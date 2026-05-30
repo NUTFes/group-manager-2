@@ -1,13 +1,11 @@
 import { FC } from 'react';
 import { GroupResponse } from '@/api/groupApi';
-import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
-import { groupLabels } from '../../label';
 import { useGroupFormHooks } from './hooks';
 
 type GroupFormProps = {
@@ -34,12 +32,12 @@ const GroupForm: FC<GroupFormProps> = ({
     errors,
     onSubmit,
     setValue,
-    createError,
     createIsMutating,
-    updateError,
     updateIsMutating,
     validateEdit,
     values,
+    formatRadioValue,
+    groupFormTexts,
   } = useGroupFormHooks(
     groups,
     userId,
@@ -48,63 +46,61 @@ const GroupForm: FC<GroupFormProps> = ({
     mutateGroupByUserId
   );
 
-  if (createError || updateError) {
-    toast.error('送信に失敗しました。時間を置いて再度お試しください');
-  }
-
   return (
     <FormContainer>
       <form
-        onSubmit={handleSubmit(onSubmit, (err) => console.table(err))}
+        onSubmit={handleSubmit(
+          async (formData) => {
+            const isSuccess = await onSubmit(formData);
+            if (isSuccess) {
+              toEdit?.();
+            }
+          },
+          (err) => console.table(err)
+        )}
         className="w-full"
       >
         <div className="flex flex-col space-y-10">
           <TextBox
-            label={groupLabels[0]}
+            label={groupFormTexts.fields.name}
             value={values.name}
             onChange={(value) => setValue('name', value)}
-            note={'例：技大祭実行委員会'}
+            note={groupFormTexts.notes.name}
             required={true}
             error={errors.name?.message}
           ></TextBox>
           <TextBox
-            label={groupLabels[1]}
+            label={groupFormTexts.fields.projectName}
             value={values.projectName}
             onChange={(value) => setValue('projectName', value)}
-            note={'例：ギダイジャー'}
+            note={groupFormTexts.notes.projectName}
             required={true}
             error={errors.projectName?.message}
           ></TextBox>
           <Radio
-            label={groupLabels[2]}
-            value={values.isInternational ? '1' : '0'}
+            label={groupFormTexts.fields.isInternational}
+            value={formatRadioValue(values.isInternational)}
             onChange={(value) => setValue('isInternational', value === '1')}
             required={true}
-            note={'注意書き'}
+            note={groupFormTexts.notes.international}
             error={errors.isInternational?.message}
-            options={[
-              { id: 0, name: 'いいえ、国際団体（留学生団体）ではありません。' },
-              { id: 1, name: 'はい、国際団体（留学生団体）です。' },
-            ]}
+            options={groupFormTexts.options.international}
           ></Radio>
           <Radio
-            label={groupLabels[3]}
-            value={values.isExternal ? '1' : '0'}
+            label={groupFormTexts.fields.isExternal}
+            value={formatRadioValue(values.isExternal)}
             onChange={(value) => setValue('isExternal', value === '1')}
             required={true}
-            note={'注意書き'}
+            note={groupFormTexts.notes.external}
             error={errors.isExternal?.message}
-            options={[
-              { id: 0, name: 'いいえ、学内の団体です。' },
-              { id: 1, name: 'はい、学外の団体です。' },
-            ]}
+            options={groupFormTexts.options.external}
           ></Radio>
           <Selector
-            label={groupLabels[4]}
+            label={groupFormTexts.fields.groupCategory}
             value={values.groupCategoryId}
             onChange={(value) => setValue('groupCategoryId', parseInt(value))}
             required={true}
-            note={'注意書き'}
+            note={groupFormTexts.notes.groupCategory}
             error={errors.groupCategoryId?.message}
             options={
               groupCategories?.map((category) => ({
@@ -114,11 +110,11 @@ const GroupForm: FC<GroupFormProps> = ({
             }
           ></Selector>
           <TextArea
-            label={groupLabels[5]}
+            label={groupFormTexts.fields.activity}
             value={values.activity}
             onChange={(value) => setValue('activity', value)}
             required={true}
-            note={'〇〇の販売、〇〇のパフォーマンスなど'}
+            note={groupFormTexts.notes.activity}
             error={errors.activity?.message}
           ></TextArea>
         </div>
@@ -132,7 +128,7 @@ const GroupForm: FC<GroupFormProps> = ({
                 type="button"
                 onClick={toEdit}
               >
-                キャンセル
+                {groupFormTexts.buttons.cancel}
               </Button>
             </div>
           )}
@@ -142,7 +138,9 @@ const GroupForm: FC<GroupFormProps> = ({
             type="submit"
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            {groups ? '修正' : '登録'}
+            {groups
+              ? groupFormTexts.buttons.edit
+              : groupFormTexts.buttons.register}
           </Button>
         </div>
       </form>

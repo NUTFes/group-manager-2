@@ -1,4 +1,4 @@
-// src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic.ts
+// src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ORDER_TYPES,
@@ -11,6 +11,7 @@ import {
 } from '@/api/rentItemsApi';
 import { useGetPlaceOrder } from '@/api/venueApplication';
 import { GROUP_CATEGORY } from '@/utils/constants';
+import { useTranslation } from 'next-i18next';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useAuthenticatedGet } from '@/hooks/useApi';
@@ -63,10 +64,11 @@ const TABLE_CHAIR_MAX_COUNT = {
   [LOCATION_TYPES.OUTDOOR]: 20, // 屋外: 20個
 };
 
-export const useRentItemsFormLogic = (
+export const useRentItemsFormHooks = (
   groupId: number,
   groupCategoryId?: number // 団体カテゴリID
 ) => {
+  const { t } = useTranslation('common');
   // 認証基盤ができたら、グループIDを取得する
   const currentGroupId = groupId;
   const [submitError, setSubmitError] = useState<string>('');
@@ -208,13 +210,13 @@ export const useRentItemsFormLogic = (
   // 物品のオプション
   const itemOptions = useMemo(
     () => [
-      { id: 0, name: '選んでください' },
+      { id: 0, name: t('form.validation.select') },
       ...filteredItems.map((item) => ({
         id: item.id,
         name: item.name,
       })),
     ],
-    [filteredItems]
+    [filteredItems, t]
   );
 
   // 特殊団体の場合に会場タイプの選択を非表示にするフラグ
@@ -525,7 +527,7 @@ export const useRentItemsFormLogic = (
       if (!unRegisteredResult.success) {
         console.error('登録エラー:', unRegisteredResult.error);
         // トースト通知でエラーを表示
-        toast.error('物品申請の登録に失敗しました');
+        toast.error(t('applications.rentItems.messages.registerNoItemsFailed'));
         return false;
       }
 
@@ -536,9 +538,13 @@ export const useRentItemsFormLogic = (
         );
 
         if (!result.success) {
-          setSubmitError('既存の申請データ削除中にエラーが発生しました');
+          setSubmitError(
+            t('applications.rentItems.messages.deleteExistingError')
+          );
           // トースト通知でエラーを表示
-          toast.error('既存の物品申請の削除に失敗しました');
+          toast.error(
+            t('applications.rentItems.messages.deleteExistingFailed')
+          );
           return false;
         }
       }
@@ -551,15 +557,21 @@ export const useRentItemsFormLogic = (
       // API更新の通知
       await mutateRentalOrders();
       // 成功時のトースト通知
-      toast.success('物品申請を行わない設定を登録しました');
+      toast.success(
+        t('applications.rentItems.messages.registerNoItemsSuccess')
+      );
       return true;
     } catch (error) {
       console.error('予期せぬエラー:', error);
       const errorMessage =
         error instanceof Error ? error.message : '不明なエラー';
-      setSubmitError('予期せぬエラーが発生しました: ' + errorMessage);
+      setSubmitError(
+        t('applications.rentItems.messages.unexpectedErrorWithDetail', {
+          message: errorMessage,
+        })
+      );
       // トースト通知でエラーを表示
-      toast.error('予期せぬエラーが発生しました');
+      toast.error(t('applications.rentItems.messages.unexpectedError'));
       return false;
     }
   };
@@ -595,25 +607,23 @@ export const useRentItemsFormLogic = (
         // アラートの代わりにトースト通知を使用
         toast.success(
           rentalOrders.length > 0
-            ? '物品申請を更新しました'
-            : '物品申請を登録しました'
+            ? t('applications.rentItems.messages.updateSuccess')
+            : t('applications.rentItems.messages.createSuccess')
         );
 
         await mutateRentalOrders();
         setIsEditMode(false);
         userChangedLocationType.current = false;
       } else {
-        setSubmitError(
-          '送信中にエラーが発生しました。もう一度お試しください。'
-        );
+        setSubmitError(t('applications.rentItems.messages.submitError'));
         // トースト通知でエラーを表示
-        toast.error('物品申請の送信に失敗しました');
+        toast.error(t('applications.rentItems.messages.submitFailed'));
       }
     } catch (error) {
       console.error('物品申請エラー:', error);
-      setSubmitError('予期せぬエラーが発生しました。もう一度お試しください。');
+      setSubmitError(t('applications.rentItems.messages.unexpectedRetry'));
       // トースト通知でエラーを表示
-      toast.error('予期せぬエラーが発生しました');
+      toast.error(t('applications.rentItems.messages.unexpectedError'));
     }
   };
 
@@ -703,10 +713,74 @@ export const useRentItemsFormLogic = (
       setTimeout(() => trigger(), 100);
     } catch (error) {
       console.error('編集モード起動エラー:', error);
-      setSubmitError('予期せぬエラーが発生しました。');
+      setSubmitError(t('applications.rentItems.messages.unexpectedError'));
       // エラー時にトースト通知を表示
-      toast.error('編集モードの開始に失敗しました');
+      toast.error(t('applications.rentItems.messages.editStartFailed'));
     }
+  };
+
+  const rentItemsFormTexts = {
+    general: {
+      loading: t('applications.rentItems.loading'),
+    },
+    errors: {
+      fetch: {
+        title: t('applications.rentItems.errors.fetchTitle'),
+        description: t('applications.rentItems.errors.fetchDescription'),
+      },
+      translate: (key?: string) =>
+        key ? t(key, { defaultValue: key }) : undefined,
+    },
+    summary: {
+      noApplication: {
+        label: t('applications.rentItems.summary.noApplication.label'),
+        description: t(
+          'applications.rentItems.summary.noApplication.description'
+        ),
+      },
+      count: (value: number | string) =>
+        t('applications.rentItems.summary.count', { value }),
+    },
+    location: {
+      displayLabel: t('applications.rentItems.location.displayLabel'),
+      radioQuestion: t('applications.rentItems.location.radioQuestion'),
+      notes: {
+        foodOnlyOutdoor: t(
+          'applications.rentItems.location.notes.foodOnlyOutdoor'
+        ),
+        preApplication: t(
+          'applications.rentItems.location.notes.preApplication'
+        ),
+      },
+      options: {
+        indoor: t('applications.rentItems.location.options.indoor'),
+        outdoor: t('applications.rentItems.location.options.outdoor'),
+      },
+    },
+    radio: {
+      question: t('applications.rentItems.radio.question'),
+      options: {
+        yes: t('applications.rentItems.radio.options.yes'),
+        no: t('applications.rentItems.radio.options.no'),
+      },
+    },
+    fields: {
+      sectionTitle: (index: number) =>
+        t('applications.rentItems.fields.section', { index }),
+      item: t('applications.rentItems.fields.item'),
+      count: t('applications.rentItems.fields.count'),
+    },
+    notes: {
+      minRequest: t('applications.rentItems.notes.minRequest'),
+      contactLimit: t('applications.rentItems.notes.contactLimit'),
+      contactEmail: t('applications.rentItems.notes.contactEmail'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+      delete: t('form.actions.delete'),
+      addItem: t('applications.rentItems.buttons.addItem'),
+    },
   };
 
   return {
@@ -734,5 +808,6 @@ export const useRentItemsFormLogic = (
     hideLocationTypeSelect, // 団体タイプに応じたUI表示制御フラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
+    rentItemsFormTexts,
   };
 };

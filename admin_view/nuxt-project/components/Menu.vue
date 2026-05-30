@@ -28,6 +28,19 @@
         </ul>
       </nav>
       <div class="menu-header">
+        <h4>確認画面</h4>
+      </div>
+      <nav class="menu">
+        <ul>
+          <li v-for="item in check_items" :key="item.title">
+            <nuxt-link v-bind:to="item.click"
+              ><span class="material-icons">{{ item.icon }}</span
+              >{{ item.title }}</nuxt-link
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="menu-header">
         <h4>一覧情報</h4>
       </div>
       <nav class="menu">
@@ -129,6 +142,12 @@ export default {
         },
         { title: "開催日", icon: "date_range", click: "/fes_dates" },
       ],
+
+      // 確認系
+      check_items: [
+        { title: "保健所提出項目確認", icon: "local_dining", click: "/health_center_document_review" },
+      ],
+
       // 申請系
       order_items: [
         { title: "申請状況一覧", icon: "task", click: "/order_status_check" },
@@ -190,6 +209,11 @@ export default {
           title: "調理工程申請",
           icon: "restaurant",
           click: "/cooking_process_order",
+        },
+        {
+          title: "火気使用申請",
+          icon: "local_fire_department",
+          click: "/fire_equipment_orders",
         }
       ],
       // 操作系

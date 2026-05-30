@@ -4,15 +4,18 @@ import {
   useUpdateStageOptions,
 } from '@/api/stageOptionApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { stageOptionLabels } from '../../label';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
   stageOptions: StageOptionResponse | undefined,
   groupId: number | undefined
 ) => {
+  const { t } = useTranslation('common');
   const {
     handleSubmit,
     setValue,
@@ -56,27 +59,46 @@ export const useStageOptionFormHooks = (
         await update({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
 
-        toast.success('送信しました');
+        toast.success(t('applications.stageOptions.messages.submitSuccess'));
+        return true;
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('applications.stageOptions.messages.submitFailed'));
+        return false;
       }
     } else {
       try {
         await create({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
         mutate(`/check_all_registered/${formData.groupId}`);
-        toast.success('送信しました');
+        toast.success(t('applications.stageOptions.messages.submitSuccess'));
+        reset();
+        return true;
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('applications.stageOptions.messages.submitFailed'));
+        return false;
       }
-      reset();
     }
   };
 
   const options = [
-    { id: 1, name: 'はい' },
-    { id: 0, name: 'いいえ' },
+    { id: 1, name: t('applications.stageOptions.options.yes') },
+    { id: 0, name: t('applications.stageOptions.options.no') },
   ];
+  const stageOptionFormTexts = {
+    labels: stageOptionLabels.map((labelKey) => t(labelKey)),
+    notes: {
+      select: t('applications.stageOptions.notes.select'),
+    },
+    options,
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+    messages: {
+      submitFailed: t('applications.stageOptions.messages.submitFailed'),
+    },
+  };
 
   const convertToBoolean = (value: string): boolean => {
     return value === '1' ? true : false;
@@ -107,9 +129,9 @@ export const useStageOptionFormHooks = (
     createIsMutating,
     updateError,
     updateIsMutating,
-    options,
     convertToBoolean,
     validateEdit,
     formatRadioValue,
+    stageOptionFormTexts,
   };
 };

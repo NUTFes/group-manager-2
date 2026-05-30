@@ -3,31 +3,33 @@ import { z } from 'zod';
 export const publicRelationsSchema = z.object({
   prText: z
     .string({
-      required_error: '入力してください',
+      required_error: 'form.validation.required',
     })
-    .min(1, { message: '入力してください' })
+    .min(1, { message: 'form.validation.required' })
     // 日本語の文字数チェック
     .refine(
       (text) => !/[\u3040-\u30FF\u4E00-\u9FAF]/.test(text) || text.length <= 50,
-      { message: '日本語は50文字以内で入力してください' }
+      { message: 'applications.publicRelations.validation.jpLimit' }
     )
     // 英語の単語数チェック
     .refine(
       (text) =>
         /[\u3040-\u30FF\u4E00-\u9FAF]/.test(text) ||
         text.split(/\s+/).filter(Boolean).length <= 25,
-      { message: '英語は25単語以内で入力してください' }
+      { message: 'applications.publicRelations.validation.enLimit' }
     ),
   announce: z.enum(['yes', 'no'], {
-    required_error: '選択してください',
+    required_error: 'form.validation.select',
   }),
   image: z
-    .instanceof(File, { message: '画像をアップロードしてください' })
+    .instanceof(File, {
+      message: 'applications.publicRelations.validation.imageRequired',
+    })
     .refine((file) => file.size < 10 * 1024 * 1024, {
-      message: 'ファイルサイズは10MB未満にしてください',
+      message: 'applications.publicRelations.validation.sizeLimit',
     })
     .refine((file) => ['image/png', 'image/jpeg'].includes(file.type), {
-      message: 'ファイル形式はpngまたはjpegにしてください',
+      message: 'applications.publicRelations.validation.format',
     })
     .optional(),
 });

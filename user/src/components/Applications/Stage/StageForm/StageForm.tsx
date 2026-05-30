@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { stageLabels } from '@/components/Applications/label';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
@@ -7,11 +6,12 @@ import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
-import { useStageFormLogic } from '../hooks';
-import { useStageFormViewLogic } from '../hooks/useStageFormViewLogic';
+import { useStageFormHooks } from '../hooks';
+import { useStageFormViewHooks } from '../hooks/useStageFormViewHooks';
 
 type Props = { isDeadline?: boolean; groupId: number };
 const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
+  const stageFormHooks = useStageFormHooks(groupId);
   const {
     formState,
     updateField,
@@ -31,14 +31,16 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
     rainyStageOptions,
     getErrorMessage,
     resetForm,
-  } = useStageFormLogic(groupId);
+    stageFormTexts,
+  } = stageFormHooks;
 
-  const { isFormMode, toEdit, toCancel } = useStageFormViewLogic({
+  const stageFormViewHooks = useStageFormViewHooks({
     hasExisting,
     isDeadline,
     isLoadingAll,
     isSubmitted,
   });
+  const { isFormMode, toEdit, toCancel } = stageFormViewHooks;
 
   const {
     date,
@@ -54,57 +56,74 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
   const items: FormItem[] = [
     {
-      label: stageLabels[0],
+      label: stageFormTexts.labels[0],
       content: dateOptions.find((o) => o.id === +date)?.name || '',
     },
     {
-      label: stageLabels[1],
+      label: stageFormTexts.labels[1],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnyFirstChoice)?.name || '',
     },
     {
-      label: stageLabels[2],
+      label: stageFormTexts.labels[2],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnySecondChoice)?.name || '',
     },
     {
-      label: stageLabels[3],
+      label: stageFormTexts.labels[3],
       content:
         rainyStageOptions.find((o) => o.id === +rainyFirstChoice)?.name || '',
     },
     {
-      label: stageLabels[4],
+      label: stageFormTexts.labels[4],
       content:
         rainyStageOptions.find((o) => o.id === +rainySecondChoice)?.name || '',
     },
-    { label: stageLabels[5], content: `${prepTime}分` },
-    { label: stageLabels[6], content: `${performTime}分` },
-    { label: stageLabels[7], content: `${cleanupTime}分` },
+    {
+      label: stageFormTexts.labels[5],
+      content: prepTime ? stageFormTexts.minutes(prepTime) : '',
+    },
+    {
+      label: stageFormTexts.labels[6],
+      content: performTime ? stageFormTexts.minutes(performTime) : '',
+    },
+    {
+      label: stageFormTexts.labels[7],
+      content: cleanupTime ? stageFormTexts.minutes(cleanupTime) : '',
+    },
   ];
 
   return (
     <>
-      {isFormMode ? (
+      {isFormMode === null ? (
+        <div className="w-[400px] py-4 text-center">
+          <p>{stageFormTexts.loading}</p>
+        </div>
+      ) : isFormMode ? (
         <FormContainer>
           {hasError && (
             <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              <strong className="font-bold">エラー：</strong>
+              <strong className="font-bold">
+                {stageFormTexts.errors.fetchTitle}
+              </strong>
               <span className="block sm:inline">
-                データの取得に失敗しました。ページを再読込してください。
+                {stageFormTexts.errors.fetchDescription}
               </span>
             </div>
           )}
 
           {submitError && (
             <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              <strong className="font-bold">送信エラー：</strong>
+              <strong className="font-bold">
+                {stageFormTexts.errors.submitTitle}
+              </strong>
               <span className="block sm:inline">{submitError}</span>
             </div>
           )}
 
           {isLoadingAll ? (
             <div className="w-[400px] py-4 text-center">
-              <p>データを読み込み中です...</p>
+              <p>{stageFormTexts.loading}</p>
             </div>
           ) : (
             <form
@@ -113,7 +132,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
             >
               <div>
                 <Radio
-                  label={stageLabels[0]}
+                  label={stageFormTexts.labels[0]}
                   value={date}
                   onChange={(value: string) => updateField('date', value)}
                   required
@@ -121,13 +140,15 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                   error={getErrorMessage('date')}
                 />
                 {!errors.date && (
-                  <p className="text-xs text-[#484848]">選んでください</p>
+                  <p className="text-xs text-[#484848]">
+                    {stageFormTexts.notes.select}
+                  </p>
                 )}
               </div>
 
               <div>
                 <Selector
-                  label={stageLabels[1]}
+                  label={stageFormTexts.labels[1]}
                   value={sunnyFirstChoice}
                   onChange={(value) => updateField('sunnyFirstChoice', value)}
                   required
@@ -138,7 +159,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={stageLabels[2]}
+                  label={stageFormTexts.labels[2]}
                   value={sunnySecondChoice}
                   onChange={(value) => updateField('sunnySecondChoice', value)}
                   required
@@ -149,7 +170,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={stageLabels[3]}
+                  label={stageFormTexts.labels[3]}
                   value={rainyFirstChoice}
                   onChange={(value) => updateField('rainyFirstChoice', value)}
                   required
@@ -160,7 +181,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={stageLabels[4]}
+                  label={stageFormTexts.labels[4]}
                   value={rainySecondChoice}
                   onChange={(value) => updateField('rainySecondChoice', value)}
                   required
@@ -171,38 +192,40 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <TextBox
-                  label={`${stageLabels[5]}(単位：min)`}
+                  label={`${stageFormTexts.labels[5]}${stageFormTexts.notes.unit}`}
                   value={prepTime}
                   onChange={(value) => updateField('prepTime', value)}
                   required
-                  note="ステージ上の準備にかかる時間を分単位で記入してください"
+                  note={stageFormTexts.notes.prepTime}
                   error={getErrorMessage('prepTime')}
                 />
               </div>
 
               <div>
                 <TextBox
-                  label={`${stageLabels[6]}(単位：min)`}
+                  label={`${stageFormTexts.labels[6]}${stageFormTexts.notes.unit}`}
                   value={performTime}
                   onChange={(value) => updateField('performTime', value)}
                   required
-                  note="準備、本番、片付けの時間が120分以内になるようにしてください"
+                  note={stageFormTexts.notes.performTime}
                   error={getErrorMessage('performTime')}
                 />
               </div>
 
               <div>
                 <TextBox
-                  label={`${stageLabels[7]}(単位：min)`}
+                  label={`${stageFormTexts.labels[7]}${stageFormTexts.notes.unit}`}
                   value={cleanupTime}
                   onChange={(value) => updateField('cleanupTime', value)}
                   required
-                  note="ステージ上の片付けにかかる時間を分単位で記入してください"
+                  note={stageFormTexts.notes.cleanupTime}
                   error={getErrorMessage('cleanupTime')}
                 />
                 {getErrorMessage('totalTime') && (
                   <p className="text-xs text-[#FF0000]">
-                    {getErrorMessage('totalTime')}
+                    {stageFormTexts.formatError(
+                      getErrorMessage('totalTime') ?? ''
+                    )}
                   </p>
                 )}
               </div>
@@ -216,7 +239,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                     variant
                     onClick={() => toCancel(resetForm)}
                   >
-                    キャンセル
+                    {stageFormTexts.buttons.cancel}
                   </Button>
                 )}
                 <Button
@@ -225,7 +248,9 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                   color="main"
                   isDisable={!isValid}
                 >
-                  {hasExisting ? '修正' : '登録'}
+                  {hasExisting
+                    ? stageFormTexts.buttons.edit
+                    : stageFormTexts.buttons.register}
                 </Button>
               </div>
             </form>

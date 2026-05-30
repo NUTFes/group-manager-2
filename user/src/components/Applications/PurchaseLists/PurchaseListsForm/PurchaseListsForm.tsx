@@ -14,12 +14,12 @@ import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
 import {
   DEFAULT_PURCHASE_ITEM,
-  FRESH_OPTIONS,
   FRESH_TYPE_ID,
   NET_ORDER_SHOP_ID,
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
 } from '../constants';
+import { usePurchaseListsFormTexts } from '../hooks';
 import { PurchaseItem, PurchaseListsFormData } from '../schema';
 import { FoodProductOption } from '../types';
 
@@ -46,11 +46,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   shopOptions,
   onFoodProductChange,
 }) => {
+  const purchaseListsFormTexts = usePurchaseListsFormTexts();
   // フォーム全体の値を監視
   const watchedFormValues = useWatch({
     control,
     name: 'purchaseLists',
   });
+  const freshOptions = purchaseListsFormTexts.radio.options;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +78,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Selector
-                      label="販売品名"
+                      label={purchaseListsFormTexts.fields.foodProduct}
                       value={controllerField.value}
                       onChange={(value) => {
                         controllerField.onChange(Number(value));
@@ -87,7 +89,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       required
                       options={foodProductOptions}
                       error={fieldState.error?.message}
-                      note="販売品申請登録後に選択可能"
+                      note={purchaseListsFormTexts.notes.foodProduct}
                     />
                   )}
                 />
@@ -97,7 +99,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
-                      label="選択した料理に使用した食材・使用する材料"
+                      label={purchaseListsFormTexts.fields.items}
                       value={controllerField.value ?? ''}
                       onChange={controllerField.onChange}
                       required
@@ -111,7 +113,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Radio
-                      label="商品の種類"
+                      label={purchaseListsFormTexts.radio.label}
                       name={`isFresh-${index}`}
                       value={
                         controllerField.value
@@ -124,7 +126,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                         )
                       }
                       required
-                      options={FRESH_OPTIONS}
+                      options={freshOptions}
                       error={fieldState.error?.message}
                     />
                   )}
@@ -135,7 +137,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Selector
-                      label="購入場所"
+                      label={purchaseListsFormTexts.fields.shop}
                       value={controllerField.value}
                       onChange={(value) =>
                         controllerField.onChange(Number(value))
@@ -143,7 +145,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       required
                       options={shopOptions}
                       error={fieldState.error?.message}
-                      note="ネット注文選択時はURL入力が必要です"
+                      note={purchaseListsFormTexts.notes.shop}
                     />
                   )}
                 />
@@ -153,13 +155,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
-                      label="購入日"
+                      label={purchaseListsFormTexts.fields.purchaseDate}
                       type="date"
                       value={controllerField.value}
                       onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
-                      note="例：2025/03/14"
+                      note={purchaseListsFormTexts.notes.purchaseDate}
                     />
                   )}
                 />
@@ -171,12 +173,12 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                     control={control}
                     render={({ field: controllerField, fieldState }) => (
                       <TextBox
-                        label="URL"
+                        label={purchaseListsFormTexts.fields.url}
                         value={controllerField.value || ''}
                         onChange={controllerField.onChange}
                         required
                         error={fieldState.error?.message}
-                        note="購入したECサイトのURLなど"
+                        note={purchaseListsFormTexts.notes.url}
                       />
                     )}
                   />
@@ -188,15 +190,15 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextArea
-                      label="備考"
+                      label={purchaseListsFormTexts.fields.remark}
                       value={controllerField.value || ''}
                       onChange={controllerField.onChange}
                       required={currentShopId === OTHER_SHOP_ID}
                       error={fieldState.error?.message}
                       note={
                         currentShopId === OTHER_SHOP_ID
-                          ? '店名・住所・電話番号・営業時間を入力してください'
-                          : 'その他補足事項があれば入力してください'
+                          ? purchaseListsFormTexts.notes.remark.other
+                          : purchaseListsFormTexts.notes.remark.default
                       }
                     />
                   )}
@@ -211,7 +213,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       onClick={() => remove(index)}
                       icon="cross"
                     >
-                      削除
+                      {purchaseListsFormTexts.buttons.delete}
                     </Button>
                   </div>
                 )}
@@ -228,10 +230,10 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
             icon="plus"
             onClick={() => append(DEFAULT_PURCHASE_ITEM as PurchaseItem)}
           >
-            購入品を追加
+            {purchaseListsFormTexts.buttons.addItem}
           </Button>
           <Button size="pc" color="main" type="submit">
-            登録
+            {purchaseListsFormTexts.buttons.register}
           </Button>
         </div>
       </div>
@@ -239,12 +241,14 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
       <div className="mt-10 flex w-full items-center justify-center space-x-4"></div>
       {errors.purchaseLists?.root?.message && (
         <p className="mt-2 text-center text-xs text-alert">
-          {errors.purchaseLists.root.message}
+          {purchaseListsFormTexts.errors.format(
+            errors.purchaseLists.root.message
+          )}
         </p>
       )}
       {errors.purchaseLists?.message && (
         <p className="mt-2 text-center text-xs text-alert">
-          {errors.purchaseLists.message}
+          {purchaseListsFormTexts.errors.format(errors.purchaseLists.message)}
         </p>
       )}
     </form>

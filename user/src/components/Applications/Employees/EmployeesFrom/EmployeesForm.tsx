@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import Button from '@/components/Button';
 import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { useEmployeeFormTexts } from './hooks';
 
 type Props = {
   index: number;
@@ -11,6 +12,7 @@ type Props = {
 
 export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
   const { control } = useFormContext();
+  const employeeFormTexts = useEmployeeFormTexts();
 
   return (
     <FormContainer>
@@ -19,13 +21,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.name` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label="従業員名"
+            label={employeeFormTexts.fields.name.label}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note="例：技大 花子"
+            note={employeeFormTexts.fields.name.note}
           />
         )}
       />
@@ -34,13 +36,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.studentId` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label="学籍番号"
+            label={employeeFormTexts.fields.studentId.label}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note="例：12345678"
+            note={employeeFormTexts.fields.studentId.note}
           />
         )}
       />
@@ -53,7 +55,7 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
           variant
           onClick={onDelete}
         >
-          削除
+          {employeeFormTexts.buttons.delete}
         </Button>
       </div>
     </FormContainer>

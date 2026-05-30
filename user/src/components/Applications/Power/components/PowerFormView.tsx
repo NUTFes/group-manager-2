@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
+import { POWER_LIMIT } from '../constants';
+import { usePowerFormViewHooks } from '../hooks/usePowerFormViewHooks';
 import { PowerFormViewProps } from '../types';
 import PowerForm from './PowerForm';
 
@@ -18,20 +20,21 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   onSubmit,
 }) => {
   const { handleSubmit } = formMethods;
+  const { powerFormViewTexts } = usePowerFormViewHooks(radioOptions);
 
   return (
     <div className="flex flex-col gap-6">
       {/* ラジオボタン */}
       <Radio
-        label="電力申請を行いますか？"
+        label={powerFormViewTexts.radio.label}
         value={radioValue}
         onChange={onRadioChange}
         required
-        options={radioOptions}
+        options={powerFormViewTexts.radio.options}
       />
 
       {/* 申請する場合のフォーム */}
-      {showForm && (
+      <div style={{ display: showForm ? 'block' : 'none' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex w-full flex-col gap-10">
             {fields.map((field, index) => (
@@ -46,9 +49,14 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
           </div>
           {/* 電力超過警告 */}
           <div className="mt-6 flex flex-col items-center gap-4">
-            {totalPower > 1500 && (
+            {totalPower > POWER_LIMIT && (
               <div className="mb-4 w-full text-center text-sm text-red-600">
-                <p>合計電力が1500Wを超えています（現在: {totalPower}W）</p>
+                <p>
+                  {powerFormViewTexts.warnings.totalPower(
+                    POWER_LIMIT,
+                    totalPower
+                  )}
+                </p>
               </div>
             )}
             {/* 操作ボタン */}
@@ -61,20 +69,20 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 variant
                 onClick={onAddDevice}
               >
-                物品の追加
+                {powerFormViewTexts.actions.addDevice}
               </Button>
               <Button
                 type="submit"
                 size="pc"
                 color="main"
-                isDisable={!isValid || totalPower > 1500}
+                isDisable={!isValid || totalPower > POWER_LIMIT}
               >
-                登録
+                {powerFormViewTexts.actions.register}
               </Button>
             </div>
           </div>
         </form>
-      )}
+      </div>
     </div>
   );
 };

@@ -92,6 +92,11 @@
               <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
+            <td :class="{ unregistered: !group.cooking_process_order && group.group_category === 1 }">
+              <div v-if="group.cooking_process_order">◯</div>
+              <div v-else-if="group.group_category !== 1">ー</div>
+              <div v-else>✖️</div>
+            </td>
             <td :class="{ unregistered: !group.food_product && (group.group_category === 1 || group.group_category === 2) }">
               <div v-if="group.food_product">◯</div>
               <div v-else-if="group.group_category !== 1 && group.group_category !== 2">ー</div>
@@ -116,9 +121,9 @@
               <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.cooking_process_order && group.group_category === 1 }">
-              <div v-if="group.cooking_process_order">◯</div>
-              <div v-else-if="group.group_category !== 1">ー</div>
+            <td :class="{ unregistered: !group.fire_equipment_order_status && !isUnregistered(group.group.id, 'fire_equipment_order') && [1, 2, 4, 5].includes(group.group_category) }">
+              <div v-if="group.fire_equipment_order_status && [1, 2, 4, 5].includes(group.group_category)">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'fire_equipment_order') || ![1, 2, 4, 5].includes(group.group_category)">ー</div>
               <div v-else>✖️</div>
             </td>
           </tr>
@@ -151,6 +156,7 @@ export default {
         "アナウンス",
         "模擬店平面図",
         "調理工程",
+        "火気使用申請",
       ],
       groups: [],
       unregisteredGroups: [],
@@ -371,10 +377,11 @@ export default {
     },
     // 申請しないデータかどうかを判定するメソッド
     isUnregistered(groupId, orderType) {
-      return this.unregisteredGroups.some(item => 
+      return this.unregisteredGroups.some(item =>
         item.group_id === groupId && item.order_type === orderType
       );
     },
+
   },
 };
 </script>

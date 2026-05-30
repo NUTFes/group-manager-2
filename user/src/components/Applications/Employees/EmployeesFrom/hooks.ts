@@ -17,6 +17,7 @@ import {
   RADIO_VALUE,
 } from '@/utils/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import {
   EmployeeFormItem,
@@ -221,5 +222,24 @@ export const useEmployeesFormHandlers = (
     handleNeedApplicationChange,
     handleEmployeeRemove,
     convertEmployeesToFormData,
+  };
+};
+
+export const useEmployeeFormTexts = () => {
+  const { t } = useTranslation('common');
+  return {
+    fields: {
+      name: {
+        label: t('applications.employees.form.labels.name'),
+        note: t('applications.employees.form.notes.name'),
+      },
+      studentId: {
+        label: t('applications.employees.form.labels.studentId'),
+        note: t('applications.employees.form.notes.studentId'),
+      },
+    },
+    buttons: {
+      delete: t('form.actions.delete'),
+    },
   };
 };

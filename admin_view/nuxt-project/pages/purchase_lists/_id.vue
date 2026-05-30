@@ -76,55 +76,13 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsPurchaseListEditModal
       v-if="isOpenEditModal"
-      title="購入品申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>品名</h3>
-          <input v-model="items" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>購入店</h3>
-          <select v-model="shopID">
-            <option disabled value="">選択してください</option>
-            <option v-for="list in shopList" :key="list.id" :value="list.id">
-              {{ list.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>購入日</h3>
-          <input v-model="purchase_date" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>なまものか</h3>
-          <select v-model="isFresh">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in isFreshList"
-              :key="list.id"
-              :value="list.value"
-            >
-              {{ list.text }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>ネットで買った場合はURLを記入してください</h3>
-          <input v-model="url" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>備考</h3>
-          <input v-model="remark" placeholder="入力してください" />
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
-      </template>
-    </EditModal>
+      :purchase-list="purchaseList"
+      :shops="shopList"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"

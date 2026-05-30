@@ -40,6 +40,6 @@ class StockerPlacesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def stocker_place_params
-    params.permit(:name, :stock_item_status, :assign_item_status)
+    params.permit(:name, :name_en, :stock_item_status, :assign_item_status)
   end
 end

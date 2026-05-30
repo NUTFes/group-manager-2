@@ -16,11 +16,12 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   stageOptions?: StageOptionResponse;
   formItem: FormItem[];
   groupId: number;
+  stageOptionTexts: ReturnType<typeof useStageOptionHooks>['stageOptionTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,15 +33,20 @@ const Content: FC<ContentProps> = ({
   stageOptions,
   formItem,
   groupId,
+  stageOptionTexts,
 }) => {
   if (isLoading) {
+    return <div>{stageOptionTexts.general.loading}</div>;
+  }
+
+  if (isEditing === null) {
     return <div>Loading...</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {stageOptionTexts.errors.fetch}
       </div>
     );
   }
@@ -67,12 +73,19 @@ const StageOptions: FC<StageOptionsProps> = ({
   isRegistered,
   groupId,
 }) => {
-  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks(groupId);
+  const {
+    formItem,
+    isEditing,
+    toEdit,
+    stageOptions,
+    isLoading,
+    hasError,
+    stageOptionTexts,
+  } = useStageOptionHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu
-      title="ステージオプション申請"
+      title={stageOptionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -86,6 +99,7 @@ const StageOptions: FC<StageOptionsProps> = ({
         stageOptions={stageOptions}
         formItem={formItem}
         groupId={groupId}
+        stageOptionTexts={stageOptionTexts}
       />
     </AccordionMenu>
   );

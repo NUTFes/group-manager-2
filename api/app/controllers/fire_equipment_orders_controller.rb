@@ -6,13 +6,26 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders
   def index
-    @fire_equipment_orders = FireEquipmentOrder.all
-    render json: fmt(ok, @fire_equipment_orders)
+    fes_year_id = params[:fes_year_id]
+    @fire_equipment_orders = if fes_year_id.present? && fes_year_id.to_i != 0
+                               FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year_id })
+                             else
+                               FireEquipmentOrder.includes(:group).all
+                             end
+    orders_with_fuel_japanese = @fire_equipment_orders.map do |order|
+      order.as_json(include: { group: { only: %i[id name] } }).merge(
+        fuel_japanese: order.fuel_japanese
+      )
+    end
+    render json: fmt(ok, orders_with_fuel_japanese)
   end
 
   # GET /fire_equipment_orders/:id
   def show
-    render json: fmt(ok, @fire_equipment_order)
+    order_with_fuel_japanese = @fire_equipment_order.as_json(include: { group: { only: %i[id name] } }).merge(
+      fuel_japanese: @fire_equipment_order.fuel_japanese
+    )
+    render json: fmt(ok, order_with_fuel_japanese)
   end
 
   # POST /fire_equipment_orders

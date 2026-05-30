@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { DEFAULT_DEVICE } from '../constants';
@@ -21,6 +22,7 @@ type PowerApplicationState = {
 };
 
 export const usePowerApplication = (groupId: number) => {
+  const { t } = useTranslation('common');
   // 電力申請のステート管理
   const [state, setState] = useState<PowerApplicationState>({
     isEditing: false,
@@ -58,7 +60,14 @@ export const usePowerApplication = (groupId: number) => {
   const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
 
   // フォーム管理
-  const powerForm = usePowerForm(hasExisting ? { devices } : undefined);
+  const initialDefaultValues = useMemo(() => {
+    if (!hasExisting) return undefined;
+
+    return {
+      devices: devices.map((d) => ({ ...d })),
+    };
+  }, [hasExisting, devices]);
+  const powerForm = usePowerForm(initialDefaultValues);
   const { formMethods } = powerForm;
 
   // 状態更新のヘルパー関数
@@ -158,9 +167,7 @@ export const usePowerApplication = (groupId: number) => {
         const hasFailures = deleteResults.some((result) => !result.success);
         if (hasFailures) {
           console.warn('一部のデバイス削除に失敗しましたが、処理を続行します');
-          toast.warning(
-            '一部の機器情報の削除に失敗しましたが、処理を続行します'
-          );
+          toast.warning(t('applications.power.messages.partialDeleteWarning'));
         }
       }
 
@@ -172,19 +179,21 @@ export const usePowerApplication = (groupId: number) => {
         await mutatePowerOrders();
         await mutateUnregisteredGroup();
         mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
-        toast.success('電力申請を行わない登録が完了しました');
+        toast.success(t('applications.power.messages.registerNegativeSuccess'));
       } else {
+        const message = t('applications.power.messages.registerNegativeFailed');
         updateState({
-          submitError: '申請の登録に失敗しました。もう一度お試しください。',
+          submitError: message,
         });
-        toast.error('申請の登録に失敗しました');
+        toast.error(message);
       }
     } catch (error) {
       console.error('申請処理中のエラー:', error);
+      const message = t('applications.power.messages.processError');
       updateState({
-        submitError: '申請の処理に失敗しました。もう一度お試しください。',
+        submitError: message,
       });
-      toast.error('申請の処理に失敗しました');
+      toast.error(message);
     }
   };
 
@@ -193,8 +202,9 @@ export const usePowerApplication = (groupId: number) => {
     updateState({ submitError: null });
 
     if (!groupId) {
-      updateState({ submitError: 'グループIDが取得できませんでした。' });
-      toast.error('グループIDが取得できませんでした');
+      const message = t('applications.power.messages.missingGroup');
+      updateState({ submitError: message });
+      toast.error(message);
       return;
     }
 
@@ -205,7 +215,7 @@ export const usePowerApplication = (groupId: number) => {
         if (!deleteResult.success) {
           console.warn('未登録テーブル削除エラー:', deleteResult.error);
           toast.warning(
-            '未登録データの削除に問題がありましたが、処理を続行します'
+            t('applications.power.messages.unregisteredDeleteWarning')
           );
         }
       } catch (error) {
@@ -214,7 +224,7 @@ export const usePowerApplication = (groupId: number) => {
           error
         );
         toast.warning(
-          '未登録データの削除に問題がありましたが、処理を続行します'
+          t('applications.power.messages.unregisteredDeleteWarning')
         );
       }
 
@@ -236,22 +246,24 @@ export const usePowerApplication = (groupId: number) => {
         updateState({ isEditing: false });
         // 編集か新規登録かによって通知メッセージを変える
         if (hasExisting) {
-          toast.success('電力申請情報を更新しました');
+          toast.success(t('applications.power.messages.updateSuccess'));
         } else {
-          toast.success('電力申請情報を登録しました');
+          toast.success(t('applications.power.messages.createSuccess'));
         }
       } else {
+        const message = t('applications.power.messages.submitFailed');
         updateState({
-          submitError: '申請の送信に失敗しました。もう一度お試しください。',
+          submitError: message,
         });
-        toast.error('申請の送信に失敗しました');
+        toast.error(message);
       }
     } catch (error) {
       console.error('申請送信中のエラー:', error);
+      const message = t('applications.power.messages.submitUnexpectedError');
       updateState({
-        submitError: '申請の送信中にエラーが発生しました。',
+        submitError: message,
       });
-      toast.error('申請の送信中にエラーが発生しました');
+      toast.error(message);
     }
   };
 
@@ -265,7 +277,7 @@ export const usePowerApplication = (groupId: number) => {
       const result = await deletePowerOrder(deviceId);
       if (result.success) {
         await mutatePowerOrders();
-        toast.success('機器情報を削除しました');
+        toast.success(t('applications.power.messages.deviceDeleteSuccess'));
 
         // すべてのデバイスが削除された場合、編集モードに切り替える
         if (willBeEmpty) {
@@ -278,16 +290,18 @@ export const usePowerApplication = (groupId: number) => {
           formMethods.reset({ devices: [{ ...DEFAULT_DEVICE }] });
         }
       } else {
+        const message = t('applications.power.messages.deviceDeleteFailed');
         updateState({
-          submitError: '機器の削除に失敗しました。もう一度お試しください。',
+          submitError: message,
         });
-        toast.error('機器の削除に失敗しました');
+        toast.error(message);
       }
     } catch {
+      const message = t('applications.power.messages.deviceDeleteError');
       updateState({
-        submitError: '機器の削除中にエラーが発生しました。',
+        submitError: message,
       });
-      toast.error('機器の削除中にエラーが発生しました');
+      toast.error(message);
     }
   };
 

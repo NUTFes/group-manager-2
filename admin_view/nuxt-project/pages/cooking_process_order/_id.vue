@@ -100,44 +100,13 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsCookingProcessOrderEditModal
       v-if="isOpenEditModal"
-      title="調理工程申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>調理場：営業前</h3>
-          <div class="radio-group">
-            <input type="radio" id="preOpenKitchenYes" :value="true" v-model="pre_open_kitchen" />
-            <label for="preOpenKitchenYes">使用する</label>
-          </div>
-          <div class="radio-group">
-            <input type="radio" id="preOpenKitchenNo" :value="false" v-model="pre_open_kitchen" />
-            <label for="preOpenKitchenNo">使用しない</label>
-          </div>
-        </div>
-
-        <div>
-          <h3>調理場：営業中</h3>
-          <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenYes" :value="true" v-model="during_open_kitchen" />
-            <label for="duringOpenKitchenYes">使用する</label>
-          </div>
-          <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenNo" :value="false" v-model="during_open_kitchen" />
-            <label for="duringOpenKitchenNo">使用しない</label>
-          </div>
-        </div>
-        <div>
-          <h3>テント内での作業内容</h3>
-          <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
-      </template>
-    </EditModal>
+      :cooking-process-order="cooking_process_order"
+      @close="closeEditModal"
+      @saved="reload"
+      @error="openSnackBar"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"

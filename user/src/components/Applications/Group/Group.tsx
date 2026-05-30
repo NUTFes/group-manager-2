@@ -11,6 +11,7 @@ type GroupProps = {
   isRegistered?: boolean | undefined;
   groupId: number;
   userId: number;
+  isGroupResolved: boolean;
   mutateCheckAllRegisteredGroups: () => void;
   mutateGroupByUserId: () => void;
 };
@@ -19,7 +20,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   groups?: GroupResponse;
   formItem: FormItem[];
@@ -28,6 +29,7 @@ type ContentProps = {
   mutateGroups: () => void;
   mutateCheckAllRegisteredGroups: () => void;
   mutateGroupByUserId: () => void;
+  groupTexts: ReturnType<typeof useGroupHooks>['groupTexts'];
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -44,16 +46,20 @@ const Content: FC<ContentProps> = ({
   mutateGroups,
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
+  groupTexts,
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{groupTexts.loading}</div>;
+  }
+  if (isEditing === null) {
+    return <div>{groupTexts.loading}</div>;
   }
   // データ取得に失敗した場合に表示する画面
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {groupTexts.errors.fetch}
       </div>
     );
   }
@@ -85,6 +91,7 @@ const Group: FC<GroupProps> = ({
   isRegistered,
   groupId,
   userId,
+  isGroupResolved,
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
@@ -97,10 +104,11 @@ const Group: FC<GroupProps> = ({
     hasError,
     groupCategories,
     mutateGroups,
-  } = useGroupHooks(groupId);
+    groupTexts,
+  } = useGroupHooks(groupId, isRegistered, isGroupResolved);
   return (
     <AccordionMenu
-      title="団体申請"
+      title={groupTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
@@ -118,6 +126,7 @@ const Group: FC<GroupProps> = ({
         mutateGroups={mutateGroups}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
         mutateGroupByUserId={mutateGroupByUserId}
+        groupTexts={groupTexts}
       />
     </AccordionMenu>
   );

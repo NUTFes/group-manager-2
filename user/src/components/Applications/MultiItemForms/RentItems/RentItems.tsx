@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
+import { useRentItemsAccordionHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
 
 type RentItemsProps = {
   isDeadline: boolean | undefined;
@@ -15,9 +16,10 @@ const RentItems: FC<RentItemsProps> = ({
   groupId,
   groupCategoryId,
 }) => {
+  const { rentItemsAccordionTexts } = useRentItemsAccordionHooks();
   return (
     <AccordionMenu
-      title="物品申請"
+      title={rentItemsAccordionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}

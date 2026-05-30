@@ -70,6 +70,28 @@ paths:
         required: true
         schema:
           type: integer
+  "/cooking_process_orders/upsert":
+    post:
+      tags:
+      - cooking_process_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
   "/cooking_process_orders/{id}":
     get:
       tags:

@@ -1,9 +1,10 @@
 import { FC, useRef } from 'react';
-import { DepartmentList, GradeList } from '@/utils/list';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
+import { useRegisterCarouselTexts } from './hooks';
 // 統合フックの代わりに3つの個別フックをインポート
 import { useCarousel } from './useCarousel';
 import { useRegisterForm } from './useRegisterForm';
@@ -14,11 +15,18 @@ type RegisterCarouselProps = {
   onClose: () => void;
 };
 
-type FormStepProps = {
-  step: number;
+type FormStepTexts = {
+  email: string;
+  representative: string;
+  confirm: string;
 };
 
-const FormStep: FC<FormStepProps> = ({ step }) => {
+type FormStepProps = {
+  step: number;
+  steps: FormStepTexts;
+};
+
+const FormStep: FC<FormStepProps> = ({ step, steps }) => {
   return (
     <div className="flex items-center justify-center">
       <div className="relative h-[81px] w-[388px]">
@@ -59,13 +67,15 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
           </div>
         </div>
         <div className="absolute left-0 top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
-          <div className="text-center text-xs text-font">メールアドレス</div>
+          <div className="text-center text-xs text-font">{steps.email}</div>
         </div>
         <div className="absolute left-[153px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px] pl-[11.58px] pr-[12.42px]">
-          <div className="text-center text-xs text-font">代表者情報</div>
+          <div className="text-center text-xs text-font">
+            {steps.representative}
+          </div>
         </div>
         <div className="absolute left-[304px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
-          <div className="text-center text-xs text-font">確認</div>
+          <div className="text-center text-xs text-font">{steps.confirm}</div>
         </div>
       </div>
     </div>
@@ -73,6 +83,18 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation('common');
+  const registerCarouselTexts = useRegisterCarouselTexts();
+  const {
+    steps,
+    labels,
+    notes,
+    review,
+    buttons,
+    options: carouselOptions,
+  } = registerCarouselTexts;
+  const gradeOptions = carouselOptions.grades;
+  const departmentOptions = carouselOptions.departments;
   // カルーセル関連のフック
   const {
     stepIndex,
@@ -100,15 +122,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     handleSubmit
   );
 
-  // 選択肢のオプション
-  const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
-  const departmentOptions = [
-    { id: 0, name: '選択してください' },
-    ...DepartmentList,
-  ];
-
   // フォーム参照の作成
   const formRef = useRef<HTMLFormElement>(null);
+
+  const getErrorMessage = (message?: string) =>
+    message ? t(message) : undefined;
 
   // 登録ボタンのクリックハンドラ
   const handleRegisterClick = async (e?: React.MouseEvent) => {
@@ -151,7 +169,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSignUpSubmit} ref={formRef} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
-          <FormStep step={stepIndex} />
+          <FormStep step={stepIndex} steps={steps} />
           <div
             className="mx-auto max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
             ref={emblaRef}
@@ -160,32 +178,32 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <div className="min-w-0 flex-none  basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
-                    label="メールアドレス"
+                    label={labels.email}
                     type="email"
                     value={values.mail}
-                    note="例：s123456@stn.nagaokaut.ac.jp"
+                    note={notes.email}
                     required
-                    error={errors.mail?.message}
+                    error={getErrorMessage(errors.mail?.message)}
                     onChange={(value: string) => setValue('mail', value)}
                     onBlur={() => trigger('mail')}
                   />
                   <TextBox
-                    label="パスワード"
+                    label={labels.password}
                     type="password"
                     value={values.password}
-                    note="英数字8文字以上"
+                    note={notes.password}
                     required
-                    error={errors.password?.message}
+                    error={getErrorMessage(errors.password?.message)}
                     onChange={(value: string) => setValue('password', value)}
                     onBlur={() => trigger('password')}
                   />
                   <TextBox
-                    label="パスワード（確認用）"
+                    label={labels.passwordConfirm}
                     type="password"
                     value={values.passwordConfirm}
-                    note="英数字8文字以上"
+                    note={notes.passwordConfirm}
                     required
-                    error={errors.passwordConfirm?.message}
+                    error={getErrorMessage(errors.passwordConfirm?.message)}
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
                     }
@@ -196,51 +214,51 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
-                    label="名前"
+                    label={labels.name}
                     value={values.name}
-                    note="例：長岡　太郎"
+                    note={notes.name}
                     required
-                    error={errors.name?.message}
+                    error={getErrorMessage(errors.name?.message)}
                     onChange={(value: string) => setValue('name', value)}
                     onBlur={() => trigger('name')}
                   />
                   <TextBox
-                    label="電話番号"
+                    label={labels.tel}
                     value={values.tel}
-                    note="例：09012345678"
+                    note={notes.tel}
                     required
-                    error={errors.tel?.message}
+                    error={getErrorMessage(errors.tel?.message)}
                     onChange={(value: string) => setValue('tel', value)}
                     onBlur={() => trigger('tel')}
                   />
                   <TextBox
-                    label="学籍番号"
+                    label={labels.studentId}
                     value={values.studentId}
-                    note="例：12345678"
+                    note={notes.studentId}
                     required
-                    error={errors.studentId?.message}
+                    error={getErrorMessage(errors.studentId?.message)}
                     onChange={(value: string) => setValue('studentId', value)}
                     onBlur={() => trigger('studentId')}
                   />
                   <Selector
-                    label="学年"
+                    label={labels.grade}
                     required
                     onChange={(value: string) =>
                       setValue('gradeId', Number(value))
                     }
                     options={gradeOptions}
                     value={values.gradeId}
-                    error={errors.gradeId?.message}
+                    error={getErrorMessage(errors.gradeId?.message)}
                   />
                   <Selector
-                    label="学科"
+                    label={labels.department}
                     required
                     onChange={(value: string) =>
                       setValue('departmentId', Number(value))
                     }
                     options={departmentOptions}
                     value={values.departmentId}
-                    error={errors.departmentId?.message}
+                    error={getErrorMessage(errors.departmentId?.message)}
                   />
                 </div>
               </div>
@@ -249,7 +267,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex w-full items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        メールアドレス
+                        {review.email}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -261,7 +279,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        パスワード
+                        {review.password}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -272,7 +290,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
-                      <div className="text-xs font-black text-font">名前</div>
+                      <div className="text-xs font-black text-font">
+                        {review.name}
+                      </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
@@ -283,7 +303,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        電話番号
+                        {review.tel}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -295,7 +315,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        学籍番号
+                        {review.studentId}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -306,25 +326,30 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
-                      <div className="text-xs font-black text-font">学年</div>
+                      <div className="text-xs font-black text-font">
+                        {review.grade}
+                      </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {
-                          GradeList.find((grade) => grade.id === values.gradeId)
-                            ?.name
+                          gradeOptions.find(
+                            (grade) => grade.id === values.gradeId
+                          )?.name
                         }
                       </div>
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
-                      <div className="text-xs font-black text-font">学科</div>
+                      <div className="text-xs font-black text-font">
+                        {review.department}
+                      </div>
                     </div>
                     <div className="inline-flex h-[65px] w-[298px] items-center justify-start">
                       <div className="text-base font-medium text-font">
                         {
-                          DepartmentList.find(
+                          departmentOptions.find(
                             (department) =>
                               department.id === values.departmentId
                           )?.name
@@ -357,7 +382,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 icon="lessThan"
                 isDisable={isLoading}
               >
-                修正
+                {buttons.previous}
               </Button>
             )}
             {stepIndex === 2 ? (
@@ -368,7 +393,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 onClick={handleRegisterClick}
                 isDisable={isLoading}
               >
-                登録
+                {buttons.submit}
               </Button>
             ) : (
               <Button
@@ -378,7 +403,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 onClick={handleNextClick}
                 isDisable={isLoading}
               >
-                次へ
+                {buttons.next}
               </Button>
             )}
           </div>

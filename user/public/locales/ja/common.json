@@ -1,0 +1,959 @@
+{
+  "languageSwitcher": {
+    "label": "言語切り替え",
+    "japanese": "日本語",
+    "english": "English"
+  },
+  "general": {
+    "loading": "読み込み中...",
+    "errors": {
+      "fetch": "データの取得に失敗しました。"
+    }
+  },
+  "form": {
+    "required": "必須",
+    "optional": "任意",
+    "actions": {
+      "register": "登録",
+      "edit": "修正",
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "close": "閉じる",
+      "submit": "送信",
+      "save": "保存",
+      "add": "追加",
+      "back": "戻る",
+      "next": "次へ",
+      "previous": "前へ",
+      "confirm": "確認",
+      "open": "開く",
+      "upload": "アップロード"
+    },
+    "messages": {
+      "nonEditable": "※変更できません",
+      "registerSuccess": "登録しました。",
+      "registerFailed": "登録に失敗しました。",
+      "updateSuccess": "更新しました。",
+      "updateFailed": "更新に失敗しました。"
+    },
+    "validation": {
+      "required": "入力してください",
+      "duplicateChoice": "希望が重複しています",
+      "remarkRequired": "備考に場所を入力してください",
+      "inputError": "入力エラーがあります。",
+      "select": "選択してください"
+    }
+  },
+  "status": {
+    "reception": {
+      "open": "受付中",
+      "deadline": "締切間近",
+      "closed": "受付終了"
+    },
+    "registration": {
+      "registered": "登録済",
+      "unregistered": "未登録"
+    },
+    "progress": {
+      "notRequired": "不要",
+      "completed": "完了",
+      "pending": "未完了"
+    }
+  },
+  "news": {
+    "title": "お知らせ",
+    "none": "お知らせはありません。",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  },
+  "welcomeBox": {
+    "register": "新規登録",
+    "registerDescription": "初めての方はこちら",
+    "login": "ログイン",
+    "loginDescription": "すでにアカウントをお持ちの方はこちら"
+  },
+  "loginModal": {
+    "emailLabel": "メールアドレス",
+    "emailNote": "例：s123456@stn.nagaokaut.ac.jp",
+    "passwordLabel": "パスワード",
+    "submit": "ログイン",
+    "submitting": "ログイン中...",
+    "errors": {
+      "invalidCredentials": "emailかpasswordが違います"
+    },
+    "toasts": {
+      "loginFailed": "ログインに失敗しました",
+      "loginSuccess": "ログインに成功しました"
+    },
+    "validation": {
+      "required": "入力してください",
+      "email": "有効なメールアドレスを入力してください"
+    }
+  },
+  "registerCarousel": {
+    "steps": {
+      "email": "メールアドレス",
+      "representative": "代表者情報",
+      "confirm": "確認"
+    },
+    "placeholders": {
+      "select": "選択してください"
+    },
+    "labels": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordConfirm": "パスワード（確認用）",
+      "name": "名前",
+      "tel": "電話番号",
+      "studentId": "学籍番号",
+      "grade": "学年",
+      "department": "学科"
+    },
+    "notes": {
+      "email": "例：s123456@stn.nagaokaut.ac.jp",
+      "password": "8文字以上",
+      "passwordConfirm": "8文字以上",
+      "name": "例：長岡 太郎",
+      "tel": "例：09012345678",
+      "studentId": "例：12345678"
+    },
+    "review": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "name": "名前",
+      "tel": "電話番号",
+      "studentId": "学籍番号",
+      "grade": "学年",
+      "department": "学科"
+    },
+    "buttons": {
+      "previous": "修正",
+      "submit": "登録",
+      "next": "次へ"
+    },
+    "errors": {
+      "nameRequired": "名前は必須です。",
+      "emailTaken": "このメールアドレスは既に登録されています。",
+      "emailInvalid": "有効なメールアドレスを入力してください。",
+      "emailDefault": "メールアドレスに誤りがあります。",
+      "passwordShort": "パスワードは8文字以上である必要があります。",
+      "passwordDefault": "パスワードに誤りがあります。",
+      "passwordConfirmMismatch": "パスワードが一致しません。",
+      "passwordConfirmDefault": "パスワード確認に誤りがあります。",
+      "telInvalid": "電話番号に誤りがあります。",
+      "telShort": "電話番号が短すぎます。",
+      "telLong": "電話番号が長すぎます。",
+      "studentIdInvalid": "学籍番号に誤りがあります。",
+      "gradeInvalid": "学年に誤りがあります。",
+      "departmentInvalid": "学科に誤りがあります。",
+      "userDetailsDefault": "ユーザー詳細情報に誤りがあります。",
+      "requestError": "通信エラーが発生しました。",
+      "requestFailed": "通信に失敗しました。時間をおいて再度お試しください。"
+    },
+    "toasts": {
+      "registrationSuccess": "登録が完了しました。",
+      "autoLogin": "自動でログインします。そのままお待ちください。",
+      "loginSuccess": "ログインしました。",
+      "loginFailed": "ログインに失敗しました。",
+      "retryLogin": "再度ログインしてください。"
+    }
+  },
+  "lists": {
+    "grade": {
+      "select": "選択してください",
+      "B1": "B1（学部1年）",
+      "B2": "B2（学部2年）",
+      "B3": "B3（学部3年）",
+      "B4": "B4（学部4年）",
+      "M1": "M1（修士1年）",
+      "M2": "M2（修士2年）",
+      "D1": "D1（博士1年）",
+      "D2": "D2（博士2年）",
+      "D3": "D3（博士3年）",
+      "GD1": "GD1（イノベ1年）",
+      "GD2": "GD2（イノベ2年）",
+      "GD3": "GD3（イノベ3年）",
+      "GD4": "GD4（イノベ4年）",
+      "GD5": "GD5（イノベ5年）",
+      "faculty": "教員",
+      "other": "その他"
+    },
+    "department": {
+      "select": "選択してください",
+      "1": "機械工学分野 / 機械創造工学課程",
+      "2": "電気電子情報工学分野 / 電気電子情報工学課程",
+      "3": "物質生物工学分野 / 物質材料工学課程 / 生物機能工学課程",
+      "4": "環境社会基盤工学分野 / 環境社会基盤工学課程",
+      "5": "情報・経営システム工学分野 / 情報・経営システム工学課程",
+      "6": "機械工学分野 / 機械創造工学専攻",
+      "7": "電気電子情報工学分野 / 電気電子情報工学専攻",
+      "8": "物質生物工学分野 / 物質材料工学専攻 / 生物機能工学専攻",
+      "9": "環境社会基盤工学分野 / 環境社会基盤工学専攻",
+      "10": "情報・経営システム工学分野 / 情報・経営システム工学専攻",
+      "11": "量子・原子力統合工学分野 / 原子力システム安全工学専攻",
+      "12": "システム安全工学専攻",
+      "13": "技術科学イノベーション専攻",
+      "14": "情報・制御工学分野 / 情報・制御工学専攻",
+      "15": "材料工学分野 / 材料工学専攻",
+      "16": "エネルギー工学分野 / エネルギー・環境工学専攻",
+      "17": "社会環境・生物機能工学分野 / 生物統合工学専攻",
+      "18": "その他"
+    }
+  },
+  "userEditModal": {
+    "labels": {
+      "name": "名前",
+      "email": "メールアドレス",
+      "tel": "電話番号",
+      "studentId": "学籍番号",
+      "grade": "学年",
+      "department": "学科"
+    },
+    "notes": {
+      "name": "例：長岡 太郎",
+      "email": "例：s123456@stn.nagaokaut.ac.jp",
+      "tel": "例：09012345678",
+      "studentId": "例：12345678"
+    },
+    "messages": {
+      "emailChangeConfirm": "メールアドレスを変更する場合は、変更後のメールアドレスで再度ログインする必要があります。パスワードは以前のものと同じです。"
+    },
+    "toasts": {
+      "cancelled": "変更はキャンセルされました。",
+      "updateSuccess": "ユーザー情報を登録しました。",
+      "emailChanged": "メールアドレスを変更しました。再度ログインしてください。"
+    },
+    "errors": {
+      "duplicateEmail": "このメールアドレスはすでに使われています。",
+      "updateFailed": "更新に失敗しました。"
+    },
+    "validation": {
+      "name": "名前は必須です",
+      "studentId": "8桁の学籍番号を入力してください",
+      "tel": "有効な電話番号を入力してください（例: 09012345678）",
+      "telMin": "電話番号が短すぎます",
+      "telMax": "電話番号が長すぎます",
+      "email": "有効なメールアドレスを入力してください",
+      "department": "学科を選択してください",
+      "grade": "学年を選択してください"
+    }
+  },
+  "applications": {
+    "group": {
+      "title": "団体申請",
+      "loading": "読み込み中...",
+      "errors": {
+        "fetch": "データの取得に失敗しました。"
+      },
+      "fields": {
+        "name": "団体名",
+        "projectName": "企画名",
+        "isInternational": "国際団体ですか？",
+        "isExternal": "学外団体ですか？",
+        "groupCategory": "参加形式",
+        "activity": "企画内容"
+      },
+      "notes": {
+        "name": "例：技大祭実行委員会",
+        "projectName": "例：ギダイジャー",
+        "international": "注意書き",
+        "external": "注意書き",
+        "groupCategory": "注意書き",
+        "activity": "〇〇の販売、〇〇のパフォーマンスなど"
+      },
+      "boolean": {
+        "yes": "はい",
+        "no": "いいえ"
+      },
+      "options": {
+        "international": {
+          "no": "いいえ、国際団体（留学生団体）ではありません。",
+          "yes": "はい、国際団体（留学生団体）です。"
+        },
+        "external": {
+          "no": "いいえ、学内の団体です。",
+          "yes": "はい、学外の団体です。"
+        }
+      }
+    },
+    "venue": {
+      "title": "会場申請",
+      "loading": "読み込み中...",
+      "fields": {
+        "firstChoice": "第一希望",
+        "secondChoice": "第二希望",
+        "thirdChoice": "第三希望",
+        "remark": "備考"
+      }
+    },
+    "rentItems": {
+      "title": "物品申請",
+      "loading": "データを読み込み中です...",
+      "errors": {
+        "fetchTitle": "エラー：",
+        "fetchDescription": "データの取得に失敗しました。ページを再読込してください。"
+      },
+      "radio": {
+        "question": "物品申請を行いますか？",
+        "options": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "summary": {
+        "noApplication": {
+          "label": "物品申請は不要（登録済み）",
+          "description": "学校から借用する備品はありません。"
+        },
+        "count": "{{value}} 個"
+      },
+      "location": {
+        "displayLabel": "第一希望：",
+        "radioQuestion": "会場申請の第一希望はどちらですか？",
+        "options": {
+          "indoor": "屋内",
+          "outdoor": "屋外"
+        },
+        "notes": {
+          "preApplication": "会場申請を先に申請してください。",
+          "foodOnlyOutdoor": "※食品販売団体は屋外での出店のみとなります"
+        }
+      },
+      "fields": {
+        "section": "物品 {{index}}",
+        "item": "物品名",
+        "count": "個数"
+      },
+      "notes": {
+        "minRequest": "※必要最低限の数だけ申請してください",
+        "contactLimit": "使用する個数が20個以上の場合はメールをお送りください",
+        "contactEmail": "nutfes.soumu@gmail.com"
+      },
+      "buttons": {
+        "addItem": "物品の追加"
+      },
+      "messages": {
+        "registerNoItemsFailed": "物品申請の登録に失敗しました",
+        "deleteExistingError": "既存の申請データ削除中にエラーが発生しました",
+        "deleteExistingFailed": "既存の物品申請の削除に失敗しました",
+        "registerNoItemsSuccess": "物品申請を行わない設定を登録しました",
+        "unexpectedError": "予期せぬエラーが発生しました",
+        "unexpectedErrorWithDetail": "予期せぬエラーが発生しました: {{message}}",
+        "unexpectedRetry": "予期せぬエラーが発生しました。もう一度お試しください。",
+        "submitError": "送信中にエラーが発生しました。もう一度お試しください。",
+        "submitFailed": "物品申請の送信に失敗しました",
+        "updateSuccess": "物品申請を更新しました",
+        "createSuccess": "物品申請を登録しました",
+        "editStartFailed": "編集モードの開始に失敗しました"
+      },
+      "validation": {
+        "selectItem": "物品を選択してください",
+        "minCount": "1つ以上選択してください",
+        "selectLocation": "会場タイプを選択してください",
+        "addOneItem": "少なくとも1つの物品を追加してください",
+        "fillAllFields": "すべての物品情報を正しく入力してください",
+        "noDuplicates": "同じ物品を複数回追加することはできません",
+        "tentLimit": "テントは1個までしか申請できません",
+        "partitionDisplayExclusive": "パーテーションと掲示板はどちらか一方のみ申請できます",
+        "longTableLimit": "長机は1個までしか申請できません",
+        "tableOutdoorLimit": "屋外団体は机を20個までしか申請できません",
+        "chairOutdoorLimit": "屋外団体は椅子を20個までしか申請できません"
+      }
+    },
+    "purchaseLists": {
+      "title": "購入品申請",
+      "loading": "読み込み中...",
+      "errors": {
+        "fetch": "データの取得に失敗しました。"
+      },
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "購入品申請の締切期限が過ぎているため、新規申請はできません。"
+      },
+      "summary": {
+        "labels": {
+          "foodProduct": "販売品名",
+          "items": "食材・材料",
+          "type": "商品の種類",
+          "shop": "購入場所",
+          "date": "購入日",
+          "remark": "備考",
+          "url": "URL"
+        }
+      },
+      "radio": {
+        "label": "商品の種類",
+        "options": {
+          "fresh": "生鮮品",
+          "processed": "加工品"
+        }
+      },
+      "fields": {
+        "section": "購入品 {{index}}",
+        "foodProduct": "販売品名",
+        "items": "選択した料理に使用した食材・使用する材料",
+        "type": "商品の種類",
+        "shop": "購入場所",
+        "purchaseDate": "購入日",
+        "url": "URL",
+        "remark": "備考"
+      },
+      "notes": {
+        "foodProduct": "販売品申請登録後に選択可能",
+        "shop": "ネット注文選択時はURL入力が必要です",
+        "purchaseDate": "例：2025/03/14",
+        "url": "購入したECサイトのURLなど",
+        "remarkOther": "店名・住所・電話番号・営業時間を入力してください",
+        "remarkDefault": "その他補足事項があれば入力してください"
+      },
+      "buttons": {
+        "addItem": "購入品を追加"
+      },
+      "messages": {
+        "itemDeleteSuccess": "購入品が削除されました",
+        "itemDeleteFailed": "削除に失敗しました。",
+        "bulkCreateSuccess": "複数の購入品申請が登録されました",
+        "updateSuccess": "購入品申請が更新されました",
+        "createSuccess": "購入品申請が登録されました",
+        "submitFailed": "登録に失敗しました"
+      },
+      "validation": {
+        "foodProduct": "販売品名を選択してください",
+        "shop": "購入場所を選択してください",
+        "items": "食材・材料を入力してください",
+        "purchaseDate": "購入日を入力してください",
+        "invalidDate": "日付を入力してください",
+        "invalidUrl": "有効なURLを入力してください",
+        "urlRequired": "ネット注文の場合はURLを入力してください",
+        "remarkRequired": "「その他」の場合は、店名・住所・電話番号・営業時間を記入してください",
+        "minItems": "少なくとも1つの購入品を登録してください"
+      }
+    },
+    "foodProduct": {
+      "title": "販売品申請",
+      "loading": "読み込み中...",
+      "errors": {
+        "fetch": "データの取得に失敗しました。"
+      },
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "販売品申請の締切期限が過ぎているため、新規申請はできません。"
+      },
+      "view": {
+        "summaryLabel": "販売品一覧",
+        "registered": "{{count}}品目登録済み",
+        "none": "未登録",
+        "empty": "販売品が登録されていません",
+        "addButton": "販売品を追加"
+      },
+      "summary": {
+        "labels": {
+          "name": "販売品名",
+          "alcohol": "酒類ですか？",
+          "cooking": "調理の有無",
+          "day1": "1日目の販売予定数",
+          "day2": "2日目の販売予定数"
+        }
+      },
+      "radio": {
+        "alcohol": {
+          "label": "酒類ですか？",
+          "note": "「はい」を選択すると、自動的に「調理あり」になります。",
+          "options": {
+            "yes": "はい",
+            "no": "いいえ"
+          }
+        },
+        "cooking": {
+          "label": "調理の有無",
+          "options": {
+            "yes": "有り　（例：酒類、加熱調理をするものなど）",
+            "no": "無し　（例：ソフトドリンク）"
+          }
+        }
+      },
+      "fields": {
+        "name": "販売品名",
+        "day1": "1日目販売予定数",
+        "day2": "2日目販売予定数"
+      },
+      "notes": {
+        "processing": "処理中...",
+        "quantity": "半角数字"
+      },
+      "buttons": {
+        "add": "販売品の追加"
+      },
+      "messages": {
+        "updateSuccess": "販売品を更新しました。",
+        "updateFailed": "販売品の更新に失敗しました。",
+        "updateFailedDetail": "販売品の更新に失敗しました: {{message}}",
+        "createSuccess": "販売品申請を送信しました。",
+        "createFailed": "販売品の登録に失敗しました。",
+        "createFailedDetail": "販売品の登録に失敗しました: {{message}}",
+        "deleteSuccess": "「{{name}}」を削除しました。",
+        "deleteFailed": "販売品の削除に失敗しました。",
+        "deleteFailedDetail": "販売品の削除に失敗しました: {{message}}",
+        "deleteNotFound": "削除対象の商品が見つかりませんでした。",
+        "authRequired": "認証が必要です。ログインしてください。"
+      },
+      "validation": {
+        "name": "販売品名を入力してください",
+        "isAlcohol": "酒類かどうかを選択してください",
+        "isCooking": "調理の有無を選択してください",
+        "day1": "1日目の販売予定数を入力してください",
+        "day2": "2日目の販売予定数を入力してください",
+        "number": "半角数字で入力してください",
+        "minValue": "1以上の数値を入力してください",
+        "alcoholRequiresCooking": "酒類を販売する場合は調理の有無を「有り」にしてください",
+        "minProducts": "少なくとも1つの販売品を登録してください"
+      }
+    },
+    "power": {
+      "title": "電力申請",
+      "radio": {
+        "question": "電力申請を行いますか？",
+        "options": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "summary": {
+        "noApplication": {
+          "label": "電力申請は不要（登録済み）",
+          "description": "電力が必要な機器は使用しません。"
+        },
+        "fields": {
+          "productName": "製品名",
+          "manufacturer": "メーカー名",
+          "model": "型番",
+          "url": "製品URL",
+          "maxPower": "消費電力"
+        },
+        "powerValue": "{{value}}W"
+      },
+      "form": {
+        "fields": {
+          "productName": "機器の名称",
+          "manufacturer": "機器のメーカー名",
+          "model": "型番",
+          "url": "製品URL",
+          "maxPower": "電力量 (W)"
+        },
+        "notes": {
+          "url": "製品の紹介ページのサイトURLを入力してください",
+          "totalPower": "使用機器の消費電力の合計が{{limit}}W以内になるようにしてください",
+          "emailWarning": "{{limit}}Wを超える場合は以下のメールアドレスまでご連絡ください。",
+          "contactEmail": "nutfes.soumu@gmail.com"
+        },
+        "addDevice": "物品の追加",
+        "totalPowerWarning": "合計電力が{{limit}}Wを超えています（現在: {{value}}W）"
+      },
+      "errors": {
+        "submitTitle": "エラー："
+      },
+      "messages": {
+        "partialDeleteWarning": "一部の機器情報の削除に失敗しましたが、処理を続行します。",
+        "registerNegativeSuccess": "電力申請を行わない登録が完了しました。",
+        "registerNegativeFailed": "申請の登録に失敗しました。もう一度お試しください。",
+        "processError": "申請の処理に失敗しました。もう一度お試しください。",
+        "missingGroup": "グループIDが取得できませんでした。",
+        "unregisteredDeleteWarning": "未登録データの削除に問題がありましたが、処理を続行します。",
+        "updateSuccess": "電力申請情報を更新しました。",
+        "createSuccess": "電力申請情報を登録しました。",
+        "submitFailed": "申請の送信に失敗しました。もう一度お試しください。",
+        "submitUnexpectedError": "申請の送信中にエラーが発生しました。",
+        "deviceDeleteSuccess": "機器情報を削除しました。",
+        "deviceDeleteFailed": "機器の削除に失敗しました。もう一度お試しください。",
+        "deviceDeleteError": "機器の削除中にエラーが発生しました。"
+      },
+      "validation": {
+        "productNameRequired": "製品名を入力してください",
+        "manufacturerRequired": "メーカー名を入力してください",
+        "modelRequired": "型番を入力してください",
+        "invalidUrl": "有効なURLを入力してください",
+        "invalidNumber": "数値を入力してください",
+        "minPower": "1W以上で入力してください",
+        "maxPower": "1500W以下で入力してください",
+        "minDevices": "少なくとも1つの機器を登録してください",
+        "totalPowerLimit": "合計消費電力は1500W以下にしてください"
+      }
+    },
+    "stage": {
+      "title": "ステージ申請",
+      "loading": "データを読み込み中です...",
+      "fields": {
+        "date": "開催日",
+        "sunnyFirst": "晴れの場合：第1希望",
+        "sunnySecond": "晴れの場合：第2希望",
+        "rainyFirst": "雨の場合：第1希望",
+        "rainySecond": "雨の場合：第2希望",
+        "prepTime": "準備時間",
+        "performTime": "本番時間",
+        "cleanupTime": "片付け時間"
+      },
+      "notes": {
+        "select": "選んでください",
+        "unit": "(単位：min)",
+        "prepTime": "ステージ上の準備にかかる時間を分単位で記入してください",
+        "performTime": "準備、本番、片付けの時間が120分以内になるようにしてください",
+        "cleanupTime": "ステージ上の片付けにかかる時間を分単位で記入してください"
+      },
+      "minutes": "{{value}}分",
+      "messages": {
+        "missingGroup": "グループIDが見つかりません",
+        "submitError": "送信中にエラーが発生しました。もう一度お試しください。",
+        "unexpectedError": "予期せぬエラーが発生しました。もう一度お試しください。",
+        "updateSuccess": "ステージ希望を更新しました。",
+        "createSuccess": "ステージ希望を登録しました。"
+      },
+      "errors": {
+        "fetchTitle": "エラー：",
+        "fetchDescription": "データの取得に失敗しました。ページを再読込してください。",
+        "submitTitle": "送信エラー："
+      },
+      "validation": {
+        "sunnyFirst": "晴れの第1希望を選択してください",
+        "sunnySecond": "晴れの第2希望を選択してください",
+        "rainyFirst": "雨の第1希望を選択してください",
+        "rainySecond": "雨の第2希望を選択してください",
+        "prepTimeRequired": "準備時間を入力してください",
+        "performTimeRequired": "本番時間を入力してください",
+        "cleanupTimeRequired": "片付け時間を入力してください",
+        "prepTimeInvalid": "有効な準備時間を入力してください",
+        "performTimeInvalid": "有効な本番時間を入力してください",
+        "cleanupTimeInvalid": "有効な片付け時間を入力してください",
+        "totalTime": "準備、本番、片付けの合計時間が120分を超えています",
+        "sunnyChoiceDuplicate": "第1希望と異なるステージを選んでください",
+        "rainyChoiceDuplicate": "第1希望と異なるステージを選んでください"
+      }
+    },
+    "stageOptions": {
+      "title": "ステージオプション申請",
+      "fields": {
+        "ownEquipment": "電力を使用する機器を持ち込みますか",
+        "bgm": "スピーカーに繋ぐ機器を持ち込みますか",
+        "cameraPermission": "実行委員が撮影することを許可しますか",
+        "loudSound": "大きい音を出しますか"
+      },
+      "notes": {
+        "select": "選んでください"
+      },
+      "options": {
+        "yes": "はい",
+        "no": "いいえ"
+      },
+      "messages": {
+        "submitSuccess": "送信しました",
+        "submitFailed": "送信に失敗しました。時間を置いて再度お試しください"
+      }
+    },
+    "publicRelations": {
+      "title": "PR文申請",
+      "fields": {
+        "text": "PR文(HP,パンフレット,アナウンスに使用)",
+        "announce": "アナウンスを行いますか？",
+        "image": "PR画像"
+      },
+      "notes": {
+        "text": "日本語の場合：0~50文字、英語の場合：0~25words",
+        "upload": [
+          "ファイル形式：png、jpeg",
+          "ファイルサイズ：10MB未満",
+          "画像、イラストの形：正方形（できれば料理の写真）"
+        ],
+        "existingImage": "※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます"
+      },
+      "uploadStatus": "アップロード済み: {{fileName}}",
+      "options": {
+        "announce": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "validation": {
+        "imageRequired": "画像をアップロードしてください",
+        "imageSquare": "画像は正方形にしてください",
+        "imageLoadFailed": "画像の読み込みに失敗しました",
+        "sizeLimit": "ファイルサイズは10MB未満にしてください",
+        "format": "ファイル形式はpngまたはjpegにしてください",
+        "jpLimit": "日本語は50文字以内で入力してください",
+        "enLimit": "英語は25単語以内で入力してください"
+      },
+      "messages": {
+        "imgurMissing": "Imgur Client IDが設定されていません。環境変数を確認してください。",
+        "imgurUploadFailed": "画像のアップロードに失敗しました",
+        "submitSuccess": "送信しました",
+        "submitFailed": "送信に失敗しました。時間を置いて再度お試しください"
+      },
+      "state": {
+        "notSet": "未設定",
+        "missingText": "(PR文が未入力です)"
+      }
+    },
+    "viceRepresentative": {
+      "title": "副代表申請",
+      "note": "一人での参加者の場合のみ、副代表申請は不要です。",
+      "summary": {
+        "individual": {
+          "label": "副代表申請は不要（登録済み）",
+          "description": "あなたは1人での参加です"
+        }
+      },
+      "fields": {
+        "isIndividual": "一人での参加ですか？",
+        "name": "名前",
+        "studentId": "学籍番号",
+        "gradeId": "課程・学年",
+        "departmentId": "学科・専攻",
+        "email": "メールアドレス",
+        "tel": "電話番号"
+      },
+      "notes": {
+        "name": "例：長岡 太郎",
+        "studentId": "半角数字のみ8桁（例：12345678）",
+        "email": "例：123456@stn.nagaokaut.ac.jp",
+        "tel": "例：09012345678（ハイフンなし）"
+      },
+      "radio": {
+        "options": {
+          "individual": "はい（個人で参加）",
+          "group": "いいえ（グループで参加）"
+        }
+      },
+      "messages": {
+        "submitSuccess": "送信しました。",
+        "submitFailed": "送信に失敗しました。"
+      },
+      "validation": {
+        "name": "名前を入力してください",
+        "studentIdInteger": "整数で入力してください",
+        "studentIdLength": "学籍番号は8桁で入力してください",
+        "gradeId": "課程・学年を選択してください",
+        "departmentId": "学科・専攻を選択してください",
+        "email": "メールアドレスを入力してください",
+        "emailFormat": "有効なメールアドレスを入力してください",
+        "tel": "電話番号は0から始まる10桁または11桁の半角数字のみで入力してください"
+      }
+    },
+    "employees": {
+      "title": "従業員申請",
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "従業員申請の締切期限が過ぎているため、新規申請はできません。"
+      },
+      "summary": {
+        "noApplication": {
+          "label": "従業員申請は不要（登録済み）",
+          "description": "代表と副代表だけで活動します。"
+        },
+        "headers": {
+          "name": "従業員名",
+          "studentId": "学籍番号"
+        }
+      },
+      "radio": {
+        "label": "「代表」と「副代表」以外の従業員申請を行いますか？",
+        "options": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "form": {
+        "labels": {
+          "name": "従業員名",
+          "studentId": "学籍番号"
+        },
+        "notes": {
+          "name": "例：技大 花子",
+          "studentId": "例：12345678"
+        }
+      },
+      "buttons": {
+        "addEmployee": "従業員の追加"
+      },
+      "messages": {
+        "applicationSuccess": "従業員申請が完了しました。",
+        "applicationFailed": "従業員申請の登録に失敗しました。",
+        "noApplicationSuccess": "従業員申請を行わない登録が完了しました。",
+        "noApplicationFailed": "従業員申請を行わない登録に失敗しました。",
+        "deleteSuccess": "従業員を削除しました。",
+        "deleteFailed": "従業員の削除に失敗しました。",
+        "registerUnregisteredFailed": "登録に失敗しました。",
+        "deleteUnregisteredFailed": "削除に失敗しました。"
+      },
+      "validation": {
+        "name": "従業員名は必須です",
+        "studentId": "8桁の学籍番号を入力してください"
+      }
+    },
+    "cookingProcessOrder": {
+      "title": "調理工程申請",
+      "warning": "販売品申請を先に申請してください。",
+      "summary": {
+        "labels": {
+          "foodProduct": "販売品名",
+          "preOpen": "調理場の使用有無（営業前）",
+          "duringOpen": "調理場の使用有無（営業中）",
+          "description": "調理内容"
+        },
+        "status": {
+          "use": "使用する",
+          "notUse": "使用しない",
+          "notRegistered": "未登録"
+        }
+      },
+      "fields": {
+        "kitchenUsage": "調理場の使用有無",
+        "preOpen": "(営業前)",
+        "duringOpen": "(営業中)",
+        "tent": "調理内容",
+        "confirm": "調理工程確認事項"
+      },
+      "placeholders": {
+        "tent": "例）\n1. コーヒー豆を15g測る\n2. 入れる\n3. 温める\n4. 皿に乗せる"
+      },
+      "notes": {
+        "confirm": "確認事項にチェックを入れてください"
+      },
+      "options": {
+        "kitchenUsage": {
+          "use": "使用する",
+          "notUse": "使用しない"
+        }
+      },
+      "checkbox": {
+        "options": [
+          "衛生管理の工程をできるだけ詳しく記載しました。",
+          "最終的に加熱して提供するか確認しました。",
+          "お酒の調理工程も提出しました。"
+        ]
+      },
+      "buttons": {
+        "edit": "修正"
+      },
+      "messages": {
+        "updateSuccess": "調理工程を更新しました。",
+        "updateFailed": "調理工程の更新に失敗しました。"
+      },
+      "validation": {
+        "tentRequired": "調理内容を入力してください",
+        "confirmAll": "すべての確認事項にチェックを入れてください"
+      }
+    },
+    "venueMap": {
+      "title": "模擬店平面図",
+      "fields": {
+        "picture": "模擬店平面図画像",
+        "checklist": "平面図確認事項"
+      },
+      "summary": {
+        "notSet": "未設定"
+      },
+      "notes": {
+        "required": "※必須",
+        "existing": "※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます。",
+        "currentImage": "現在の画像: {{name}}",
+        "unknownFile": "ファイル名不明"
+      },
+      "upload": {
+        "note": [
+          "机、椅子、使用機器などの配置が分かるように",
+          "ファイル形式：png、jpeg",
+          "ファイルサイズ：20MB"
+        ],
+        "uploaded": "アップロード済み: {{fileName}}"
+      },
+      "checklist": {
+        "note": "確認事項にチェックを入れてください",
+        "options": {
+          "trashPosition": "ゴミ箱の設置位置を記載しました。",
+          "foodStorage": "食材の保存場所を記載しました。",
+          "allItemsListed": "申請した物品をすべて平面図に記載しました。",
+          "fireHazardousMaterials": "火気・電化製品の使用場所を明記しました。",
+          "partitionPlacement": "パーテーション/掲示板が調理場内に入っておらず、テントの側面に設置してあることを確認しました。"
+        }
+      },
+      "messages": {
+        "imgurMissing": "Imgur Client IDが設定されていません。環境変数を確認してください。",
+        "imgurUploadFailed": "画像のアップロードに失敗しました。",
+        "submitSuccess": "送信しました。",
+        "submitFailed": "送信に失敗しました。時間を置いて再度お試しください。"
+      },
+      "buttons": {
+        "submitting": "送信中..."
+      },
+      "validation": {
+        "imageRequired": "模擬店平面図画像をアップロードしてください。",
+        "fileSize": "ファイルサイズは20MB未満にしてください",
+        "fileType": "ファイル形式はpngまたはjpegにしてください",
+        "checklist": "すべての項目を確認してください。"
+      }
+    },
+    "fireEquipment": {
+      "title": "火気使用申請",
+      "fields": {
+        "name": "火気の名称",
+        "quantity": "火気の台数",
+        "fuel": "燃料",
+        "usage": "使用用途",
+        "isTakeaway": "火気を毎日テントから持ち帰ることができますか？",
+        "remark": "備考"
+      },
+      "fuel": {
+        "gasBottle": "カセットガス",
+        "lpGas": "LPガス",
+        "charcoal": "炭"
+      },
+      "radio": {
+        "question": "火気を使用しますか？",
+        "options": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "notes": {
+        "quantity": "半角数字のみ",
+        "takeaway": "火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。\n火気はテント内に残す行為は火事の原因になります。",
+        "remark": "いいえを押した場合は火気の備考欄に理由を記載して下さい。",
+        "remarkRequired": "いいえを押した場合必須",
+        "excludedItems": "電気ホットプレートとIHは含まれません。"
+      },
+      "summary": {
+        "noApplication": {
+          "label": "火気申請は不要（登録済み）",
+          "description": "火気は使用しません。"
+        }
+      },
+      "messages": {
+        "deleteSuccess": "火気申請を削除しました",
+        "deleteFailed": "削除に失敗しました。もう一度お試しください。",
+        "noApplicationSuccess": "火気申請を行わない登録が完了しました",
+        "registerSuccess": "火気申請が完了しました。",
+        "updateSuccess": "火気申請を更新しました。",
+        "submitFailed": "送信に失敗しました: {{message}}"
+      },
+      "validation": {
+        "required": "入力してください",
+        "quantity": "1以上の数字を入力してください",
+        "fuel": "燃料を選択してください",
+        "remarkRequired": "持ち帰りが「いいえ」の場合、備考欄は必須です",
+        "group": "グループを選択してください"
+      }
+    }
+  },
+  "auth": {
+    "logout": "ログアウト"
+  },
+  "userModal": {
+    "guest": "ゲスト",
+    "noEmail": "メールアドレスなし",
+    "toasts": {
+      "logoutSuccess": "ログアウトしました",
+      "logoutFailed": "ログアウトに失敗しました"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  }
+}

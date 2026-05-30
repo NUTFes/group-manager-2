@@ -64,46 +64,12 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsFoodProductEditModal
       v-if="isOpenEditModal"
-      title="販売品申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>食品名</h3>
-          <input v-model="name" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>調理するか</h3>
-          <select v-model="isCooking">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="isCook in isCookingList"
-              :key="isCook.id"
-              :value="isCook.value"
-            >
-              {{ isCook.text }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>1日目の個数</h3>
-          <input v-model="first" type="number" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>2日目の個数</h3>
-          <input
-            v-model="second"
-            type="number"
-            placeholder="入力してください"
-          />
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
-      </template>
-    </EditModal>
+      :food-product="foodProduct"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"

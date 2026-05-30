@@ -8,6 +8,7 @@ import {
   usePurchaseListRowUpdater,
   usePurchaseListsForm,
   usePurchaseListsState,
+  usePurchaseListsViewTexts,
 } from './hooks';
 import { PurchaseItem } from './schema';
 
@@ -22,6 +23,9 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   isDeadline,
   isRegistered: initialIsRegistered,
 }) => {
+  const purchaseListsViewTexts = usePurchaseListsViewTexts();
+  const title = purchaseListsViewTexts.title;
+
   const {
     foodProducts,
     foodProductOptions,
@@ -60,12 +64,12 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   if (isFoodProductsLoading || isPurchaseListsLoading) {
     return (
       <AccordionMenu
-        title="購入品申請"
+        title={title}
         required
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
       >
-        <div>Loading...</div>
+        <div>{purchaseListsViewTexts.loading}</div>
       </AccordionMenu>
     );
   }
@@ -73,13 +77,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   if (hasFoodProductsError) {
     return (
       <AccordionMenu
-        title="購入品申請"
+        title={title}
         required
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
       >
         <div className="py-10 text-center text-red-500">
-          データの取得に失敗しました。
+          {purchaseListsViewTexts.errors.fetch}
         </div>
       </AccordionMenu>
     );
@@ -88,7 +92,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 締め切り後で、かつデータがない（未登録）場合
   if (isDeadline && (!purchaseLists || purchaseLists.length === 0)) {
     return (
-      <AccordionMenu title="購入品申請" required isEdit={false} isExist={false}>
+      <AccordionMenu title={title} required isEdit={false} isExist={false}>
         <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
           <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
             <div className="mb-4">
@@ -108,10 +112,10 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
               </svg>
             </div>
             <h3 className="mb-2 text-lg font-semibold text-gray-800">
-              申請期限が過ぎています
+              {purchaseListsViewTexts.deadline.title}
             </h3>
             <p className="text-sm text-gray-600">
-              購入品申請の締切期限が過ぎているため、新規申請はできません。
+              {purchaseListsViewTexts.deadline.description}
             </p>
           </div>
         </div>
@@ -122,7 +126,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 締め切り後で、データがある場合 (表示のみ)
   if (isDeadline && purchaseLists && purchaseLists.length > 0) {
     return (
-      <AccordionMenu title="購入品申請" required isEdit={false} isExist={true}>
+      <AccordionMenu title={title} required isEdit={false} isExist={true}>
         {formItems.map((items, index) => (
           <div key={`purchase-list-${index}`} className="mb-4">
             <FormList items={items} />
@@ -136,7 +140,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   if (isEditing || !purchaseLists || purchaseLists.length === 0) {
     return (
       <AccordionMenu
-        title="購入品申請"
+        title={title}
         required
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
@@ -159,7 +163,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 表示モード (データあり、未締め切り)
   return (
     <AccordionMenu
-      title="購入品申請"
+      title={title}
       required
       isEdit={!isDeadline}
       isExist={initialIsRegistered}
@@ -185,7 +189,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
             icon="pencil"
             onClick={toggleEdit}
           >
-            修正
+            {purchaseListsViewTexts.buttons.edit}
           </Button>
         </div>
       )}

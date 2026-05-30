@@ -17,13 +17,16 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
   groupId: number;
   mutateViceRepresentative: () => void;
   mutateCheckAllRegisteredGroups: () => void;
+  viceRepresentativeTexts: ReturnType<
+    typeof useViceRepresentativeHook
+  >['viceRepresentativeTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -37,15 +40,20 @@ const Content: FC<ContentProps> = ({
   groupId,
   mutateViceRepresentative,
   mutateCheckAllRegisteredGroups,
+  viceRepresentativeTexts,
 }) => {
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{viceRepresentativeTexts.general.loading}</div>;
+  }
+
+  if (isEditing === null) {
+    return <div>{viceRepresentativeTexts.general.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {viceRepresentativeTexts.errors.fetch}
       </div>
     );
   }
@@ -83,14 +91,15 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     isLoading,
     hasError,
     mutateViceRepresentative,
-  } = useViceRepresentativeHook(groupId);
+    viceRepresentativeTexts,
+  } = useViceRepresentativeHook(groupId, isRegistered);
   return (
     <AccordionMenu
-      title="副代表申請"
+      title={viceRepresentativeTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
-      note="一人での参加者の場合のみ、副代表申請は不要です。"
+      note={viceRepresentativeTexts.note}
     >
       <Content
         isLoading={isLoading}
@@ -103,6 +112,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         groupId={groupId}
         mutateViceRepresentative={mutateViceRepresentative}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+        viceRepresentativeTexts={viceRepresentativeTexts}
       />
     </AccordionMenu>
   );

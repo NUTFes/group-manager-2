@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetPlaceOrder, usePlacesData } from '@/api/venueApplication';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 
-export const usePlaceOrdersHooks = (groupId: number) => {
+export const useVenueApplicationHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const {
     placeOrder,
     isLoading: isPlaceOrderLoading,
@@ -14,28 +16,38 @@ export const usePlaceOrdersHooks = (groupId: number) => {
   const firstPlace = places.find((place) => place.id === placeOrder?.first);
   const secondPlace = places.find((place) => place.id === placeOrder?.second);
   const thirdPlace = places.find((place) => place.id === placeOrder?.third);
+  const venueApplicationTexts = {
+    title: t('applications.venue.title'),
+    loading: t('applications.venue.loading'),
+    fields: {
+      firstChoice: t('applications.venue.fields.firstChoice'),
+      secondChoice: t('applications.venue.fields.secondChoice'),
+      thirdChoice: t('applications.venue.fields.thirdChoice'),
+      remark: t('applications.venue.fields.remark'),
+    },
+  };
   const formItem: FormItem[] = placeOrder
     ? [
         {
-          label: '第一希望',
+          label: venueApplicationTexts.fields.firstChoice,
           content: firstPlace?.name || '',
         },
         {
-          label: '第二希望',
+          label: venueApplicationTexts.fields.secondChoice,
           content: secondPlace?.name || '',
         },
         {
-          label: '第三希望',
+          label: venueApplicationTexts.fields.thirdChoice,
           content: thirdPlace?.name || '',
         },
         {
-          label: '備考',
+          label: venueApplicationTexts.fields.remark,
           content: placeOrder?.remark || '',
         },
       ]
     : [];
-
   const [isEditing, setIsEditing] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
@@ -43,12 +55,19 @@ export const usePlaceOrdersHooks = (groupId: number) => {
 
   const isLoading = isPlaceOrderLoading || isPlacesLoading;
 
+  useEffect(() => {
+    if (!isLoading) {
+      setHasLoadedOnce(true);
+    }
+  }, [isLoading]);
+
   return {
     placeOrder,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     formItem,
+    venueApplicationTexts,
     handleEditClick,
     placeOrderMutate,
   };

@@ -15,15 +15,21 @@ export const FES_DATE_ID = 1;
 
 // 商品の種類
 export const FRESH_OPTIONS: RadioOption[] = [
-  { id: FRESH_TYPE_ID.FRESH, name: '生鮮品' },
-  { id: FRESH_TYPE_ID.PROCESSED, name: '加工品' },
+  {
+    id: FRESH_TYPE_ID.FRESH,
+    labelKey: 'applications.purchaseLists.radio.options.fresh',
+  },
+  {
+    id: FRESH_TYPE_ID.PROCESSED,
+    labelKey: 'applications.purchaseLists.radio.options.processed',
+  },
 ];
 
 // ネット注文のショップID
-export const NET_ORDER_SHOP_ID = 29;
+export const NET_ORDER_SHOP_ID = 998;
 
 // その他のショップID
-export const OTHER_SHOP_ID = 30;
+export const OTHER_SHOP_ID = 999;
 
 // フォームフィールド名
 export const PurchaseItemFieldNames = {
@@ -51,16 +57,17 @@ export const DEFAULT_PURCHASE_ITEM = {
 
 // バリデーションメッセージ
 export const VALIDATION_MESSAGES = {
-  REQUIRED_FOOD_PRODUCT: '販売品名を選択してください',
-  REQUIRED_SHOP: '購入場所を選択してください',
-  REQUIRED_ITEMS: '食材・材料を入力してください',
-  REQUIRED_PURCHASE_DATE: '購入日を入力してください',
-  INVALID_DATE_FORMAT: '日付を入力してください',
-  INVALID_URL: '有効なURLを入力してください',
-  REQUIRED_URL_FOR_NET_ORDER: 'ネット注文の場合はURLを入力してください',
+  REQUIRED_FOOD_PRODUCT: 'applications.purchaseLists.validation.foodProduct',
+  REQUIRED_SHOP: 'applications.purchaseLists.validation.shop',
+  REQUIRED_ITEMS: 'applications.purchaseLists.validation.items',
+  REQUIRED_PURCHASE_DATE: 'applications.purchaseLists.validation.purchaseDate',
+  INVALID_DATE_FORMAT: 'applications.purchaseLists.validation.invalidDate',
+  INVALID_URL: 'applications.purchaseLists.validation.invalidUrl',
+  REQUIRED_URL_FOR_NET_ORDER:
+    'applications.purchaseLists.validation.urlRequired',
   REQUIRED_REMARKS_FOR_OTHER:
-    '「その他」の場合は、店名・住所・電話番号・営業時間を記入してください',
-  MIN_ITEMS: '少なくとも1つの購入品を登録してください',
+    'applications.purchaseLists.validation.remarkRequired',
+  MIN_ITEMS: 'applications.purchaseLists.validation.minItems',
 };
 
 // 日付フォーマット関連の定数

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import {
   FoodProductFormData,
@@ -23,6 +23,7 @@ export const useFoodProductFormHooks = (
   addFoodProducts?: (products: ProductInput[]) => Promise<void>,
   setFoodProductsData?: (products: ProductInput[]) => Promise<void>
 ) => {
+  const { t } = useTranslation('common');
   // 安全なデフォルト値生成関数
   const createDefaultProducts = (propsData?: RegisteredProduct[] | null) => {
     if (propsData && propsData.length > 0) {
@@ -53,7 +54,6 @@ export const useFoodProductFormHooks = (
     setValue,
     watch,
     control,
-    reset,
   } = useForm<FoodProductFormData>({
     mode: 'onSubmit',
     resolver: zodResolver(foodProductSchema),
@@ -61,14 +61,6 @@ export const useFoodProductFormHooks = (
       products: createDefaultProducts(foodProductsProp),
     },
   });
-
-  // foodProductsPropが変更された時にフォームをリセット
-  useEffect(() => {
-    const newProducts = createDefaultProducts(foodProductsProp);
-    reset({
-      products: newProducts,
-    });
-  }, [foodProductsProp, reset]);
 
   const { fields, append, remove, replace } = useFieldArray({
     control,
@@ -79,14 +71,81 @@ export const useFoodProductFormHooks = (
   const products = values.products || [];
 
   const alcoholOptions = [
-    { id: FORM_VALUES.YES, name: 'はい' },
-    { id: FORM_VALUES.NO, name: 'いいえ' },
+    {
+      id: FORM_VALUES.YES,
+      name: t('applications.foodProduct.radio.alcohol.options.yes'),
+    },
+    {
+      id: FORM_VALUES.NO,
+      name: t('applications.foodProduct.radio.alcohol.options.no'),
+    },
   ];
 
   const licenseOptions = [
-    { id: FORM_VALUES.YES, name: '有り　（例：酒類、加熱調理をするものなど）' },
-    { id: FORM_VALUES.NO, name: '無し　（例：ソフトドリンク）' },
+    {
+      id: FORM_VALUES.YES,
+      name: t('applications.foodProduct.radio.cooking.options.yes'),
+    },
+    {
+      id: FORM_VALUES.NO,
+      name: t('applications.foodProduct.radio.cooking.options.no'),
+    },
   ];
+
+  const foodProductFormTexts = {
+    statuses: {
+      processing: t('applications.foodProduct.notes.processing'),
+    },
+    view: {
+      empty: t('applications.foodProduct.view.empty'),
+      addButton: t('applications.foodProduct.view.addButton'),
+      summaryLabels: {
+        name: t('applications.foodProduct.summary.labels.name'),
+        alcohol: t('applications.foodProduct.summary.labels.alcohol'),
+        cooking: t('applications.foodProduct.summary.labels.cooking'),
+        day1: t('applications.foodProduct.summary.labels.day1'),
+        day2: t('applications.foodProduct.summary.labels.day2'),
+      },
+      radio: {
+        alcohol: {
+          yes: t('applications.foodProduct.radio.alcohol.options.yes'),
+          no: t('applications.foodProduct.radio.alcohol.options.no'),
+        },
+        cooking: {
+          yes: t('applications.foodProduct.radio.cooking.options.yes'),
+          no: t('applications.foodProduct.radio.cooking.options.no'),
+        },
+      },
+    },
+    form: {
+      fields: {
+        name: t('applications.foodProduct.fields.name'),
+        day1: t('applications.foodProduct.fields.day1'),
+        day2: t('applications.foodProduct.fields.day2'),
+      },
+      radio: {
+        alcohol: {
+          label: t('applications.foodProduct.radio.alcohol.label'),
+          note: t('applications.foodProduct.radio.alcohol.note'),
+          options: alcoholOptions,
+        },
+        cooking: {
+          label: t('applications.foodProduct.radio.cooking.label'),
+          options: licenseOptions,
+        },
+      },
+      notes: {
+        quantity: t('applications.foodProduct.notes.quantity'),
+      },
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+      delete: t('form.actions.delete'),
+      add: t('applications.foodProduct.buttons.add'),
+      save: t('form.actions.save'),
+      register: t('form.actions.register'),
+    },
+  };
 
   const handleAlcoholChange = (index: number, value: string) => {
     const isAlcohol = parseInt(value) === FORM_VALUES.YES;
@@ -167,5 +226,6 @@ export const useFoodProductFormHooks = (
     products,
     fields,
     replace,
+    foodProductFormTexts,
   };
 };

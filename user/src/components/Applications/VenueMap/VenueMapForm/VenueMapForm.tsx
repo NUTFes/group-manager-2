@@ -19,6 +19,11 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
   toEdit,
   onSubmitted,
 }) => {
+  const venueMapFormHooks = useVenueMapFormHooks(
+    groupId,
+    venueMap,
+    onSubmitted
+  );
   const {
     handleSubmit,
     errors,
@@ -30,35 +35,13 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     handleImageUpload,
     onSubmit,
     isDirty,
-  } = useVenueMapFormHooks(groupId, venueMap, onSubmitted);
-
-  const checklistOptions = [
-    {
-      id: 'trashPosition',
-      name: 'ゴミ箱の設置位置を記載しました。',
-    },
-    {
-      id: 'foodStorage',
-      name: '食材の保存場所を記載しました。',
-    },
-    {
-      id: 'allItemsListed',
-      name: '申請した物品をすべて平面図に記載しました。',
-    },
-    {
-      id: 'fireHazardousMaterials',
-      name: '火気・電化製品の使用場所を明記しました。',
-    },
-    {
-      id: 'partitionPlacement',
-      name: 'パーテーション/掲示板が調理場内に入っておらず、テントの側面に設置してあることを確認しました。',
-    },
-  ];
+    venueMapFormTexts,
+  } = venueMapFormHooks;
 
   return (
     <FormContainer>
       {isFetching ? (
-        <div>Loading...</div>
+        <div>{venueMapFormTexts.general.loading}</div>
       ) : (
         <form
           className="flex w-full flex-col gap-10"
@@ -68,44 +51,45 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
           <div className="flex flex-col gap-1">
             <div className="flex items-baseline gap-4">
               <div className="text-base font-medium text-font">
-                模擬店平面図画像
+                {venueMapFormTexts.fields.picture}
               </div>
-              <div className="text-xs font-light text-alert">※必須</div>
+              <div className="text-xs font-light text-alert">
+                ※{venueMapFormTexts.general.required}
+              </div>
             </div>
             <Upload
               title=""
-              note={[
-                '机、椅子、使用機器などの配置が分かるように',
-                'ファイル形式：png、jpeg',
-                'ファイルサイズ：20MB',
-              ]}
+              note={venueMapFormTexts.upload.notes}
               onClick={handleImageUpload}
               idDisable={isMutating}
               error={errors.image?.message as string | undefined}
             />
             {fileName && (
               <div className="mt-2 text-sm text-font">
-                アップロード済み: {fileName}
+                {venueMapFormTexts.upload.uploaded(fileName)}
               </div>
             )}
             {venueMap?.picturePath && !values.image && (
               <div className="mt-1 text-xs text-gray-500">
-                ※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます。
+                {venueMapFormTexts.notes.existing}
                 <br />
-                現在の画像: {venueMap.pictureName || 'ファイル名不明'}
+                {venueMapFormTexts.notes.currentImage(
+                  venueMap.pictureName || venueMapFormTexts.notes.unknownFile
+                )}
               </div>
             )}
           </div>
 
           {/* 平面図確認事項 */}
           <Checkbox
-            label="平面図確認事項"
-            options={checklistOptions}
+            label={venueMapFormTexts.fields.checklist}
+            options={venueMapFormTexts.checklist.options}
             value={values.checklist || []}
             onChange={(newValues) =>
               setValue('checklist', newValues, { shouldDirty: true })
             }
             error={errors.checklist?.message as string | undefined}
+            note={venueMapFormTexts.checklist.note}
             required
           />
 
@@ -119,7 +103,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
                 type="button"
                 variant
               >
-                キャンセル
+                {venueMapFormTexts.buttons.cancel}
               </Button>
             )}
             <Button
@@ -128,7 +112,11 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
               color="main"
               isDisable={isMutating || (venueMap ? !isDirty : false)}
             >
-              {isMutating ? '送信中...' : venueMap ? '修正' : '登録する'}
+              {isMutating
+                ? venueMapFormTexts.buttons.submitting
+                : venueMap
+                  ? venueMapFormTexts.buttons.edit
+                  : venueMapFormTexts.buttons.register}
             </Button>
           </div>
         </form>

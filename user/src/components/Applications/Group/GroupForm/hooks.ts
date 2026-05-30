@@ -6,8 +6,10 @@ import {
 } from '@/api/groupApi';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { groupLabels } from '../../label';
 import { GroupForm, groupSchema } from './schema';
 
 export const useGroupFormHooks = (
@@ -18,6 +20,7 @@ export const useGroupFormHooks = (
   mutateCheckAllRegisteredGroups: () => void,
   mutateGroupByUserId: () => void
 ) => {
+  const { t } = useTranslation('common');
   // 団体カテゴリー一覧を取得
   const {
     handleSubmit,
@@ -43,6 +46,46 @@ export const useGroupFormHooks = (
 
   // フォームをリアルタイム監視
   const values = watch();
+
+  const groupFormTexts = {
+    fields: {
+      name: t(groupLabels[0]),
+      projectName: t(groupLabels[1]),
+      isInternational: t(groupLabels[2]),
+      isExternal: t(groupLabels[3]),
+      groupCategory: t(groupLabels[4]),
+      activity: t(groupLabels[5]),
+    },
+    notes: {
+      name: t('applications.group.notes.name'),
+      projectName: t('applications.group.notes.projectName'),
+      international: t('applications.group.notes.international'),
+      external: t('applications.group.notes.external'),
+      groupCategory: t('applications.group.notes.groupCategory'),
+      activity: t('applications.group.notes.activity'),
+    },
+    options: {
+      international: [
+        { id: 0, name: t('applications.group.options.international.no') },
+        { id: 1, name: t('applications.group.options.international.yes') },
+      ],
+      external: [
+        { id: 0, name: t('applications.group.options.external.no') },
+        { id: 1, name: t('applications.group.options.external.yes') },
+      ],
+    },
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+    messages: {
+      registerFailed: t('form.messages.registerFailed'),
+      registerSuccess: t('form.messages.registerSuccess'),
+      updateSuccess: t('form.messages.updateSuccess'),
+      updateFailed: t('form.messages.updateFailed'),
+    },
+  };
 
   // 団体カテゴリーが「実行委員」の場合は，committeeを1にする
   useEffect(() => {
@@ -72,28 +115,40 @@ export const useGroupFormHooks = (
     isMutating: updateIsMutating,
   } = useUpdateGroups(groups?.id ?? 0);
 
+  const registerFailedMessage = groupFormTexts.messages.registerFailed;
+
+  useEffect(() => {
+    if (createError || updateError) {
+      toast.error(registerFailedMessage);
+    }
+  }, [createError, updateError, registerFailedMessage]);
+
   const onSubmit = async (formData: GroupForm) => {
     // 既存の団体申請がある場合は更新
     if (groups) {
       try {
         await update({ query: formData });
-        mutateGroups();
-        toast.success('送信しました');
+        await mutateGroups();
+        toast.success(groupFormTexts.messages.updateSuccess);
+        return true;
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(groupFormTexts.messages.updateFailed);
+        return false;
       }
       // 団体申請がない場合は新規作成
     } else {
       try {
         await create({ query: formData });
-        mutateGroups();
-        mutateCheckAllRegisteredGroups();
-        mutateGroupByUserId();
-        toast.success('送信しました');
+        await mutateGroups();
+        await mutateCheckAllRegisteredGroups();
+        await mutateGroupByUserId();
+        toast.success(groupFormTexts.messages.registerSuccess);
+        reset();
+        return true;
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(groupFormTexts.messages.registerFailed);
+        return false;
       }
-      reset();
     }
   };
 
@@ -118,12 +173,11 @@ export const useGroupFormHooks = (
     errors,
     onSubmit,
     setValue,
-    createError,
     createIsMutating,
-    updateError,
     updateIsMutating,
     formatRadioValue,
     validateEdit,
     values,
+    groupFormTexts,
   };
 };

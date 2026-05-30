@@ -2,7 +2,7 @@ import { FC } from 'react';
 import TextBox from '@/components/Form/TextBox';
 import Button from '../Button';
 import Modal from '../Modal';
-import { useLoginModalHooks } from './hooks';
+import { useLoginModalHooks, useLoginModalTexts } from './hooks';
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -12,6 +12,7 @@ type LoginModalProps = {
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const { handleSignInSubmit, setValue, errors, email, password, isLoggingIn } =
     useLoginModalHooks();
+  const loginModalTexts = useLoginModalTexts();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -21,16 +22,16 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex w-96 flex-col items-center justify-center gap-12">
           <TextBox
-            label="メールアドレス"
+            label={loginModalTexts.labels.email}
             type="email"
             value={email}
             onChange={(value) => setValue('email', value)}
             error={errors.email?.message}
             required
-            note="例：s123456@stn.nagaokaut.ac.jp"
+            note={loginModalTexts.notes.email}
           />
           <TextBox
-            label="パスワード"
+            label={loginModalTexts.labels.password}
             type="password"
             value={password}
             onChange={(value) => setValue('password', value)}
@@ -44,7 +45,9 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             type="submit"
             isDisable={isLoggingIn}
           >
-            {isLoggingIn ? 'ログイン中...' : 'ログイン'}
+            {isLoggingIn
+              ? loginModalTexts.buttons.submitting
+              : loginModalTexts.buttons.submit}
           </Button>
         </div>
       </form>

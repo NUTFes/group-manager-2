@@ -52,7 +52,11 @@ Rails.application.routes.draw do
   end
   resources :assign_rental_items
   resources :rentable_items
-  resources :rental_items
+  resources :rental_items do
+    collection do
+      post :translate
+    end
+  end
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
@@ -245,6 +249,9 @@ Rails.application.routes.draw do
       get 'get_cooking_process_order_by_food_product_id/:food_product_id' => 'cooking_process_orders_api#get_cooking_process_order_by_food_product_id'
       get 'get_groups_have_no_cooking_process_order' => 'groups_api#get_groups_have_no_cooking_process_order'
 
+      #---火気使用申請
+      get 'get_groups_for_fire_equipment_order' => 'groups_api#get_groups_for_fire_equipment_order'
+
       #---実行委員担当者申請ページ
       get 'get_contact_person_index_for_admin_view' => 'contact_persons_api#get_contact_person_index_for_admin_view'
       get 'get_contact_person_show_for_admin_view/:id' => 'contact_persons_api#get_contact_person_show_for_admin_view'
@@ -260,6 +267,15 @@ Rails.application.routes.draw do
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
       post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
+
+      #---保健所提出確認画面
+      get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'
+      get 'get_health_center_submission_status_show_for_admin_view/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_show_for_admin_view'
+      get 'get_health_center_submission_status_counts/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_counts'
+      patch 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
+      post 'upsert_health_center_submission_status' => 'health_center_submission_statuses_api#upsert_health_center_submission_status'
+      post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
+      post 'sync_health_center_submission_statuses' => 'health_center_submission_statuses_api#sync_health_center_submission_statuses'
 
       #---開催日
       get 'get_refinement_fes_date_by_fes_year/:fes_year_id' => 'fes_dates_api#get_refinement_fes_date_by_fes_year'
@@ -289,6 +305,12 @@ Rails.application.routes.draw do
       get 'get_announcements_csv' => 'output_csv#output_announcements_csv'
       get 'get_cooking_process_orders_csv' => 'output_csv#output_cooking_process_orders_csv'
       get 'get_public_relations_csv/:fes_year_id' => 'output_csv#output_public_relations_csv'
+      get 'get_fire_equipment_orders_csv/:fes_year_id' => 'output_csv#output_fire_equipment_orders_csv'
+
+      #---pdf出力
+      get 'output_pdf/rental_items' => 'print_pdf#rental_items_pdf'
+      get 'output_pdf/power_orders' => 'print_pdf#power_orders_pdf'
+      get 'get_project_check_list_pdf/:group_id' => 'output_pdf#output_project_check_list_pdf'
 
       # ダッシュボード
       get 'dashboard' => 'dashboard_api#get_dashboard_info'

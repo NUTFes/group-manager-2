@@ -18,25 +18,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # Corepack を有効にして pnpm を使えるようにする
-      - name: Enable Corepack
-        run: corepack enable
+      # pnpm を明示的にセットアップしてから setup-node の cache を使う
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+            version: 10.7.0
       # Node.js v22をセットアップ
       - name: Use Node.js v22
         uses: actions/setup-node@v4
         with:
             node-version: '22'
             cache: 'pnpm'
-            cache-dependency-path: |
-              ./user/package.json
-              ./user/pnpm-lock.yaml
+            cache-dependency-path: ./user/pnpm-lock.yaml
       # pnpmで依存関係をインストール
       - name: pnpm install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ./user
-      - name: Install dependencies
-        working-directory: ./user
-        run: pnpm i
       - name: Run Chromatic
         uses: chromaui/action@latest
         with:

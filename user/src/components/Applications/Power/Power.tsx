@@ -3,6 +3,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
 import { RADIO_OPTIONS } from './constants';
+import { usePowerAccordionHooks } from './hooks/usePowerAccordionHooks';
 import { usePowerApplication } from './hooks/usePowerApplication';
 import { usePowerDisplay } from './hooks/usePowerDisplay';
 
@@ -13,6 +14,8 @@ type PowerProps = {
 };
 
 const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
+  const powerAccordionHooks = usePowerAccordionHooks();
+
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
     state,
@@ -142,7 +145,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
 
   return (
     <AccordionMenu
-      title={'電力申請'}
+      title={powerAccordionHooks.powerAccordionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}

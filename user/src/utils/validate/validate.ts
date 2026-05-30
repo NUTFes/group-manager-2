@@ -117,31 +117,39 @@ export const placeSchema = z.object({
 // stage登録のバリデーション
 export const stageSchema = z
   .object({
-    date: z.string().nonempty('入力してください'),
-    sunnyFirstChoice: z.string().nonempty('晴れの第1希望を選択してください'),
-    sunnySecondChoice: z.string().nonempty('晴れの第2希望を選択してください'),
-    rainyFirstChoice: z.string().nonempty('雨の第1希望を選択してください'),
-    rainySecondChoice: z.string().nonempty('雨の第2希望を選択してください'),
+    date: z.string().nonempty('form.validation.required'),
+    sunnyFirstChoice: z
+      .string()
+      .nonempty('applications.stage.validation.sunnyFirst'),
+    sunnySecondChoice: z
+      .string()
+      .nonempty('applications.stage.validation.sunnySecond'),
+    rainyFirstChoice: z
+      .string()
+      .nonempty('applications.stage.validation.rainyFirst'),
+    rainySecondChoice: z
+      .string()
+      .nonempty('applications.stage.validation.rainySecond'),
     prepTime: z
       .string()
-      .nonempty('準備時間を入力してください')
+      .nonempty('applications.stage.validation.prepTimeRequired')
       .refine(
         (val) => !isNaN(Number(val)) && Number(val) >= 0,
-        '有効な準備時間を入力してください'
+        'applications.stage.validation.prepTimeInvalid'
       ),
     performTime: z
       .string()
-      .nonempty('本番時間を入力してください')
+      .nonempty('applications.stage.validation.performTimeRequired')
       .refine(
         (val) => !isNaN(Number(val)) && Number(val) >= 0,
-        '有効な本番時間を入力してください'
+        'applications.stage.validation.performTimeInvalid'
       ),
     cleanupTime: z
       .string()
-      .nonempty('片付け時間を入力してください')
+      .nonempty('applications.stage.validation.cleanupTimeRequired')
       .refine(
         (val) => !isNaN(Number(val)) && Number(val) >= 0,
-        '有効な片付け時間を入力してください'
+        'applications.stage.validation.cleanupTimeInvalid'
       ),
     remarks: z.string().optional(),
     groupId: z.string().optional(),
@@ -155,7 +163,7 @@ export const stageSchema = z
       return total <= 120;
     },
     {
-      message: '準備、本番、片付けの合計時間が120分を超えています',
+      message: 'applications.stage.validation.totalTime',
       path: ['totalTime'],
     }
   )
@@ -167,7 +175,7 @@ export const stageSchema = z
       );
     },
     {
-      message: '第1希望と異なるステージを選んでください',
+      message: 'applications.stage.validation.sunnyChoiceDuplicate',
       path: ['sunnySecondChoice'],
     }
   )
@@ -179,7 +187,7 @@ export const stageSchema = z
       );
     },
     {
-      message: '第1希望と異なるステージを選んでください',
+      message: 'applications.stage.validation.rainyChoiceDuplicate',
       path: ['rainySecondChoice'],
     }
   );

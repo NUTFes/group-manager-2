@@ -3,7 +3,8 @@ import { Controller, FieldPath } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
-import { FIELD_NAMES } from '../constants';
+import { FIELD_NAMES, POWER_LIMIT } from '../constants';
+import { usePowerDeviceFormHooks } from '../hooks/usePowerDeviceFormHooks';
 import { PowerApplicationFormData } from '../schema';
 import { DeviceField, PowerFormFieldProps, PowerFormProps } from '../types';
 
@@ -50,6 +51,7 @@ const PowerFormField: FC<PowerFormFieldProps> = ({
 
 const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
   const { control, formState } = form;
+  const { powerDeviceFormTexts } = usePowerDeviceFormHooks();
 
   // エラーメッセージを取得 - DeviceField型を受け取るように修正
   const getErrorMessage = (name: DeviceField) => {
@@ -63,7 +65,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
         <div className="flex flex-col gap-10 text-[#484848]">
           <PowerFormField
             name={FIELD_NAMES.PRODUCT_NAME}
-            label="機器の名称"
+            label={powerDeviceFormTexts.fields.productName}
             control={control}
             index={index}
             required
@@ -72,7 +74,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.MANUFACTURER}
-            label="機器のメーカー名"
+            label={powerDeviceFormTexts.fields.manufacturer}
             control={control}
             index={index}
             required
@@ -81,7 +83,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.MODEL}
-            label="型番"
+            label={powerDeviceFormTexts.fields.model}
             control={control}
             index={index}
             required
@@ -90,28 +92,28 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.URL}
-            label="製品URL"
+            label={powerDeviceFormTexts.fields.url}
             control={control}
             index={index}
             required
-            note="製品の紹介ページのサイトURLを貼ってください"
+            note={powerDeviceFormTexts.notes.url}
             getErrorMessage={getErrorMessage}
           />
 
           <PowerFormField
             name={FIELD_NAMES.MAX_POWER}
-            label="電力量 (W)"
+            label={powerDeviceFormTexts.fields.maxPower}
             control={control}
             index={index}
             required
-            note="使用機器の電力量の合計が1500W以内になるようにしてください"
+            note={powerDeviceFormTexts.notes.totalPower(POWER_LIMIT)}
             getErrorMessage={getErrorMessage}
             type="number"
           />
 
           <div className="text-sm">
-            <p>電力量が1500W以上の場合はメールを送ってください。</p>
-            <p>nutfes.soumu@gmail.com</p>
+            <p>{powerDeviceFormTexts.notes.emailWarning(POWER_LIMIT)}</p>
+            <p>{powerDeviceFormTexts.notes.contactEmail}</p>
           </div>
 
           {index > 0 && !form.getValues().devices[index]?.productName && (
@@ -124,7 +126,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
                 variant
                 onClick={() => onRemove(index)}
               >
-                削除
+                {powerDeviceFormTexts.actions.delete}
               </Button>
             </div>
           )}

@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
 type TextBoxProps = {
   label: string;
@@ -22,6 +23,7 @@ const TextBox: FC<TextBoxProps> = ({
   error,
   type,
 }) => {
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
 
@@ -38,7 +40,7 @@ const TextBox: FC<TextBoxProps> = ({
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && <p className="text-xs text-alert">※必須</p>}
+          {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
         </div>
         <div className="relative">
           <input
@@ -61,7 +63,7 @@ const TextBox: FC<TextBoxProps> = ({
         <p className="mt-[4px] max-w-[400px] break-words text-xs text-sub">
           {note}
         </p>
-        <p className="text-xs text-alert">{error}</p>
+        <p className="text-xs text-alert">{translateError(error)}</p>
       </label>
     </>
   );

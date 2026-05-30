@@ -19,7 +19,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
@@ -27,6 +27,9 @@ type ContentProps = {
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
   removeFoodProduct: (id: string) => Promise<void>;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
+  foodProductViewTexts: ReturnType<
+    typeof useFoodProductHooks
+  >['foodProductViewTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -41,8 +44,18 @@ const Content: FC<ContentProps> = ({
   addFoodProducts,
   removeFoodProduct,
   setFoodProductsData,
+  foodProductViewTexts,
 }) => {
   if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+        <span className="ml-2">{foodProductViewTexts.loading}</span>
+      </div>
+    );
+  }
+
+  if (isEditing === null) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
@@ -54,7 +67,7 @@ const Content: FC<ContentProps> = ({
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {foodProductViewTexts.errors.fetch}
       </div>
     );
   }
@@ -81,10 +94,10 @@ const Content: FC<ContentProps> = ({
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
-            申請期限が過ぎています
+            {foodProductViewTexts.deadline.title}
           </h3>
           <p className="text-sm text-gray-600">
-            販売品申請の締切期限が過ぎているため、新規申請はできません。
+            {foodProductViewTexts.deadline.description}
           </p>
         </div>
       </div>
@@ -136,11 +149,12 @@ const FoodProduct: FC<FoodProductProps> = ({
     addFoodProducts,
     removeFoodProduct,
     setFoodProductsData,
-  } = useFoodProductHooks(groupId);
+    foodProductViewTexts,
+  } = useFoodProductHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu
-      title="販売品申請"
+      title={foodProductViewTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -157,6 +171,7 @@ const FoodProduct: FC<FoodProductProps> = ({
         addFoodProducts={addFoodProducts}
         removeFoodProduct={removeFoodProduct}
         setFoodProductsData={setFoodProductsData}
+        foodProductViewTexts={foodProductViewTexts}
       />
     </AccordionMenu>
   );

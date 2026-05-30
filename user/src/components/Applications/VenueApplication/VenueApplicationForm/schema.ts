@@ -6,10 +6,13 @@ const OTHER_OPTION_ID = 11;
 
 export const venueApplicationFormSchema = z
   .object({
-    groupId: z.number({ required_error: '入力してください' }).int().default(1),
-    first: z.number({ required_error: '入力してください' }),
-    second: z.number({ required_error: '入力してください' }),
-    third: z.number({ required_error: '入力してください' }),
+    groupId: z
+      .number({ required_error: 'form.validation.required' })
+      .int()
+      .default(1),
+    first: z.number({ required_error: 'form.validation.required' }),
+    second: z.number({ required_error: 'form.validation.required' }),
+    third: z.number({ required_error: 'form.validation.required' }),
     remark: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -28,7 +31,7 @@ export const venueApplicationFormSchema = z
       if (value !== DEFAULT_ID && freq[value] > 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: '希望が重複しています',
+          message: 'form.validation.duplicateChoice',
           path: [field],
         });
       }
@@ -37,7 +40,7 @@ export const venueApplicationFormSchema = z
       if (value === OTHER_OPTION_ID && !data.remark) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: '備考に場所を入力してください',
+          message: 'form.validation.remarkRequired',
           path: ['remark'],
         });
       }

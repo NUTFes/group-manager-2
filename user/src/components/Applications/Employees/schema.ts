@@ -1,10 +1,15 @@
 import { NEED_APPLICATION } from '@/utils/constants';
 import { z } from 'zod';
 
+const VALIDATION_MESSAGES = {
+  NAME: 'applications.employees.validation.name',
+  STUDENT_ID: 'applications.employees.validation.studentId',
+} as const;
+
 export const employeeFormItemSchema = z.object({
   id: z.number().optional(),
-  name: z.string().min(1, '従業員名は必須です'),
-  studentId: z.string().regex(/^\d{8}$/, '8桁の学籍番号を入力してください'),
+  name: z.string().min(1, VALIDATION_MESSAGES.NAME),
+  studentId: z.string().regex(/^\d{8}$/, VALIDATION_MESSAGES.STUDENT_ID),
 });
 
 export const employeesFormSchema = z.object({

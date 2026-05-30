@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
 type TextAreaProps = {
   label: string;
@@ -6,6 +7,7 @@ type TextAreaProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
+  requireMessage?: string;
   note?: string;
   error?: string;
 };
@@ -16,19 +18,21 @@ const TextArea: FC<TextAreaProps> = ({
   onChange,
   placeholder,
   required,
+  requireMessage,
   note,
   error,
 }) => {
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value);
   };
-
+  const requiredMessage = requireMessage ?? requiredLabel;
   return (
     <>
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && <p className="text-xs text-alert">※必須</p>}
+          {required && <p className="text-xs text-alert">※{requiredMessage}</p>}
         </div>
         <textarea
           value={value}
@@ -39,7 +43,7 @@ const TextArea: FC<TextAreaProps> = ({
         <p className="max-w-[400px] whitespace-pre-wrap break-words text-xs text-sub">
           {note}
         </p>
-        <p className="text-xs text-alert">{error}</p>
+        <p className="text-xs text-alert">{translateError(error)}</p>
       </label>
     </>
   );

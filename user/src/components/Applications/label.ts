@@ -1,43 +1,47 @@
 export const stageOptionLabels = [
-  '電力を使用する機器を持ち込みますか',
-  'スピーカーに繋ぐ機器を持ち込みますか',
-  '実行委員が撮影することを許可しますか',
-  '大きい音を出しますか',
-];
+  'applications.stageOptions.fields.ownEquipment',
+  'applications.stageOptions.fields.bgm',
+  'applications.stageOptions.fields.cameraPermission',
+  'applications.stageOptions.fields.loudSound',
+] as const;
 
 // 団体申請フォームで表示するラベル
 export const groupLabels = [
-  '団体名',
-  '企画名',
-  '国際団体ですか？',
-  '学外団体ですか？',
-  '参加形式',
-  '企画内容',
-];
+  'applications.group.fields.name',
+  'applications.group.fields.projectName',
+  'applications.group.fields.isInternational',
+  'applications.group.fields.isExternal',
+  'applications.group.fields.groupCategory',
+  'applications.group.fields.activity',
+] as const;
 
 export const stageLabels = [
-  '開催日',
-  '晴れの場合：第1希望',
-  '晴れの場合：第2希望',
-  '雨の場合：第1希望',
-  '雨の場合：第2希望',
-  '準備時間',
-  '本番時間',
-  '片付け時間',
-];
+  'applications.stage.fields.date',
+  'applications.stage.fields.sunnyFirst',
+  'applications.stage.fields.sunnySecond',
+  'applications.stage.fields.rainyFirst',
+  'applications.stage.fields.rainySecond',
+  'applications.stage.fields.prepTime',
+  'applications.stage.fields.performTime',
+  'applications.stage.fields.cleanupTime',
+] as const;
 
-export const publicRelationLabels = ['PR文', 'アナウンスの有無', 'PR画像'];
+export const publicRelationLabels = [
+  'applications.publicRelations.fields.text',
+  'applications.publicRelations.fields.announce',
+  'applications.publicRelations.fields.image',
+] as const;
 
 export const viceRepresentativeLabels = [
-  '一人での参加ですか？',
-  '名前',
-  '学籍番号',
-  '課程・学年',
-  '学科・専攻',
-  'メールアドレス',
-  '電話番号',
-];
+  'applications.viceRepresentative.fields.isIndividual',
+  'applications.viceRepresentative.fields.name',
+  'applications.viceRepresentative.fields.studentId',
+  'applications.viceRepresentative.fields.gradeId',
+  'applications.viceRepresentative.fields.departmentId',
+  'applications.viceRepresentative.fields.email',
+  'applications.viceRepresentative.fields.tel',
+] as const;
 
 export const venueMapLabels = {
-  pictureName: '模擬店平面図画像',
+  pictureName: 'applications.venueMap.fields.picture',
 };

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
 type Option = {
   id: string;
@@ -24,6 +25,7 @@ const Checkbox: FC<CheckboxProps> = ({
   error,
   options,
 }) => {
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, value: optionValue } = event.target;
     if (checked) {
@@ -38,7 +40,7 @@ const Checkbox: FC<CheckboxProps> = ({
       <label>
         <div className="mb-[5px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && <p className="text-xs text-alert">※必須</p>}
+          {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
         </div>
         <div className="my-6 flex flex-col gap-4">
           {options.map((option) => (
@@ -56,7 +58,7 @@ const Checkbox: FC<CheckboxProps> = ({
           ))}
         </div>
         <p className="text-xs text-sub">{note}</p>
-        <p className="text-xs text-alert">{error}</p>
+        <p className="text-xs text-alert">{translateError(error)}</p>
       </label>
     </>
   );

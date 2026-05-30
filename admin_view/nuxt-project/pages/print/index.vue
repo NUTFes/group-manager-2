@@ -114,6 +114,17 @@
           </td>
         </tr>
         <tr>
+
+          <td>物品貸出表（国際団体・英語版）</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsAllPDFen"
+              >PDF</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
           <td>保健所提出書類（調理計画・調理工程・従事者・平面図）</td>
           <td>
             <InTableButton
@@ -207,9 +218,14 @@ export default {
       this.openSnackBar("参加団体情報リストをダウンロードしました");
     },
     async downloadRentalItemsAllPDF() {
-      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf`;
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?render_locale=ja`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ');
       this.openSnackBar("物品貸し出し表まとめをダウンロードしました");
+    },
+    async downloadRentalItemsAllPDFen() {
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?locale=en&render_locale=en`;
+      await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ（国際団体・英語版）');
+      this.openSnackBar("物品貸し出し表まとめ（国際団体・英語版）をダウンロードしました");
     },
     async downloadHealthOfficeDocumentsPDF() {
       const endpoint = `/print_pdf/health_office_documents/${this.currentYearID}/output.pdf`;

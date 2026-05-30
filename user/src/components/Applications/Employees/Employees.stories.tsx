@@ -230,8 +230,8 @@ export default {
 
 このコンポーネントはカスタムフックを使用してロジックを分離しています：
 
-- \`useEmployeesBusinessLogic\`: ビジネスロジック全般
-- \`useUnregisteredGroupLogic\`: 未登録グループの管理
+  - \`useEmployeesBusinessHooks\`: ビジネスロジック全般
+  - \`useUnregisteredGroupHooks\`: 未登録グループの管理
 - \`useEmployeesForm\`: フォームの状態管理
 - \`useEmployeesFormState\`: フォーム状態の監視
 - \`useEmployeesFormHandlers\`: イベントハンドラ

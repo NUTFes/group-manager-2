@@ -12,18 +12,19 @@ paths:
           content:
             application/json:
               schema:
-               type: array
-               items:
-                $ref: "#/components/schemas/PurchaseList"
-
+                "$ref": "#/components/schemas/PurchaseList"
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
         '422':
           description: purchase_list description
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PurchaseList"
                 type: array
                 items:
-                  $ref: "#/components/schemas/PurchaseList"
+                  "$ref": "#/components/schemas/PurchaseList"
       deprecated: false
     post:
       tags:
@@ -46,40 +47,81 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
-        "/purchase_lists/group/{group_id}":
-  get:
-    tags:
+  "/purchase_lists/food_product":
+    get:
+      tags:
       - purchase_list
-    summary: get summary
-    description: get description
-    responses:
-      '200':
-        description: purchase_list description
-        content:
-          application/json:
-            schema:
-               type: array
-               items:
-                $ref: "#/components/schemas/PurchaseList"
-      '404':
-        description: purchase_list description
-      '422':
-        description: purchase_list description
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/PurchaseList"
-
-    deprecated: false
-    parameters:
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+  "/purchase_lists/group/{group_id}":
+    get:
+      tags:
+      - purchase_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+        '404':
+          description: purchase_list description
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      parameters:
       - name: group_id
         in: path
         description: group_id
         required: true
         schema:
           type: integer
+  "/purchase_lists/upsert":
+    post:
+      tags:
+      - purchase_list
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PurchaseList"
   "/purchase_lists/{id}":
     get:
       tags:

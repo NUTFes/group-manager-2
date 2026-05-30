@@ -1,0 +1,959 @@
+{
+  "languageSwitcher": {
+    "label": "Language selector",
+    "japanese": "Japanese",
+    "english": "English"
+  },
+  "general": {
+    "loading": "Loading...",
+    "errors": {
+      "fetch": "Failed to fetch data."
+    }
+  },
+  "form": {
+    "required": "Required",
+    "optional": "Optional",
+    "actions": {
+      "register": "Register",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "close": "Close",
+      "submit": "Submit",
+      "save": "Save",
+      "add": "Add",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "confirm": "Confirm",
+      "open": "Open",
+      "upload": "Upload"
+    },
+    "messages": {
+      "nonEditable": "* Cannot be edited",
+      "registerSuccess": "Saved successfully.",
+      "registerFailed": "Failed to save.",
+      "updateSuccess": "Updated successfully.",
+      "updateFailed": "Failed to update."
+    },
+    "validation": {
+      "required": "This field is required",
+      "duplicateChoice": "You selected the same choice more than once.",
+      "remarkRequired": "Please enter the location in the remarks.",
+      "inputError": "Please fix the highlighted errors.",
+      "select": "Please select an option"
+    }
+  },
+  "status": {
+    "reception": {
+      "open": "Open",
+      "deadline": "Closing soon",
+      "closed": "Closed"
+    },
+    "registration": {
+      "registered": "Registered",
+      "unregistered": "Not registered"
+    },
+    "progress": {
+      "notRequired": "Not required",
+      "completed": "Complete",
+      "pending": "Incomplete"
+    }
+  },
+  "news": {
+    "title": "News",
+    "none": "No news available.",
+    "loading": "Loading...",
+    "error": "An error has occurred"
+  },
+  "welcomeBox": {
+    "register": "Register",
+    "registerDescription": "New users start here",
+    "login": "Log in",
+    "loginDescription": "Existing users sign in here"
+  },
+  "loginModal": {
+    "emailLabel": "Email address",
+    "emailNote": "e.g., s123456@stn.nagaokaut.ac.jp",
+    "passwordLabel": "Password",
+    "submit": "Log in",
+    "submitting": "Signing in...",
+    "errors": {
+      "invalidCredentials": "Email or password is incorrect"
+    },
+    "toasts": {
+      "loginFailed": "Failed to sign in",
+      "loginSuccess": "Signed in successfully"
+    },
+    "validation": {
+      "required": "Enter this field.",
+      "email": "Enter a valid email address."
+    }
+  },
+  "registerCarousel": {
+    "steps": {
+      "email": "Email",
+      "representative": "Representative",
+      "confirm": "Review"
+    },
+    "placeholders": {
+      "select": "Please select"
+    },
+    "labels": {
+      "email": "Email address",
+      "password": "Password",
+      "passwordConfirm": "Confirm password",
+      "name": "Name",
+      "tel": "Phone number",
+      "studentId": "Student ID",
+      "grade": "Grade",
+      "department": "Department"
+    },
+    "notes": {
+      "email": "e.g., s123456@stn.nagaokaut.ac.jp",
+      "password": "At least 8 characters",
+      "passwordConfirm": "At least 8 characters",
+      "name": "e.g., Taro Nagaoka",
+      "tel": "e.g., 09012345678",
+      "studentId": "e.g., 12345678"
+    },
+    "review": {
+      "email": "Email address",
+      "password": "Password",
+      "name": "Name",
+      "tel": "Phone number",
+      "studentId": "Student ID",
+      "grade": "Grade",
+      "department": "Department"
+    },
+    "buttons": {
+      "previous": "Edit",
+      "submit": "Submit",
+      "next": "Next"
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "emailTaken": "This email address is already registered.",
+      "emailInvalid": "Please enter a valid email address.",
+      "emailDefault": "There is an issue with the email address.",
+      "passwordShort": "Password must be at least 8 characters.",
+      "passwordDefault": "There is an issue with the password.",
+      "passwordConfirmMismatch": "Passwords do not match.",
+      "passwordConfirmDefault": "There is an issue with the password confirmation.",
+      "telInvalid": "There is an issue with the phone number.",
+      "telShort": "The phone number is too short.",
+      "telLong": "The phone number is too long.",
+      "studentIdInvalid": "There is an issue with the student ID.",
+      "gradeInvalid": "There is an issue with the grade selection.",
+      "departmentInvalid": "There is an issue with the department selection.",
+      "userDetailsDefault": "There is an issue with the user details.",
+      "requestError": "A network error has occurred.",
+      "requestFailed": "The request failed. Please try again later."
+    },
+    "toasts": {
+      "registrationSuccess": "Registration completed.",
+      "autoLogin": "Signing you in automatically. Please wait.",
+      "loginSuccess": "Signed in successfully.",
+      "loginFailed": "Failed to sign in.",
+      "retryLogin": "Please try signing in again."
+    }
+  },
+  "lists": {
+    "grade": {
+      "select": "Select",
+      "B1": "B1 (1st year undergraduate)",
+      "B2": "B2 (2nd year undergraduate)",
+      "B3": "B3 (3rd year undergraduate)",
+      "B4": "B4 (4th year undergraduate)",
+      "M1": "M1 (1st year master's)",
+      "M2": "M2 (2nd year master's)",
+      "D1": "D1 (1st year doctoral)",
+      "D2": "D2 (2nd year doctoral)",
+      "D3": "D3 (3rd year doctoral)",
+      "GD1": "GD1 (1st year innovation program)",
+      "GD2": "GD2 (2nd year innovation program)",
+      "GD3": "GD3 (3rd year innovation program)",
+      "GD4": "GD4 (4th year innovation program)",
+      "GD5": "GD5 (5th year innovation program)",
+      "faculty": "Faculty / Staff",
+      "other": "Other"
+    },
+    "department": {
+      "select": "Select",
+      "1": "Mechanical Engineering (Undergraduate Program)",
+      "2": "Electrical, Electronics and Information Engineering (Undergraduate Program)",
+      "3": "Materials Science and Biotechnology (Undergraduate Programs)",
+      "4": "Civil and Environmental Engineering (Undergraduate Program)",
+      "5": "Information and Management Systems Engineering (Undergraduate Program)",
+      "6": "Mechanical Engineering (Graduate Program)",
+      "7": "Electrical, Electronics and Information Engineering (Graduate Program)",
+      "8": "Materials Science and Biotechnology (Graduate Programs)",
+      "9": "Civil and Environmental Engineering (Graduate Program)",
+      "10": "Information and Management Systems Engineering (Graduate Program)",
+      "11": "Integrated Quantum and Nuclear Engineering",
+      "12": "System Safety Engineering",
+      "13": "GIGAKU Innovation Group",
+      "14": "Information Science and Control Engineering",
+      "15": "Materials Science",
+      "16": "Energy and Environmental Engineering",
+      "17": "Integrated Bioscience and Technology",
+      "18": "Other"
+    }
+  },
+  "userEditModal": {
+    "labels": {
+      "name": "Name",
+      "email": "Email address",
+      "tel": "Phone number",
+      "studentId": "Student ID",
+      "grade": "Grade",
+      "department": "Department"
+    },
+    "notes": {
+      "name": "e.g., Taro Nagaoka",
+      "email": "e.g., s123456@stn.nagaokaut.ac.jp",
+      "tel": "e.g., 09012345678",
+      "studentId": "e.g., 12345678"
+    },
+    "messages": {
+      "emailChangeConfirm": "If you change your email address, you must sign in again with the new address. Your password will remain the same."
+    },
+    "toasts": {
+      "cancelled": "Update was cancelled.",
+      "updateSuccess": "User information updated.",
+      "emailChanged": "Email updated. Please sign in again."
+    },
+    "errors": {
+      "duplicateEmail": "This email address is already in use.",
+      "updateFailed": "Failed to update."
+    },
+    "validation": {
+      "name": "Name is required.",
+      "studentId": "Enter an 8-digit student ID.",
+      "tel": "Enter a valid phone number (e.g., 09012345678).",
+      "telMin": "Phone number is too short.",
+      "telMax": "Phone number is too long.",
+      "email": "Enter a valid email address.",
+      "department": "Select a department.",
+      "grade": "Select a grade."
+    }
+  },
+  "applications": {
+    "group": {
+      "title": "Group Registration",
+      "loading": "Loading...",
+      "errors": {
+        "fetch": "Failed to fetch data."
+      },
+      "fields": {
+        "name": "Group name",
+        "projectName": "Project name",
+        "isInternational": "Is this an international group?",
+        "isExternal": "Is this an off-campus group?",
+        "groupCategory": "Participation type",
+        "activity": "Activity details"
+      },
+      "notes": {
+        "name": "e.g., NUT Festival Executive Committee",
+        "projectName": "e.g., Gidai Rangers",
+        "international": "Please confirm your registration status.",
+        "external": "Please confirm whether outside organizations are allowed.",
+        "groupCategory": "Select the format that best fits your activity.",
+        "activity": "e.g., Food sales, stage performance"
+      },
+      "boolean": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "options": {
+        "international": {
+          "no": "No, we are not an international (international-student) group.",
+          "yes": "Yes, we are an international (international-student) group."
+        },
+        "external": {
+          "no": "No, we are an on-campus group.",
+          "yes": "Yes, we are an off-campus group."
+        }
+      }
+    },
+    "venue": {
+      "title": "Venue Application",
+      "loading": "Loading...",
+      "fields": {
+        "firstChoice": "First choice",
+        "secondChoice": "Second choice",
+        "thirdChoice": "Third choice",
+        "remark": "Remarks"
+      }
+    },
+    "rentItems": {
+      "title": "Equipment rental application",
+      "loading": "Loading data...",
+      "errors": {
+        "fetchTitle": "Error:",
+        "fetchDescription": "Failed to load data. Please reload the page."
+      },
+      "radio": {
+        "question": "Will you submit a rental request?",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "summary": {
+        "noApplication": {
+          "label": "Rental request not required (saved)",
+          "description": "We will not borrow any equipment from the school."
+        },
+        "count": "{{value}} items"
+      },
+      "location": {
+        "displayLabel": "First choice:",
+        "radioQuestion": "Which venue type is your first choice?",
+        "options": {
+          "indoor": "Indoor",
+          "outdoor": "Outdoor"
+        },
+        "notes": {
+          "preApplication": "Please submit your venue application first.",
+          "foodOnlyOutdoor": "Food sales groups can only operate outdoors."
+        }
+      },
+      "fields": {
+        "section": "Item {{index}}",
+        "item": "Item name",
+        "count": "Quantity"
+      },
+      "notes": {
+        "minRequest": "Request only the minimum quantity you need.",
+        "contactLimit": "If you need 20 or more units, please email us.",
+        "contactEmail": "nutfes.soumu@gmail.com"
+      },
+      "buttons": {
+        "addItem": "Add item"
+      },
+      "messages": {
+        "registerNoItemsFailed": "Failed to save the response that no rental is needed.",
+        "deleteExistingError": "An error occurred while deleting existing rental data.",
+        "deleteExistingFailed": "Failed to delete the existing rental request.",
+        "registerNoItemsSuccess": "Saved that no rental request is needed.",
+        "unexpectedError": "An unexpected error occurred.",
+        "unexpectedErrorWithDetail": "An unexpected error occurred: {{message}}",
+        "unexpectedRetry": "An unexpected error occurred. Please try again.",
+        "submitError": "An error occurred while submitting. Please try again.",
+        "submitFailed": "Failed to submit the rental request.",
+        "updateSuccess": "Rental request updated.",
+        "createSuccess": "Rental request submitted.",
+        "editStartFailed": "Failed to start editing."
+      },
+      "validation": {
+        "selectItem": "Please select an item.",
+        "minCount": "Enter at least one.",
+        "selectLocation": "Please select a venue type.",
+        "addOneItem": "Add at least one item.",
+        "fillAllFields": "Complete all item fields.",
+        "noDuplicates": "You cannot add the same item more than once.",
+        "tentLimit": "You can request at most one tent.",
+        "partitionDisplayExclusive": "You can request either partitions or display boards, not both.",
+        "longTableLimit": "You can request at most one long table.",
+        "tableOutdoorLimit": "Outdoor groups can request up to 20 tables.",
+        "chairOutdoorLimit": "Outdoor groups can request up to 20 chairs."
+      }
+    },
+    "purchaseLists": {
+      "title": "Purchase application",
+      "loading": "Loading...",
+      "errors": {
+        "fetch": "Failed to fetch data."
+      },
+      "deadline": {
+        "title": "Submission deadline has passed",
+        "description": "The purchase application deadline is over, so you can no longer submit a new request."
+      },
+      "summary": {
+        "labels": {
+          "foodProduct": "Product name",
+          "items": "Ingredients / materials",
+          "type": "Product type",
+          "shop": "Shop",
+          "date": "Purchase date",
+          "remark": "Remarks",
+          "url": "URL"
+        }
+      },
+      "radio": {
+        "label": "Product type",
+        "options": {
+          "fresh": "Fresh food",
+          "processed": "Processed food"
+        }
+      },
+      "fields": {
+        "section": "Item {{index}}",
+        "foodProduct": "Product name",
+        "items": "Ingredients/materials used for the selected dish",
+        "type": "Product type",
+        "shop": "Shop",
+        "purchaseDate": "Purchase date",
+        "url": "URL",
+        "remark": "Remarks"
+      },
+      "notes": {
+        "foodProduct": "Selectable after you register your food product application.",
+        "shop": "If you choose online order, a URL is required.",
+        "purchaseDate": "Example: 2025/03/14",
+        "url": "Enter the URL of the e-commerce site you used.",
+        "remarkOther": "Enter the shop name, address, phone number, and opening hours.",
+        "remarkDefault": "Add any other details if needed."
+      },
+      "buttons": {
+        "addItem": "Add purchase item"
+      },
+      "messages": {
+        "itemDeleteSuccess": "Deleted the purchase item.",
+        "itemDeleteFailed": "Failed to delete the item.",
+        "bulkCreateSuccess": "Submitted multiple purchase applications.",
+        "updateSuccess": "Purchase application updated.",
+        "createSuccess": "Purchase application submitted.",
+        "submitFailed": "Failed to submit."
+      },
+      "validation": {
+        "foodProduct": "Select a product.",
+        "shop": "Select a shop.",
+        "items": "Enter the ingredients or materials.",
+        "purchaseDate": "Enter the purchase date.",
+        "invalidDate": "Enter a valid date.",
+        "invalidUrl": "Enter a valid URL.",
+        "urlRequired": "Enter a URL for online orders.",
+        "remarkRequired": "For “Other” shops, enter the name, address, phone number, and opening hours.",
+        "minItems": "Register at least one purchase item."
+      }
+    },
+    "foodProduct": {
+      "title": "Product for sales application",
+      "loading": "Loading...",
+      "errors": {
+        "fetch": "Failed to fetch data."
+      },
+      "deadline": {
+        "title": "Submission deadline has passed",
+        "description": "You can no longer submit new products because the deadline has passed."
+      },
+      "view": {
+        "summaryLabel": "Product list",
+        "registered": "{{count}} items registered",
+        "none": "Not registered",
+        "empty": "No products have been registered.",
+        "addButton": "Add product"
+      },
+      "summary": {
+        "labels": {
+          "name": "Product name",
+          "alcohol": "Is it alcoholic?",
+          "cooking": "Cooking required",
+          "day1": "Day 1 quantity",
+          "day2": "Day 2 quantity"
+        }
+      },
+      "radio": {
+        "alcohol": {
+          "label": "Is this an alcoholic beverage?",
+          "note": "Selecting “Yes” automatically sets cooking to “required.”",
+          "options": {
+            "yes": "Yes",
+            "no": "No"
+          }
+        },
+        "cooking": {
+          "label": "Cooking required",
+          "options": {
+            "yes": "Yes (e.g., alcohol, heated dishes)",
+            "no": "No (e.g., soft drinks)"
+          }
+        }
+      },
+      "fields": {
+        "name": "Product name",
+        "day1": "Planned quantity (Day 1)",
+        "day2": "Planned quantity (Day 2)"
+      },
+      "notes": {
+        "processing": "Processing...",
+        "quantity": "Use half-width numbers."
+      },
+      "buttons": {
+        "add": "Add product"
+      },
+      "messages": {
+        "updateSuccess": "Updated the product list.",
+        "updateFailed": "Failed to update the product list.",
+        "updateFailedDetail": "Failed to update the product list: {{message}}",
+        "createSuccess": "Submitted the product list.",
+        "createFailed": "Failed to submit the product list.",
+        "createFailedDetail": "Failed to submit the product list: {{message}}",
+        "deleteSuccess": "Deleted “{{name}}”.",
+        "deleteFailed": "Failed to delete the product.",
+        "deleteFailedDetail": "Failed to delete the product: {{message}}",
+        "deleteNotFound": "Could not find the product to delete.",
+        "authRequired": "Authentication is required. Please sign in."
+      },
+      "validation": {
+        "name": "Enter a product name.",
+        "isAlcohol": "Select whether it is alcoholic.",
+        "isCooking": "Select whether cooking is required.",
+        "day1": "Enter the planned quantity for Day 1.",
+        "day2": "Enter the planned quantity for Day 2.",
+        "number": "Use half-width numbers.",
+        "minValue": "Enter a value of 1 or more.",
+        "alcoholRequiresCooking": "Alcohol must be marked as requiring cooking.",
+        "minProducts": "Register at least one product."
+      }
+    },
+    "power": {
+      "title": "Power application",
+      "radio": {
+        "question": "Will you submit a power application?",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "summary": {
+        "noApplication": {
+          "label": "Power application not required (saved)",
+          "description": "We will not use any devices that require power."
+        },
+        "fields": {
+          "productName": "Product name",
+          "manufacturer": "Manufacturer",
+          "model": "Model number",
+          "url": "Product URL",
+          "maxPower": "Power consumption"
+        },
+        "powerValue": "{{value}} W"
+      },
+      "form": {
+        "fields": {
+          "productName": "Device name",
+          "manufacturer": "Device manufacturer",
+          "model": "Model number",
+          "url": "Product URL",
+          "maxPower": "Power (W)"
+        },
+        "notes": {
+          "url": "Enter the URL of the product introduction page.",
+          "totalPower": "Keep the total consumption of all devices within {{limit}} W.",
+          "emailWarning": "If you need more than {{limit}} W, contact us at the email below.",
+          "contactEmail": "nutfes.soumu@gmail.com"
+        },
+        "addDevice": "Add device",
+        "totalPowerWarning": "Total power exceeds {{limit}} W (current: {{value}} W)."
+      },
+      "errors": {
+        "submitTitle": "Error:"
+      },
+      "messages": {
+        "partialDeleteWarning": "Some devices could not be deleted, but the process will continue.",
+        "registerNegativeSuccess": "Saved your response that no power application is needed.",
+        "registerNegativeFailed": "Failed to save your response. Please try again.",
+        "processError": "Failed to process the application. Please try again.",
+        "missingGroup": "Could not retrieve the group ID.",
+        "unregisteredDeleteWarning": "There was an issue removing the previous response, but the process will continue.",
+        "updateSuccess": "Power application updated.",
+        "createSuccess": "Power application submitted.",
+        "submitFailed": "Failed to submit the application. Please try again.",
+        "submitUnexpectedError": "An error occurred while submitting the application.",
+        "deviceDeleteSuccess": "Deleted the device.",
+        "deviceDeleteFailed": "Failed to delete the device. Please try again.",
+        "deviceDeleteError": "An error occurred while deleting the device."
+      },
+      "validation": {
+        "productNameRequired": "Enter a product name.",
+        "manufacturerRequired": "Enter the manufacturer.",
+        "modelRequired": "Enter the model number.",
+        "invalidUrl": "Enter a valid URL.",
+        "invalidNumber": "Enter a number.",
+        "minPower": "Enter at least 1 W.",
+        "maxPower": "Enter 1500 W or less.",
+        "minDevices": "Register at least one device.",
+        "totalPowerLimit": "Keep the total power consumption within 1500 W."
+      }
+    },
+    "stage": {
+      "title": "Stage application",
+      "loading": "Loading stage data...",
+      "fields": {
+        "date": "Event date",
+        "sunnyFirst": "Sunny: first choice",
+        "sunnySecond": "Sunny: second choice",
+        "rainyFirst": "Rainy: first choice",
+        "rainySecond": "Rainy: second choice",
+        "prepTime": "Preparation time",
+        "performTime": "Performance time",
+        "cleanupTime": "Cleanup time"
+      },
+      "notes": {
+        "select": "Please select",
+        "unit": " (Unit: min)",
+        "prepTime": "Enter the minutes required to prepare on stage.",
+        "performTime": "The total of preparation, performance, and cleanup must be within 120 minutes.",
+        "cleanupTime": "Enter the minutes required to clean up on stage."
+      },
+      "minutes": "{{value}} min",
+      "messages": {
+        "missingGroup": "Group ID was not found.",
+        "submitError": "An error occurred while submitting. Please try again.",
+        "unexpectedError": "An unexpected error occurred. Please try again.",
+        "updateSuccess": "Stage preferences updated.",
+        "createSuccess": "Stage preferences submitted."
+      },
+      "errors": {
+        "fetchTitle": "Error:",
+        "fetchDescription": "Failed to fetch data. Please reload the page.",
+        "submitTitle": "Submission error:"
+      },
+      "validation": {
+        "sunnyFirst": "Select your first sunny-day preference.",
+        "sunnySecond": "Select your second sunny-day preference.",
+        "rainyFirst": "Select your first rainy-day preference.",
+        "rainySecond": "Select your second rainy-day preference.",
+        "prepTimeRequired": "Enter a preparation time.",
+        "performTimeRequired": "Enter a performance time.",
+        "cleanupTimeRequired": "Enter a cleanup time.",
+        "prepTimeInvalid": "Enter a valid preparation time.",
+        "performTimeInvalid": "Enter a valid performance time.",
+        "cleanupTimeInvalid": "Enter a valid cleanup time.",
+        "totalTime": "The total of preparation, performance, and cleanup must be 120 minutes or less.",
+        "sunnyChoiceDuplicate": "Choose a different stage than your first sunny-day choice.",
+        "rainyChoiceDuplicate": "Choose a different stage than your first rainy-day choice."
+      }
+    },
+    "stageOptions": {
+      "title": "Stage option application",
+      "fields": {
+        "ownEquipment": "Will you bring electrical equipment?",
+        "bgm": "Will you bring equipment that connects to the speakers?",
+        "cameraPermission": "Do you allow the committee to film your performance?",
+        "loudSound": "Will you produce loud sounds?"
+      },
+      "notes": {
+        "select": "Please select"
+      },
+      "options": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "messages": {
+        "submitSuccess": "Submitted successfully.",
+        "submitFailed": "Submission failed. Please try again later."
+      }
+    },
+    "publicRelations": {
+      "title": "Public relations submission",
+      "fields": {
+        "text": "PR text (used on the website, pamphlet, and announcements)",
+        "announce": "Would you like to make an announcement?",
+        "image": "PR image"
+      },
+      "notes": {
+        "text": "Japanese: 0–50 characters / English: 0–25 words",
+        "upload": [
+          "File types: png, jpeg",
+          "File size: under 10 MB",
+          "Image shape: square (ideally a photo of your food/product)"
+        ],
+        "existingImage": "If you don’t upload a new image, the current one will be kept."
+      },
+      "uploadStatus": "Uploaded: {{fileName}}",
+      "options": {
+        "announce": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "validation": {
+        "imageRequired": "Please upload an image.",
+        "imageSquare": "Please upload a square image.",
+        "imageLoadFailed": "Failed to load the selected image.",
+        "sizeLimit": "Image files must be under 10 MB.",
+        "format": "Only png or jpeg files are supported.",
+        "jpLimit": "Japanese text must be 50 characters or less.",
+        "enLimit": "English text must be 25 words or fewer."
+      },
+      "messages": {
+        "imgurMissing": "Imgur Client ID is not configured. Check your environment variables.",
+        "imgurUploadFailed": "Failed to upload the image.",
+        "submitSuccess": "Submitted successfully.",
+        "submitFailed": "Submission failed. Please try again later."
+      },
+      "state": {
+        "notSet": "Not set",
+        "missingText": "(No PR text submitted)"
+      }
+    },
+    "viceRepresentative": {
+      "title": "Vice Representative Application",
+      "note": "If you are participating alone, you do not need to submit this application.",
+      "summary": {
+        "individual": {
+          "label": "No vice representative required (saved)",
+          "description": "You are participating alone."
+        }
+      },
+      "fields": {
+        "isIndividual": "Are you participating alone?",
+        "name": "Name",
+        "studentId": "Student ID",
+        "gradeId": "Grade",
+        "departmentId": "Department",
+        "email": "Email address",
+        "tel": "Phone number"
+      },
+      "notes": {
+        "name": "e.g., Taro Nagaoka",
+        "studentId": "8-digit half-width numbers only (e.g., 12345678)",
+        "email": "e.g., 123456@stn.nagaokaut.ac.jp",
+        "tel": "e.g., 09012345678 (no hyphen)"
+      },
+      "radio": {
+        "options": {
+          "individual": "Yes (participating alone)",
+          "group": "No (participating as a group)"
+        }
+      },
+      "messages": {
+        "submitSuccess": "Submitted successfully.",
+        "submitFailed": "Failed to submit."
+      },
+      "validation": {
+        "name": "Enter the vice representative's name.",
+        "studentIdInteger": "Enter numbers only.",
+        "studentIdLength": "Student ID must be 8 digits.",
+        "gradeId": "Select a grade.",
+        "departmentId": "Select a department.",
+        "email": "Enter an email address.",
+        "emailFormat": "Enter a valid email address.",
+        "tel": "Enter a 10 or 11 digit phone number starting with 0."
+      }
+    },
+    "employees": {
+      "title": "Employee Application",
+      "deadline": {
+        "title": "The submission deadline has passed",
+        "description": "The deadline for the employee application has passed, so you can no longer submit a new application."
+      },
+      "summary": {
+        "noApplication": {
+          "label": "No employee application required (saved)",
+          "description": "Only the representative and vice representative will participate."
+        },
+        "headers": {
+          "name": "Employee name",
+          "studentId": "Student ID"
+        }
+      },
+      "radio": {
+        "label": "Will you register members other than the representative and vice representative?",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "form": {
+        "labels": {
+          "name": "Employee name",
+          "studentId": "Student ID"
+        },
+        "notes": {
+          "name": "e.g., Hanako NUT",
+          "studentId": "e.g., 12345678"
+        }
+      },
+      "buttons": {
+        "addEmployee": "Add employee"
+      },
+      "messages": {
+        "applicationSuccess": "Employee information saved.",
+        "applicationFailed": "Failed to save the employee information.",
+        "noApplicationSuccess": "Saved that no employee registration is required.",
+        "noApplicationFailed": "Failed to save the response that no employee registration is required.",
+        "deleteSuccess": "Employee deleted.",
+        "deleteFailed": "Failed to delete the employee.",
+        "registerUnregisteredFailed": "Failed to save.",
+        "deleteUnregisteredFailed": "Failed to delete."
+      },
+      "validation": {
+        "name": "Employee name is required.",
+        "studentId": "Enter an 8-digit student ID."
+      }
+    },
+    "cookingProcessOrder": {
+      "title": "Cooking Process Application",
+      "warning": "Please submit your food product application first.",
+      "summary": {
+        "labels": {
+          "foodProduct": "Product name",
+          "preOpen": "Kitchen use (before opening)",
+          "duringOpen": "Kitchen use (during business)",
+          "description": "Cooking details"
+        },
+        "status": {
+          "use": "Will use",
+          "notUse": "Will not use",
+          "notRegistered": "Not submitted"
+        }
+      },
+      "fields": {
+        "kitchenUsage": "Kitchen usage",
+        "preOpen": "(Before opening)",
+        "duringOpen": "(During business)",
+        "tent": "Cooking details",
+        "confirm": "Confirmation items"
+      },
+      "placeholders": {
+        "tent": "Example:\n1. Measure 15 g of coffee beans\n2. Place in filter\n3. Heat\n4. Plate and serve"
+      },
+      "notes": {
+        "confirm": "Check every confirmation item."
+      },
+      "options": {
+        "kitchenUsage": {
+          "use": "Will use",
+          "notUse": "Will not use"
+        }
+      },
+      "checkbox": {
+        "options": [
+          "I described the hygiene control process in as much detail as possible.",
+          "I confirmed whether the final product is heated before serving.",
+          "I also submitted the cooking process for alcoholic beverages."
+        ]
+      },
+      "buttons": {
+        "edit": "Edit"
+      },
+      "messages": {
+        "updateSuccess": "Cooking processes updated.",
+        "updateFailed": "Failed to update the cooking processes."
+      },
+      "validation": {
+        "tentRequired": "Enter the cooking details.",
+        "confirmAll": "Check all confirmation items."
+      }
+    },
+    "venueMap": {
+      "title": "Venue Layout",
+      "fields": {
+        "picture": "Venue layout image",
+        "checklist": "Layout checklist"
+      },
+      "summary": {
+        "notSet": "Not set"
+      },
+      "notes": {
+        "required": "*Required",
+        "existing": "If you do not upload a new image, the current image will be used.",
+        "currentImage": "Current image: {{name}}",
+        "unknownFile": "Unknown file name"
+      },
+      "upload": {
+        "note": [
+          "Show the placement of tables, chairs, and equipment.",
+          "File types: png, jpeg",
+          "File size: 20 MB max"
+        ],
+        "uploaded": "Uploaded: {{fileName}}"
+      },
+      "checklist": {
+        "note": "Check every item.",
+        "options": {
+          "trashPosition": "I included the location of the trash bins.",
+          "foodStorage": "I included where ingredients will be stored.",
+          "allItemsListed": "I added every requested item to the layout.",
+          "fireHazardousMaterials": "I specified where fire or electrical appliances will be used.",
+          "partitionPlacement": "I confirmed that partitions/boards stay outside the kitchen area and are placed on the side of the tent."
+        }
+      },
+      "messages": {
+        "imgurMissing": "Imgur Client ID is not configured. Check your environment variables.",
+        "imgurUploadFailed": "Failed to upload the image.",
+        "submitSuccess": "Submitted successfully.",
+        "submitFailed": "Submission failed. Please try again later."
+      },
+      "buttons": {
+        "submitting": "Submitting..."
+      },
+      "validation": {
+        "imageRequired": "Upload the venue layout image.",
+        "fileSize": "File size must be under 20 MB.",
+        "fileType": "Only png or jpeg files are supported.",
+        "checklist": "Confirm every item."
+      }
+    },
+    "fireEquipment": {
+      "title": "Fire Use Application",
+      "fields": {
+        "name": "Fire equipment name",
+        "quantity": "Number of units",
+        "fuel": "Fuel",
+        "usage": "Purpose of use",
+        "isTakeaway": "Can you take the fire equipment out of the tent every day?",
+        "remark": "Remarks"
+      },
+      "fuel": {
+        "gasBottle": "Cassette gas",
+        "lpGas": "LP gas",
+        "charcoal": "Charcoal"
+      },
+      "radio": {
+        "question": "Will you use fire equipment?",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "notes": {
+        "quantity": "Half-width numbers only",
+        "takeaway": "In principle, take fire equipment back with you every day unless you cannot do so.\nLeaving fire equipment inside the tent may cause a fire.",
+        "remark": "If you select No, write the reason in the remarks field.",
+        "remarkRequired": "Required if you select No",
+        "excludedItems": "Electric hot plates and IH cookers are not included."
+      },
+      "summary": {
+        "noApplication": {
+          "label": "Fire use application not required (saved)",
+          "description": "We will not use fire equipment."
+        }
+      },
+      "messages": {
+        "deleteSuccess": "Deleted the fire use application.",
+        "deleteFailed": "Failed to delete. Please try again.",
+        "noApplicationSuccess": "Saved that no fire use application is needed.",
+        "registerSuccess": "Fire use application submitted.",
+        "updateSuccess": "Fire use application updated.",
+        "submitFailed": "Submission failed: {{message}}"
+      },
+      "validation": {
+        "required": "Enter this field.",
+        "quantity": "Enter a number of 1 or more.",
+        "fuel": "Select a fuel.",
+        "remarkRequired": "Remarks are required when you cannot take the equipment back every day.",
+        "group": "Select a group."
+      }
+    }
+  },
+  "auth": {
+    "logout": "Log out"
+  },
+  "userModal": {
+    "guest": "Guest",
+    "noEmail": "No email address",
+    "toasts": {
+      "logoutSuccess": "Logged out.",
+      "logoutFailed": "Failed to log out."
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  }
+}
