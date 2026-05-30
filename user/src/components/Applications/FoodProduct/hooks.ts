@@ -4,9 +4,9 @@ import {
   useGetFoodProducts,
   useUpsertFoodProducts,
 } from '@/api/foodProductApi';
-import { mutate } from 'swr';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import {
   ProductInput,
   RegisteredProduct,
@@ -262,9 +262,9 @@ export const useFoodProductHooks = (
       await mutateFoodProducts();
       // 調理工程申請のキャッシュも更新して古いデータを消す
       await mutate(
-          (key) =>
-              Array.isArray(key) &&
-              key[0] === `/cooking_process_orders/group/${groupId}`
+        (key) =>
+          Array.isArray(key) &&
+          key[0] === `/cooking_process_orders/group/${groupId}`
       );
 
       // 少し待ってからもう一度再取得

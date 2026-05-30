@@ -174,11 +174,7 @@ export const useCookingProcessOrder = (
   }, [isExist]);
 
   useEffect(() => {
-    if (
-        hasInitializedEditing ||
-        isRegistered === undefined ||
-        isDataLoading
-    ) {
+    if (hasInitializedEditing || isRegistered === undefined || isDataLoading) {
       return;
     }
 
@@ -189,7 +185,13 @@ export const useCookingProcessOrder = (
     }
 
     setHasInitializedEditing(true);
-  }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline, isExist]);
+  }, [
+    isRegistered,
+    isDataLoading,
+    cookingTargetFoodProducts,
+    isDeadline,
+    isExist,
+  ]);
 
   return {
     methods,
