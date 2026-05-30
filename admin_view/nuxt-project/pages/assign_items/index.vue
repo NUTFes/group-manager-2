@@ -1041,14 +1041,16 @@ export default {
 }
 .stock-inventory {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
 }
 .inventory-item {
+  display : flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: wrap;
   max-width: 300px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
   background-color: white;
   padding: 4px 12px;
   border: 1px solid #e0e7ff;
@@ -1101,12 +1103,15 @@ export default {
 }
 .assign-inputs {
   display: flex;
+  flex: 1;
   gap: 8px;
-  margin-right: 8px;
+  margin-right: 12px;
+  justify-content: flex-end;
 }
 .assign-input-group {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 .input-label {
