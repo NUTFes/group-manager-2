@@ -159,7 +159,7 @@
             <div class="stock-inventory">
               <div v-for="itemId in activeItemIds" :key="itemId" class="inventory-item">
                 <span class="inventory-label">{{ getItemName(itemId) }}</span>
-                <span class="inventory-value">
+                <span  class = "inventory-value" :class="getRemainingStock(stock, itemId) < 0 ? 'text-danger' : 'text-normal'">
                   {{ getRemainingStock(stock, itemId) }}<span class="inventory-total">/{{ stock.inventory[itemId] || 0 }}</span>
                 </span>
               </div>
@@ -180,9 +180,14 @@
               <div class="assign-inputs">
                 <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
                   <span class="input-label">{{ getItemName(itemId) }}</span>
-                  <span class="num-input highlight">
-                    {{ assign.assigned[itemId] !== undefined ? assign.assigned[itemId] : 0 }}
-                    </span>
+                  <input
+                    type="number"
+                    min="0"
+                    :value="assign.assigned[itemId] || 0"
+                    @blur="updateManualAssign($event, assign, itemId)"
+                    @keyup.enter="$event.target.blur()"
+                    class="num-input highlight"
+                  >
                 </div>
                 <button class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
@@ -235,6 +240,7 @@ export default {
       { id: 'fixed', label: '固定値' }
       ],
       expandedGroupIds: [],
+      oldEditingValue: 0,
     };
   },
 
@@ -445,7 +451,6 @@ export default {
       const groupId = e.dataTransfer.getData('groupId');
       const group = this.groups.find(g => g.id === Number(groupId));
       if (!group) return;
-
       const newAssignment = {
         id: `temp-${Date.now()}`,
         groupId: group.id,
@@ -486,27 +491,88 @@ export default {
           }
         }).filter(p => p !== undefined);
 
-        if (postRequests.length === 0) {
-          this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
-          return;
-        }
+        // if (postRequests.length === 0) {
+        // this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
+        // return;
+        // }
 
-       const results = await Promise.all(postRequests);
-       //バックエンドの作成結果からdbIdsを埋める
+                  const results = await Promise.all(postRequests);
+              //バックエンドの作成結果からdbIdsを埋める
        newAssignment.dbIds = [];
-       results.forEach(({ itemId, res }) => {
-        (Array.isArray(res) ? res : [res]).forEach(record => {
-          if (record && record.id) {
-            newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId) });
-          }
-        });
-       });
-       //temp idから確定idに置き換え
+          results.forEach(({ itemId, res }) => {
+            (Array.isArray(res) ? res : [res]).forEach(record => {
+              if (record && record.id) {
+                newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId) });
+              }
+            });
+          });
+        //temp idから確定idに置き換え
        newAssignment.id = `${newAssignment.groupId}_${newAssignment.stockId}`;
       } catch (error) {
-        //部分成功への配慮：Dbを再取得して同期する
+        // エラー時は再取得して同期
         await this.fetchDataFromDB();
         this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
+      }
+    },
+    // 数の手動変更と保存処理
+    async updateManualAssign(e, assign, itemId) {
+     let newValue = parseInt(e.target.value, 10);
+      if (isNaN(newValue) || newValue < 0) {
+        newValue = 0;
+      }
+
+      const oldValue = assign.assigned[itemId] || 0;
+      if (newValue === oldValue) return; // 変更がなければ終了
+     
+      this.$set(assign.assigned, itemId, newValue);
+
+      // 編集対象のレコード（dbId）を探す
+      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
+
+      try {
+        if (newValue === 0 && dbRecord) {
+          // パターンA: 0になったら割り当て解除（DELETE）
+          await this.$axios.$delete(`/assign_rental_items/${dbRecord.id}`);
+          assign.dbIds = assign.dbIds.filter(db => db.id !== dbRecord.id);
+
+        } else if (dbRecord) {
+          // PUT処理
+          const putPayload = {
+            group_id: assign.groupId,
+            num: newValue,
+            rental_item_id: Number(itemId),
+            stocker_place_id: assign.stockId
+          };
+
+          // 🚨 ここで送信直前のデータをブラウザのコンソールで確認！
+          console.log("PUT URL ID:", dbRecord.id);
+          console.log("PUT Payload:", putPayload);
+
+          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
+
+        } else if (!dbRecord && newValue > 0) {
+          // これまで0だったところに新規で数を入力した場合（POST）
+          const postPayload = {
+            items: [{ group_id: assign.groupId, num: newValue }],
+            rentalItemId: Number(itemId),
+            stockerPlaceId: assign.stockId
+          };
+          const res = await this.$axios.$post('/assign_rental_items', postPayload);
+          
+          // 新しく生成された dbId を保存
+          const resData = Array.isArray(res.data) ? res.data[0] : res.data;
+          if (resData && resData.id) {
+            assign.dbIds.push({ id: resData.id, itemId: Number(itemId) });
+          }
+        }
+      } catch (error) {
+        console.error("更新エラー詳細:", error.response ? error.response.data : error);
+        this.$set(assign.assigned, itemId, oldValue);
+        e.target.value = oldValue;
+        console.error("数の更新に失敗しました", error);
+        // エラー時は画面の表示を元の数字に戻す
+        assign.assigned[itemId] = oldValue;
+        alert("更新に失敗しました。在庫数の上限を超えていないか等を確認してください。");
       }
     },
 
@@ -520,6 +586,8 @@ export default {
         const deletePromises = targetDbItems.map(dbItem => 
           this.$axios.$delete("/assign_rental_items/" + dbItem.id)
         );
+        // 削除対象のカードのID
+        this.assignments = this.assignments.filter(assign => assign.id !== this.assignRentalItemDeleteId);
         
         try {
           await Promise.all(deletePromises);
@@ -598,7 +666,7 @@ export default {
     getRemainingStock(stock, itemId) {
       const total = stock.inventory[Number(itemId)] || 0;
       const used = this.getUsedStock(stock.id, Number(itemId));
-      return Math.max(0, total - used);
+      return Math.max(total - used);
     },
     getGroupAssignedTotal(groupId, itemId) {
       return this.assignments
@@ -614,13 +682,7 @@ export default {
       return this.assignments.filter(assign => {
         if (assign.stockId !== stockId) return false;
         
-        if (assign.id.startsWith('temp-')) return true;
-
-        const hasActiveItem = this.activeItemIds.some(itemId => {
-          return assign.assigned[itemId] && assign.assigned[itemId] > 0;
-        });
-        
-        return hasActiveItem;
+        return true;
       });
     },
     isGroupFulfilled(group) {
@@ -660,7 +722,7 @@ export default {
       counts: counts
     };
   }).filter(a => a !== null);
-},
+  },
   },
 };
 </script>
@@ -919,6 +981,7 @@ export default {
 }
 .text-danger { color: #d33838; }
 .text-success { color: #16a34a; }
+.text-nomal { color: #333333;}
 
 .assign-result {
   font-weight: bold;
@@ -997,7 +1060,7 @@ export default {
   font-size: 12px;
 }
 .inventory-label { color: #333333; font-size: 14px; }
-.inventory-value { font-weight: bold; color: #333333; }
+.inventory-value { font-weight: bold; }
 .inventory-total { color: #94a3b8; font-size: 12px; font-weight: normal; }
 
 /* 割り当てリスト */
