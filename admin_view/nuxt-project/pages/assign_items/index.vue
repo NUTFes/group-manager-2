@@ -246,9 +246,11 @@ export default {
 
  // 初期マスターデータの取得 (年度とカテゴリー)
   async asyncData({ $axios }) {
-    const currentYearRes = await $axios.$get("/user_page_settings/1");
-    const yearsRes = await $axios.$get("/fes_years");
-    const categoryRes = await $axios.$get("/group_categories");
+    const [currentYearRes, yearsRes, categoryRes] = await Promise.all([
+    $axios.$get("/user_page_settings/1"),
+    $axios.$get("/fes_years"),
+    $axios.$get("/group_categories"),
+   ]);
 
     const currentYearData = yearsRes.data.find(
       (y) => y.id === currentYearRes.data.fes_year_id
@@ -420,7 +422,7 @@ export default {
           }
         }
 
-        if (!groupId || !stockId || !itemKey) return;
+        if (groupId == null || stockId == null || itemKey == null) return;
 
         const key = `${groupId}_${stockId}`;
 
@@ -468,6 +470,12 @@ export default {
       const groupId = e.dataTransfer.getData('groupId');
       const group = this.groups.find(g => g.id === Number(groupId));
       if (!group) return;
+      const existingAssignment = this.assignments.find(
+        (assign) =>
+          Number(assign.groupId) === Number(group.id) &&
+          Number(assign.stockId) === Number(stock.id)
+      );
+      if (existingAssignment) return;
       const newAssignment = {
         id: `temp-${Date.now()}`,
         groupId: group.id,
@@ -604,11 +612,12 @@ export default {
         const deletePromises = targetDbItems.map(dbItem => 
           this.$axios.$delete("/assign_rental_items/" + dbItem.id)
         );
-        // 削除対象のカードのID
-        this.assignments = this.assignments.filter(assign => assign.id !== this.assignRentalItemDeleteId);
-        
+       
         try {
           await Promise.all(deletePromises);
+          this.assignments = this.assignments.filter(
+            assign => assign.id !== this.assignRentalItemDeleteId
+          );
         } catch (error) {
           console.error("削除に失敗しました", error);
           return;
@@ -629,7 +638,6 @@ export default {
     },
     openAssignDeleteModal(id) {
       this.assignRentalItemDeleteId = id;
-      this.isOpenAssignDeleteModal = false;
       this.isOpenAssignDeleteModal = true;
     },
     closeAssignDeleteModal() {
@@ -659,14 +667,16 @@ export default {
     },
 
     updateFilters(item_id, name_list) {
-      if (name_list.toString() === this.yearList.toString()) {
+      if (name_list === this.yearList) {
         this.refYearID = item_id;
-        this.refYears = item_id === 0 ? "ALL" : name_list[item_id - 1].year_num;
-      } else if (name_list.toString() === this.groupCategories.toString()) {
+        const found = name_list.find(x => x.id === item_id);
+        this.refYears = item_id === 0 ? "ALL" : (found ? found.year_num : "Year");
+      } else if (name_list === this.groupCategories) {
         this.refCategoryID = item_id;
-        this.refGroupCategories = item_id === 0 ? "ALL" : name_list[item_id - 1].name;
+        const found = name_list.find(x => x.id === item_id);
+        this.refGroupCategories = item_id === 0 ? "ALL" : (found ? found.name : "ALL");
       }
-    },
+     },
 
     getItemName(itemId) {
       const item = this.items.find(i => i.id === Number(itemId));
