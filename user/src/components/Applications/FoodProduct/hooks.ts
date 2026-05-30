@@ -267,11 +267,6 @@ export const useFoodProductHooks = (
           key[0] === `/cooking_process_orders/group/${groupId}`
       );
 
-      // 少し待ってからもう一度再取得
-      setTimeout(async () => {
-        await mutateFoodProducts();
-      }, 500);
-
       toast.success(
         t('applications.foodProduct.messages.deleteSuccess', {
           name: productToRemove.name,
