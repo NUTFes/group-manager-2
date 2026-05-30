@@ -186,7 +186,7 @@ export const useCookingProcessOrder = (
 
     setHasInitializedEditing(true);
   }, [
-    hasInitializedEditing,
+    // hasInitializedEditing,
     isRegistered,
     isDataLoading,
     cookingTargetFoodProducts,
