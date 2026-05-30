@@ -38,7 +38,7 @@ class AssignRentalItemsController < ApplicationController
   # PATCH/PUT /assign_rental_items/1.json
   def update
     @assign_rental_item.update(assign_rental_item_params)
-    render json: fmt(created, @assign_rental_item, "Updated assign_rental_item id = #{params[:id]}")
+    render json: fmt(ok, @assign_rental_item, "Updated assign_rental_item id = #{params[:id]}")
   end
 
   # DELETE /assign_rental_items/1
@@ -62,5 +62,9 @@ class AssignRentalItemsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def assign_rental_items_params
     params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num])
+  end
+  # update用のストロングパラメータ (単数形)
+  def assign_rental_item_params
+    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId)
   end
 end
