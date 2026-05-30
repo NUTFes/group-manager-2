@@ -446,7 +446,13 @@ export default {
           });
         }
       });
-      return Object.values(assignMap);
+      // return Object.values(assignMap);
+      const resultList = Object.values(assignMap);
+      resultList.forEach(assign => {
+      // DBから生成された際に割り当てが存在していた物品IDを記録
+       assign.baseItemIds = Object.keys(assign.assigned);
+      });
+      return resultList;
     },
 
     // ドラッグ＆ドロップと保存処理
@@ -467,7 +473,8 @@ export default {
         groupId: group.id,
         groupName: group.name,
         stockId: stock.id,
-        assigned: {}
+        assigned: {},
+        baseItemIds: [...this.activeItemIds]
       };
 
       this.activeItemIds.forEach(itemId => {
@@ -665,7 +672,7 @@ export default {
       const item = this.items.find(i => i.id === Number(itemId));
       return item ? item.name : '不明';
     },
-  getGroupName(groupId) {
+    getGroupName(groupId) {
       const group = this.groups.find(g => g.id === Number(groupId));
       return group ? group.name : '不明';
     },
@@ -693,7 +700,20 @@ export default {
       return this.assignments.filter(assign => {
         if (assign.stockId !== stockId) return false;
         
-        return true;
+        // 現在選択している物品(activeItemIds)の中に、このカードと関連するものがあるかチェック
+    return this.activeItemIds.some(itemId => {
+      // ① 画面上の割り当て数が 1 以上ある
+      if ((assign.assigned[Number(itemId)] || 0) > 0) return true;
+
+      // ② DBにその物品のレコードが既に存在する
+      if (assign.dbIds && assign.dbIds.some(db => Number(db.itemId) === Number(itemId))) return true;
+
+      // ③ ドロップ時、または初期読み込み時にこの物品が対象になっていた
+      // （※これがあるおかげで、0個スタートのカードや、手動で0に減らした直後のカードが消えずに残ります）
+      if (assign.baseItemIds && assign.baseItemIds.includes(String(itemId))) return true;
+
+      return false;
+      });
       });
     },
     isGroupFulfilled(group) {
