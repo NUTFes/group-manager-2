@@ -91,7 +91,7 @@
         </div>
         <div class="order-group-content">
           <div 
-            v-for="group in groups" 
+            v-for="group in filteredGroups" 
             :key="group.id" 
             draggable="true" 
             @dragstart="handleDragStartGroup($event, group)" 
@@ -172,7 +172,7 @@
             </div>
             <div 
               v-else 
-              v-for="assign in getStockAssignments(stock.id)" 
+              v-for="assign in getStockAssignments(stock.id)"
               :key="assign.id" 
               class="assignment-item"
             >
@@ -274,6 +274,21 @@ export default {
         (id) => this.activeSettings[id].selected
       );
     },
+    filteredGroups() {
+      let result = this.groups;
+
+      // カテゴリーIDで絞り込み
+      if (this.refCategoryID !== 0) {
+         result = result.filter(g => g.group_category_id === this.refCategoryID);
+      }
+
+      // 年度IDで絞り込み
+      if (this.refYearID !== 0) {
+        result = result.filter(g => g.fes_year_id === this.refYearID);
+      }
+
+      return result;
+  }
   },
 
   mounted() {
@@ -328,25 +343,16 @@ export default {
         const assigns = Array.isArray(assignRes) ? assignRes : assignRes.data;
         const rentableItems = Array.isArray(rentableItemRes) ? rentableItemRes : rentableItemRes.data;
 
-        // 絞り込み
-        let filteredGroups = groupRaw;
-        if (this.refCategoryID !== 0) {
-          filteredGroups = filteredGroups.filter(g => g.group_category_id === this.refCategoryID);
-        }
-        if (this.refYearID !== 0) {
-          filteredGroups = filteredGroups.filter(g => g.fes_year_id === this.refYearID);
-        }
+        this.groups = this.formatGroups(rawOrders, groupRaw, this.items);
+      this.stocks = this.formatStocks(stockerItems, places, this.items);
+      this.assignments = this.formatAssignments(assigns, rawOrders, rentableItems, this.items, groupRaw);
 
-        this.groups = this.formatGroups(rawOrders, filteredGroups, this.items);
-        this.stocks = this.formatStocks(stockerItems, places, this.items);
-        this.assignments = this.formatAssignments(assigns, rawOrders, rentableItems, this.items, groupRaw);
-
-      } catch (error) {
-        console.error("データの取得に失敗", error);
-      } finally {
-        this.isLoading = false;
-      }
-    },
+    } catch (error) {
+      console.error("データの取得に失敗", error);
+    } finally {
+      this.isLoading = false;
+    }
+  },
 
     toggleDetails(groupId) {
       const index = this.expandedGroupIds.indexOf(groupId);
@@ -363,7 +369,12 @@ export default {
        if (!groups || !items) return [];
        const groupMap = {};
        groups.forEach(g => {
-        groupMap[g.id] = { id: g.id, name: g.name, requests: {} };
+        groupMap[g.id] = { 
+          id: g.id, 
+          name: g.name, 
+          group_category_id: g.group_category_id,
+          fes_year_id: g.fes_year_id,
+          requests: {} };
       });
       (rentalOrders || []).forEach(order => {
          const g = groupMap[order.group_id];
@@ -654,7 +665,7 @@ export default {
       const item = this.items.find(i => i.id === Number(itemId));
       return item ? item.name : '不明';
     },
-    getGroupName(groupId) {
+  getGroupName(groupId) {
       const group = this.groups.find(g => g.id === Number(groupId));
       return group ? group.name : '不明';
     },
