@@ -4,9 +4,7 @@ test.describe('home page', () => {
   test('shows the registration and login entry points', async ({ page }) => {
     await page.goto('/');
 
-    await expect(
-      page.getByRole('button', { name: '新規登録' })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: '新規登録' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'ログイン' })).toBeVisible();
     await expect(page.getByText('お知らせ', { exact: true })).toBeVisible();
   });
