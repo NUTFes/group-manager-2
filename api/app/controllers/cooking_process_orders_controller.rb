@@ -129,9 +129,7 @@ class CookingProcessOrdersController < ApplicationController
     attrs[:tent] = normalized_tent
 
     if existing && normalized_tent == normalize_tent(existing.tent)
-      if preserve_existing_translation
-        attrs[:tent_ja] = existing.tent_ja unless tent_ja_provided?(attrs)
-      end
+      attrs[:tent_ja] = existing.tent_ja if preserve_existing_translation && !tent_ja_provided?(attrs)
       return attrs
     end
 
