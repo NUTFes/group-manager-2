@@ -13,6 +13,8 @@
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint-fix": "eslint src --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
     "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
   },
@@ -52,6 +54,7 @@
     "@chromatic-com/storybook": "^3.2.4",
     "@eslint/eslintrc": "^3.3.1",
     "@next/eslint-plugin-next": "^15.2.4",
+    "@playwright/test": "^1.60.0",
     "@storybook/addon-docs": "^8.6.12",
     "@storybook/addon-essentials": "^8.5.0",
     "@storybook/addon-interactions": "^8.5.0",
