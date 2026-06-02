@@ -223,24 +223,20 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
     )
   end
 
-  def stub_deepl_translate(calls)
+  def stub_deepl_translate(calls, &block)
     with_deepl_api_key do
       with_deepl_translate(lambda { |text, _source_lang, target_lang|
         calls << [text, target_lang]
         Struct.new(:text).new(translated_text(text))
-      }) do
-        yield
-      end
+      }, &block)
     end
   end
 
-  def stub_deepl_translate_raises
+  def stub_deepl_translate_raises(&block)
     with_deepl_api_key do
       with_deepl_translate(lambda { |_text, _source_lang, _target_lang|
         raise 'DeepL.translate should not be called'
-      }) do
-        yield
-      end
+      }, &block)
     end
   end
 
@@ -265,7 +261,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   def response_data
-    JSON.parse(response.body)['data']
+    response.parsed_body['data']
   end
 
   def unique_tent(prefix)
