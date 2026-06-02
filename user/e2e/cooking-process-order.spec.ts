@@ -47,16 +47,27 @@ test.describe('cooking process order translation data', () => {
   });
 
   test.afterEach(async () => {
-    if (cookingProcessOrderId !== undefined) {
-      await api.delete(`/cooking_process_orders/${cookingProcessOrderId}`);
+    try {
+      if (cookingProcessOrderId !== undefined) {
+        try {
+          await api.delete(`/cooking_process_orders/${cookingProcessOrderId}`);
+        } finally {
+          cookingProcessOrderId = undefined;
+        }
+      }
+      if (foodProductId !== undefined) {
+        try {
+          await api.delete(`/food_products/${foodProductId}`);
+        } finally {
+          foodProductId = undefined;
+        }
+      }
+    } finally {
+      await api.dispose();
     }
-    if (foodProductId !== undefined) {
-      await api.delete(`/food_products/${foodProductId}`);
-    }
-    await api.dispose();
   });
 
-  test('preserves translated Japanese text when the source tent is unchanged and updates it when the source tent changes', async () => {
+  test('preserves translated Japanese text when the source tent is unchanged and stores edited Japanese text when it is provided', async () => {
     const foodProduct = await createFoodProduct(api);
     foodProductId = foodProduct.id;
 

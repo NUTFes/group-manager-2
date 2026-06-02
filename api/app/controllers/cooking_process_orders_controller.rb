@@ -145,7 +145,8 @@ class CookingProcessOrdersController < ApplicationController
     return nil if tent.blank?
     return nil unless translatable_english_text?(tent)
 
-    translate_to_ja(tent)
+    translated = translate_to_ja(tent)
+    translated == tent ? nil : translated
   end
 
   def normalize_tent(tent)

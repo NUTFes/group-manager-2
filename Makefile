@@ -80,7 +80,15 @@ fmt:
 test-e2e:
 	docker compose exec -T api rails db:migrate
 	docker compose restart api
-	docker compose run --rm user sh -lc 'pnpm exec playwright install chromium >/dev/null && PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e'
+	docker compose run --rm user sh -lc '\
+		i=0; \
+		until node -e "require(\"http\").get(\"http://api:3000\", () => process.exit(0)).on(\"error\", () => process.exit(1))"; do \
+			i=$$((i + 1)); \
+			test $$i -ge 60 && exit 1; \
+			sleep 1; \
+		done; \
+		pnpm exec playwright install chromium >/dev/null && \
+		PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e'
 
 run-swagger:
 	docker compose -f compose.swagger.yml up -d

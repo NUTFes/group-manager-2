@@ -18,7 +18,9 @@ RUN apt-get update \
     libxkbcommon0 \
     libxrandr2 \
   && rm -rf /var/lib/apt/lists/* \
-  && npm install -g pnpm
+  && npm install -g corepack@0.34.0 \
+  && corepack enable \
+  && corepack prepare pnpm@10.7.0 --activate
 
 # 作業ディレクトリを設定
 WORKDIR /app

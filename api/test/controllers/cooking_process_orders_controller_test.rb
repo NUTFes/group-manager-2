@@ -82,6 +82,29 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal '麺をゆでる。', order.tent_ja
   end
 
+  test 'create stores nil tent_ja when DeepL returns the original text' do
+    food_product = create_food_product
+    tent = unique_tent('Boil noodles')
+
+    stub_deepl_translate_original do
+      post cooking_process_orders_url,
+           params: {
+             cooking_process_order: {
+               food_product_id: food_product.id,
+               pre_open_kitchen: true,
+               during_open_kitchen: false,
+               tent: tent
+             }
+           },
+           as: :json
+    end
+
+    assert_response :success
+    order = CookingProcessOrder.find(response_data['id'])
+    assert_equal tent, order.tent
+    assert_nil order.tent_ja
+  end
+
   test 'update does not translate when tent is unchanged' do
     order = create_cooking_process_order(
       tent: unique_tent('Boil noodles'),
@@ -237,6 +260,16 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
       with_deepl_translate(lambda { |_text, _source_lang, _target_lang|
         raise 'DeepL.translate should not be called'
       }, &block)
+    end
+  end
+
+  def stub_deepl_translate_original
+    with_deepl_api_key do
+      with_deepl_translate(lambda { |text, _source_lang, _target_lang|
+        Struct.new(:text).new(text)
+      }) do
+        yield
+      end
     end
   end
 
