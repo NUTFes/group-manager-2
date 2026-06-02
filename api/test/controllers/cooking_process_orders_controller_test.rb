@@ -263,13 +263,11 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def stub_deepl_translate_original
+  def stub_deepl_translate_original(&block)
     with_deepl_api_key do
       with_deepl_translate(lambda { |text, _source_lang, _target_lang|
         Struct.new(:text).new(text)
-      }) do
-        yield
-      end
+      }, &block)
     end
   end
 
