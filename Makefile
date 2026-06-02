@@ -77,6 +77,11 @@ run-storybook:
 fmt:
 	docker compose run --rm user pnpm run fmt
 
+test-e2e:
+	docker compose exec -T api rails db:migrate
+	docker compose restart api
+	docker compose run --rm user sh -lc 'pnpm exec playwright install chromium >/dev/null && PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e'
+
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
 
