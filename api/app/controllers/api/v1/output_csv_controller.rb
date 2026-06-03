@@ -13,7 +13,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @groups = Group.where(fes_year_id: params[:fes_year_id])
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -47,7 +47,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: params[:fes_year_id] }).references(:groups)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -83,7 +83,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @sub_reps = Group.where(fes_year_id: params[:fes_year_id]).preload(:sub_rep).map(&:sub_rep)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -116,7 +116,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @rental_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:rental_orders).map(&:rental_orders)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -152,7 +152,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @power_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:power_orders).map(&:power_orders)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -190,7 +190,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @place_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:place_order).map(&:place_order)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -222,7 +222,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @stage_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:stage_orders).map(&:stage_orders)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -266,7 +266,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @stage_common_options = Group.where(fes_year_id: params[:fes_year_id]).preload(:stage_common_option).map(&:stage_common_option)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -297,7 +297,7 @@ class Api::V1::OutputCsvController < ApplicationController
     else
       # 開催年かつ食品団体（食販）のみ対象
       groups = Group.where(fes_year_id: params[:fes_year_id], group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
 
     # 全件の人物リストを収集（代表・副代表・従業員）
@@ -460,7 +460,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @food_products = Group.where(fes_year_id: params[:fes_year_id]).preload(:food_products).map(&:food_products)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -494,7 +494,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @purchase_lists = FoodProduct.preload(:purchase_lists).map { |food_product| food_product.purchase_lists if food_product.group.fes_year_id == params[:fes_year_id] }
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -533,7 +533,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @groups = Group.where(fes_year_id: params[:fes_year_id]).preload(:user, :sub_rep, user: :user_detail) # 必要な関連を事前にロード
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
 
     @categories = []
@@ -622,7 +622,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @public_relations = Group.where(fes_year_id: params[:fes_year_id]).preload(:public_relation).map(&:public_relation)
-      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -648,7 +648,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @fire_equipment_orders = FireEquipmentOrder.all
       filename_year = '全'
     else
-      fes_year = FesYear.find_by(id: params[:fes_year_id])
+      fes_year = FesYear.find(params[:fes_year_id])
       if fes_year
         @fire_equipment_orders = FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year.id })
         filename_year = fes_year.year_num
