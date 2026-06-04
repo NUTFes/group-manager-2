@@ -9,482 +9,555 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  Announcement
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { Announcement } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getAnnouncementsResponse200 = {
-  data: Announcement
-  status: 200
-}
+  data: Announcement;
+  status: 200;
+};
 
 export type getAnnouncementsResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type getAnnouncementsResponseSuccess = (getAnnouncementsResponse200) & {
-  headers: Headers;
-};
-export type getAnnouncementsResponseError = (getAnnouncementsResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type getAnnouncementsResponse = (getAnnouncementsResponseSuccess | getAnnouncementsResponseError)
+export type getAnnouncementsResponseSuccess = getAnnouncementsResponse200 & {
+  headers: Headers;
+};
+export type getAnnouncementsResponseError = getAnnouncementsResponse422 & {
+  headers: Headers;
+};
+
+export type getAnnouncementsResponse =
+  | getAnnouncementsResponseSuccess
+  | getAnnouncementsResponseError;
 
 export const getGetAnnouncementsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAnnouncements = async ( options?: RequestInit): Promise<getAnnouncementsResponse> => {
-
-  return openApiFetch<getAnnouncementsResponse>(getGetAnnouncementsUrl(),
-  {
+export const getAnnouncements = async (
+  options?: RequestInit
+): Promise<getAnnouncementsResponse> => {
+  return openApiFetch<getAnnouncementsResponse>(getGetAnnouncementsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetAnnouncementsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetAnnouncementsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements`] as const;
-
-export type GetAnnouncementsQueryResult = NonNullable<Awaited<ReturnType<typeof getAnnouncements>>>
+export type GetAnnouncementsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAnnouncements>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetAnnouncements = <TError = Announcement>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAnnouncements>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetAnnouncements = <TError = Announcement>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getAnnouncements>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAnnouncementsKey() : null);
-  const swrFn = () => getAnnouncements(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetAnnouncementsKey() : null));
+  const swrFn = () => getAnnouncements(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postAnnouncementsResponse201 = {
-  data: Announcement
-  status: 201
-}
+  data: Announcement;
+  status: 201;
+};
 
 export type postAnnouncementsResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type postAnnouncementsResponseSuccess = (postAnnouncementsResponse201) & {
-  headers: Headers;
-};
-export type postAnnouncementsResponseError = (postAnnouncementsResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type postAnnouncementsResponse = (postAnnouncementsResponseSuccess | postAnnouncementsResponseError)
+export type postAnnouncementsResponseSuccess = postAnnouncementsResponse201 & {
+  headers: Headers;
+};
+export type postAnnouncementsResponseError = postAnnouncementsResponse422 & {
+  headers: Headers;
+};
+
+export type postAnnouncementsResponse =
+  | postAnnouncementsResponseSuccess
+  | postAnnouncementsResponseError;
 
 export const getPostAnnouncementsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postAnnouncements = async (announcement?: Announcement, options?: RequestInit): Promise<postAnnouncementsResponse> => {
-
-  return openApiFetch<postAnnouncementsResponse>(getPostAnnouncementsUrl(),
-  {
+export const postAnnouncements = async (
+  announcement?: Announcement,
+  options?: RequestInit
+): Promise<postAnnouncementsResponse> => {
+  return openApiFetch<postAnnouncementsResponse>(getPostAnnouncementsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(announcement)
-  }
-);}
+    body: JSON.stringify(announcement),
+  });
+};
 
-
-
-
-export const getPostAnnouncementsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostAnnouncementsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Announcement | undefined }) => {
     return postAnnouncements(arg, options);
-  }
-}
-export const getPostAnnouncementsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements`] as const;
+  };
+};
+export const getPostAnnouncementsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements`] as const;
 
-export type PostAnnouncementsMutationResult = NonNullable<Awaited<ReturnType<typeof postAnnouncements>>>
+export type PostAnnouncementsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAnnouncements>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostAnnouncements = <TError = Announcement>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postAnnouncements>>, TError, Key, Announcement | undefined, Awaited<ReturnType<typeof postAnnouncements>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostAnnouncements = <TError = Announcement>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postAnnouncements>>,
+    TError,
+    Key,
+    Announcement | undefined,
+    Awaited<ReturnType<typeof postAnnouncements>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostAnnouncementsMutationKey();
   const swrFn = getPostAnnouncementsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getAnnouncementsIdResponse200 = {
-  data: Announcement
-  status: 200
-}
+  data: Announcement;
+  status: 200;
+};
 
 export type getAnnouncementsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getAnnouncementsIdResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type getAnnouncementsIdResponseSuccess = (getAnnouncementsIdResponse200) & {
-  headers: Headers;
-};
-export type getAnnouncementsIdResponseError = (getAnnouncementsIdResponse404 | getAnnouncementsIdResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type getAnnouncementsIdResponse = (getAnnouncementsIdResponseSuccess | getAnnouncementsIdResponseError)
+export type getAnnouncementsIdResponseSuccess =
+  getAnnouncementsIdResponse200 & {
+    headers: Headers;
+  };
+export type getAnnouncementsIdResponseError = (
+  | getAnnouncementsIdResponse404
+  | getAnnouncementsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetAnnouncementsIdUrl = (id: number,) => {
+export type getAnnouncementsIdResponse =
+  | getAnnouncementsIdResponseSuccess
+  | getAnnouncementsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`
-}
+export const getGetAnnouncementsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAnnouncementsId = async (id: number, options?: RequestInit): Promise<getAnnouncementsIdResponse> => {
+export const getAnnouncementsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getAnnouncementsIdResponse> => {
+  return openApiFetch<getAnnouncementsIdResponse>(
+    getGetAnnouncementsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getAnnouncementsIdResponse>(getGetAnnouncementsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetAnnouncementsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetAnnouncementsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`] as const;
-
-export type GetAnnouncementsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAnnouncementsId>>>
+export type GetAnnouncementsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAnnouncementsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetAnnouncementsId = <TError = void | Announcement>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAnnouncementsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getAnnouncementsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAnnouncementsIdKey(id) : null);
-  const swrFn = () => getAnnouncementsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetAnnouncementsIdKey(id) : null));
+  const swrFn = () => getAnnouncementsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchAnnouncementsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchAnnouncementsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchAnnouncementsIdResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type patchAnnouncementsIdResponseSuccess = (patchAnnouncementsIdResponse204) & {
-  headers: Headers;
-};
-export type patchAnnouncementsIdResponseError = (patchAnnouncementsIdResponse404 | patchAnnouncementsIdResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type patchAnnouncementsIdResponse = (patchAnnouncementsIdResponseSuccess | patchAnnouncementsIdResponseError)
+export type patchAnnouncementsIdResponseSuccess =
+  patchAnnouncementsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchAnnouncementsIdResponseError = (
+  | patchAnnouncementsIdResponse404
+  | patchAnnouncementsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchAnnouncementsIdUrl = (id: number,) => {
+export type patchAnnouncementsIdResponse =
+  | patchAnnouncementsIdResponseSuccess
+  | patchAnnouncementsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`
-}
+export const getPatchAnnouncementsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchAnnouncementsId = async (id: number,
-    announcement?: Announcement, options?: RequestInit): Promise<patchAnnouncementsIdResponse> => {
+export const patchAnnouncementsId = async (
+  id: number,
+  announcement?: Announcement,
+  options?: RequestInit
+): Promise<patchAnnouncementsIdResponse> => {
+  return openApiFetch<patchAnnouncementsIdResponse>(
+    getPatchAnnouncementsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(announcement),
+    }
+  );
+};
 
-  return openApiFetch<patchAnnouncementsIdResponse>(getPatchAnnouncementsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(announcement)
-  }
-);}
-
-
-
-
-export const getPatchAnnouncementsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchAnnouncementsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Announcement | undefined }) => {
     return patchAnnouncementsId(id, arg, options);
-  }
-}
-export const getPatchAnnouncementsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`] as const;
+  };
+};
+export const getPatchAnnouncementsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`] as const;
 
-export type PatchAnnouncementsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchAnnouncementsId>>>
+export type PatchAnnouncementsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAnnouncementsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchAnnouncementsId = <TError = void | Announcement>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchAnnouncementsId>>, TError, Key, Announcement | undefined, Awaited<ReturnType<typeof patchAnnouncementsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchAnnouncementsId>>,
+      TError,
+      Key,
+      Announcement | undefined,
+      Awaited<ReturnType<typeof patchAnnouncementsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchAnnouncementsIdMutationKey(id);
   const swrFn = getPatchAnnouncementsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putAnnouncementsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putAnnouncementsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putAnnouncementsIdResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type putAnnouncementsIdResponseSuccess = (putAnnouncementsIdResponse204) & {
-  headers: Headers;
-};
-export type putAnnouncementsIdResponseError = (putAnnouncementsIdResponse404 | putAnnouncementsIdResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type putAnnouncementsIdResponse = (putAnnouncementsIdResponseSuccess | putAnnouncementsIdResponseError)
+export type putAnnouncementsIdResponseSuccess =
+  putAnnouncementsIdResponse204 & {
+    headers: Headers;
+  };
+export type putAnnouncementsIdResponseError = (
+  | putAnnouncementsIdResponse404
+  | putAnnouncementsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutAnnouncementsIdUrl = (id: number,) => {
+export type putAnnouncementsIdResponse =
+  | putAnnouncementsIdResponseSuccess
+  | putAnnouncementsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`
-}
+export const getPutAnnouncementsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putAnnouncementsId = async (id: number,
-    announcement?: Announcement, options?: RequestInit): Promise<putAnnouncementsIdResponse> => {
+export const putAnnouncementsId = async (
+  id: number,
+  announcement?: Announcement,
+  options?: RequestInit
+): Promise<putAnnouncementsIdResponse> => {
+  return openApiFetch<putAnnouncementsIdResponse>(
+    getPutAnnouncementsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(announcement),
+    }
+  );
+};
 
-  return openApiFetch<putAnnouncementsIdResponse>(getPutAnnouncementsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(announcement)
-  }
-);}
-
-
-
-
-export const getPutAnnouncementsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutAnnouncementsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Announcement | undefined }) => {
     return putAnnouncementsId(id, arg, options);
-  }
-}
-export const getPutAnnouncementsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`] as const;
+  };
+};
+export const getPutAnnouncementsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`] as const;
 
-export type PutAnnouncementsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putAnnouncementsId>>>
+export type PutAnnouncementsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putAnnouncementsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutAnnouncementsId = <TError = void | Announcement>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putAnnouncementsId>>, TError, Key, Announcement | undefined, Awaited<ReturnType<typeof putAnnouncementsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putAnnouncementsId>>,
+      TError,
+      Key,
+      Announcement | undefined,
+      Awaited<ReturnType<typeof putAnnouncementsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutAnnouncementsIdMutationKey(id);
   const swrFn = getPutAnnouncementsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteAnnouncementsIdResponse200 = {
-  data: Announcement
-  status: 200
-}
+  data: Announcement;
+  status: 200;
+};
 
 export type deleteAnnouncementsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteAnnouncementsIdResponse422 = {
-  data: Announcement
-  status: 422
-}
-
-export type deleteAnnouncementsIdResponseSuccess = (deleteAnnouncementsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteAnnouncementsIdResponseError = (deleteAnnouncementsIdResponse404 | deleteAnnouncementsIdResponse422) & {
-  headers: Headers;
+  data: Announcement;
+  status: 422;
 };
 
-export type deleteAnnouncementsIdResponse = (deleteAnnouncementsIdResponseSuccess | deleteAnnouncementsIdResponseError)
+export type deleteAnnouncementsIdResponseSuccess =
+  deleteAnnouncementsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteAnnouncementsIdResponseError = (
+  | deleteAnnouncementsIdResponse404
+  | deleteAnnouncementsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteAnnouncementsIdUrl = (id: number,) => {
+export type deleteAnnouncementsIdResponse =
+  | deleteAnnouncementsIdResponseSuccess
+  | deleteAnnouncementsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`
-}
+export const getDeleteAnnouncementsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteAnnouncementsId = async (id: number, options?: RequestInit): Promise<deleteAnnouncementsIdResponse> => {
+export const deleteAnnouncementsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteAnnouncementsIdResponse> => {
+  return openApiFetch<deleteAnnouncementsIdResponse>(
+    getDeleteAnnouncementsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteAnnouncementsIdResponse>(getDeleteAnnouncementsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteAnnouncementsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteAnnouncementsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteAnnouncementsId(id, options);
-  }
-}
-export const getDeleteAnnouncementsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/announcements/${id}`] as const;
+  };
+};
+export const getDeleteAnnouncementsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/announcements/${id}`] as const;
 
-export type DeleteAnnouncementsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAnnouncementsId>>>
+export type DeleteAnnouncementsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAnnouncementsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteAnnouncementsId = <TError = void | Announcement>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteAnnouncementsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteAnnouncementsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteAnnouncementsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteAnnouncementsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteAnnouncementsIdMutationKey(id);
   const swrFn = getDeleteAnnouncementsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

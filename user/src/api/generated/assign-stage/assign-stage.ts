@@ -9,482 +9,547 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  AssignStage
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { AssignStage } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getAssignStagesResponse200 = {
-  data: AssignStage
-  status: 200
-}
+  data: AssignStage;
+  status: 200;
+};
 
 export type getAssignStagesResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type getAssignStagesResponseSuccess = (getAssignStagesResponse200) & {
-  headers: Headers;
-};
-export type getAssignStagesResponseError = (getAssignStagesResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type getAssignStagesResponse = (getAssignStagesResponseSuccess | getAssignStagesResponseError)
+export type getAssignStagesResponseSuccess = getAssignStagesResponse200 & {
+  headers: Headers;
+};
+export type getAssignStagesResponseError = getAssignStagesResponse422 & {
+  headers: Headers;
+};
+
+export type getAssignStagesResponse =
+  | getAssignStagesResponseSuccess
+  | getAssignStagesResponseError;
 
 export const getGetAssignStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAssignStages = async ( options?: RequestInit): Promise<getAssignStagesResponse> => {
-
-  return openApiFetch<getAssignStagesResponse>(getGetAssignStagesUrl(),
-  {
+export const getAssignStages = async (
+  options?: RequestInit
+): Promise<getAssignStagesResponse> => {
+  return openApiFetch<getAssignStagesResponse>(getGetAssignStagesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetAssignStagesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetAssignStagesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages`] as const;
-
-export type GetAssignStagesQueryResult = NonNullable<Awaited<ReturnType<typeof getAssignStages>>>
+export type GetAssignStagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAssignStages>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetAssignStages = <TError = AssignStage>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAssignStages>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetAssignStages = <TError = AssignStage>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getAssignStages>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAssignStagesKey() : null);
-  const swrFn = () => getAssignStages(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetAssignStagesKey() : null));
+  const swrFn = () => getAssignStages(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postAssignStagesResponse201 = {
-  data: AssignStage
-  status: 201
-}
+  data: AssignStage;
+  status: 201;
+};
 
 export type postAssignStagesResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type postAssignStagesResponseSuccess = (postAssignStagesResponse201) & {
-  headers: Headers;
-};
-export type postAssignStagesResponseError = (postAssignStagesResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type postAssignStagesResponse = (postAssignStagesResponseSuccess | postAssignStagesResponseError)
+export type postAssignStagesResponseSuccess = postAssignStagesResponse201 & {
+  headers: Headers;
+};
+export type postAssignStagesResponseError = postAssignStagesResponse422 & {
+  headers: Headers;
+};
+
+export type postAssignStagesResponse =
+  | postAssignStagesResponseSuccess
+  | postAssignStagesResponseError;
 
 export const getPostAssignStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postAssignStages = async (assignStage?: AssignStage, options?: RequestInit): Promise<postAssignStagesResponse> => {
-
-  return openApiFetch<postAssignStagesResponse>(getPostAssignStagesUrl(),
-  {
+export const postAssignStages = async (
+  assignStage?: AssignStage,
+  options?: RequestInit
+): Promise<postAssignStagesResponse> => {
+  return openApiFetch<postAssignStagesResponse>(getPostAssignStagesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignStage)
-  }
-);}
+    body: JSON.stringify(assignStage),
+  });
+};
 
-
-
-
-export const getPostAssignStagesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostAssignStagesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignStage | undefined }) => {
     return postAssignStages(arg, options);
-  }
-}
-export const getPostAssignStagesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages`] as const;
+  };
+};
+export const getPostAssignStagesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages`] as const;
 
-export type PostAssignStagesMutationResult = NonNullable<Awaited<ReturnType<typeof postAssignStages>>>
+export type PostAssignStagesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAssignStages>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostAssignStages = <TError = AssignStage>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postAssignStages>>, TError, Key, AssignStage | undefined, Awaited<ReturnType<typeof postAssignStages>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostAssignStages = <TError = AssignStage>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postAssignStages>>,
+    TError,
+    Key,
+    AssignStage | undefined,
+    Awaited<ReturnType<typeof postAssignStages>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostAssignStagesMutationKey();
   const swrFn = getPostAssignStagesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getAssignStagesIdResponse200 = {
-  data: AssignStage
-  status: 200
-}
+  data: AssignStage;
+  status: 200;
+};
 
 export type getAssignStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getAssignStagesIdResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type getAssignStagesIdResponseSuccess = (getAssignStagesIdResponse200) & {
-  headers: Headers;
-};
-export type getAssignStagesIdResponseError = (getAssignStagesIdResponse404 | getAssignStagesIdResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type getAssignStagesIdResponse = (getAssignStagesIdResponseSuccess | getAssignStagesIdResponseError)
+export type getAssignStagesIdResponseSuccess = getAssignStagesIdResponse200 & {
+  headers: Headers;
+};
+export type getAssignStagesIdResponseError = (
+  | getAssignStagesIdResponse404
+  | getAssignStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetAssignStagesIdUrl = (id: number,) => {
+export type getAssignStagesIdResponse =
+  | getAssignStagesIdResponseSuccess
+  | getAssignStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`
-}
+export const getGetAssignStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAssignStagesId = async (id: number, options?: RequestInit): Promise<getAssignStagesIdResponse> => {
-
-  return openApiFetch<getAssignStagesIdResponse>(getGetAssignStagesIdUrl(id),
-  {
+export const getAssignStagesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getAssignStagesIdResponse> => {
+  return openApiFetch<getAssignStagesIdResponse>(getGetAssignStagesIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetAssignStagesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetAssignStagesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`] as const;
-
-export type GetAssignStagesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAssignStagesId>>>
+export type GetAssignStagesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAssignStagesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetAssignStagesId = <TError = void | AssignStage>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAssignStagesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getAssignStagesId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAssignStagesIdKey(id) : null);
-  const swrFn = () => getAssignStagesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetAssignStagesIdKey(id) : null));
+  const swrFn = () => getAssignStagesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchAssignStagesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchAssignStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchAssignStagesIdResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type patchAssignStagesIdResponseSuccess = (patchAssignStagesIdResponse204) & {
-  headers: Headers;
-};
-export type patchAssignStagesIdResponseError = (patchAssignStagesIdResponse404 | patchAssignStagesIdResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type patchAssignStagesIdResponse = (patchAssignStagesIdResponseSuccess | patchAssignStagesIdResponseError)
+export type patchAssignStagesIdResponseSuccess =
+  patchAssignStagesIdResponse204 & {
+    headers: Headers;
+  };
+export type patchAssignStagesIdResponseError = (
+  | patchAssignStagesIdResponse404
+  | patchAssignStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchAssignStagesIdUrl = (id: number,) => {
+export type patchAssignStagesIdResponse =
+  | patchAssignStagesIdResponseSuccess
+  | patchAssignStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`
-}
+export const getPatchAssignStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchAssignStagesId = async (id: number,
-    assignStage?: AssignStage, options?: RequestInit): Promise<patchAssignStagesIdResponse> => {
+export const patchAssignStagesId = async (
+  id: number,
+  assignStage?: AssignStage,
+  options?: RequestInit
+): Promise<patchAssignStagesIdResponse> => {
+  return openApiFetch<patchAssignStagesIdResponse>(
+    getPatchAssignStagesIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(assignStage),
+    }
+  );
+};
 
-  return openApiFetch<patchAssignStagesIdResponse>(getPatchAssignStagesIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignStage)
-  }
-);}
-
-
-
-
-export const getPatchAssignStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchAssignStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignStage | undefined }) => {
     return patchAssignStagesId(id, arg, options);
-  }
-}
-export const getPatchAssignStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`] as const;
+  };
+};
+export const getPatchAssignStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`] as const;
 
-export type PatchAssignStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchAssignStagesId>>>
+export type PatchAssignStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAssignStagesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchAssignStagesId = <TError = void | AssignStage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchAssignStagesId>>, TError, Key, AssignStage | undefined, Awaited<ReturnType<typeof patchAssignStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchAssignStagesId>>,
+      TError,
+      Key,
+      AssignStage | undefined,
+      Awaited<ReturnType<typeof patchAssignStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchAssignStagesIdMutationKey(id);
   const swrFn = getPatchAssignStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putAssignStagesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putAssignStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putAssignStagesIdResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type putAssignStagesIdResponseSuccess = (putAssignStagesIdResponse204) & {
-  headers: Headers;
-};
-export type putAssignStagesIdResponseError = (putAssignStagesIdResponse404 | putAssignStagesIdResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type putAssignStagesIdResponse = (putAssignStagesIdResponseSuccess | putAssignStagesIdResponseError)
+export type putAssignStagesIdResponseSuccess = putAssignStagesIdResponse204 & {
+  headers: Headers;
+};
+export type putAssignStagesIdResponseError = (
+  | putAssignStagesIdResponse404
+  | putAssignStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutAssignStagesIdUrl = (id: number,) => {
+export type putAssignStagesIdResponse =
+  | putAssignStagesIdResponseSuccess
+  | putAssignStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`
-}
+export const getPutAssignStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putAssignStagesId = async (id: number,
-    assignStage?: AssignStage, options?: RequestInit): Promise<putAssignStagesIdResponse> => {
-
-  return openApiFetch<putAssignStagesIdResponse>(getPutAssignStagesIdUrl(id),
-  {
+export const putAssignStagesId = async (
+  id: number,
+  assignStage?: AssignStage,
+  options?: RequestInit
+): Promise<putAssignStagesIdResponse> => {
+  return openApiFetch<putAssignStagesIdResponse>(getPutAssignStagesIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignStage)
-  }
-);}
+    body: JSON.stringify(assignStage),
+  });
+};
 
-
-
-
-export const getPutAssignStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutAssignStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignStage | undefined }) => {
     return putAssignStagesId(id, arg, options);
-  }
-}
-export const getPutAssignStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`] as const;
+  };
+};
+export const getPutAssignStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`] as const;
 
-export type PutAssignStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putAssignStagesId>>>
+export type PutAssignStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putAssignStagesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutAssignStagesId = <TError = void | AssignStage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putAssignStagesId>>, TError, Key, AssignStage | undefined, Awaited<ReturnType<typeof putAssignStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putAssignStagesId>>,
+      TError,
+      Key,
+      AssignStage | undefined,
+      Awaited<ReturnType<typeof putAssignStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutAssignStagesIdMutationKey(id);
   const swrFn = getPutAssignStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteAssignStagesIdResponse200 = {
-  data: AssignStage
-  status: 200
-}
+  data: AssignStage;
+  status: 200;
+};
 
 export type deleteAssignStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteAssignStagesIdResponse422 = {
-  data: AssignStage
-  status: 422
-}
-
-export type deleteAssignStagesIdResponseSuccess = (deleteAssignStagesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteAssignStagesIdResponseError = (deleteAssignStagesIdResponse404 | deleteAssignStagesIdResponse422) & {
-  headers: Headers;
+  data: AssignStage;
+  status: 422;
 };
 
-export type deleteAssignStagesIdResponse = (deleteAssignStagesIdResponseSuccess | deleteAssignStagesIdResponseError)
+export type deleteAssignStagesIdResponseSuccess =
+  deleteAssignStagesIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteAssignStagesIdResponseError = (
+  | deleteAssignStagesIdResponse404
+  | deleteAssignStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteAssignStagesIdUrl = (id: number,) => {
+export type deleteAssignStagesIdResponse =
+  | deleteAssignStagesIdResponseSuccess
+  | deleteAssignStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`
-}
+export const getDeleteAssignStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteAssignStagesId = async (id: number, options?: RequestInit): Promise<deleteAssignStagesIdResponse> => {
+export const deleteAssignStagesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteAssignStagesIdResponse> => {
+  return openApiFetch<deleteAssignStagesIdResponse>(
+    getDeleteAssignStagesIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteAssignStagesIdResponse>(getDeleteAssignStagesIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteAssignStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteAssignStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteAssignStagesId(id, options);
-  }
-}
-export const getDeleteAssignStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_stages/${id}`] as const;
+  };
+};
+export const getDeleteAssignStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_stages/${id}`] as const;
 
-export type DeleteAssignStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAssignStagesId>>>
+export type DeleteAssignStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAssignStagesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteAssignStagesId = <TError = void | AssignStage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteAssignStagesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteAssignStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteAssignStagesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteAssignStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteAssignStagesIdMutationKey(id);
   const swrFn = getDeleteAssignStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

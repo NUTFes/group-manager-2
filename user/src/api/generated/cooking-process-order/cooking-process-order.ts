@@ -9,631 +9,789 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  CookingProcessOrder
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { CookingProcessOrder } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getCookingProcessOrdersResponse200 = {
-  data: CookingProcessOrder
-  status: 200
-}
+  data: CookingProcessOrder;
+  status: 200;
+};
 
 export type getCookingProcessOrdersResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type getCookingProcessOrdersResponseSuccess = (getCookingProcessOrdersResponse200) & {
-  headers: Headers;
-};
-export type getCookingProcessOrdersResponseError = (getCookingProcessOrdersResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type getCookingProcessOrdersResponse = (getCookingProcessOrdersResponseSuccess | getCookingProcessOrdersResponseError)
+export type getCookingProcessOrdersResponseSuccess =
+  getCookingProcessOrdersResponse200 & {
+    headers: Headers;
+  };
+export type getCookingProcessOrdersResponseError =
+  getCookingProcessOrdersResponse422 & {
+    headers: Headers;
+  };
+
+export type getCookingProcessOrdersResponse =
+  | getCookingProcessOrdersResponseSuccess
+  | getCookingProcessOrdersResponseError;
 
 export const getGetCookingProcessOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getCookingProcessOrders = async ( options?: RequestInit): Promise<getCookingProcessOrdersResponse> => {
+export const getCookingProcessOrders = async (
+  options?: RequestInit
+): Promise<getCookingProcessOrdersResponse> => {
+  return openApiFetch<getCookingProcessOrdersResponse>(
+    getGetCookingProcessOrdersUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getCookingProcessOrdersResponse>(getGetCookingProcessOrdersUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetCookingProcessOrdersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetCookingProcessOrdersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders`] as const;
-
-export type GetCookingProcessOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getCookingProcessOrders>>>
+export type GetCookingProcessOrdersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCookingProcessOrders>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetCookingProcessOrders = <TError = CookingProcessOrder>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCookingProcessOrders>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetCookingProcessOrders = <
+  TError = CookingProcessOrder,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getCookingProcessOrders>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCookingProcessOrdersKey() : null);
-  const swrFn = () => getCookingProcessOrders(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetCookingProcessOrdersKey() : null));
+  const swrFn = () => getCookingProcessOrders(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postCookingProcessOrdersResponse201 = {
-  data: CookingProcessOrder
-  status: 201
-}
+  data: CookingProcessOrder;
+  status: 201;
+};
 
 export type postCookingProcessOrdersResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type postCookingProcessOrdersResponseSuccess = (postCookingProcessOrdersResponse201) & {
-  headers: Headers;
-};
-export type postCookingProcessOrdersResponseError = (postCookingProcessOrdersResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type postCookingProcessOrdersResponse = (postCookingProcessOrdersResponseSuccess | postCookingProcessOrdersResponseError)
+export type postCookingProcessOrdersResponseSuccess =
+  postCookingProcessOrdersResponse201 & {
+    headers: Headers;
+  };
+export type postCookingProcessOrdersResponseError =
+  postCookingProcessOrdersResponse422 & {
+    headers: Headers;
+  };
+
+export type postCookingProcessOrdersResponse =
+  | postCookingProcessOrdersResponseSuccess
+  | postCookingProcessOrdersResponseError;
 
 export const getPostCookingProcessOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postCookingProcessOrders = async (cookingProcessOrder?: CookingProcessOrder, options?: RequestInit): Promise<postCookingProcessOrdersResponse> => {
+export const postCookingProcessOrders = async (
+  cookingProcessOrder?: CookingProcessOrder,
+  options?: RequestInit
+): Promise<postCookingProcessOrdersResponse> => {
+  return openApiFetch<postCookingProcessOrdersResponse>(
+    getPostCookingProcessOrdersUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(cookingProcessOrder),
+    }
+  );
+};
 
-  return openApiFetch<postCookingProcessOrdersResponse>(getPostCookingProcessOrdersUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(cookingProcessOrder)
-  }
-);}
-
-
-
-
-export const getPostCookingProcessOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostCookingProcessOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: CookingProcessOrder | undefined }) => {
     return postCookingProcessOrders(arg, options);
-  }
-}
-export const getPostCookingProcessOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders`] as const;
+  };
+};
+export const getPostCookingProcessOrdersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders`] as const;
 
-export type PostCookingProcessOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postCookingProcessOrders>>>
+export type PostCookingProcessOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postCookingProcessOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostCookingProcessOrders = <TError = CookingProcessOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postCookingProcessOrders>>, TError, Key, CookingProcessOrder | undefined, Awaited<ReturnType<typeof postCookingProcessOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostCookingProcessOrders = <
+  TError = CookingProcessOrder,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCookingProcessOrders>>,
+    TError,
+    Key,
+    CookingProcessOrder | undefined,
+    Awaited<ReturnType<typeof postCookingProcessOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostCookingProcessOrdersMutationKey();
   const swrFn = getPostCookingProcessOrdersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getCookingProcessOrdersIdResponse200 = {
-  data: CookingProcessOrder
-  status: 200
-}
+  data: CookingProcessOrder;
+  status: 200;
+};
 
 export type getCookingProcessOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getCookingProcessOrdersIdResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type getCookingProcessOrdersIdResponseSuccess = (getCookingProcessOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type getCookingProcessOrdersIdResponseError = (getCookingProcessOrdersIdResponse404 | getCookingProcessOrdersIdResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type getCookingProcessOrdersIdResponse = (getCookingProcessOrdersIdResponseSuccess | getCookingProcessOrdersIdResponseError)
+export type getCookingProcessOrdersIdResponseSuccess =
+  getCookingProcessOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type getCookingProcessOrdersIdResponseError = (
+  | getCookingProcessOrdersIdResponse404
+  | getCookingProcessOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetCookingProcessOrdersIdUrl = (id: number,) => {
+export type getCookingProcessOrdersIdResponse =
+  | getCookingProcessOrdersIdResponseSuccess
+  | getCookingProcessOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`
-}
+export const getGetCookingProcessOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getCookingProcessOrdersId = async (id: number, options?: RequestInit): Promise<getCookingProcessOrdersIdResponse> => {
+export const getCookingProcessOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getCookingProcessOrdersIdResponse> => {
+  return openApiFetch<getCookingProcessOrdersIdResponse>(
+    getGetCookingProcessOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getCookingProcessOrdersIdResponse>(getGetCookingProcessOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetCookingProcessOrdersIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetCookingProcessOrdersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`] as const;
-
-export type GetCookingProcessOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCookingProcessOrdersId>>>
+export type GetCookingProcessOrdersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCookingProcessOrdersId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetCookingProcessOrdersId = <TError = void | CookingProcessOrder>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCookingProcessOrdersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetCookingProcessOrdersId = <
+  TError = void | CookingProcessOrder,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCookingProcessOrdersId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCookingProcessOrdersIdKey(id) : null);
-  const swrFn = () => getCookingProcessOrdersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetCookingProcessOrdersIdKey(id) : null));
+  const swrFn = () => getCookingProcessOrdersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchCookingProcessOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchCookingProcessOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchCookingProcessOrdersIdResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type patchCookingProcessOrdersIdResponseSuccess = (patchCookingProcessOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type patchCookingProcessOrdersIdResponseError = (patchCookingProcessOrdersIdResponse404 | patchCookingProcessOrdersIdResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type patchCookingProcessOrdersIdResponse = (patchCookingProcessOrdersIdResponseSuccess | patchCookingProcessOrdersIdResponseError)
+export type patchCookingProcessOrdersIdResponseSuccess =
+  patchCookingProcessOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type patchCookingProcessOrdersIdResponseError = (
+  | patchCookingProcessOrdersIdResponse404
+  | patchCookingProcessOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchCookingProcessOrdersIdUrl = (id: number,) => {
+export type patchCookingProcessOrdersIdResponse =
+  | patchCookingProcessOrdersIdResponseSuccess
+  | patchCookingProcessOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`
-}
+export const getPatchCookingProcessOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchCookingProcessOrdersId = async (id: number,
-    cookingProcessOrder?: CookingProcessOrder, options?: RequestInit): Promise<patchCookingProcessOrdersIdResponse> => {
+export const patchCookingProcessOrdersId = async (
+  id: number,
+  cookingProcessOrder?: CookingProcessOrder,
+  options?: RequestInit
+): Promise<patchCookingProcessOrdersIdResponse> => {
+  return openApiFetch<patchCookingProcessOrdersIdResponse>(
+    getPatchCookingProcessOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(cookingProcessOrder),
+    }
+  );
+};
 
-  return openApiFetch<patchCookingProcessOrdersIdResponse>(getPatchCookingProcessOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(cookingProcessOrder)
-  }
-);}
-
-
-
-
-export const getPatchCookingProcessOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchCookingProcessOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: CookingProcessOrder | undefined }) => {
     return patchCookingProcessOrdersId(id, arg, options);
-  }
-}
-export const getPatchCookingProcessOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`] as const;
+  };
+};
+export const getPatchCookingProcessOrdersIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`,
+  ] as const;
 
-export type PatchCookingProcessOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchCookingProcessOrdersId>>>
+export type PatchCookingProcessOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchCookingProcessOrdersId>>
+>;
 
 /**
  * @summary patch summary
  */
-export const usePatchCookingProcessOrdersId = <TError = void | CookingProcessOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchCookingProcessOrdersId>>, TError, Key, CookingProcessOrder | undefined, Awaited<ReturnType<typeof patchCookingProcessOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePatchCookingProcessOrdersId = <
+  TError = void | CookingProcessOrder,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchCookingProcessOrdersId>>,
+      TError,
+      Key,
+      CookingProcessOrder | undefined,
+      Awaited<ReturnType<typeof patchCookingProcessOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchCookingProcessOrdersIdMutationKey(id);
+  const swrFn = getPatchCookingProcessOrdersIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getPatchCookingProcessOrdersIdMutationKey(id);
-  const swrFn = getPatchCookingProcessOrdersIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putCookingProcessOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putCookingProcessOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putCookingProcessOrdersIdResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type putCookingProcessOrdersIdResponseSuccess = (putCookingProcessOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type putCookingProcessOrdersIdResponseError = (putCookingProcessOrdersIdResponse404 | putCookingProcessOrdersIdResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type putCookingProcessOrdersIdResponse = (putCookingProcessOrdersIdResponseSuccess | putCookingProcessOrdersIdResponseError)
+export type putCookingProcessOrdersIdResponseSuccess =
+  putCookingProcessOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type putCookingProcessOrdersIdResponseError = (
+  | putCookingProcessOrdersIdResponse404
+  | putCookingProcessOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutCookingProcessOrdersIdUrl = (id: number,) => {
+export type putCookingProcessOrdersIdResponse =
+  | putCookingProcessOrdersIdResponseSuccess
+  | putCookingProcessOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`
-}
+export const getPutCookingProcessOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putCookingProcessOrdersId = async (id: number,
-    cookingProcessOrder?: CookingProcessOrder, options?: RequestInit): Promise<putCookingProcessOrdersIdResponse> => {
+export const putCookingProcessOrdersId = async (
+  id: number,
+  cookingProcessOrder?: CookingProcessOrder,
+  options?: RequestInit
+): Promise<putCookingProcessOrdersIdResponse> => {
+  return openApiFetch<putCookingProcessOrdersIdResponse>(
+    getPutCookingProcessOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(cookingProcessOrder),
+    }
+  );
+};
 
-  return openApiFetch<putCookingProcessOrdersIdResponse>(getPutCookingProcessOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(cookingProcessOrder)
-  }
-);}
-
-
-
-
-export const getPutCookingProcessOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutCookingProcessOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: CookingProcessOrder | undefined }) => {
     return putCookingProcessOrdersId(id, arg, options);
-  }
-}
-export const getPutCookingProcessOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`] as const;
+  };
+};
+export const getPutCookingProcessOrdersIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`,
+  ] as const;
 
-export type PutCookingProcessOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putCookingProcessOrdersId>>>
+export type PutCookingProcessOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putCookingProcessOrdersId>>
+>;
 
 /**
  * @summary put summary
  */
-export const usePutCookingProcessOrdersId = <TError = void | CookingProcessOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putCookingProcessOrdersId>>, TError, Key, CookingProcessOrder | undefined, Awaited<ReturnType<typeof putCookingProcessOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePutCookingProcessOrdersId = <
+  TError = void | CookingProcessOrder,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putCookingProcessOrdersId>>,
+      TError,
+      Key,
+      CookingProcessOrder | undefined,
+      Awaited<ReturnType<typeof putCookingProcessOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPutCookingProcessOrdersIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPutCookingProcessOrdersIdMutationKey(id);
   const swrFn = getPutCookingProcessOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteCookingProcessOrdersIdResponse200 = {
-  data: CookingProcessOrder
-  status: 200
-}
+  data: CookingProcessOrder;
+  status: 200;
+};
 
 export type deleteCookingProcessOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteCookingProcessOrdersIdResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type deleteCookingProcessOrdersIdResponseSuccess = (deleteCookingProcessOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type deleteCookingProcessOrdersIdResponseError = (deleteCookingProcessOrdersIdResponse404 | deleteCookingProcessOrdersIdResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type deleteCookingProcessOrdersIdResponse = (deleteCookingProcessOrdersIdResponseSuccess | deleteCookingProcessOrdersIdResponseError)
+export type deleteCookingProcessOrdersIdResponseSuccess =
+  deleteCookingProcessOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteCookingProcessOrdersIdResponseError = (
+  | deleteCookingProcessOrdersIdResponse404
+  | deleteCookingProcessOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteCookingProcessOrdersIdUrl = (id: number,) => {
+export type deleteCookingProcessOrdersIdResponse =
+  | deleteCookingProcessOrdersIdResponseSuccess
+  | deleteCookingProcessOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`
-}
+export const getDeleteCookingProcessOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteCookingProcessOrdersId = async (id: number, options?: RequestInit): Promise<deleteCookingProcessOrdersIdResponse> => {
+export const deleteCookingProcessOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteCookingProcessOrdersIdResponse> => {
+  return openApiFetch<deleteCookingProcessOrdersIdResponse>(
+    getDeleteCookingProcessOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteCookingProcessOrdersIdResponse>(getDeleteCookingProcessOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteCookingProcessOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteCookingProcessOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteCookingProcessOrdersId(id, options);
-  }
-}
-export const getDeleteCookingProcessOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/${id}`] as const;
+  };
+};
+export const getDeleteCookingProcessOrdersIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/${id}`,
+  ] as const;
 
-export type DeleteCookingProcessOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>>
+export type DeleteCookingProcessOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteCookingProcessOrdersId = <TError = void | CookingProcessOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteCookingProcessOrdersId = <
+  TError = void | CookingProcessOrder,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteCookingProcessOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteCookingProcessOrdersIdMutationKey(id);
+  const swrFn = getDeleteCookingProcessOrdersIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteCookingProcessOrdersIdMutationKey(id);
-  const swrFn = getDeleteCookingProcessOrdersIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getCookingProcessOrdersGroupGroupIdResponse200 = {
-  data: CookingProcessOrder
-  status: 200
-}
+  data: CookingProcessOrder;
+  status: 200;
+};
 
 export type getCookingProcessOrdersGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getCookingProcessOrdersGroupGroupIdResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type getCookingProcessOrdersGroupGroupIdResponseSuccess = (getCookingProcessOrdersGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getCookingProcessOrdersGroupGroupIdResponseError = (getCookingProcessOrdersGroupGroupIdResponse404 | getCookingProcessOrdersGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type getCookingProcessOrdersGroupGroupIdResponse = (getCookingProcessOrdersGroupGroupIdResponseSuccess | getCookingProcessOrdersGroupGroupIdResponseError)
+export type getCookingProcessOrdersGroupGroupIdResponseSuccess =
+  getCookingProcessOrdersGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getCookingProcessOrdersGroupGroupIdResponseError = (
+  | getCookingProcessOrdersGroupGroupIdResponse404
+  | getCookingProcessOrdersGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetCookingProcessOrdersGroupGroupIdUrl = (groupId: number,) => {
+export type getCookingProcessOrdersGroupGroupIdResponse =
+  | getCookingProcessOrdersGroupGroupIdResponseSuccess
+  | getCookingProcessOrdersGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/group/${groupId}`
-}
+export const getGetCookingProcessOrdersGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getCookingProcessOrdersGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getCookingProcessOrdersGroupGroupIdResponse> => {
+export const getCookingProcessOrdersGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getCookingProcessOrdersGroupGroupIdResponse> => {
+  return openApiFetch<getCookingProcessOrdersGroupGroupIdResponse>(
+    getGetCookingProcessOrdersGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getCookingProcessOrdersGroupGroupIdResponse>(getGetCookingProcessOrdersGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetCookingProcessOrdersGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetCookingProcessOrdersGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/group/${groupId}`] as const;
-
-export type GetCookingProcessOrdersGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCookingProcessOrdersGroupGroupId>>>
+export type GetCookingProcessOrdersGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCookingProcessOrdersGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetCookingProcessOrdersGroupGroupId = <TError = void | CookingProcessOrder>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCookingProcessOrdersGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetCookingProcessOrdersGroupGroupId = <
+  TError = void | CookingProcessOrder,
+>(
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCookingProcessOrdersGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCookingProcessOrdersGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getCookingProcessOrdersGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetCookingProcessOrdersGroupGroupIdKey(groupId) : null);
+  const swrFn = () =>
+    getCookingProcessOrdersGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postCookingProcessOrdersUpsertResponse201 = {
-  data: CookingProcessOrder
-  status: 201
-}
+  data: CookingProcessOrder;
+  status: 201;
+};
 
 export type postCookingProcessOrdersUpsertResponse422 = {
-  data: CookingProcessOrder
-  status: 422
-}
-
-export type postCookingProcessOrdersUpsertResponseSuccess = (postCookingProcessOrdersUpsertResponse201) & {
-  headers: Headers;
-};
-export type postCookingProcessOrdersUpsertResponseError = (postCookingProcessOrdersUpsertResponse422) & {
-  headers: Headers;
+  data: CookingProcessOrder;
+  status: 422;
 };
 
-export type postCookingProcessOrdersUpsertResponse = (postCookingProcessOrdersUpsertResponseSuccess | postCookingProcessOrdersUpsertResponseError)
+export type postCookingProcessOrdersUpsertResponseSuccess =
+  postCookingProcessOrdersUpsertResponse201 & {
+    headers: Headers;
+  };
+export type postCookingProcessOrdersUpsertResponseError =
+  postCookingProcessOrdersUpsertResponse422 & {
+    headers: Headers;
+  };
+
+export type postCookingProcessOrdersUpsertResponse =
+  | postCookingProcessOrdersUpsertResponseSuccess
+  | postCookingProcessOrdersUpsertResponseError;
 
 export const getPostCookingProcessOrdersUpsertUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/upsert`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/upsert`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postCookingProcessOrdersUpsert = async (cookingProcessOrder?: CookingProcessOrder, options?: RequestInit): Promise<postCookingProcessOrdersUpsertResponse> => {
+export const postCookingProcessOrdersUpsert = async (
+  cookingProcessOrder?: CookingProcessOrder,
+  options?: RequestInit
+): Promise<postCookingProcessOrdersUpsertResponse> => {
+  return openApiFetch<postCookingProcessOrdersUpsertResponse>(
+    getPostCookingProcessOrdersUpsertUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(cookingProcessOrder),
+    }
+  );
+};
 
-  return openApiFetch<postCookingProcessOrdersUpsertResponse>(getPostCookingProcessOrdersUpsertUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(cookingProcessOrder)
-  }
-);}
-
-
-
-
-export const getPostCookingProcessOrdersUpsertMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostCookingProcessOrdersUpsertMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: CookingProcessOrder | undefined }) => {
     return postCookingProcessOrdersUpsert(arg, options);
-  }
-}
-export const getPostCookingProcessOrdersUpsertMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/cooking_process_orders/upsert`] as const;
+  };
+};
+export const getPostCookingProcessOrdersUpsertMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/cooking_process_orders/upsert`,
+  ] as const;
 
-export type PostCookingProcessOrdersUpsertMutationResult = NonNullable<Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>>
+export type PostCookingProcessOrdersUpsertMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostCookingProcessOrdersUpsert = <TError = CookingProcessOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>, TError, Key, CookingProcessOrder | undefined, Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostCookingProcessOrdersUpsert = <
+  TError = CookingProcessOrder,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>,
+    TError,
+    Key,
+    CookingProcessOrder | undefined,
+    Awaited<ReturnType<typeof postCookingProcessOrdersUpsert>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostCookingProcessOrdersUpsertMutationKey();
+  const swrFn =
+    getPostCookingProcessOrdersUpsertMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostCookingProcessOrdersUpsertMutationKey();
-  const swrFn = getPostCookingProcessOrdersUpsertMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

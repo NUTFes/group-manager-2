@@ -9,327 +9,357 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  PlaceNumber
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { PlaceNumber } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getPlaceNumbersResponse200 = {
-  data: PlaceNumber
-  status: 200
-}
+  data: PlaceNumber;
+  status: 200;
+};
 
 export type getPlaceNumbersResponse422 = {
-  data: PlaceNumber
-  status: 422
-}
-
-export type getPlaceNumbersResponseSuccess = (getPlaceNumbersResponse200) & {
-  headers: Headers;
-};
-export type getPlaceNumbersResponseError = (getPlaceNumbersResponse422) & {
-  headers: Headers;
+  data: PlaceNumber;
+  status: 422;
 };
 
-export type getPlaceNumbersResponse = (getPlaceNumbersResponseSuccess | getPlaceNumbersResponseError)
+export type getPlaceNumbersResponseSuccess = getPlaceNumbersResponse200 & {
+  headers: Headers;
+};
+export type getPlaceNumbersResponseError = getPlaceNumbersResponse422 & {
+  headers: Headers;
+};
+
+export type getPlaceNumbersResponse =
+  | getPlaceNumbersResponseSuccess
+  | getPlaceNumbersResponseError;
 
 export const getGetPlaceNumbersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceNumbers = async ( options?: RequestInit): Promise<getPlaceNumbersResponse> => {
-
-  return openApiFetch<getPlaceNumbersResponse>(getGetPlaceNumbersUrl(),
-  {
+export const getPlaceNumbers = async (
+  options?: RequestInit
+): Promise<getPlaceNumbersResponse> => {
+  return openApiFetch<getPlaceNumbersResponse>(getGetPlaceNumbersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPlaceNumbersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPlaceNumbersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers`] as const;
-
-export type GetPlaceNumbersQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceNumbers>>>
+export type GetPlaceNumbersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceNumbers>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPlaceNumbers = <TError = PlaceNumber>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceNumbers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPlaceNumbers = <TError = PlaceNumber>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getPlaceNumbers>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceNumbersKey() : null);
-  const swrFn = () => getPlaceNumbers(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetPlaceNumbersKey() : null));
+  const swrFn = () => getPlaceNumbers(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPlaceNumbersResponse201 = {
-  data: PlaceNumber
-  status: 201
-}
+  data: PlaceNumber;
+  status: 201;
+};
 
 export type postPlaceNumbersResponse422 = {
-  data: PlaceNumber
-  status: 422
-}
-
-export type postPlaceNumbersResponseSuccess = (postPlaceNumbersResponse201) & {
-  headers: Headers;
-};
-export type postPlaceNumbersResponseError = (postPlaceNumbersResponse422) & {
-  headers: Headers;
+  data: PlaceNumber;
+  status: 422;
 };
 
-export type postPlaceNumbersResponse = (postPlaceNumbersResponseSuccess | postPlaceNumbersResponseError)
+export type postPlaceNumbersResponseSuccess = postPlaceNumbersResponse201 & {
+  headers: Headers;
+};
+export type postPlaceNumbersResponseError = postPlaceNumbersResponse422 & {
+  headers: Headers;
+};
+
+export type postPlaceNumbersResponse =
+  | postPlaceNumbersResponseSuccess
+  | postPlaceNumbersResponseError;
 
 export const getPostPlaceNumbersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPlaceNumbers = async (placeNumber?: PlaceNumber, options?: RequestInit): Promise<postPlaceNumbersResponse> => {
-
-  return openApiFetch<postPlaceNumbersResponse>(getPostPlaceNumbersUrl(),
-  {
+export const postPlaceNumbers = async (
+  placeNumber?: PlaceNumber,
+  options?: RequestInit
+): Promise<postPlaceNumbersResponse> => {
+  return openApiFetch<postPlaceNumbersResponse>(getPostPlaceNumbersUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeNumber)
-  }
-);}
+    body: JSON.stringify(placeNumber),
+  });
+};
 
-
-
-
-export const getPostPlaceNumbersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPlaceNumbersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceNumber | undefined }) => {
     return postPlaceNumbers(arg, options);
-  }
-}
-export const getPostPlaceNumbersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers`] as const;
+  };
+};
+export const getPostPlaceNumbersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers`] as const;
 
-export type PostPlaceNumbersMutationResult = NonNullable<Awaited<ReturnType<typeof postPlaceNumbers>>>
+export type PostPlaceNumbersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPlaceNumbers>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPlaceNumbers = <TError = PlaceNumber>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPlaceNumbers>>, TError, Key, PlaceNumber | undefined, Awaited<ReturnType<typeof postPlaceNumbers>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPlaceNumbers = <TError = PlaceNumber>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPlaceNumbers>>,
+    TError,
+    Key,
+    PlaceNumber | undefined,
+    Awaited<ReturnType<typeof postPlaceNumbers>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPlaceNumbersMutationKey();
   const swrFn = getPostPlaceNumbersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putPlaceNumbersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putPlaceNumbersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putPlaceNumbersIdResponse422 = {
-  data: PlaceNumber
-  status: 422
-}
-
-export type putPlaceNumbersIdResponseSuccess = (putPlaceNumbersIdResponse204) & {
-  headers: Headers;
-};
-export type putPlaceNumbersIdResponseError = (putPlaceNumbersIdResponse404 | putPlaceNumbersIdResponse422) & {
-  headers: Headers;
+  data: PlaceNumber;
+  status: 422;
 };
 
-export type putPlaceNumbersIdResponse = (putPlaceNumbersIdResponseSuccess | putPlaceNumbersIdResponseError)
+export type putPlaceNumbersIdResponseSuccess = putPlaceNumbersIdResponse204 & {
+  headers: Headers;
+};
+export type putPlaceNumbersIdResponseError = (
+  | putPlaceNumbersIdResponse404
+  | putPlaceNumbersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutPlaceNumbersIdUrl = (id: number,) => {
+export type putPlaceNumbersIdResponse =
+  | putPlaceNumbersIdResponseSuccess
+  | putPlaceNumbersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers/${id}`
-}
+export const getPutPlaceNumbersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putPlaceNumbersId = async (id: number,
-    placeNumber?: PlaceNumber, options?: RequestInit): Promise<putPlaceNumbersIdResponse> => {
-
-  return openApiFetch<putPlaceNumbersIdResponse>(getPutPlaceNumbersIdUrl(id),
-  {
+export const putPlaceNumbersId = async (
+  id: number,
+  placeNumber?: PlaceNumber,
+  options?: RequestInit
+): Promise<putPlaceNumbersIdResponse> => {
+  return openApiFetch<putPlaceNumbersIdResponse>(getPutPlaceNumbersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeNumber)
-  }
-);}
+    body: JSON.stringify(placeNumber),
+  });
+};
 
-
-
-
-export const getPutPlaceNumbersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutPlaceNumbersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceNumber | undefined }) => {
     return putPlaceNumbersId(id, arg, options);
-  }
-}
-export const getPutPlaceNumbersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers/${id}`] as const;
+  };
+};
+export const getPutPlaceNumbersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers/${id}`] as const;
 
-export type PutPlaceNumbersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putPlaceNumbersId>>>
+export type PutPlaceNumbersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putPlaceNumbersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutPlaceNumbersId = <TError = void | PlaceNumber>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putPlaceNumbersId>>, TError, Key, PlaceNumber | undefined, Awaited<ReturnType<typeof putPlaceNumbersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putPlaceNumbersId>>,
+      TError,
+      Key,
+      PlaceNumber | undefined,
+      Awaited<ReturnType<typeof putPlaceNumbersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutPlaceNumbersIdMutationKey(id);
   const swrFn = getPutPlaceNumbersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deletePlaceNumbersIdResponse200 = {
-  data: PlaceNumber
-  status: 200
-}
+  data: PlaceNumber;
+  status: 200;
+};
 
 export type deletePlaceNumbersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deletePlaceNumbersIdResponse422 = {
-  data: PlaceNumber
-  status: 422
-}
-
-export type deletePlaceNumbersIdResponseSuccess = (deletePlaceNumbersIdResponse200) & {
-  headers: Headers;
-};
-export type deletePlaceNumbersIdResponseError = (deletePlaceNumbersIdResponse404 | deletePlaceNumbersIdResponse422) & {
-  headers: Headers;
+  data: PlaceNumber;
+  status: 422;
 };
 
-export type deletePlaceNumbersIdResponse = (deletePlaceNumbersIdResponseSuccess | deletePlaceNumbersIdResponseError)
+export type deletePlaceNumbersIdResponseSuccess =
+  deletePlaceNumbersIdResponse200 & {
+    headers: Headers;
+  };
+export type deletePlaceNumbersIdResponseError = (
+  | deletePlaceNumbersIdResponse404
+  | deletePlaceNumbersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeletePlaceNumbersIdUrl = (id: number,) => {
+export type deletePlaceNumbersIdResponse =
+  | deletePlaceNumbersIdResponseSuccess
+  | deletePlaceNumbersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers/${id}`
-}
+export const getDeletePlaceNumbersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deletePlaceNumbersId = async (id: number, options?: RequestInit): Promise<deletePlaceNumbersIdResponse> => {
+export const deletePlaceNumbersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deletePlaceNumbersIdResponse> => {
+  return openApiFetch<deletePlaceNumbersIdResponse>(
+    getDeletePlaceNumbersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deletePlaceNumbersIdResponse>(getDeletePlaceNumbersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeletePlaceNumbersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeletePlaceNumbersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deletePlaceNumbersId(id, options);
-  }
-}
-export const getDeletePlaceNumbersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_numbers/${id}`] as const;
+  };
+};
+export const getDeletePlaceNumbersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_numbers/${id}`] as const;
 
-export type DeletePlaceNumbersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlaceNumbersId>>>
+export type DeletePlaceNumbersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePlaceNumbersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeletePlaceNumbersId = <TError = void | PlaceNumber>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deletePlaceNumbersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deletePlaceNumbersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deletePlaceNumbersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deletePlaceNumbersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeletePlaceNumbersIdMutationKey(id);
   const swrFn = getDeletePlaceNumbersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

@@ -10,4 +10,5 @@
  */
 import type { ActionmailboxIngressesPostmarkInboundEmail } from './actionmailboxIngressesPostmarkInboundEmail';
 
-export type ActionmailboxIngressesPostmarkInboundEmailBody = ActionmailboxIngressesPostmarkInboundEmail;
+export type ActionmailboxIngressesPostmarkInboundEmailBody =
+  ActionmailboxIngressesPostmarkInboundEmail;

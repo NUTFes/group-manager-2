@@ -9,482 +9,538 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  FesDate
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { FesDate } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getFesDatesResponse200 = {
-  data: FesDate
-  status: 200
-}
+  data: FesDate;
+  status: 200;
+};
 
 export type getFesDatesResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type getFesDatesResponseSuccess = (getFesDatesResponse200) & {
-  headers: Headers;
-};
-export type getFesDatesResponseError = (getFesDatesResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type getFesDatesResponse = (getFesDatesResponseSuccess | getFesDatesResponseError)
+export type getFesDatesResponseSuccess = getFesDatesResponse200 & {
+  headers: Headers;
+};
+export type getFesDatesResponseError = getFesDatesResponse422 & {
+  headers: Headers;
+};
+
+export type getFesDatesResponse =
+  | getFesDatesResponseSuccess
+  | getFesDatesResponseError;
 
 export const getGetFesDatesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getFesDates = async ( options?: RequestInit): Promise<getFesDatesResponse> => {
-
-  return openApiFetch<getFesDatesResponse>(getGetFesDatesUrl(),
-  {
+export const getFesDates = async (
+  options?: RequestInit
+): Promise<getFesDatesResponse> => {
+  return openApiFetch<getFesDatesResponse>(getGetFesDatesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetFesDatesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetFesDatesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates`] as const;
-
-export type GetFesDatesQueryResult = NonNullable<Awaited<ReturnType<typeof getFesDates>>>
+export type GetFesDatesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFesDates>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetFesDates = <TError = FesDate>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFesDates>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetFesDates = <TError = FesDate>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getFesDates>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFesDatesKey() : null);
-  const swrFn = () => getFesDates(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFesDatesKey() : null));
+  const swrFn = () => getFesDates(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postFesDatesResponse201 = {
-  data: FesDate
-  status: 201
-}
+  data: FesDate;
+  status: 201;
+};
 
 export type postFesDatesResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type postFesDatesResponseSuccess = (postFesDatesResponse201) & {
-  headers: Headers;
-};
-export type postFesDatesResponseError = (postFesDatesResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type postFesDatesResponse = (postFesDatesResponseSuccess | postFesDatesResponseError)
+export type postFesDatesResponseSuccess = postFesDatesResponse201 & {
+  headers: Headers;
+};
+export type postFesDatesResponseError = postFesDatesResponse422 & {
+  headers: Headers;
+};
+
+export type postFesDatesResponse =
+  | postFesDatesResponseSuccess
+  | postFesDatesResponseError;
 
 export const getPostFesDatesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postFesDates = async (fesDate?: FesDate, options?: RequestInit): Promise<postFesDatesResponse> => {
-
-  return openApiFetch<postFesDatesResponse>(getPostFesDatesUrl(),
-  {
+export const postFesDates = async (
+  fesDate?: FesDate,
+  options?: RequestInit
+): Promise<postFesDatesResponse> => {
+  return openApiFetch<postFesDatesResponse>(getPostFesDatesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(fesDate)
-  }
-);}
+    body: JSON.stringify(fesDate),
+  });
+};
 
-
-
-
-export const getPostFesDatesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostFesDatesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FesDate | undefined }) => {
     return postFesDates(arg, options);
-  }
-}
-export const getPostFesDatesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates`] as const;
+  };
+};
+export const getPostFesDatesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates`] as const;
 
-export type PostFesDatesMutationResult = NonNullable<Awaited<ReturnType<typeof postFesDates>>>
+export type PostFesDatesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postFesDates>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostFesDates = <TError = FesDate>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFesDates>>, TError, Key, FesDate | undefined, Awaited<ReturnType<typeof postFesDates>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostFesDates = <TError = FesDate>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postFesDates>>,
+    TError,
+    Key,
+    FesDate | undefined,
+    Awaited<ReturnType<typeof postFesDates>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostFesDatesMutationKey();
   const swrFn = getPostFesDatesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getFesDatesIdResponse200 = {
-  data: FesDate
-  status: 200
-}
+  data: FesDate;
+  status: 200;
+};
 
 export type getFesDatesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getFesDatesIdResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type getFesDatesIdResponseSuccess = (getFesDatesIdResponse200) & {
-  headers: Headers;
-};
-export type getFesDatesIdResponseError = (getFesDatesIdResponse404 | getFesDatesIdResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type getFesDatesIdResponse = (getFesDatesIdResponseSuccess | getFesDatesIdResponseError)
+export type getFesDatesIdResponseSuccess = getFesDatesIdResponse200 & {
+  headers: Headers;
+};
+export type getFesDatesIdResponseError = (
+  | getFesDatesIdResponse404
+  | getFesDatesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetFesDatesIdUrl = (id: number,) => {
+export type getFesDatesIdResponse =
+  | getFesDatesIdResponseSuccess
+  | getFesDatesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`
-}
+export const getGetFesDatesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getFesDatesId = async (id: number, options?: RequestInit): Promise<getFesDatesIdResponse> => {
-
-  return openApiFetch<getFesDatesIdResponse>(getGetFesDatesIdUrl(id),
-  {
+export const getFesDatesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getFesDatesIdResponse> => {
+  return openApiFetch<getFesDatesIdResponse>(getGetFesDatesIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetFesDatesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetFesDatesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`] as const;
-
-export type GetFesDatesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFesDatesId>>>
+export type GetFesDatesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFesDatesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetFesDatesId = <TError = void | FesDate>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFesDatesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getFesDatesId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFesDatesIdKey(id) : null);
-  const swrFn = () => getFesDatesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFesDatesIdKey(id) : null));
+  const swrFn = () => getFesDatesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchFesDatesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchFesDatesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchFesDatesIdResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type patchFesDatesIdResponseSuccess = (patchFesDatesIdResponse204) & {
-  headers: Headers;
-};
-export type patchFesDatesIdResponseError = (patchFesDatesIdResponse404 | patchFesDatesIdResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type patchFesDatesIdResponse = (patchFesDatesIdResponseSuccess | patchFesDatesIdResponseError)
+export type patchFesDatesIdResponseSuccess = patchFesDatesIdResponse204 & {
+  headers: Headers;
+};
+export type patchFesDatesIdResponseError = (
+  | patchFesDatesIdResponse404
+  | patchFesDatesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchFesDatesIdUrl = (id: number,) => {
+export type patchFesDatesIdResponse =
+  | patchFesDatesIdResponseSuccess
+  | patchFesDatesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`
-}
+export const getPatchFesDatesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchFesDatesId = async (id: number,
-    fesDate?: FesDate, options?: RequestInit): Promise<patchFesDatesIdResponse> => {
-
-  return openApiFetch<patchFesDatesIdResponse>(getPatchFesDatesIdUrl(id),
-  {
+export const patchFesDatesId = async (
+  id: number,
+  fesDate?: FesDate,
+  options?: RequestInit
+): Promise<patchFesDatesIdResponse> => {
+  return openApiFetch<patchFesDatesIdResponse>(getPatchFesDatesIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(fesDate)
-  }
-);}
+    body: JSON.stringify(fesDate),
+  });
+};
 
-
-
-
-export const getPatchFesDatesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchFesDatesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FesDate | undefined }) => {
     return patchFesDatesId(id, arg, options);
-  }
-}
-export const getPatchFesDatesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`] as const;
+  };
+};
+export const getPatchFesDatesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`] as const;
 
-export type PatchFesDatesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchFesDatesId>>>
+export type PatchFesDatesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchFesDatesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchFesDatesId = <TError = void | FesDate>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchFesDatesId>>, TError, Key, FesDate | undefined, Awaited<ReturnType<typeof patchFesDatesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchFesDatesId>>,
+      TError,
+      Key,
+      FesDate | undefined,
+      Awaited<ReturnType<typeof patchFesDatesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchFesDatesIdMutationKey(id);
   const swrFn = getPatchFesDatesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putFesDatesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putFesDatesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putFesDatesIdResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type putFesDatesIdResponseSuccess = (putFesDatesIdResponse204) & {
-  headers: Headers;
-};
-export type putFesDatesIdResponseError = (putFesDatesIdResponse404 | putFesDatesIdResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type putFesDatesIdResponse = (putFesDatesIdResponseSuccess | putFesDatesIdResponseError)
+export type putFesDatesIdResponseSuccess = putFesDatesIdResponse204 & {
+  headers: Headers;
+};
+export type putFesDatesIdResponseError = (
+  | putFesDatesIdResponse404
+  | putFesDatesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutFesDatesIdUrl = (id: number,) => {
+export type putFesDatesIdResponse =
+  | putFesDatesIdResponseSuccess
+  | putFesDatesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`
-}
+export const getPutFesDatesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putFesDatesId = async (id: number,
-    fesDate?: FesDate, options?: RequestInit): Promise<putFesDatesIdResponse> => {
-
-  return openApiFetch<putFesDatesIdResponse>(getPutFesDatesIdUrl(id),
-  {
+export const putFesDatesId = async (
+  id: number,
+  fesDate?: FesDate,
+  options?: RequestInit
+): Promise<putFesDatesIdResponse> => {
+  return openApiFetch<putFesDatesIdResponse>(getPutFesDatesIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(fesDate)
-  }
-);}
+    body: JSON.stringify(fesDate),
+  });
+};
 
-
-
-
-export const getPutFesDatesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutFesDatesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FesDate | undefined }) => {
     return putFesDatesId(id, arg, options);
-  }
-}
-export const getPutFesDatesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`] as const;
+  };
+};
+export const getPutFesDatesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`] as const;
 
-export type PutFesDatesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putFesDatesId>>>
+export type PutFesDatesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putFesDatesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutFesDatesId = <TError = void | FesDate>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putFesDatesId>>, TError, Key, FesDate | undefined, Awaited<ReturnType<typeof putFesDatesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putFesDatesId>>,
+      TError,
+      Key,
+      FesDate | undefined,
+      Awaited<ReturnType<typeof putFesDatesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutFesDatesIdMutationKey(id);
   const swrFn = getPutFesDatesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteFesDatesIdResponse200 = {
-  data: FesDate
-  status: 200
-}
+  data: FesDate;
+  status: 200;
+};
 
 export type deleteFesDatesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteFesDatesIdResponse422 = {
-  data: FesDate
-  status: 422
-}
-
-export type deleteFesDatesIdResponseSuccess = (deleteFesDatesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteFesDatesIdResponseError = (deleteFesDatesIdResponse404 | deleteFesDatesIdResponse422) & {
-  headers: Headers;
+  data: FesDate;
+  status: 422;
 };
 
-export type deleteFesDatesIdResponse = (deleteFesDatesIdResponseSuccess | deleteFesDatesIdResponseError)
+export type deleteFesDatesIdResponseSuccess = deleteFesDatesIdResponse200 & {
+  headers: Headers;
+};
+export type deleteFesDatesIdResponseError = (
+  | deleteFesDatesIdResponse404
+  | deleteFesDatesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteFesDatesIdUrl = (id: number,) => {
+export type deleteFesDatesIdResponse =
+  | deleteFesDatesIdResponseSuccess
+  | deleteFesDatesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`
-}
+export const getDeleteFesDatesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteFesDatesId = async (id: number, options?: RequestInit): Promise<deleteFesDatesIdResponse> => {
-
-  return openApiFetch<deleteFesDatesIdResponse>(getDeleteFesDatesIdUrl(id),
-  {
+export const deleteFesDatesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteFesDatesIdResponse> => {
+  return openApiFetch<deleteFesDatesIdResponse>(getDeleteFesDatesIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteFesDatesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteFesDatesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteFesDatesId(id, options);
-  }
-}
-export const getDeleteFesDatesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/fes_dates/${id}`] as const;
+  };
+};
+export const getDeleteFesDatesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/fes_dates/${id}`] as const;
 
-export type DeleteFesDatesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteFesDatesId>>>
+export type DeleteFesDatesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteFesDatesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteFesDatesId = <TError = void | FesDate>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteFesDatesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteFesDatesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteFesDatesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteFesDatesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteFesDatesIdMutationKey(id);
   const swrFn = getDeleteFesDatesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

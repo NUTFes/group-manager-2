@@ -10,4 +10,5 @@
  */
 import type { ApiV1HealthCenterSubmissionStatusesApi } from './apiV1HealthCenterSubmissionStatusesApi';
 
-export type ApiV1HealthCenterSubmissionStatusesApiBody = ApiV1HealthCenterSubmissionStatusesApi;
+export type ApiV1HealthCenterSubmissionStatusesApiBody =
+  ApiV1HealthCenterSubmissionStatusesApi;

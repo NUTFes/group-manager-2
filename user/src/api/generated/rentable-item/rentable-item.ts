@@ -9,482 +9,555 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  RentableItem
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { RentableItem } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRentableItemsResponse200 = {
-  data: RentableItem
-  status: 200
-}
+  data: RentableItem;
+  status: 200;
+};
 
 export type getRentableItemsResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type getRentableItemsResponseSuccess = (getRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getRentableItemsResponseError = (getRentableItemsResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type getRentableItemsResponse = (getRentableItemsResponseSuccess | getRentableItemsResponseError)
+export type getRentableItemsResponseSuccess = getRentableItemsResponse200 & {
+  headers: Headers;
+};
+export type getRentableItemsResponseError = getRentableItemsResponse422 & {
+  headers: Headers;
+};
+
+export type getRentableItemsResponse =
+  | getRentableItemsResponseSuccess
+  | getRentableItemsResponseError;
 
 export const getGetRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentableItems = async ( options?: RequestInit): Promise<getRentableItemsResponse> => {
-
-  return openApiFetch<getRentableItemsResponse>(getGetRentableItemsUrl(),
-  {
+export const getRentableItems = async (
+  options?: RequestInit
+): Promise<getRentableItemsResponse> => {
+  return openApiFetch<getRentableItemsResponse>(getGetRentableItemsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetRentableItemsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items`] as const;
-
-export type GetRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getRentableItems>>>
+export type GetRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRentableItems = <TError = RentableItem>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRentableItems = <TError = RentableItem>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentableItemsKey() : null);
-  const swrFn = () => getRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetRentableItemsKey() : null));
+  const swrFn = () => getRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postRentableItemsResponse201 = {
-  data: RentableItem
-  status: 201
-}
+  data: RentableItem;
+  status: 201;
+};
 
 export type postRentableItemsResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type postRentableItemsResponseSuccess = (postRentableItemsResponse201) & {
-  headers: Headers;
-};
-export type postRentableItemsResponseError = (postRentableItemsResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type postRentableItemsResponse = (postRentableItemsResponseSuccess | postRentableItemsResponseError)
+export type postRentableItemsResponseSuccess = postRentableItemsResponse201 & {
+  headers: Headers;
+};
+export type postRentableItemsResponseError = postRentableItemsResponse422 & {
+  headers: Headers;
+};
+
+export type postRentableItemsResponse =
+  | postRentableItemsResponseSuccess
+  | postRentableItemsResponseError;
 
 export const getPostRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRentableItems = async (rentableItem?: RentableItem, options?: RequestInit): Promise<postRentableItemsResponse> => {
-
-  return openApiFetch<postRentableItemsResponse>(getPostRentableItemsUrl(),
-  {
+export const postRentableItems = async (
+  rentableItem?: RentableItem,
+  options?: RequestInit
+): Promise<postRentableItemsResponse> => {
+  return openApiFetch<postRentableItemsResponse>(getPostRentableItemsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentableItem)
-  }
-);}
+    body: JSON.stringify(rentableItem),
+  });
+};
 
-
-
-
-export const getPostRentableItemsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostRentableItemsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentableItem | undefined }) => {
     return postRentableItems(arg, options);
-  }
-}
-export const getPostRentableItemsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items`] as const;
+  };
+};
+export const getPostRentableItemsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items`] as const;
 
-export type PostRentableItemsMutationResult = NonNullable<Awaited<ReturnType<typeof postRentableItems>>>
+export type PostRentableItemsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRentableItems>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostRentableItems = <TError = RentableItem>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRentableItems>>, TError, Key, RentableItem | undefined, Awaited<ReturnType<typeof postRentableItems>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostRentableItems = <TError = RentableItem>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRentableItems>>,
+    TError,
+    Key,
+    RentableItem | undefined,
+    Awaited<ReturnType<typeof postRentableItems>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostRentableItemsMutationKey();
   const swrFn = getPostRentableItemsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRentableItemsIdResponse200 = {
-  data: RentableItem
-  status: 200
-}
+  data: RentableItem;
+  status: 200;
+};
 
 export type getRentableItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRentableItemsIdResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type getRentableItemsIdResponseSuccess = (getRentableItemsIdResponse200) & {
-  headers: Headers;
-};
-export type getRentableItemsIdResponseError = (getRentableItemsIdResponse404 | getRentableItemsIdResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type getRentableItemsIdResponse = (getRentableItemsIdResponseSuccess | getRentableItemsIdResponseError)
+export type getRentableItemsIdResponseSuccess =
+  getRentableItemsIdResponse200 & {
+    headers: Headers;
+  };
+export type getRentableItemsIdResponseError = (
+  | getRentableItemsIdResponse404
+  | getRentableItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRentableItemsIdUrl = (id: number,) => {
+export type getRentableItemsIdResponse =
+  | getRentableItemsIdResponseSuccess
+  | getRentableItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`
-}
+export const getGetRentableItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentableItemsId = async (id: number, options?: RequestInit): Promise<getRentableItemsIdResponse> => {
+export const getRentableItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getRentableItemsIdResponse> => {
+  return openApiFetch<getRentableItemsIdResponse>(
+    getGetRentableItemsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRentableItemsIdResponse>(getGetRentableItemsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRentableItemsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRentableItemsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`] as const;
-
-export type GetRentableItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getRentableItemsId>>>
+export type GetRentableItemsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentableItemsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetRentableItemsId = <TError = void | RentableItem>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentableItemsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRentableItemsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentableItemsIdKey(id) : null);
-  const swrFn = () => getRentableItemsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetRentableItemsIdKey(id) : null));
+  const swrFn = () => getRentableItemsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchRentableItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchRentableItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchRentableItemsIdResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type patchRentableItemsIdResponseSuccess = (patchRentableItemsIdResponse204) & {
-  headers: Headers;
-};
-export type patchRentableItemsIdResponseError = (patchRentableItemsIdResponse404 | patchRentableItemsIdResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type patchRentableItemsIdResponse = (patchRentableItemsIdResponseSuccess | patchRentableItemsIdResponseError)
+export type patchRentableItemsIdResponseSuccess =
+  patchRentableItemsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchRentableItemsIdResponseError = (
+  | patchRentableItemsIdResponse404
+  | patchRentableItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchRentableItemsIdUrl = (id: number,) => {
+export type patchRentableItemsIdResponse =
+  | patchRentableItemsIdResponseSuccess
+  | patchRentableItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`
-}
+export const getPatchRentableItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchRentableItemsId = async (id: number,
-    rentableItem?: RentableItem, options?: RequestInit): Promise<patchRentableItemsIdResponse> => {
+export const patchRentableItemsId = async (
+  id: number,
+  rentableItem?: RentableItem,
+  options?: RequestInit
+): Promise<patchRentableItemsIdResponse> => {
+  return openApiFetch<patchRentableItemsIdResponse>(
+    getPatchRentableItemsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentableItem),
+    }
+  );
+};
 
-  return openApiFetch<patchRentableItemsIdResponse>(getPatchRentableItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentableItem)
-  }
-);}
-
-
-
-
-export const getPatchRentableItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchRentableItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentableItem | undefined }) => {
     return patchRentableItemsId(id, arg, options);
-  }
-}
-export const getPatchRentableItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`] as const;
+  };
+};
+export const getPatchRentableItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`] as const;
 
-export type PatchRentableItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchRentableItemsId>>>
+export type PatchRentableItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchRentableItemsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchRentableItemsId = <TError = void | RentableItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchRentableItemsId>>, TError, Key, RentableItem | undefined, Awaited<ReturnType<typeof patchRentableItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchRentableItemsId>>,
+      TError,
+      Key,
+      RentableItem | undefined,
+      Awaited<ReturnType<typeof patchRentableItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchRentableItemsIdMutationKey(id);
   const swrFn = getPatchRentableItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putRentableItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putRentableItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putRentableItemsIdResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type putRentableItemsIdResponseSuccess = (putRentableItemsIdResponse204) & {
-  headers: Headers;
-};
-export type putRentableItemsIdResponseError = (putRentableItemsIdResponse404 | putRentableItemsIdResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type putRentableItemsIdResponse = (putRentableItemsIdResponseSuccess | putRentableItemsIdResponseError)
+export type putRentableItemsIdResponseSuccess =
+  putRentableItemsIdResponse204 & {
+    headers: Headers;
+  };
+export type putRentableItemsIdResponseError = (
+  | putRentableItemsIdResponse404
+  | putRentableItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutRentableItemsIdUrl = (id: number,) => {
+export type putRentableItemsIdResponse =
+  | putRentableItemsIdResponseSuccess
+  | putRentableItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`
-}
+export const getPutRentableItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putRentableItemsId = async (id: number,
-    rentableItem?: RentableItem, options?: RequestInit): Promise<putRentableItemsIdResponse> => {
+export const putRentableItemsId = async (
+  id: number,
+  rentableItem?: RentableItem,
+  options?: RequestInit
+): Promise<putRentableItemsIdResponse> => {
+  return openApiFetch<putRentableItemsIdResponse>(
+    getPutRentableItemsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentableItem),
+    }
+  );
+};
 
-  return openApiFetch<putRentableItemsIdResponse>(getPutRentableItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentableItem)
-  }
-);}
-
-
-
-
-export const getPutRentableItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutRentableItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentableItem | undefined }) => {
     return putRentableItemsId(id, arg, options);
-  }
-}
-export const getPutRentableItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`] as const;
+  };
+};
+export const getPutRentableItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`] as const;
 
-export type PutRentableItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putRentableItemsId>>>
+export type PutRentableItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putRentableItemsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutRentableItemsId = <TError = void | RentableItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putRentableItemsId>>, TError, Key, RentableItem | undefined, Awaited<ReturnType<typeof putRentableItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putRentableItemsId>>,
+      TError,
+      Key,
+      RentableItem | undefined,
+      Awaited<ReturnType<typeof putRentableItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutRentableItemsIdMutationKey(id);
   const swrFn = getPutRentableItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteRentableItemsIdResponse200 = {
-  data: RentableItem
-  status: 200
-}
+  data: RentableItem;
+  status: 200;
+};
 
 export type deleteRentableItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteRentableItemsIdResponse422 = {
-  data: RentableItem
-  status: 422
-}
-
-export type deleteRentableItemsIdResponseSuccess = (deleteRentableItemsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteRentableItemsIdResponseError = (deleteRentableItemsIdResponse404 | deleteRentableItemsIdResponse422) & {
-  headers: Headers;
+  data: RentableItem;
+  status: 422;
 };
 
-export type deleteRentableItemsIdResponse = (deleteRentableItemsIdResponseSuccess | deleteRentableItemsIdResponseError)
+export type deleteRentableItemsIdResponseSuccess =
+  deleteRentableItemsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteRentableItemsIdResponseError = (
+  | deleteRentableItemsIdResponse404
+  | deleteRentableItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteRentableItemsIdUrl = (id: number,) => {
+export type deleteRentableItemsIdResponse =
+  | deleteRentableItemsIdResponseSuccess
+  | deleteRentableItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`
-}
+export const getDeleteRentableItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteRentableItemsId = async (id: number, options?: RequestInit): Promise<deleteRentableItemsIdResponse> => {
+export const deleteRentableItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteRentableItemsIdResponse> => {
+  return openApiFetch<deleteRentableItemsIdResponse>(
+    getDeleteRentableItemsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteRentableItemsIdResponse>(getDeleteRentableItemsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteRentableItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteRentableItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteRentableItemsId(id, options);
-  }
-}
-export const getDeleteRentableItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rentable_items/${id}`] as const;
+  };
+};
+export const getDeleteRentableItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rentable_items/${id}`] as const;
 
-export type DeleteRentableItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRentableItemsId>>>
+export type DeleteRentableItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteRentableItemsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteRentableItemsId = <TError = void | RentableItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteRentableItemsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteRentableItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteRentableItemsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteRentableItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteRentableItemsIdMutationKey(id);
   const swrFn = getDeleteRentableItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

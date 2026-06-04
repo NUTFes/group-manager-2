@@ -10,4 +10,5 @@
  */
 import type { RailsConductorActionmailboxReroute } from './railsConductorActionmailboxReroute';
 
-export type RailsConductorActionmailboxRerouteBody = RailsConductorActionmailboxReroute;
+export type RailsConductorActionmailboxRerouteBody =
+  RailsConductorActionmailboxReroute;

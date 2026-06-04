@@ -8,103 +8,136 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  RailsConductorActionmailboxReroute
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { RailsConductorActionmailboxReroute } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postRailsConductorActionMailboxInboundEmailIdRerouteResponse201 = {
-  data: RailsConductorActionmailboxReroute
-  status: 201
-}
+  data: RailsConductorActionmailboxReroute;
+  status: 201;
+};
 
 export type postRailsConductorActionMailboxInboundEmailIdRerouteResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type postRailsConductorActionMailboxInboundEmailIdRerouteResponse422 = {
-  data: RailsConductorActionmailboxReroute
-  status: 422
-}
-
-export type postRailsConductorActionMailboxInboundEmailIdRerouteResponseSuccess = (postRailsConductorActionMailboxInboundEmailIdRerouteResponse201) & {
-  headers: Headers;
-};
-export type postRailsConductorActionMailboxInboundEmailIdRerouteResponseError = (postRailsConductorActionMailboxInboundEmailIdRerouteResponse404 | postRailsConductorActionMailboxInboundEmailIdRerouteResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxReroute;
+  status: 422;
 };
 
-export type postRailsConductorActionMailboxInboundEmailIdRerouteResponse = (postRailsConductorActionMailboxInboundEmailIdRerouteResponseSuccess | postRailsConductorActionMailboxInboundEmailIdRerouteResponseError)
+export type postRailsConductorActionMailboxInboundEmailIdRerouteResponseSuccess =
+  postRailsConductorActionMailboxInboundEmailIdRerouteResponse201 & {
+    headers: Headers;
+  };
+export type postRailsConductorActionMailboxInboundEmailIdRerouteResponseError =
+  (
+    | postRailsConductorActionMailboxInboundEmailIdRerouteResponse404
+    | postRailsConductorActionMailboxInboundEmailIdRerouteResponse422
+  ) & {
+    headers: Headers;
+  };
 
-export const getPostRailsConductorActionMailboxInboundEmailIdRerouteUrl = (inboundEmailId: number,) => {
+export type postRailsConductorActionMailboxInboundEmailIdRerouteResponse =
+  | postRailsConductorActionMailboxInboundEmailIdRerouteResponseSuccess
+  | postRailsConductorActionMailboxInboundEmailIdRerouteResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/${inboundEmailId}/reroute`
-}
+export const getPostRailsConductorActionMailboxInboundEmailIdRerouteUrl = (
+  inboundEmailId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/${inboundEmailId}/reroute`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRailsConductorActionMailboxInboundEmailIdReroute = async (inboundEmailId: number,
-    railsConductorActionmailboxReroute?: RailsConductorActionmailboxReroute, options?: RequestInit): Promise<postRailsConductorActionMailboxInboundEmailIdRerouteResponse> => {
+export const postRailsConductorActionMailboxInboundEmailIdReroute = async (
+  inboundEmailId: number,
+  railsConductorActionmailboxReroute?: RailsConductorActionmailboxReroute,
+  options?: RequestInit
+): Promise<postRailsConductorActionMailboxInboundEmailIdRerouteResponse> => {
+  return openApiFetch<postRailsConductorActionMailboxInboundEmailIdRerouteResponse>(
+    getPostRailsConductorActionMailboxInboundEmailIdRerouteUrl(inboundEmailId),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(railsConductorActionmailboxReroute),
+    }
+  );
+};
 
-  return openApiFetch<postRailsConductorActionMailboxInboundEmailIdRerouteResponse>(getPostRailsConductorActionMailboxInboundEmailIdRerouteUrl(inboundEmailId),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(railsConductorActionmailboxReroute)
-  }
-);}
+export const getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationFetcher =
+  (inboundEmailId: number, options?: SecondParameter<typeof openApiFetch>) => {
+    return (
+      _: Key,
+      { arg }: { arg: RailsConductorActionmailboxReroute | undefined }
+    ) => {
+      return postRailsConductorActionMailboxInboundEmailIdReroute(
+        inboundEmailId,
+        arg,
+        options
+      );
+    };
+  };
+export const getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationKey =
+  (inboundEmailId: number) =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/${inboundEmailId}/reroute`,
+    ] as const;
 
-
-
-
-export const getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationFetcher = (inboundEmailId: number, options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: RailsConductorActionmailboxReroute | undefined }) => {
-    return postRailsConductorActionMailboxInboundEmailIdReroute(inboundEmailId, arg, options);
-  }
-}
-export const getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationKey = (inboundEmailId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/${inboundEmailId}/reroute`] as const;
-
-export type PostRailsConductorActionMailboxInboundEmailIdRerouteMutationResult = NonNullable<Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>>>
+export type PostRailsConductorActionMailboxInboundEmailIdRerouteMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>
+    >
+  >;
 
 /**
  * @summary post summary
  */
-export const usePostRailsConductorActionMailboxInboundEmailIdReroute = <TError = void | RailsConductorActionmailboxReroute>(
-  inboundEmailId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>>, TError, Key, RailsConductorActionmailboxReroute | undefined, Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePostRailsConductorActionMailboxInboundEmailIdReroute = <
+  TError = void | RailsConductorActionmailboxReroute,
+>(
+  inboundEmailId: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<
+        ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>
+      >,
+      TError,
+      Key,
+      RailsConductorActionmailboxReroute | undefined,
+      Awaited<
+        ReturnType<typeof postRailsConductorActionMailboxInboundEmailIdReroute>
+      >
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationKey(
+      inboundEmailId
+    );
+  const swrFn =
+    getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationFetcher(
+      inboundEmailId,
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationKey(inboundEmailId);
-  const swrFn = getPostRailsConductorActionMailboxInboundEmailIdRerouteMutationFetcher(inboundEmailId, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

@@ -10,4 +10,5 @@
  */
 import type { ActionmailboxIngressesSendgridInboundEmail } from './actionmailboxIngressesSendgridInboundEmail';
 
-export type ActionmailboxIngressesSendgridInboundEmailBody = ActionmailboxIngressesSendgridInboundEmail;
+export type ActionmailboxIngressesSendgridInboundEmailBody =
+  ActionmailboxIngressesSendgridInboundEmail;

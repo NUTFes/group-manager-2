@@ -9,91 +9,89 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ApiV1DashboardApi
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1DashboardApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1DashboardResponse200 = {
-  data: ApiV1DashboardApi
-  status: 200
-}
+  data: ApiV1DashboardApi;
+  status: 200;
+};
 
 export type getApiV1DashboardResponse422 = {
-  data: ApiV1DashboardApi
-  status: 422
-}
-
-export type getApiV1DashboardResponseSuccess = (getApiV1DashboardResponse200) & {
-  headers: Headers;
-};
-export type getApiV1DashboardResponseError = (getApiV1DashboardResponse422) & {
-  headers: Headers;
+  data: ApiV1DashboardApi;
+  status: 422;
 };
 
-export type getApiV1DashboardResponse = (getApiV1DashboardResponseSuccess | getApiV1DashboardResponseError)
+export type getApiV1DashboardResponseSuccess = getApiV1DashboardResponse200 & {
+  headers: Headers;
+};
+export type getApiV1DashboardResponseError = getApiV1DashboardResponse422 & {
+  headers: Headers;
+};
+
+export type getApiV1DashboardResponse =
+  | getApiV1DashboardResponseSuccess
+  | getApiV1DashboardResponseError;
 
 export const getGetApiV1DashboardUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/dashboard`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/dashboard`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1Dashboard = async ( options?: RequestInit): Promise<getApiV1DashboardResponse> => {
-
-  return openApiFetch<getApiV1DashboardResponse>(getGetApiV1DashboardUrl(),
-  {
+export const getApiV1Dashboard = async (
+  options?: RequestInit
+): Promise<getApiV1DashboardResponse> => {
+  return openApiFetch<getApiV1DashboardResponse>(getGetApiV1DashboardUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetApiV1DashboardKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/dashboard`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetApiV1DashboardKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/dashboard`] as const;
-
-export type GetApiV1DashboardQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1Dashboard>>>
+export type GetApiV1DashboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1Dashboard>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1Dashboard = <TError = ApiV1DashboardApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1Dashboard>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1Dashboard = <TError = ApiV1DashboardApi>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1Dashboard>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1DashboardKey() : null);
-  const swrFn = () => getApiV1Dashboard(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1DashboardKey() : null));
+  const swrFn = () => getApiV1Dashboard(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

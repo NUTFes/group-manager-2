@@ -9,482 +9,653 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  RailsConductorActionmailboxInboundEmail
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { RailsConductorActionmailboxInboundEmail } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRailsConductorActionMailboxInboundEmailsResponse200 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 200
-}
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 200;
+};
 
 export type getRailsConductorActionMailboxInboundEmailsResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type getRailsConductorActionMailboxInboundEmailsResponseSuccess = (getRailsConductorActionMailboxInboundEmailsResponse200) & {
-  headers: Headers;
-};
-export type getRailsConductorActionMailboxInboundEmailsResponseError = (getRailsConductorActionMailboxInboundEmailsResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type getRailsConductorActionMailboxInboundEmailsResponse = (getRailsConductorActionMailboxInboundEmailsResponseSuccess | getRailsConductorActionMailboxInboundEmailsResponseError)
+export type getRailsConductorActionMailboxInboundEmailsResponseSuccess =
+  getRailsConductorActionMailboxInboundEmailsResponse200 & {
+    headers: Headers;
+  };
+export type getRailsConductorActionMailboxInboundEmailsResponseError =
+  getRailsConductorActionMailboxInboundEmailsResponse422 & {
+    headers: Headers;
+  };
+
+export type getRailsConductorActionMailboxInboundEmailsResponse =
+  | getRailsConductorActionMailboxInboundEmailsResponseSuccess
+  | getRailsConductorActionMailboxInboundEmailsResponseError;
 
 export const getGetRailsConductorActionMailboxInboundEmailsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsConductorActionMailboxInboundEmails = async ( options?: RequestInit): Promise<getRailsConductorActionMailboxInboundEmailsResponse> => {
+export const getRailsConductorActionMailboxInboundEmails = async (
+  options?: RequestInit
+): Promise<getRailsConductorActionMailboxInboundEmailsResponse> => {
+  return openApiFetch<getRailsConductorActionMailboxInboundEmailsResponse>(
+    getGetRailsConductorActionMailboxInboundEmailsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRailsConductorActionMailboxInboundEmailsResponse>(getGetRailsConductorActionMailboxInboundEmailsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsConductorActionMailboxInboundEmailsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsConductorActionMailboxInboundEmailsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails`] as const;
-
-export type GetRailsConductorActionMailboxInboundEmailsQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmails>>>
+export type GetRailsConductorActionMailboxInboundEmailsQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmails>>
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetRailsConductorActionMailboxInboundEmails = <TError = RailsConductorActionmailboxInboundEmail>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmails>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRailsConductorActionMailboxInboundEmails = <
+  TError = RailsConductorActionmailboxInboundEmail,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmails>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsConductorActionMailboxInboundEmailsKey() : null);
-  const swrFn = () => getRailsConductorActionMailboxInboundEmails(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetRailsConductorActionMailboxInboundEmailsKey() : null);
+  const swrFn = () =>
+    getRailsConductorActionMailboxInboundEmails(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postRailsConductorActionMailboxInboundEmailsResponse201 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 201
-}
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 201;
+};
 
 export type postRailsConductorActionMailboxInboundEmailsResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type postRailsConductorActionMailboxInboundEmailsResponseSuccess = (postRailsConductorActionMailboxInboundEmailsResponse201) & {
-  headers: Headers;
-};
-export type postRailsConductorActionMailboxInboundEmailsResponseError = (postRailsConductorActionMailboxInboundEmailsResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type postRailsConductorActionMailboxInboundEmailsResponse = (postRailsConductorActionMailboxInboundEmailsResponseSuccess | postRailsConductorActionMailboxInboundEmailsResponseError)
+export type postRailsConductorActionMailboxInboundEmailsResponseSuccess =
+  postRailsConductorActionMailboxInboundEmailsResponse201 & {
+    headers: Headers;
+  };
+export type postRailsConductorActionMailboxInboundEmailsResponseError =
+  postRailsConductorActionMailboxInboundEmailsResponse422 & {
+    headers: Headers;
+  };
+
+export type postRailsConductorActionMailboxInboundEmailsResponse =
+  | postRailsConductorActionMailboxInboundEmailsResponseSuccess
+  | postRailsConductorActionMailboxInboundEmailsResponseError;
 
 export const getPostRailsConductorActionMailboxInboundEmailsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRailsConductorActionMailboxInboundEmails = async (railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail, options?: RequestInit): Promise<postRailsConductorActionMailboxInboundEmailsResponse> => {
+export const postRailsConductorActionMailboxInboundEmails = async (
+  railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail,
+  options?: RequestInit
+): Promise<postRailsConductorActionMailboxInboundEmailsResponse> => {
+  return openApiFetch<postRailsConductorActionMailboxInboundEmailsResponse>(
+    getPostRailsConductorActionMailboxInboundEmailsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(railsConductorActionmailboxInboundEmail),
+    }
+  );
+};
 
-  return openApiFetch<postRailsConductorActionMailboxInboundEmailsResponse>(getPostRailsConductorActionMailboxInboundEmailsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(railsConductorActionmailboxInboundEmail)
-  }
-);}
-
-
-
-
-export const getPostRailsConductorActionMailboxInboundEmailsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }) => {
+export const getPostRailsConductorActionMailboxInboundEmailsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }
+  ) => {
     return postRailsConductorActionMailboxInboundEmails(arg, options);
-  }
-}
-export const getPostRailsConductorActionMailboxInboundEmailsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails`] as const;
+  };
+};
+export const getPostRailsConductorActionMailboxInboundEmailsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails`,
+  ] as const;
 
-export type PostRailsConductorActionMailboxInboundEmailsMutationResult = NonNullable<Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>>
+export type PostRailsConductorActionMailboxInboundEmailsMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>
+  >;
 
 /**
  * @summary post summary
  */
-export const usePostRailsConductorActionMailboxInboundEmails = <TError = RailsConductorActionmailboxInboundEmail>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>, TError, Key, RailsConductorActionmailboxInboundEmail | undefined, Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostRailsConductorActionMailboxInboundEmails = <
+  TError = RailsConductorActionmailboxInboundEmail,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>,
+    TError,
+    Key,
+    RailsConductorActionmailboxInboundEmail | undefined,
+    Awaited<ReturnType<typeof postRailsConductorActionMailboxInboundEmails>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostRailsConductorActionMailboxInboundEmailsMutationKey();
+  const swrFn =
+    getPostRailsConductorActionMailboxInboundEmailsMutationFetcher(
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPostRailsConductorActionMailboxInboundEmailsMutationKey();
-  const swrFn = getPostRailsConductorActionMailboxInboundEmailsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRailsConductorActionMailboxInboundEmailsIdResponse200 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 200
-}
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 200;
+};
 
 export type getRailsConductorActionMailboxInboundEmailsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRailsConductorActionMailboxInboundEmailsIdResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type getRailsConductorActionMailboxInboundEmailsIdResponseSuccess = (getRailsConductorActionMailboxInboundEmailsIdResponse200) & {
-  headers: Headers;
-};
-export type getRailsConductorActionMailboxInboundEmailsIdResponseError = (getRailsConductorActionMailboxInboundEmailsIdResponse404 | getRailsConductorActionMailboxInboundEmailsIdResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type getRailsConductorActionMailboxInboundEmailsIdResponse = (getRailsConductorActionMailboxInboundEmailsIdResponseSuccess | getRailsConductorActionMailboxInboundEmailsIdResponseError)
+export type getRailsConductorActionMailboxInboundEmailsIdResponseSuccess =
+  getRailsConductorActionMailboxInboundEmailsIdResponse200 & {
+    headers: Headers;
+  };
+export type getRailsConductorActionMailboxInboundEmailsIdResponseError = (
+  | getRailsConductorActionMailboxInboundEmailsIdResponse404
+  | getRailsConductorActionMailboxInboundEmailsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRailsConductorActionMailboxInboundEmailsIdUrl = (id: number,) => {
+export type getRailsConductorActionMailboxInboundEmailsIdResponse =
+  | getRailsConductorActionMailboxInboundEmailsIdResponseSuccess
+  | getRailsConductorActionMailboxInboundEmailsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`
-}
+export const getGetRailsConductorActionMailboxInboundEmailsIdUrl = (
+  id: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsConductorActionMailboxInboundEmailsId = async (id: number, options?: RequestInit): Promise<getRailsConductorActionMailboxInboundEmailsIdResponse> => {
+export const getRailsConductorActionMailboxInboundEmailsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getRailsConductorActionMailboxInboundEmailsIdResponse> => {
+  return openApiFetch<getRailsConductorActionMailboxInboundEmailsIdResponse>(
+    getGetRailsConductorActionMailboxInboundEmailsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRailsConductorActionMailboxInboundEmailsIdResponse>(getGetRailsConductorActionMailboxInboundEmailsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsConductorActionMailboxInboundEmailsIdKey = (
+  id: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsConductorActionMailboxInboundEmailsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`] as const;
-
-export type GetRailsConductorActionMailboxInboundEmailsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmailsId>>>
+export type GetRailsConductorActionMailboxInboundEmailsIdQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmailsId>>
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetRailsConductorActionMailboxInboundEmailsId = <TError = void | RailsConductorActionmailboxInboundEmail>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmailsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetRailsConductorActionMailboxInboundEmailsId = <
+  TError = void | RailsConductorActionmailboxInboundEmail,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRailsConductorActionMailboxInboundEmailsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsConductorActionMailboxInboundEmailsIdKey(id) : null);
-  const swrFn = () => getRailsConductorActionMailboxInboundEmailsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetRailsConductorActionMailboxInboundEmailsIdKey(id)
+        : null);
+  const swrFn = () =>
+    getRailsConductorActionMailboxInboundEmailsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchRailsConductorActionMailboxInboundEmailsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchRailsConductorActionMailboxInboundEmailsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchRailsConductorActionMailboxInboundEmailsIdResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type patchRailsConductorActionMailboxInboundEmailsIdResponseSuccess = (patchRailsConductorActionMailboxInboundEmailsIdResponse204) & {
-  headers: Headers;
-};
-export type patchRailsConductorActionMailboxInboundEmailsIdResponseError = (patchRailsConductorActionMailboxInboundEmailsIdResponse404 | patchRailsConductorActionMailboxInboundEmailsIdResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type patchRailsConductorActionMailboxInboundEmailsIdResponse = (patchRailsConductorActionMailboxInboundEmailsIdResponseSuccess | patchRailsConductorActionMailboxInboundEmailsIdResponseError)
+export type patchRailsConductorActionMailboxInboundEmailsIdResponseSuccess =
+  patchRailsConductorActionMailboxInboundEmailsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchRailsConductorActionMailboxInboundEmailsIdResponseError = (
+  | patchRailsConductorActionMailboxInboundEmailsIdResponse404
+  | patchRailsConductorActionMailboxInboundEmailsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchRailsConductorActionMailboxInboundEmailsIdUrl = (id: number,) => {
+export type patchRailsConductorActionMailboxInboundEmailsIdResponse =
+  | patchRailsConductorActionMailboxInboundEmailsIdResponseSuccess
+  | patchRailsConductorActionMailboxInboundEmailsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`
-}
+export const getPatchRailsConductorActionMailboxInboundEmailsIdUrl = (
+  id: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchRailsConductorActionMailboxInboundEmailsId = async (id: number,
-    railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail, options?: RequestInit): Promise<patchRailsConductorActionMailboxInboundEmailsIdResponse> => {
+export const patchRailsConductorActionMailboxInboundEmailsId = async (
+  id: number,
+  railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail,
+  options?: RequestInit
+): Promise<patchRailsConductorActionMailboxInboundEmailsIdResponse> => {
+  return openApiFetch<patchRailsConductorActionMailboxInboundEmailsIdResponse>(
+    getPatchRailsConductorActionMailboxInboundEmailsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(railsConductorActionmailboxInboundEmail),
+    }
+  );
+};
 
-  return openApiFetch<patchRailsConductorActionMailboxInboundEmailsIdResponse>(getPatchRailsConductorActionMailboxInboundEmailsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(railsConductorActionmailboxInboundEmail)
-  }
-);}
+export const getPatchRailsConductorActionMailboxInboundEmailsIdMutationFetcher =
+  (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+    return (
+      _: Key,
+      { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }
+    ) => {
+      return patchRailsConductorActionMailboxInboundEmailsId(id, arg, options);
+    };
+  };
+export const getPatchRailsConductorActionMailboxInboundEmailsIdMutationKey = (
+  id: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`,
+  ] as const;
 
-
-
-
-export const getPatchRailsConductorActionMailboxInboundEmailsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }) => {
-    return patchRailsConductorActionMailboxInboundEmailsId(id, arg, options);
-  }
-}
-export const getPatchRailsConductorActionMailboxInboundEmailsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`] as const;
-
-export type PatchRailsConductorActionMailboxInboundEmailsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>>>
+export type PatchRailsConductorActionMailboxInboundEmailsIdMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>>
+  >;
 
 /**
  * @summary patch summary
  */
-export const usePatchRailsConductorActionMailboxInboundEmailsId = <TError = void | RailsConductorActionmailboxInboundEmail>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>>, TError, Key, RailsConductorActionmailboxInboundEmail | undefined, Awaited<ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePatchRailsConductorActionMailboxInboundEmailsId = <
+  TError = void | RailsConductorActionmailboxInboundEmail,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<
+        ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>
+      >,
+      TError,
+      Key,
+      RailsConductorActionmailboxInboundEmail | undefined,
+      Awaited<
+        ReturnType<typeof patchRailsConductorActionMailboxInboundEmailsId>
+      >
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPatchRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
+  const swrFn =
+    getPatchRailsConductorActionMailboxInboundEmailsIdMutationFetcher(
+      id,
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPatchRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
-  const swrFn = getPatchRailsConductorActionMailboxInboundEmailsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putRailsConductorActionMailboxInboundEmailsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putRailsConductorActionMailboxInboundEmailsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putRailsConductorActionMailboxInboundEmailsIdResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type putRailsConductorActionMailboxInboundEmailsIdResponseSuccess = (putRailsConductorActionMailboxInboundEmailsIdResponse204) & {
-  headers: Headers;
-};
-export type putRailsConductorActionMailboxInboundEmailsIdResponseError = (putRailsConductorActionMailboxInboundEmailsIdResponse404 | putRailsConductorActionMailboxInboundEmailsIdResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type putRailsConductorActionMailboxInboundEmailsIdResponse = (putRailsConductorActionMailboxInboundEmailsIdResponseSuccess | putRailsConductorActionMailboxInboundEmailsIdResponseError)
+export type putRailsConductorActionMailboxInboundEmailsIdResponseSuccess =
+  putRailsConductorActionMailboxInboundEmailsIdResponse204 & {
+    headers: Headers;
+  };
+export type putRailsConductorActionMailboxInboundEmailsIdResponseError = (
+  | putRailsConductorActionMailboxInboundEmailsIdResponse404
+  | putRailsConductorActionMailboxInboundEmailsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutRailsConductorActionMailboxInboundEmailsIdUrl = (id: number,) => {
+export type putRailsConductorActionMailboxInboundEmailsIdResponse =
+  | putRailsConductorActionMailboxInboundEmailsIdResponseSuccess
+  | putRailsConductorActionMailboxInboundEmailsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`
-}
+export const getPutRailsConductorActionMailboxInboundEmailsIdUrl = (
+  id: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putRailsConductorActionMailboxInboundEmailsId = async (id: number,
-    railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail, options?: RequestInit): Promise<putRailsConductorActionMailboxInboundEmailsIdResponse> => {
+export const putRailsConductorActionMailboxInboundEmailsId = async (
+  id: number,
+  railsConductorActionmailboxInboundEmail?: RailsConductorActionmailboxInboundEmail,
+  options?: RequestInit
+): Promise<putRailsConductorActionMailboxInboundEmailsIdResponse> => {
+  return openApiFetch<putRailsConductorActionMailboxInboundEmailsIdResponse>(
+    getPutRailsConductorActionMailboxInboundEmailsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(railsConductorActionmailboxInboundEmail),
+    }
+  );
+};
 
-  return openApiFetch<putRailsConductorActionMailboxInboundEmailsIdResponse>(getPutRailsConductorActionMailboxInboundEmailsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(railsConductorActionmailboxInboundEmail)
-  }
-);}
-
-
-
-
-export const getPutRailsConductorActionMailboxInboundEmailsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }) => {
+export const getPutRailsConductorActionMailboxInboundEmailsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: RailsConductorActionmailboxInboundEmail | undefined }
+  ) => {
     return putRailsConductorActionMailboxInboundEmailsId(id, arg, options);
-  }
-}
-export const getPutRailsConductorActionMailboxInboundEmailsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`] as const;
+  };
+};
+export const getPutRailsConductorActionMailboxInboundEmailsIdMutationKey = (
+  id: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`,
+  ] as const;
 
-export type PutRailsConductorActionMailboxInboundEmailsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>>
+export type PutRailsConductorActionMailboxInboundEmailsIdMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>
+  >;
 
 /**
  * @summary put summary
  */
-export const usePutRailsConductorActionMailboxInboundEmailsId = <TError = void | RailsConductorActionmailboxInboundEmail>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>, TError, Key, RailsConductorActionmailboxInboundEmail | undefined, Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePutRailsConductorActionMailboxInboundEmailsId = <
+  TError = void | RailsConductorActionmailboxInboundEmail,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>,
+      TError,
+      Key,
+      RailsConductorActionmailboxInboundEmail | undefined,
+      Awaited<ReturnType<typeof putRailsConductorActionMailboxInboundEmailsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPutRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
+  const swrFn = getPutRailsConductorActionMailboxInboundEmailsIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getPutRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
-  const swrFn = getPutRailsConductorActionMailboxInboundEmailsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteRailsConductorActionMailboxInboundEmailsIdResponse200 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 200
-}
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 200;
+};
 
 export type deleteRailsConductorActionMailboxInboundEmailsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteRailsConductorActionMailboxInboundEmailsIdResponse422 = {
-  data: RailsConductorActionmailboxInboundEmail
-  status: 422
-}
-
-export type deleteRailsConductorActionMailboxInboundEmailsIdResponseSuccess = (deleteRailsConductorActionMailboxInboundEmailsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteRailsConductorActionMailboxInboundEmailsIdResponseError = (deleteRailsConductorActionMailboxInboundEmailsIdResponse404 | deleteRailsConductorActionMailboxInboundEmailsIdResponse422) & {
-  headers: Headers;
+  data: RailsConductorActionmailboxInboundEmail;
+  status: 422;
 };
 
-export type deleteRailsConductorActionMailboxInboundEmailsIdResponse = (deleteRailsConductorActionMailboxInboundEmailsIdResponseSuccess | deleteRailsConductorActionMailboxInboundEmailsIdResponseError)
+export type deleteRailsConductorActionMailboxInboundEmailsIdResponseSuccess =
+  deleteRailsConductorActionMailboxInboundEmailsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteRailsConductorActionMailboxInboundEmailsIdResponseError = (
+  | deleteRailsConductorActionMailboxInboundEmailsIdResponse404
+  | deleteRailsConductorActionMailboxInboundEmailsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteRailsConductorActionMailboxInboundEmailsIdUrl = (id: number,) => {
+export type deleteRailsConductorActionMailboxInboundEmailsIdResponse =
+  | deleteRailsConductorActionMailboxInboundEmailsIdResponseSuccess
+  | deleteRailsConductorActionMailboxInboundEmailsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`
-}
+export const getDeleteRailsConductorActionMailboxInboundEmailsIdUrl = (
+  id: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteRailsConductorActionMailboxInboundEmailsId = async (id: number, options?: RequestInit): Promise<deleteRailsConductorActionMailboxInboundEmailsIdResponse> => {
+export const deleteRailsConductorActionMailboxInboundEmailsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteRailsConductorActionMailboxInboundEmailsIdResponse> => {
+  return openApiFetch<deleteRailsConductorActionMailboxInboundEmailsIdResponse>(
+    getDeleteRailsConductorActionMailboxInboundEmailsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteRailsConductorActionMailboxInboundEmailsIdResponse>(getDeleteRailsConductorActionMailboxInboundEmailsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
+export const getDeleteRailsConductorActionMailboxInboundEmailsIdMutationFetcher =
+  (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+    return (_: Key, __: { arg: Arguments }) => {
+      return deleteRailsConductorActionMailboxInboundEmailsId(id, options);
+    };
+  };
+export const getDeleteRailsConductorActionMailboxInboundEmailsIdMutationKey = (
+  id: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/conductor/action_mailbox/inbound_emails/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getDeleteRailsConductorActionMailboxInboundEmailsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, __: { arg: Arguments }) => {
-    return deleteRailsConductorActionMailboxInboundEmailsId(id, options);
-  }
-}
-export const getDeleteRailsConductorActionMailboxInboundEmailsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/conductor/action_mailbox/inbound_emails/${id}`] as const;
-
-export type DeleteRailsConductorActionMailboxInboundEmailsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>>>
+export type DeleteRailsConductorActionMailboxInboundEmailsIdMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>>
+  >;
 
 /**
  * @summary delete summary
  */
-export const useDeleteRailsConductorActionMailboxInboundEmailsId = <TError = void | RailsConductorActionmailboxInboundEmail>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteRailsConductorActionMailboxInboundEmailsId = <
+  TError = void | RailsConductorActionmailboxInboundEmail,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<
+        ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>
+      >,
+      TError,
+      Key,
+      Arguments,
+      Awaited<
+        ReturnType<typeof deleteRailsConductorActionMailboxInboundEmailsId>
+      >
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getDeleteRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
+  const swrFn =
+    getDeleteRailsConductorActionMailboxInboundEmailsIdMutationFetcher(
+      id,
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteRailsConductorActionMailboxInboundEmailsIdMutationKey(id);
-  const swrFn = getDeleteRailsConductorActionMailboxInboundEmailsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

@@ -9,327 +9,389 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  GroupIdentification
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { GroupIdentification } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getGroupIdentificationResponse200 = {
-  data: GroupIdentification
-  status: 200
-}
+  data: GroupIdentification;
+  status: 200;
+};
 
 export type getGroupIdentificationResponse422 = {
-  data: GroupIdentification
-  status: 422
-}
-
-export type getGroupIdentificationResponseSuccess = (getGroupIdentificationResponse200) & {
-  headers: Headers;
-};
-export type getGroupIdentificationResponseError = (getGroupIdentificationResponse422) & {
-  headers: Headers;
+  data: GroupIdentification;
+  status: 422;
 };
 
-export type getGroupIdentificationResponse = (getGroupIdentificationResponseSuccess | getGroupIdentificationResponseError)
+export type getGroupIdentificationResponseSuccess =
+  getGroupIdentificationResponse200 & {
+    headers: Headers;
+  };
+export type getGroupIdentificationResponseError =
+  getGroupIdentificationResponse422 & {
+    headers: Headers;
+  };
+
+export type getGroupIdentificationResponse =
+  | getGroupIdentificationResponseSuccess
+  | getGroupIdentificationResponseError;
 
 export const getGetGroupIdentificationUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroupIdentification = async ( options?: RequestInit): Promise<getGroupIdentificationResponse> => {
+export const getGroupIdentification = async (
+  options?: RequestInit
+): Promise<getGroupIdentificationResponse> => {
+  return openApiFetch<getGroupIdentificationResponse>(
+    getGetGroupIdentificationUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getGroupIdentificationResponse>(getGetGroupIdentificationUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetGroupIdentificationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetGroupIdentificationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification`] as const;
-
-export type GetGroupIdentificationQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupIdentification>>>
+export type GetGroupIdentificationQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroupIdentification>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetGroupIdentification = <TError = GroupIdentification>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroupIdentification>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetGroupIdentification = <
+  TError = GroupIdentification,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getGroupIdentification>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupIdentificationKey() : null);
-  const swrFn = () => getGroupIdentification(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetGroupIdentificationKey() : null));
+  const swrFn = () => getGroupIdentification(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postGroupIdentificationResponse201 = {
-  data: GroupIdentification
-  status: 201
-}
+  data: GroupIdentification;
+  status: 201;
+};
 
 export type postGroupIdentificationResponse422 = {
-  data: GroupIdentification
-  status: 422
-}
-
-export type postGroupIdentificationResponseSuccess = (postGroupIdentificationResponse201) & {
-  headers: Headers;
-};
-export type postGroupIdentificationResponseError = (postGroupIdentificationResponse422) & {
-  headers: Headers;
+  data: GroupIdentification;
+  status: 422;
 };
 
-export type postGroupIdentificationResponse = (postGroupIdentificationResponseSuccess | postGroupIdentificationResponseError)
+export type postGroupIdentificationResponseSuccess =
+  postGroupIdentificationResponse201 & {
+    headers: Headers;
+  };
+export type postGroupIdentificationResponseError =
+  postGroupIdentificationResponse422 & {
+    headers: Headers;
+  };
+
+export type postGroupIdentificationResponse =
+  | postGroupIdentificationResponseSuccess
+  | postGroupIdentificationResponseError;
 
 export const getPostGroupIdentificationUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postGroupIdentification = async (groupIdentification?: GroupIdentification, options?: RequestInit): Promise<postGroupIdentificationResponse> => {
+export const postGroupIdentification = async (
+  groupIdentification?: GroupIdentification,
+  options?: RequestInit
+): Promise<postGroupIdentificationResponse> => {
+  return openApiFetch<postGroupIdentificationResponse>(
+    getPostGroupIdentificationUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(groupIdentification),
+    }
+  );
+};
 
-  return openApiFetch<postGroupIdentificationResponse>(getPostGroupIdentificationUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(groupIdentification)
-  }
-);}
-
-
-
-
-export const getPostGroupIdentificationMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostGroupIdentificationMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: GroupIdentification | undefined }) => {
     return postGroupIdentification(arg, options);
-  }
-}
-export const getPostGroupIdentificationMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification`] as const;
+  };
+};
+export const getPostGroupIdentificationMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification`] as const;
 
-export type PostGroupIdentificationMutationResult = NonNullable<Awaited<ReturnType<typeof postGroupIdentification>>>
+export type PostGroupIdentificationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postGroupIdentification>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostGroupIdentification = <TError = GroupIdentification>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postGroupIdentification>>, TError, Key, GroupIdentification | undefined, Awaited<ReturnType<typeof postGroupIdentification>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostGroupIdentification = <
+  TError = GroupIdentification,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postGroupIdentification>>,
+    TError,
+    Key,
+    GroupIdentification | undefined,
+    Awaited<ReturnType<typeof postGroupIdentification>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostGroupIdentificationMutationKey();
   const swrFn = getPostGroupIdentificationMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putGroupIdentificationIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putGroupIdentificationIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putGroupIdentificationIdResponse422 = {
-  data: GroupIdentification
-  status: 422
-}
-
-export type putGroupIdentificationIdResponseSuccess = (putGroupIdentificationIdResponse204) & {
-  headers: Headers;
-};
-export type putGroupIdentificationIdResponseError = (putGroupIdentificationIdResponse404 | putGroupIdentificationIdResponse422) & {
-  headers: Headers;
+  data: GroupIdentification;
+  status: 422;
 };
 
-export type putGroupIdentificationIdResponse = (putGroupIdentificationIdResponseSuccess | putGroupIdentificationIdResponseError)
+export type putGroupIdentificationIdResponseSuccess =
+  putGroupIdentificationIdResponse204 & {
+    headers: Headers;
+  };
+export type putGroupIdentificationIdResponseError = (
+  | putGroupIdentificationIdResponse404
+  | putGroupIdentificationIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutGroupIdentificationIdUrl = (id: number,) => {
+export type putGroupIdentificationIdResponse =
+  | putGroupIdentificationIdResponseSuccess
+  | putGroupIdentificationIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification/${id}`
-}
+export const getPutGroupIdentificationIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putGroupIdentificationId = async (id: number,
-    groupIdentification?: GroupIdentification, options?: RequestInit): Promise<putGroupIdentificationIdResponse> => {
+export const putGroupIdentificationId = async (
+  id: number,
+  groupIdentification?: GroupIdentification,
+  options?: RequestInit
+): Promise<putGroupIdentificationIdResponse> => {
+  return openApiFetch<putGroupIdentificationIdResponse>(
+    getPutGroupIdentificationIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(groupIdentification),
+    }
+  );
+};
 
-  return openApiFetch<putGroupIdentificationIdResponse>(getPutGroupIdentificationIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(groupIdentification)
-  }
-);}
-
-
-
-
-export const getPutGroupIdentificationIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutGroupIdentificationIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: GroupIdentification | undefined }) => {
     return putGroupIdentificationId(id, arg, options);
-  }
-}
-export const getPutGroupIdentificationIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification/${id}`] as const;
+  };
+};
+export const getPutGroupIdentificationIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification/${id}`,
+  ] as const;
 
-export type PutGroupIdentificationIdMutationResult = NonNullable<Awaited<ReturnType<typeof putGroupIdentificationId>>>
+export type PutGroupIdentificationIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putGroupIdentificationId>>
+>;
 
 /**
  * @summary put summary
  */
-export const usePutGroupIdentificationId = <TError = void | GroupIdentification>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putGroupIdentificationId>>, TError, Key, GroupIdentification | undefined, Awaited<ReturnType<typeof putGroupIdentificationId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePutGroupIdentificationId = <
+  TError = void | GroupIdentification,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putGroupIdentificationId>>,
+      TError,
+      Key,
+      GroupIdentification | undefined,
+      Awaited<ReturnType<typeof putGroupIdentificationId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPutGroupIdentificationIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPutGroupIdentificationIdMutationKey(id);
   const swrFn = getPutGroupIdentificationIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteGroupIdentificationIdResponse200 = {
-  data: GroupIdentification
-  status: 200
-}
+  data: GroupIdentification;
+  status: 200;
+};
 
 export type deleteGroupIdentificationIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteGroupIdentificationIdResponse422 = {
-  data: GroupIdentification
-  status: 422
-}
-
-export type deleteGroupIdentificationIdResponseSuccess = (deleteGroupIdentificationIdResponse200) & {
-  headers: Headers;
-};
-export type deleteGroupIdentificationIdResponseError = (deleteGroupIdentificationIdResponse404 | deleteGroupIdentificationIdResponse422) & {
-  headers: Headers;
+  data: GroupIdentification;
+  status: 422;
 };
 
-export type deleteGroupIdentificationIdResponse = (deleteGroupIdentificationIdResponseSuccess | deleteGroupIdentificationIdResponseError)
+export type deleteGroupIdentificationIdResponseSuccess =
+  deleteGroupIdentificationIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteGroupIdentificationIdResponseError = (
+  | deleteGroupIdentificationIdResponse404
+  | deleteGroupIdentificationIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteGroupIdentificationIdUrl = (id: number,) => {
+export type deleteGroupIdentificationIdResponse =
+  | deleteGroupIdentificationIdResponseSuccess
+  | deleteGroupIdentificationIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification/${id}`
-}
+export const getDeleteGroupIdentificationIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteGroupIdentificationId = async (id: number, options?: RequestInit): Promise<deleteGroupIdentificationIdResponse> => {
+export const deleteGroupIdentificationId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteGroupIdentificationIdResponse> => {
+  return openApiFetch<deleteGroupIdentificationIdResponse>(
+    getDeleteGroupIdentificationIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteGroupIdentificationIdResponse>(getDeleteGroupIdentificationIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteGroupIdentificationIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteGroupIdentificationIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteGroupIdentificationId(id, options);
-  }
-}
-export const getDeleteGroupIdentificationIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_identification/${id}`] as const;
+  };
+};
+export const getDeleteGroupIdentificationIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_identification/${id}`,
+  ] as const;
 
-export type DeleteGroupIdentificationIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGroupIdentificationId>>>
+export type DeleteGroupIdentificationIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteGroupIdentificationId>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteGroupIdentificationId = <TError = void | GroupIdentification>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteGroupIdentificationId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteGroupIdentificationId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteGroupIdentificationId = <
+  TError = void | GroupIdentification,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteGroupIdentificationId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteGroupIdentificationId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteGroupIdentificationIdMutationKey(id);
+  const swrFn = getDeleteGroupIdentificationIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteGroupIdentificationIdMutationKey(id);
-  const swrFn = getDeleteGroupIdentificationIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

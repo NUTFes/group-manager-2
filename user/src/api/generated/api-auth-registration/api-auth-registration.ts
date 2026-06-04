@@ -9,531 +9,565 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiAuthRegistration
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiAuthRegistration } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type patchApiAuthResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchApiAuthResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type patchApiAuthResponseSuccess = (patchApiAuthResponse204) & {
-  headers: Headers;
-};
-export type patchApiAuthResponseError = (patchApiAuthResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type patchApiAuthResponse = (patchApiAuthResponseSuccess | patchApiAuthResponseError)
+export type patchApiAuthResponseSuccess = patchApiAuthResponse204 & {
+  headers: Headers;
+};
+export type patchApiAuthResponseError = patchApiAuthResponse422 & {
+  headers: Headers;
+};
+
+export type patchApiAuthResponse =
+  | patchApiAuthResponseSuccess
+  | patchApiAuthResponseError;
 
 export const getPatchApiAuthUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchApiAuth = async (apiAuthRegistration?: ApiAuthRegistration, options?: RequestInit): Promise<patchApiAuthResponse> => {
-
-  return openApiFetch<patchApiAuthResponse>(getPatchApiAuthUrl(),
-  {
+export const patchApiAuth = async (
+  apiAuthRegistration?: ApiAuthRegistration,
+  options?: RequestInit
+): Promise<patchApiAuthResponse> => {
+  return openApiFetch<patchApiAuthResponse>(getPatchApiAuthUrl(), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiAuthRegistration)
-  }
-);}
+    body: JSON.stringify(apiAuthRegistration),
+  });
+};
 
-
-
-
-export const getPatchApiAuthMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchApiAuthMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiAuthRegistration | undefined }) => {
     return patchApiAuth(arg, options);
-  }
-}
-export const getPatchApiAuthMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`] as const;
+  };
+};
+export const getPatchApiAuthMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`] as const;
 
-export type PatchApiAuthMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiAuth>>>
+export type PatchApiAuthMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchApiAuth>>
+>;
 
 /**
  * @summary patch summary
  */
-export const usePatchApiAuth = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchApiAuth>>, TError, Key, ApiAuthRegistration | undefined, Awaited<ReturnType<typeof patchApiAuth>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePatchApiAuth = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof patchApiAuth>>,
+    TError,
+    Key,
+    ApiAuthRegistration | undefined,
+    Awaited<ReturnType<typeof patchApiAuth>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchApiAuthMutationKey();
   const swrFn = getPatchApiAuthMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putApiAuthResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putApiAuthResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type putApiAuthResponseSuccess = (putApiAuthResponse204) & {
-  headers: Headers;
-};
-export type putApiAuthResponseError = (putApiAuthResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type putApiAuthResponse = (putApiAuthResponseSuccess | putApiAuthResponseError)
+export type putApiAuthResponseSuccess = putApiAuthResponse204 & {
+  headers: Headers;
+};
+export type putApiAuthResponseError = putApiAuthResponse422 & {
+  headers: Headers;
+};
+
+export type putApiAuthResponse =
+  | putApiAuthResponseSuccess
+  | putApiAuthResponseError;
 
 export const getPutApiAuthUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putApiAuth = async (apiAuthRegistration?: ApiAuthRegistration, options?: RequestInit): Promise<putApiAuthResponse> => {
-
-  return openApiFetch<putApiAuthResponse>(getPutApiAuthUrl(),
-  {
+export const putApiAuth = async (
+  apiAuthRegistration?: ApiAuthRegistration,
+  options?: RequestInit
+): Promise<putApiAuthResponse> => {
+  return openApiFetch<putApiAuthResponse>(getPutApiAuthUrl(), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiAuthRegistration)
-  }
-);}
+    body: JSON.stringify(apiAuthRegistration),
+  });
+};
 
-
-
-
-export const getPutApiAuthMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutApiAuthMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiAuthRegistration | undefined }) => {
     return putApiAuth(arg, options);
-  }
-}
-export const getPutApiAuthMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`] as const;
+  };
+};
+export const getPutApiAuthMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`] as const;
 
-export type PutApiAuthMutationResult = NonNullable<Awaited<ReturnType<typeof putApiAuth>>>
+export type PutApiAuthMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putApiAuth>>
+>;
 
 /**
  * @summary put summary
  */
-export const usePutApiAuth = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putApiAuth>>, TError, Key, ApiAuthRegistration | undefined, Awaited<ReturnType<typeof putApiAuth>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePutApiAuth = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof putApiAuth>>,
+    TError,
+    Key,
+    ApiAuthRegistration | undefined,
+    Awaited<ReturnType<typeof putApiAuth>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutApiAuthMutationKey();
   const swrFn = getPutApiAuthMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteApiAuthResponse200 = {
-  data: ApiAuthRegistration
-  status: 200
-}
+  data: ApiAuthRegistration;
+  status: 200;
+};
 
 export type deleteApiAuthResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type deleteApiAuthResponseSuccess = (deleteApiAuthResponse200) & {
-  headers: Headers;
-};
-export type deleteApiAuthResponseError = (deleteApiAuthResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type deleteApiAuthResponse = (deleteApiAuthResponseSuccess | deleteApiAuthResponseError)
+export type deleteApiAuthResponseSuccess = deleteApiAuthResponse200 & {
+  headers: Headers;
+};
+export type deleteApiAuthResponseError = deleteApiAuthResponse422 & {
+  headers: Headers;
+};
+
+export type deleteApiAuthResponse =
+  | deleteApiAuthResponseSuccess
+  | deleteApiAuthResponseError;
 
 export const getDeleteApiAuthUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteApiAuth = async ( options?: RequestInit): Promise<deleteApiAuthResponse> => {
-
-  return openApiFetch<deleteApiAuthResponse>(getDeleteApiAuthUrl(),
-  {
+export const deleteApiAuth = async (
+  options?: RequestInit
+): Promise<deleteApiAuthResponse> => {
+  return openApiFetch<deleteApiAuthResponse>(getDeleteApiAuthUrl(), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteApiAuthMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteApiAuthMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteApiAuth(options);
-  }
-}
-export const getDeleteApiAuthMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`] as const;
+  };
+};
+export const getDeleteApiAuthMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`] as const;
 
-export type DeleteApiAuthMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiAuth>>>
+export type DeleteApiAuthMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteApiAuth>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteApiAuth = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteApiAuth>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteApiAuth>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useDeleteApiAuth = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof deleteApiAuth>>,
+    TError,
+    Key,
+    Arguments,
+    Awaited<ReturnType<typeof deleteApiAuth>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteApiAuthMutationKey();
   const swrFn = getDeleteApiAuthMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiAuthResponse201 = {
-  data: ApiAuthRegistration
-  status: 201
-}
+  data: ApiAuthRegistration;
+  status: 201;
+};
 
 export type postApiAuthResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type postApiAuthResponseSuccess = (postApiAuthResponse201) & {
-  headers: Headers;
-};
-export type postApiAuthResponseError = (postApiAuthResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type postApiAuthResponse = (postApiAuthResponseSuccess | postApiAuthResponseError)
+export type postApiAuthResponseSuccess = postApiAuthResponse201 & {
+  headers: Headers;
+};
+export type postApiAuthResponseError = postApiAuthResponse422 & {
+  headers: Headers;
+};
+
+export type postApiAuthResponse =
+  | postApiAuthResponseSuccess
+  | postApiAuthResponseError;
 
 export const getPostApiAuthUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiAuth = async (apiAuthRegistration?: ApiAuthRegistration, options?: RequestInit): Promise<postApiAuthResponse> => {
-
-  return openApiFetch<postApiAuthResponse>(getPostApiAuthUrl(),
-  {
+export const postApiAuth = async (
+  apiAuthRegistration?: ApiAuthRegistration,
+  options?: RequestInit
+): Promise<postApiAuthResponse> => {
+  return openApiFetch<postApiAuthResponse>(getPostApiAuthUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiAuthRegistration)
-  }
-);}
+    body: JSON.stringify(apiAuthRegistration),
+  });
+};
 
-
-
-
-export const getPostApiAuthMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiAuthMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiAuthRegistration | undefined }) => {
     return postApiAuth(arg, options);
-  }
-}
-export const getPostApiAuthMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth`] as const;
+  };
+};
+export const getPostApiAuthMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth`] as const;
 
-export type PostApiAuthMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuth>>>
+export type PostApiAuthMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiAuth>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiAuth = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiAuth>>, TError, Key, ApiAuthRegistration | undefined, Awaited<ReturnType<typeof postApiAuth>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostApiAuth = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiAuth>>,
+    TError,
+    Key,
+    ApiAuthRegistration | undefined,
+    Awaited<ReturnType<typeof postApiAuth>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostApiAuthMutationKey();
   const swrFn = getPostApiAuthMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiAuthCancelResponse200 = {
-  data: ApiAuthRegistration
-  status: 200
-}
+  data: ApiAuthRegistration;
+  status: 200;
+};
 
 export type getApiAuthCancelResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type getApiAuthCancelResponseSuccess = (getApiAuthCancelResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthCancelResponseError = (getApiAuthCancelResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type getApiAuthCancelResponse = (getApiAuthCancelResponseSuccess | getApiAuthCancelResponseError)
+export type getApiAuthCancelResponseSuccess = getApiAuthCancelResponse200 & {
+  headers: Headers;
+};
+export type getApiAuthCancelResponseError = getApiAuthCancelResponse422 & {
+  headers: Headers;
+};
+
+export type getApiAuthCancelResponse =
+  | getApiAuthCancelResponseSuccess
+  | getApiAuthCancelResponseError;
 
 export const getGetApiAuthCancelUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/cancel`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/cancel`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthCancel = async ( options?: RequestInit): Promise<getApiAuthCancelResponse> => {
-
-  return openApiFetch<getApiAuthCancelResponse>(getGetApiAuthCancelUrl(),
-  {
+export const getApiAuthCancel = async (
+  options?: RequestInit
+): Promise<getApiAuthCancelResponse> => {
+  return openApiFetch<getApiAuthCancelResponse>(getGetApiAuthCancelUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetApiAuthCancelKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/cancel`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetApiAuthCancelKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/cancel`] as const;
-
-export type GetApiAuthCancelQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthCancel>>>
+export type GetApiAuthCancelQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthCancel>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthCancel = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthCancel>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthCancel = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiAuthCancel>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthCancelKey() : null);
-  const swrFn = () => getApiAuthCancel(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetApiAuthCancelKey() : null));
+  const swrFn = () => getApiAuthCancel(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiAuthEditResponse200 = {
-  data: ApiAuthRegistration
-  status: 200
-}
+  data: ApiAuthRegistration;
+  status: 200;
+};
 
 export type getApiAuthEditResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type getApiAuthEditResponseSuccess = (getApiAuthEditResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthEditResponseError = (getApiAuthEditResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type getApiAuthEditResponse = (getApiAuthEditResponseSuccess | getApiAuthEditResponseError)
+export type getApiAuthEditResponseSuccess = getApiAuthEditResponse200 & {
+  headers: Headers;
+};
+export type getApiAuthEditResponseError = getApiAuthEditResponse422 & {
+  headers: Headers;
+};
+
+export type getApiAuthEditResponse =
+  | getApiAuthEditResponseSuccess
+  | getApiAuthEditResponseError;
 
 export const getGetApiAuthEditUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/edit`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/edit`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthEdit = async ( options?: RequestInit): Promise<getApiAuthEditResponse> => {
-
-  return openApiFetch<getApiAuthEditResponse>(getGetApiAuthEditUrl(),
-  {
+export const getApiAuthEdit = async (
+  options?: RequestInit
+): Promise<getApiAuthEditResponse> => {
+  return openApiFetch<getApiAuthEditResponse>(getGetApiAuthEditUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetApiAuthEditKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/edit`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetApiAuthEditKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/edit`] as const;
-
-export type GetApiAuthEditQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthEdit>>>
+export type GetApiAuthEditQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthEdit>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthEdit = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthEdit>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthEdit = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getApiAuthEdit>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthEditKey() : null);
-  const swrFn = () => getApiAuthEdit(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetApiAuthEditKey() : null));
+  const swrFn = () => getApiAuthEdit(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiAuthSignUpResponse200 = {
-  data: ApiAuthRegistration
-  status: 200
-}
+  data: ApiAuthRegistration;
+  status: 200;
+};
 
 export type getApiAuthSignUpResponse422 = {
-  data: ApiAuthRegistration
-  status: 422
-}
-
-export type getApiAuthSignUpResponseSuccess = (getApiAuthSignUpResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthSignUpResponseError = (getApiAuthSignUpResponse422) & {
-  headers: Headers;
+  data: ApiAuthRegistration;
+  status: 422;
 };
 
-export type getApiAuthSignUpResponse = (getApiAuthSignUpResponseSuccess | getApiAuthSignUpResponseError)
+export type getApiAuthSignUpResponseSuccess = getApiAuthSignUpResponse200 & {
+  headers: Headers;
+};
+export type getApiAuthSignUpResponseError = getApiAuthSignUpResponse422 & {
+  headers: Headers;
+};
+
+export type getApiAuthSignUpResponse =
+  | getApiAuthSignUpResponseSuccess
+  | getApiAuthSignUpResponseError;
 
 export const getGetApiAuthSignUpUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_up`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_up`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthSignUp = async ( options?: RequestInit): Promise<getApiAuthSignUpResponse> => {
-
-  return openApiFetch<getApiAuthSignUpResponse>(getGetApiAuthSignUpUrl(),
-  {
+export const getApiAuthSignUp = async (
+  options?: RequestInit
+): Promise<getApiAuthSignUpResponse> => {
+  return openApiFetch<getApiAuthSignUpResponse>(getGetApiAuthSignUpUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetApiAuthSignUpKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_up`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetApiAuthSignUpKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_up`] as const;
-
-export type GetApiAuthSignUpQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthSignUp>>>
+export type GetApiAuthSignUpQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthSignUp>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthSignUp = <TError = ApiAuthRegistration>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthSignUp>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthSignUp = <TError = ApiAuthRegistration>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiAuthSignUp>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthSignUpKey() : null);
-  const swrFn = () => getApiAuthSignUp(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetApiAuthSignUpKey() : null));
+  const swrFn = () => getApiAuthSignUp(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

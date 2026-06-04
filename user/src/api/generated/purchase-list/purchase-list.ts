@@ -9,702 +9,828 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  PurchaseList
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { PurchaseList } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getPurchaseListsResponse200 = {
-  data: PurchaseList[]
-  status: 200
-}
+  data: PurchaseList[];
+  status: 200;
+};
 
 export type getPurchaseListsResponse422 = {
-  data: PurchaseList[]
-  status: 422
-}
-
-export type getPurchaseListsResponseSuccess = (getPurchaseListsResponse200) & {
-  headers: Headers;
-};
-export type getPurchaseListsResponseError = (getPurchaseListsResponse422) & {
-  headers: Headers;
+  data: PurchaseList[];
+  status: 422;
 };
 
-export type getPurchaseListsResponse = (getPurchaseListsResponseSuccess | getPurchaseListsResponseError)
+export type getPurchaseListsResponseSuccess = getPurchaseListsResponse200 & {
+  headers: Headers;
+};
+export type getPurchaseListsResponseError = getPurchaseListsResponse422 & {
+  headers: Headers;
+};
+
+export type getPurchaseListsResponse =
+  | getPurchaseListsResponseSuccess
+  | getPurchaseListsResponseError;
 
 export const getGetPurchaseListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPurchaseLists = async ( options?: RequestInit): Promise<getPurchaseListsResponse> => {
-
-  return openApiFetch<getPurchaseListsResponse>(getGetPurchaseListsUrl(),
-  {
+export const getPurchaseLists = async (
+  options?: RequestInit
+): Promise<getPurchaseListsResponse> => {
+  return openApiFetch<getPurchaseListsResponse>(getGetPurchaseListsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPurchaseListsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPurchaseListsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists`] as const;
-
-export type GetPurchaseListsQueryResult = NonNullable<Awaited<ReturnType<typeof getPurchaseLists>>>
+export type GetPurchaseListsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPurchaseLists>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPurchaseLists = <TError = PurchaseList[]>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPurchaseLists>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPurchaseLists = <TError = PurchaseList[]>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getPurchaseLists>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPurchaseListsKey() : null);
-  const swrFn = () => getPurchaseLists(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetPurchaseListsKey() : null));
+  const swrFn = () => getPurchaseLists(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPurchaseListsResponse201 = {
-  data: PurchaseList
-  status: 201
-}
+  data: PurchaseList;
+  status: 201;
+};
 
 export type postPurchaseListsResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type postPurchaseListsResponseSuccess = (postPurchaseListsResponse201) & {
-  headers: Headers;
-};
-export type postPurchaseListsResponseError = (postPurchaseListsResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type postPurchaseListsResponse = (postPurchaseListsResponseSuccess | postPurchaseListsResponseError)
+export type postPurchaseListsResponseSuccess = postPurchaseListsResponse201 & {
+  headers: Headers;
+};
+export type postPurchaseListsResponseError = postPurchaseListsResponse422 & {
+  headers: Headers;
+};
+
+export type postPurchaseListsResponse =
+  | postPurchaseListsResponseSuccess
+  | postPurchaseListsResponseError;
 
 export const getPostPurchaseListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPurchaseLists = async (purchaseList?: PurchaseList, options?: RequestInit): Promise<postPurchaseListsResponse> => {
-
-  return openApiFetch<postPurchaseListsResponse>(getPostPurchaseListsUrl(),
-  {
+export const postPurchaseLists = async (
+  purchaseList?: PurchaseList,
+  options?: RequestInit
+): Promise<postPurchaseListsResponse> => {
+  return openApiFetch<postPurchaseListsResponse>(getPostPurchaseListsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(purchaseList)
-  }
-);}
+    body: JSON.stringify(purchaseList),
+  });
+};
 
-
-
-
-export const getPostPurchaseListsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPurchaseListsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PurchaseList | undefined }) => {
     return postPurchaseLists(arg, options);
-  }
-}
-export const getPostPurchaseListsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists`] as const;
+  };
+};
+export const getPostPurchaseListsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists`] as const;
 
-export type PostPurchaseListsMutationResult = NonNullable<Awaited<ReturnType<typeof postPurchaseLists>>>
+export type PostPurchaseListsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPurchaseLists>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPurchaseLists = <TError = PurchaseList>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPurchaseLists>>, TError, Key, PurchaseList | undefined, Awaited<ReturnType<typeof postPurchaseLists>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPurchaseLists = <TError = PurchaseList>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPurchaseLists>>,
+    TError,
+    Key,
+    PurchaseList | undefined,
+    Awaited<ReturnType<typeof postPurchaseLists>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPurchaseListsMutationKey();
   const swrFn = getPostPurchaseListsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPurchaseListsIdResponse200 = {
-  data: PurchaseList
-  status: 200
-}
+  data: PurchaseList;
+  status: 200;
+};
 
 export type getPurchaseListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPurchaseListsIdResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type getPurchaseListsIdResponseSuccess = (getPurchaseListsIdResponse200) & {
-  headers: Headers;
-};
-export type getPurchaseListsIdResponseError = (getPurchaseListsIdResponse404 | getPurchaseListsIdResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type getPurchaseListsIdResponse = (getPurchaseListsIdResponseSuccess | getPurchaseListsIdResponseError)
+export type getPurchaseListsIdResponseSuccess =
+  getPurchaseListsIdResponse200 & {
+    headers: Headers;
+  };
+export type getPurchaseListsIdResponseError = (
+  | getPurchaseListsIdResponse404
+  | getPurchaseListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPurchaseListsIdUrl = (id: number,) => {
+export type getPurchaseListsIdResponse =
+  | getPurchaseListsIdResponseSuccess
+  | getPurchaseListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`
-}
+export const getGetPurchaseListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPurchaseListsId = async (id: number, options?: RequestInit): Promise<getPurchaseListsIdResponse> => {
+export const getPurchaseListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getPurchaseListsIdResponse> => {
+  return openApiFetch<getPurchaseListsIdResponse>(
+    getGetPurchaseListsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPurchaseListsIdResponse>(getGetPurchaseListsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPurchaseListsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPurchaseListsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`] as const;
-
-export type GetPurchaseListsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPurchaseListsId>>>
+export type GetPurchaseListsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPurchaseListsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPurchaseListsId = <TError = void | PurchaseList>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPurchaseListsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPurchaseListsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPurchaseListsIdKey(id) : null);
-  const swrFn = () => getPurchaseListsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPurchaseListsIdKey(id) : null));
+  const swrFn = () => getPurchaseListsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchPurchaseListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchPurchaseListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchPurchaseListsIdResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type patchPurchaseListsIdResponseSuccess = (patchPurchaseListsIdResponse204) & {
-  headers: Headers;
-};
-export type patchPurchaseListsIdResponseError = (patchPurchaseListsIdResponse404 | patchPurchaseListsIdResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type patchPurchaseListsIdResponse = (patchPurchaseListsIdResponseSuccess | patchPurchaseListsIdResponseError)
+export type patchPurchaseListsIdResponseSuccess =
+  patchPurchaseListsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchPurchaseListsIdResponseError = (
+  | patchPurchaseListsIdResponse404
+  | patchPurchaseListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchPurchaseListsIdUrl = (id: number,) => {
+export type patchPurchaseListsIdResponse =
+  | patchPurchaseListsIdResponseSuccess
+  | patchPurchaseListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`
-}
+export const getPatchPurchaseListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchPurchaseListsId = async (id: number,
-    purchaseList?: PurchaseList, options?: RequestInit): Promise<patchPurchaseListsIdResponse> => {
+export const patchPurchaseListsId = async (
+  id: number,
+  purchaseList?: PurchaseList,
+  options?: RequestInit
+): Promise<patchPurchaseListsIdResponse> => {
+  return openApiFetch<patchPurchaseListsIdResponse>(
+    getPatchPurchaseListsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(purchaseList),
+    }
+  );
+};
 
-  return openApiFetch<patchPurchaseListsIdResponse>(getPatchPurchaseListsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(purchaseList)
-  }
-);}
-
-
-
-
-export const getPatchPurchaseListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchPurchaseListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PurchaseList | undefined }) => {
     return patchPurchaseListsId(id, arg, options);
-  }
-}
-export const getPatchPurchaseListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`] as const;
+  };
+};
+export const getPatchPurchaseListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`] as const;
 
-export type PatchPurchaseListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchPurchaseListsId>>>
+export type PatchPurchaseListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchPurchaseListsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchPurchaseListsId = <TError = void | PurchaseList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchPurchaseListsId>>, TError, Key, PurchaseList | undefined, Awaited<ReturnType<typeof patchPurchaseListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchPurchaseListsId>>,
+      TError,
+      Key,
+      PurchaseList | undefined,
+      Awaited<ReturnType<typeof patchPurchaseListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchPurchaseListsIdMutationKey(id);
   const swrFn = getPatchPurchaseListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putPurchaseListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putPurchaseListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putPurchaseListsIdResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type putPurchaseListsIdResponseSuccess = (putPurchaseListsIdResponse204) & {
-  headers: Headers;
-};
-export type putPurchaseListsIdResponseError = (putPurchaseListsIdResponse404 | putPurchaseListsIdResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type putPurchaseListsIdResponse = (putPurchaseListsIdResponseSuccess | putPurchaseListsIdResponseError)
+export type putPurchaseListsIdResponseSuccess =
+  putPurchaseListsIdResponse204 & {
+    headers: Headers;
+  };
+export type putPurchaseListsIdResponseError = (
+  | putPurchaseListsIdResponse404
+  | putPurchaseListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutPurchaseListsIdUrl = (id: number,) => {
+export type putPurchaseListsIdResponse =
+  | putPurchaseListsIdResponseSuccess
+  | putPurchaseListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`
-}
+export const getPutPurchaseListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putPurchaseListsId = async (id: number,
-    purchaseList?: PurchaseList, options?: RequestInit): Promise<putPurchaseListsIdResponse> => {
+export const putPurchaseListsId = async (
+  id: number,
+  purchaseList?: PurchaseList,
+  options?: RequestInit
+): Promise<putPurchaseListsIdResponse> => {
+  return openApiFetch<putPurchaseListsIdResponse>(
+    getPutPurchaseListsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(purchaseList),
+    }
+  );
+};
 
-  return openApiFetch<putPurchaseListsIdResponse>(getPutPurchaseListsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(purchaseList)
-  }
-);}
-
-
-
-
-export const getPutPurchaseListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutPurchaseListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PurchaseList | undefined }) => {
     return putPurchaseListsId(id, arg, options);
-  }
-}
-export const getPutPurchaseListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`] as const;
+  };
+};
+export const getPutPurchaseListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`] as const;
 
-export type PutPurchaseListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putPurchaseListsId>>>
+export type PutPurchaseListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putPurchaseListsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutPurchaseListsId = <TError = void | PurchaseList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putPurchaseListsId>>, TError, Key, PurchaseList | undefined, Awaited<ReturnType<typeof putPurchaseListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putPurchaseListsId>>,
+      TError,
+      Key,
+      PurchaseList | undefined,
+      Awaited<ReturnType<typeof putPurchaseListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutPurchaseListsIdMutationKey(id);
   const swrFn = getPutPurchaseListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deletePurchaseListsIdResponse200 = {
-  data: PurchaseList
-  status: 200
-}
+  data: PurchaseList;
+  status: 200;
+};
 
 export type deletePurchaseListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deletePurchaseListsIdResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type deletePurchaseListsIdResponseSuccess = (deletePurchaseListsIdResponse200) & {
-  headers: Headers;
-};
-export type deletePurchaseListsIdResponseError = (deletePurchaseListsIdResponse404 | deletePurchaseListsIdResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type deletePurchaseListsIdResponse = (deletePurchaseListsIdResponseSuccess | deletePurchaseListsIdResponseError)
+export type deletePurchaseListsIdResponseSuccess =
+  deletePurchaseListsIdResponse200 & {
+    headers: Headers;
+  };
+export type deletePurchaseListsIdResponseError = (
+  | deletePurchaseListsIdResponse404
+  | deletePurchaseListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeletePurchaseListsIdUrl = (id: number,) => {
+export type deletePurchaseListsIdResponse =
+  | deletePurchaseListsIdResponseSuccess
+  | deletePurchaseListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`
-}
+export const getDeletePurchaseListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deletePurchaseListsId = async (id: number, options?: RequestInit): Promise<deletePurchaseListsIdResponse> => {
+export const deletePurchaseListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deletePurchaseListsIdResponse> => {
+  return openApiFetch<deletePurchaseListsIdResponse>(
+    getDeletePurchaseListsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deletePurchaseListsIdResponse>(getDeletePurchaseListsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeletePurchaseListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeletePurchaseListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deletePurchaseListsId(id, options);
-  }
-}
-export const getDeletePurchaseListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/${id}`] as const;
+  };
+};
+export const getDeletePurchaseListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/${id}`] as const;
 
-export type DeletePurchaseListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePurchaseListsId>>>
+export type DeletePurchaseListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePurchaseListsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeletePurchaseListsId = <TError = void | PurchaseList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deletePurchaseListsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deletePurchaseListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deletePurchaseListsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deletePurchaseListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeletePurchaseListsIdMutationKey(id);
   const swrFn = getDeletePurchaseListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPurchaseListsFoodProductResponse200 = {
-  data: PurchaseList
-  status: 200
-}
+  data: PurchaseList;
+  status: 200;
+};
 
 export type getPurchaseListsFoodProductResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type getPurchaseListsFoodProductResponseSuccess = (getPurchaseListsFoodProductResponse200) & {
-  headers: Headers;
-};
-export type getPurchaseListsFoodProductResponseError = (getPurchaseListsFoodProductResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type getPurchaseListsFoodProductResponse = (getPurchaseListsFoodProductResponseSuccess | getPurchaseListsFoodProductResponseError)
+export type getPurchaseListsFoodProductResponseSuccess =
+  getPurchaseListsFoodProductResponse200 & {
+    headers: Headers;
+  };
+export type getPurchaseListsFoodProductResponseError =
+  getPurchaseListsFoodProductResponse422 & {
+    headers: Headers;
+  };
+
+export type getPurchaseListsFoodProductResponse =
+  | getPurchaseListsFoodProductResponseSuccess
+  | getPurchaseListsFoodProductResponseError;
 
 export const getGetPurchaseListsFoodProductUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/food_product`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/food_product`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPurchaseListsFoodProduct = async ( options?: RequestInit): Promise<getPurchaseListsFoodProductResponse> => {
+export const getPurchaseListsFoodProduct = async (
+  options?: RequestInit
+): Promise<getPurchaseListsFoodProductResponse> => {
+  return openApiFetch<getPurchaseListsFoodProductResponse>(
+    getGetPurchaseListsFoodProductUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPurchaseListsFoodProductResponse>(getGetPurchaseListsFoodProductUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPurchaseListsFoodProductKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/food_product`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPurchaseListsFoodProductKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/food_product`] as const;
-
-export type GetPurchaseListsFoodProductQueryResult = NonNullable<Awaited<ReturnType<typeof getPurchaseListsFoodProduct>>>
+export type GetPurchaseListsFoodProductQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPurchaseListsFoodProduct>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPurchaseListsFoodProduct = <TError = PurchaseList>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPurchaseListsFoodProduct>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPurchaseListsFoodProduct = <
+  TError = PurchaseList,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getPurchaseListsFoodProduct>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPurchaseListsFoodProductKey() : null);
-  const swrFn = () => getPurchaseListsFoodProduct(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPurchaseListsFoodProductKey() : null));
+  const swrFn = () => getPurchaseListsFoodProduct(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPurchaseListsGroupGroupIdResponse200 = {
-  data: PurchaseList[]
-  status: 200
-}
+  data: PurchaseList[];
+  status: 200;
+};
 
 export type getPurchaseListsGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPurchaseListsGroupGroupIdResponse422 = {
-  data: PurchaseList[]
-  status: 422
-}
-
-export type getPurchaseListsGroupGroupIdResponseSuccess = (getPurchaseListsGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getPurchaseListsGroupGroupIdResponseError = (getPurchaseListsGroupGroupIdResponse404 | getPurchaseListsGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: PurchaseList[];
+  status: 422;
 };
 
-export type getPurchaseListsGroupGroupIdResponse = (getPurchaseListsGroupGroupIdResponseSuccess | getPurchaseListsGroupGroupIdResponseError)
+export type getPurchaseListsGroupGroupIdResponseSuccess =
+  getPurchaseListsGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getPurchaseListsGroupGroupIdResponseError = (
+  | getPurchaseListsGroupGroupIdResponse404
+  | getPurchaseListsGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPurchaseListsGroupGroupIdUrl = (groupId: number,) => {
+export type getPurchaseListsGroupGroupIdResponse =
+  | getPurchaseListsGroupGroupIdResponseSuccess
+  | getPurchaseListsGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/group/${groupId}`
-}
+export const getGetPurchaseListsGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPurchaseListsGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getPurchaseListsGroupGroupIdResponse> => {
+export const getPurchaseListsGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getPurchaseListsGroupGroupIdResponse> => {
+  return openApiFetch<getPurchaseListsGroupGroupIdResponse>(
+    getGetPurchaseListsGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPurchaseListsGroupGroupIdResponse>(getGetPurchaseListsGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPurchaseListsGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPurchaseListsGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/group/${groupId}`] as const;
-
-export type GetPurchaseListsGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPurchaseListsGroupGroupId>>>
+export type GetPurchaseListsGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPurchaseListsGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPurchaseListsGroupGroupId = <TError = void | PurchaseList[]>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPurchaseListsGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPurchaseListsGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPurchaseListsGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getPurchaseListsGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPurchaseListsGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getPurchaseListsGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPurchaseListsUpsertResponse201 = {
-  data: PurchaseList
-  status: 201
-}
+  data: PurchaseList;
+  status: 201;
+};
 
 export type postPurchaseListsUpsertResponse422 = {
-  data: PurchaseList
-  status: 422
-}
-
-export type postPurchaseListsUpsertResponseSuccess = (postPurchaseListsUpsertResponse201) & {
-  headers: Headers;
-};
-export type postPurchaseListsUpsertResponseError = (postPurchaseListsUpsertResponse422) & {
-  headers: Headers;
+  data: PurchaseList;
+  status: 422;
 };
 
-export type postPurchaseListsUpsertResponse = (postPurchaseListsUpsertResponseSuccess | postPurchaseListsUpsertResponseError)
+export type postPurchaseListsUpsertResponseSuccess =
+  postPurchaseListsUpsertResponse201 & {
+    headers: Headers;
+  };
+export type postPurchaseListsUpsertResponseError =
+  postPurchaseListsUpsertResponse422 & {
+    headers: Headers;
+  };
+
+export type postPurchaseListsUpsertResponse =
+  | postPurchaseListsUpsertResponseSuccess
+  | postPurchaseListsUpsertResponseError;
 
 export const getPostPurchaseListsUpsertUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/upsert`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/upsert`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPurchaseListsUpsert = async (purchaseList?: PurchaseList, options?: RequestInit): Promise<postPurchaseListsUpsertResponse> => {
+export const postPurchaseListsUpsert = async (
+  purchaseList?: PurchaseList,
+  options?: RequestInit
+): Promise<postPurchaseListsUpsertResponse> => {
+  return openApiFetch<postPurchaseListsUpsertResponse>(
+    getPostPurchaseListsUpsertUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(purchaseList),
+    }
+  );
+};
 
-  return openApiFetch<postPurchaseListsUpsertResponse>(getPostPurchaseListsUpsertUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(purchaseList)
-  }
-);}
-
-
-
-
-export const getPostPurchaseListsUpsertMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPurchaseListsUpsertMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PurchaseList | undefined }) => {
     return postPurchaseListsUpsert(arg, options);
-  }
-}
-export const getPostPurchaseListsUpsertMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/purchase_lists/upsert`] as const;
+  };
+};
+export const getPostPurchaseListsUpsertMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/purchase_lists/upsert`] as const;
 
-export type PostPurchaseListsUpsertMutationResult = NonNullable<Awaited<ReturnType<typeof postPurchaseListsUpsert>>>
+export type PostPurchaseListsUpsertMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPurchaseListsUpsert>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPurchaseListsUpsert = <TError = PurchaseList>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPurchaseListsUpsert>>, TError, Key, PurchaseList | undefined, Awaited<ReturnType<typeof postPurchaseListsUpsert>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPurchaseListsUpsert = <TError = PurchaseList>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPurchaseListsUpsert>>,
+    TError,
+    Key,
+    PurchaseList | undefined,
+    Awaited<ReturnType<typeof postPurchaseListsUpsert>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPurchaseListsUpsertMutationKey();
   const swrFn = getPostPurchaseListsUpsertMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

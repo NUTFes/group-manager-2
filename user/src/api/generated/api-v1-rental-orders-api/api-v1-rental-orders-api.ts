@@ -9,318 +9,386 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1RentalOrdersApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1RentalOrdersApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postApiV1GetRefinementRentalOrdersResponse201 = {
-  data: ApiV1RentalOrdersApi
-  status: 201
-}
+  data: ApiV1RentalOrdersApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementRentalOrdersResponse422 = {
-  data: ApiV1RentalOrdersApi
-  status: 422
-}
-
-export type postApiV1GetRefinementRentalOrdersResponseSuccess = (postApiV1GetRefinementRentalOrdersResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementRentalOrdersResponseError = (postApiV1GetRefinementRentalOrdersResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalOrdersApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementRentalOrdersResponse = (postApiV1GetRefinementRentalOrdersResponseSuccess | postApiV1GetRefinementRentalOrdersResponseError)
+export type postApiV1GetRefinementRentalOrdersResponseSuccess =
+  postApiV1GetRefinementRentalOrdersResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementRentalOrdersResponseError =
+  postApiV1GetRefinementRentalOrdersResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementRentalOrdersResponse =
+  | postApiV1GetRefinementRentalOrdersResponseSuccess
+  | postApiV1GetRefinementRentalOrdersResponseError;
 
 export const getPostApiV1GetRefinementRentalOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_rental_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_rental_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementRentalOrders = async (apiV1RentalOrdersApi?: ApiV1RentalOrdersApi, options?: RequestInit): Promise<postApiV1GetRefinementRentalOrdersResponse> => {
+export const postApiV1GetRefinementRentalOrders = async (
+  apiV1RentalOrdersApi?: ApiV1RentalOrdersApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementRentalOrdersResponse> => {
+  return openApiFetch<postApiV1GetRefinementRentalOrdersResponse>(
+    getPostApiV1GetRefinementRentalOrdersUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1RentalOrdersApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementRentalOrdersResponse>(getPostApiV1GetRefinementRentalOrdersUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1RentalOrdersApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementRentalOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementRentalOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1RentalOrdersApi | undefined }) => {
     return postApiV1GetRefinementRentalOrders(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementRentalOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_rental_orders`] as const;
+  };
+};
+export const getPostApiV1GetRefinementRentalOrdersMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_rental_orders`,
+  ] as const;
 
-export type PostApiV1GetRefinementRentalOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>>
+export type PostApiV1GetRefinementRentalOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementRentalOrders = <TError = ApiV1RentalOrdersApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>, TError, Key, ApiV1RentalOrdersApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementRentalOrders = <
+  TError = ApiV1RentalOrdersApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>,
+    TError,
+    Key,
+    ApiV1RentalOrdersApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementRentalOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementRentalOrdersMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementRentalOrdersMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementRentalOrdersMutationKey();
-  const swrFn = getPostApiV1GetRefinementRentalOrdersMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetRentalOrderIndexForAdminViewResponse200 = {
-  data: ApiV1RentalOrdersApi
-  status: 200
-}
+  data: ApiV1RentalOrdersApi;
+  status: 200;
+};
 
 export type getApiV1GetRentalOrderIndexForAdminViewResponse422 = {
-  data: ApiV1RentalOrdersApi
-  status: 422
-}
-
-export type getApiV1GetRentalOrderIndexForAdminViewResponseSuccess = (getApiV1GetRentalOrderIndexForAdminViewResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetRentalOrderIndexForAdminViewResponseError = (getApiV1GetRentalOrderIndexForAdminViewResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalOrdersApi;
+  status: 422;
 };
 
-export type getApiV1GetRentalOrderIndexForAdminViewResponse = (getApiV1GetRentalOrderIndexForAdminViewResponseSuccess | getApiV1GetRentalOrderIndexForAdminViewResponseError)
+export type getApiV1GetRentalOrderIndexForAdminViewResponseSuccess =
+  getApiV1GetRentalOrderIndexForAdminViewResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetRentalOrderIndexForAdminViewResponseError =
+  getApiV1GetRentalOrderIndexForAdminViewResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetRentalOrderIndexForAdminViewResponse =
+  | getApiV1GetRentalOrderIndexForAdminViewResponseSuccess
+  | getApiV1GetRentalOrderIndexForAdminViewResponseError;
 
 export const getGetApiV1GetRentalOrderIndexForAdminViewUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rental_order_index_for_admin_view`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rental_order_index_for_admin_view`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetRentalOrderIndexForAdminView = async ( options?: RequestInit): Promise<getApiV1GetRentalOrderIndexForAdminViewResponse> => {
+export const getApiV1GetRentalOrderIndexForAdminView = async (
+  options?: RequestInit
+): Promise<getApiV1GetRentalOrderIndexForAdminViewResponse> => {
+  return openApiFetch<getApiV1GetRentalOrderIndexForAdminViewResponse>(
+    getGetApiV1GetRentalOrderIndexForAdminViewUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetRentalOrderIndexForAdminViewResponse>(getGetApiV1GetRentalOrderIndexForAdminViewUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetRentalOrderIndexForAdminViewKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rental_order_index_for_admin_view`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetRentalOrderIndexForAdminViewKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rental_order_index_for_admin_view`] as const;
-
-export type GetApiV1GetRentalOrderIndexForAdminViewQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetRentalOrderIndexForAdminView>>>
+export type GetApiV1GetRentalOrderIndexForAdminViewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetRentalOrderIndexForAdminView>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetRentalOrderIndexForAdminView = <TError = ApiV1RentalOrdersApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetRentalOrderIndexForAdminView>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetRentalOrderIndexForAdminView = <
+  TError = ApiV1RentalOrdersApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetRentalOrderIndexForAdminView>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetRentalOrderIndexForAdminViewKey() : null);
-  const swrFn = () => getApiV1GetRentalOrderIndexForAdminView(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetRentalOrderIndexForAdminViewKey() : null);
+  const swrFn = () => getApiV1GetRentalOrderIndexForAdminView(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetRentalOrderShowForAdminViewIdResponse200 = {
-  data: ApiV1RentalOrdersApi
-  status: 200
-}
+  data: ApiV1RentalOrdersApi;
+  status: 200;
+};
 
 export type getApiV1GetRentalOrderShowForAdminViewIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetRentalOrderShowForAdminViewIdResponse422 = {
-  data: ApiV1RentalOrdersApi
-  status: 422
-}
-
-export type getApiV1GetRentalOrderShowForAdminViewIdResponseSuccess = (getApiV1GetRentalOrderShowForAdminViewIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetRentalOrderShowForAdminViewIdResponseError = (getApiV1GetRentalOrderShowForAdminViewIdResponse404 | getApiV1GetRentalOrderShowForAdminViewIdResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalOrdersApi;
+  status: 422;
 };
 
-export type getApiV1GetRentalOrderShowForAdminViewIdResponse = (getApiV1GetRentalOrderShowForAdminViewIdResponseSuccess | getApiV1GetRentalOrderShowForAdminViewIdResponseError)
+export type getApiV1GetRentalOrderShowForAdminViewIdResponseSuccess =
+  getApiV1GetRentalOrderShowForAdminViewIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetRentalOrderShowForAdminViewIdResponseError = (
+  | getApiV1GetRentalOrderShowForAdminViewIdResponse404
+  | getApiV1GetRentalOrderShowForAdminViewIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetRentalOrderShowForAdminViewIdUrl = (id: number,) => {
+export type getApiV1GetRentalOrderShowForAdminViewIdResponse =
+  | getApiV1GetRentalOrderShowForAdminViewIdResponseSuccess
+  | getApiV1GetRentalOrderShowForAdminViewIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rental_order_show_for_admin_view/${id}`
-}
+export const getGetApiV1GetRentalOrderShowForAdminViewIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rental_order_show_for_admin_view/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetRentalOrderShowForAdminViewId = async (id: number, options?: RequestInit): Promise<getApiV1GetRentalOrderShowForAdminViewIdResponse> => {
+export const getApiV1GetRentalOrderShowForAdminViewId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getApiV1GetRentalOrderShowForAdminViewIdResponse> => {
+  return openApiFetch<getApiV1GetRentalOrderShowForAdminViewIdResponse>(
+    getGetApiV1GetRentalOrderShowForAdminViewIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetRentalOrderShowForAdminViewIdResponse>(getGetApiV1GetRentalOrderShowForAdminViewIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetRentalOrderShowForAdminViewIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rental_order_show_for_admin_view/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetRentalOrderShowForAdminViewIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rental_order_show_for_admin_view/${id}`] as const;
-
-export type GetApiV1GetRentalOrderShowForAdminViewIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetRentalOrderShowForAdminViewId>>>
+export type GetApiV1GetRentalOrderShowForAdminViewIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetRentalOrderShowForAdminViewId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetRentalOrderShowForAdminViewId = <TError = void | ApiV1RentalOrdersApi>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetRentalOrderShowForAdminViewId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetRentalOrderShowForAdminViewId = <
+  TError = void | ApiV1RentalOrdersApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getApiV1GetRentalOrderShowForAdminViewId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetRentalOrderShowForAdminViewIdKey(id) : null);
-  const swrFn = () => getApiV1GetRentalOrderShowForAdminViewId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetRentalOrderShowForAdminViewIdKey(id) : null);
+  const swrFn = () =>
+    getApiV1GetRentalOrderShowForAdminViewId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetSearchRentalOrdersResponse201 = {
-  data: ApiV1RentalOrdersApi
-  status: 201
-}
+  data: ApiV1RentalOrdersApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchRentalOrdersResponse422 = {
-  data: ApiV1RentalOrdersApi
-  status: 422
-}
-
-export type postApiV1GetSearchRentalOrdersResponseSuccess = (postApiV1GetSearchRentalOrdersResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchRentalOrdersResponseError = (postApiV1GetSearchRentalOrdersResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalOrdersApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchRentalOrdersResponse = (postApiV1GetSearchRentalOrdersResponseSuccess | postApiV1GetSearchRentalOrdersResponseError)
+export type postApiV1GetSearchRentalOrdersResponseSuccess =
+  postApiV1GetSearchRentalOrdersResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchRentalOrdersResponseError =
+  postApiV1GetSearchRentalOrdersResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchRentalOrdersResponse =
+  | postApiV1GetSearchRentalOrdersResponseSuccess
+  | postApiV1GetSearchRentalOrdersResponseError;
 
 export const getPostApiV1GetSearchRentalOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_rental_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_rental_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchRentalOrders = async (apiV1RentalOrdersApi?: ApiV1RentalOrdersApi, options?: RequestInit): Promise<postApiV1GetSearchRentalOrdersResponse> => {
+export const postApiV1GetSearchRentalOrders = async (
+  apiV1RentalOrdersApi?: ApiV1RentalOrdersApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchRentalOrdersResponse> => {
+  return openApiFetch<postApiV1GetSearchRentalOrdersResponse>(
+    getPostApiV1GetSearchRentalOrdersUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1RentalOrdersApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchRentalOrdersResponse>(getPostApiV1GetSearchRentalOrdersUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1RentalOrdersApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchRentalOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchRentalOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1RentalOrdersApi | undefined }) => {
     return postApiV1GetSearchRentalOrders(arg, options);
-  }
-}
-export const getPostApiV1GetSearchRentalOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_rental_orders`] as const;
+  };
+};
+export const getPostApiV1GetSearchRentalOrdersMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_rental_orders`,
+  ] as const;
 
-export type PostApiV1GetSearchRentalOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>>
+export type PostApiV1GetSearchRentalOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchRentalOrders = <TError = ApiV1RentalOrdersApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>, TError, Key, ApiV1RentalOrdersApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchRentalOrders = <
+  TError = ApiV1RentalOrdersApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>,
+    TError,
+    Key,
+    ApiV1RentalOrdersApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchRentalOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchRentalOrdersMutationKey();
+  const swrFn =
+    getPostApiV1GetSearchRentalOrdersMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchRentalOrdersMutationKey();
-  const swrFn = getPostApiV1GetSearchRentalOrdersMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

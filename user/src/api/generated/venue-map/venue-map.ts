@@ -9,558 +9,637 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  VenueMap
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { VenueMap } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getVenueMapsResponse200 = {
-  data: VenueMap
-  status: 200
-}
+  data: VenueMap;
+  status: 200;
+};
 
 export type getVenueMapsResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type getVenueMapsResponseSuccess = (getVenueMapsResponse200) & {
-  headers: Headers;
-};
-export type getVenueMapsResponseError = (getVenueMapsResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type getVenueMapsResponse = (getVenueMapsResponseSuccess | getVenueMapsResponseError)
+export type getVenueMapsResponseSuccess = getVenueMapsResponse200 & {
+  headers: Headers;
+};
+export type getVenueMapsResponseError = getVenueMapsResponse422 & {
+  headers: Headers;
+};
+
+export type getVenueMapsResponse =
+  | getVenueMapsResponseSuccess
+  | getVenueMapsResponseError;
 
 export const getGetVenueMapsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getVenueMaps = async ( options?: RequestInit): Promise<getVenueMapsResponse> => {
-
-  return openApiFetch<getVenueMapsResponse>(getGetVenueMapsUrl(),
-  {
+export const getVenueMaps = async (
+  options?: RequestInit
+): Promise<getVenueMapsResponse> => {
+  return openApiFetch<getVenueMapsResponse>(getGetVenueMapsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetVenueMapsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetVenueMapsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps`] as const;
-
-export type GetVenueMapsQueryResult = NonNullable<Awaited<ReturnType<typeof getVenueMaps>>>
+export type GetVenueMapsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getVenueMaps>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetVenueMaps = <TError = VenueMap>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getVenueMaps>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetVenueMaps = <TError = VenueMap>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getVenueMaps>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetVenueMapsKey() : null);
-  const swrFn = () => getVenueMaps(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetVenueMapsKey() : null));
+  const swrFn = () => getVenueMaps(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postVenueMapsResponse201 = {
-  data: VenueMap
-  status: 201
-}
+  data: VenueMap;
+  status: 201;
+};
 
 export type postVenueMapsResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type postVenueMapsResponseSuccess = (postVenueMapsResponse201) & {
-  headers: Headers;
-};
-export type postVenueMapsResponseError = (postVenueMapsResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type postVenueMapsResponse = (postVenueMapsResponseSuccess | postVenueMapsResponseError)
+export type postVenueMapsResponseSuccess = postVenueMapsResponse201 & {
+  headers: Headers;
+};
+export type postVenueMapsResponseError = postVenueMapsResponse422 & {
+  headers: Headers;
+};
+
+export type postVenueMapsResponse =
+  | postVenueMapsResponseSuccess
+  | postVenueMapsResponseError;
 
 export const getPostVenueMapsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postVenueMaps = async (venueMap?: VenueMap, options?: RequestInit): Promise<postVenueMapsResponse> => {
-
-  return openApiFetch<postVenueMapsResponse>(getPostVenueMapsUrl(),
-  {
+export const postVenueMaps = async (
+  venueMap?: VenueMap,
+  options?: RequestInit
+): Promise<postVenueMapsResponse> => {
+  return openApiFetch<postVenueMapsResponse>(getPostVenueMapsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(venueMap)
-  }
-);}
+    body: JSON.stringify(venueMap),
+  });
+};
 
-
-
-
-export const getPostVenueMapsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostVenueMapsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: VenueMap | undefined }) => {
     return postVenueMaps(arg, options);
-  }
-}
-export const getPostVenueMapsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps`] as const;
+  };
+};
+export const getPostVenueMapsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps`] as const;
 
-export type PostVenueMapsMutationResult = NonNullable<Awaited<ReturnType<typeof postVenueMaps>>>
+export type PostVenueMapsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postVenueMaps>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostVenueMaps = <TError = VenueMap>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postVenueMaps>>, TError, Key, VenueMap | undefined, Awaited<ReturnType<typeof postVenueMaps>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostVenueMaps = <TError = VenueMap>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postVenueMaps>>,
+    TError,
+    Key,
+    VenueMap | undefined,
+    Awaited<ReturnType<typeof postVenueMaps>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostVenueMapsMutationKey();
   const swrFn = getPostVenueMapsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getVenueMapsIdResponse200 = {
-  data: VenueMap
-  status: 200
-}
+  data: VenueMap;
+  status: 200;
+};
 
 export type getVenueMapsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getVenueMapsIdResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type getVenueMapsIdResponseSuccess = (getVenueMapsIdResponse200) & {
-  headers: Headers;
-};
-export type getVenueMapsIdResponseError = (getVenueMapsIdResponse404 | getVenueMapsIdResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type getVenueMapsIdResponse = (getVenueMapsIdResponseSuccess | getVenueMapsIdResponseError)
+export type getVenueMapsIdResponseSuccess = getVenueMapsIdResponse200 & {
+  headers: Headers;
+};
+export type getVenueMapsIdResponseError = (
+  | getVenueMapsIdResponse404
+  | getVenueMapsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetVenueMapsIdUrl = (id: number,) => {
+export type getVenueMapsIdResponse =
+  | getVenueMapsIdResponseSuccess
+  | getVenueMapsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`
-}
+export const getGetVenueMapsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getVenueMapsId = async (id: number, options?: RequestInit): Promise<getVenueMapsIdResponse> => {
-
-  return openApiFetch<getVenueMapsIdResponse>(getGetVenueMapsIdUrl(id),
-  {
+export const getVenueMapsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getVenueMapsIdResponse> => {
+  return openApiFetch<getVenueMapsIdResponse>(getGetVenueMapsIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetVenueMapsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetVenueMapsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`] as const;
-
-export type GetVenueMapsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getVenueMapsId>>>
+export type GetVenueMapsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getVenueMapsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetVenueMapsId = <TError = void | VenueMap>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getVenueMapsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getVenueMapsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetVenueMapsIdKey(id) : null);
-  const swrFn = () => getVenueMapsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetVenueMapsIdKey(id) : null));
+  const swrFn = () => getVenueMapsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchVenueMapsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchVenueMapsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchVenueMapsIdResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type patchVenueMapsIdResponseSuccess = (patchVenueMapsIdResponse204) & {
-  headers: Headers;
-};
-export type patchVenueMapsIdResponseError = (patchVenueMapsIdResponse404 | patchVenueMapsIdResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type patchVenueMapsIdResponse = (patchVenueMapsIdResponseSuccess | patchVenueMapsIdResponseError)
+export type patchVenueMapsIdResponseSuccess = patchVenueMapsIdResponse204 & {
+  headers: Headers;
+};
+export type patchVenueMapsIdResponseError = (
+  | patchVenueMapsIdResponse404
+  | patchVenueMapsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchVenueMapsIdUrl = (id: number,) => {
+export type patchVenueMapsIdResponse =
+  | patchVenueMapsIdResponseSuccess
+  | patchVenueMapsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`
-}
+export const getPatchVenueMapsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchVenueMapsId = async (id: number,
-    venueMap?: VenueMap, options?: RequestInit): Promise<patchVenueMapsIdResponse> => {
-
-  return openApiFetch<patchVenueMapsIdResponse>(getPatchVenueMapsIdUrl(id),
-  {
+export const patchVenueMapsId = async (
+  id: number,
+  venueMap?: VenueMap,
+  options?: RequestInit
+): Promise<patchVenueMapsIdResponse> => {
+  return openApiFetch<patchVenueMapsIdResponse>(getPatchVenueMapsIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(venueMap)
-  }
-);}
+    body: JSON.stringify(venueMap),
+  });
+};
 
-
-
-
-export const getPatchVenueMapsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchVenueMapsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: VenueMap | undefined }) => {
     return patchVenueMapsId(id, arg, options);
-  }
-}
-export const getPatchVenueMapsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`] as const;
+  };
+};
+export const getPatchVenueMapsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`] as const;
 
-export type PatchVenueMapsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchVenueMapsId>>>
+export type PatchVenueMapsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchVenueMapsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchVenueMapsId = <TError = void | VenueMap>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchVenueMapsId>>, TError, Key, VenueMap | undefined, Awaited<ReturnType<typeof patchVenueMapsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchVenueMapsId>>,
+      TError,
+      Key,
+      VenueMap | undefined,
+      Awaited<ReturnType<typeof patchVenueMapsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchVenueMapsIdMutationKey(id);
   const swrFn = getPatchVenueMapsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putVenueMapsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putVenueMapsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putVenueMapsIdResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type putVenueMapsIdResponseSuccess = (putVenueMapsIdResponse204) & {
-  headers: Headers;
-};
-export type putVenueMapsIdResponseError = (putVenueMapsIdResponse404 | putVenueMapsIdResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type putVenueMapsIdResponse = (putVenueMapsIdResponseSuccess | putVenueMapsIdResponseError)
+export type putVenueMapsIdResponseSuccess = putVenueMapsIdResponse204 & {
+  headers: Headers;
+};
+export type putVenueMapsIdResponseError = (
+  | putVenueMapsIdResponse404
+  | putVenueMapsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutVenueMapsIdUrl = (id: number,) => {
+export type putVenueMapsIdResponse =
+  | putVenueMapsIdResponseSuccess
+  | putVenueMapsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`
-}
+export const getPutVenueMapsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putVenueMapsId = async (id: number,
-    venueMap?: VenueMap, options?: RequestInit): Promise<putVenueMapsIdResponse> => {
-
-  return openApiFetch<putVenueMapsIdResponse>(getPutVenueMapsIdUrl(id),
-  {
+export const putVenueMapsId = async (
+  id: number,
+  venueMap?: VenueMap,
+  options?: RequestInit
+): Promise<putVenueMapsIdResponse> => {
+  return openApiFetch<putVenueMapsIdResponse>(getPutVenueMapsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(venueMap)
-  }
-);}
+    body: JSON.stringify(venueMap),
+  });
+};
 
-
-
-
-export const getPutVenueMapsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutVenueMapsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: VenueMap | undefined }) => {
     return putVenueMapsId(id, arg, options);
-  }
-}
-export const getPutVenueMapsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`] as const;
+  };
+};
+export const getPutVenueMapsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`] as const;
 
-export type PutVenueMapsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putVenueMapsId>>>
+export type PutVenueMapsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putVenueMapsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutVenueMapsId = <TError = void | VenueMap>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putVenueMapsId>>, TError, Key, VenueMap | undefined, Awaited<ReturnType<typeof putVenueMapsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putVenueMapsId>>,
+      TError,
+      Key,
+      VenueMap | undefined,
+      Awaited<ReturnType<typeof putVenueMapsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutVenueMapsIdMutationKey(id);
   const swrFn = getPutVenueMapsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteVenueMapsIdResponse200 = {
-  data: VenueMap
-  status: 200
-}
+  data: VenueMap;
+  status: 200;
+};
 
 export type deleteVenueMapsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteVenueMapsIdResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type deleteVenueMapsIdResponseSuccess = (deleteVenueMapsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteVenueMapsIdResponseError = (deleteVenueMapsIdResponse404 | deleteVenueMapsIdResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type deleteVenueMapsIdResponse = (deleteVenueMapsIdResponseSuccess | deleteVenueMapsIdResponseError)
+export type deleteVenueMapsIdResponseSuccess = deleteVenueMapsIdResponse200 & {
+  headers: Headers;
+};
+export type deleteVenueMapsIdResponseError = (
+  | deleteVenueMapsIdResponse404
+  | deleteVenueMapsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteVenueMapsIdUrl = (id: number,) => {
+export type deleteVenueMapsIdResponse =
+  | deleteVenueMapsIdResponseSuccess
+  | deleteVenueMapsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`
-}
+export const getDeleteVenueMapsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteVenueMapsId = async (id: number, options?: RequestInit): Promise<deleteVenueMapsIdResponse> => {
-
-  return openApiFetch<deleteVenueMapsIdResponse>(getDeleteVenueMapsIdUrl(id),
-  {
+export const deleteVenueMapsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteVenueMapsIdResponse> => {
+  return openApiFetch<deleteVenueMapsIdResponse>(getDeleteVenueMapsIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteVenueMapsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteVenueMapsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteVenueMapsId(id, options);
-  }
-}
-export const getDeleteVenueMapsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/${id}`] as const;
+  };
+};
+export const getDeleteVenueMapsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/${id}`] as const;
 
-export type DeleteVenueMapsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteVenueMapsId>>>
+export type DeleteVenueMapsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteVenueMapsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteVenueMapsId = <TError = void | VenueMap>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteVenueMapsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteVenueMapsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteVenueMapsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteVenueMapsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteVenueMapsIdMutationKey(id);
   const swrFn = getDeleteVenueMapsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getVenueMapsGroupGroupIdResponse200 = {
-  data: VenueMap
-  status: 200
-}
+  data: VenueMap;
+  status: 200;
+};
 
 export type getVenueMapsGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getVenueMapsGroupGroupIdResponse422 = {
-  data: VenueMap
-  status: 422
-}
-
-export type getVenueMapsGroupGroupIdResponseSuccess = (getVenueMapsGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getVenueMapsGroupGroupIdResponseError = (getVenueMapsGroupGroupIdResponse404 | getVenueMapsGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: VenueMap;
+  status: 422;
 };
 
-export type getVenueMapsGroupGroupIdResponse = (getVenueMapsGroupGroupIdResponseSuccess | getVenueMapsGroupGroupIdResponseError)
+export type getVenueMapsGroupGroupIdResponseSuccess =
+  getVenueMapsGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getVenueMapsGroupGroupIdResponseError = (
+  | getVenueMapsGroupGroupIdResponse404
+  | getVenueMapsGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetVenueMapsGroupGroupIdUrl = (groupId: number,) => {
+export type getVenueMapsGroupGroupIdResponse =
+  | getVenueMapsGroupGroupIdResponseSuccess
+  | getVenueMapsGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/group/${groupId}`
-}
+export const getGetVenueMapsGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getVenueMapsGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getVenueMapsGroupGroupIdResponse> => {
+export const getVenueMapsGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getVenueMapsGroupGroupIdResponse> => {
+  return openApiFetch<getVenueMapsGroupGroupIdResponse>(
+    getGetVenueMapsGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getVenueMapsGroupGroupIdResponse>(getGetVenueMapsGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetVenueMapsGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/venue_maps/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetVenueMapsGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/venue_maps/group/${groupId}`] as const;
-
-export type GetVenueMapsGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getVenueMapsGroupGroupId>>>
+export type GetVenueMapsGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getVenueMapsGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetVenueMapsGroupGroupId = <TError = void | VenueMap>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getVenueMapsGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getVenueMapsGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetVenueMapsGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getVenueMapsGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetVenueMapsGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getVenueMapsGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

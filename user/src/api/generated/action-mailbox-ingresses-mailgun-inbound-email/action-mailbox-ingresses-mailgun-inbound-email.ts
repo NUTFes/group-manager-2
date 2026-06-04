@@ -8,97 +8,109 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ActionmailboxIngressesMailgunInboundEmail
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActionmailboxIngressesMailgunInboundEmail } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postRailsActionMailboxMailgunInboundEmailsMimeResponse201 = {
-  data: ActionmailboxIngressesMailgunInboundEmail
-  status: 201
-}
+  data: ActionmailboxIngressesMailgunInboundEmail;
+  status: 201;
+};
 
 export type postRailsActionMailboxMailgunInboundEmailsMimeResponse422 = {
-  data: ActionmailboxIngressesMailgunInboundEmail
-  status: 422
-}
-
-export type postRailsActionMailboxMailgunInboundEmailsMimeResponseSuccess = (postRailsActionMailboxMailgunInboundEmailsMimeResponse201) & {
-  headers: Headers;
-};
-export type postRailsActionMailboxMailgunInboundEmailsMimeResponseError = (postRailsActionMailboxMailgunInboundEmailsMimeResponse422) & {
-  headers: Headers;
+  data: ActionmailboxIngressesMailgunInboundEmail;
+  status: 422;
 };
 
-export type postRailsActionMailboxMailgunInboundEmailsMimeResponse = (postRailsActionMailboxMailgunInboundEmailsMimeResponseSuccess | postRailsActionMailboxMailgunInboundEmailsMimeResponseError)
+export type postRailsActionMailboxMailgunInboundEmailsMimeResponseSuccess =
+  postRailsActionMailboxMailgunInboundEmailsMimeResponse201 & {
+    headers: Headers;
+  };
+export type postRailsActionMailboxMailgunInboundEmailsMimeResponseError =
+  postRailsActionMailboxMailgunInboundEmailsMimeResponse422 & {
+    headers: Headers;
+  };
+
+export type postRailsActionMailboxMailgunInboundEmailsMimeResponse =
+  | postRailsActionMailboxMailgunInboundEmailsMimeResponseSuccess
+  | postRailsActionMailboxMailgunInboundEmailsMimeResponseError;
 
 export const getPostRailsActionMailboxMailgunInboundEmailsMimeUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/action_mailbox/mailgun/inbound_emails/mime`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/action_mailbox/mailgun/inbound_emails/mime`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRailsActionMailboxMailgunInboundEmailsMime = async (actionmailboxIngressesMailgunInboundEmail?: ActionmailboxIngressesMailgunInboundEmail, options?: RequestInit): Promise<postRailsActionMailboxMailgunInboundEmailsMimeResponse> => {
+export const postRailsActionMailboxMailgunInboundEmailsMime = async (
+  actionmailboxIngressesMailgunInboundEmail?: ActionmailboxIngressesMailgunInboundEmail,
+  options?: RequestInit
+): Promise<postRailsActionMailboxMailgunInboundEmailsMimeResponse> => {
+  return openApiFetch<postRailsActionMailboxMailgunInboundEmailsMimeResponse>(
+    getPostRailsActionMailboxMailgunInboundEmailsMimeUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(actionmailboxIngressesMailgunInboundEmail),
+    }
+  );
+};
 
-  return openApiFetch<postRailsActionMailboxMailgunInboundEmailsMimeResponse>(getPostRailsActionMailboxMailgunInboundEmailsMimeUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(actionmailboxIngressesMailgunInboundEmail)
-  }
-);}
+export const getPostRailsActionMailboxMailgunInboundEmailsMimeMutationFetcher =
+  (options?: SecondParameter<typeof openApiFetch>) => {
+    return (
+      _: Key,
+      { arg }: { arg: ActionmailboxIngressesMailgunInboundEmail | undefined }
+    ) => {
+      return postRailsActionMailboxMailgunInboundEmailsMime(arg, options);
+    };
+  };
+export const getPostRailsActionMailboxMailgunInboundEmailsMimeMutationKey =
+  () =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/action_mailbox/mailgun/inbound_emails/mime`,
+    ] as const;
 
-
-
-
-export const getPostRailsActionMailboxMailgunInboundEmailsMimeMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: ActionmailboxIngressesMailgunInboundEmail | undefined }) => {
-    return postRailsActionMailboxMailgunInboundEmailsMime(arg, options);
-  }
-}
-export const getPostRailsActionMailboxMailgunInboundEmailsMimeMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/action_mailbox/mailgun/inbound_emails/mime`] as const;
-
-export type PostRailsActionMailboxMailgunInboundEmailsMimeMutationResult = NonNullable<Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>>
+export type PostRailsActionMailboxMailgunInboundEmailsMimeMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>
+  >;
 
 /**
  * @summary post summary
  */
-export const usePostRailsActionMailboxMailgunInboundEmailsMime = <TError = ActionmailboxIngressesMailgunInboundEmail>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>, TError, Key, ActionmailboxIngressesMailgunInboundEmail | undefined, Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostRailsActionMailboxMailgunInboundEmailsMime = <
+  TError = ActionmailboxIngressesMailgunInboundEmail,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>,
+    TError,
+    Key,
+    ActionmailboxIngressesMailgunInboundEmail | undefined,
+    Awaited<ReturnType<typeof postRailsActionMailboxMailgunInboundEmailsMime>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostRailsActionMailboxMailgunInboundEmailsMimeMutationKey();
+  const swrFn =
+    getPostRailsActionMailboxMailgunInboundEmailsMimeMutationFetcher(
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPostRailsActionMailboxMailgunInboundEmailsMimeMutationKey();
-  const swrFn = getPostRailsActionMailboxMailgunInboundEmailsMimeMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

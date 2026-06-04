@@ -9,400 +9,584 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1HealthCenterSubmissionStatusesApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1HealthCenterSubmissionStatusesApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postApiV1CreateHealthCenterSubmissionStatusCommentResponse201 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 201
-}
+  data: ApiV1HealthCenterSubmissionStatusesApi;
+  status: 201;
+};
 
 export type postApiV1CreateHealthCenterSubmissionStatusCommentResponse422 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 422
-}
-
-export type postApiV1CreateHealthCenterSubmissionStatusCommentResponseSuccess = (postApiV1CreateHealthCenterSubmissionStatusCommentResponse201) & {
-  headers: Headers;
-};
-export type postApiV1CreateHealthCenterSubmissionStatusCommentResponseError = (postApiV1CreateHealthCenterSubmissionStatusCommentResponse422) & {
-  headers: Headers;
+  data: ApiV1HealthCenterSubmissionStatusesApi;
+  status: 422;
 };
 
-export type postApiV1CreateHealthCenterSubmissionStatusCommentResponse = (postApiV1CreateHealthCenterSubmissionStatusCommentResponseSuccess | postApiV1CreateHealthCenterSubmissionStatusCommentResponseError)
+export type postApiV1CreateHealthCenterSubmissionStatusCommentResponseSuccess =
+  postApiV1CreateHealthCenterSubmissionStatusCommentResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1CreateHealthCenterSubmissionStatusCommentResponseError =
+  postApiV1CreateHealthCenterSubmissionStatusCommentResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1CreateHealthCenterSubmissionStatusCommentResponse =
+  | postApiV1CreateHealthCenterSubmissionStatusCommentResponseSuccess
+  | postApiV1CreateHealthCenterSubmissionStatusCommentResponseError;
 
 export const getPostApiV1CreateHealthCenterSubmissionStatusCommentUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/create_health_center_submission_status_comment`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/create_health_center_submission_status_comment`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1CreateHealthCenterSubmissionStatusComment = async (apiV1HealthCenterSubmissionStatusesApi?: ApiV1HealthCenterSubmissionStatusesApi, options?: RequestInit): Promise<postApiV1CreateHealthCenterSubmissionStatusCommentResponse> => {
+export const postApiV1CreateHealthCenterSubmissionStatusComment = async (
+  apiV1HealthCenterSubmissionStatusesApi?: ApiV1HealthCenterSubmissionStatusesApi,
+  options?: RequestInit
+): Promise<postApiV1CreateHealthCenterSubmissionStatusCommentResponse> => {
+  return openApiFetch<postApiV1CreateHealthCenterSubmissionStatusCommentResponse>(
+    getPostApiV1CreateHealthCenterSubmissionStatusCommentUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1HealthCenterSubmissionStatusesApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1CreateHealthCenterSubmissionStatusCommentResponse>(getPostApiV1CreateHealthCenterSubmissionStatusCommentUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1HealthCenterSubmissionStatusesApi)
-  }
-);}
+export const getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationFetcher =
+  (options?: SecondParameter<typeof openApiFetch>) => {
+    return (
+      _: Key,
+      { arg }: { arg: ApiV1HealthCenterSubmissionStatusesApi | undefined }
+    ) => {
+      return postApiV1CreateHealthCenterSubmissionStatusComment(arg, options);
+    };
+  };
+export const getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationKey =
+  () =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/create_health_center_submission_status_comment`,
+    ] as const;
 
-
-
-
-export const getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: ApiV1HealthCenterSubmissionStatusesApi | undefined }) => {
-    return postApiV1CreateHealthCenterSubmissionStatusComment(arg, options);
-  }
-}
-export const getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/create_health_center_submission_status_comment`] as const;
-
-export type PostApiV1CreateHealthCenterSubmissionStatusCommentMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>>>
+export type PostApiV1CreateHealthCenterSubmissionStatusCommentMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>
+    >
+  >;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1CreateHealthCenterSubmissionStatusComment = <TError = ApiV1HealthCenterSubmissionStatusesApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>>, TError, Key, ApiV1HealthCenterSubmissionStatusesApi | undefined, Awaited<ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1CreateHealthCenterSubmissionStatusComment = <
+  TError = ApiV1HealthCenterSubmissionStatusesApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<
+      ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>
+    >,
+    TError,
+    Key,
+    ApiV1HealthCenterSubmissionStatusesApi | undefined,
+    Awaited<
+      ReturnType<typeof postApiV1CreateHealthCenterSubmissionStatusComment>
+    >
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationKey();
+  const swrFn =
+    getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationFetcher(
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationKey();
-  const swrFn = getPostApiV1CreateHealthCenterSubmissionStatusCommentMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse200 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 200
-}
+  data: ApiV1HealthCenterSubmissionStatusesApi;
+  status: 200;
+};
 
 export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse422 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 422
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseSuccess = (getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseError = (getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse404 | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse422) & {
-  headers: Headers;
+  data: ApiV1HealthCenterSubmissionStatusesApi;
+  status: 422;
 };
 
-export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse = (getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseSuccess | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseError)
+export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseSuccess =
+  getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseError =
+  (
+    | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse404
+    | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse422
+  ) & {
+    headers: Headers;
+  };
 
-export const getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdUrl = (groupId: number,) => {
+export type getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse =
+  | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseSuccess
+  | getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_counts/${groupId}`
-}
+export const getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdUrl = (
+  groupId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_counts/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetHealthCenterSubmissionStatusCountsGroupId = async (groupId: number, options?: RequestInit): Promise<getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse> => {
+export const getApiV1GetHealthCenterSubmissionStatusCountsGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse> => {
+  return openApiFetch<getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse>(
+    getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetHealthCenterSubmissionStatusCountsGroupIdResponse>(getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdKey = (
+  groupId: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_counts/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_counts/${groupId}`] as const;
-
-export type GetApiV1GetHealthCenterSubmissionStatusCountsGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusCountsGroupId>>>
+export type GetApiV1GetHealthCenterSubmissionStatusCountsGroupIdQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusCountsGroupId>
+    >
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetHealthCenterSubmissionStatusCountsGroupId = <TError = void | ApiV1HealthCenterSubmissionStatusesApi>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusCountsGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetHealthCenterSubmissionStatusCountsGroupId = <
+  TError = void | ApiV1HealthCenterSubmissionStatusesApi,
+>(
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<
+        ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusCountsGroupId>
+      >,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdKey(groupId) : null);
-  const swrFn = () => getApiV1GetHealthCenterSubmissionStatusCountsGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetApiV1GetHealthCenterSubmissionStatusCountsGroupIdKey(groupId)
+        : null);
+  const swrFn = () =>
+    getApiV1GetHealthCenterSubmissionStatusCountsGroupId(
+      groupId,
+      requestOptions
+    );
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
-export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse200 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 200
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse422 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 422
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseSuccess = (getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse200) & {
-  headers: Headers;
+    ...query,
+  };
 };
-export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseError = (getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse422) & {
-  headers: Headers;
-};
+export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse200 =
+  {
+    data: ApiV1HealthCenterSubmissionStatusesApi;
+    status: 200;
+  };
 
-export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse = (getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseSuccess | getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseError)
+export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse422 =
+  {
+    data: ApiV1HealthCenterSubmissionStatusesApi;
+    status: 422;
+  };
 
-export const getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewUrl = () => {
+export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseSuccess =
+  getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseError =
+  getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse422 & {
+    headers: Headers;
+  };
 
+export type getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse =
+  | getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseSuccess
+  | getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponseError;
 
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_index_for_admin_view`
-}
+export const getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewUrl =
+  () => {
+    return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_index_for_admin_view`;
+  };
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetHealthCenterSubmissionStatusIndexForAdminView = async ( options?: RequestInit): Promise<getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse> => {
+export const getApiV1GetHealthCenterSubmissionStatusIndexForAdminView = async (
+  options?: RequestInit
+): Promise<getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse> => {
+  return openApiFetch<getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse>(
+    getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetHealthCenterSubmissionStatusIndexForAdminViewResponse>(getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewKey =
+  () =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_index_for_admin_view`,
+    ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_index_for_admin_view`] as const;
-
-export type GetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusIndexForAdminView>>>
+export type GetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof getApiV1GetHealthCenterSubmissionStatusIndexForAdminView
+      >
+    >
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetHealthCenterSubmissionStatusIndexForAdminView = <TError = ApiV1HealthCenterSubmissionStatusesApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusIndexForAdminView>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetHealthCenterSubmissionStatusIndexForAdminView = <
+  TError = ApiV1HealthCenterSubmissionStatusesApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<
+      ReturnType<
+        typeof getApiV1GetHealthCenterSubmissionStatusIndexForAdminView
+      >
+    >,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewKey() : null);
-  const swrFn = () => getApiV1GetHealthCenterSubmissionStatusIndexForAdminView(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetApiV1GetHealthCenterSubmissionStatusIndexForAdminViewKey()
+        : null);
+  const swrFn = () =>
+    getApiV1GetHealthCenterSubmissionStatusIndexForAdminView(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse200 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 200
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse404 = {
-  data: void
-  status: 404
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse422 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 422
-}
-
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseSuccess = (getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse200) & {
-  headers: Headers;
+    ...query,
+  };
 };
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseError = (getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse404 | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse422) & {
-  headers: Headers;
-};
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse200 =
+  {
+    data: ApiV1HealthCenterSubmissionStatusesApi;
+    status: 200;
+  };
 
-export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse = (getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseSuccess | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseError)
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse404 =
+  {
+    data: void;
+    status: 404;
+  };
 
-export const getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdUrl = (groupId: number,) => {
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse422 =
+  {
+    data: ApiV1HealthCenterSubmissionStatusesApi;
+    status: 422;
+  };
 
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseSuccess =
+  getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseError =
+  (
+    | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse404
+    | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse422
+  ) & {
+    headers: Headers;
+  };
 
+export type getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse =
 
+    | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseSuccess
+    | getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponseError;
 
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_show_for_admin_view/${groupId}`
-}
+export const getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdUrl =
+  (groupId: number) => {
+    return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_show_for_admin_view/${groupId}`;
+  };
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId = async (groupId: number, options?: RequestInit): Promise<getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse> => {
+export const getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId =
+  async (
+    groupId: number,
+    options?: RequestInit
+  ): Promise<getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse> => {
+    return openApiFetch<getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse>(
+      getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdUrl(
+        groupId
+      ),
+      {
+        ...options,
+        method: 'GET',
+      }
+    );
+  };
 
-  return openApiFetch<getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdResponse>(getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdKey =
+  (groupId: number) =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_health_center_submission_status_show_for_admin_view/${groupId}`,
+    ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_health_center_submission_status_show_for_admin_view/${groupId}`] as const;
-
-export type GetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId>>>
+export type GetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId
+      >
+    >
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId = <TError = void | ApiV1HealthCenterSubmissionStatusesApi>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId =
+  <TError = void | ApiV1HealthCenterSubmissionStatusesApi>(
+    groupId: number,
+    options?: {
+      swr?: SWRConfiguration<
+        Awaited<
+          ReturnType<
+            typeof getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId
+          >
+        >,
+        TError
+      > & { swrKey?: Key; enabled?: boolean };
+      request?: SecondParameter<typeof openApiFetch>;
+    }
+  ) => {
+    const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdKey(groupId) : null);
-  const swrFn = () => getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId(groupId, requestOptions)
+    const isEnabled =
+      swrOptions?.enabled !== false &&
+      groupId !== null &&
+      groupId !== undefined;
+    const swrKey =
+      swrOptions?.swrKey ??
+      (() =>
+        isEnabled
+          ? getGetApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupIdKey(
+              groupId
+            )
+          : null);
+    const swrFn = () =>
+      getApiV1GetHealthCenterSubmissionStatusShowForAdminViewGroupId(
+        groupId,
+        requestOptions
+      );
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+      swrKey,
+      swrFn,
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        keepPreviousData: true,
+        dedupingInterval: 10000,
+        ...swrOptions,
+      }
+    );
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+      swrKey,
+      ...query,
+    };
+  };
 export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponse422 = {
-  data: ApiV1HealthCenterSubmissionStatusesApi
-  status: 422
-}
-
-export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponseSuccess = (patchApiV1UpdateHealthCenterSubmissionStatusIdResponse204) & {
-  headers: Headers;
-};
-export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponseError = (patchApiV1UpdateHealthCenterSubmissionStatusIdResponse404 | patchApiV1UpdateHealthCenterSubmissionStatusIdResponse422) & {
-  headers: Headers;
+  data: ApiV1HealthCenterSubmissionStatusesApi;
+  status: 422;
 };
 
-export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponse = (patchApiV1UpdateHealthCenterSubmissionStatusIdResponseSuccess | patchApiV1UpdateHealthCenterSubmissionStatusIdResponseError)
+export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponseSuccess =
+  patchApiV1UpdateHealthCenterSubmissionStatusIdResponse204 & {
+    headers: Headers;
+  };
+export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponseError = (
+  | patchApiV1UpdateHealthCenterSubmissionStatusIdResponse404
+  | patchApiV1UpdateHealthCenterSubmissionStatusIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdUrl = (id: number,) => {
+export type patchApiV1UpdateHealthCenterSubmissionStatusIdResponse =
+  | patchApiV1UpdateHealthCenterSubmissionStatusIdResponseSuccess
+  | patchApiV1UpdateHealthCenterSubmissionStatusIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/update_health_center_submission_status/${id}`
-}
+export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdUrl = (
+  id: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/update_health_center_submission_status/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchApiV1UpdateHealthCenterSubmissionStatusId = async (id: number,
-    apiV1HealthCenterSubmissionStatusesApi?: ApiV1HealthCenterSubmissionStatusesApi, options?: RequestInit): Promise<patchApiV1UpdateHealthCenterSubmissionStatusIdResponse> => {
+export const patchApiV1UpdateHealthCenterSubmissionStatusId = async (
+  id: number,
+  apiV1HealthCenterSubmissionStatusesApi?: ApiV1HealthCenterSubmissionStatusesApi,
+  options?: RequestInit
+): Promise<patchApiV1UpdateHealthCenterSubmissionStatusIdResponse> => {
+  return openApiFetch<patchApiV1UpdateHealthCenterSubmissionStatusIdResponse>(
+    getPatchApiV1UpdateHealthCenterSubmissionStatusIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1HealthCenterSubmissionStatusesApi),
+    }
+  );
+};
 
-  return openApiFetch<patchApiV1UpdateHealthCenterSubmissionStatusIdResponse>(getPatchApiV1UpdateHealthCenterSubmissionStatusIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1HealthCenterSubmissionStatusesApi)
-  }
-);}
+export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationFetcher =
+  (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+    return (
+      _: Key,
+      { arg }: { arg: ApiV1HealthCenterSubmissionStatusesApi | undefined }
+    ) => {
+      return patchApiV1UpdateHealthCenterSubmissionStatusId(id, arg, options);
+    };
+  };
+export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationKey = (
+  id: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/update_health_center_submission_status/${id}`,
+  ] as const;
 
-
-
-
-export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: ApiV1HealthCenterSubmissionStatusesApi | undefined }) => {
-    return patchApiV1UpdateHealthCenterSubmissionStatusId(id, arg, options);
-  }
-}
-export const getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/update_health_center_submission_status/${id}`] as const;
-
-export type PatchApiV1UpdateHealthCenterSubmissionStatusIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>>>
+export type PatchApiV1UpdateHealthCenterSubmissionStatusIdMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>>
+  >;
 
 /**
  * @summary patch summary
  */
-export const usePatchApiV1UpdateHealthCenterSubmissionStatusId = <TError = void | ApiV1HealthCenterSubmissionStatusesApi>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>>, TError, Key, ApiV1HealthCenterSubmissionStatusesApi | undefined, Awaited<ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePatchApiV1UpdateHealthCenterSubmissionStatusId = <
+  TError = void | ApiV1HealthCenterSubmissionStatusesApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<
+        ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>
+      >,
+      TError,
+      Key,
+      ApiV1HealthCenterSubmissionStatusesApi | undefined,
+      Awaited<ReturnType<typeof patchApiV1UpdateHealthCenterSubmissionStatusId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationKey(id);
+  const swrFn =
+    getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationFetcher(
+      id,
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationKey(id);
-  const swrFn = getPatchApiV1UpdateHealthCenterSubmissionStatusIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

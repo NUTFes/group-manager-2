@@ -9,482 +9,534 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  News
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { News } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getNewsResponse200 = {
-  data: News
-  status: 200
-}
+  data: News;
+  status: 200;
+};
 
 export type getNewsResponse422 = {
-  data: News
-  status: 422
-}
-
-export type getNewsResponseSuccess = (getNewsResponse200) & {
-  headers: Headers;
-};
-export type getNewsResponseError = (getNewsResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type getNewsResponse = (getNewsResponseSuccess | getNewsResponseError)
+export type getNewsResponseSuccess = getNewsResponse200 & {
+  headers: Headers;
+};
+export type getNewsResponseError = getNewsResponse422 & {
+  headers: Headers;
+};
+
+export type getNewsResponse = getNewsResponseSuccess | getNewsResponseError;
 
 export const getGetNewsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getNews = async ( options?: RequestInit): Promise<getNewsResponse> => {
-
-  return openApiFetch<getNewsResponse>(getGetNewsUrl(),
-  {
+export const getNews = async (
+  options?: RequestInit
+): Promise<getNewsResponse> => {
+  return openApiFetch<getNewsResponse>(getGetNewsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetNewsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetNewsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news`] as const;
-
-export type GetNewsQueryResult = NonNullable<Awaited<ReturnType<typeof getNews>>>
+export type GetNewsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNews>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetNews = <TError = News>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getNews>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetNews = <TError = News>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getNews>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetNewsKey() : null);
-  const swrFn = () => getNews(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetNewsKey() : null));
+  const swrFn = () => getNews(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postNewsResponse201 = {
-  data: News
-  status: 201
-}
+  data: News;
+  status: 201;
+};
 
 export type postNewsResponse422 = {
-  data: News
-  status: 422
-}
-
-export type postNewsResponseSuccess = (postNewsResponse201) & {
-  headers: Headers;
-};
-export type postNewsResponseError = (postNewsResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type postNewsResponse = (postNewsResponseSuccess | postNewsResponseError)
+export type postNewsResponseSuccess = postNewsResponse201 & {
+  headers: Headers;
+};
+export type postNewsResponseError = postNewsResponse422 & {
+  headers: Headers;
+};
+
+export type postNewsResponse = postNewsResponseSuccess | postNewsResponseError;
 
 export const getPostNewsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postNews = async (news?: News, options?: RequestInit): Promise<postNewsResponse> => {
-
-  return openApiFetch<postNewsResponse>(getPostNewsUrl(),
-  {
+export const postNews = async (
+  news?: News,
+  options?: RequestInit
+): Promise<postNewsResponse> => {
+  return openApiFetch<postNewsResponse>(getPostNewsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(news)
-  }
-);}
+    body: JSON.stringify(news),
+  });
+};
 
-
-
-
-export const getPostNewsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostNewsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: News | undefined }) => {
     return postNews(arg, options);
-  }
-}
-export const getPostNewsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news`] as const;
+  };
+};
+export const getPostNewsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news`] as const;
 
-export type PostNewsMutationResult = NonNullable<Awaited<ReturnType<typeof postNews>>>
+export type PostNewsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postNews>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostNews = <TError = News>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postNews>>, TError, Key, News | undefined, Awaited<ReturnType<typeof postNews>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostNews = <TError = News>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postNews>>,
+    TError,
+    Key,
+    News | undefined,
+    Awaited<ReturnType<typeof postNews>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostNewsMutationKey();
   const swrFn = getPostNewsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getNewsIdResponse200 = {
-  data: News
-  status: 200
-}
+  data: News;
+  status: 200;
+};
 
 export type getNewsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getNewsIdResponse422 = {
-  data: News
-  status: 422
-}
-
-export type getNewsIdResponseSuccess = (getNewsIdResponse200) & {
-  headers: Headers;
-};
-export type getNewsIdResponseError = (getNewsIdResponse404 | getNewsIdResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type getNewsIdResponse = (getNewsIdResponseSuccess | getNewsIdResponseError)
+export type getNewsIdResponseSuccess = getNewsIdResponse200 & {
+  headers: Headers;
+};
+export type getNewsIdResponseError = (
+  | getNewsIdResponse404
+  | getNewsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetNewsIdUrl = (id: number,) => {
+export type getNewsIdResponse =
+  | getNewsIdResponseSuccess
+  | getNewsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`
-}
+export const getGetNewsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getNewsId = async (id: number, options?: RequestInit): Promise<getNewsIdResponse> => {
-
-  return openApiFetch<getNewsIdResponse>(getGetNewsIdUrl(id),
-  {
+export const getNewsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getNewsIdResponse> => {
+  return openApiFetch<getNewsIdResponse>(getGetNewsIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetNewsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetNewsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`] as const;
-
-export type GetNewsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getNewsId>>>
+export type GetNewsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNewsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetNewsId = <TError = void | News>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getNewsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getNewsId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetNewsIdKey(id) : null);
-  const swrFn = () => getNewsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetNewsIdKey(id) : null));
+  const swrFn = () => getNewsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchNewsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchNewsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchNewsIdResponse422 = {
-  data: News
-  status: 422
-}
-
-export type patchNewsIdResponseSuccess = (patchNewsIdResponse204) & {
-  headers: Headers;
-};
-export type patchNewsIdResponseError = (patchNewsIdResponse404 | patchNewsIdResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type patchNewsIdResponse = (patchNewsIdResponseSuccess | patchNewsIdResponseError)
+export type patchNewsIdResponseSuccess = patchNewsIdResponse204 & {
+  headers: Headers;
+};
+export type patchNewsIdResponseError = (
+  | patchNewsIdResponse404
+  | patchNewsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchNewsIdUrl = (id: number,) => {
+export type patchNewsIdResponse =
+  | patchNewsIdResponseSuccess
+  | patchNewsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`
-}
+export const getPatchNewsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchNewsId = async (id: number,
-    news?: News, options?: RequestInit): Promise<patchNewsIdResponse> => {
-
-  return openApiFetch<patchNewsIdResponse>(getPatchNewsIdUrl(id),
-  {
+export const patchNewsId = async (
+  id: number,
+  news?: News,
+  options?: RequestInit
+): Promise<patchNewsIdResponse> => {
+  return openApiFetch<patchNewsIdResponse>(getPatchNewsIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(news)
-  }
-);}
+    body: JSON.stringify(news),
+  });
+};
 
-
-
-
-export const getPatchNewsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchNewsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: News | undefined }) => {
     return patchNewsId(id, arg, options);
-  }
-}
-export const getPatchNewsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`] as const;
+  };
+};
+export const getPatchNewsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`] as const;
 
-export type PatchNewsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchNewsId>>>
+export type PatchNewsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchNewsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchNewsId = <TError = void | News>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchNewsId>>, TError, Key, News | undefined, Awaited<ReturnType<typeof patchNewsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchNewsId>>,
+      TError,
+      Key,
+      News | undefined,
+      Awaited<ReturnType<typeof patchNewsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchNewsIdMutationKey(id);
   const swrFn = getPatchNewsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putNewsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putNewsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putNewsIdResponse422 = {
-  data: News
-  status: 422
-}
-
-export type putNewsIdResponseSuccess = (putNewsIdResponse204) & {
-  headers: Headers;
-};
-export type putNewsIdResponseError = (putNewsIdResponse404 | putNewsIdResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type putNewsIdResponse = (putNewsIdResponseSuccess | putNewsIdResponseError)
+export type putNewsIdResponseSuccess = putNewsIdResponse204 & {
+  headers: Headers;
+};
+export type putNewsIdResponseError = (
+  | putNewsIdResponse404
+  | putNewsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutNewsIdUrl = (id: number,) => {
+export type putNewsIdResponse =
+  | putNewsIdResponseSuccess
+  | putNewsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`
-}
+export const getPutNewsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putNewsId = async (id: number,
-    news?: News, options?: RequestInit): Promise<putNewsIdResponse> => {
-
-  return openApiFetch<putNewsIdResponse>(getPutNewsIdUrl(id),
-  {
+export const putNewsId = async (
+  id: number,
+  news?: News,
+  options?: RequestInit
+): Promise<putNewsIdResponse> => {
+  return openApiFetch<putNewsIdResponse>(getPutNewsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(news)
-  }
-);}
+    body: JSON.stringify(news),
+  });
+};
 
-
-
-
-export const getPutNewsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutNewsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: News | undefined }) => {
     return putNewsId(id, arg, options);
-  }
-}
-export const getPutNewsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`] as const;
+  };
+};
+export const getPutNewsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`] as const;
 
-export type PutNewsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putNewsId>>>
+export type PutNewsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putNewsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutNewsId = <TError = void | News>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putNewsId>>, TError, Key, News | undefined, Awaited<ReturnType<typeof putNewsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putNewsId>>,
+      TError,
+      Key,
+      News | undefined,
+      Awaited<ReturnType<typeof putNewsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutNewsIdMutationKey(id);
   const swrFn = getPutNewsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteNewsIdResponse200 = {
-  data: News
-  status: 200
-}
+  data: News;
+  status: 200;
+};
 
 export type deleteNewsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteNewsIdResponse422 = {
-  data: News
-  status: 422
-}
-
-export type deleteNewsIdResponseSuccess = (deleteNewsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteNewsIdResponseError = (deleteNewsIdResponse404 | deleteNewsIdResponse422) & {
-  headers: Headers;
+  data: News;
+  status: 422;
 };
 
-export type deleteNewsIdResponse = (deleteNewsIdResponseSuccess | deleteNewsIdResponseError)
+export type deleteNewsIdResponseSuccess = deleteNewsIdResponse200 & {
+  headers: Headers;
+};
+export type deleteNewsIdResponseError = (
+  | deleteNewsIdResponse404
+  | deleteNewsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteNewsIdUrl = (id: number,) => {
+export type deleteNewsIdResponse =
+  | deleteNewsIdResponseSuccess
+  | deleteNewsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`
-}
+export const getDeleteNewsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteNewsId = async (id: number, options?: RequestInit): Promise<deleteNewsIdResponse> => {
-
-  return openApiFetch<deleteNewsIdResponse>(getDeleteNewsIdUrl(id),
-  {
+export const deleteNewsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteNewsIdResponse> => {
+  return openApiFetch<deleteNewsIdResponse>(getDeleteNewsIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteNewsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteNewsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteNewsId(id, options);
-  }
-}
-export const getDeleteNewsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/news/${id}`] as const;
+  };
+};
+export const getDeleteNewsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/news/${id}`] as const;
 
-export type DeleteNewsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNewsId>>>
+export type DeleteNewsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteNewsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteNewsId = <TError = void | News>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteNewsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteNewsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteNewsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteNewsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteNewsIdMutationKey(id);
   const swrFn = getDeleteNewsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

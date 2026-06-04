@@ -9,631 +9,722 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  Employee
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { Employee } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getEmployeesResponse200 = {
-  data: Employee
-  status: 200
-}
+  data: Employee;
+  status: 200;
+};
 
 export type getEmployeesResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type getEmployeesResponseSuccess = (getEmployeesResponse200) & {
-  headers: Headers;
-};
-export type getEmployeesResponseError = (getEmployeesResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type getEmployeesResponse = (getEmployeesResponseSuccess | getEmployeesResponseError)
+export type getEmployeesResponseSuccess = getEmployeesResponse200 & {
+  headers: Headers;
+};
+export type getEmployeesResponseError = getEmployeesResponse422 & {
+  headers: Headers;
+};
+
+export type getEmployeesResponse =
+  | getEmployeesResponseSuccess
+  | getEmployeesResponseError;
 
 export const getGetEmployeesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getEmployees = async ( options?: RequestInit): Promise<getEmployeesResponse> => {
-
-  return openApiFetch<getEmployeesResponse>(getGetEmployeesUrl(),
-  {
+export const getEmployees = async (
+  options?: RequestInit
+): Promise<getEmployeesResponse> => {
+  return openApiFetch<getEmployeesResponse>(getGetEmployeesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetEmployeesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetEmployeesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees`] as const;
-
-export type GetEmployeesQueryResult = NonNullable<Awaited<ReturnType<typeof getEmployees>>>
+export type GetEmployeesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEmployees>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetEmployees = <TError = Employee>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getEmployees>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetEmployees = <TError = Employee>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getEmployees>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetEmployeesKey() : null);
-  const swrFn = () => getEmployees(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetEmployeesKey() : null));
+  const swrFn = () => getEmployees(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postEmployeesResponse201 = {
-  data: Employee
-  status: 201
-}
+  data: Employee;
+  status: 201;
+};
 
 export type postEmployeesResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type postEmployeesResponseSuccess = (postEmployeesResponse201) & {
-  headers: Headers;
-};
-export type postEmployeesResponseError = (postEmployeesResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type postEmployeesResponse = (postEmployeesResponseSuccess | postEmployeesResponseError)
+export type postEmployeesResponseSuccess = postEmployeesResponse201 & {
+  headers: Headers;
+};
+export type postEmployeesResponseError = postEmployeesResponse422 & {
+  headers: Headers;
+};
+
+export type postEmployeesResponse =
+  | postEmployeesResponseSuccess
+  | postEmployeesResponseError;
 
 export const getPostEmployeesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postEmployees = async (employee?: Employee, options?: RequestInit): Promise<postEmployeesResponse> => {
-
-  return openApiFetch<postEmployeesResponse>(getPostEmployeesUrl(),
-  {
+export const postEmployees = async (
+  employee?: Employee,
+  options?: RequestInit
+): Promise<postEmployeesResponse> => {
+  return openApiFetch<postEmployeesResponse>(getPostEmployeesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(employee)
-  }
-);}
+    body: JSON.stringify(employee),
+  });
+};
 
-
-
-
-export const getPostEmployeesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostEmployeesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Employee | undefined }) => {
     return postEmployees(arg, options);
-  }
-}
-export const getPostEmployeesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees`] as const;
+  };
+};
+export const getPostEmployeesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees`] as const;
 
-export type PostEmployeesMutationResult = NonNullable<Awaited<ReturnType<typeof postEmployees>>>
+export type PostEmployeesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postEmployees>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostEmployees = <TError = Employee>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postEmployees>>, TError, Key, Employee | undefined, Awaited<ReturnType<typeof postEmployees>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostEmployees = <TError = Employee>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postEmployees>>,
+    TError,
+    Key,
+    Employee | undefined,
+    Awaited<ReturnType<typeof postEmployees>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostEmployeesMutationKey();
   const swrFn = getPostEmployeesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getEmployeesIdResponse200 = {
-  data: Employee
-  status: 200
-}
+  data: Employee;
+  status: 200;
+};
 
 export type getEmployeesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getEmployeesIdResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type getEmployeesIdResponseSuccess = (getEmployeesIdResponse200) & {
-  headers: Headers;
-};
-export type getEmployeesIdResponseError = (getEmployeesIdResponse404 | getEmployeesIdResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type getEmployeesIdResponse = (getEmployeesIdResponseSuccess | getEmployeesIdResponseError)
+export type getEmployeesIdResponseSuccess = getEmployeesIdResponse200 & {
+  headers: Headers;
+};
+export type getEmployeesIdResponseError = (
+  | getEmployeesIdResponse404
+  | getEmployeesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetEmployeesIdUrl = (id: number,) => {
+export type getEmployeesIdResponse =
+  | getEmployeesIdResponseSuccess
+  | getEmployeesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`
-}
+export const getGetEmployeesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getEmployeesId = async (id: number, options?: RequestInit): Promise<getEmployeesIdResponse> => {
-
-  return openApiFetch<getEmployeesIdResponse>(getGetEmployeesIdUrl(id),
-  {
+export const getEmployeesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getEmployeesIdResponse> => {
+  return openApiFetch<getEmployeesIdResponse>(getGetEmployeesIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetEmployeesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetEmployeesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`] as const;
-
-export type GetEmployeesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEmployeesId>>>
+export type GetEmployeesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEmployeesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetEmployeesId = <TError = void | Employee>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getEmployeesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getEmployeesId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetEmployeesIdKey(id) : null);
-  const swrFn = () => getEmployeesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetEmployeesIdKey(id) : null));
+  const swrFn = () => getEmployeesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchEmployeesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchEmployeesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchEmployeesIdResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type patchEmployeesIdResponseSuccess = (patchEmployeesIdResponse204) & {
-  headers: Headers;
-};
-export type patchEmployeesIdResponseError = (patchEmployeesIdResponse404 | patchEmployeesIdResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type patchEmployeesIdResponse = (patchEmployeesIdResponseSuccess | patchEmployeesIdResponseError)
+export type patchEmployeesIdResponseSuccess = patchEmployeesIdResponse204 & {
+  headers: Headers;
+};
+export type patchEmployeesIdResponseError = (
+  | patchEmployeesIdResponse404
+  | patchEmployeesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchEmployeesIdUrl = (id: number,) => {
+export type patchEmployeesIdResponse =
+  | patchEmployeesIdResponseSuccess
+  | patchEmployeesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`
-}
+export const getPatchEmployeesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchEmployeesId = async (id: number,
-    employee?: Employee, options?: RequestInit): Promise<patchEmployeesIdResponse> => {
-
-  return openApiFetch<patchEmployeesIdResponse>(getPatchEmployeesIdUrl(id),
-  {
+export const patchEmployeesId = async (
+  id: number,
+  employee?: Employee,
+  options?: RequestInit
+): Promise<patchEmployeesIdResponse> => {
+  return openApiFetch<patchEmployeesIdResponse>(getPatchEmployeesIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(employee)
-  }
-);}
+    body: JSON.stringify(employee),
+  });
+};
 
-
-
-
-export const getPatchEmployeesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchEmployeesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Employee | undefined }) => {
     return patchEmployeesId(id, arg, options);
-  }
-}
-export const getPatchEmployeesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`] as const;
+  };
+};
+export const getPatchEmployeesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`] as const;
 
-export type PatchEmployeesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchEmployeesId>>>
+export type PatchEmployeesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchEmployeesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchEmployeesId = <TError = void | Employee>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchEmployeesId>>, TError, Key, Employee | undefined, Awaited<ReturnType<typeof patchEmployeesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchEmployeesId>>,
+      TError,
+      Key,
+      Employee | undefined,
+      Awaited<ReturnType<typeof patchEmployeesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchEmployeesIdMutationKey(id);
   const swrFn = getPatchEmployeesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putEmployeesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putEmployeesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putEmployeesIdResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type putEmployeesIdResponseSuccess = (putEmployeesIdResponse204) & {
-  headers: Headers;
-};
-export type putEmployeesIdResponseError = (putEmployeesIdResponse404 | putEmployeesIdResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type putEmployeesIdResponse = (putEmployeesIdResponseSuccess | putEmployeesIdResponseError)
+export type putEmployeesIdResponseSuccess = putEmployeesIdResponse204 & {
+  headers: Headers;
+};
+export type putEmployeesIdResponseError = (
+  | putEmployeesIdResponse404
+  | putEmployeesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutEmployeesIdUrl = (id: number,) => {
+export type putEmployeesIdResponse =
+  | putEmployeesIdResponseSuccess
+  | putEmployeesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`
-}
+export const getPutEmployeesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putEmployeesId = async (id: number,
-    employee?: Employee, options?: RequestInit): Promise<putEmployeesIdResponse> => {
-
-  return openApiFetch<putEmployeesIdResponse>(getPutEmployeesIdUrl(id),
-  {
+export const putEmployeesId = async (
+  id: number,
+  employee?: Employee,
+  options?: RequestInit
+): Promise<putEmployeesIdResponse> => {
+  return openApiFetch<putEmployeesIdResponse>(getPutEmployeesIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(employee)
-  }
-);}
+    body: JSON.stringify(employee),
+  });
+};
 
-
-
-
-export const getPutEmployeesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutEmployeesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Employee | undefined }) => {
     return putEmployeesId(id, arg, options);
-  }
-}
-export const getPutEmployeesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`] as const;
+  };
+};
+export const getPutEmployeesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`] as const;
 
-export type PutEmployeesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putEmployeesId>>>
+export type PutEmployeesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putEmployeesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutEmployeesId = <TError = void | Employee>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putEmployeesId>>, TError, Key, Employee | undefined, Awaited<ReturnType<typeof putEmployeesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putEmployeesId>>,
+      TError,
+      Key,
+      Employee | undefined,
+      Awaited<ReturnType<typeof putEmployeesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutEmployeesIdMutationKey(id);
   const swrFn = getPutEmployeesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteEmployeesIdResponse200 = {
-  data: Employee
-  status: 200
-}
+  data: Employee;
+  status: 200;
+};
 
 export type deleteEmployeesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteEmployeesIdResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type deleteEmployeesIdResponseSuccess = (deleteEmployeesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteEmployeesIdResponseError = (deleteEmployeesIdResponse404 | deleteEmployeesIdResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type deleteEmployeesIdResponse = (deleteEmployeesIdResponseSuccess | deleteEmployeesIdResponseError)
+export type deleteEmployeesIdResponseSuccess = deleteEmployeesIdResponse200 & {
+  headers: Headers;
+};
+export type deleteEmployeesIdResponseError = (
+  | deleteEmployeesIdResponse404
+  | deleteEmployeesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteEmployeesIdUrl = (id: number,) => {
+export type deleteEmployeesIdResponse =
+  | deleteEmployeesIdResponseSuccess
+  | deleteEmployeesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`
-}
+export const getDeleteEmployeesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteEmployeesId = async (id: number, options?: RequestInit): Promise<deleteEmployeesIdResponse> => {
-
-  return openApiFetch<deleteEmployeesIdResponse>(getDeleteEmployeesIdUrl(id),
-  {
+export const deleteEmployeesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteEmployeesIdResponse> => {
+  return openApiFetch<deleteEmployeesIdResponse>(getDeleteEmployeesIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteEmployeesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteEmployeesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteEmployeesId(id, options);
-  }
-}
-export const getDeleteEmployeesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/${id}`] as const;
+  };
+};
+export const getDeleteEmployeesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/${id}`] as const;
 
-export type DeleteEmployeesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEmployeesId>>>
+export type DeleteEmployeesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteEmployeesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteEmployeesId = <TError = void | Employee>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteEmployeesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteEmployeesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteEmployeesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteEmployeesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteEmployeesIdMutationKey(id);
   const swrFn = getDeleteEmployeesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getEmployeesGroupGroupIdResponse200 = {
-  data: Employee
-  status: 200
-}
+  data: Employee;
+  status: 200;
+};
 
 export type getEmployeesGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getEmployeesGroupGroupIdResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type getEmployeesGroupGroupIdResponseSuccess = (getEmployeesGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getEmployeesGroupGroupIdResponseError = (getEmployeesGroupGroupIdResponse404 | getEmployeesGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type getEmployeesGroupGroupIdResponse = (getEmployeesGroupGroupIdResponseSuccess | getEmployeesGroupGroupIdResponseError)
+export type getEmployeesGroupGroupIdResponseSuccess =
+  getEmployeesGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getEmployeesGroupGroupIdResponseError = (
+  | getEmployeesGroupGroupIdResponse404
+  | getEmployeesGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetEmployeesGroupGroupIdUrl = (groupId: number,) => {
+export type getEmployeesGroupGroupIdResponse =
+  | getEmployeesGroupGroupIdResponseSuccess
+  | getEmployeesGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/group/${groupId}`
-}
+export const getGetEmployeesGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getEmployeesGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getEmployeesGroupGroupIdResponse> => {
+export const getEmployeesGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getEmployeesGroupGroupIdResponse> => {
+  return openApiFetch<getEmployeesGroupGroupIdResponse>(
+    getGetEmployeesGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getEmployeesGroupGroupIdResponse>(getGetEmployeesGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetEmployeesGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetEmployeesGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/group/${groupId}`] as const;
-
-export type GetEmployeesGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEmployeesGroupGroupId>>>
+export type GetEmployeesGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEmployeesGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetEmployeesGroupGroupId = <TError = void | Employee>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getEmployeesGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getEmployeesGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetEmployeesGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getEmployeesGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetEmployeesGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getEmployeesGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postEmployeesUpsertResponse201 = {
-  data: Employee
-  status: 201
-}
+  data: Employee;
+  status: 201;
+};
 
 export type postEmployeesUpsertResponse422 = {
-  data: Employee
-  status: 422
-}
-
-export type postEmployeesUpsertResponseSuccess = (postEmployeesUpsertResponse201) & {
-  headers: Headers;
-};
-export type postEmployeesUpsertResponseError = (postEmployeesUpsertResponse422) & {
-  headers: Headers;
+  data: Employee;
+  status: 422;
 };
 
-export type postEmployeesUpsertResponse = (postEmployeesUpsertResponseSuccess | postEmployeesUpsertResponseError)
+export type postEmployeesUpsertResponseSuccess =
+  postEmployeesUpsertResponse201 & {
+    headers: Headers;
+  };
+export type postEmployeesUpsertResponseError =
+  postEmployeesUpsertResponse422 & {
+    headers: Headers;
+  };
+
+export type postEmployeesUpsertResponse =
+  | postEmployeesUpsertResponseSuccess
+  | postEmployeesUpsertResponseError;
 
 export const getPostEmployeesUpsertUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/upsert`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/upsert`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postEmployeesUpsert = async (employee?: Employee, options?: RequestInit): Promise<postEmployeesUpsertResponse> => {
+export const postEmployeesUpsert = async (
+  employee?: Employee,
+  options?: RequestInit
+): Promise<postEmployeesUpsertResponse> => {
+  return openApiFetch<postEmployeesUpsertResponse>(
+    getPostEmployeesUpsertUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(employee),
+    }
+  );
+};
 
-  return openApiFetch<postEmployeesUpsertResponse>(getPostEmployeesUpsertUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(employee)
-  }
-);}
-
-
-
-
-export const getPostEmployeesUpsertMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostEmployeesUpsertMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Employee | undefined }) => {
     return postEmployeesUpsert(arg, options);
-  }
-}
-export const getPostEmployeesUpsertMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/employees/upsert`] as const;
+  };
+};
+export const getPostEmployeesUpsertMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/employees/upsert`] as const;
 
-export type PostEmployeesUpsertMutationResult = NonNullable<Awaited<ReturnType<typeof postEmployeesUpsert>>>
+export type PostEmployeesUpsertMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postEmployeesUpsert>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostEmployeesUpsert = <TError = Employee>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postEmployeesUpsert>>, TError, Key, Employee | undefined, Awaited<ReturnType<typeof postEmployeesUpsert>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostEmployeesUpsert = <TError = Employee>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postEmployeesUpsert>>,
+    TError,
+    Key,
+    Employee | undefined,
+    Awaited<ReturnType<typeof postEmployeesUpsert>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostEmployeesUpsertMutationKey();
   const swrFn = getPostEmployeesUpsertMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

@@ -9,482 +9,563 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  GroupCategory
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { GroupCategory } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getGroupCategoriesResponse200 = {
-  data: GroupCategory
-  status: 200
-}
+  data: GroupCategory;
+  status: 200;
+};
 
 export type getGroupCategoriesResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type getGroupCategoriesResponseSuccess = (getGroupCategoriesResponse200) & {
-  headers: Headers;
-};
-export type getGroupCategoriesResponseError = (getGroupCategoriesResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type getGroupCategoriesResponse = (getGroupCategoriesResponseSuccess | getGroupCategoriesResponseError)
+export type getGroupCategoriesResponseSuccess =
+  getGroupCategoriesResponse200 & {
+    headers: Headers;
+  };
+export type getGroupCategoriesResponseError = getGroupCategoriesResponse422 & {
+  headers: Headers;
+};
+
+export type getGroupCategoriesResponse =
+  | getGroupCategoriesResponseSuccess
+  | getGroupCategoriesResponseError;
 
 export const getGetGroupCategoriesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroupCategories = async ( options?: RequestInit): Promise<getGroupCategoriesResponse> => {
-
-  return openApiFetch<getGroupCategoriesResponse>(getGetGroupCategoriesUrl(),
-  {
+export const getGroupCategories = async (
+  options?: RequestInit
+): Promise<getGroupCategoriesResponse> => {
+  return openApiFetch<getGroupCategoriesResponse>(getGetGroupCategoriesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetGroupCategoriesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetGroupCategoriesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories`] as const;
-
-export type GetGroupCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupCategories>>>
+export type GetGroupCategoriesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroupCategories>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetGroupCategories = <TError = GroupCategory>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroupCategories>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetGroupCategories = <TError = GroupCategory>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getGroupCategories>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupCategoriesKey() : null);
-  const swrFn = () => getGroupCategories(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetGroupCategoriesKey() : null));
+  const swrFn = () => getGroupCategories(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postGroupCategoriesResponse201 = {
-  data: GroupCategory
-  status: 201
-}
+  data: GroupCategory;
+  status: 201;
+};
 
 export type postGroupCategoriesResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type postGroupCategoriesResponseSuccess = (postGroupCategoriesResponse201) & {
-  headers: Headers;
-};
-export type postGroupCategoriesResponseError = (postGroupCategoriesResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type postGroupCategoriesResponse = (postGroupCategoriesResponseSuccess | postGroupCategoriesResponseError)
+export type postGroupCategoriesResponseSuccess =
+  postGroupCategoriesResponse201 & {
+    headers: Headers;
+  };
+export type postGroupCategoriesResponseError =
+  postGroupCategoriesResponse422 & {
+    headers: Headers;
+  };
+
+export type postGroupCategoriesResponse =
+  | postGroupCategoriesResponseSuccess
+  | postGroupCategoriesResponseError;
 
 export const getPostGroupCategoriesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postGroupCategories = async (groupCategory?: GroupCategory, options?: RequestInit): Promise<postGroupCategoriesResponse> => {
+export const postGroupCategories = async (
+  groupCategory?: GroupCategory,
+  options?: RequestInit
+): Promise<postGroupCategoriesResponse> => {
+  return openApiFetch<postGroupCategoriesResponse>(
+    getPostGroupCategoriesUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(groupCategory),
+    }
+  );
+};
 
-  return openApiFetch<postGroupCategoriesResponse>(getPostGroupCategoriesUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(groupCategory)
-  }
-);}
-
-
-
-
-export const getPostGroupCategoriesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostGroupCategoriesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: GroupCategory | undefined }) => {
     return postGroupCategories(arg, options);
-  }
-}
-export const getPostGroupCategoriesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories`] as const;
+  };
+};
+export const getPostGroupCategoriesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories`] as const;
 
-export type PostGroupCategoriesMutationResult = NonNullable<Awaited<ReturnType<typeof postGroupCategories>>>
+export type PostGroupCategoriesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postGroupCategories>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostGroupCategories = <TError = GroupCategory>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postGroupCategories>>, TError, Key, GroupCategory | undefined, Awaited<ReturnType<typeof postGroupCategories>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostGroupCategories = <TError = GroupCategory>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postGroupCategories>>,
+    TError,
+    Key,
+    GroupCategory | undefined,
+    Awaited<ReturnType<typeof postGroupCategories>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostGroupCategoriesMutationKey();
   const swrFn = getPostGroupCategoriesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getGroupCategoriesIdResponse200 = {
-  data: GroupCategory
-  status: 200
-}
+  data: GroupCategory;
+  status: 200;
+};
 
 export type getGroupCategoriesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getGroupCategoriesIdResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type getGroupCategoriesIdResponseSuccess = (getGroupCategoriesIdResponse200) & {
-  headers: Headers;
-};
-export type getGroupCategoriesIdResponseError = (getGroupCategoriesIdResponse404 | getGroupCategoriesIdResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type getGroupCategoriesIdResponse = (getGroupCategoriesIdResponseSuccess | getGroupCategoriesIdResponseError)
+export type getGroupCategoriesIdResponseSuccess =
+  getGroupCategoriesIdResponse200 & {
+    headers: Headers;
+  };
+export type getGroupCategoriesIdResponseError = (
+  | getGroupCategoriesIdResponse404
+  | getGroupCategoriesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetGroupCategoriesIdUrl = (id: number,) => {
+export type getGroupCategoriesIdResponse =
+  | getGroupCategoriesIdResponseSuccess
+  | getGroupCategoriesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`
-}
+export const getGetGroupCategoriesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroupCategoriesId = async (id: number, options?: RequestInit): Promise<getGroupCategoriesIdResponse> => {
+export const getGroupCategoriesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getGroupCategoriesIdResponse> => {
+  return openApiFetch<getGroupCategoriesIdResponse>(
+    getGetGroupCategoriesIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getGroupCategoriesIdResponse>(getGetGroupCategoriesIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetGroupCategoriesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetGroupCategoriesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`] as const;
-
-export type GetGroupCategoriesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupCategoriesId>>>
+export type GetGroupCategoriesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroupCategoriesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetGroupCategoriesId = <TError = void | GroupCategory>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroupCategoriesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getGroupCategoriesId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupCategoriesIdKey(id) : null);
-  const swrFn = () => getGroupCategoriesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetGroupCategoriesIdKey(id) : null));
+  const swrFn = () => getGroupCategoriesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchGroupCategoriesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchGroupCategoriesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchGroupCategoriesIdResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type patchGroupCategoriesIdResponseSuccess = (patchGroupCategoriesIdResponse204) & {
-  headers: Headers;
-};
-export type patchGroupCategoriesIdResponseError = (patchGroupCategoriesIdResponse404 | patchGroupCategoriesIdResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type patchGroupCategoriesIdResponse = (patchGroupCategoriesIdResponseSuccess | patchGroupCategoriesIdResponseError)
+export type patchGroupCategoriesIdResponseSuccess =
+  patchGroupCategoriesIdResponse204 & {
+    headers: Headers;
+  };
+export type patchGroupCategoriesIdResponseError = (
+  | patchGroupCategoriesIdResponse404
+  | patchGroupCategoriesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchGroupCategoriesIdUrl = (id: number,) => {
+export type patchGroupCategoriesIdResponse =
+  | patchGroupCategoriesIdResponseSuccess
+  | patchGroupCategoriesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`
-}
+export const getPatchGroupCategoriesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchGroupCategoriesId = async (id: number,
-    groupCategory?: GroupCategory, options?: RequestInit): Promise<patchGroupCategoriesIdResponse> => {
+export const patchGroupCategoriesId = async (
+  id: number,
+  groupCategory?: GroupCategory,
+  options?: RequestInit
+): Promise<patchGroupCategoriesIdResponse> => {
+  return openApiFetch<patchGroupCategoriesIdResponse>(
+    getPatchGroupCategoriesIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(groupCategory),
+    }
+  );
+};
 
-  return openApiFetch<patchGroupCategoriesIdResponse>(getPatchGroupCategoriesIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(groupCategory)
-  }
-);}
-
-
-
-
-export const getPatchGroupCategoriesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchGroupCategoriesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: GroupCategory | undefined }) => {
     return patchGroupCategoriesId(id, arg, options);
-  }
-}
-export const getPatchGroupCategoriesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`] as const;
+  };
+};
+export const getPatchGroupCategoriesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`] as const;
 
-export type PatchGroupCategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchGroupCategoriesId>>>
+export type PatchGroupCategoriesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchGroupCategoriesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchGroupCategoriesId = <TError = void | GroupCategory>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchGroupCategoriesId>>, TError, Key, GroupCategory | undefined, Awaited<ReturnType<typeof patchGroupCategoriesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchGroupCategoriesId>>,
+      TError,
+      Key,
+      GroupCategory | undefined,
+      Awaited<ReturnType<typeof patchGroupCategoriesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchGroupCategoriesIdMutationKey(id);
   const swrFn = getPatchGroupCategoriesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putGroupCategoriesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putGroupCategoriesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putGroupCategoriesIdResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type putGroupCategoriesIdResponseSuccess = (putGroupCategoriesIdResponse204) & {
-  headers: Headers;
-};
-export type putGroupCategoriesIdResponseError = (putGroupCategoriesIdResponse404 | putGroupCategoriesIdResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type putGroupCategoriesIdResponse = (putGroupCategoriesIdResponseSuccess | putGroupCategoriesIdResponseError)
+export type putGroupCategoriesIdResponseSuccess =
+  putGroupCategoriesIdResponse204 & {
+    headers: Headers;
+  };
+export type putGroupCategoriesIdResponseError = (
+  | putGroupCategoriesIdResponse404
+  | putGroupCategoriesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutGroupCategoriesIdUrl = (id: number,) => {
+export type putGroupCategoriesIdResponse =
+  | putGroupCategoriesIdResponseSuccess
+  | putGroupCategoriesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`
-}
+export const getPutGroupCategoriesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putGroupCategoriesId = async (id: number,
-    groupCategory?: GroupCategory, options?: RequestInit): Promise<putGroupCategoriesIdResponse> => {
+export const putGroupCategoriesId = async (
+  id: number,
+  groupCategory?: GroupCategory,
+  options?: RequestInit
+): Promise<putGroupCategoriesIdResponse> => {
+  return openApiFetch<putGroupCategoriesIdResponse>(
+    getPutGroupCategoriesIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(groupCategory),
+    }
+  );
+};
 
-  return openApiFetch<putGroupCategoriesIdResponse>(getPutGroupCategoriesIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(groupCategory)
-  }
-);}
-
-
-
-
-export const getPutGroupCategoriesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutGroupCategoriesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: GroupCategory | undefined }) => {
     return putGroupCategoriesId(id, arg, options);
-  }
-}
-export const getPutGroupCategoriesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`] as const;
+  };
+};
+export const getPutGroupCategoriesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`] as const;
 
-export type PutGroupCategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putGroupCategoriesId>>>
+export type PutGroupCategoriesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putGroupCategoriesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutGroupCategoriesId = <TError = void | GroupCategory>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putGroupCategoriesId>>, TError, Key, GroupCategory | undefined, Awaited<ReturnType<typeof putGroupCategoriesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putGroupCategoriesId>>,
+      TError,
+      Key,
+      GroupCategory | undefined,
+      Awaited<ReturnType<typeof putGroupCategoriesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutGroupCategoriesIdMutationKey(id);
   const swrFn = getPutGroupCategoriesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteGroupCategoriesIdResponse200 = {
-  data: GroupCategory
-  status: 200
-}
+  data: GroupCategory;
+  status: 200;
+};
 
 export type deleteGroupCategoriesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteGroupCategoriesIdResponse422 = {
-  data: GroupCategory
-  status: 422
-}
-
-export type deleteGroupCategoriesIdResponseSuccess = (deleteGroupCategoriesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteGroupCategoriesIdResponseError = (deleteGroupCategoriesIdResponse404 | deleteGroupCategoriesIdResponse422) & {
-  headers: Headers;
+  data: GroupCategory;
+  status: 422;
 };
 
-export type deleteGroupCategoriesIdResponse = (deleteGroupCategoriesIdResponseSuccess | deleteGroupCategoriesIdResponseError)
+export type deleteGroupCategoriesIdResponseSuccess =
+  deleteGroupCategoriesIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteGroupCategoriesIdResponseError = (
+  | deleteGroupCategoriesIdResponse404
+  | deleteGroupCategoriesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteGroupCategoriesIdUrl = (id: number,) => {
+export type deleteGroupCategoriesIdResponse =
+  | deleteGroupCategoriesIdResponseSuccess
+  | deleteGroupCategoriesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`
-}
+export const getDeleteGroupCategoriesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteGroupCategoriesId = async (id: number, options?: RequestInit): Promise<deleteGroupCategoriesIdResponse> => {
+export const deleteGroupCategoriesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteGroupCategoriesIdResponse> => {
+  return openApiFetch<deleteGroupCategoriesIdResponse>(
+    getDeleteGroupCategoriesIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteGroupCategoriesIdResponse>(getDeleteGroupCategoriesIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteGroupCategoriesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteGroupCategoriesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteGroupCategoriesId(id, options);
-  }
-}
-export const getDeleteGroupCategoriesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/group_categories/${id}`] as const;
+  };
+};
+export const getDeleteGroupCategoriesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/group_categories/${id}`] as const;
 
-export type DeleteGroupCategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGroupCategoriesId>>>
+export type DeleteGroupCategoriesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteGroupCategoriesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteGroupCategoriesId = <TError = void | GroupCategory>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteGroupCategoriesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteGroupCategoriesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteGroupCategoriesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteGroupCategoriesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getDeleteGroupCategoriesIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteGroupCategoriesIdMutationKey(id);
   const swrFn = getDeleteGroupCategoriesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

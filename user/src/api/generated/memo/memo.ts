@@ -9,482 +9,536 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  Memo
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { Memo } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getMemosResponse200 = {
-  data: Memo
-  status: 200
-}
+  data: Memo;
+  status: 200;
+};
 
 export type getMemosResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type getMemosResponseSuccess = (getMemosResponse200) & {
-  headers: Headers;
-};
-export type getMemosResponseError = (getMemosResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type getMemosResponse = (getMemosResponseSuccess | getMemosResponseError)
+export type getMemosResponseSuccess = getMemosResponse200 & {
+  headers: Headers;
+};
+export type getMemosResponseError = getMemosResponse422 & {
+  headers: Headers;
+};
+
+export type getMemosResponse = getMemosResponseSuccess | getMemosResponseError;
 
 export const getGetMemosUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getMemos = async ( options?: RequestInit): Promise<getMemosResponse> => {
-
-  return openApiFetch<getMemosResponse>(getGetMemosUrl(),
-  {
+export const getMemos = async (
+  options?: RequestInit
+): Promise<getMemosResponse> => {
+  return openApiFetch<getMemosResponse>(getGetMemosUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetMemosKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetMemosKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos`] as const;
-
-export type GetMemosQueryResult = NonNullable<Awaited<ReturnType<typeof getMemos>>>
+export type GetMemosQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMemos>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetMemos = <TError = Memo>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getMemos>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetMemos = <TError = Memo>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getMemos>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetMemosKey() : null);
-  const swrFn = () => getMemos(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetMemosKey() : null));
+  const swrFn = () => getMemos(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postMemosResponse201 = {
-  data: Memo
-  status: 201
-}
+  data: Memo;
+  status: 201;
+};
 
 export type postMemosResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type postMemosResponseSuccess = (postMemosResponse201) & {
-  headers: Headers;
-};
-export type postMemosResponseError = (postMemosResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type postMemosResponse = (postMemosResponseSuccess | postMemosResponseError)
+export type postMemosResponseSuccess = postMemosResponse201 & {
+  headers: Headers;
+};
+export type postMemosResponseError = postMemosResponse422 & {
+  headers: Headers;
+};
+
+export type postMemosResponse =
+  | postMemosResponseSuccess
+  | postMemosResponseError;
 
 export const getPostMemosUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postMemos = async (memo?: Memo, options?: RequestInit): Promise<postMemosResponse> => {
-
-  return openApiFetch<postMemosResponse>(getPostMemosUrl(),
-  {
+export const postMemos = async (
+  memo?: Memo,
+  options?: RequestInit
+): Promise<postMemosResponse> => {
+  return openApiFetch<postMemosResponse>(getPostMemosUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(memo)
-  }
-);}
+    body: JSON.stringify(memo),
+  });
+};
 
-
-
-
-export const getPostMemosMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostMemosMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Memo | undefined }) => {
     return postMemos(arg, options);
-  }
-}
-export const getPostMemosMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos`] as const;
+  };
+};
+export const getPostMemosMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos`] as const;
 
-export type PostMemosMutationResult = NonNullable<Awaited<ReturnType<typeof postMemos>>>
+export type PostMemosMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postMemos>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostMemos = <TError = Memo>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postMemos>>, TError, Key, Memo | undefined, Awaited<ReturnType<typeof postMemos>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostMemos = <TError = Memo>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postMemos>>,
+    TError,
+    Key,
+    Memo | undefined,
+    Awaited<ReturnType<typeof postMemos>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostMemosMutationKey();
   const swrFn = getPostMemosMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getMemosIdResponse200 = {
-  data: Memo
-  status: 200
-}
+  data: Memo;
+  status: 200;
+};
 
 export type getMemosIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getMemosIdResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type getMemosIdResponseSuccess = (getMemosIdResponse200) & {
-  headers: Headers;
-};
-export type getMemosIdResponseError = (getMemosIdResponse404 | getMemosIdResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type getMemosIdResponse = (getMemosIdResponseSuccess | getMemosIdResponseError)
+export type getMemosIdResponseSuccess = getMemosIdResponse200 & {
+  headers: Headers;
+};
+export type getMemosIdResponseError = (
+  | getMemosIdResponse404
+  | getMemosIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetMemosIdUrl = (id: number,) => {
+export type getMemosIdResponse =
+  | getMemosIdResponseSuccess
+  | getMemosIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`
-}
+export const getGetMemosIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getMemosId = async (id: number, options?: RequestInit): Promise<getMemosIdResponse> => {
-
-  return openApiFetch<getMemosIdResponse>(getGetMemosIdUrl(id),
-  {
+export const getMemosId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getMemosIdResponse> => {
+  return openApiFetch<getMemosIdResponse>(getGetMemosIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetMemosIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetMemosIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`] as const;
-
-export type GetMemosIdQueryResult = NonNullable<Awaited<ReturnType<typeof getMemosId>>>
+export type GetMemosIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMemosId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetMemosId = <TError = void | Memo>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getMemosId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getMemosId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetMemosIdKey(id) : null);
-  const swrFn = () => getMemosId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetMemosIdKey(id) : null));
+  const swrFn = () => getMemosId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchMemosIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchMemosIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchMemosIdResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type patchMemosIdResponseSuccess = (patchMemosIdResponse204) & {
-  headers: Headers;
-};
-export type patchMemosIdResponseError = (patchMemosIdResponse404 | patchMemosIdResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type patchMemosIdResponse = (patchMemosIdResponseSuccess | patchMemosIdResponseError)
+export type patchMemosIdResponseSuccess = patchMemosIdResponse204 & {
+  headers: Headers;
+};
+export type patchMemosIdResponseError = (
+  | patchMemosIdResponse404
+  | patchMemosIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchMemosIdUrl = (id: number,) => {
+export type patchMemosIdResponse =
+  | patchMemosIdResponseSuccess
+  | patchMemosIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`
-}
+export const getPatchMemosIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchMemosId = async (id: number,
-    memo?: Memo, options?: RequestInit): Promise<patchMemosIdResponse> => {
-
-  return openApiFetch<patchMemosIdResponse>(getPatchMemosIdUrl(id),
-  {
+export const patchMemosId = async (
+  id: number,
+  memo?: Memo,
+  options?: RequestInit
+): Promise<patchMemosIdResponse> => {
+  return openApiFetch<patchMemosIdResponse>(getPatchMemosIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(memo)
-  }
-);}
+    body: JSON.stringify(memo),
+  });
+};
 
-
-
-
-export const getPatchMemosIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchMemosIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Memo | undefined }) => {
     return patchMemosId(id, arg, options);
-  }
-}
-export const getPatchMemosIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`] as const;
+  };
+};
+export const getPatchMemosIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`] as const;
 
-export type PatchMemosIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchMemosId>>>
+export type PatchMemosIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchMemosId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchMemosId = <TError = void | Memo>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchMemosId>>, TError, Key, Memo | undefined, Awaited<ReturnType<typeof patchMemosId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchMemosId>>,
+      TError,
+      Key,
+      Memo | undefined,
+      Awaited<ReturnType<typeof patchMemosId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchMemosIdMutationKey(id);
   const swrFn = getPatchMemosIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putMemosIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putMemosIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putMemosIdResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type putMemosIdResponseSuccess = (putMemosIdResponse204) & {
-  headers: Headers;
-};
-export type putMemosIdResponseError = (putMemosIdResponse404 | putMemosIdResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type putMemosIdResponse = (putMemosIdResponseSuccess | putMemosIdResponseError)
+export type putMemosIdResponseSuccess = putMemosIdResponse204 & {
+  headers: Headers;
+};
+export type putMemosIdResponseError = (
+  | putMemosIdResponse404
+  | putMemosIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutMemosIdUrl = (id: number,) => {
+export type putMemosIdResponse =
+  | putMemosIdResponseSuccess
+  | putMemosIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`
-}
+export const getPutMemosIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putMemosId = async (id: number,
-    memo?: Memo, options?: RequestInit): Promise<putMemosIdResponse> => {
-
-  return openApiFetch<putMemosIdResponse>(getPutMemosIdUrl(id),
-  {
+export const putMemosId = async (
+  id: number,
+  memo?: Memo,
+  options?: RequestInit
+): Promise<putMemosIdResponse> => {
+  return openApiFetch<putMemosIdResponse>(getPutMemosIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(memo)
-  }
-);}
+    body: JSON.stringify(memo),
+  });
+};
 
-
-
-
-export const getPutMemosIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutMemosIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Memo | undefined }) => {
     return putMemosId(id, arg, options);
-  }
-}
-export const getPutMemosIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`] as const;
+  };
+};
+export const getPutMemosIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`] as const;
 
-export type PutMemosIdMutationResult = NonNullable<Awaited<ReturnType<typeof putMemosId>>>
+export type PutMemosIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putMemosId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutMemosId = <TError = void | Memo>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putMemosId>>, TError, Key, Memo | undefined, Awaited<ReturnType<typeof putMemosId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putMemosId>>,
+      TError,
+      Key,
+      Memo | undefined,
+      Awaited<ReturnType<typeof putMemosId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutMemosIdMutationKey(id);
   const swrFn = getPutMemosIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteMemosIdResponse200 = {
-  data: Memo
-  status: 200
-}
+  data: Memo;
+  status: 200;
+};
 
 export type deleteMemosIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteMemosIdResponse422 = {
-  data: Memo
-  status: 422
-}
-
-export type deleteMemosIdResponseSuccess = (deleteMemosIdResponse200) & {
-  headers: Headers;
-};
-export type deleteMemosIdResponseError = (deleteMemosIdResponse404 | deleteMemosIdResponse422) & {
-  headers: Headers;
+  data: Memo;
+  status: 422;
 };
 
-export type deleteMemosIdResponse = (deleteMemosIdResponseSuccess | deleteMemosIdResponseError)
+export type deleteMemosIdResponseSuccess = deleteMemosIdResponse200 & {
+  headers: Headers;
+};
+export type deleteMemosIdResponseError = (
+  | deleteMemosIdResponse404
+  | deleteMemosIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteMemosIdUrl = (id: number,) => {
+export type deleteMemosIdResponse =
+  | deleteMemosIdResponseSuccess
+  | deleteMemosIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`
-}
+export const getDeleteMemosIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteMemosId = async (id: number, options?: RequestInit): Promise<deleteMemosIdResponse> => {
-
-  return openApiFetch<deleteMemosIdResponse>(getDeleteMemosIdUrl(id),
-  {
+export const deleteMemosId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteMemosIdResponse> => {
+  return openApiFetch<deleteMemosIdResponse>(getDeleteMemosIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteMemosIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteMemosIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteMemosId(id, options);
-  }
-}
-export const getDeleteMemosIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/memos/${id}`] as const;
+  };
+};
+export const getDeleteMemosIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/memos/${id}`] as const;
 
-export type DeleteMemosIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMemosId>>>
+export type DeleteMemosIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteMemosId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteMemosId = <TError = void | Memo>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteMemosId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteMemosId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteMemosId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteMemosId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteMemosIdMutationKey(id);
   const swrFn = getDeleteMemosIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

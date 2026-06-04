@@ -10,4 +10,5 @@
  */
 import type { RailsConductorActionmailboxInboundEmail } from './railsConductorActionmailboxInboundEmail';
 
-export type RailsConductorActionmailboxInboundEmailBody = RailsConductorActionmailboxInboundEmail;
+export type RailsConductorActionmailboxInboundEmailBody =
+  RailsConductorActionmailboxInboundEmail;

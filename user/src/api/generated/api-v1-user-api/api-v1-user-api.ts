@@ -9,91 +9,98 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ApiV1UserApi
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1UserApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetUserWithUserDetailResponse200 = {
-  data: ApiV1UserApi
-  status: 200
-}
+  data: ApiV1UserApi;
+  status: 200;
+};
 
 export type getApiV1GetUserWithUserDetailResponse422 = {
-  data: ApiV1UserApi
-  status: 422
-}
-
-export type getApiV1GetUserWithUserDetailResponseSuccess = (getApiV1GetUserWithUserDetailResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetUserWithUserDetailResponseError = (getApiV1GetUserWithUserDetailResponse422) & {
-  headers: Headers;
+  data: ApiV1UserApi;
+  status: 422;
 };
 
-export type getApiV1GetUserWithUserDetailResponse = (getApiV1GetUserWithUserDetailResponseSuccess | getApiV1GetUserWithUserDetailResponseError)
+export type getApiV1GetUserWithUserDetailResponseSuccess =
+  getApiV1GetUserWithUserDetailResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetUserWithUserDetailResponseError =
+  getApiV1GetUserWithUserDetailResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetUserWithUserDetailResponse =
+  | getApiV1GetUserWithUserDetailResponseSuccess
+  | getApiV1GetUserWithUserDetailResponseError;
 
 export const getGetApiV1GetUserWithUserDetailUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_user_with_user_detail`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_user_with_user_detail`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetUserWithUserDetail = async ( options?: RequestInit): Promise<getApiV1GetUserWithUserDetailResponse> => {
+export const getApiV1GetUserWithUserDetail = async (
+  options?: RequestInit
+): Promise<getApiV1GetUserWithUserDetailResponse> => {
+  return openApiFetch<getApiV1GetUserWithUserDetailResponse>(
+    getGetApiV1GetUserWithUserDetailUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetUserWithUserDetailResponse>(getGetApiV1GetUserWithUserDetailUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetUserWithUserDetailKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_user_with_user_detail`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetUserWithUserDetailKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_user_with_user_detail`] as const;
-
-export type GetApiV1GetUserWithUserDetailQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetUserWithUserDetail>>>
+export type GetApiV1GetUserWithUserDetailQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetUserWithUserDetail>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetUserWithUserDetail = <TError = ApiV1UserApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetUserWithUserDetail>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetUserWithUserDetail = <
+  TError = ApiV1UserApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetUserWithUserDetail>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetUserWithUserDetailKey() : null);
-  const swrFn = () => getApiV1GetUserWithUserDetail(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetUserWithUserDetailKey() : null));
+  const swrFn = () => getApiV1GetUserWithUserDetail(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

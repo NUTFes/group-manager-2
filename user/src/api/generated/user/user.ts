@@ -9,474 +9,530 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  User
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { User } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getCurrentUserResponse200 = {
-  data: User
-  status: 200
-}
+  data: User;
+  status: 200;
+};
 
 export type getCurrentUserResponse422 = {
-  data: User
-  status: 422
-}
-
-export type getCurrentUserResponseSuccess = (getCurrentUserResponse200) & {
-  headers: Headers;
-};
-export type getCurrentUserResponseError = (getCurrentUserResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type getCurrentUserResponse = (getCurrentUserResponseSuccess | getCurrentUserResponseError)
+export type getCurrentUserResponseSuccess = getCurrentUserResponse200 & {
+  headers: Headers;
+};
+export type getCurrentUserResponseError = getCurrentUserResponse422 & {
+  headers: Headers;
+};
+
+export type getCurrentUserResponse =
+  | getCurrentUserResponseSuccess
+  | getCurrentUserResponseError;
 
 export const getGetCurrentUserUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/current_user`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/current_user`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getCurrentUser = async ( options?: RequestInit): Promise<getCurrentUserResponse> => {
-
-  return openApiFetch<getCurrentUserResponse>(getGetCurrentUserUrl(),
-  {
+export const getCurrentUser = async (
+  options?: RequestInit
+): Promise<getCurrentUserResponse> => {
+  return openApiFetch<getCurrentUserResponse>(getGetCurrentUserUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetCurrentUserKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/current_user`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetCurrentUserKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/current_user`] as const;
-
-export type GetCurrentUserQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>
+export type GetCurrentUserQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCurrentUser>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetCurrentUser = <TError = User>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetCurrentUser = <TError = User>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCurrentUserKey() : null);
-  const swrFn = () => getCurrentUser(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetCurrentUserKey() : null));
+  const swrFn = () => getCurrentUser(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getUsersResponse200 = {
-  data: User
-  status: 200
-}
+  data: User;
+  status: 200;
+};
 
 export type getUsersResponse422 = {
-  data: User
-  status: 422
-}
-
-export type getUsersResponseSuccess = (getUsersResponse200) & {
-  headers: Headers;
-};
-export type getUsersResponseError = (getUsersResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type getUsersResponse = (getUsersResponseSuccess | getUsersResponseError)
+export type getUsersResponseSuccess = getUsersResponse200 & {
+  headers: Headers;
+};
+export type getUsersResponseError = getUsersResponse422 & {
+  headers: Headers;
+};
+
+export type getUsersResponse = getUsersResponseSuccess | getUsersResponseError;
 
 export const getGetUsersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/users`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUsers = async ( options?: RequestInit): Promise<getUsersResponse> => {
-
-  return openApiFetch<getUsersResponse>(getGetUsersUrl(),
-  {
+export const getUsers = async (
+  options?: RequestInit
+): Promise<getUsersResponse> => {
+  return openApiFetch<getUsersResponse>(getGetUsersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetUsersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/users`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetUsersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/users`] as const;
-
-export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>
+export type GetUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUsers>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetUsers = <TError = User>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetUsers = <TError = User>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUsersKey() : null);
-  const swrFn = () => getUsers(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersKey() : null));
+  const swrFn = () => getUsers(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getUsersIdResponse200 = {
-  data: User
-  status: 200
-}
+  data: User;
+  status: 200;
+};
 
 export type getUsersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getUsersIdResponse422 = {
-  data: User
-  status: 422
-}
-
-export type getUsersIdResponseSuccess = (getUsersIdResponse200) & {
-  headers: Headers;
-};
-export type getUsersIdResponseError = (getUsersIdResponse404 | getUsersIdResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type getUsersIdResponse = (getUsersIdResponseSuccess | getUsersIdResponseError)
+export type getUsersIdResponseSuccess = getUsersIdResponse200 & {
+  headers: Headers;
+};
+export type getUsersIdResponseError = (
+  | getUsersIdResponse404
+  | getUsersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetUsersIdUrl = (id: number,) => {
+export type getUsersIdResponse =
+  | getUsersIdResponseSuccess
+  | getUsersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`
-}
+export const getGetUsersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUsersId = async (id: number, options?: RequestInit): Promise<getUsersIdResponse> => {
-
-  return openApiFetch<getUsersIdResponse>(getGetUsersIdUrl(id),
-  {
+export const getUsersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getUsersIdResponse> => {
+  return openApiFetch<getUsersIdResponse>(getGetUsersIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetUsersIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetUsersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`] as const;
-
-export type GetUsersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersId>>>
+export type GetUsersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUsersId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetUsersId = <TError = void | User>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUsersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsersId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUsersIdKey(id) : null);
-  const swrFn = () => getUsersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetUsersIdKey(id) : null));
+  const swrFn = () => getUsersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putUsersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putUsersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putUsersIdResponse422 = {
-  data: User
-  status: 422
-}
-
-export type putUsersIdResponseSuccess = (putUsersIdResponse204) & {
-  headers: Headers;
-};
-export type putUsersIdResponseError = (putUsersIdResponse404 | putUsersIdResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type putUsersIdResponse = (putUsersIdResponseSuccess | putUsersIdResponseError)
+export type putUsersIdResponseSuccess = putUsersIdResponse204 & {
+  headers: Headers;
+};
+export type putUsersIdResponseError = (
+  | putUsersIdResponse404
+  | putUsersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutUsersIdUrl = (id: number,) => {
+export type putUsersIdResponse =
+  | putUsersIdResponseSuccess
+  | putUsersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`
-}
+export const getPutUsersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putUsersId = async (id: number,
-    user?: User, options?: RequestInit): Promise<putUsersIdResponse> => {
-
-  return openApiFetch<putUsersIdResponse>(getPutUsersIdUrl(id),
-  {
+export const putUsersId = async (
+  id: number,
+  user?: User,
+  options?: RequestInit
+): Promise<putUsersIdResponse> => {
+  return openApiFetch<putUsersIdResponse>(getPutUsersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(user)
-  }
-);}
+    body: JSON.stringify(user),
+  });
+};
 
-
-
-
-export const getPutUsersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutUsersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: User | undefined }) => {
     return putUsersId(id, arg, options);
-  }
-}
-export const getPutUsersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`] as const;
+  };
+};
+export const getPutUsersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`] as const;
 
-export type PutUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putUsersId>>>
+export type PutUsersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putUsersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutUsersId = <TError = void | User>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putUsersId>>, TError, Key, User | undefined, Awaited<ReturnType<typeof putUsersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putUsersId>>,
+      TError,
+      Key,
+      User | undefined,
+      Awaited<ReturnType<typeof putUsersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutUsersIdMutationKey(id);
   const swrFn = getPutUsersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteUsersIdResponse200 = {
-  data: User
-  status: 200
-}
+  data: User;
+  status: 200;
+};
 
 export type deleteUsersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteUsersIdResponse422 = {
-  data: User
-  status: 422
-}
-
-export type deleteUsersIdResponseSuccess = (deleteUsersIdResponse200) & {
-  headers: Headers;
-};
-export type deleteUsersIdResponseError = (deleteUsersIdResponse404 | deleteUsersIdResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type deleteUsersIdResponse = (deleteUsersIdResponseSuccess | deleteUsersIdResponseError)
+export type deleteUsersIdResponseSuccess = deleteUsersIdResponse200 & {
+  headers: Headers;
+};
+export type deleteUsersIdResponseError = (
+  | deleteUsersIdResponse404
+  | deleteUsersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteUsersIdUrl = (id: number,) => {
+export type deleteUsersIdResponse =
+  | deleteUsersIdResponseSuccess
+  | deleteUsersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`
-}
+export const getDeleteUsersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteUsersId = async (id: number, options?: RequestInit): Promise<deleteUsersIdResponse> => {
-
-  return openApiFetch<deleteUsersIdResponse>(getDeleteUsersIdUrl(id),
-  {
+export const deleteUsersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteUsersIdResponse> => {
+  return openApiFetch<deleteUsersIdResponse>(getDeleteUsersIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteUsersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteUsersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteUsersId(id, options);
-  }
-}
-export const getDeleteUsersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/${id}`] as const;
+  };
+};
+export const getDeleteUsersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/${id}`] as const;
 
-export type DeleteUsersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUsersId>>>
+export type DeleteUsersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUsersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteUsersId = <TError = void | User>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteUsersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteUsersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteUsersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteUsersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteUsersIdMutationKey(id);
   const swrFn = getDeleteUsersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postUsersSimplyUserCreateResponse201 = {
-  data: User
-  status: 201
-}
+  data: User;
+  status: 201;
+};
 
 export type postUsersSimplyUserCreateResponse422 = {
-  data: User
-  status: 422
-}
-
-export type postUsersSimplyUserCreateResponseSuccess = (postUsersSimplyUserCreateResponse201) & {
-  headers: Headers;
-};
-export type postUsersSimplyUserCreateResponseError = (postUsersSimplyUserCreateResponse422) & {
-  headers: Headers;
+  data: User;
+  status: 422;
 };
 
-export type postUsersSimplyUserCreateResponse = (postUsersSimplyUserCreateResponseSuccess | postUsersSimplyUserCreateResponseError)
+export type postUsersSimplyUserCreateResponseSuccess =
+  postUsersSimplyUserCreateResponse201 & {
+    headers: Headers;
+  };
+export type postUsersSimplyUserCreateResponseError =
+  postUsersSimplyUserCreateResponse422 & {
+    headers: Headers;
+  };
+
+export type postUsersSimplyUserCreateResponse =
+  | postUsersSimplyUserCreateResponseSuccess
+  | postUsersSimplyUserCreateResponseError;
 
 export const getPostUsersSimplyUserCreateUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/simply_user_create`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/simply_user_create`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postUsersSimplyUserCreate = async (user?: User, options?: RequestInit): Promise<postUsersSimplyUserCreateResponse> => {
+export const postUsersSimplyUserCreate = async (
+  user?: User,
+  options?: RequestInit
+): Promise<postUsersSimplyUserCreateResponse> => {
+  return openApiFetch<postUsersSimplyUserCreateResponse>(
+    getPostUsersSimplyUserCreateUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(user),
+    }
+  );
+};
 
-  return openApiFetch<postUsersSimplyUserCreateResponse>(getPostUsersSimplyUserCreateUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(user)
-  }
-);}
-
-
-
-
-export const getPostUsersSimplyUserCreateMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostUsersSimplyUserCreateMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: User | undefined }) => {
     return postUsersSimplyUserCreate(arg, options);
-  }
-}
-export const getPostUsersSimplyUserCreateMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/users/simply_user_create`] as const;
+  };
+};
+export const getPostUsersSimplyUserCreateMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/users/simply_user_create`,
+  ] as const;
 
-export type PostUsersSimplyUserCreateMutationResult = NonNullable<Awaited<ReturnType<typeof postUsersSimplyUserCreate>>>
+export type PostUsersSimplyUserCreateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUsersSimplyUserCreate>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostUsersSimplyUserCreate = <TError = User>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postUsersSimplyUserCreate>>, TError, Key, User | undefined, Awaited<ReturnType<typeof postUsersSimplyUserCreate>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostUsersSimplyUserCreate = <TError = User>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postUsersSimplyUserCreate>>,
+    TError,
+    Key,
+    User | undefined,
+    Awaited<ReturnType<typeof postUsersSimplyUserCreate>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPostUsersSimplyUserCreateMutationKey();
+  const swrKey =
+    swrOptions?.swrKey ?? getPostUsersSimplyUserCreateMutationKey();
   const swrFn = getPostUsersSimplyUserCreateMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

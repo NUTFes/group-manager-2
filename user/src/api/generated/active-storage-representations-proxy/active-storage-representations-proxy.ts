@@ -9,100 +9,146 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ActivestorageRepresentationsProxy
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActivestorageRepresentationsProxy } from '../schemas';
 
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse200 =
+  {
+    data: ActivestorageRepresentationsProxy;
+    status: 200;
+  };
 
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse404 =
+  {
+    data: void;
+    status: 404;
+  };
 
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse422 =
+  {
+    data: ActivestorageRepresentationsProxy;
+    status: 422;
+  };
 
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseSuccess =
+  getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse200 & {
+    headers: Headers;
+  };
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseError =
+  (
+    | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse404
+    | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse422
+  ) & {
+    headers: Headers;
+  };
 
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse200 = {
-  data: ActivestorageRepresentationsProxy
-  status: 200
-}
+export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse =
 
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse404 = {
-  data: void
-  status: 404
-}
+    | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseSuccess
+    | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseError;
 
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse422 = {
-  data: ActivestorageRepresentationsProxy
-  status: 422
-}
-
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseSuccess = (getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse200) & {
-  headers: Headers;
-};
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseError = (getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse404 | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse422) & {
-  headers: Headers;
-};
-
-export type getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse = (getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseSuccess | getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponseError)
-
-export const getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameUrl = (signedBlobId: number,
-    variationKey: string,) => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/representations/proxy/${signedBlobId}/${variationKey}/*filename`
-}
+export const getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameUrl =
+  (signedBlobId: number, variationKey: string) => {
+    return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/representations/proxy/${signedBlobId}/${variationKey}/*filename`;
+  };
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename = async (signedBlobId: number,
-    variationKey: string, options?: RequestInit): Promise<getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse> => {
+export const getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename =
+  async (
+    signedBlobId: number,
+    variationKey: string,
+    options?: RequestInit
+  ): Promise<getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse> => {
+    return openApiFetch<getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse>(
+      getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameUrl(
+        signedBlobId,
+        variationKey
+      ),
+      {
+        ...options,
+        method: 'GET',
+      }
+    );
+  };
 
-  return openApiFetch<getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameResponse>(getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameUrl(signedBlobId,variationKey),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameKey =
+  (signedBlobId: number, variationKey: string) =>
+    [
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/representations/proxy/${signedBlobId}/${variationKey}/*filename`,
+    ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameKey = (signedBlobId: number,
-    variationKey: string,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/representations/proxy/${signedBlobId}/${variationKey}/*filename`] as const;
-
-export type GetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename>>>
+export type GetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename
+      >
+    >
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename = <TError = void | ActivestorageRepresentationsProxy>(
-  signedBlobId: number,
-    variationKey: string, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename =
+  <TError = void | ActivestorageRepresentationsProxy>(
+    signedBlobId: number,
+    variationKey: string,
+    options?: {
+      swr?: SWRConfiguration<
+        Awaited<
+          ReturnType<
+            typeof getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename
+          >
+        >,
+        TError
+      > & { swrKey?: Key; enabled?: boolean };
+      request?: SecondParameter<typeof openApiFetch>;
+    }
+  ) => {
+    const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && signedBlobId !== null && signedBlobId !== undefined && variationKey !== null && variationKey !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameKey(signedBlobId,variationKey) : null);
-  const swrFn = () => getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename(signedBlobId,variationKey, requestOptions)
+    const isEnabled =
+      swrOptions?.enabled !== false &&
+      signedBlobId !== null &&
+      signedBlobId !== undefined &&
+      variationKey !== null &&
+      variationKey !== undefined;
+    const swrKey =
+      swrOptions?.swrKey ??
+      (() =>
+        isEnabled
+          ? getGetRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilenameKey(
+              signedBlobId,
+              variationKey
+            )
+          : null);
+    const swrFn = () =>
+      getRailsActiveStorageRepresentationsProxySignedBlobIdVariationKeyFilename(
+        signedBlobId,
+        variationKey,
+        requestOptions
+      );
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+    const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+      swrKey,
+      swrFn,
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        keepPreviousData: true,
+        dedupingInterval: 10000,
+        ...swrOptions,
+      }
+    );
 
-  return {
-    swrKey,
-    ...query
-  }
-}
+    return {
+      swrKey,
+      ...query,
+    };
+  };

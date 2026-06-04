@@ -9,386 +9,442 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  DevisetokenauthPassword
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { DevisetokenauthPassword } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type patchApiAuthPasswordResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchApiAuthPasswordResponse422 = {
-  data: DevisetokenauthPassword
-  status: 422
-}
-
-export type patchApiAuthPasswordResponseSuccess = (patchApiAuthPasswordResponse204) & {
-  headers: Headers;
-};
-export type patchApiAuthPasswordResponseError = (patchApiAuthPasswordResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthPassword;
+  status: 422;
 };
 
-export type patchApiAuthPasswordResponse = (patchApiAuthPasswordResponseSuccess | patchApiAuthPasswordResponseError)
+export type patchApiAuthPasswordResponseSuccess =
+  patchApiAuthPasswordResponse204 & {
+    headers: Headers;
+  };
+export type patchApiAuthPasswordResponseError =
+  patchApiAuthPasswordResponse422 & {
+    headers: Headers;
+  };
+
+export type patchApiAuthPasswordResponse =
+  | patchApiAuthPasswordResponseSuccess
+  | patchApiAuthPasswordResponseError;
 
 export const getPatchApiAuthPasswordUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchApiAuthPassword = async (devisetokenauthPassword?: DevisetokenauthPassword, options?: RequestInit): Promise<patchApiAuthPasswordResponse> => {
+export const patchApiAuthPassword = async (
+  devisetokenauthPassword?: DevisetokenauthPassword,
+  options?: RequestInit
+): Promise<patchApiAuthPasswordResponse> => {
+  return openApiFetch<patchApiAuthPasswordResponse>(
+    getPatchApiAuthPasswordUrl(),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(devisetokenauthPassword),
+    }
+  );
+};
 
-  return openApiFetch<patchApiAuthPasswordResponse>(getPatchApiAuthPasswordUrl(),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(devisetokenauthPassword)
-  }
-);}
-
-
-
-
-export const getPatchApiAuthPasswordMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchApiAuthPasswordMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: DevisetokenauthPassword | undefined }) => {
     return patchApiAuthPassword(arg, options);
-  }
-}
-export const getPatchApiAuthPasswordMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`] as const;
+  };
+};
+export const getPatchApiAuthPasswordMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`] as const;
 
-export type PatchApiAuthPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiAuthPassword>>>
+export type PatchApiAuthPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchApiAuthPassword>>
+>;
 
 /**
  * @summary patch summary
  */
-export const usePatchApiAuthPassword = <TError = DevisetokenauthPassword>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchApiAuthPassword>>, TError, Key, DevisetokenauthPassword | undefined, Awaited<ReturnType<typeof patchApiAuthPassword>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePatchApiAuthPassword = <
+  TError = DevisetokenauthPassword,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof patchApiAuthPassword>>,
+    TError,
+    Key,
+    DevisetokenauthPassword | undefined,
+    Awaited<ReturnType<typeof patchApiAuthPassword>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchApiAuthPasswordMutationKey();
   const swrFn = getPatchApiAuthPasswordMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putApiAuthPasswordResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putApiAuthPasswordResponse422 = {
-  data: DevisetokenauthPassword
-  status: 422
-}
-
-export type putApiAuthPasswordResponseSuccess = (putApiAuthPasswordResponse204) & {
-  headers: Headers;
-};
-export type putApiAuthPasswordResponseError = (putApiAuthPasswordResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthPassword;
+  status: 422;
 };
 
-export type putApiAuthPasswordResponse = (putApiAuthPasswordResponseSuccess | putApiAuthPasswordResponseError)
+export type putApiAuthPasswordResponseSuccess =
+  putApiAuthPasswordResponse204 & {
+    headers: Headers;
+  };
+export type putApiAuthPasswordResponseError = putApiAuthPasswordResponse422 & {
+  headers: Headers;
+};
+
+export type putApiAuthPasswordResponse =
+  | putApiAuthPasswordResponseSuccess
+  | putApiAuthPasswordResponseError;
 
 export const getPutApiAuthPasswordUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putApiAuthPassword = async (devisetokenauthPassword?: DevisetokenauthPassword, options?: RequestInit): Promise<putApiAuthPasswordResponse> => {
-
-  return openApiFetch<putApiAuthPasswordResponse>(getPutApiAuthPasswordUrl(),
-  {
+export const putApiAuthPassword = async (
+  devisetokenauthPassword?: DevisetokenauthPassword,
+  options?: RequestInit
+): Promise<putApiAuthPasswordResponse> => {
+  return openApiFetch<putApiAuthPasswordResponse>(getPutApiAuthPasswordUrl(), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(devisetokenauthPassword)
-  }
-);}
+    body: JSON.stringify(devisetokenauthPassword),
+  });
+};
 
-
-
-
-export const getPutApiAuthPasswordMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutApiAuthPasswordMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: DevisetokenauthPassword | undefined }) => {
     return putApiAuthPassword(arg, options);
-  }
-}
-export const getPutApiAuthPasswordMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`] as const;
+  };
+};
+export const getPutApiAuthPasswordMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`] as const;
 
-export type PutApiAuthPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof putApiAuthPassword>>>
+export type PutApiAuthPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putApiAuthPassword>>
+>;
 
 /**
  * @summary put summary
  */
-export const usePutApiAuthPassword = <TError = DevisetokenauthPassword>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putApiAuthPassword>>, TError, Key, DevisetokenauthPassword | undefined, Awaited<ReturnType<typeof putApiAuthPassword>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePutApiAuthPassword = <
+  TError = DevisetokenauthPassword,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof putApiAuthPassword>>,
+    TError,
+    Key,
+    DevisetokenauthPassword | undefined,
+    Awaited<ReturnType<typeof putApiAuthPassword>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutApiAuthPasswordMutationKey();
   const swrFn = getPutApiAuthPasswordMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiAuthPasswordResponse201 = {
-  data: DevisetokenauthPassword
-  status: 201
-}
+  data: DevisetokenauthPassword;
+  status: 201;
+};
 
 export type postApiAuthPasswordResponse422 = {
-  data: DevisetokenauthPassword
-  status: 422
-}
-
-export type postApiAuthPasswordResponseSuccess = (postApiAuthPasswordResponse201) & {
-  headers: Headers;
-};
-export type postApiAuthPasswordResponseError = (postApiAuthPasswordResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthPassword;
+  status: 422;
 };
 
-export type postApiAuthPasswordResponse = (postApiAuthPasswordResponseSuccess | postApiAuthPasswordResponseError)
+export type postApiAuthPasswordResponseSuccess =
+  postApiAuthPasswordResponse201 & {
+    headers: Headers;
+  };
+export type postApiAuthPasswordResponseError =
+  postApiAuthPasswordResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiAuthPasswordResponse =
+  | postApiAuthPasswordResponseSuccess
+  | postApiAuthPasswordResponseError;
 
 export const getPostApiAuthPasswordUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiAuthPassword = async (devisetokenauthPassword?: DevisetokenauthPassword, options?: RequestInit): Promise<postApiAuthPasswordResponse> => {
+export const postApiAuthPassword = async (
+  devisetokenauthPassword?: DevisetokenauthPassword,
+  options?: RequestInit
+): Promise<postApiAuthPasswordResponse> => {
+  return openApiFetch<postApiAuthPasswordResponse>(
+    getPostApiAuthPasswordUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(devisetokenauthPassword),
+    }
+  );
+};
 
-  return openApiFetch<postApiAuthPasswordResponse>(getPostApiAuthPasswordUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(devisetokenauthPassword)
-  }
-);}
-
-
-
-
-export const getPostApiAuthPasswordMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiAuthPasswordMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: DevisetokenauthPassword | undefined }) => {
     return postApiAuthPassword(arg, options);
-  }
-}
-export const getPostApiAuthPasswordMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password`] as const;
+  };
+};
+export const getPostApiAuthPasswordMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password`] as const;
 
-export type PostApiAuthPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthPassword>>>
+export type PostApiAuthPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiAuthPassword>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiAuthPassword = <TError = DevisetokenauthPassword>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiAuthPassword>>, TError, Key, DevisetokenauthPassword | undefined, Awaited<ReturnType<typeof postApiAuthPassword>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostApiAuthPassword = <
+  TError = DevisetokenauthPassword,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiAuthPassword>>,
+    TError,
+    Key,
+    DevisetokenauthPassword | undefined,
+    Awaited<ReturnType<typeof postApiAuthPassword>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostApiAuthPasswordMutationKey();
   const swrFn = getPostApiAuthPasswordMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiAuthPasswordEditResponse200 = {
-  data: DevisetokenauthPassword
-  status: 200
-}
+  data: DevisetokenauthPassword;
+  status: 200;
+};
 
 export type getApiAuthPasswordEditResponse422 = {
-  data: DevisetokenauthPassword
-  status: 422
-}
-
-export type getApiAuthPasswordEditResponseSuccess = (getApiAuthPasswordEditResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthPasswordEditResponseError = (getApiAuthPasswordEditResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthPassword;
+  status: 422;
 };
 
-export type getApiAuthPasswordEditResponse = (getApiAuthPasswordEditResponseSuccess | getApiAuthPasswordEditResponseError)
+export type getApiAuthPasswordEditResponseSuccess =
+  getApiAuthPasswordEditResponse200 & {
+    headers: Headers;
+  };
+export type getApiAuthPasswordEditResponseError =
+  getApiAuthPasswordEditResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiAuthPasswordEditResponse =
+  | getApiAuthPasswordEditResponseSuccess
+  | getApiAuthPasswordEditResponseError;
 
 export const getGetApiAuthPasswordEditUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password/edit`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password/edit`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthPasswordEdit = async ( options?: RequestInit): Promise<getApiAuthPasswordEditResponse> => {
+export const getApiAuthPasswordEdit = async (
+  options?: RequestInit
+): Promise<getApiAuthPasswordEditResponse> => {
+  return openApiFetch<getApiAuthPasswordEditResponse>(
+    getGetApiAuthPasswordEditUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiAuthPasswordEditResponse>(getGetApiAuthPasswordEditUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiAuthPasswordEditKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password/edit`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiAuthPasswordEditKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password/edit`] as const;
-
-export type GetApiAuthPasswordEditQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthPasswordEdit>>>
+export type GetApiAuthPasswordEditQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthPasswordEdit>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthPasswordEdit = <TError = DevisetokenauthPassword>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthPasswordEdit>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthPasswordEdit = <
+  TError = DevisetokenauthPassword,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiAuthPasswordEdit>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthPasswordEditKey() : null);
-  const swrFn = () => getApiAuthPasswordEdit(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiAuthPasswordEditKey() : null));
+  const swrFn = () => getApiAuthPasswordEdit(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiAuthPasswordNewResponse200 = {
-  data: DevisetokenauthPassword
-  status: 200
-}
+  data: DevisetokenauthPassword;
+  status: 200;
+};
 
 export type getApiAuthPasswordNewResponse422 = {
-  data: DevisetokenauthPassword
-  status: 422
-}
-
-export type getApiAuthPasswordNewResponseSuccess = (getApiAuthPasswordNewResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthPasswordNewResponseError = (getApiAuthPasswordNewResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthPassword;
+  status: 422;
 };
 
-export type getApiAuthPasswordNewResponse = (getApiAuthPasswordNewResponseSuccess | getApiAuthPasswordNewResponseError)
+export type getApiAuthPasswordNewResponseSuccess =
+  getApiAuthPasswordNewResponse200 & {
+    headers: Headers;
+  };
+export type getApiAuthPasswordNewResponseError =
+  getApiAuthPasswordNewResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiAuthPasswordNewResponse =
+  | getApiAuthPasswordNewResponseSuccess
+  | getApiAuthPasswordNewResponseError;
 
 export const getGetApiAuthPasswordNewUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password/new`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password/new`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthPasswordNew = async ( options?: RequestInit): Promise<getApiAuthPasswordNewResponse> => {
+export const getApiAuthPasswordNew = async (
+  options?: RequestInit
+): Promise<getApiAuthPasswordNewResponse> => {
+  return openApiFetch<getApiAuthPasswordNewResponse>(
+    getGetApiAuthPasswordNewUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiAuthPasswordNewResponse>(getGetApiAuthPasswordNewUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiAuthPasswordNewKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/password/new`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiAuthPasswordNewKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/password/new`] as const;
-
-export type GetApiAuthPasswordNewQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthPasswordNew>>>
+export type GetApiAuthPasswordNewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthPasswordNew>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthPasswordNew = <TError = DevisetokenauthPassword>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthPasswordNew>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthPasswordNew = <
+  TError = DevisetokenauthPassword,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiAuthPasswordNew>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthPasswordNewKey() : null);
-  const swrFn = () => getApiAuthPasswordNew(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiAuthPasswordNewKey() : null));
+  const swrFn = () => getApiAuthPasswordNew(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

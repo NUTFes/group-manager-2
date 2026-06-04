@@ -9,318 +9,386 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1PurchaseListsApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1PurchaseListsApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetPurchaseListIndexForAdminViewResponse200 = {
-  data: ApiV1PurchaseListsApi
-  status: 200
-}
+  data: ApiV1PurchaseListsApi;
+  status: 200;
+};
 
 export type getApiV1GetPurchaseListIndexForAdminViewResponse422 = {
-  data: ApiV1PurchaseListsApi
-  status: 422
-}
-
-export type getApiV1GetPurchaseListIndexForAdminViewResponseSuccess = (getApiV1GetPurchaseListIndexForAdminViewResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetPurchaseListIndexForAdminViewResponseError = (getApiV1GetPurchaseListIndexForAdminViewResponse422) & {
-  headers: Headers;
+  data: ApiV1PurchaseListsApi;
+  status: 422;
 };
 
-export type getApiV1GetPurchaseListIndexForAdminViewResponse = (getApiV1GetPurchaseListIndexForAdminViewResponseSuccess | getApiV1GetPurchaseListIndexForAdminViewResponseError)
+export type getApiV1GetPurchaseListIndexForAdminViewResponseSuccess =
+  getApiV1GetPurchaseListIndexForAdminViewResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetPurchaseListIndexForAdminViewResponseError =
+  getApiV1GetPurchaseListIndexForAdminViewResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetPurchaseListIndexForAdminViewResponse =
+  | getApiV1GetPurchaseListIndexForAdminViewResponseSuccess
+  | getApiV1GetPurchaseListIndexForAdminViewResponseError;
 
 export const getGetApiV1GetPurchaseListIndexForAdminViewUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_purchase_list_index_for_admin_view`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_purchase_list_index_for_admin_view`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetPurchaseListIndexForAdminView = async ( options?: RequestInit): Promise<getApiV1GetPurchaseListIndexForAdminViewResponse> => {
+export const getApiV1GetPurchaseListIndexForAdminView = async (
+  options?: RequestInit
+): Promise<getApiV1GetPurchaseListIndexForAdminViewResponse> => {
+  return openApiFetch<getApiV1GetPurchaseListIndexForAdminViewResponse>(
+    getGetApiV1GetPurchaseListIndexForAdminViewUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetPurchaseListIndexForAdminViewResponse>(getGetApiV1GetPurchaseListIndexForAdminViewUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetPurchaseListIndexForAdminViewKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_purchase_list_index_for_admin_view`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetPurchaseListIndexForAdminViewKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_purchase_list_index_for_admin_view`] as const;
-
-export type GetApiV1GetPurchaseListIndexForAdminViewQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetPurchaseListIndexForAdminView>>>
+export type GetApiV1GetPurchaseListIndexForAdminViewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetPurchaseListIndexForAdminView>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetPurchaseListIndexForAdminView = <TError = ApiV1PurchaseListsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetPurchaseListIndexForAdminView>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetPurchaseListIndexForAdminView = <
+  TError = ApiV1PurchaseListsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetPurchaseListIndexForAdminView>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetPurchaseListIndexForAdminViewKey() : null);
-  const swrFn = () => getApiV1GetPurchaseListIndexForAdminView(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetPurchaseListIndexForAdminViewKey() : null);
+  const swrFn = () => getApiV1GetPurchaseListIndexForAdminView(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetPurchaseListShowForAdminViewIdResponse200 = {
-  data: ApiV1PurchaseListsApi
-  status: 200
-}
+  data: ApiV1PurchaseListsApi;
+  status: 200;
+};
 
 export type getApiV1GetPurchaseListShowForAdminViewIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetPurchaseListShowForAdminViewIdResponse422 = {
-  data: ApiV1PurchaseListsApi
-  status: 422
-}
-
-export type getApiV1GetPurchaseListShowForAdminViewIdResponseSuccess = (getApiV1GetPurchaseListShowForAdminViewIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetPurchaseListShowForAdminViewIdResponseError = (getApiV1GetPurchaseListShowForAdminViewIdResponse404 | getApiV1GetPurchaseListShowForAdminViewIdResponse422) & {
-  headers: Headers;
+  data: ApiV1PurchaseListsApi;
+  status: 422;
 };
 
-export type getApiV1GetPurchaseListShowForAdminViewIdResponse = (getApiV1GetPurchaseListShowForAdminViewIdResponseSuccess | getApiV1GetPurchaseListShowForAdminViewIdResponseError)
+export type getApiV1GetPurchaseListShowForAdminViewIdResponseSuccess =
+  getApiV1GetPurchaseListShowForAdminViewIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetPurchaseListShowForAdminViewIdResponseError = (
+  | getApiV1GetPurchaseListShowForAdminViewIdResponse404
+  | getApiV1GetPurchaseListShowForAdminViewIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetPurchaseListShowForAdminViewIdUrl = (id: number,) => {
+export type getApiV1GetPurchaseListShowForAdminViewIdResponse =
+  | getApiV1GetPurchaseListShowForAdminViewIdResponseSuccess
+  | getApiV1GetPurchaseListShowForAdminViewIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_purchase_list_show_for_admin_view/${id}`
-}
+export const getGetApiV1GetPurchaseListShowForAdminViewIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_purchase_list_show_for_admin_view/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetPurchaseListShowForAdminViewId = async (id: number, options?: RequestInit): Promise<getApiV1GetPurchaseListShowForAdminViewIdResponse> => {
+export const getApiV1GetPurchaseListShowForAdminViewId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getApiV1GetPurchaseListShowForAdminViewIdResponse> => {
+  return openApiFetch<getApiV1GetPurchaseListShowForAdminViewIdResponse>(
+    getGetApiV1GetPurchaseListShowForAdminViewIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetPurchaseListShowForAdminViewIdResponse>(getGetApiV1GetPurchaseListShowForAdminViewIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetPurchaseListShowForAdminViewIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_purchase_list_show_for_admin_view/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetPurchaseListShowForAdminViewIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_purchase_list_show_for_admin_view/${id}`] as const;
-
-export type GetApiV1GetPurchaseListShowForAdminViewIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetPurchaseListShowForAdminViewId>>>
+export type GetApiV1GetPurchaseListShowForAdminViewIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetPurchaseListShowForAdminViewId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetPurchaseListShowForAdminViewId = <TError = void | ApiV1PurchaseListsApi>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetPurchaseListShowForAdminViewId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetPurchaseListShowForAdminViewId = <
+  TError = void | ApiV1PurchaseListsApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getApiV1GetPurchaseListShowForAdminViewId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetPurchaseListShowForAdminViewIdKey(id) : null);
-  const swrFn = () => getApiV1GetPurchaseListShowForAdminViewId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetPurchaseListShowForAdminViewIdKey(id) : null);
+  const swrFn = () =>
+    getApiV1GetPurchaseListShowForAdminViewId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetRefinementPurchaseListsResponse201 = {
-  data: ApiV1PurchaseListsApi
-  status: 201
-}
+  data: ApiV1PurchaseListsApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementPurchaseListsResponse422 = {
-  data: ApiV1PurchaseListsApi
-  status: 422
-}
-
-export type postApiV1GetRefinementPurchaseListsResponseSuccess = (postApiV1GetRefinementPurchaseListsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementPurchaseListsResponseError = (postApiV1GetRefinementPurchaseListsResponse422) & {
-  headers: Headers;
+  data: ApiV1PurchaseListsApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementPurchaseListsResponse = (postApiV1GetRefinementPurchaseListsResponseSuccess | postApiV1GetRefinementPurchaseListsResponseError)
+export type postApiV1GetRefinementPurchaseListsResponseSuccess =
+  postApiV1GetRefinementPurchaseListsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementPurchaseListsResponseError =
+  postApiV1GetRefinementPurchaseListsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementPurchaseListsResponse =
+  | postApiV1GetRefinementPurchaseListsResponseSuccess
+  | postApiV1GetRefinementPurchaseListsResponseError;
 
 export const getPostApiV1GetRefinementPurchaseListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_purchase_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_purchase_lists`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementPurchaseLists = async (apiV1PurchaseListsApi?: ApiV1PurchaseListsApi, options?: RequestInit): Promise<postApiV1GetRefinementPurchaseListsResponse> => {
+export const postApiV1GetRefinementPurchaseLists = async (
+  apiV1PurchaseListsApi?: ApiV1PurchaseListsApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementPurchaseListsResponse> => {
+  return openApiFetch<postApiV1GetRefinementPurchaseListsResponse>(
+    getPostApiV1GetRefinementPurchaseListsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1PurchaseListsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementPurchaseListsResponse>(getPostApiV1GetRefinementPurchaseListsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1PurchaseListsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementPurchaseListsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementPurchaseListsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1PurchaseListsApi | undefined }) => {
     return postApiV1GetRefinementPurchaseLists(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementPurchaseListsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_purchase_lists`] as const;
+  };
+};
+export const getPostApiV1GetRefinementPurchaseListsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_purchase_lists`,
+  ] as const;
 
-export type PostApiV1GetRefinementPurchaseListsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>>
+export type PostApiV1GetRefinementPurchaseListsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementPurchaseLists = <TError = ApiV1PurchaseListsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>, TError, Key, ApiV1PurchaseListsApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementPurchaseLists = <
+  TError = ApiV1PurchaseListsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>,
+    TError,
+    Key,
+    ApiV1PurchaseListsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementPurchaseLists>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementPurchaseListsMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementPurchaseListsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementPurchaseListsMutationKey();
-  const swrFn = getPostApiV1GetRefinementPurchaseListsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetSearchPurchaseListsResponse201 = {
-  data: ApiV1PurchaseListsApi
-  status: 201
-}
+  data: ApiV1PurchaseListsApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchPurchaseListsResponse422 = {
-  data: ApiV1PurchaseListsApi
-  status: 422
-}
-
-export type postApiV1GetSearchPurchaseListsResponseSuccess = (postApiV1GetSearchPurchaseListsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchPurchaseListsResponseError = (postApiV1GetSearchPurchaseListsResponse422) & {
-  headers: Headers;
+  data: ApiV1PurchaseListsApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchPurchaseListsResponse = (postApiV1GetSearchPurchaseListsResponseSuccess | postApiV1GetSearchPurchaseListsResponseError)
+export type postApiV1GetSearchPurchaseListsResponseSuccess =
+  postApiV1GetSearchPurchaseListsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchPurchaseListsResponseError =
+  postApiV1GetSearchPurchaseListsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchPurchaseListsResponse =
+  | postApiV1GetSearchPurchaseListsResponseSuccess
+  | postApiV1GetSearchPurchaseListsResponseError;
 
 export const getPostApiV1GetSearchPurchaseListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_purchase_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_purchase_lists`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchPurchaseLists = async (apiV1PurchaseListsApi?: ApiV1PurchaseListsApi, options?: RequestInit): Promise<postApiV1GetSearchPurchaseListsResponse> => {
+export const postApiV1GetSearchPurchaseLists = async (
+  apiV1PurchaseListsApi?: ApiV1PurchaseListsApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchPurchaseListsResponse> => {
+  return openApiFetch<postApiV1GetSearchPurchaseListsResponse>(
+    getPostApiV1GetSearchPurchaseListsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1PurchaseListsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchPurchaseListsResponse>(getPostApiV1GetSearchPurchaseListsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1PurchaseListsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchPurchaseListsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchPurchaseListsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1PurchaseListsApi | undefined }) => {
     return postApiV1GetSearchPurchaseLists(arg, options);
-  }
-}
-export const getPostApiV1GetSearchPurchaseListsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_purchase_lists`] as const;
+  };
+};
+export const getPostApiV1GetSearchPurchaseListsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_purchase_lists`,
+  ] as const;
 
-export type PostApiV1GetSearchPurchaseListsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>>
+export type PostApiV1GetSearchPurchaseListsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchPurchaseLists = <TError = ApiV1PurchaseListsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>, TError, Key, ApiV1PurchaseListsApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchPurchaseLists = <
+  TError = ApiV1PurchaseListsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>,
+    TError,
+    Key,
+    ApiV1PurchaseListsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchPurchaseLists>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchPurchaseListsMutationKey();
+  const swrFn =
+    getPostApiV1GetSearchPurchaseListsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchPurchaseListsMutationKey();
-  const swrFn = getPostApiV1GetSearchPurchaseListsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

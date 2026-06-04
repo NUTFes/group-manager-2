@@ -9,482 +9,595 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  RentalItemAllowList
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { RentalItemAllowList } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRentalItemAllowListsResponse200 = {
-  data: RentalItemAllowList
-  status: 200
-}
+  data: RentalItemAllowList;
+  status: 200;
+};
 
 export type getRentalItemAllowListsResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type getRentalItemAllowListsResponseSuccess = (getRentalItemAllowListsResponse200) & {
-  headers: Headers;
-};
-export type getRentalItemAllowListsResponseError = (getRentalItemAllowListsResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type getRentalItemAllowListsResponse = (getRentalItemAllowListsResponseSuccess | getRentalItemAllowListsResponseError)
+export type getRentalItemAllowListsResponseSuccess =
+  getRentalItemAllowListsResponse200 & {
+    headers: Headers;
+  };
+export type getRentalItemAllowListsResponseError =
+  getRentalItemAllowListsResponse422 & {
+    headers: Headers;
+  };
+
+export type getRentalItemAllowListsResponse =
+  | getRentalItemAllowListsResponseSuccess
+  | getRentalItemAllowListsResponseError;
 
 export const getGetRentalItemAllowListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentalItemAllowLists = async ( options?: RequestInit): Promise<getRentalItemAllowListsResponse> => {
+export const getRentalItemAllowLists = async (
+  options?: RequestInit
+): Promise<getRentalItemAllowListsResponse> => {
+  return openApiFetch<getRentalItemAllowListsResponse>(
+    getGetRentalItemAllowListsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRentalItemAllowListsResponse>(getGetRentalItemAllowListsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRentalItemAllowListsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRentalItemAllowListsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists`] as const;
-
-export type GetRentalItemAllowListsQueryResult = NonNullable<Awaited<ReturnType<typeof getRentalItemAllowLists>>>
+export type GetRentalItemAllowListsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentalItemAllowLists>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRentalItemAllowLists = <TError = RentalItemAllowList>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentalItemAllowLists>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRentalItemAllowLists = <
+  TError = RentalItemAllowList,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getRentalItemAllowLists>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentalItemAllowListsKey() : null);
-  const swrFn = () => getRentalItemAllowLists(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetRentalItemAllowListsKey() : null));
+  const swrFn = () => getRentalItemAllowLists(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postRentalItemAllowListsResponse201 = {
-  data: RentalItemAllowList
-  status: 201
-}
+  data: RentalItemAllowList;
+  status: 201;
+};
 
 export type postRentalItemAllowListsResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type postRentalItemAllowListsResponseSuccess = (postRentalItemAllowListsResponse201) & {
-  headers: Headers;
-};
-export type postRentalItemAllowListsResponseError = (postRentalItemAllowListsResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type postRentalItemAllowListsResponse = (postRentalItemAllowListsResponseSuccess | postRentalItemAllowListsResponseError)
+export type postRentalItemAllowListsResponseSuccess =
+  postRentalItemAllowListsResponse201 & {
+    headers: Headers;
+  };
+export type postRentalItemAllowListsResponseError =
+  postRentalItemAllowListsResponse422 & {
+    headers: Headers;
+  };
+
+export type postRentalItemAllowListsResponse =
+  | postRentalItemAllowListsResponseSuccess
+  | postRentalItemAllowListsResponseError;
 
 export const getPostRentalItemAllowListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRentalItemAllowLists = async (rentalItemAllowList?: RentalItemAllowList, options?: RequestInit): Promise<postRentalItemAllowListsResponse> => {
+export const postRentalItemAllowLists = async (
+  rentalItemAllowList?: RentalItemAllowList,
+  options?: RequestInit
+): Promise<postRentalItemAllowListsResponse> => {
+  return openApiFetch<postRentalItemAllowListsResponse>(
+    getPostRentalItemAllowListsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentalItemAllowList),
+    }
+  );
+};
 
-  return openApiFetch<postRentalItemAllowListsResponse>(getPostRentalItemAllowListsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalItemAllowList)
-  }
-);}
-
-
-
-
-export const getPostRentalItemAllowListsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostRentalItemAllowListsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalItemAllowList | undefined }) => {
     return postRentalItemAllowLists(arg, options);
-  }
-}
-export const getPostRentalItemAllowListsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists`] as const;
+  };
+};
+export const getPostRentalItemAllowListsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists`] as const;
 
-export type PostRentalItemAllowListsMutationResult = NonNullable<Awaited<ReturnType<typeof postRentalItemAllowLists>>>
+export type PostRentalItemAllowListsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRentalItemAllowLists>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostRentalItemAllowLists = <TError = RentalItemAllowList>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRentalItemAllowLists>>, TError, Key, RentalItemAllowList | undefined, Awaited<ReturnType<typeof postRentalItemAllowLists>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostRentalItemAllowLists = <
+  TError = RentalItemAllowList,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRentalItemAllowLists>>,
+    TError,
+    Key,
+    RentalItemAllowList | undefined,
+    Awaited<ReturnType<typeof postRentalItemAllowLists>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostRentalItemAllowListsMutationKey();
   const swrFn = getPostRentalItemAllowListsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRentalItemAllowListsIdResponse200 = {
-  data: RentalItemAllowList
-  status: 200
-}
+  data: RentalItemAllowList;
+  status: 200;
+};
 
 export type getRentalItemAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRentalItemAllowListsIdResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type getRentalItemAllowListsIdResponseSuccess = (getRentalItemAllowListsIdResponse200) & {
-  headers: Headers;
-};
-export type getRentalItemAllowListsIdResponseError = (getRentalItemAllowListsIdResponse404 | getRentalItemAllowListsIdResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type getRentalItemAllowListsIdResponse = (getRentalItemAllowListsIdResponseSuccess | getRentalItemAllowListsIdResponseError)
+export type getRentalItemAllowListsIdResponseSuccess =
+  getRentalItemAllowListsIdResponse200 & {
+    headers: Headers;
+  };
+export type getRentalItemAllowListsIdResponseError = (
+  | getRentalItemAllowListsIdResponse404
+  | getRentalItemAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRentalItemAllowListsIdUrl = (id: number,) => {
+export type getRentalItemAllowListsIdResponse =
+  | getRentalItemAllowListsIdResponseSuccess
+  | getRentalItemAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`
-}
+export const getGetRentalItemAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentalItemAllowListsId = async (id: number, options?: RequestInit): Promise<getRentalItemAllowListsIdResponse> => {
+export const getRentalItemAllowListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getRentalItemAllowListsIdResponse> => {
+  return openApiFetch<getRentalItemAllowListsIdResponse>(
+    getGetRentalItemAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRentalItemAllowListsIdResponse>(getGetRentalItemAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRentalItemAllowListsIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRentalItemAllowListsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`] as const;
-
-export type GetRentalItemAllowListsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getRentalItemAllowListsId>>>
+export type GetRentalItemAllowListsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentalItemAllowListsId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRentalItemAllowListsId = <TError = void | RentalItemAllowList>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentalItemAllowListsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetRentalItemAllowListsId = <
+  TError = void | RentalItemAllowList,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRentalItemAllowListsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentalItemAllowListsIdKey(id) : null);
-  const swrFn = () => getRentalItemAllowListsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetRentalItemAllowListsIdKey(id) : null));
+  const swrFn = () => getRentalItemAllowListsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchRentalItemAllowListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchRentalItemAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchRentalItemAllowListsIdResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type patchRentalItemAllowListsIdResponseSuccess = (patchRentalItemAllowListsIdResponse204) & {
-  headers: Headers;
-};
-export type patchRentalItemAllowListsIdResponseError = (patchRentalItemAllowListsIdResponse404 | patchRentalItemAllowListsIdResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type patchRentalItemAllowListsIdResponse = (patchRentalItemAllowListsIdResponseSuccess | patchRentalItemAllowListsIdResponseError)
+export type patchRentalItemAllowListsIdResponseSuccess =
+  patchRentalItemAllowListsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchRentalItemAllowListsIdResponseError = (
+  | patchRentalItemAllowListsIdResponse404
+  | patchRentalItemAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchRentalItemAllowListsIdUrl = (id: number,) => {
+export type patchRentalItemAllowListsIdResponse =
+  | patchRentalItemAllowListsIdResponseSuccess
+  | patchRentalItemAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`
-}
+export const getPatchRentalItemAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchRentalItemAllowListsId = async (id: number,
-    rentalItemAllowList?: RentalItemAllowList, options?: RequestInit): Promise<patchRentalItemAllowListsIdResponse> => {
+export const patchRentalItemAllowListsId = async (
+  id: number,
+  rentalItemAllowList?: RentalItemAllowList,
+  options?: RequestInit
+): Promise<patchRentalItemAllowListsIdResponse> => {
+  return openApiFetch<patchRentalItemAllowListsIdResponse>(
+    getPatchRentalItemAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentalItemAllowList),
+    }
+  );
+};
 
-  return openApiFetch<patchRentalItemAllowListsIdResponse>(getPatchRentalItemAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalItemAllowList)
-  }
-);}
-
-
-
-
-export const getPatchRentalItemAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchRentalItemAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalItemAllowList | undefined }) => {
     return patchRentalItemAllowListsId(id, arg, options);
-  }
-}
-export const getPatchRentalItemAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`] as const;
+  };
+};
+export const getPatchRentalItemAllowListsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`,
+  ] as const;
 
-export type PatchRentalItemAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchRentalItemAllowListsId>>>
+export type PatchRentalItemAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchRentalItemAllowListsId>>
+>;
 
 /**
  * @summary patch summary
  */
-export const usePatchRentalItemAllowListsId = <TError = void | RentalItemAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchRentalItemAllowListsId>>, TError, Key, RentalItemAllowList | undefined, Awaited<ReturnType<typeof patchRentalItemAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePatchRentalItemAllowListsId = <
+  TError = void | RentalItemAllowList,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchRentalItemAllowListsId>>,
+      TError,
+      Key,
+      RentalItemAllowList | undefined,
+      Awaited<ReturnType<typeof patchRentalItemAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchRentalItemAllowListsIdMutationKey(id);
+  const swrFn = getPatchRentalItemAllowListsIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getPatchRentalItemAllowListsIdMutationKey(id);
-  const swrFn = getPatchRentalItemAllowListsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putRentalItemAllowListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putRentalItemAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putRentalItemAllowListsIdResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type putRentalItemAllowListsIdResponseSuccess = (putRentalItemAllowListsIdResponse204) & {
-  headers: Headers;
-};
-export type putRentalItemAllowListsIdResponseError = (putRentalItemAllowListsIdResponse404 | putRentalItemAllowListsIdResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type putRentalItemAllowListsIdResponse = (putRentalItemAllowListsIdResponseSuccess | putRentalItemAllowListsIdResponseError)
+export type putRentalItemAllowListsIdResponseSuccess =
+  putRentalItemAllowListsIdResponse204 & {
+    headers: Headers;
+  };
+export type putRentalItemAllowListsIdResponseError = (
+  | putRentalItemAllowListsIdResponse404
+  | putRentalItemAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutRentalItemAllowListsIdUrl = (id: number,) => {
+export type putRentalItemAllowListsIdResponse =
+  | putRentalItemAllowListsIdResponseSuccess
+  | putRentalItemAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`
-}
+export const getPutRentalItemAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putRentalItemAllowListsId = async (id: number,
-    rentalItemAllowList?: RentalItemAllowList, options?: RequestInit): Promise<putRentalItemAllowListsIdResponse> => {
+export const putRentalItemAllowListsId = async (
+  id: number,
+  rentalItemAllowList?: RentalItemAllowList,
+  options?: RequestInit
+): Promise<putRentalItemAllowListsIdResponse> => {
+  return openApiFetch<putRentalItemAllowListsIdResponse>(
+    getPutRentalItemAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentalItemAllowList),
+    }
+  );
+};
 
-  return openApiFetch<putRentalItemAllowListsIdResponse>(getPutRentalItemAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalItemAllowList)
-  }
-);}
-
-
-
-
-export const getPutRentalItemAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutRentalItemAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalItemAllowList | undefined }) => {
     return putRentalItemAllowListsId(id, arg, options);
-  }
-}
-export const getPutRentalItemAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`] as const;
+  };
+};
+export const getPutRentalItemAllowListsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`,
+  ] as const;
 
-export type PutRentalItemAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putRentalItemAllowListsId>>>
+export type PutRentalItemAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putRentalItemAllowListsId>>
+>;
 
 /**
  * @summary put summary
  */
-export const usePutRentalItemAllowListsId = <TError = void | RentalItemAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putRentalItemAllowListsId>>, TError, Key, RentalItemAllowList | undefined, Awaited<ReturnType<typeof putRentalItemAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const usePutRentalItemAllowListsId = <
+  TError = void | RentalItemAllowList,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putRentalItemAllowListsId>>,
+      TError,
+      Key,
+      RentalItemAllowList | undefined,
+      Awaited<ReturnType<typeof putRentalItemAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPutRentalItemAllowListsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPutRentalItemAllowListsIdMutationKey(id);
   const swrFn = getPutRentalItemAllowListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteRentalItemAllowListsIdResponse200 = {
-  data: RentalItemAllowList
-  status: 200
-}
+  data: RentalItemAllowList;
+  status: 200;
+};
 
 export type deleteRentalItemAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteRentalItemAllowListsIdResponse422 = {
-  data: RentalItemAllowList
-  status: 422
-}
-
-export type deleteRentalItemAllowListsIdResponseSuccess = (deleteRentalItemAllowListsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteRentalItemAllowListsIdResponseError = (deleteRentalItemAllowListsIdResponse404 | deleteRentalItemAllowListsIdResponse422) & {
-  headers: Headers;
+  data: RentalItemAllowList;
+  status: 422;
 };
 
-export type deleteRentalItemAllowListsIdResponse = (deleteRentalItemAllowListsIdResponseSuccess | deleteRentalItemAllowListsIdResponseError)
+export type deleteRentalItemAllowListsIdResponseSuccess =
+  deleteRentalItemAllowListsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteRentalItemAllowListsIdResponseError = (
+  | deleteRentalItemAllowListsIdResponse404
+  | deleteRentalItemAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteRentalItemAllowListsIdUrl = (id: number,) => {
+export type deleteRentalItemAllowListsIdResponse =
+  | deleteRentalItemAllowListsIdResponseSuccess
+  | deleteRentalItemAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`
-}
+export const getDeleteRentalItemAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteRentalItemAllowListsId = async (id: number, options?: RequestInit): Promise<deleteRentalItemAllowListsIdResponse> => {
+export const deleteRentalItemAllowListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteRentalItemAllowListsIdResponse> => {
+  return openApiFetch<deleteRentalItemAllowListsIdResponse>(
+    getDeleteRentalItemAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteRentalItemAllowListsIdResponse>(getDeleteRentalItemAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteRentalItemAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteRentalItemAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteRentalItemAllowListsId(id, options);
-  }
-}
-export const getDeleteRentalItemAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_item_allow_lists/${id}`] as const;
+  };
+};
+export const getDeleteRentalItemAllowListsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_item_allow_lists/${id}`,
+  ] as const;
 
-export type DeleteRentalItemAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>>
+export type DeleteRentalItemAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteRentalItemAllowListsId = <TError = void | RentalItemAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteRentalItemAllowListsId = <
+  TError = void | RentalItemAllowList,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteRentalItemAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteRentalItemAllowListsIdMutationKey(id);
+  const swrFn = getDeleteRentalItemAllowListsIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteRentalItemAllowListsIdMutationKey(id);
-  const swrFn = getDeleteRentalItemAllowListsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

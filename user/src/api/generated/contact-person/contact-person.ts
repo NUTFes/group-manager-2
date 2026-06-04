@@ -9,482 +9,557 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ContactPerson
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ContactPerson } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getContactPersonsResponse200 = {
-  data: ContactPerson
-  status: 200
-}
+  data: ContactPerson;
+  status: 200;
+};
 
 export type getContactPersonsResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type getContactPersonsResponseSuccess = (getContactPersonsResponse200) & {
-  headers: Headers;
-};
-export type getContactPersonsResponseError = (getContactPersonsResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type getContactPersonsResponse = (getContactPersonsResponseSuccess | getContactPersonsResponseError)
+export type getContactPersonsResponseSuccess = getContactPersonsResponse200 & {
+  headers: Headers;
+};
+export type getContactPersonsResponseError = getContactPersonsResponse422 & {
+  headers: Headers;
+};
+
+export type getContactPersonsResponse =
+  | getContactPersonsResponseSuccess
+  | getContactPersonsResponseError;
 
 export const getGetContactPersonsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getContactPersons = async ( options?: RequestInit): Promise<getContactPersonsResponse> => {
-
-  return openApiFetch<getContactPersonsResponse>(getGetContactPersonsUrl(),
-  {
+export const getContactPersons = async (
+  options?: RequestInit
+): Promise<getContactPersonsResponse> => {
+  return openApiFetch<getContactPersonsResponse>(getGetContactPersonsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetContactPersonsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetContactPersonsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons`] as const;
-
-export type GetContactPersonsQueryResult = NonNullable<Awaited<ReturnType<typeof getContactPersons>>>
+export type GetContactPersonsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getContactPersons>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetContactPersons = <TError = ContactPerson>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getContactPersons>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetContactPersons = <TError = ContactPerson>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getContactPersons>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetContactPersonsKey() : null);
-  const swrFn = () => getContactPersons(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetContactPersonsKey() : null));
+  const swrFn = () => getContactPersons(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postContactPersonsResponse201 = {
-  data: ContactPerson
-  status: 201
-}
+  data: ContactPerson;
+  status: 201;
+};
 
 export type postContactPersonsResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type postContactPersonsResponseSuccess = (postContactPersonsResponse201) & {
-  headers: Headers;
-};
-export type postContactPersonsResponseError = (postContactPersonsResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type postContactPersonsResponse = (postContactPersonsResponseSuccess | postContactPersonsResponseError)
+export type postContactPersonsResponseSuccess =
+  postContactPersonsResponse201 & {
+    headers: Headers;
+  };
+export type postContactPersonsResponseError = postContactPersonsResponse422 & {
+  headers: Headers;
+};
+
+export type postContactPersonsResponse =
+  | postContactPersonsResponseSuccess
+  | postContactPersonsResponseError;
 
 export const getPostContactPersonsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postContactPersons = async (contactPerson?: ContactPerson, options?: RequestInit): Promise<postContactPersonsResponse> => {
-
-  return openApiFetch<postContactPersonsResponse>(getPostContactPersonsUrl(),
-  {
+export const postContactPersons = async (
+  contactPerson?: ContactPerson,
+  options?: RequestInit
+): Promise<postContactPersonsResponse> => {
+  return openApiFetch<postContactPersonsResponse>(getPostContactPersonsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(contactPerson)
-  }
-);}
+    body: JSON.stringify(contactPerson),
+  });
+};
 
-
-
-
-export const getPostContactPersonsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostContactPersonsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ContactPerson | undefined }) => {
     return postContactPersons(arg, options);
-  }
-}
-export const getPostContactPersonsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons`] as const;
+  };
+};
+export const getPostContactPersonsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons`] as const;
 
-export type PostContactPersonsMutationResult = NonNullable<Awaited<ReturnType<typeof postContactPersons>>>
+export type PostContactPersonsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postContactPersons>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostContactPersons = <TError = ContactPerson>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postContactPersons>>, TError, Key, ContactPerson | undefined, Awaited<ReturnType<typeof postContactPersons>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostContactPersons = <TError = ContactPerson>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postContactPersons>>,
+    TError,
+    Key,
+    ContactPerson | undefined,
+    Awaited<ReturnType<typeof postContactPersons>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostContactPersonsMutationKey();
   const swrFn = getPostContactPersonsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getContactPersonsIdResponse200 = {
-  data: ContactPerson
-  status: 200
-}
+  data: ContactPerson;
+  status: 200;
+};
 
 export type getContactPersonsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getContactPersonsIdResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type getContactPersonsIdResponseSuccess = (getContactPersonsIdResponse200) & {
-  headers: Headers;
-};
-export type getContactPersonsIdResponseError = (getContactPersonsIdResponse404 | getContactPersonsIdResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type getContactPersonsIdResponse = (getContactPersonsIdResponseSuccess | getContactPersonsIdResponseError)
+export type getContactPersonsIdResponseSuccess =
+  getContactPersonsIdResponse200 & {
+    headers: Headers;
+  };
+export type getContactPersonsIdResponseError = (
+  | getContactPersonsIdResponse404
+  | getContactPersonsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetContactPersonsIdUrl = (id: number,) => {
+export type getContactPersonsIdResponse =
+  | getContactPersonsIdResponseSuccess
+  | getContactPersonsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`
-}
+export const getGetContactPersonsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getContactPersonsId = async (id: number, options?: RequestInit): Promise<getContactPersonsIdResponse> => {
+export const getContactPersonsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getContactPersonsIdResponse> => {
+  return openApiFetch<getContactPersonsIdResponse>(
+    getGetContactPersonsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getContactPersonsIdResponse>(getGetContactPersonsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetContactPersonsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetContactPersonsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`] as const;
-
-export type GetContactPersonsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getContactPersonsId>>>
+export type GetContactPersonsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getContactPersonsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetContactPersonsId = <TError = void | ContactPerson>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getContactPersonsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getContactPersonsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetContactPersonsIdKey(id) : null);
-  const swrFn = () => getContactPersonsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetContactPersonsIdKey(id) : null));
+  const swrFn = () => getContactPersonsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchContactPersonsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchContactPersonsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchContactPersonsIdResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type patchContactPersonsIdResponseSuccess = (patchContactPersonsIdResponse204) & {
-  headers: Headers;
-};
-export type patchContactPersonsIdResponseError = (patchContactPersonsIdResponse404 | patchContactPersonsIdResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type patchContactPersonsIdResponse = (patchContactPersonsIdResponseSuccess | patchContactPersonsIdResponseError)
+export type patchContactPersonsIdResponseSuccess =
+  patchContactPersonsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchContactPersonsIdResponseError = (
+  | patchContactPersonsIdResponse404
+  | patchContactPersonsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchContactPersonsIdUrl = (id: number,) => {
+export type patchContactPersonsIdResponse =
+  | patchContactPersonsIdResponseSuccess
+  | patchContactPersonsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`
-}
+export const getPatchContactPersonsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchContactPersonsId = async (id: number,
-    contactPerson?: ContactPerson, options?: RequestInit): Promise<patchContactPersonsIdResponse> => {
+export const patchContactPersonsId = async (
+  id: number,
+  contactPerson?: ContactPerson,
+  options?: RequestInit
+): Promise<patchContactPersonsIdResponse> => {
+  return openApiFetch<patchContactPersonsIdResponse>(
+    getPatchContactPersonsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(contactPerson),
+    }
+  );
+};
 
-  return openApiFetch<patchContactPersonsIdResponse>(getPatchContactPersonsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(contactPerson)
-  }
-);}
-
-
-
-
-export const getPatchContactPersonsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchContactPersonsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ContactPerson | undefined }) => {
     return patchContactPersonsId(id, arg, options);
-  }
-}
-export const getPatchContactPersonsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`] as const;
+  };
+};
+export const getPatchContactPersonsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`] as const;
 
-export type PatchContactPersonsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchContactPersonsId>>>
+export type PatchContactPersonsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchContactPersonsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchContactPersonsId = <TError = void | ContactPerson>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchContactPersonsId>>, TError, Key, ContactPerson | undefined, Awaited<ReturnType<typeof patchContactPersonsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchContactPersonsId>>,
+      TError,
+      Key,
+      ContactPerson | undefined,
+      Awaited<ReturnType<typeof patchContactPersonsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchContactPersonsIdMutationKey(id);
   const swrFn = getPatchContactPersonsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putContactPersonsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putContactPersonsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putContactPersonsIdResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type putContactPersonsIdResponseSuccess = (putContactPersonsIdResponse204) & {
-  headers: Headers;
-};
-export type putContactPersonsIdResponseError = (putContactPersonsIdResponse404 | putContactPersonsIdResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type putContactPersonsIdResponse = (putContactPersonsIdResponseSuccess | putContactPersonsIdResponseError)
+export type putContactPersonsIdResponseSuccess =
+  putContactPersonsIdResponse204 & {
+    headers: Headers;
+  };
+export type putContactPersonsIdResponseError = (
+  | putContactPersonsIdResponse404
+  | putContactPersonsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutContactPersonsIdUrl = (id: number,) => {
+export type putContactPersonsIdResponse =
+  | putContactPersonsIdResponseSuccess
+  | putContactPersonsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`
-}
+export const getPutContactPersonsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putContactPersonsId = async (id: number,
-    contactPerson?: ContactPerson, options?: RequestInit): Promise<putContactPersonsIdResponse> => {
+export const putContactPersonsId = async (
+  id: number,
+  contactPerson?: ContactPerson,
+  options?: RequestInit
+): Promise<putContactPersonsIdResponse> => {
+  return openApiFetch<putContactPersonsIdResponse>(
+    getPutContactPersonsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(contactPerson),
+    }
+  );
+};
 
-  return openApiFetch<putContactPersonsIdResponse>(getPutContactPersonsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(contactPerson)
-  }
-);}
-
-
-
-
-export const getPutContactPersonsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutContactPersonsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ContactPerson | undefined }) => {
     return putContactPersonsId(id, arg, options);
-  }
-}
-export const getPutContactPersonsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`] as const;
+  };
+};
+export const getPutContactPersonsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`] as const;
 
-export type PutContactPersonsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putContactPersonsId>>>
+export type PutContactPersonsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putContactPersonsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutContactPersonsId = <TError = void | ContactPerson>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putContactPersonsId>>, TError, Key, ContactPerson | undefined, Awaited<ReturnType<typeof putContactPersonsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putContactPersonsId>>,
+      TError,
+      Key,
+      ContactPerson | undefined,
+      Awaited<ReturnType<typeof putContactPersonsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutContactPersonsIdMutationKey(id);
   const swrFn = getPutContactPersonsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteContactPersonsIdResponse200 = {
-  data: ContactPerson
-  status: 200
-}
+  data: ContactPerson;
+  status: 200;
+};
 
 export type deleteContactPersonsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteContactPersonsIdResponse422 = {
-  data: ContactPerson
-  status: 422
-}
-
-export type deleteContactPersonsIdResponseSuccess = (deleteContactPersonsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteContactPersonsIdResponseError = (deleteContactPersonsIdResponse404 | deleteContactPersonsIdResponse422) & {
-  headers: Headers;
+  data: ContactPerson;
+  status: 422;
 };
 
-export type deleteContactPersonsIdResponse = (deleteContactPersonsIdResponseSuccess | deleteContactPersonsIdResponseError)
+export type deleteContactPersonsIdResponseSuccess =
+  deleteContactPersonsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteContactPersonsIdResponseError = (
+  | deleteContactPersonsIdResponse404
+  | deleteContactPersonsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteContactPersonsIdUrl = (id: number,) => {
+export type deleteContactPersonsIdResponse =
+  | deleteContactPersonsIdResponseSuccess
+  | deleteContactPersonsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`
-}
+export const getDeleteContactPersonsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteContactPersonsId = async (id: number, options?: RequestInit): Promise<deleteContactPersonsIdResponse> => {
+export const deleteContactPersonsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteContactPersonsIdResponse> => {
+  return openApiFetch<deleteContactPersonsIdResponse>(
+    getDeleteContactPersonsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteContactPersonsIdResponse>(getDeleteContactPersonsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteContactPersonsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteContactPersonsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteContactPersonsId(id, options);
-  }
-}
-export const getDeleteContactPersonsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/contact_persons/${id}`] as const;
+  };
+};
+export const getDeleteContactPersonsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/contact_persons/${id}`] as const;
 
-export type DeleteContactPersonsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteContactPersonsId>>>
+export type DeleteContactPersonsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteContactPersonsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteContactPersonsId = <TError = void | ContactPerson>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteContactPersonsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteContactPersonsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteContactPersonsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteContactPersonsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteContactPersonsIdMutationKey(id);
   const swrFn = getDeleteContactPersonsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

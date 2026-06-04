@@ -9,558 +9,635 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  Group
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { Group } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getGroupsResponse200 = {
-  data: Group
-  status: 200
-}
+  data: Group;
+  status: 200;
+};
 
 export type getGroupsResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type getGroupsResponseSuccess = (getGroupsResponse200) & {
-  headers: Headers;
-};
-export type getGroupsResponseError = (getGroupsResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type getGroupsResponse = (getGroupsResponseSuccess | getGroupsResponseError)
+export type getGroupsResponseSuccess = getGroupsResponse200 & {
+  headers: Headers;
+};
+export type getGroupsResponseError = getGroupsResponse422 & {
+  headers: Headers;
+};
+
+export type getGroupsResponse =
+  | getGroupsResponseSuccess
+  | getGroupsResponseError;
 
 export const getGetGroupsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroups = async ( options?: RequestInit): Promise<getGroupsResponse> => {
-
-  return openApiFetch<getGroupsResponse>(getGetGroupsUrl(),
-  {
+export const getGroups = async (
+  options?: RequestInit
+): Promise<getGroupsResponse> => {
+  return openApiFetch<getGroupsResponse>(getGetGroupsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetGroupsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetGroupsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups`] as const;
-
-export type GetGroupsQueryResult = NonNullable<Awaited<ReturnType<typeof getGroups>>>
+export type GetGroupsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroups>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetGroups = <TError = Group>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroups>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetGroups = <TError = Group>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getGroups>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupsKey() : null);
-  const swrFn = () => getGroups(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetGroupsKey() : null));
+  const swrFn = () => getGroups(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postGroupsResponse201 = {
-  data: Group
-  status: 201
-}
+  data: Group;
+  status: 201;
+};
 
 export type postGroupsResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type postGroupsResponseSuccess = (postGroupsResponse201) & {
-  headers: Headers;
-};
-export type postGroupsResponseError = (postGroupsResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type postGroupsResponse = (postGroupsResponseSuccess | postGroupsResponseError)
+export type postGroupsResponseSuccess = postGroupsResponse201 & {
+  headers: Headers;
+};
+export type postGroupsResponseError = postGroupsResponse422 & {
+  headers: Headers;
+};
+
+export type postGroupsResponse =
+  | postGroupsResponseSuccess
+  | postGroupsResponseError;
 
 export const getPostGroupsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postGroups = async (group?: Group, options?: RequestInit): Promise<postGroupsResponse> => {
-
-  return openApiFetch<postGroupsResponse>(getPostGroupsUrl(),
-  {
+export const postGroups = async (
+  group?: Group,
+  options?: RequestInit
+): Promise<postGroupsResponse> => {
+  return openApiFetch<postGroupsResponse>(getPostGroupsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(group)
-  }
-);}
+    body: JSON.stringify(group),
+  });
+};
 
-
-
-
-export const getPostGroupsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostGroupsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Group | undefined }) => {
     return postGroups(arg, options);
-  }
-}
-export const getPostGroupsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups`] as const;
+  };
+};
+export const getPostGroupsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups`] as const;
 
-export type PostGroupsMutationResult = NonNullable<Awaited<ReturnType<typeof postGroups>>>
+export type PostGroupsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postGroups>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostGroups = <TError = Group>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postGroups>>, TError, Key, Group | undefined, Awaited<ReturnType<typeof postGroups>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostGroups = <TError = Group>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postGroups>>,
+    TError,
+    Key,
+    Group | undefined,
+    Awaited<ReturnType<typeof postGroups>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostGroupsMutationKey();
   const swrFn = getPostGroupsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getGroupsIdResponse200 = {
-  data: Group
-  status: 200
-}
+  data: Group;
+  status: 200;
+};
 
 export type getGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getGroupsIdResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type getGroupsIdResponseSuccess = (getGroupsIdResponse200) & {
-  headers: Headers;
-};
-export type getGroupsIdResponseError = (getGroupsIdResponse404 | getGroupsIdResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type getGroupsIdResponse = (getGroupsIdResponseSuccess | getGroupsIdResponseError)
+export type getGroupsIdResponseSuccess = getGroupsIdResponse200 & {
+  headers: Headers;
+};
+export type getGroupsIdResponseError = (
+  | getGroupsIdResponse404
+  | getGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetGroupsIdUrl = (id: number,) => {
+export type getGroupsIdResponse =
+  | getGroupsIdResponseSuccess
+  | getGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`
-}
+export const getGetGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroupsId = async (id: number, options?: RequestInit): Promise<getGroupsIdResponse> => {
-
-  return openApiFetch<getGroupsIdResponse>(getGetGroupsIdUrl(id),
-  {
+export const getGroupsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getGroupsIdResponse> => {
+  return openApiFetch<getGroupsIdResponse>(getGetGroupsIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetGroupsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetGroupsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`] as const;
-
-export type GetGroupsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupsId>>>
+export type GetGroupsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroupsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetGroupsId = <TError = void | Group>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroupsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getGroupsId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupsIdKey(id) : null);
-  const swrFn = () => getGroupsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetGroupsIdKey(id) : null));
+  const swrFn = () => getGroupsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchGroupsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchGroupsIdResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type patchGroupsIdResponseSuccess = (patchGroupsIdResponse204) & {
-  headers: Headers;
-};
-export type patchGroupsIdResponseError = (patchGroupsIdResponse404 | patchGroupsIdResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type patchGroupsIdResponse = (patchGroupsIdResponseSuccess | patchGroupsIdResponseError)
+export type patchGroupsIdResponseSuccess = patchGroupsIdResponse204 & {
+  headers: Headers;
+};
+export type patchGroupsIdResponseError = (
+  | patchGroupsIdResponse404
+  | patchGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchGroupsIdUrl = (id: number,) => {
+export type patchGroupsIdResponse =
+  | patchGroupsIdResponseSuccess
+  | patchGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`
-}
+export const getPatchGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchGroupsId = async (id: number,
-    group?: Group, options?: RequestInit): Promise<patchGroupsIdResponse> => {
-
-  return openApiFetch<patchGroupsIdResponse>(getPatchGroupsIdUrl(id),
-  {
+export const patchGroupsId = async (
+  id: number,
+  group?: Group,
+  options?: RequestInit
+): Promise<patchGroupsIdResponse> => {
+  return openApiFetch<patchGroupsIdResponse>(getPatchGroupsIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(group)
-  }
-);}
+    body: JSON.stringify(group),
+  });
+};
 
-
-
-
-export const getPatchGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Group | undefined }) => {
     return patchGroupsId(id, arg, options);
-  }
-}
-export const getPatchGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`] as const;
+  };
+};
+export const getPatchGroupsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`] as const;
 
-export type PatchGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchGroupsId>>>
+export type PatchGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchGroupsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchGroupsId = <TError = void | Group>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchGroupsId>>, TError, Key, Group | undefined, Awaited<ReturnType<typeof patchGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchGroupsId>>,
+      TError,
+      Key,
+      Group | undefined,
+      Awaited<ReturnType<typeof patchGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchGroupsIdMutationKey(id);
   const swrFn = getPatchGroupsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putGroupsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putGroupsIdResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type putGroupsIdResponseSuccess = (putGroupsIdResponse204) & {
-  headers: Headers;
-};
-export type putGroupsIdResponseError = (putGroupsIdResponse404 | putGroupsIdResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type putGroupsIdResponse = (putGroupsIdResponseSuccess | putGroupsIdResponseError)
+export type putGroupsIdResponseSuccess = putGroupsIdResponse204 & {
+  headers: Headers;
+};
+export type putGroupsIdResponseError = (
+  | putGroupsIdResponse404
+  | putGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutGroupsIdUrl = (id: number,) => {
+export type putGroupsIdResponse =
+  | putGroupsIdResponseSuccess
+  | putGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`
-}
+export const getPutGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putGroupsId = async (id: number,
-    group?: Group, options?: RequestInit): Promise<putGroupsIdResponse> => {
-
-  return openApiFetch<putGroupsIdResponse>(getPutGroupsIdUrl(id),
-  {
+export const putGroupsId = async (
+  id: number,
+  group?: Group,
+  options?: RequestInit
+): Promise<putGroupsIdResponse> => {
+  return openApiFetch<putGroupsIdResponse>(getPutGroupsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(group)
-  }
-);}
+    body: JSON.stringify(group),
+  });
+};
 
-
-
-
-export const getPutGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Group | undefined }) => {
     return putGroupsId(id, arg, options);
-  }
-}
-export const getPutGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`] as const;
+  };
+};
+export const getPutGroupsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`] as const;
 
-export type PutGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putGroupsId>>>
+export type PutGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putGroupsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutGroupsId = <TError = void | Group>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putGroupsId>>, TError, Key, Group | undefined, Awaited<ReturnType<typeof putGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putGroupsId>>,
+      TError,
+      Key,
+      Group | undefined,
+      Awaited<ReturnType<typeof putGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutGroupsIdMutationKey(id);
   const swrFn = getPutGroupsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteGroupsIdResponse200 = {
-  data: Group
-  status: 200
-}
+  data: Group;
+  status: 200;
+};
 
 export type deleteGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteGroupsIdResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type deleteGroupsIdResponseSuccess = (deleteGroupsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteGroupsIdResponseError = (deleteGroupsIdResponse404 | deleteGroupsIdResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type deleteGroupsIdResponse = (deleteGroupsIdResponseSuccess | deleteGroupsIdResponseError)
+export type deleteGroupsIdResponseSuccess = deleteGroupsIdResponse200 & {
+  headers: Headers;
+};
+export type deleteGroupsIdResponseError = (
+  | deleteGroupsIdResponse404
+  | deleteGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteGroupsIdUrl = (id: number,) => {
+export type deleteGroupsIdResponse =
+  | deleteGroupsIdResponseSuccess
+  | deleteGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`
-}
+export const getDeleteGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteGroupsId = async (id: number, options?: RequestInit): Promise<deleteGroupsIdResponse> => {
-
-  return openApiFetch<deleteGroupsIdResponse>(getDeleteGroupsIdUrl(id),
-  {
+export const deleteGroupsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteGroupsIdResponse> => {
+  return openApiFetch<deleteGroupsIdResponse>(getDeleteGroupsIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteGroupsId(id, options);
-  }
-}
-export const getDeleteGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/${id}`] as const;
+  };
+};
+export const getDeleteGroupsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/${id}`] as const;
 
-export type DeleteGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGroupsId>>>
+export type DeleteGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteGroupsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteGroupsId = <TError = void | Group>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteGroupsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteGroupsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteGroupsIdMutationKey(id);
   const swrFn = getDeleteGroupsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getGroupsUserUserIdResponse200 = {
-  data: Group
-  status: 200
-}
+  data: Group;
+  status: 200;
+};
 
 export type getGroupsUserUserIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getGroupsUserUserIdResponse422 = {
-  data: Group
-  status: 422
-}
-
-export type getGroupsUserUserIdResponseSuccess = (getGroupsUserUserIdResponse200) & {
-  headers: Headers;
-};
-export type getGroupsUserUserIdResponseError = (getGroupsUserUserIdResponse404 | getGroupsUserUserIdResponse422) & {
-  headers: Headers;
+  data: Group;
+  status: 422;
 };
 
-export type getGroupsUserUserIdResponse = (getGroupsUserUserIdResponseSuccess | getGroupsUserUserIdResponseError)
+export type getGroupsUserUserIdResponseSuccess =
+  getGroupsUserUserIdResponse200 & {
+    headers: Headers;
+  };
+export type getGroupsUserUserIdResponseError = (
+  | getGroupsUserUserIdResponse404
+  | getGroupsUserUserIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetGroupsUserUserIdUrl = (userId: number,) => {
+export type getGroupsUserUserIdResponse =
+  | getGroupsUserUserIdResponseSuccess
+  | getGroupsUserUserIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/user/${userId}`
-}
+export const getGetGroupsUserUserIdUrl = (userId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/user/${userId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getGroupsUserUserId = async (userId: number, options?: RequestInit): Promise<getGroupsUserUserIdResponse> => {
+export const getGroupsUserUserId = async (
+  userId: number,
+  options?: RequestInit
+): Promise<getGroupsUserUserIdResponse> => {
+  return openApiFetch<getGroupsUserUserIdResponse>(
+    getGetGroupsUserUserIdUrl(userId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getGroupsUserUserIdResponse>(getGetGroupsUserUserIdUrl(userId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetGroupsUserUserIdKey = (userId: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/groups/user/${userId}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetGroupsUserUserIdKey = (userId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/groups/user/${userId}`] as const;
-
-export type GetGroupsUserUserIdQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupsUserUserId>>>
+export type GetGroupsUserUserIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGroupsUserUserId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetGroupsUserUserId = <TError = void | Group>(
-  userId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getGroupsUserUserId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  userId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getGroupsUserUserId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && userId !== null && userId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetGroupsUserUserIdKey(userId) : null);
-  const swrFn = () => getGroupsUserUserId(userId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && userId !== null && userId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetGroupsUserUserIdKey(userId) : null));
+  const swrFn = () => getGroupsUserUserId(userId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

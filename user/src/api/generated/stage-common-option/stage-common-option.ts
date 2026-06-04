@@ -9,558 +9,687 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  StageCommonOption
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { StageCommonOption } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getStageCommonOptionsResponse200 = {
-  data: StageCommonOption
-  status: 200
-}
+  data: StageCommonOption;
+  status: 200;
+};
 
 export type getStageCommonOptionsResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type getStageCommonOptionsResponseSuccess = (getStageCommonOptionsResponse200) & {
-  headers: Headers;
-};
-export type getStageCommonOptionsResponseError = (getStageCommonOptionsResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type getStageCommonOptionsResponse = (getStageCommonOptionsResponseSuccess | getStageCommonOptionsResponseError)
+export type getStageCommonOptionsResponseSuccess =
+  getStageCommonOptionsResponse200 & {
+    headers: Headers;
+  };
+export type getStageCommonOptionsResponseError =
+  getStageCommonOptionsResponse422 & {
+    headers: Headers;
+  };
+
+export type getStageCommonOptionsResponse =
+  | getStageCommonOptionsResponseSuccess
+  | getStageCommonOptionsResponseError;
 
 export const getGetStageCommonOptionsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageCommonOptions = async ( options?: RequestInit): Promise<getStageCommonOptionsResponse> => {
+export const getStageCommonOptions = async (
+  options?: RequestInit
+): Promise<getStageCommonOptionsResponse> => {
+  return openApiFetch<getStageCommonOptionsResponse>(
+    getGetStageCommonOptionsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getStageCommonOptionsResponse>(getGetStageCommonOptionsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetStageCommonOptionsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetStageCommonOptionsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options`] as const;
-
-export type GetStageCommonOptionsQueryResult = NonNullable<Awaited<ReturnType<typeof getStageCommonOptions>>>
+export type GetStageCommonOptionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageCommonOptions>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStageCommonOptions = <TError = StageCommonOption>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageCommonOptions>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetStageCommonOptions = <TError = StageCommonOption>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getStageCommonOptions>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageCommonOptionsKey() : null);
-  const swrFn = () => getStageCommonOptions(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStageCommonOptionsKey() : null));
+  const swrFn = () => getStageCommonOptions(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postStageCommonOptionsResponse201 = {
-  data: StageCommonOption
-  status: 201
-}
+  data: StageCommonOption;
+  status: 201;
+};
 
 export type postStageCommonOptionsResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type postStageCommonOptionsResponseSuccess = (postStageCommonOptionsResponse201) & {
-  headers: Headers;
-};
-export type postStageCommonOptionsResponseError = (postStageCommonOptionsResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type postStageCommonOptionsResponse = (postStageCommonOptionsResponseSuccess | postStageCommonOptionsResponseError)
+export type postStageCommonOptionsResponseSuccess =
+  postStageCommonOptionsResponse201 & {
+    headers: Headers;
+  };
+export type postStageCommonOptionsResponseError =
+  postStageCommonOptionsResponse422 & {
+    headers: Headers;
+  };
+
+export type postStageCommonOptionsResponse =
+  | postStageCommonOptionsResponseSuccess
+  | postStageCommonOptionsResponseError;
 
 export const getPostStageCommonOptionsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postStageCommonOptions = async (stageCommonOption?: StageCommonOption, options?: RequestInit): Promise<postStageCommonOptionsResponse> => {
+export const postStageCommonOptions = async (
+  stageCommonOption?: StageCommonOption,
+  options?: RequestInit
+): Promise<postStageCommonOptionsResponse> => {
+  return openApiFetch<postStageCommonOptionsResponse>(
+    getPostStageCommonOptionsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stageCommonOption),
+    }
+  );
+};
 
-  return openApiFetch<postStageCommonOptionsResponse>(getPostStageCommonOptionsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageCommonOption)
-  }
-);}
-
-
-
-
-export const getPostStageCommonOptionsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostStageCommonOptionsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageCommonOption | undefined }) => {
     return postStageCommonOptions(arg, options);
-  }
-}
-export const getPostStageCommonOptionsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options`] as const;
+  };
+};
+export const getPostStageCommonOptionsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options`] as const;
 
-export type PostStageCommonOptionsMutationResult = NonNullable<Awaited<ReturnType<typeof postStageCommonOptions>>>
+export type PostStageCommonOptionsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postStageCommonOptions>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostStageCommonOptions = <TError = StageCommonOption>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postStageCommonOptions>>, TError, Key, StageCommonOption | undefined, Awaited<ReturnType<typeof postStageCommonOptions>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostStageCommonOptions = <
+  TError = StageCommonOption,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postStageCommonOptions>>,
+    TError,
+    Key,
+    StageCommonOption | undefined,
+    Awaited<ReturnType<typeof postStageCommonOptions>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostStageCommonOptionsMutationKey();
   const swrFn = getPostStageCommonOptionsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStageCommonOptionsIdResponse200 = {
-  data: StageCommonOption
-  status: 200
-}
+  data: StageCommonOption;
+  status: 200;
+};
 
 export type getStageCommonOptionsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStageCommonOptionsIdResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type getStageCommonOptionsIdResponseSuccess = (getStageCommonOptionsIdResponse200) & {
-  headers: Headers;
-};
-export type getStageCommonOptionsIdResponseError = (getStageCommonOptionsIdResponse404 | getStageCommonOptionsIdResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type getStageCommonOptionsIdResponse = (getStageCommonOptionsIdResponseSuccess | getStageCommonOptionsIdResponseError)
+export type getStageCommonOptionsIdResponseSuccess =
+  getStageCommonOptionsIdResponse200 & {
+    headers: Headers;
+  };
+export type getStageCommonOptionsIdResponseError = (
+  | getStageCommonOptionsIdResponse404
+  | getStageCommonOptionsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStageCommonOptionsIdUrl = (id: number,) => {
+export type getStageCommonOptionsIdResponse =
+  | getStageCommonOptionsIdResponseSuccess
+  | getStageCommonOptionsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`
-}
+export const getGetStageCommonOptionsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageCommonOptionsId = async (id: number, options?: RequestInit): Promise<getStageCommonOptionsIdResponse> => {
+export const getStageCommonOptionsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getStageCommonOptionsIdResponse> => {
+  return openApiFetch<getStageCommonOptionsIdResponse>(
+    getGetStageCommonOptionsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getStageCommonOptionsIdResponse>(getGetStageCommonOptionsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetStageCommonOptionsIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetStageCommonOptionsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`] as const;
-
-export type GetStageCommonOptionsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStageCommonOptionsId>>>
+export type GetStageCommonOptionsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageCommonOptionsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStageCommonOptionsId = <TError = void | StageCommonOption>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageCommonOptionsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStageCommonOptionsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageCommonOptionsIdKey(id) : null);
-  const swrFn = () => getStageCommonOptionsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStageCommonOptionsIdKey(id) : null));
+  const swrFn = () => getStageCommonOptionsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchStageCommonOptionsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchStageCommonOptionsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchStageCommonOptionsIdResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type patchStageCommonOptionsIdResponseSuccess = (patchStageCommonOptionsIdResponse204) & {
-  headers: Headers;
-};
-export type patchStageCommonOptionsIdResponseError = (patchStageCommonOptionsIdResponse404 | patchStageCommonOptionsIdResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type patchStageCommonOptionsIdResponse = (patchStageCommonOptionsIdResponseSuccess | patchStageCommonOptionsIdResponseError)
+export type patchStageCommonOptionsIdResponseSuccess =
+  patchStageCommonOptionsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchStageCommonOptionsIdResponseError = (
+  | patchStageCommonOptionsIdResponse404
+  | patchStageCommonOptionsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchStageCommonOptionsIdUrl = (id: number,) => {
+export type patchStageCommonOptionsIdResponse =
+  | patchStageCommonOptionsIdResponseSuccess
+  | patchStageCommonOptionsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`
-}
+export const getPatchStageCommonOptionsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchStageCommonOptionsId = async (id: number,
-    stageCommonOption?: StageCommonOption, options?: RequestInit): Promise<patchStageCommonOptionsIdResponse> => {
+export const patchStageCommonOptionsId = async (
+  id: number,
+  stageCommonOption?: StageCommonOption,
+  options?: RequestInit
+): Promise<patchStageCommonOptionsIdResponse> => {
+  return openApiFetch<patchStageCommonOptionsIdResponse>(
+    getPatchStageCommonOptionsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stageCommonOption),
+    }
+  );
+};
 
-  return openApiFetch<patchStageCommonOptionsIdResponse>(getPatchStageCommonOptionsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageCommonOption)
-  }
-);}
-
-
-
-
-export const getPatchStageCommonOptionsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchStageCommonOptionsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageCommonOption | undefined }) => {
     return patchStageCommonOptionsId(id, arg, options);
-  }
-}
-export const getPatchStageCommonOptionsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`] as const;
+  };
+};
+export const getPatchStageCommonOptionsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`,
+  ] as const;
 
-export type PatchStageCommonOptionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchStageCommonOptionsId>>>
+export type PatchStageCommonOptionsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchStageCommonOptionsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchStageCommonOptionsId = <TError = void | StageCommonOption>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchStageCommonOptionsId>>, TError, Key, StageCommonOption | undefined, Awaited<ReturnType<typeof patchStageCommonOptionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchStageCommonOptionsId>>,
+      TError,
+      Key,
+      StageCommonOption | undefined,
+      Awaited<ReturnType<typeof patchStageCommonOptionsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPatchStageCommonOptionsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchStageCommonOptionsIdMutationKey(id);
   const swrFn = getPatchStageCommonOptionsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putStageCommonOptionsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putStageCommonOptionsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putStageCommonOptionsIdResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type putStageCommonOptionsIdResponseSuccess = (putStageCommonOptionsIdResponse204) & {
-  headers: Headers;
-};
-export type putStageCommonOptionsIdResponseError = (putStageCommonOptionsIdResponse404 | putStageCommonOptionsIdResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type putStageCommonOptionsIdResponse = (putStageCommonOptionsIdResponseSuccess | putStageCommonOptionsIdResponseError)
+export type putStageCommonOptionsIdResponseSuccess =
+  putStageCommonOptionsIdResponse204 & {
+    headers: Headers;
+  };
+export type putStageCommonOptionsIdResponseError = (
+  | putStageCommonOptionsIdResponse404
+  | putStageCommonOptionsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutStageCommonOptionsIdUrl = (id: number,) => {
+export type putStageCommonOptionsIdResponse =
+  | putStageCommonOptionsIdResponseSuccess
+  | putStageCommonOptionsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`
-}
+export const getPutStageCommonOptionsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putStageCommonOptionsId = async (id: number,
-    stageCommonOption?: StageCommonOption, options?: RequestInit): Promise<putStageCommonOptionsIdResponse> => {
+export const putStageCommonOptionsId = async (
+  id: number,
+  stageCommonOption?: StageCommonOption,
+  options?: RequestInit
+): Promise<putStageCommonOptionsIdResponse> => {
+  return openApiFetch<putStageCommonOptionsIdResponse>(
+    getPutStageCommonOptionsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stageCommonOption),
+    }
+  );
+};
 
-  return openApiFetch<putStageCommonOptionsIdResponse>(getPutStageCommonOptionsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageCommonOption)
-  }
-);}
-
-
-
-
-export const getPutStageCommonOptionsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutStageCommonOptionsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageCommonOption | undefined }) => {
     return putStageCommonOptionsId(id, arg, options);
-  }
-}
-export const getPutStageCommonOptionsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`] as const;
+  };
+};
+export const getPutStageCommonOptionsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`,
+  ] as const;
 
-export type PutStageCommonOptionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putStageCommonOptionsId>>>
+export type PutStageCommonOptionsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putStageCommonOptionsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutStageCommonOptionsId = <TError = void | StageCommonOption>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putStageCommonOptionsId>>, TError, Key, StageCommonOption | undefined, Awaited<ReturnType<typeof putStageCommonOptionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putStageCommonOptionsId>>,
+      TError,
+      Key,
+      StageCommonOption | undefined,
+      Awaited<ReturnType<typeof putStageCommonOptionsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPutStageCommonOptionsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPutStageCommonOptionsIdMutationKey(id);
   const swrFn = getPutStageCommonOptionsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteStageCommonOptionsIdResponse200 = {
-  data: StageCommonOption
-  status: 200
-}
+  data: StageCommonOption;
+  status: 200;
+};
 
 export type deleteStageCommonOptionsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteStageCommonOptionsIdResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type deleteStageCommonOptionsIdResponseSuccess = (deleteStageCommonOptionsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteStageCommonOptionsIdResponseError = (deleteStageCommonOptionsIdResponse404 | deleteStageCommonOptionsIdResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type deleteStageCommonOptionsIdResponse = (deleteStageCommonOptionsIdResponseSuccess | deleteStageCommonOptionsIdResponseError)
+export type deleteStageCommonOptionsIdResponseSuccess =
+  deleteStageCommonOptionsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteStageCommonOptionsIdResponseError = (
+  | deleteStageCommonOptionsIdResponse404
+  | deleteStageCommonOptionsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteStageCommonOptionsIdUrl = (id: number,) => {
+export type deleteStageCommonOptionsIdResponse =
+  | deleteStageCommonOptionsIdResponseSuccess
+  | deleteStageCommonOptionsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`
-}
+export const getDeleteStageCommonOptionsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteStageCommonOptionsId = async (id: number, options?: RequestInit): Promise<deleteStageCommonOptionsIdResponse> => {
+export const deleteStageCommonOptionsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteStageCommonOptionsIdResponse> => {
+  return openApiFetch<deleteStageCommonOptionsIdResponse>(
+    getDeleteStageCommonOptionsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteStageCommonOptionsIdResponse>(getDeleteStageCommonOptionsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteStageCommonOptionsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteStageCommonOptionsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteStageCommonOptionsId(id, options);
-  }
-}
-export const getDeleteStageCommonOptionsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/${id}`] as const;
+  };
+};
+export const getDeleteStageCommonOptionsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/${id}`,
+  ] as const;
 
-export type DeleteStageCommonOptionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStageCommonOptionsId>>>
+export type DeleteStageCommonOptionsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteStageCommonOptionsId>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteStageCommonOptionsId = <TError = void | StageCommonOption>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteStageCommonOptionsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteStageCommonOptionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteStageCommonOptionsId = <
+  TError = void | StageCommonOption,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteStageCommonOptionsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteStageCommonOptionsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteStageCommonOptionsIdMutationKey(id);
+  const swrFn = getDeleteStageCommonOptionsIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteStageCommonOptionsIdMutationKey(id);
-  const swrFn = getDeleteStageCommonOptionsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStageCommonOptionsGroupGroupIdResponse200 = {
-  data: StageCommonOption
-  status: 200
-}
+  data: StageCommonOption;
+  status: 200;
+};
 
 export type getStageCommonOptionsGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStageCommonOptionsGroupGroupIdResponse422 = {
-  data: StageCommonOption
-  status: 422
-}
-
-export type getStageCommonOptionsGroupGroupIdResponseSuccess = (getStageCommonOptionsGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getStageCommonOptionsGroupGroupIdResponseError = (getStageCommonOptionsGroupGroupIdResponse404 | getStageCommonOptionsGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: StageCommonOption;
+  status: 422;
 };
 
-export type getStageCommonOptionsGroupGroupIdResponse = (getStageCommonOptionsGroupGroupIdResponseSuccess | getStageCommonOptionsGroupGroupIdResponseError)
+export type getStageCommonOptionsGroupGroupIdResponseSuccess =
+  getStageCommonOptionsGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getStageCommonOptionsGroupGroupIdResponseError = (
+  | getStageCommonOptionsGroupGroupIdResponse404
+  | getStageCommonOptionsGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStageCommonOptionsGroupGroupIdUrl = (groupId: number,) => {
+export type getStageCommonOptionsGroupGroupIdResponse =
+  | getStageCommonOptionsGroupGroupIdResponseSuccess
+  | getStageCommonOptionsGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/group/${groupId}`
-}
+export const getGetStageCommonOptionsGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageCommonOptionsGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getStageCommonOptionsGroupGroupIdResponse> => {
+export const getStageCommonOptionsGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getStageCommonOptionsGroupGroupIdResponse> => {
+  return openApiFetch<getStageCommonOptionsGroupGroupIdResponse>(
+    getGetStageCommonOptionsGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getStageCommonOptionsGroupGroupIdResponse>(getGetStageCommonOptionsGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetStageCommonOptionsGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_common_options/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetStageCommonOptionsGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_common_options/group/${groupId}`] as const;
-
-export type GetStageCommonOptionsGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStageCommonOptionsGroupGroupId>>>
+export type GetStageCommonOptionsGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageCommonOptionsGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStageCommonOptionsGroupGroupId = <TError = void | StageCommonOption>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageCommonOptionsGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetStageCommonOptionsGroupGroupId = <
+  TError = void | StageCommonOption,
+>(
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStageCommonOptionsGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageCommonOptionsGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getStageCommonOptionsGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetStageCommonOptionsGroupGroupIdKey(groupId) : null);
+  const swrFn = () =>
+    getStageCommonOptionsGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

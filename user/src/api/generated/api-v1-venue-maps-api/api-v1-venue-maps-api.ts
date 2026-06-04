@@ -9,247 +9,293 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1VenueMapsApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1VenueMapsApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postApiV1GetRefinementVenueMapsResponse201 = {
-  data: ApiV1VenueMapsApi
-  status: 201
-}
+  data: ApiV1VenueMapsApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementVenueMapsResponse422 = {
-  data: ApiV1VenueMapsApi
-  status: 422
-}
-
-export type postApiV1GetRefinementVenueMapsResponseSuccess = (postApiV1GetRefinementVenueMapsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementVenueMapsResponseError = (postApiV1GetRefinementVenueMapsResponse422) & {
-  headers: Headers;
+  data: ApiV1VenueMapsApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementVenueMapsResponse = (postApiV1GetRefinementVenueMapsResponseSuccess | postApiV1GetRefinementVenueMapsResponseError)
+export type postApiV1GetRefinementVenueMapsResponseSuccess =
+  postApiV1GetRefinementVenueMapsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementVenueMapsResponseError =
+  postApiV1GetRefinementVenueMapsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementVenueMapsResponse =
+  | postApiV1GetRefinementVenueMapsResponseSuccess
+  | postApiV1GetRefinementVenueMapsResponseError;
 
 export const getPostApiV1GetRefinementVenueMapsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_venue_maps`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_venue_maps`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementVenueMaps = async (apiV1VenueMapsApi?: ApiV1VenueMapsApi, options?: RequestInit): Promise<postApiV1GetRefinementVenueMapsResponse> => {
+export const postApiV1GetRefinementVenueMaps = async (
+  apiV1VenueMapsApi?: ApiV1VenueMapsApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementVenueMapsResponse> => {
+  return openApiFetch<postApiV1GetRefinementVenueMapsResponse>(
+    getPostApiV1GetRefinementVenueMapsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1VenueMapsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementVenueMapsResponse>(getPostApiV1GetRefinementVenueMapsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1VenueMapsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementVenueMapsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementVenueMapsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1VenueMapsApi | undefined }) => {
     return postApiV1GetRefinementVenueMaps(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementVenueMapsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_venue_maps`] as const;
+  };
+};
+export const getPostApiV1GetRefinementVenueMapsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_venue_maps`,
+  ] as const;
 
-export type PostApiV1GetRefinementVenueMapsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>>
+export type PostApiV1GetRefinementVenueMapsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementVenueMaps = <TError = ApiV1VenueMapsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>, TError, Key, ApiV1VenueMapsApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementVenueMaps = <
+  TError = ApiV1VenueMapsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>,
+    TError,
+    Key,
+    ApiV1VenueMapsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementVenueMaps>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementVenueMapsMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementVenueMapsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementVenueMapsMutationKey();
-  const swrFn = getPostApiV1GetRefinementVenueMapsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetSearchVenueMapsResponse201 = {
-  data: ApiV1VenueMapsApi
-  status: 201
-}
+  data: ApiV1VenueMapsApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchVenueMapsResponse422 = {
-  data: ApiV1VenueMapsApi
-  status: 422
-}
-
-export type postApiV1GetSearchVenueMapsResponseSuccess = (postApiV1GetSearchVenueMapsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchVenueMapsResponseError = (postApiV1GetSearchVenueMapsResponse422) & {
-  headers: Headers;
+  data: ApiV1VenueMapsApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchVenueMapsResponse = (postApiV1GetSearchVenueMapsResponseSuccess | postApiV1GetSearchVenueMapsResponseError)
+export type postApiV1GetSearchVenueMapsResponseSuccess =
+  postApiV1GetSearchVenueMapsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchVenueMapsResponseError =
+  postApiV1GetSearchVenueMapsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchVenueMapsResponse =
+  | postApiV1GetSearchVenueMapsResponseSuccess
+  | postApiV1GetSearchVenueMapsResponseError;
 
 export const getPostApiV1GetSearchVenueMapsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_venue_maps`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_venue_maps`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchVenueMaps = async (apiV1VenueMapsApi?: ApiV1VenueMapsApi, options?: RequestInit): Promise<postApiV1GetSearchVenueMapsResponse> => {
+export const postApiV1GetSearchVenueMaps = async (
+  apiV1VenueMapsApi?: ApiV1VenueMapsApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchVenueMapsResponse> => {
+  return openApiFetch<postApiV1GetSearchVenueMapsResponse>(
+    getPostApiV1GetSearchVenueMapsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1VenueMapsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchVenueMapsResponse>(getPostApiV1GetSearchVenueMapsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1VenueMapsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchVenueMapsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchVenueMapsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1VenueMapsApi | undefined }) => {
     return postApiV1GetSearchVenueMaps(arg, options);
-  }
-}
-export const getPostApiV1GetSearchVenueMapsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_venue_maps`] as const;
+  };
+};
+export const getPostApiV1GetSearchVenueMapsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_venue_maps`,
+  ] as const;
 
-export type PostApiV1GetSearchVenueMapsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>>
+export type PostApiV1GetSearchVenueMapsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchVenueMaps = <TError = ApiV1VenueMapsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>, TError, Key, ApiV1VenueMapsApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchVenueMaps = <
+  TError = ApiV1VenueMapsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>,
+    TError,
+    Key,
+    ApiV1VenueMapsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchVenueMaps>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchVenueMapsMutationKey();
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchVenueMapsMutationKey();
   const swrFn = getPostApiV1GetSearchVenueMapsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetVenueMapForAdminViewIdResponse200 = {
-  data: ApiV1VenueMapsApi
-  status: 200
-}
+  data: ApiV1VenueMapsApi;
+  status: 200;
+};
 
 export type getApiV1GetVenueMapForAdminViewIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetVenueMapForAdminViewIdResponse422 = {
-  data: ApiV1VenueMapsApi
-  status: 422
-}
-
-export type getApiV1GetVenueMapForAdminViewIdResponseSuccess = (getApiV1GetVenueMapForAdminViewIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetVenueMapForAdminViewIdResponseError = (getApiV1GetVenueMapForAdminViewIdResponse404 | getApiV1GetVenueMapForAdminViewIdResponse422) & {
-  headers: Headers;
+  data: ApiV1VenueMapsApi;
+  status: 422;
 };
 
-export type getApiV1GetVenueMapForAdminViewIdResponse = (getApiV1GetVenueMapForAdminViewIdResponseSuccess | getApiV1GetVenueMapForAdminViewIdResponseError)
+export type getApiV1GetVenueMapForAdminViewIdResponseSuccess =
+  getApiV1GetVenueMapForAdminViewIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetVenueMapForAdminViewIdResponseError = (
+  | getApiV1GetVenueMapForAdminViewIdResponse404
+  | getApiV1GetVenueMapForAdminViewIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetVenueMapForAdminViewIdUrl = (id: number,) => {
+export type getApiV1GetVenueMapForAdminViewIdResponse =
+  | getApiV1GetVenueMapForAdminViewIdResponseSuccess
+  | getApiV1GetVenueMapForAdminViewIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_venue_map_for_admin_view/${id}`
-}
+export const getGetApiV1GetVenueMapForAdminViewIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_venue_map_for_admin_view/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetVenueMapForAdminViewId = async (id: number, options?: RequestInit): Promise<getApiV1GetVenueMapForAdminViewIdResponse> => {
+export const getApiV1GetVenueMapForAdminViewId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getApiV1GetVenueMapForAdminViewIdResponse> => {
+  return openApiFetch<getApiV1GetVenueMapForAdminViewIdResponse>(
+    getGetApiV1GetVenueMapForAdminViewIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetVenueMapForAdminViewIdResponse>(getGetApiV1GetVenueMapForAdminViewIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetVenueMapForAdminViewIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_venue_map_for_admin_view/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetVenueMapForAdminViewIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_venue_map_for_admin_view/${id}`] as const;
-
-export type GetApiV1GetVenueMapForAdminViewIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetVenueMapForAdminViewId>>>
+export type GetApiV1GetVenueMapForAdminViewIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetVenueMapForAdminViewId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetVenueMapForAdminViewId = <TError = void | ApiV1VenueMapsApi>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetVenueMapForAdminViewId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetVenueMapForAdminViewId = <
+  TError = void | ApiV1VenueMapsApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getApiV1GetVenueMapForAdminViewId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetVenueMapForAdminViewIdKey(id) : null);
-  const swrFn = () => getApiV1GetVenueMapForAdminViewId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetVenueMapForAdminViewIdKey(id) : null));
+  const swrFn = () => getApiV1GetVenueMapForAdminViewId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

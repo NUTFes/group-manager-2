@@ -9,558 +9,646 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  PowerOrder
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { PowerOrder } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getPowerOrdersResponse200 = {
-  data: PowerOrder
-  status: 200
-}
+  data: PowerOrder;
+  status: 200;
+};
 
 export type getPowerOrdersResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type getPowerOrdersResponseSuccess = (getPowerOrdersResponse200) & {
-  headers: Headers;
-};
-export type getPowerOrdersResponseError = (getPowerOrdersResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type getPowerOrdersResponse = (getPowerOrdersResponseSuccess | getPowerOrdersResponseError)
+export type getPowerOrdersResponseSuccess = getPowerOrdersResponse200 & {
+  headers: Headers;
+};
+export type getPowerOrdersResponseError = getPowerOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type getPowerOrdersResponse =
+  | getPowerOrdersResponseSuccess
+  | getPowerOrdersResponseError;
 
 export const getGetPowerOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPowerOrders = async ( options?: RequestInit): Promise<getPowerOrdersResponse> => {
-
-  return openApiFetch<getPowerOrdersResponse>(getGetPowerOrdersUrl(),
-  {
+export const getPowerOrders = async (
+  options?: RequestInit
+): Promise<getPowerOrdersResponse> => {
+  return openApiFetch<getPowerOrdersResponse>(getGetPowerOrdersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPowerOrdersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPowerOrdersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders`] as const;
-
-export type GetPowerOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getPowerOrders>>>
+export type GetPowerOrdersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPowerOrders>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPowerOrders = <TError = PowerOrder>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPowerOrders>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPowerOrders = <TError = PowerOrder>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getPowerOrders>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPowerOrdersKey() : null);
-  const swrFn = () => getPowerOrders(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetPowerOrdersKey() : null));
+  const swrFn = () => getPowerOrders(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPowerOrdersResponse201 = {
-  data: PowerOrder
-  status: 201
-}
+  data: PowerOrder;
+  status: 201;
+};
 
 export type postPowerOrdersResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type postPowerOrdersResponseSuccess = (postPowerOrdersResponse201) & {
-  headers: Headers;
-};
-export type postPowerOrdersResponseError = (postPowerOrdersResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type postPowerOrdersResponse = (postPowerOrdersResponseSuccess | postPowerOrdersResponseError)
+export type postPowerOrdersResponseSuccess = postPowerOrdersResponse201 & {
+  headers: Headers;
+};
+export type postPowerOrdersResponseError = postPowerOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type postPowerOrdersResponse =
+  | postPowerOrdersResponseSuccess
+  | postPowerOrdersResponseError;
 
 export const getPostPowerOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPowerOrders = async (powerOrder?: PowerOrder, options?: RequestInit): Promise<postPowerOrdersResponse> => {
-
-  return openApiFetch<postPowerOrdersResponse>(getPostPowerOrdersUrl(),
-  {
+export const postPowerOrders = async (
+  powerOrder?: PowerOrder,
+  options?: RequestInit
+): Promise<postPowerOrdersResponse> => {
+  return openApiFetch<postPowerOrdersResponse>(getPostPowerOrdersUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(powerOrder)
-  }
-);}
+    body: JSON.stringify(powerOrder),
+  });
+};
 
-
-
-
-export const getPostPowerOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPowerOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PowerOrder | undefined }) => {
     return postPowerOrders(arg, options);
-  }
-}
-export const getPostPowerOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders`] as const;
+  };
+};
+export const getPostPowerOrdersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders`] as const;
 
-export type PostPowerOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postPowerOrders>>>
+export type PostPowerOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPowerOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPowerOrders = <TError = PowerOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPowerOrders>>, TError, Key, PowerOrder | undefined, Awaited<ReturnType<typeof postPowerOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPowerOrders = <TError = PowerOrder>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPowerOrders>>,
+    TError,
+    Key,
+    PowerOrder | undefined,
+    Awaited<ReturnType<typeof postPowerOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPowerOrdersMutationKey();
   const swrFn = getPostPowerOrdersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPowerOrdersIdResponse200 = {
-  data: PowerOrder
-  status: 200
-}
+  data: PowerOrder;
+  status: 200;
+};
 
 export type getPowerOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPowerOrdersIdResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type getPowerOrdersIdResponseSuccess = (getPowerOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type getPowerOrdersIdResponseError = (getPowerOrdersIdResponse404 | getPowerOrdersIdResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type getPowerOrdersIdResponse = (getPowerOrdersIdResponseSuccess | getPowerOrdersIdResponseError)
+export type getPowerOrdersIdResponseSuccess = getPowerOrdersIdResponse200 & {
+  headers: Headers;
+};
+export type getPowerOrdersIdResponseError = (
+  | getPowerOrdersIdResponse404
+  | getPowerOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPowerOrdersIdUrl = (id: number,) => {
+export type getPowerOrdersIdResponse =
+  | getPowerOrdersIdResponseSuccess
+  | getPowerOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`
-}
+export const getGetPowerOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPowerOrdersId = async (id: number, options?: RequestInit): Promise<getPowerOrdersIdResponse> => {
-
-  return openApiFetch<getPowerOrdersIdResponse>(getGetPowerOrdersIdUrl(id),
-  {
+export const getPowerOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getPowerOrdersIdResponse> => {
+  return openApiFetch<getPowerOrdersIdResponse>(getGetPowerOrdersIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPowerOrdersIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPowerOrdersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`] as const;
-
-export type GetPowerOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPowerOrdersId>>>
+export type GetPowerOrdersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPowerOrdersId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPowerOrdersId = <TError = void | PowerOrder>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPowerOrdersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPowerOrdersId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPowerOrdersIdKey(id) : null);
-  const swrFn = () => getPowerOrdersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPowerOrdersIdKey(id) : null));
+  const swrFn = () => getPowerOrdersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchPowerOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchPowerOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchPowerOrdersIdResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type patchPowerOrdersIdResponseSuccess = (patchPowerOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type patchPowerOrdersIdResponseError = (patchPowerOrdersIdResponse404 | patchPowerOrdersIdResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type patchPowerOrdersIdResponse = (patchPowerOrdersIdResponseSuccess | patchPowerOrdersIdResponseError)
+export type patchPowerOrdersIdResponseSuccess =
+  patchPowerOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type patchPowerOrdersIdResponseError = (
+  | patchPowerOrdersIdResponse404
+  | patchPowerOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchPowerOrdersIdUrl = (id: number,) => {
+export type patchPowerOrdersIdResponse =
+  | patchPowerOrdersIdResponseSuccess
+  | patchPowerOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`
-}
+export const getPatchPowerOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchPowerOrdersId = async (id: number,
-    powerOrder?: PowerOrder, options?: RequestInit): Promise<patchPowerOrdersIdResponse> => {
+export const patchPowerOrdersId = async (
+  id: number,
+  powerOrder?: PowerOrder,
+  options?: RequestInit
+): Promise<patchPowerOrdersIdResponse> => {
+  return openApiFetch<patchPowerOrdersIdResponse>(
+    getPatchPowerOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(powerOrder),
+    }
+  );
+};
 
-  return openApiFetch<patchPowerOrdersIdResponse>(getPatchPowerOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(powerOrder)
-  }
-);}
-
-
-
-
-export const getPatchPowerOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchPowerOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PowerOrder | undefined }) => {
     return patchPowerOrdersId(id, arg, options);
-  }
-}
-export const getPatchPowerOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`] as const;
+  };
+};
+export const getPatchPowerOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`] as const;
 
-export type PatchPowerOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchPowerOrdersId>>>
+export type PatchPowerOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchPowerOrdersId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchPowerOrdersId = <TError = void | PowerOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchPowerOrdersId>>, TError, Key, PowerOrder | undefined, Awaited<ReturnType<typeof patchPowerOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchPowerOrdersId>>,
+      TError,
+      Key,
+      PowerOrder | undefined,
+      Awaited<ReturnType<typeof patchPowerOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchPowerOrdersIdMutationKey(id);
   const swrFn = getPatchPowerOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putPowerOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putPowerOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putPowerOrdersIdResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type putPowerOrdersIdResponseSuccess = (putPowerOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type putPowerOrdersIdResponseError = (putPowerOrdersIdResponse404 | putPowerOrdersIdResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type putPowerOrdersIdResponse = (putPowerOrdersIdResponseSuccess | putPowerOrdersIdResponseError)
+export type putPowerOrdersIdResponseSuccess = putPowerOrdersIdResponse204 & {
+  headers: Headers;
+};
+export type putPowerOrdersIdResponseError = (
+  | putPowerOrdersIdResponse404
+  | putPowerOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutPowerOrdersIdUrl = (id: number,) => {
+export type putPowerOrdersIdResponse =
+  | putPowerOrdersIdResponseSuccess
+  | putPowerOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`
-}
+export const getPutPowerOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putPowerOrdersId = async (id: number,
-    powerOrder?: PowerOrder, options?: RequestInit): Promise<putPowerOrdersIdResponse> => {
-
-  return openApiFetch<putPowerOrdersIdResponse>(getPutPowerOrdersIdUrl(id),
-  {
+export const putPowerOrdersId = async (
+  id: number,
+  powerOrder?: PowerOrder,
+  options?: RequestInit
+): Promise<putPowerOrdersIdResponse> => {
+  return openApiFetch<putPowerOrdersIdResponse>(getPutPowerOrdersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(powerOrder)
-  }
-);}
+    body: JSON.stringify(powerOrder),
+  });
+};
 
-
-
-
-export const getPutPowerOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutPowerOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PowerOrder | undefined }) => {
     return putPowerOrdersId(id, arg, options);
-  }
-}
-export const getPutPowerOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`] as const;
+  };
+};
+export const getPutPowerOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`] as const;
 
-export type PutPowerOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putPowerOrdersId>>>
+export type PutPowerOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putPowerOrdersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutPowerOrdersId = <TError = void | PowerOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putPowerOrdersId>>, TError, Key, PowerOrder | undefined, Awaited<ReturnType<typeof putPowerOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putPowerOrdersId>>,
+      TError,
+      Key,
+      PowerOrder | undefined,
+      Awaited<ReturnType<typeof putPowerOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutPowerOrdersIdMutationKey(id);
   const swrFn = getPutPowerOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deletePowerOrdersIdResponse200 = {
-  data: PowerOrder
-  status: 200
-}
+  data: PowerOrder;
+  status: 200;
+};
 
 export type deletePowerOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deletePowerOrdersIdResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type deletePowerOrdersIdResponseSuccess = (deletePowerOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type deletePowerOrdersIdResponseError = (deletePowerOrdersIdResponse404 | deletePowerOrdersIdResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type deletePowerOrdersIdResponse = (deletePowerOrdersIdResponseSuccess | deletePowerOrdersIdResponseError)
+export type deletePowerOrdersIdResponseSuccess =
+  deletePowerOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type deletePowerOrdersIdResponseError = (
+  | deletePowerOrdersIdResponse404
+  | deletePowerOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeletePowerOrdersIdUrl = (id: number,) => {
+export type deletePowerOrdersIdResponse =
+  | deletePowerOrdersIdResponseSuccess
+  | deletePowerOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`
-}
+export const getDeletePowerOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deletePowerOrdersId = async (id: number, options?: RequestInit): Promise<deletePowerOrdersIdResponse> => {
+export const deletePowerOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deletePowerOrdersIdResponse> => {
+  return openApiFetch<deletePowerOrdersIdResponse>(
+    getDeletePowerOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deletePowerOrdersIdResponse>(getDeletePowerOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeletePowerOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeletePowerOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deletePowerOrdersId(id, options);
-  }
-}
-export const getDeletePowerOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/${id}`] as const;
+  };
+};
+export const getDeletePowerOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/${id}`] as const;
 
-export type DeletePowerOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePowerOrdersId>>>
+export type DeletePowerOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePowerOrdersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeletePowerOrdersId = <TError = void | PowerOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deletePowerOrdersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deletePowerOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deletePowerOrdersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deletePowerOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeletePowerOrdersIdMutationKey(id);
   const swrFn = getDeletePowerOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPowerOrdersGroupGroupIdResponse200 = {
-  data: PowerOrder
-  status: 200
-}
+  data: PowerOrder;
+  status: 200;
+};
 
 export type getPowerOrdersGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPowerOrdersGroupGroupIdResponse422 = {
-  data: PowerOrder
-  status: 422
-}
-
-export type getPowerOrdersGroupGroupIdResponseSuccess = (getPowerOrdersGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getPowerOrdersGroupGroupIdResponseError = (getPowerOrdersGroupGroupIdResponse404 | getPowerOrdersGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: PowerOrder;
+  status: 422;
 };
 
-export type getPowerOrdersGroupGroupIdResponse = (getPowerOrdersGroupGroupIdResponseSuccess | getPowerOrdersGroupGroupIdResponseError)
+export type getPowerOrdersGroupGroupIdResponseSuccess =
+  getPowerOrdersGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getPowerOrdersGroupGroupIdResponseError = (
+  | getPowerOrdersGroupGroupIdResponse404
+  | getPowerOrdersGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPowerOrdersGroupGroupIdUrl = (groupId: number,) => {
+export type getPowerOrdersGroupGroupIdResponse =
+  | getPowerOrdersGroupGroupIdResponseSuccess
+  | getPowerOrdersGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/group/${groupId}`
-}
+export const getGetPowerOrdersGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPowerOrdersGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getPowerOrdersGroupGroupIdResponse> => {
+export const getPowerOrdersGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getPowerOrdersGroupGroupIdResponse> => {
+  return openApiFetch<getPowerOrdersGroupGroupIdResponse>(
+    getGetPowerOrdersGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPowerOrdersGroupGroupIdResponse>(getGetPowerOrdersGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPowerOrdersGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/power_orders/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPowerOrdersGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/power_orders/group/${groupId}`] as const;
-
-export type GetPowerOrdersGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPowerOrdersGroupGroupId>>>
+export type GetPowerOrdersGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPowerOrdersGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPowerOrdersGroupGroupId = <TError = void | PowerOrder>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPowerOrdersGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPowerOrdersGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPowerOrdersGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getPowerOrdersGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPowerOrdersGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getPowerOrdersGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

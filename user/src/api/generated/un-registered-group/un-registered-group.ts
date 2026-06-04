@@ -9,553 +9,673 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  UnRegisteredGroup
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { UnRegisteredGroup } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getUnRegisteredGroupsResponse200 = {
-  data: UnRegisteredGroup
-  status: 200
-}
+  data: UnRegisteredGroup;
+  status: 200;
+};
 
 export type getUnRegisteredGroupsResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type getUnRegisteredGroupsResponseSuccess = (getUnRegisteredGroupsResponse200) & {
-  headers: Headers;
-};
-export type getUnRegisteredGroupsResponseError = (getUnRegisteredGroupsResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type getUnRegisteredGroupsResponse = (getUnRegisteredGroupsResponseSuccess | getUnRegisteredGroupsResponseError)
+export type getUnRegisteredGroupsResponseSuccess =
+  getUnRegisteredGroupsResponse200 & {
+    headers: Headers;
+  };
+export type getUnRegisteredGroupsResponseError =
+  getUnRegisteredGroupsResponse422 & {
+    headers: Headers;
+  };
+
+export type getUnRegisteredGroupsResponse =
+  | getUnRegisteredGroupsResponseSuccess
+  | getUnRegisteredGroupsResponseError;
 
 export const getGetUnRegisteredGroupsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUnRegisteredGroups = async ( options?: RequestInit): Promise<getUnRegisteredGroupsResponse> => {
+export const getUnRegisteredGroups = async (
+  options?: RequestInit
+): Promise<getUnRegisteredGroupsResponse> => {
+  return openApiFetch<getUnRegisteredGroupsResponse>(
+    getGetUnRegisteredGroupsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getUnRegisteredGroupsResponse>(getGetUnRegisteredGroupsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUnRegisteredGroupsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetUnRegisteredGroupsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups`] as const;
-
-export type GetUnRegisteredGroupsQueryResult = NonNullable<Awaited<ReturnType<typeof getUnRegisteredGroups>>>
+export type GetUnRegisteredGroupsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUnRegisteredGroups>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetUnRegisteredGroups = <TError = UnRegisteredGroup>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUnRegisteredGroups>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetUnRegisteredGroups = <TError = UnRegisteredGroup>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getUnRegisteredGroups>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUnRegisteredGroupsKey() : null);
-  const swrFn = () => getUnRegisteredGroups(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetUnRegisteredGroupsKey() : null));
+  const swrFn = () => getUnRegisteredGroups(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postUnRegisteredGroupsResponse201 = {
-  data: UnRegisteredGroup
-  status: 201
-}
+  data: UnRegisteredGroup;
+  status: 201;
+};
 
 export type postUnRegisteredGroupsResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type postUnRegisteredGroupsResponseSuccess = (postUnRegisteredGroupsResponse201) & {
-  headers: Headers;
-};
-export type postUnRegisteredGroupsResponseError = (postUnRegisteredGroupsResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type postUnRegisteredGroupsResponse = (postUnRegisteredGroupsResponseSuccess | postUnRegisteredGroupsResponseError)
+export type postUnRegisteredGroupsResponseSuccess =
+  postUnRegisteredGroupsResponse201 & {
+    headers: Headers;
+  };
+export type postUnRegisteredGroupsResponseError =
+  postUnRegisteredGroupsResponse422 & {
+    headers: Headers;
+  };
+
+export type postUnRegisteredGroupsResponse =
+  | postUnRegisteredGroupsResponseSuccess
+  | postUnRegisteredGroupsResponseError;
 
 export const getPostUnRegisteredGroupsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postUnRegisteredGroups = async (unRegisteredGroup?: UnRegisteredGroup, options?: RequestInit): Promise<postUnRegisteredGroupsResponse> => {
+export const postUnRegisteredGroups = async (
+  unRegisteredGroup?: UnRegisteredGroup,
+  options?: RequestInit
+): Promise<postUnRegisteredGroupsResponse> => {
+  return openApiFetch<postUnRegisteredGroupsResponse>(
+    getPostUnRegisteredGroupsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(unRegisteredGroup),
+    }
+  );
+};
 
-  return openApiFetch<postUnRegisteredGroupsResponse>(getPostUnRegisteredGroupsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(unRegisteredGroup)
-  }
-);}
-
-
-
-
-export const getPostUnRegisteredGroupsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostUnRegisteredGroupsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UnRegisteredGroup | undefined }) => {
     return postUnRegisteredGroups(arg, options);
-  }
-}
-export const getPostUnRegisteredGroupsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups`] as const;
+  };
+};
+export const getPostUnRegisteredGroupsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups`] as const;
 
-export type PostUnRegisteredGroupsMutationResult = NonNullable<Awaited<ReturnType<typeof postUnRegisteredGroups>>>
+export type PostUnRegisteredGroupsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUnRegisteredGroups>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostUnRegisteredGroups = <TError = UnRegisteredGroup>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postUnRegisteredGroups>>, TError, Key, UnRegisteredGroup | undefined, Awaited<ReturnType<typeof postUnRegisteredGroups>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostUnRegisteredGroups = <
+  TError = UnRegisteredGroup,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postUnRegisteredGroups>>,
+    TError,
+    Key,
+    UnRegisteredGroup | undefined,
+    Awaited<ReturnType<typeof postUnRegisteredGroups>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostUnRegisteredGroupsMutationKey();
   const swrFn = getPostUnRegisteredGroupsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getUnRegisteredGroupsIdResponse200 = {
-  data: UnRegisteredGroup
-  status: 200
-}
+  data: UnRegisteredGroup;
+  status: 200;
+};
 
 export type getUnRegisteredGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getUnRegisteredGroupsIdResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type getUnRegisteredGroupsIdResponseSuccess = (getUnRegisteredGroupsIdResponse200) & {
-  headers: Headers;
-};
-export type getUnRegisteredGroupsIdResponseError = (getUnRegisteredGroupsIdResponse404 | getUnRegisteredGroupsIdResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type getUnRegisteredGroupsIdResponse = (getUnRegisteredGroupsIdResponseSuccess | getUnRegisteredGroupsIdResponseError)
+export type getUnRegisteredGroupsIdResponseSuccess =
+  getUnRegisteredGroupsIdResponse200 & {
+    headers: Headers;
+  };
+export type getUnRegisteredGroupsIdResponseError = (
+  | getUnRegisteredGroupsIdResponse404
+  | getUnRegisteredGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetUnRegisteredGroupsIdUrl = (id: number,) => {
+export type getUnRegisteredGroupsIdResponse =
+  | getUnRegisteredGroupsIdResponseSuccess
+  | getUnRegisteredGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`
-}
+export const getGetUnRegisteredGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUnRegisteredGroupsId = async (id: number, options?: RequestInit): Promise<getUnRegisteredGroupsIdResponse> => {
+export const getUnRegisteredGroupsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getUnRegisteredGroupsIdResponse> => {
+  return openApiFetch<getUnRegisteredGroupsIdResponse>(
+    getGetUnRegisteredGroupsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getUnRegisteredGroupsIdResponse>(getGetUnRegisteredGroupsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUnRegisteredGroupsIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetUnRegisteredGroupsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`] as const;
-
-export type GetUnRegisteredGroupsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getUnRegisteredGroupsId>>>
+export type GetUnRegisteredGroupsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUnRegisteredGroupsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetUnRegisteredGroupsId = <TError = void | UnRegisteredGroup>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUnRegisteredGroupsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getUnRegisteredGroupsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUnRegisteredGroupsIdKey(id) : null);
-  const swrFn = () => getUnRegisteredGroupsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetUnRegisteredGroupsIdKey(id) : null));
+  const swrFn = () => getUnRegisteredGroupsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchUnRegisteredGroupsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchUnRegisteredGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchUnRegisteredGroupsIdResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type patchUnRegisteredGroupsIdResponseSuccess = (patchUnRegisteredGroupsIdResponse204) & {
-  headers: Headers;
-};
-export type patchUnRegisteredGroupsIdResponseError = (patchUnRegisteredGroupsIdResponse404 | patchUnRegisteredGroupsIdResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type patchUnRegisteredGroupsIdResponse = (patchUnRegisteredGroupsIdResponseSuccess | patchUnRegisteredGroupsIdResponseError)
+export type patchUnRegisteredGroupsIdResponseSuccess =
+  patchUnRegisteredGroupsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchUnRegisteredGroupsIdResponseError = (
+  | patchUnRegisteredGroupsIdResponse404
+  | patchUnRegisteredGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchUnRegisteredGroupsIdUrl = (id: number,) => {
+export type patchUnRegisteredGroupsIdResponse =
+  | patchUnRegisteredGroupsIdResponseSuccess
+  | patchUnRegisteredGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`
-}
+export const getPatchUnRegisteredGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchUnRegisteredGroupsId = async (id: number,
-    unRegisteredGroup?: UnRegisteredGroup, options?: RequestInit): Promise<patchUnRegisteredGroupsIdResponse> => {
+export const patchUnRegisteredGroupsId = async (
+  id: number,
+  unRegisteredGroup?: UnRegisteredGroup,
+  options?: RequestInit
+): Promise<patchUnRegisteredGroupsIdResponse> => {
+  return openApiFetch<patchUnRegisteredGroupsIdResponse>(
+    getPatchUnRegisteredGroupsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(unRegisteredGroup),
+    }
+  );
+};
 
-  return openApiFetch<patchUnRegisteredGroupsIdResponse>(getPatchUnRegisteredGroupsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(unRegisteredGroup)
-  }
-);}
-
-
-
-
-export const getPatchUnRegisteredGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchUnRegisteredGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UnRegisteredGroup | undefined }) => {
     return patchUnRegisteredGroupsId(id, arg, options);
-  }
-}
-export const getPatchUnRegisteredGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`] as const;
+  };
+};
+export const getPatchUnRegisteredGroupsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`,
+  ] as const;
 
-export type PatchUnRegisteredGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>>
+export type PatchUnRegisteredGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchUnRegisteredGroupsId = <TError = void | UnRegisteredGroup>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>, TError, Key, UnRegisteredGroup | undefined, Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>,
+      TError,
+      Key,
+      UnRegisteredGroup | undefined,
+      Awaited<ReturnType<typeof patchUnRegisteredGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPatchUnRegisteredGroupsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchUnRegisteredGroupsIdMutationKey(id);
   const swrFn = getPatchUnRegisteredGroupsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putUnRegisteredGroupsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putUnRegisteredGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putUnRegisteredGroupsIdResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type putUnRegisteredGroupsIdResponseSuccess = (putUnRegisteredGroupsIdResponse204) & {
-  headers: Headers;
-};
-export type putUnRegisteredGroupsIdResponseError = (putUnRegisteredGroupsIdResponse404 | putUnRegisteredGroupsIdResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type putUnRegisteredGroupsIdResponse = (putUnRegisteredGroupsIdResponseSuccess | putUnRegisteredGroupsIdResponseError)
+export type putUnRegisteredGroupsIdResponseSuccess =
+  putUnRegisteredGroupsIdResponse204 & {
+    headers: Headers;
+  };
+export type putUnRegisteredGroupsIdResponseError = (
+  | putUnRegisteredGroupsIdResponse404
+  | putUnRegisteredGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutUnRegisteredGroupsIdUrl = (id: number,) => {
+export type putUnRegisteredGroupsIdResponse =
+  | putUnRegisteredGroupsIdResponseSuccess
+  | putUnRegisteredGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`
-}
+export const getPutUnRegisteredGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putUnRegisteredGroupsId = async (id: number,
-    unRegisteredGroup?: UnRegisteredGroup, options?: RequestInit): Promise<putUnRegisteredGroupsIdResponse> => {
+export const putUnRegisteredGroupsId = async (
+  id: number,
+  unRegisteredGroup?: UnRegisteredGroup,
+  options?: RequestInit
+): Promise<putUnRegisteredGroupsIdResponse> => {
+  return openApiFetch<putUnRegisteredGroupsIdResponse>(
+    getPutUnRegisteredGroupsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(unRegisteredGroup),
+    }
+  );
+};
 
-  return openApiFetch<putUnRegisteredGroupsIdResponse>(getPutUnRegisteredGroupsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(unRegisteredGroup)
-  }
-);}
-
-
-
-
-export const getPutUnRegisteredGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutUnRegisteredGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UnRegisteredGroup | undefined }) => {
     return putUnRegisteredGroupsId(id, arg, options);
-  }
-}
-export const getPutUnRegisteredGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`] as const;
+  };
+};
+export const getPutUnRegisteredGroupsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`,
+  ] as const;
 
-export type PutUnRegisteredGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putUnRegisteredGroupsId>>>
+export type PutUnRegisteredGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putUnRegisteredGroupsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutUnRegisteredGroupsId = <TError = void | UnRegisteredGroup>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putUnRegisteredGroupsId>>, TError, Key, UnRegisteredGroup | undefined, Awaited<ReturnType<typeof putUnRegisteredGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putUnRegisteredGroupsId>>,
+      TError,
+      Key,
+      UnRegisteredGroup | undefined,
+      Awaited<ReturnType<typeof putUnRegisteredGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPutUnRegisteredGroupsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPutUnRegisteredGroupsIdMutationKey(id);
   const swrFn = getPutUnRegisteredGroupsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteUnRegisteredGroupsIdResponse200 = {
-  data: UnRegisteredGroup
-  status: 200
-}
+  data: UnRegisteredGroup;
+  status: 200;
+};
 
 export type deleteUnRegisteredGroupsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteUnRegisteredGroupsIdResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type deleteUnRegisteredGroupsIdResponseSuccess = (deleteUnRegisteredGroupsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteUnRegisteredGroupsIdResponseError = (deleteUnRegisteredGroupsIdResponse404 | deleteUnRegisteredGroupsIdResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type deleteUnRegisteredGroupsIdResponse = (deleteUnRegisteredGroupsIdResponseSuccess | deleteUnRegisteredGroupsIdResponseError)
+export type deleteUnRegisteredGroupsIdResponseSuccess =
+  deleteUnRegisteredGroupsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteUnRegisteredGroupsIdResponseError = (
+  | deleteUnRegisteredGroupsIdResponse404
+  | deleteUnRegisteredGroupsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteUnRegisteredGroupsIdUrl = (id: number,) => {
+export type deleteUnRegisteredGroupsIdResponse =
+  | deleteUnRegisteredGroupsIdResponseSuccess
+  | deleteUnRegisteredGroupsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`
-}
+export const getDeleteUnRegisteredGroupsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteUnRegisteredGroupsId = async (id: number, options?: RequestInit): Promise<deleteUnRegisteredGroupsIdResponse> => {
+export const deleteUnRegisteredGroupsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteUnRegisteredGroupsIdResponse> => {
+  return openApiFetch<deleteUnRegisteredGroupsIdResponse>(
+    getDeleteUnRegisteredGroupsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteUnRegisteredGroupsIdResponse>(getDeleteUnRegisteredGroupsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteUnRegisteredGroupsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteUnRegisteredGroupsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteUnRegisteredGroupsId(id, options);
-  }
-}
-export const getDeleteUnRegisteredGroupsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/${id}`] as const;
+  };
+};
+export const getDeleteUnRegisteredGroupsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/${id}`,
+  ] as const;
 
-export type DeleteUnRegisteredGroupsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>>
+export type DeleteUnRegisteredGroupsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteUnRegisteredGroupsId = <TError = void | UnRegisteredGroup>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+export const useDeleteUnRegisteredGroupsId = <
+  TError = void | UnRegisteredGroup,
+>(
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteUnRegisteredGroupsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteUnRegisteredGroupsIdMutationKey(id);
+  const swrFn = getDeleteUnRegisteredGroupsIdMutationFetcher(
+    id,
+    requestOptions
+  );
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteUnRegisteredGroupsIdMutationKey(id);
-  const swrFn = getDeleteUnRegisteredGroupsIdMutationFetcher(id, requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getUnRegisteredGroupsGroupResponse200 = {
-  data: UnRegisteredGroup
-  status: 200
-}
+  data: UnRegisteredGroup;
+  status: 200;
+};
 
 export type getUnRegisteredGroupsGroupResponse422 = {
-  data: UnRegisteredGroup
-  status: 422
-}
-
-export type getUnRegisteredGroupsGroupResponseSuccess = (getUnRegisteredGroupsGroupResponse200) & {
-  headers: Headers;
-};
-export type getUnRegisteredGroupsGroupResponseError = (getUnRegisteredGroupsGroupResponse422) & {
-  headers: Headers;
+  data: UnRegisteredGroup;
+  status: 422;
 };
 
-export type getUnRegisteredGroupsGroupResponse = (getUnRegisteredGroupsGroupResponseSuccess | getUnRegisteredGroupsGroupResponseError)
+export type getUnRegisteredGroupsGroupResponseSuccess =
+  getUnRegisteredGroupsGroupResponse200 & {
+    headers: Headers;
+  };
+export type getUnRegisteredGroupsGroupResponseError =
+  getUnRegisteredGroupsGroupResponse422 & {
+    headers: Headers;
+  };
+
+export type getUnRegisteredGroupsGroupResponse =
+  | getUnRegisteredGroupsGroupResponseSuccess
+  | getUnRegisteredGroupsGroupResponseError;
 
 export const getGetUnRegisteredGroupsGroupUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/group`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/group`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUnRegisteredGroupsGroup = async ( options?: RequestInit): Promise<getUnRegisteredGroupsGroupResponse> => {
+export const getUnRegisteredGroupsGroup = async (
+  options?: RequestInit
+): Promise<getUnRegisteredGroupsGroupResponse> => {
+  return openApiFetch<getUnRegisteredGroupsGroupResponse>(
+    getGetUnRegisteredGroupsGroupUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getUnRegisteredGroupsGroupResponse>(getGetUnRegisteredGroupsGroupUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUnRegisteredGroupsGroupKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/un_registered_groups/group`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetUnRegisteredGroupsGroupKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/un_registered_groups/group`] as const;
-
-export type GetUnRegisteredGroupsGroupQueryResult = NonNullable<Awaited<ReturnType<typeof getUnRegisteredGroupsGroup>>>
+export type GetUnRegisteredGroupsGroupQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUnRegisteredGroupsGroup>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetUnRegisteredGroupsGroup = <TError = UnRegisteredGroup>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUnRegisteredGroupsGroup>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetUnRegisteredGroupsGroup = <
+  TError = UnRegisteredGroup,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getUnRegisteredGroupsGroup>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUnRegisteredGroupsGroupKey() : null);
-  const swrFn = () => getUnRegisteredGroupsGroup(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetUnRegisteredGroupsGroupKey() : null));
+  const swrFn = () => getUnRegisteredGroupsGroup(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

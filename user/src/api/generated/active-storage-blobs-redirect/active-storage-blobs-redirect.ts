@@ -9,172 +9,239 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ActivestorageBlobsRedirect
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActivestorageBlobsRedirect } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRailsActiveStorageBlobsSignedIdFilenameResponse200 = {
-  data: ActivestorageBlobsRedirect
-  status: 200
-}
+  data: ActivestorageBlobsRedirect;
+  status: 200;
+};
 
 export type getRailsActiveStorageBlobsSignedIdFilenameResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRailsActiveStorageBlobsSignedIdFilenameResponse422 = {
-  data: ActivestorageBlobsRedirect
-  status: 422
-}
-
-export type getRailsActiveStorageBlobsSignedIdFilenameResponseSuccess = (getRailsActiveStorageBlobsSignedIdFilenameResponse200) & {
-  headers: Headers;
-};
-export type getRailsActiveStorageBlobsSignedIdFilenameResponseError = (getRailsActiveStorageBlobsSignedIdFilenameResponse404 | getRailsActiveStorageBlobsSignedIdFilenameResponse422) & {
-  headers: Headers;
+  data: ActivestorageBlobsRedirect;
+  status: 422;
 };
 
-export type getRailsActiveStorageBlobsSignedIdFilenameResponse = (getRailsActiveStorageBlobsSignedIdFilenameResponseSuccess | getRailsActiveStorageBlobsSignedIdFilenameResponseError)
+export type getRailsActiveStorageBlobsSignedIdFilenameResponseSuccess =
+  getRailsActiveStorageBlobsSignedIdFilenameResponse200 & {
+    headers: Headers;
+  };
+export type getRailsActiveStorageBlobsSignedIdFilenameResponseError = (
+  | getRailsActiveStorageBlobsSignedIdFilenameResponse404
+  | getRailsActiveStorageBlobsSignedIdFilenameResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRailsActiveStorageBlobsSignedIdFilenameUrl = (signedId: number,) => {
+export type getRailsActiveStorageBlobsSignedIdFilenameResponse =
+  | getRailsActiveStorageBlobsSignedIdFilenameResponseSuccess
+  | getRailsActiveStorageBlobsSignedIdFilenameResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/${signedId}/*filename`
-}
+export const getGetRailsActiveStorageBlobsSignedIdFilenameUrl = (
+  signedId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/${signedId}/*filename`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsActiveStorageBlobsSignedIdFilename = async (signedId: number, options?: RequestInit): Promise<getRailsActiveStorageBlobsSignedIdFilenameResponse> => {
+export const getRailsActiveStorageBlobsSignedIdFilename = async (
+  signedId: number,
+  options?: RequestInit
+): Promise<getRailsActiveStorageBlobsSignedIdFilenameResponse> => {
+  return openApiFetch<getRailsActiveStorageBlobsSignedIdFilenameResponse>(
+    getGetRailsActiveStorageBlobsSignedIdFilenameUrl(signedId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRailsActiveStorageBlobsSignedIdFilenameResponse>(getGetRailsActiveStorageBlobsSignedIdFilenameUrl(signedId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsActiveStorageBlobsSignedIdFilenameKey = (
+  signedId: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/${signedId}/*filename`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsActiveStorageBlobsSignedIdFilenameKey = (signedId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/${signedId}/*filename`] as const;
-
-export type GetRailsActiveStorageBlobsSignedIdFilenameQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsActiveStorageBlobsSignedIdFilename>>>
+export type GetRailsActiveStorageBlobsSignedIdFilenameQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRailsActiveStorageBlobsSignedIdFilename>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRailsActiveStorageBlobsSignedIdFilename = <TError = void | ActivestorageBlobsRedirect>(
-  signedId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsActiveStorageBlobsSignedIdFilename>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetRailsActiveStorageBlobsSignedIdFilename = <
+  TError = void | ActivestorageBlobsRedirect,
+>(
+  signedId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRailsActiveStorageBlobsSignedIdFilename>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && signedId !== null && signedId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsActiveStorageBlobsSignedIdFilenameKey(signedId) : null);
-  const swrFn = () => getRailsActiveStorageBlobsSignedIdFilename(signedId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false &&
+    signedId !== null &&
+    signedId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetRailsActiveStorageBlobsSignedIdFilenameKey(signedId)
+        : null);
+  const swrFn = () =>
+    getRailsActiveStorageBlobsSignedIdFilename(signedId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse200 = {
-  data: ActivestorageBlobsRedirect
-  status: 200
-}
+  data: ActivestorageBlobsRedirect;
+  status: 200;
+};
 
 export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse422 = {
-  data: ActivestorageBlobsRedirect
-  status: 422
-}
-
-export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseSuccess = (getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse200) & {
-  headers: Headers;
-};
-export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseError = (getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse404 | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse422) & {
-  headers: Headers;
+  data: ActivestorageBlobsRedirect;
+  status: 422;
 };
 
-export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse = (getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseSuccess | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseError)
+export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseSuccess =
+  getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse200 & {
+    headers: Headers;
+  };
+export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseError = (
+  | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse404
+  | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRailsActiveStorageBlobsRedirectSignedIdFilenameUrl = (signedId: number,) => {
+export type getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse =
+  | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseSuccess
+  | getRailsActiveStorageBlobsRedirectSignedIdFilenameResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/redirect/${signedId}/*filename`
-}
+export const getGetRailsActiveStorageBlobsRedirectSignedIdFilenameUrl = (
+  signedId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/redirect/${signedId}/*filename`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsActiveStorageBlobsRedirectSignedIdFilename = async (signedId: number, options?: RequestInit): Promise<getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse> => {
+export const getRailsActiveStorageBlobsRedirectSignedIdFilename = async (
+  signedId: number,
+  options?: RequestInit
+): Promise<getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse> => {
+  return openApiFetch<getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse>(
+    getGetRailsActiveStorageBlobsRedirectSignedIdFilenameUrl(signedId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRailsActiveStorageBlobsRedirectSignedIdFilenameResponse>(getGetRailsActiveStorageBlobsRedirectSignedIdFilenameUrl(signedId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsActiveStorageBlobsRedirectSignedIdFilenameKey = (
+  signedId: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/redirect/${signedId}/*filename`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsActiveStorageBlobsRedirectSignedIdFilenameKey = (signedId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/redirect/${signedId}/*filename`] as const;
-
-export type GetRailsActiveStorageBlobsRedirectSignedIdFilenameQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsActiveStorageBlobsRedirectSignedIdFilename>>>
+export type GetRailsActiveStorageBlobsRedirectSignedIdFilenameQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getRailsActiveStorageBlobsRedirectSignedIdFilename>
+    >
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetRailsActiveStorageBlobsRedirectSignedIdFilename = <TError = void | ActivestorageBlobsRedirect>(
-  signedId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsActiveStorageBlobsRedirectSignedIdFilename>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetRailsActiveStorageBlobsRedirectSignedIdFilename = <
+  TError = void | ActivestorageBlobsRedirect,
+>(
+  signedId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<
+        ReturnType<typeof getRailsActiveStorageBlobsRedirectSignedIdFilename>
+      >,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && signedId !== null && signedId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsActiveStorageBlobsRedirectSignedIdFilenameKey(signedId) : null);
-  const swrFn = () => getRailsActiveStorageBlobsRedirectSignedIdFilename(signedId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false &&
+    signedId !== null &&
+    signedId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetRailsActiveStorageBlobsRedirectSignedIdFilenameKey(signedId)
+        : null);
+  const swrFn = () =>
+    getRailsActiveStorageBlobsRedirectSignedIdFilename(
+      signedId,
+      requestOptions
+    );
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

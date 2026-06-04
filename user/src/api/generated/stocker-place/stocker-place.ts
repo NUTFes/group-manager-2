@@ -9,482 +9,555 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  StockerPlace
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { StockerPlace } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getStockerPlacesResponse200 = {
-  data: StockerPlace
-  status: 200
-}
+  data: StockerPlace;
+  status: 200;
+};
 
 export type getStockerPlacesResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type getStockerPlacesResponseSuccess = (getStockerPlacesResponse200) & {
-  headers: Headers;
-};
-export type getStockerPlacesResponseError = (getStockerPlacesResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type getStockerPlacesResponse = (getStockerPlacesResponseSuccess | getStockerPlacesResponseError)
+export type getStockerPlacesResponseSuccess = getStockerPlacesResponse200 & {
+  headers: Headers;
+};
+export type getStockerPlacesResponseError = getStockerPlacesResponse422 & {
+  headers: Headers;
+};
+
+export type getStockerPlacesResponse =
+  | getStockerPlacesResponseSuccess
+  | getStockerPlacesResponseError;
 
 export const getGetStockerPlacesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStockerPlaces = async ( options?: RequestInit): Promise<getStockerPlacesResponse> => {
-
-  return openApiFetch<getStockerPlacesResponse>(getGetStockerPlacesUrl(),
-  {
+export const getStockerPlaces = async (
+  options?: RequestInit
+): Promise<getStockerPlacesResponse> => {
+  return openApiFetch<getStockerPlacesResponse>(getGetStockerPlacesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStockerPlacesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStockerPlacesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places`] as const;
-
-export type GetStockerPlacesQueryResult = NonNullable<Awaited<ReturnType<typeof getStockerPlaces>>>
+export type GetStockerPlacesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStockerPlaces>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStockerPlaces = <TError = StockerPlace>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStockerPlaces>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetStockerPlaces = <TError = StockerPlace>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getStockerPlaces>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStockerPlacesKey() : null);
-  const swrFn = () => getStockerPlaces(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetStockerPlacesKey() : null));
+  const swrFn = () => getStockerPlaces(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postStockerPlacesResponse201 = {
-  data: StockerPlace
-  status: 201
-}
+  data: StockerPlace;
+  status: 201;
+};
 
 export type postStockerPlacesResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type postStockerPlacesResponseSuccess = (postStockerPlacesResponse201) & {
-  headers: Headers;
-};
-export type postStockerPlacesResponseError = (postStockerPlacesResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type postStockerPlacesResponse = (postStockerPlacesResponseSuccess | postStockerPlacesResponseError)
+export type postStockerPlacesResponseSuccess = postStockerPlacesResponse201 & {
+  headers: Headers;
+};
+export type postStockerPlacesResponseError = postStockerPlacesResponse422 & {
+  headers: Headers;
+};
+
+export type postStockerPlacesResponse =
+  | postStockerPlacesResponseSuccess
+  | postStockerPlacesResponseError;
 
 export const getPostStockerPlacesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postStockerPlaces = async (stockerPlace?: StockerPlace, options?: RequestInit): Promise<postStockerPlacesResponse> => {
-
-  return openApiFetch<postStockerPlacesResponse>(getPostStockerPlacesUrl(),
-  {
+export const postStockerPlaces = async (
+  stockerPlace?: StockerPlace,
+  options?: RequestInit
+): Promise<postStockerPlacesResponse> => {
+  return openApiFetch<postStockerPlacesResponse>(getPostStockerPlacesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerPlace)
-  }
-);}
+    body: JSON.stringify(stockerPlace),
+  });
+};
 
-
-
-
-export const getPostStockerPlacesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostStockerPlacesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerPlace | undefined }) => {
     return postStockerPlaces(arg, options);
-  }
-}
-export const getPostStockerPlacesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places`] as const;
+  };
+};
+export const getPostStockerPlacesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places`] as const;
 
-export type PostStockerPlacesMutationResult = NonNullable<Awaited<ReturnType<typeof postStockerPlaces>>>
+export type PostStockerPlacesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postStockerPlaces>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostStockerPlaces = <TError = StockerPlace>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postStockerPlaces>>, TError, Key, StockerPlace | undefined, Awaited<ReturnType<typeof postStockerPlaces>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostStockerPlaces = <TError = StockerPlace>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postStockerPlaces>>,
+    TError,
+    Key,
+    StockerPlace | undefined,
+    Awaited<ReturnType<typeof postStockerPlaces>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostStockerPlacesMutationKey();
   const swrFn = getPostStockerPlacesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStockerPlacesIdResponse200 = {
-  data: StockerPlace
-  status: 200
-}
+  data: StockerPlace;
+  status: 200;
+};
 
 export type getStockerPlacesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStockerPlacesIdResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type getStockerPlacesIdResponseSuccess = (getStockerPlacesIdResponse200) & {
-  headers: Headers;
-};
-export type getStockerPlacesIdResponseError = (getStockerPlacesIdResponse404 | getStockerPlacesIdResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type getStockerPlacesIdResponse = (getStockerPlacesIdResponseSuccess | getStockerPlacesIdResponseError)
+export type getStockerPlacesIdResponseSuccess =
+  getStockerPlacesIdResponse200 & {
+    headers: Headers;
+  };
+export type getStockerPlacesIdResponseError = (
+  | getStockerPlacesIdResponse404
+  | getStockerPlacesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStockerPlacesIdUrl = (id: number,) => {
+export type getStockerPlacesIdResponse =
+  | getStockerPlacesIdResponseSuccess
+  | getStockerPlacesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`
-}
+export const getGetStockerPlacesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStockerPlacesId = async (id: number, options?: RequestInit): Promise<getStockerPlacesIdResponse> => {
+export const getStockerPlacesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getStockerPlacesIdResponse> => {
+  return openApiFetch<getStockerPlacesIdResponse>(
+    getGetStockerPlacesIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getStockerPlacesIdResponse>(getGetStockerPlacesIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetStockerPlacesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetStockerPlacesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`] as const;
-
-export type GetStockerPlacesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStockerPlacesId>>>
+export type GetStockerPlacesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStockerPlacesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStockerPlacesId = <TError = void | StockerPlace>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStockerPlacesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStockerPlacesId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStockerPlacesIdKey(id) : null);
-  const swrFn = () => getStockerPlacesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStockerPlacesIdKey(id) : null));
+  const swrFn = () => getStockerPlacesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchStockerPlacesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchStockerPlacesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchStockerPlacesIdResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type patchStockerPlacesIdResponseSuccess = (patchStockerPlacesIdResponse204) & {
-  headers: Headers;
-};
-export type patchStockerPlacesIdResponseError = (patchStockerPlacesIdResponse404 | patchStockerPlacesIdResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type patchStockerPlacesIdResponse = (patchStockerPlacesIdResponseSuccess | patchStockerPlacesIdResponseError)
+export type patchStockerPlacesIdResponseSuccess =
+  patchStockerPlacesIdResponse204 & {
+    headers: Headers;
+  };
+export type patchStockerPlacesIdResponseError = (
+  | patchStockerPlacesIdResponse404
+  | patchStockerPlacesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchStockerPlacesIdUrl = (id: number,) => {
+export type patchStockerPlacesIdResponse =
+  | patchStockerPlacesIdResponseSuccess
+  | patchStockerPlacesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`
-}
+export const getPatchStockerPlacesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchStockerPlacesId = async (id: number,
-    stockerPlace?: StockerPlace, options?: RequestInit): Promise<patchStockerPlacesIdResponse> => {
+export const patchStockerPlacesId = async (
+  id: number,
+  stockerPlace?: StockerPlace,
+  options?: RequestInit
+): Promise<patchStockerPlacesIdResponse> => {
+  return openApiFetch<patchStockerPlacesIdResponse>(
+    getPatchStockerPlacesIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stockerPlace),
+    }
+  );
+};
 
-  return openApiFetch<patchStockerPlacesIdResponse>(getPatchStockerPlacesIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerPlace)
-  }
-);}
-
-
-
-
-export const getPatchStockerPlacesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchStockerPlacesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerPlace | undefined }) => {
     return patchStockerPlacesId(id, arg, options);
-  }
-}
-export const getPatchStockerPlacesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`] as const;
+  };
+};
+export const getPatchStockerPlacesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`] as const;
 
-export type PatchStockerPlacesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchStockerPlacesId>>>
+export type PatchStockerPlacesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchStockerPlacesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchStockerPlacesId = <TError = void | StockerPlace>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchStockerPlacesId>>, TError, Key, StockerPlace | undefined, Awaited<ReturnType<typeof patchStockerPlacesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchStockerPlacesId>>,
+      TError,
+      Key,
+      StockerPlace | undefined,
+      Awaited<ReturnType<typeof patchStockerPlacesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchStockerPlacesIdMutationKey(id);
   const swrFn = getPatchStockerPlacesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putStockerPlacesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putStockerPlacesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putStockerPlacesIdResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type putStockerPlacesIdResponseSuccess = (putStockerPlacesIdResponse204) & {
-  headers: Headers;
-};
-export type putStockerPlacesIdResponseError = (putStockerPlacesIdResponse404 | putStockerPlacesIdResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type putStockerPlacesIdResponse = (putStockerPlacesIdResponseSuccess | putStockerPlacesIdResponseError)
+export type putStockerPlacesIdResponseSuccess =
+  putStockerPlacesIdResponse204 & {
+    headers: Headers;
+  };
+export type putStockerPlacesIdResponseError = (
+  | putStockerPlacesIdResponse404
+  | putStockerPlacesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutStockerPlacesIdUrl = (id: number,) => {
+export type putStockerPlacesIdResponse =
+  | putStockerPlacesIdResponseSuccess
+  | putStockerPlacesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`
-}
+export const getPutStockerPlacesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putStockerPlacesId = async (id: number,
-    stockerPlace?: StockerPlace, options?: RequestInit): Promise<putStockerPlacesIdResponse> => {
+export const putStockerPlacesId = async (
+  id: number,
+  stockerPlace?: StockerPlace,
+  options?: RequestInit
+): Promise<putStockerPlacesIdResponse> => {
+  return openApiFetch<putStockerPlacesIdResponse>(
+    getPutStockerPlacesIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stockerPlace),
+    }
+  );
+};
 
-  return openApiFetch<putStockerPlacesIdResponse>(getPutStockerPlacesIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerPlace)
-  }
-);}
-
-
-
-
-export const getPutStockerPlacesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutStockerPlacesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerPlace | undefined }) => {
     return putStockerPlacesId(id, arg, options);
-  }
-}
-export const getPutStockerPlacesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`] as const;
+  };
+};
+export const getPutStockerPlacesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`] as const;
 
-export type PutStockerPlacesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putStockerPlacesId>>>
+export type PutStockerPlacesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putStockerPlacesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutStockerPlacesId = <TError = void | StockerPlace>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putStockerPlacesId>>, TError, Key, StockerPlace | undefined, Awaited<ReturnType<typeof putStockerPlacesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putStockerPlacesId>>,
+      TError,
+      Key,
+      StockerPlace | undefined,
+      Awaited<ReturnType<typeof putStockerPlacesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutStockerPlacesIdMutationKey(id);
   const swrFn = getPutStockerPlacesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteStockerPlacesIdResponse200 = {
-  data: StockerPlace
-  status: 200
-}
+  data: StockerPlace;
+  status: 200;
+};
 
 export type deleteStockerPlacesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteStockerPlacesIdResponse422 = {
-  data: StockerPlace
-  status: 422
-}
-
-export type deleteStockerPlacesIdResponseSuccess = (deleteStockerPlacesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteStockerPlacesIdResponseError = (deleteStockerPlacesIdResponse404 | deleteStockerPlacesIdResponse422) & {
-  headers: Headers;
+  data: StockerPlace;
+  status: 422;
 };
 
-export type deleteStockerPlacesIdResponse = (deleteStockerPlacesIdResponseSuccess | deleteStockerPlacesIdResponseError)
+export type deleteStockerPlacesIdResponseSuccess =
+  deleteStockerPlacesIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteStockerPlacesIdResponseError = (
+  | deleteStockerPlacesIdResponse404
+  | deleteStockerPlacesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteStockerPlacesIdUrl = (id: number,) => {
+export type deleteStockerPlacesIdResponse =
+  | deleteStockerPlacesIdResponseSuccess
+  | deleteStockerPlacesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`
-}
+export const getDeleteStockerPlacesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteStockerPlacesId = async (id: number, options?: RequestInit): Promise<deleteStockerPlacesIdResponse> => {
+export const deleteStockerPlacesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteStockerPlacesIdResponse> => {
+  return openApiFetch<deleteStockerPlacesIdResponse>(
+    getDeleteStockerPlacesIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteStockerPlacesIdResponse>(getDeleteStockerPlacesIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteStockerPlacesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteStockerPlacesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteStockerPlacesId(id, options);
-  }
-}
-export const getDeleteStockerPlacesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_places/${id}`] as const;
+  };
+};
+export const getDeleteStockerPlacesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_places/${id}`] as const;
 
-export type DeleteStockerPlacesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStockerPlacesId>>>
+export type DeleteStockerPlacesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteStockerPlacesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteStockerPlacesId = <TError = void | StockerPlace>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteStockerPlacesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteStockerPlacesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteStockerPlacesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteStockerPlacesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteStockerPlacesIdMutationKey(id);
   const swrFn = getDeleteStockerPlacesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

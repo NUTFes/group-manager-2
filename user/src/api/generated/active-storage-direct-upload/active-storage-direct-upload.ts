@@ -8,97 +8,102 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ActivestorageDirectUpload
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActivestorageDirectUpload } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postRailsActiveStorageDirectUploadsResponse201 = {
-  data: ActivestorageDirectUpload
-  status: 201
-}
+  data: ActivestorageDirectUpload;
+  status: 201;
+};
 
 export type postRailsActiveStorageDirectUploadsResponse422 = {
-  data: ActivestorageDirectUpload
-  status: 422
-}
-
-export type postRailsActiveStorageDirectUploadsResponseSuccess = (postRailsActiveStorageDirectUploadsResponse201) & {
-  headers: Headers;
-};
-export type postRailsActiveStorageDirectUploadsResponseError = (postRailsActiveStorageDirectUploadsResponse422) & {
-  headers: Headers;
+  data: ActivestorageDirectUpload;
+  status: 422;
 };
 
-export type postRailsActiveStorageDirectUploadsResponse = (postRailsActiveStorageDirectUploadsResponseSuccess | postRailsActiveStorageDirectUploadsResponseError)
+export type postRailsActiveStorageDirectUploadsResponseSuccess =
+  postRailsActiveStorageDirectUploadsResponse201 & {
+    headers: Headers;
+  };
+export type postRailsActiveStorageDirectUploadsResponseError =
+  postRailsActiveStorageDirectUploadsResponse422 & {
+    headers: Headers;
+  };
+
+export type postRailsActiveStorageDirectUploadsResponse =
+  | postRailsActiveStorageDirectUploadsResponseSuccess
+  | postRailsActiveStorageDirectUploadsResponseError;
 
 export const getPostRailsActiveStorageDirectUploadsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/direct_uploads`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/direct_uploads`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRailsActiveStorageDirectUploads = async (activestorageDirectUpload?: ActivestorageDirectUpload, options?: RequestInit): Promise<postRailsActiveStorageDirectUploadsResponse> => {
+export const postRailsActiveStorageDirectUploads = async (
+  activestorageDirectUpload?: ActivestorageDirectUpload,
+  options?: RequestInit
+): Promise<postRailsActiveStorageDirectUploadsResponse> => {
+  return openApiFetch<postRailsActiveStorageDirectUploadsResponse>(
+    getPostRailsActiveStorageDirectUploadsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(activestorageDirectUpload),
+    }
+  );
+};
 
-  return openApiFetch<postRailsActiveStorageDirectUploadsResponse>(getPostRailsActiveStorageDirectUploadsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(activestorageDirectUpload)
-  }
-);}
-
-
-
-
-export const getPostRailsActiveStorageDirectUploadsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostRailsActiveStorageDirectUploadsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ActivestorageDirectUpload | undefined }) => {
     return postRailsActiveStorageDirectUploads(arg, options);
-  }
-}
-export const getPostRailsActiveStorageDirectUploadsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/direct_uploads`] as const;
+  };
+};
+export const getPostRailsActiveStorageDirectUploadsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/direct_uploads`,
+  ] as const;
 
-export type PostRailsActiveStorageDirectUploadsMutationResult = NonNullable<Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>>
+export type PostRailsActiveStorageDirectUploadsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostRailsActiveStorageDirectUploads = <TError = ActivestorageDirectUpload>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>, TError, Key, ActivestorageDirectUpload | undefined, Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostRailsActiveStorageDirectUploads = <
+  TError = ActivestorageDirectUpload,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>,
+    TError,
+    Key,
+    ActivestorageDirectUpload | undefined,
+    Awaited<ReturnType<typeof postRailsActiveStorageDirectUploads>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostRailsActiveStorageDirectUploadsMutationKey();
+  const swrFn =
+    getPostRailsActiveStorageDirectUploadsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostRailsActiveStorageDirectUploadsMutationKey();
-  const swrFn = getPostRailsActiveStorageDirectUploadsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

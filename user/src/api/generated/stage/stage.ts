@@ -9,624 +9,696 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  Stage
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { Stage } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRainyStagesResponse200 = {
-  data: Stage
-  status: 200
-}
+  data: Stage;
+  status: 200;
+};
 
 export type getRainyStagesResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type getRainyStagesResponseSuccess = (getRainyStagesResponse200) & {
-  headers: Headers;
-};
-export type getRainyStagesResponseError = (getRainyStagesResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type getRainyStagesResponse = (getRainyStagesResponseSuccess | getRainyStagesResponseError)
+export type getRainyStagesResponseSuccess = getRainyStagesResponse200 & {
+  headers: Headers;
+};
+export type getRainyStagesResponseError = getRainyStagesResponse422 & {
+  headers: Headers;
+};
+
+export type getRainyStagesResponse =
+  | getRainyStagesResponseSuccess
+  | getRainyStagesResponseError;
 
 export const getGetRainyStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rainy/stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rainy/stages`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRainyStages = async ( options?: RequestInit): Promise<getRainyStagesResponse> => {
-
-  return openApiFetch<getRainyStagesResponse>(getGetRainyStagesUrl(),
-  {
+export const getRainyStages = async (
+  options?: RequestInit
+): Promise<getRainyStagesResponse> => {
+  return openApiFetch<getRainyStagesResponse>(getGetRainyStagesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetRainyStagesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rainy/stages`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetRainyStagesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rainy/stages`] as const;
-
-export type GetRainyStagesQueryResult = NonNullable<Awaited<ReturnType<typeof getRainyStages>>>
+export type GetRainyStagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRainyStages>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRainyStages = <TError = Stage>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRainyStages>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRainyStages = <TError = Stage>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getRainyStages>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRainyStagesKey() : null);
-  const swrFn = () => getRainyStages(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetRainyStagesKey() : null));
+  const swrFn = () => getRainyStages(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStagesResponse200 = {
-  data: Stage
-  status: 200
-}
+  data: Stage;
+  status: 200;
+};
 
 export type getStagesResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type getStagesResponseSuccess = (getStagesResponse200) & {
-  headers: Headers;
-};
-export type getStagesResponseError = (getStagesResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type getStagesResponse = (getStagesResponseSuccess | getStagesResponseError)
+export type getStagesResponseSuccess = getStagesResponse200 & {
+  headers: Headers;
+};
+export type getStagesResponseError = getStagesResponse422 & {
+  headers: Headers;
+};
+
+export type getStagesResponse =
+  | getStagesResponseSuccess
+  | getStagesResponseError;
 
 export const getGetStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStages = async ( options?: RequestInit): Promise<getStagesResponse> => {
-
-  return openApiFetch<getStagesResponse>(getGetStagesUrl(),
-  {
+export const getStages = async (
+  options?: RequestInit
+): Promise<getStagesResponse> => {
+  return openApiFetch<getStagesResponse>(getGetStagesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStagesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStagesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages`] as const;
-
-export type GetStagesQueryResult = NonNullable<Awaited<ReturnType<typeof getStages>>>
+export type GetStagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStages>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStages = <TError = Stage>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStages>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetStages = <TError = Stage>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getStages>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStagesKey() : null);
-  const swrFn = () => getStages(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetStagesKey() : null));
+  const swrFn = () => getStages(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postStagesResponse201 = {
-  data: Stage
-  status: 201
-}
+  data: Stage;
+  status: 201;
+};
 
 export type postStagesResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type postStagesResponseSuccess = (postStagesResponse201) & {
-  headers: Headers;
-};
-export type postStagesResponseError = (postStagesResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type postStagesResponse = (postStagesResponseSuccess | postStagesResponseError)
+export type postStagesResponseSuccess = postStagesResponse201 & {
+  headers: Headers;
+};
+export type postStagesResponseError = postStagesResponse422 & {
+  headers: Headers;
+};
+
+export type postStagesResponse =
+  | postStagesResponseSuccess
+  | postStagesResponseError;
 
 export const getPostStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postStages = async (stage?: Stage, options?: RequestInit): Promise<postStagesResponse> => {
-
-  return openApiFetch<postStagesResponse>(getPostStagesUrl(),
-  {
+export const postStages = async (
+  stage?: Stage,
+  options?: RequestInit
+): Promise<postStagesResponse> => {
+  return openApiFetch<postStagesResponse>(getPostStagesUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stage)
-  }
-);}
+    body: JSON.stringify(stage),
+  });
+};
 
-
-
-
-export const getPostStagesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostStagesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Stage | undefined }) => {
     return postStages(arg, options);
-  }
-}
-export const getPostStagesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages`] as const;
+  };
+};
+export const getPostStagesMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages`] as const;
 
-export type PostStagesMutationResult = NonNullable<Awaited<ReturnType<typeof postStages>>>
+export type PostStagesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postStages>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostStages = <TError = Stage>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postStages>>, TError, Key, Stage | undefined, Awaited<ReturnType<typeof postStages>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostStages = <TError = Stage>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postStages>>,
+    TError,
+    Key,
+    Stage | undefined,
+    Awaited<ReturnType<typeof postStages>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostStagesMutationKey();
   const swrFn = getPostStagesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStagesIdResponse200 = {
-  data: Stage
-  status: 200
-}
+  data: Stage;
+  status: 200;
+};
 
 export type getStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStagesIdResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type getStagesIdResponseSuccess = (getStagesIdResponse200) & {
-  headers: Headers;
-};
-export type getStagesIdResponseError = (getStagesIdResponse404 | getStagesIdResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type getStagesIdResponse = (getStagesIdResponseSuccess | getStagesIdResponseError)
+export type getStagesIdResponseSuccess = getStagesIdResponse200 & {
+  headers: Headers;
+};
+export type getStagesIdResponseError = (
+  | getStagesIdResponse404
+  | getStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStagesIdUrl = (id: number,) => {
+export type getStagesIdResponse =
+  | getStagesIdResponseSuccess
+  | getStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`
-}
+export const getGetStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStagesId = async (id: number, options?: RequestInit): Promise<getStagesIdResponse> => {
-
-  return openApiFetch<getStagesIdResponse>(getGetStagesIdUrl(id),
-  {
+export const getStagesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getStagesIdResponse> => {
+  return openApiFetch<getStagesIdResponse>(getGetStagesIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStagesIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStagesIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`] as const;
-
-export type GetStagesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStagesId>>>
+export type GetStagesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStagesId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStagesId = <TError = void | Stage>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStagesId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getStagesId>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStagesIdKey(id) : null);
-  const swrFn = () => getStagesId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetStagesIdKey(id) : null));
+  const swrFn = () => getStagesId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchStagesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchStagesIdResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type patchStagesIdResponseSuccess = (patchStagesIdResponse204) & {
-  headers: Headers;
-};
-export type patchStagesIdResponseError = (patchStagesIdResponse404 | patchStagesIdResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type patchStagesIdResponse = (patchStagesIdResponseSuccess | patchStagesIdResponseError)
+export type patchStagesIdResponseSuccess = patchStagesIdResponse204 & {
+  headers: Headers;
+};
+export type patchStagesIdResponseError = (
+  | patchStagesIdResponse404
+  | patchStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchStagesIdUrl = (id: number,) => {
+export type patchStagesIdResponse =
+  | patchStagesIdResponseSuccess
+  | patchStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`
-}
+export const getPatchStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchStagesId = async (id: number,
-    stage?: Stage, options?: RequestInit): Promise<patchStagesIdResponse> => {
-
-  return openApiFetch<patchStagesIdResponse>(getPatchStagesIdUrl(id),
-  {
+export const patchStagesId = async (
+  id: number,
+  stage?: Stage,
+  options?: RequestInit
+): Promise<patchStagesIdResponse> => {
+  return openApiFetch<patchStagesIdResponse>(getPatchStagesIdUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stage)
-  }
-);}
+    body: JSON.stringify(stage),
+  });
+};
 
-
-
-
-export const getPatchStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Stage | undefined }) => {
     return patchStagesId(id, arg, options);
-  }
-}
-export const getPatchStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`] as const;
+  };
+};
+export const getPatchStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`] as const;
 
-export type PatchStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchStagesId>>>
+export type PatchStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchStagesId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchStagesId = <TError = void | Stage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchStagesId>>, TError, Key, Stage | undefined, Awaited<ReturnType<typeof patchStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchStagesId>>,
+      TError,
+      Key,
+      Stage | undefined,
+      Awaited<ReturnType<typeof patchStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchStagesIdMutationKey(id);
   const swrFn = getPatchStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putStagesIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putStagesIdResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type putStagesIdResponseSuccess = (putStagesIdResponse204) & {
-  headers: Headers;
-};
-export type putStagesIdResponseError = (putStagesIdResponse404 | putStagesIdResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type putStagesIdResponse = (putStagesIdResponseSuccess | putStagesIdResponseError)
+export type putStagesIdResponseSuccess = putStagesIdResponse204 & {
+  headers: Headers;
+};
+export type putStagesIdResponseError = (
+  | putStagesIdResponse404
+  | putStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutStagesIdUrl = (id: number,) => {
+export type putStagesIdResponse =
+  | putStagesIdResponseSuccess
+  | putStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`
-}
+export const getPutStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putStagesId = async (id: number,
-    stage?: Stage, options?: RequestInit): Promise<putStagesIdResponse> => {
-
-  return openApiFetch<putStagesIdResponse>(getPutStagesIdUrl(id),
-  {
+export const putStagesId = async (
+  id: number,
+  stage?: Stage,
+  options?: RequestInit
+): Promise<putStagesIdResponse> => {
+  return openApiFetch<putStagesIdResponse>(getPutStagesIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stage)
-  }
-);}
+    body: JSON.stringify(stage),
+  });
+};
 
-
-
-
-export const getPutStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: Stage | undefined }) => {
     return putStagesId(id, arg, options);
-  }
-}
-export const getPutStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`] as const;
+  };
+};
+export const getPutStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`] as const;
 
-export type PutStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putStagesId>>>
+export type PutStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putStagesId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutStagesId = <TError = void | Stage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putStagesId>>, TError, Key, Stage | undefined, Awaited<ReturnType<typeof putStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putStagesId>>,
+      TError,
+      Key,
+      Stage | undefined,
+      Awaited<ReturnType<typeof putStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutStagesIdMutationKey(id);
   const swrFn = getPutStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteStagesIdResponse200 = {
-  data: Stage
-  status: 200
-}
+  data: Stage;
+  status: 200;
+};
 
 export type deleteStagesIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteStagesIdResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type deleteStagesIdResponseSuccess = (deleteStagesIdResponse200) & {
-  headers: Headers;
-};
-export type deleteStagesIdResponseError = (deleteStagesIdResponse404 | deleteStagesIdResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type deleteStagesIdResponse = (deleteStagesIdResponseSuccess | deleteStagesIdResponseError)
+export type deleteStagesIdResponseSuccess = deleteStagesIdResponse200 & {
+  headers: Headers;
+};
+export type deleteStagesIdResponseError = (
+  | deleteStagesIdResponse404
+  | deleteStagesIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteStagesIdUrl = (id: number,) => {
+export type deleteStagesIdResponse =
+  | deleteStagesIdResponseSuccess
+  | deleteStagesIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`
-}
+export const getDeleteStagesIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteStagesId = async (id: number, options?: RequestInit): Promise<deleteStagesIdResponse> => {
-
-  return openApiFetch<deleteStagesIdResponse>(getDeleteStagesIdUrl(id),
-  {
+export const deleteStagesId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteStagesIdResponse> => {
+  return openApiFetch<deleteStagesIdResponse>(getDeleteStagesIdUrl(id), {
     ...options,
-    method: 'DELETE'
+    method: 'DELETE',
+  });
+};
 
-
-  }
-);}
-
-
-
-
-export const getDeleteStagesIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteStagesIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteStagesId(id, options);
-  }
-}
-export const getDeleteStagesIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stages/${id}`] as const;
+  };
+};
+export const getDeleteStagesIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stages/${id}`] as const;
 
-export type DeleteStagesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStagesId>>>
+export type DeleteStagesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteStagesId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteStagesId = <TError = void | Stage>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteStagesId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteStagesId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteStagesId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteStagesId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteStagesIdMutationKey(id);
   const swrFn = getDeleteStagesIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getSunnyStagesResponse200 = {
-  data: Stage
-  status: 200
-}
+  data: Stage;
+  status: 200;
+};
 
 export type getSunnyStagesResponse422 = {
-  data: Stage
-  status: 422
-}
-
-export type getSunnyStagesResponseSuccess = (getSunnyStagesResponse200) & {
-  headers: Headers;
-};
-export type getSunnyStagesResponseError = (getSunnyStagesResponse422) & {
-  headers: Headers;
+  data: Stage;
+  status: 422;
 };
 
-export type getSunnyStagesResponse = (getSunnyStagesResponseSuccess | getSunnyStagesResponseError)
+export type getSunnyStagesResponseSuccess = getSunnyStagesResponse200 & {
+  headers: Headers;
+};
+export type getSunnyStagesResponseError = getSunnyStagesResponse422 & {
+  headers: Headers;
+};
+
+export type getSunnyStagesResponse =
+  | getSunnyStagesResponseSuccess
+  | getSunnyStagesResponseError;
 
 export const getGetSunnyStagesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/sunny/stages`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/sunny/stages`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getSunnyStages = async ( options?: RequestInit): Promise<getSunnyStagesResponse> => {
-
-  return openApiFetch<getSunnyStagesResponse>(getGetSunnyStagesUrl(),
-  {
+export const getSunnyStages = async (
+  options?: RequestInit
+): Promise<getSunnyStagesResponse> => {
+  return openApiFetch<getSunnyStagesResponse>(getGetSunnyStagesUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetSunnyStagesKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/sunny/stages`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetSunnyStagesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/sunny/stages`] as const;
-
-export type GetSunnyStagesQueryResult = NonNullable<Awaited<ReturnType<typeof getSunnyStages>>>
+export type GetSunnyStagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getSunnyStages>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetSunnyStages = <TError = Stage>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getSunnyStages>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetSunnyStages = <TError = Stage>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getSunnyStages>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetSunnyStagesKey() : null);
-  const swrFn = () => getSunnyStages(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetSunnyStagesKey() : null));
+  const swrFn = () => getSunnyStages(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

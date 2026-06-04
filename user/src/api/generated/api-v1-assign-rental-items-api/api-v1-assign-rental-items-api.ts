@@ -8,170 +8,194 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1AssignRentalItemsApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1AssignRentalItemsApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postApiV1GetRefinementAssignRentalItemResponse201 = {
-  data: ApiV1AssignRentalItemsApi
-  status: 201
-}
+  data: ApiV1AssignRentalItemsApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementAssignRentalItemResponse422 = {
-  data: ApiV1AssignRentalItemsApi
-  status: 422
-}
-
-export type postApiV1GetRefinementAssignRentalItemResponseSuccess = (postApiV1GetRefinementAssignRentalItemResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementAssignRentalItemResponseError = (postApiV1GetRefinementAssignRentalItemResponse422) & {
-  headers: Headers;
+  data: ApiV1AssignRentalItemsApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementAssignRentalItemResponse = (postApiV1GetRefinementAssignRentalItemResponseSuccess | postApiV1GetRefinementAssignRentalItemResponseError)
+export type postApiV1GetRefinementAssignRentalItemResponseSuccess =
+  postApiV1GetRefinementAssignRentalItemResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementAssignRentalItemResponseError =
+  postApiV1GetRefinementAssignRentalItemResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementAssignRentalItemResponse =
+  | postApiV1GetRefinementAssignRentalItemResponseSuccess
+  | postApiV1GetRefinementAssignRentalItemResponseError;
 
 export const getPostApiV1GetRefinementAssignRentalItemUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_assign_rental_item`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_assign_rental_item`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementAssignRentalItem = async (apiV1AssignRentalItemsApi?: ApiV1AssignRentalItemsApi, options?: RequestInit): Promise<postApiV1GetRefinementAssignRentalItemResponse> => {
+export const postApiV1GetRefinementAssignRentalItem = async (
+  apiV1AssignRentalItemsApi?: ApiV1AssignRentalItemsApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementAssignRentalItemResponse> => {
+  return openApiFetch<postApiV1GetRefinementAssignRentalItemResponse>(
+    getPostApiV1GetRefinementAssignRentalItemUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1AssignRentalItemsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementAssignRentalItemResponse>(getPostApiV1GetRefinementAssignRentalItemUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1AssignRentalItemsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementAssignRentalItemMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementAssignRentalItemMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1AssignRentalItemsApi | undefined }) => {
     return postApiV1GetRefinementAssignRentalItem(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementAssignRentalItemMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_assign_rental_item`] as const;
+  };
+};
+export const getPostApiV1GetRefinementAssignRentalItemMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_assign_rental_item`,
+  ] as const;
 
-export type PostApiV1GetRefinementAssignRentalItemMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>>
+export type PostApiV1GetRefinementAssignRentalItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementAssignRentalItem = <TError = ApiV1AssignRentalItemsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>, TError, Key, ApiV1AssignRentalItemsApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementAssignRentalItem = <
+  TError = ApiV1AssignRentalItemsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>,
+    TError,
+    Key,
+    ApiV1AssignRentalItemsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementAssignRentalItem>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostApiV1GetRefinementAssignRentalItemMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementAssignRentalItemMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementAssignRentalItemMutationKey();
-  const swrFn = getPostApiV1GetRefinementAssignRentalItemMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetRefinementStockerItemResponse201 = {
-  data: ApiV1AssignRentalItemsApi
-  status: 201
-}
+  data: ApiV1AssignRentalItemsApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementStockerItemResponse422 = {
-  data: ApiV1AssignRentalItemsApi
-  status: 422
-}
-
-export type postApiV1GetRefinementStockerItemResponseSuccess = (postApiV1GetRefinementStockerItemResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementStockerItemResponseError = (postApiV1GetRefinementStockerItemResponse422) & {
-  headers: Headers;
+  data: ApiV1AssignRentalItemsApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementStockerItemResponse = (postApiV1GetRefinementStockerItemResponseSuccess | postApiV1GetRefinementStockerItemResponseError)
+export type postApiV1GetRefinementStockerItemResponseSuccess =
+  postApiV1GetRefinementStockerItemResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementStockerItemResponseError =
+  postApiV1GetRefinementStockerItemResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementStockerItemResponse =
+  | postApiV1GetRefinementStockerItemResponseSuccess
+  | postApiV1GetRefinementStockerItemResponseError;
 
 export const getPostApiV1GetRefinementStockerItemUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_stocker_item`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_stocker_item`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementStockerItem = async (apiV1AssignRentalItemsApi?: ApiV1AssignRentalItemsApi, options?: RequestInit): Promise<postApiV1GetRefinementStockerItemResponse> => {
+export const postApiV1GetRefinementStockerItem = async (
+  apiV1AssignRentalItemsApi?: ApiV1AssignRentalItemsApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementStockerItemResponse> => {
+  return openApiFetch<postApiV1GetRefinementStockerItemResponse>(
+    getPostApiV1GetRefinementStockerItemUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1AssignRentalItemsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementStockerItemResponse>(getPostApiV1GetRefinementStockerItemUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1AssignRentalItemsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementStockerItemMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementStockerItemMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1AssignRentalItemsApi | undefined }) => {
     return postApiV1GetRefinementStockerItem(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementStockerItemMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_stocker_item`] as const;
+  };
+};
+export const getPostApiV1GetRefinementStockerItemMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_stocker_item`,
+  ] as const;
 
-export type PostApiV1GetRefinementStockerItemMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>>
+export type PostApiV1GetRefinementStockerItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementStockerItem = <TError = ApiV1AssignRentalItemsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>, TError, Key, ApiV1AssignRentalItemsApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementStockerItem = <
+  TError = ApiV1AssignRentalItemsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>,
+    TError,
+    Key,
+    ApiV1AssignRentalItemsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementStockerItem>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementStockerItemMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementStockerItemMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementStockerItemMutationKey();
-  const swrFn = getPostApiV1GetRefinementStockerItemMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

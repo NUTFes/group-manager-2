@@ -9,482 +9,576 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  AssignRentalItem
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { AssignRentalItem } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getAssignRentalItemsResponse200 = {
-  data: AssignRentalItem
-  status: 200
-}
+  data: AssignRentalItem;
+  status: 200;
+};
 
 export type getAssignRentalItemsResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type getAssignRentalItemsResponseSuccess = (getAssignRentalItemsResponse200) & {
-  headers: Headers;
-};
-export type getAssignRentalItemsResponseError = (getAssignRentalItemsResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type getAssignRentalItemsResponse = (getAssignRentalItemsResponseSuccess | getAssignRentalItemsResponseError)
+export type getAssignRentalItemsResponseSuccess =
+  getAssignRentalItemsResponse200 & {
+    headers: Headers;
+  };
+export type getAssignRentalItemsResponseError =
+  getAssignRentalItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getAssignRentalItemsResponse =
+  | getAssignRentalItemsResponseSuccess
+  | getAssignRentalItemsResponseError;
 
 export const getGetAssignRentalItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAssignRentalItems = async ( options?: RequestInit): Promise<getAssignRentalItemsResponse> => {
+export const getAssignRentalItems = async (
+  options?: RequestInit
+): Promise<getAssignRentalItemsResponse> => {
+  return openApiFetch<getAssignRentalItemsResponse>(
+    getGetAssignRentalItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getAssignRentalItemsResponse>(getGetAssignRentalItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetAssignRentalItemsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetAssignRentalItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items`] as const;
-
-export type GetAssignRentalItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getAssignRentalItems>>>
+export type GetAssignRentalItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAssignRentalItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetAssignRentalItems = <TError = AssignRentalItem>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAssignRentalItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetAssignRentalItems = <TError = AssignRentalItem>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getAssignRentalItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAssignRentalItemsKey() : null);
-  const swrFn = () => getAssignRentalItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetAssignRentalItemsKey() : null));
+  const swrFn = () => getAssignRentalItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postAssignRentalItemsResponse201 = {
-  data: AssignRentalItem
-  status: 201
-}
+  data: AssignRentalItem;
+  status: 201;
+};
 
 export type postAssignRentalItemsResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type postAssignRentalItemsResponseSuccess = (postAssignRentalItemsResponse201) & {
-  headers: Headers;
-};
-export type postAssignRentalItemsResponseError = (postAssignRentalItemsResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type postAssignRentalItemsResponse = (postAssignRentalItemsResponseSuccess | postAssignRentalItemsResponseError)
+export type postAssignRentalItemsResponseSuccess =
+  postAssignRentalItemsResponse201 & {
+    headers: Headers;
+  };
+export type postAssignRentalItemsResponseError =
+  postAssignRentalItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type postAssignRentalItemsResponse =
+  | postAssignRentalItemsResponseSuccess
+  | postAssignRentalItemsResponseError;
 
 export const getPostAssignRentalItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postAssignRentalItems = async (assignRentalItem?: AssignRentalItem, options?: RequestInit): Promise<postAssignRentalItemsResponse> => {
+export const postAssignRentalItems = async (
+  assignRentalItem?: AssignRentalItem,
+  options?: RequestInit
+): Promise<postAssignRentalItemsResponse> => {
+  return openApiFetch<postAssignRentalItemsResponse>(
+    getPostAssignRentalItemsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(assignRentalItem),
+    }
+  );
+};
 
-  return openApiFetch<postAssignRentalItemsResponse>(getPostAssignRentalItemsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignRentalItem)
-  }
-);}
-
-
-
-
-export const getPostAssignRentalItemsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostAssignRentalItemsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignRentalItem | undefined }) => {
     return postAssignRentalItems(arg, options);
-  }
-}
-export const getPostAssignRentalItemsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items`] as const;
+  };
+};
+export const getPostAssignRentalItemsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items`] as const;
 
-export type PostAssignRentalItemsMutationResult = NonNullable<Awaited<ReturnType<typeof postAssignRentalItems>>>
+export type PostAssignRentalItemsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAssignRentalItems>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostAssignRentalItems = <TError = AssignRentalItem>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postAssignRentalItems>>, TError, Key, AssignRentalItem | undefined, Awaited<ReturnType<typeof postAssignRentalItems>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostAssignRentalItems = <TError = AssignRentalItem>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postAssignRentalItems>>,
+    TError,
+    Key,
+    AssignRentalItem | undefined,
+    Awaited<ReturnType<typeof postAssignRentalItems>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostAssignRentalItemsMutationKey();
   const swrFn = getPostAssignRentalItemsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getAssignRentalItemsIdResponse200 = {
-  data: AssignRentalItem
-  status: 200
-}
+  data: AssignRentalItem;
+  status: 200;
+};
 
 export type getAssignRentalItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getAssignRentalItemsIdResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type getAssignRentalItemsIdResponseSuccess = (getAssignRentalItemsIdResponse200) & {
-  headers: Headers;
-};
-export type getAssignRentalItemsIdResponseError = (getAssignRentalItemsIdResponse404 | getAssignRentalItemsIdResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type getAssignRentalItemsIdResponse = (getAssignRentalItemsIdResponseSuccess | getAssignRentalItemsIdResponseError)
+export type getAssignRentalItemsIdResponseSuccess =
+  getAssignRentalItemsIdResponse200 & {
+    headers: Headers;
+  };
+export type getAssignRentalItemsIdResponseError = (
+  | getAssignRentalItemsIdResponse404
+  | getAssignRentalItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetAssignRentalItemsIdUrl = (id: number,) => {
+export type getAssignRentalItemsIdResponse =
+  | getAssignRentalItemsIdResponseSuccess
+  | getAssignRentalItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`
-}
+export const getGetAssignRentalItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getAssignRentalItemsId = async (id: number, options?: RequestInit): Promise<getAssignRentalItemsIdResponse> => {
+export const getAssignRentalItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getAssignRentalItemsIdResponse> => {
+  return openApiFetch<getAssignRentalItemsIdResponse>(
+    getGetAssignRentalItemsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getAssignRentalItemsIdResponse>(getGetAssignRentalItemsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetAssignRentalItemsIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetAssignRentalItemsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`] as const;
-
-export type GetAssignRentalItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getAssignRentalItemsId>>>
+export type GetAssignRentalItemsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAssignRentalItemsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetAssignRentalItemsId = <TError = void | AssignRentalItem>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getAssignRentalItemsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getAssignRentalItemsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetAssignRentalItemsIdKey(id) : null);
-  const swrFn = () => getAssignRentalItemsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetAssignRentalItemsIdKey(id) : null));
+  const swrFn = () => getAssignRentalItemsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchAssignRentalItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchAssignRentalItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchAssignRentalItemsIdResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type patchAssignRentalItemsIdResponseSuccess = (patchAssignRentalItemsIdResponse204) & {
-  headers: Headers;
-};
-export type patchAssignRentalItemsIdResponseError = (patchAssignRentalItemsIdResponse404 | patchAssignRentalItemsIdResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type patchAssignRentalItemsIdResponse = (patchAssignRentalItemsIdResponseSuccess | patchAssignRentalItemsIdResponseError)
+export type patchAssignRentalItemsIdResponseSuccess =
+  patchAssignRentalItemsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchAssignRentalItemsIdResponseError = (
+  | patchAssignRentalItemsIdResponse404
+  | patchAssignRentalItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchAssignRentalItemsIdUrl = (id: number,) => {
+export type patchAssignRentalItemsIdResponse =
+  | patchAssignRentalItemsIdResponseSuccess
+  | patchAssignRentalItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`
-}
+export const getPatchAssignRentalItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchAssignRentalItemsId = async (id: number,
-    assignRentalItem?: AssignRentalItem, options?: RequestInit): Promise<patchAssignRentalItemsIdResponse> => {
+export const patchAssignRentalItemsId = async (
+  id: number,
+  assignRentalItem?: AssignRentalItem,
+  options?: RequestInit
+): Promise<patchAssignRentalItemsIdResponse> => {
+  return openApiFetch<patchAssignRentalItemsIdResponse>(
+    getPatchAssignRentalItemsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(assignRentalItem),
+    }
+  );
+};
 
-  return openApiFetch<patchAssignRentalItemsIdResponse>(getPatchAssignRentalItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignRentalItem)
-  }
-);}
-
-
-
-
-export const getPatchAssignRentalItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchAssignRentalItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignRentalItem | undefined }) => {
     return patchAssignRentalItemsId(id, arg, options);
-  }
-}
-export const getPatchAssignRentalItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`] as const;
+  };
+};
+export const getPatchAssignRentalItemsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`,
+  ] as const;
 
-export type PatchAssignRentalItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchAssignRentalItemsId>>>
+export type PatchAssignRentalItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchAssignRentalItemsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchAssignRentalItemsId = <TError = void | AssignRentalItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchAssignRentalItemsId>>, TError, Key, AssignRentalItem | undefined, Awaited<ReturnType<typeof patchAssignRentalItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchAssignRentalItemsId>>,
+      TError,
+      Key,
+      AssignRentalItem | undefined,
+      Awaited<ReturnType<typeof patchAssignRentalItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPatchAssignRentalItemsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchAssignRentalItemsIdMutationKey(id);
   const swrFn = getPatchAssignRentalItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putAssignRentalItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putAssignRentalItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putAssignRentalItemsIdResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type putAssignRentalItemsIdResponseSuccess = (putAssignRentalItemsIdResponse204) & {
-  headers: Headers;
-};
-export type putAssignRentalItemsIdResponseError = (putAssignRentalItemsIdResponse404 | putAssignRentalItemsIdResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type putAssignRentalItemsIdResponse = (putAssignRentalItemsIdResponseSuccess | putAssignRentalItemsIdResponseError)
+export type putAssignRentalItemsIdResponseSuccess =
+  putAssignRentalItemsIdResponse204 & {
+    headers: Headers;
+  };
+export type putAssignRentalItemsIdResponseError = (
+  | putAssignRentalItemsIdResponse404
+  | putAssignRentalItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutAssignRentalItemsIdUrl = (id: number,) => {
+export type putAssignRentalItemsIdResponse =
+  | putAssignRentalItemsIdResponseSuccess
+  | putAssignRentalItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`
-}
+export const getPutAssignRentalItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putAssignRentalItemsId = async (id: number,
-    assignRentalItem?: AssignRentalItem, options?: RequestInit): Promise<putAssignRentalItemsIdResponse> => {
+export const putAssignRentalItemsId = async (
+  id: number,
+  assignRentalItem?: AssignRentalItem,
+  options?: RequestInit
+): Promise<putAssignRentalItemsIdResponse> => {
+  return openApiFetch<putAssignRentalItemsIdResponse>(
+    getPutAssignRentalItemsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(assignRentalItem),
+    }
+  );
+};
 
-  return openApiFetch<putAssignRentalItemsIdResponse>(getPutAssignRentalItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(assignRentalItem)
-  }
-);}
-
-
-
-
-export const getPutAssignRentalItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutAssignRentalItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: AssignRentalItem | undefined }) => {
     return putAssignRentalItemsId(id, arg, options);
-  }
-}
-export const getPutAssignRentalItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`] as const;
+  };
+};
+export const getPutAssignRentalItemsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`,
+  ] as const;
 
-export type PutAssignRentalItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putAssignRentalItemsId>>>
+export type PutAssignRentalItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putAssignRentalItemsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutAssignRentalItemsId = <TError = void | AssignRentalItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putAssignRentalItemsId>>, TError, Key, AssignRentalItem | undefined, Awaited<ReturnType<typeof putAssignRentalItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putAssignRentalItemsId>>,
+      TError,
+      Key,
+      AssignRentalItem | undefined,
+      Awaited<ReturnType<typeof putAssignRentalItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutAssignRentalItemsIdMutationKey(id);
   const swrFn = getPutAssignRentalItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteAssignRentalItemsIdResponse200 = {
-  data: AssignRentalItem
-  status: 200
-}
+  data: AssignRentalItem;
+  status: 200;
+};
 
 export type deleteAssignRentalItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteAssignRentalItemsIdResponse422 = {
-  data: AssignRentalItem
-  status: 422
-}
-
-export type deleteAssignRentalItemsIdResponseSuccess = (deleteAssignRentalItemsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteAssignRentalItemsIdResponseError = (deleteAssignRentalItemsIdResponse404 | deleteAssignRentalItemsIdResponse422) & {
-  headers: Headers;
+  data: AssignRentalItem;
+  status: 422;
 };
 
-export type deleteAssignRentalItemsIdResponse = (deleteAssignRentalItemsIdResponseSuccess | deleteAssignRentalItemsIdResponseError)
+export type deleteAssignRentalItemsIdResponseSuccess =
+  deleteAssignRentalItemsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteAssignRentalItemsIdResponseError = (
+  | deleteAssignRentalItemsIdResponse404
+  | deleteAssignRentalItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteAssignRentalItemsIdUrl = (id: number,) => {
+export type deleteAssignRentalItemsIdResponse =
+  | deleteAssignRentalItemsIdResponseSuccess
+  | deleteAssignRentalItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`
-}
+export const getDeleteAssignRentalItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteAssignRentalItemsId = async (id: number, options?: RequestInit): Promise<deleteAssignRentalItemsIdResponse> => {
+export const deleteAssignRentalItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteAssignRentalItemsIdResponse> => {
+  return openApiFetch<deleteAssignRentalItemsIdResponse>(
+    getDeleteAssignRentalItemsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteAssignRentalItemsIdResponse>(getDeleteAssignRentalItemsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteAssignRentalItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteAssignRentalItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteAssignRentalItemsId(id, options);
-  }
-}
-export const getDeleteAssignRentalItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/assign_rental_items/${id}`] as const;
+  };
+};
+export const getDeleteAssignRentalItemsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/assign_rental_items/${id}`,
+  ] as const;
 
-export type DeleteAssignRentalItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAssignRentalItemsId>>>
+export type DeleteAssignRentalItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteAssignRentalItemsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteAssignRentalItemsId = <TError = void | AssignRentalItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteAssignRentalItemsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteAssignRentalItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteAssignRentalItemsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteAssignRentalItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getDeleteAssignRentalItemsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteAssignRentalItemsIdMutationKey(id);
   const swrFn = getDeleteAssignRentalItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

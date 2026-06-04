@@ -9,167 +9,212 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ApiV1FesDatesApi
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1FesDatesApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetCurrentFesDatesResponse200 = {
-  data: ApiV1FesDatesApi
-  status: 200
-}
+  data: ApiV1FesDatesApi;
+  status: 200;
+};
 
 export type getApiV1GetCurrentFesDatesResponse422 = {
-  data: ApiV1FesDatesApi
-  status: 422
-}
-
-export type getApiV1GetCurrentFesDatesResponseSuccess = (getApiV1GetCurrentFesDatesResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetCurrentFesDatesResponseError = (getApiV1GetCurrentFesDatesResponse422) & {
-  headers: Headers;
+  data: ApiV1FesDatesApi;
+  status: 422;
 };
 
-export type getApiV1GetCurrentFesDatesResponse = (getApiV1GetCurrentFesDatesResponseSuccess | getApiV1GetCurrentFesDatesResponseError)
+export type getApiV1GetCurrentFesDatesResponseSuccess =
+  getApiV1GetCurrentFesDatesResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetCurrentFesDatesResponseError =
+  getApiV1GetCurrentFesDatesResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetCurrentFesDatesResponse =
+  | getApiV1GetCurrentFesDatesResponseSuccess
+  | getApiV1GetCurrentFesDatesResponseError;
 
 export const getGetApiV1GetCurrentFesDatesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_current_fes_dates`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_current_fes_dates`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetCurrentFesDates = async ( options?: RequestInit): Promise<getApiV1GetCurrentFesDatesResponse> => {
+export const getApiV1GetCurrentFesDates = async (
+  options?: RequestInit
+): Promise<getApiV1GetCurrentFesDatesResponse> => {
+  return openApiFetch<getApiV1GetCurrentFesDatesResponse>(
+    getGetApiV1GetCurrentFesDatesUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetCurrentFesDatesResponse>(getGetApiV1GetCurrentFesDatesUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetCurrentFesDatesKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_current_fes_dates`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetCurrentFesDatesKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_current_fes_dates`] as const;
-
-export type GetApiV1GetCurrentFesDatesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetCurrentFesDates>>>
+export type GetApiV1GetCurrentFesDatesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetCurrentFesDates>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetCurrentFesDates = <TError = ApiV1FesDatesApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetCurrentFesDates>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetCurrentFesDates = <
+  TError = ApiV1FesDatesApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetCurrentFesDates>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetCurrentFesDatesKey() : null);
-  const swrFn = () => getApiV1GetCurrentFesDates(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetCurrentFesDatesKey() : null));
+  const swrFn = () => getApiV1GetCurrentFesDates(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponse200 = {
-  data: ApiV1FesDatesApi
-  status: 200
-}
+  data: ApiV1FesDatesApi;
+  status: 200;
+};
 
 export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponse422 = {
-  data: ApiV1FesDatesApi
-  status: 422
-}
-
-export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponseSuccess = (getApiV1GetRefinementFesDateByFesYearFesYearIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponseError = (getApiV1GetRefinementFesDateByFesYearFesYearIdResponse404 | getApiV1GetRefinementFesDateByFesYearFesYearIdResponse422) & {
-  headers: Headers;
+  data: ApiV1FesDatesApi;
+  status: 422;
 };
 
-export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponse = (getApiV1GetRefinementFesDateByFesYearFesYearIdResponseSuccess | getApiV1GetRefinementFesDateByFesYearFesYearIdResponseError)
+export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponseSuccess =
+  getApiV1GetRefinementFesDateByFesYearFesYearIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponseError = (
+  | getApiV1GetRefinementFesDateByFesYearFesYearIdResponse404
+  | getApiV1GetRefinementFesDateByFesYearFesYearIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetRefinementFesDateByFesYearFesYearIdUrl = (fesYearId: number,) => {
+export type getApiV1GetRefinementFesDateByFesYearFesYearIdResponse =
+  | getApiV1GetRefinementFesDateByFesYearFesYearIdResponseSuccess
+  | getApiV1GetRefinementFesDateByFesYearFesYearIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_fes_date_by_fes_year/${fesYearId}`
-}
+export const getGetApiV1GetRefinementFesDateByFesYearFesYearIdUrl = (
+  fesYearId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_fes_date_by_fes_year/${fesYearId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetRefinementFesDateByFesYearFesYearId = async (fesYearId: number, options?: RequestInit): Promise<getApiV1GetRefinementFesDateByFesYearFesYearIdResponse> => {
+export const getApiV1GetRefinementFesDateByFesYearFesYearId = async (
+  fesYearId: number,
+  options?: RequestInit
+): Promise<getApiV1GetRefinementFesDateByFesYearFesYearIdResponse> => {
+  return openApiFetch<getApiV1GetRefinementFesDateByFesYearFesYearIdResponse>(
+    getGetApiV1GetRefinementFesDateByFesYearFesYearIdUrl(fesYearId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetRefinementFesDateByFesYearFesYearIdResponse>(getGetApiV1GetRefinementFesDateByFesYearFesYearIdUrl(fesYearId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetRefinementFesDateByFesYearFesYearIdKey = (
+  fesYearId: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_fes_date_by_fes_year/${fesYearId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetRefinementFesDateByFesYearFesYearIdKey = (fesYearId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_fes_date_by_fes_year/${fesYearId}`] as const;
-
-export type GetApiV1GetRefinementFesDateByFesYearFesYearIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetRefinementFesDateByFesYearFesYearId>>>
+export type GetApiV1GetRefinementFesDateByFesYearFesYearIdQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getApiV1GetRefinementFesDateByFesYearFesYearId>>
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetRefinementFesDateByFesYearFesYearId = <TError = void | ApiV1FesDatesApi>(
-  fesYearId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetRefinementFesDateByFesYearFesYearId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetRefinementFesDateByFesYearFesYearId = <
+  TError = void | ApiV1FesDatesApi,
+>(
+  fesYearId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<
+        ReturnType<typeof getApiV1GetRefinementFesDateByFesYearFesYearId>
+      >,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && fesYearId !== null && fesYearId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetRefinementFesDateByFesYearFesYearIdKey(fesYearId) : null);
-  const swrFn = () => getApiV1GetRefinementFesDateByFesYearFesYearId(fesYearId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false &&
+    fesYearId !== null &&
+    fesYearId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetApiV1GetRefinementFesDateByFesYearFesYearIdKey(fesYearId)
+        : null);
+  const swrFn = () =>
+    getApiV1GetRefinementFesDateByFesYearFesYearId(fesYearId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

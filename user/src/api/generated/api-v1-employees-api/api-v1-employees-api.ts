@@ -9,318 +9,383 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1EmployeesApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1EmployeesApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetEmployeeIndexForAdminViewResponse200 = {
-  data: ApiV1EmployeesApi
-  status: 200
-}
+  data: ApiV1EmployeesApi;
+  status: 200;
+};
 
 export type getApiV1GetEmployeeIndexForAdminViewResponse422 = {
-  data: ApiV1EmployeesApi
-  status: 422
-}
-
-export type getApiV1GetEmployeeIndexForAdminViewResponseSuccess = (getApiV1GetEmployeeIndexForAdminViewResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetEmployeeIndexForAdminViewResponseError = (getApiV1GetEmployeeIndexForAdminViewResponse422) & {
-  headers: Headers;
+  data: ApiV1EmployeesApi;
+  status: 422;
 };
 
-export type getApiV1GetEmployeeIndexForAdminViewResponse = (getApiV1GetEmployeeIndexForAdminViewResponseSuccess | getApiV1GetEmployeeIndexForAdminViewResponseError)
+export type getApiV1GetEmployeeIndexForAdminViewResponseSuccess =
+  getApiV1GetEmployeeIndexForAdminViewResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetEmployeeIndexForAdminViewResponseError =
+  getApiV1GetEmployeeIndexForAdminViewResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetEmployeeIndexForAdminViewResponse =
+  | getApiV1GetEmployeeIndexForAdminViewResponseSuccess
+  | getApiV1GetEmployeeIndexForAdminViewResponseError;
 
 export const getGetApiV1GetEmployeeIndexForAdminViewUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_employee_index_for_admin_view`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_employee_index_for_admin_view`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetEmployeeIndexForAdminView = async ( options?: RequestInit): Promise<getApiV1GetEmployeeIndexForAdminViewResponse> => {
+export const getApiV1GetEmployeeIndexForAdminView = async (
+  options?: RequestInit
+): Promise<getApiV1GetEmployeeIndexForAdminViewResponse> => {
+  return openApiFetch<getApiV1GetEmployeeIndexForAdminViewResponse>(
+    getGetApiV1GetEmployeeIndexForAdminViewUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetEmployeeIndexForAdminViewResponse>(getGetApiV1GetEmployeeIndexForAdminViewUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetEmployeeIndexForAdminViewKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_employee_index_for_admin_view`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetEmployeeIndexForAdminViewKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_employee_index_for_admin_view`] as const;
-
-export type GetApiV1GetEmployeeIndexForAdminViewQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetEmployeeIndexForAdminView>>>
+export type GetApiV1GetEmployeeIndexForAdminViewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetEmployeeIndexForAdminView>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetEmployeeIndexForAdminView = <TError = ApiV1EmployeesApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetEmployeeIndexForAdminView>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetEmployeeIndexForAdminView = <
+  TError = ApiV1EmployeesApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetEmployeeIndexForAdminView>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetEmployeeIndexForAdminViewKey() : null);
-  const swrFn = () => getApiV1GetEmployeeIndexForAdminView(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetEmployeeIndexForAdminViewKey() : null));
+  const swrFn = () => getApiV1GetEmployeeIndexForAdminView(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetEmployeeShowForAdminViewIdResponse200 = {
-  data: ApiV1EmployeesApi
-  status: 200
-}
+  data: ApiV1EmployeesApi;
+  status: 200;
+};
 
 export type getApiV1GetEmployeeShowForAdminViewIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetEmployeeShowForAdminViewIdResponse422 = {
-  data: ApiV1EmployeesApi
-  status: 422
-}
-
-export type getApiV1GetEmployeeShowForAdminViewIdResponseSuccess = (getApiV1GetEmployeeShowForAdminViewIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetEmployeeShowForAdminViewIdResponseError = (getApiV1GetEmployeeShowForAdminViewIdResponse404 | getApiV1GetEmployeeShowForAdminViewIdResponse422) & {
-  headers: Headers;
+  data: ApiV1EmployeesApi;
+  status: 422;
 };
 
-export type getApiV1GetEmployeeShowForAdminViewIdResponse = (getApiV1GetEmployeeShowForAdminViewIdResponseSuccess | getApiV1GetEmployeeShowForAdminViewIdResponseError)
+export type getApiV1GetEmployeeShowForAdminViewIdResponseSuccess =
+  getApiV1GetEmployeeShowForAdminViewIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetEmployeeShowForAdminViewIdResponseError = (
+  | getApiV1GetEmployeeShowForAdminViewIdResponse404
+  | getApiV1GetEmployeeShowForAdminViewIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetEmployeeShowForAdminViewIdUrl = (id: number,) => {
+export type getApiV1GetEmployeeShowForAdminViewIdResponse =
+  | getApiV1GetEmployeeShowForAdminViewIdResponseSuccess
+  | getApiV1GetEmployeeShowForAdminViewIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_employee_show_for_admin_view/${id}`
-}
+export const getGetApiV1GetEmployeeShowForAdminViewIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_employee_show_for_admin_view/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetEmployeeShowForAdminViewId = async (id: number, options?: RequestInit): Promise<getApiV1GetEmployeeShowForAdminViewIdResponse> => {
+export const getApiV1GetEmployeeShowForAdminViewId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getApiV1GetEmployeeShowForAdminViewIdResponse> => {
+  return openApiFetch<getApiV1GetEmployeeShowForAdminViewIdResponse>(
+    getGetApiV1GetEmployeeShowForAdminViewIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetEmployeeShowForAdminViewIdResponse>(getGetApiV1GetEmployeeShowForAdminViewIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetEmployeeShowForAdminViewIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_employee_show_for_admin_view/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetEmployeeShowForAdminViewIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_employee_show_for_admin_view/${id}`] as const;
-
-export type GetApiV1GetEmployeeShowForAdminViewIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetEmployeeShowForAdminViewId>>>
+export type GetApiV1GetEmployeeShowForAdminViewIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetEmployeeShowForAdminViewId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetEmployeeShowForAdminViewId = <TError = void | ApiV1EmployeesApi>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetEmployeeShowForAdminViewId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetEmployeeShowForAdminViewId = <
+  TError = void | ApiV1EmployeesApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getApiV1GetEmployeeShowForAdminViewId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetEmployeeShowForAdminViewIdKey(id) : null);
-  const swrFn = () => getApiV1GetEmployeeShowForAdminViewId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetEmployeeShowForAdminViewIdKey(id) : null);
+  const swrFn = () => getApiV1GetEmployeeShowForAdminViewId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetRefinementEmployeesResponse201 = {
-  data: ApiV1EmployeesApi
-  status: 201
-}
+  data: ApiV1EmployeesApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementEmployeesResponse422 = {
-  data: ApiV1EmployeesApi
-  status: 422
-}
-
-export type postApiV1GetRefinementEmployeesResponseSuccess = (postApiV1GetRefinementEmployeesResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementEmployeesResponseError = (postApiV1GetRefinementEmployeesResponse422) & {
-  headers: Headers;
+  data: ApiV1EmployeesApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementEmployeesResponse = (postApiV1GetRefinementEmployeesResponseSuccess | postApiV1GetRefinementEmployeesResponseError)
+export type postApiV1GetRefinementEmployeesResponseSuccess =
+  postApiV1GetRefinementEmployeesResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementEmployeesResponseError =
+  postApiV1GetRefinementEmployeesResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementEmployeesResponse =
+  | postApiV1GetRefinementEmployeesResponseSuccess
+  | postApiV1GetRefinementEmployeesResponseError;
 
 export const getPostApiV1GetRefinementEmployeesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_employees`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_employees`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementEmployees = async (apiV1EmployeesApi?: ApiV1EmployeesApi, options?: RequestInit): Promise<postApiV1GetRefinementEmployeesResponse> => {
+export const postApiV1GetRefinementEmployees = async (
+  apiV1EmployeesApi?: ApiV1EmployeesApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementEmployeesResponse> => {
+  return openApiFetch<postApiV1GetRefinementEmployeesResponse>(
+    getPostApiV1GetRefinementEmployeesUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1EmployeesApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementEmployeesResponse>(getPostApiV1GetRefinementEmployeesUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1EmployeesApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementEmployeesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementEmployeesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1EmployeesApi | undefined }) => {
     return postApiV1GetRefinementEmployees(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementEmployeesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_employees`] as const;
+  };
+};
+export const getPostApiV1GetRefinementEmployeesMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_employees`,
+  ] as const;
 
-export type PostApiV1GetRefinementEmployeesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>>
+export type PostApiV1GetRefinementEmployeesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementEmployees = <TError = ApiV1EmployeesApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>, TError, Key, ApiV1EmployeesApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementEmployees = <
+  TError = ApiV1EmployeesApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>,
+    TError,
+    Key,
+    ApiV1EmployeesApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementEmployees>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementEmployeesMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementEmployeesMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementEmployeesMutationKey();
-  const swrFn = getPostApiV1GetRefinementEmployeesMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetSearchEmployeesResponse201 = {
-  data: ApiV1EmployeesApi
-  status: 201
-}
+  data: ApiV1EmployeesApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchEmployeesResponse422 = {
-  data: ApiV1EmployeesApi
-  status: 422
-}
-
-export type postApiV1GetSearchEmployeesResponseSuccess = (postApiV1GetSearchEmployeesResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchEmployeesResponseError = (postApiV1GetSearchEmployeesResponse422) & {
-  headers: Headers;
+  data: ApiV1EmployeesApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchEmployeesResponse = (postApiV1GetSearchEmployeesResponseSuccess | postApiV1GetSearchEmployeesResponseError)
+export type postApiV1GetSearchEmployeesResponseSuccess =
+  postApiV1GetSearchEmployeesResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchEmployeesResponseError =
+  postApiV1GetSearchEmployeesResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchEmployeesResponse =
+  | postApiV1GetSearchEmployeesResponseSuccess
+  | postApiV1GetSearchEmployeesResponseError;
 
 export const getPostApiV1GetSearchEmployeesUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_employees`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_employees`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchEmployees = async (apiV1EmployeesApi?: ApiV1EmployeesApi, options?: RequestInit): Promise<postApiV1GetSearchEmployeesResponse> => {
+export const postApiV1GetSearchEmployees = async (
+  apiV1EmployeesApi?: ApiV1EmployeesApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchEmployeesResponse> => {
+  return openApiFetch<postApiV1GetSearchEmployeesResponse>(
+    getPostApiV1GetSearchEmployeesUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1EmployeesApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchEmployeesResponse>(getPostApiV1GetSearchEmployeesUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1EmployeesApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchEmployeesMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchEmployeesMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1EmployeesApi | undefined }) => {
     return postApiV1GetSearchEmployees(arg, options);
-  }
-}
-export const getPostApiV1GetSearchEmployeesMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_employees`] as const;
+  };
+};
+export const getPostApiV1GetSearchEmployeesMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_employees`,
+  ] as const;
 
-export type PostApiV1GetSearchEmployeesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>>
+export type PostApiV1GetSearchEmployeesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchEmployees = <TError = ApiV1EmployeesApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>, TError, Key, ApiV1EmployeesApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchEmployees = <
+  TError = ApiV1EmployeesApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>,
+    TError,
+    Key,
+    ApiV1EmployeesApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchEmployees>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchEmployeesMutationKey();
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchEmployeesMutationKey();
   const swrFn = getPostApiV1GetSearchEmployeesMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

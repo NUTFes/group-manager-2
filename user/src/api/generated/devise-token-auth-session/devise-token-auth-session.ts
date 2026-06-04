@@ -9,243 +9,256 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  DevisetokenauthSession
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { DevisetokenauthSession } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiAuthSignInResponse200 = {
-  data: DevisetokenauthSession
-  status: 200
-}
+  data: DevisetokenauthSession;
+  status: 200;
+};
 
 export type getApiAuthSignInResponse422 = {
-  data: DevisetokenauthSession
-  status: 422
-}
-
-export type getApiAuthSignInResponseSuccess = (getApiAuthSignInResponse200) & {
-  headers: Headers;
-};
-export type getApiAuthSignInResponseError = (getApiAuthSignInResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthSession;
+  status: 422;
 };
 
-export type getApiAuthSignInResponse = (getApiAuthSignInResponseSuccess | getApiAuthSignInResponseError)
+export type getApiAuthSignInResponseSuccess = getApiAuthSignInResponse200 & {
+  headers: Headers;
+};
+export type getApiAuthSignInResponseError = getApiAuthSignInResponse422 & {
+  headers: Headers;
+};
+
+export type getApiAuthSignInResponse =
+  | getApiAuthSignInResponseSuccess
+  | getApiAuthSignInResponseError;
 
 export const getGetApiAuthSignInUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_in`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_in`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiAuthSignIn = async ( options?: RequestInit): Promise<getApiAuthSignInResponse> => {
-
-  return openApiFetch<getApiAuthSignInResponse>(getGetApiAuthSignInUrl(),
-  {
+export const getApiAuthSignIn = async (
+  options?: RequestInit
+): Promise<getApiAuthSignInResponse> => {
+  return openApiFetch<getApiAuthSignInResponse>(getGetApiAuthSignInUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetApiAuthSignInKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_in`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetApiAuthSignInKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_in`] as const;
-
-export type GetApiAuthSignInQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthSignIn>>>
+export type GetApiAuthSignInQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthSignIn>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiAuthSignIn = <TError = DevisetokenauthSession>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiAuthSignIn>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiAuthSignIn = <TError = DevisetokenauthSession>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiAuthSignIn>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiAuthSignInKey() : null);
-  const swrFn = () => getApiAuthSignIn(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetApiAuthSignInKey() : null));
+  const swrFn = () => getApiAuthSignIn(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiAuthSignInResponse201 = {
-  data: DevisetokenauthSession
-  status: 201
-}
+  data: DevisetokenauthSession;
+  status: 201;
+};
 
 export type postApiAuthSignInResponse422 = {
-  data: DevisetokenauthSession
-  status: 422
-}
-
-export type postApiAuthSignInResponseSuccess = (postApiAuthSignInResponse201) & {
-  headers: Headers;
-};
-export type postApiAuthSignInResponseError = (postApiAuthSignInResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthSession;
+  status: 422;
 };
 
-export type postApiAuthSignInResponse = (postApiAuthSignInResponseSuccess | postApiAuthSignInResponseError)
+export type postApiAuthSignInResponseSuccess = postApiAuthSignInResponse201 & {
+  headers: Headers;
+};
+export type postApiAuthSignInResponseError = postApiAuthSignInResponse422 & {
+  headers: Headers;
+};
+
+export type postApiAuthSignInResponse =
+  | postApiAuthSignInResponseSuccess
+  | postApiAuthSignInResponseError;
 
 export const getPostApiAuthSignInUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_in`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_in`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiAuthSignIn = async (devisetokenauthSession?: DevisetokenauthSession, options?: RequestInit): Promise<postApiAuthSignInResponse> => {
-
-  return openApiFetch<postApiAuthSignInResponse>(getPostApiAuthSignInUrl(),
-  {
+export const postApiAuthSignIn = async (
+  devisetokenauthSession?: DevisetokenauthSession,
+  options?: RequestInit
+): Promise<postApiAuthSignInResponse> => {
+  return openApiFetch<postApiAuthSignInResponse>(getPostApiAuthSignInUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(devisetokenauthSession)
-  }
-);}
+    body: JSON.stringify(devisetokenauthSession),
+  });
+};
 
-
-
-
-export const getPostApiAuthSignInMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiAuthSignInMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: DevisetokenauthSession | undefined }) => {
     return postApiAuthSignIn(arg, options);
-  }
-}
-export const getPostApiAuthSignInMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_in`] as const;
+  };
+};
+export const getPostApiAuthSignInMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_in`] as const;
 
-export type PostApiAuthSignInMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthSignIn>>>
+export type PostApiAuthSignInMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiAuthSignIn>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiAuthSignIn = <TError = DevisetokenauthSession>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiAuthSignIn>>, TError, Key, DevisetokenauthSession | undefined, Awaited<ReturnType<typeof postApiAuthSignIn>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostApiAuthSignIn = <
+  TError = DevisetokenauthSession,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiAuthSignIn>>,
+    TError,
+    Key,
+    DevisetokenauthSession | undefined,
+    Awaited<ReturnType<typeof postApiAuthSignIn>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostApiAuthSignInMutationKey();
   const swrFn = getPostApiAuthSignInMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteApiAuthSignOutResponse200 = {
-  data: DevisetokenauthSession
-  status: 200
-}
+  data: DevisetokenauthSession;
+  status: 200;
+};
 
 export type deleteApiAuthSignOutResponse422 = {
-  data: DevisetokenauthSession
-  status: 422
-}
-
-export type deleteApiAuthSignOutResponseSuccess = (deleteApiAuthSignOutResponse200) & {
-  headers: Headers;
-};
-export type deleteApiAuthSignOutResponseError = (deleteApiAuthSignOutResponse422) & {
-  headers: Headers;
+  data: DevisetokenauthSession;
+  status: 422;
 };
 
-export type deleteApiAuthSignOutResponse = (deleteApiAuthSignOutResponseSuccess | deleteApiAuthSignOutResponseError)
+export type deleteApiAuthSignOutResponseSuccess =
+  deleteApiAuthSignOutResponse200 & {
+    headers: Headers;
+  };
+export type deleteApiAuthSignOutResponseError =
+  deleteApiAuthSignOutResponse422 & {
+    headers: Headers;
+  };
+
+export type deleteApiAuthSignOutResponse =
+  | deleteApiAuthSignOutResponseSuccess
+  | deleteApiAuthSignOutResponseError;
 
 export const getDeleteApiAuthSignOutUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_out`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_out`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteApiAuthSignOut = async ( options?: RequestInit): Promise<deleteApiAuthSignOutResponse> => {
+export const deleteApiAuthSignOut = async (
+  options?: RequestInit
+): Promise<deleteApiAuthSignOutResponse> => {
+  return openApiFetch<deleteApiAuthSignOutResponse>(
+    getDeleteApiAuthSignOutUrl(),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteApiAuthSignOutResponse>(getDeleteApiAuthSignOutUrl(),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteApiAuthSignOutMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteApiAuthSignOutMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteApiAuthSignOut(options);
-  }
-}
-export const getDeleteApiAuthSignOutMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/auth/sign_out`] as const;
+  };
+};
+export const getDeleteApiAuthSignOutMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/auth/sign_out`] as const;
 
-export type DeleteApiAuthSignOutMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiAuthSignOut>>>
+export type DeleteApiAuthSignOutMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteApiAuthSignOut>>
+>;
 
 /**
  * @summary delete summary
  */
-export const useDeleteApiAuthSignOut = <TError = DevisetokenauthSession>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteApiAuthSignOut>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteApiAuthSignOut>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useDeleteApiAuthSignOut = <
+  TError = DevisetokenauthSession,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof deleteApiAuthSignOut>>,
+    TError,
+    Key,
+    Arguments,
+    Awaited<ReturnType<typeof deleteApiAuthSignOut>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteApiAuthSignOutMutationKey();
   const swrFn = getDeleteApiAuthSignOutMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

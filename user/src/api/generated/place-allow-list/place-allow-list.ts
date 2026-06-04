@@ -9,482 +9,563 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  PlaceAllowList
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { PlaceAllowList } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getPlaceAllowListsResponse200 = {
-  data: PlaceAllowList
-  status: 200
-}
+  data: PlaceAllowList;
+  status: 200;
+};
 
 export type getPlaceAllowListsResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type getPlaceAllowListsResponseSuccess = (getPlaceAllowListsResponse200) & {
-  headers: Headers;
-};
-export type getPlaceAllowListsResponseError = (getPlaceAllowListsResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type getPlaceAllowListsResponse = (getPlaceAllowListsResponseSuccess | getPlaceAllowListsResponseError)
+export type getPlaceAllowListsResponseSuccess =
+  getPlaceAllowListsResponse200 & {
+    headers: Headers;
+  };
+export type getPlaceAllowListsResponseError = getPlaceAllowListsResponse422 & {
+  headers: Headers;
+};
+
+export type getPlaceAllowListsResponse =
+  | getPlaceAllowListsResponseSuccess
+  | getPlaceAllowListsResponseError;
 
 export const getGetPlaceAllowListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceAllowLists = async ( options?: RequestInit): Promise<getPlaceAllowListsResponse> => {
-
-  return openApiFetch<getPlaceAllowListsResponse>(getGetPlaceAllowListsUrl(),
-  {
+export const getPlaceAllowLists = async (
+  options?: RequestInit
+): Promise<getPlaceAllowListsResponse> => {
+  return openApiFetch<getPlaceAllowListsResponse>(getGetPlaceAllowListsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPlaceAllowListsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPlaceAllowListsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists`] as const;
-
-export type GetPlaceAllowListsQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceAllowLists>>>
+export type GetPlaceAllowListsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceAllowLists>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPlaceAllowLists = <TError = PlaceAllowList>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceAllowLists>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPlaceAllowLists = <TError = PlaceAllowList>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getPlaceAllowLists>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceAllowListsKey() : null);
-  const swrFn = () => getPlaceAllowLists(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPlaceAllowListsKey() : null));
+  const swrFn = () => getPlaceAllowLists(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPlaceAllowListsResponse201 = {
-  data: PlaceAllowList
-  status: 201
-}
+  data: PlaceAllowList;
+  status: 201;
+};
 
 export type postPlaceAllowListsResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type postPlaceAllowListsResponseSuccess = (postPlaceAllowListsResponse201) & {
-  headers: Headers;
-};
-export type postPlaceAllowListsResponseError = (postPlaceAllowListsResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type postPlaceAllowListsResponse = (postPlaceAllowListsResponseSuccess | postPlaceAllowListsResponseError)
+export type postPlaceAllowListsResponseSuccess =
+  postPlaceAllowListsResponse201 & {
+    headers: Headers;
+  };
+export type postPlaceAllowListsResponseError =
+  postPlaceAllowListsResponse422 & {
+    headers: Headers;
+  };
+
+export type postPlaceAllowListsResponse =
+  | postPlaceAllowListsResponseSuccess
+  | postPlaceAllowListsResponseError;
 
 export const getPostPlaceAllowListsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPlaceAllowLists = async (placeAllowList?: PlaceAllowList, options?: RequestInit): Promise<postPlaceAllowListsResponse> => {
+export const postPlaceAllowLists = async (
+  placeAllowList?: PlaceAllowList,
+  options?: RequestInit
+): Promise<postPlaceAllowListsResponse> => {
+  return openApiFetch<postPlaceAllowListsResponse>(
+    getPostPlaceAllowListsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(placeAllowList),
+    }
+  );
+};
 
-  return openApiFetch<postPlaceAllowListsResponse>(getPostPlaceAllowListsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeAllowList)
-  }
-);}
-
-
-
-
-export const getPostPlaceAllowListsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPlaceAllowListsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceAllowList | undefined }) => {
     return postPlaceAllowLists(arg, options);
-  }
-}
-export const getPostPlaceAllowListsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists`] as const;
+  };
+};
+export const getPostPlaceAllowListsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists`] as const;
 
-export type PostPlaceAllowListsMutationResult = NonNullable<Awaited<ReturnType<typeof postPlaceAllowLists>>>
+export type PostPlaceAllowListsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPlaceAllowLists>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPlaceAllowLists = <TError = PlaceAllowList>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPlaceAllowLists>>, TError, Key, PlaceAllowList | undefined, Awaited<ReturnType<typeof postPlaceAllowLists>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPlaceAllowLists = <TError = PlaceAllowList>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPlaceAllowLists>>,
+    TError,
+    Key,
+    PlaceAllowList | undefined,
+    Awaited<ReturnType<typeof postPlaceAllowLists>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPlaceAllowListsMutationKey();
   const swrFn = getPostPlaceAllowListsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPlaceAllowListsIdResponse200 = {
-  data: PlaceAllowList
-  status: 200
-}
+  data: PlaceAllowList;
+  status: 200;
+};
 
 export type getPlaceAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPlaceAllowListsIdResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type getPlaceAllowListsIdResponseSuccess = (getPlaceAllowListsIdResponse200) & {
-  headers: Headers;
-};
-export type getPlaceAllowListsIdResponseError = (getPlaceAllowListsIdResponse404 | getPlaceAllowListsIdResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type getPlaceAllowListsIdResponse = (getPlaceAllowListsIdResponseSuccess | getPlaceAllowListsIdResponseError)
+export type getPlaceAllowListsIdResponseSuccess =
+  getPlaceAllowListsIdResponse200 & {
+    headers: Headers;
+  };
+export type getPlaceAllowListsIdResponseError = (
+  | getPlaceAllowListsIdResponse404
+  | getPlaceAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPlaceAllowListsIdUrl = (id: number,) => {
+export type getPlaceAllowListsIdResponse =
+  | getPlaceAllowListsIdResponseSuccess
+  | getPlaceAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`
-}
+export const getGetPlaceAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceAllowListsId = async (id: number, options?: RequestInit): Promise<getPlaceAllowListsIdResponse> => {
+export const getPlaceAllowListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getPlaceAllowListsIdResponse> => {
+  return openApiFetch<getPlaceAllowListsIdResponse>(
+    getGetPlaceAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPlaceAllowListsIdResponse>(getGetPlaceAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPlaceAllowListsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPlaceAllowListsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`] as const;
-
-export type GetPlaceAllowListsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceAllowListsId>>>
+export type GetPlaceAllowListsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceAllowListsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPlaceAllowListsId = <TError = void | PlaceAllowList>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceAllowListsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPlaceAllowListsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceAllowListsIdKey(id) : null);
-  const swrFn = () => getPlaceAllowListsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPlaceAllowListsIdKey(id) : null));
+  const swrFn = () => getPlaceAllowListsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchPlaceAllowListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchPlaceAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchPlaceAllowListsIdResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type patchPlaceAllowListsIdResponseSuccess = (patchPlaceAllowListsIdResponse204) & {
-  headers: Headers;
-};
-export type patchPlaceAllowListsIdResponseError = (patchPlaceAllowListsIdResponse404 | patchPlaceAllowListsIdResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type patchPlaceAllowListsIdResponse = (patchPlaceAllowListsIdResponseSuccess | patchPlaceAllowListsIdResponseError)
+export type patchPlaceAllowListsIdResponseSuccess =
+  patchPlaceAllowListsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchPlaceAllowListsIdResponseError = (
+  | patchPlaceAllowListsIdResponse404
+  | patchPlaceAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchPlaceAllowListsIdUrl = (id: number,) => {
+export type patchPlaceAllowListsIdResponse =
+  | patchPlaceAllowListsIdResponseSuccess
+  | patchPlaceAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`
-}
+export const getPatchPlaceAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchPlaceAllowListsId = async (id: number,
-    placeAllowList?: PlaceAllowList, options?: RequestInit): Promise<patchPlaceAllowListsIdResponse> => {
+export const patchPlaceAllowListsId = async (
+  id: number,
+  placeAllowList?: PlaceAllowList,
+  options?: RequestInit
+): Promise<patchPlaceAllowListsIdResponse> => {
+  return openApiFetch<patchPlaceAllowListsIdResponse>(
+    getPatchPlaceAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(placeAllowList),
+    }
+  );
+};
 
-  return openApiFetch<patchPlaceAllowListsIdResponse>(getPatchPlaceAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeAllowList)
-  }
-);}
-
-
-
-
-export const getPatchPlaceAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchPlaceAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceAllowList | undefined }) => {
     return patchPlaceAllowListsId(id, arg, options);
-  }
-}
-export const getPatchPlaceAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`] as const;
+  };
+};
+export const getPatchPlaceAllowListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`] as const;
 
-export type PatchPlaceAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchPlaceAllowListsId>>>
+export type PatchPlaceAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchPlaceAllowListsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchPlaceAllowListsId = <TError = void | PlaceAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchPlaceAllowListsId>>, TError, Key, PlaceAllowList | undefined, Awaited<ReturnType<typeof patchPlaceAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchPlaceAllowListsId>>,
+      TError,
+      Key,
+      PlaceAllowList | undefined,
+      Awaited<ReturnType<typeof patchPlaceAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchPlaceAllowListsIdMutationKey(id);
   const swrFn = getPatchPlaceAllowListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putPlaceAllowListsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putPlaceAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putPlaceAllowListsIdResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type putPlaceAllowListsIdResponseSuccess = (putPlaceAllowListsIdResponse204) & {
-  headers: Headers;
-};
-export type putPlaceAllowListsIdResponseError = (putPlaceAllowListsIdResponse404 | putPlaceAllowListsIdResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type putPlaceAllowListsIdResponse = (putPlaceAllowListsIdResponseSuccess | putPlaceAllowListsIdResponseError)
+export type putPlaceAllowListsIdResponseSuccess =
+  putPlaceAllowListsIdResponse204 & {
+    headers: Headers;
+  };
+export type putPlaceAllowListsIdResponseError = (
+  | putPlaceAllowListsIdResponse404
+  | putPlaceAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutPlaceAllowListsIdUrl = (id: number,) => {
+export type putPlaceAllowListsIdResponse =
+  | putPlaceAllowListsIdResponseSuccess
+  | putPlaceAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`
-}
+export const getPutPlaceAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putPlaceAllowListsId = async (id: number,
-    placeAllowList?: PlaceAllowList, options?: RequestInit): Promise<putPlaceAllowListsIdResponse> => {
+export const putPlaceAllowListsId = async (
+  id: number,
+  placeAllowList?: PlaceAllowList,
+  options?: RequestInit
+): Promise<putPlaceAllowListsIdResponse> => {
+  return openApiFetch<putPlaceAllowListsIdResponse>(
+    getPutPlaceAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(placeAllowList),
+    }
+  );
+};
 
-  return openApiFetch<putPlaceAllowListsIdResponse>(getPutPlaceAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeAllowList)
-  }
-);}
-
-
-
-
-export const getPutPlaceAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutPlaceAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceAllowList | undefined }) => {
     return putPlaceAllowListsId(id, arg, options);
-  }
-}
-export const getPutPlaceAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`] as const;
+  };
+};
+export const getPutPlaceAllowListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`] as const;
 
-export type PutPlaceAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putPlaceAllowListsId>>>
+export type PutPlaceAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putPlaceAllowListsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutPlaceAllowListsId = <TError = void | PlaceAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putPlaceAllowListsId>>, TError, Key, PlaceAllowList | undefined, Awaited<ReturnType<typeof putPlaceAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putPlaceAllowListsId>>,
+      TError,
+      Key,
+      PlaceAllowList | undefined,
+      Awaited<ReturnType<typeof putPlaceAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutPlaceAllowListsIdMutationKey(id);
   const swrFn = getPutPlaceAllowListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deletePlaceAllowListsIdResponse200 = {
-  data: PlaceAllowList
-  status: 200
-}
+  data: PlaceAllowList;
+  status: 200;
+};
 
 export type deletePlaceAllowListsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deletePlaceAllowListsIdResponse422 = {
-  data: PlaceAllowList
-  status: 422
-}
-
-export type deletePlaceAllowListsIdResponseSuccess = (deletePlaceAllowListsIdResponse200) & {
-  headers: Headers;
-};
-export type deletePlaceAllowListsIdResponseError = (deletePlaceAllowListsIdResponse404 | deletePlaceAllowListsIdResponse422) & {
-  headers: Headers;
+  data: PlaceAllowList;
+  status: 422;
 };
 
-export type deletePlaceAllowListsIdResponse = (deletePlaceAllowListsIdResponseSuccess | deletePlaceAllowListsIdResponseError)
+export type deletePlaceAllowListsIdResponseSuccess =
+  deletePlaceAllowListsIdResponse200 & {
+    headers: Headers;
+  };
+export type deletePlaceAllowListsIdResponseError = (
+  | deletePlaceAllowListsIdResponse404
+  | deletePlaceAllowListsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeletePlaceAllowListsIdUrl = (id: number,) => {
+export type deletePlaceAllowListsIdResponse =
+  | deletePlaceAllowListsIdResponseSuccess
+  | deletePlaceAllowListsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`
-}
+export const getDeletePlaceAllowListsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deletePlaceAllowListsId = async (id: number, options?: RequestInit): Promise<deletePlaceAllowListsIdResponse> => {
+export const deletePlaceAllowListsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deletePlaceAllowListsIdResponse> => {
+  return openApiFetch<deletePlaceAllowListsIdResponse>(
+    getDeletePlaceAllowListsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deletePlaceAllowListsIdResponse>(getDeletePlaceAllowListsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeletePlaceAllowListsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeletePlaceAllowListsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deletePlaceAllowListsId(id, options);
-  }
-}
-export const getDeletePlaceAllowListsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_allow_lists/${id}`] as const;
+  };
+};
+export const getDeletePlaceAllowListsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_allow_lists/${id}`] as const;
 
-export type DeletePlaceAllowListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlaceAllowListsId>>>
+export type DeletePlaceAllowListsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePlaceAllowListsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeletePlaceAllowListsId = <TError = void | PlaceAllowList>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deletePlaceAllowListsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deletePlaceAllowListsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deletePlaceAllowListsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deletePlaceAllowListsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getDeletePlaceAllowListsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getDeletePlaceAllowListsIdMutationKey(id);
   const swrFn = getDeletePlaceAllowListsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

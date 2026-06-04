@@ -9,558 +9,646 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  StageOrder
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { StageOrder } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getStageOrdersResponse200 = {
-  data: StageOrder
-  status: 200
-}
+  data: StageOrder;
+  status: 200;
+};
 
 export type getStageOrdersResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type getStageOrdersResponseSuccess = (getStageOrdersResponse200) & {
-  headers: Headers;
-};
-export type getStageOrdersResponseError = (getStageOrdersResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type getStageOrdersResponse = (getStageOrdersResponseSuccess | getStageOrdersResponseError)
+export type getStageOrdersResponseSuccess = getStageOrdersResponse200 & {
+  headers: Headers;
+};
+export type getStageOrdersResponseError = getStageOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type getStageOrdersResponse =
+  | getStageOrdersResponseSuccess
+  | getStageOrdersResponseError;
 
 export const getGetStageOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageOrders = async ( options?: RequestInit): Promise<getStageOrdersResponse> => {
-
-  return openApiFetch<getStageOrdersResponse>(getGetStageOrdersUrl(),
-  {
+export const getStageOrders = async (
+  options?: RequestInit
+): Promise<getStageOrdersResponse> => {
+  return openApiFetch<getStageOrdersResponse>(getGetStageOrdersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStageOrdersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStageOrdersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders`] as const;
-
-export type GetStageOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getStageOrders>>>
+export type GetStageOrdersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageOrders>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStageOrders = <TError = StageOrder>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageOrders>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetStageOrders = <TError = StageOrder>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getStageOrders>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageOrdersKey() : null);
-  const swrFn = () => getStageOrders(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetStageOrdersKey() : null));
+  const swrFn = () => getStageOrders(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postStageOrdersResponse201 = {
-  data: StageOrder
-  status: 201
-}
+  data: StageOrder;
+  status: 201;
+};
 
 export type postStageOrdersResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type postStageOrdersResponseSuccess = (postStageOrdersResponse201) & {
-  headers: Headers;
-};
-export type postStageOrdersResponseError = (postStageOrdersResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type postStageOrdersResponse = (postStageOrdersResponseSuccess | postStageOrdersResponseError)
+export type postStageOrdersResponseSuccess = postStageOrdersResponse201 & {
+  headers: Headers;
+};
+export type postStageOrdersResponseError = postStageOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type postStageOrdersResponse =
+  | postStageOrdersResponseSuccess
+  | postStageOrdersResponseError;
 
 export const getPostStageOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postStageOrders = async (stageOrder?: StageOrder, options?: RequestInit): Promise<postStageOrdersResponse> => {
-
-  return openApiFetch<postStageOrdersResponse>(getPostStageOrdersUrl(),
-  {
+export const postStageOrders = async (
+  stageOrder?: StageOrder,
+  options?: RequestInit
+): Promise<postStageOrdersResponse> => {
+  return openApiFetch<postStageOrdersResponse>(getPostStageOrdersUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageOrder)
-  }
-);}
+    body: JSON.stringify(stageOrder),
+  });
+};
 
-
-
-
-export const getPostStageOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostStageOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageOrder | undefined }) => {
     return postStageOrders(arg, options);
-  }
-}
-export const getPostStageOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders`] as const;
+  };
+};
+export const getPostStageOrdersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders`] as const;
 
-export type PostStageOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postStageOrders>>>
+export type PostStageOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postStageOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostStageOrders = <TError = StageOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postStageOrders>>, TError, Key, StageOrder | undefined, Awaited<ReturnType<typeof postStageOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostStageOrders = <TError = StageOrder>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postStageOrders>>,
+    TError,
+    Key,
+    StageOrder | undefined,
+    Awaited<ReturnType<typeof postStageOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostStageOrdersMutationKey();
   const swrFn = getPostStageOrdersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStageOrdersIdResponse200 = {
-  data: StageOrder
-  status: 200
-}
+  data: StageOrder;
+  status: 200;
+};
 
 export type getStageOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStageOrdersIdResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type getStageOrdersIdResponseSuccess = (getStageOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type getStageOrdersIdResponseError = (getStageOrdersIdResponse404 | getStageOrdersIdResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type getStageOrdersIdResponse = (getStageOrdersIdResponseSuccess | getStageOrdersIdResponseError)
+export type getStageOrdersIdResponseSuccess = getStageOrdersIdResponse200 & {
+  headers: Headers;
+};
+export type getStageOrdersIdResponseError = (
+  | getStageOrdersIdResponse404
+  | getStageOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStageOrdersIdUrl = (id: number,) => {
+export type getStageOrdersIdResponse =
+  | getStageOrdersIdResponseSuccess
+  | getStageOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`
-}
+export const getGetStageOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageOrdersId = async (id: number, options?: RequestInit): Promise<getStageOrdersIdResponse> => {
-
-  return openApiFetch<getStageOrdersIdResponse>(getGetStageOrdersIdUrl(id),
-  {
+export const getStageOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getStageOrdersIdResponse> => {
+  return openApiFetch<getStageOrdersIdResponse>(getGetStageOrdersIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStageOrdersIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStageOrdersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`] as const;
-
-export type GetStageOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStageOrdersId>>>
+export type GetStageOrdersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageOrdersId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStageOrdersId = <TError = void | StageOrder>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageOrdersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStageOrdersId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageOrdersIdKey(id) : null);
-  const swrFn = () => getStageOrdersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStageOrdersIdKey(id) : null));
+  const swrFn = () => getStageOrdersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchStageOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchStageOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchStageOrdersIdResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type patchStageOrdersIdResponseSuccess = (patchStageOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type patchStageOrdersIdResponseError = (patchStageOrdersIdResponse404 | patchStageOrdersIdResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type patchStageOrdersIdResponse = (patchStageOrdersIdResponseSuccess | patchStageOrdersIdResponseError)
+export type patchStageOrdersIdResponseSuccess =
+  patchStageOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type patchStageOrdersIdResponseError = (
+  | patchStageOrdersIdResponse404
+  | patchStageOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchStageOrdersIdUrl = (id: number,) => {
+export type patchStageOrdersIdResponse =
+  | patchStageOrdersIdResponseSuccess
+  | patchStageOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`
-}
+export const getPatchStageOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchStageOrdersId = async (id: number,
-    stageOrder?: StageOrder, options?: RequestInit): Promise<patchStageOrdersIdResponse> => {
+export const patchStageOrdersId = async (
+  id: number,
+  stageOrder?: StageOrder,
+  options?: RequestInit
+): Promise<patchStageOrdersIdResponse> => {
+  return openApiFetch<patchStageOrdersIdResponse>(
+    getPatchStageOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stageOrder),
+    }
+  );
+};
 
-  return openApiFetch<patchStageOrdersIdResponse>(getPatchStageOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageOrder)
-  }
-);}
-
-
-
-
-export const getPatchStageOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchStageOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageOrder | undefined }) => {
     return patchStageOrdersId(id, arg, options);
-  }
-}
-export const getPatchStageOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`] as const;
+  };
+};
+export const getPatchStageOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`] as const;
 
-export type PatchStageOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchStageOrdersId>>>
+export type PatchStageOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchStageOrdersId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchStageOrdersId = <TError = void | StageOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchStageOrdersId>>, TError, Key, StageOrder | undefined, Awaited<ReturnType<typeof patchStageOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchStageOrdersId>>,
+      TError,
+      Key,
+      StageOrder | undefined,
+      Awaited<ReturnType<typeof patchStageOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchStageOrdersIdMutationKey(id);
   const swrFn = getPatchStageOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putStageOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putStageOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putStageOrdersIdResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type putStageOrdersIdResponseSuccess = (putStageOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type putStageOrdersIdResponseError = (putStageOrdersIdResponse404 | putStageOrdersIdResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type putStageOrdersIdResponse = (putStageOrdersIdResponseSuccess | putStageOrdersIdResponseError)
+export type putStageOrdersIdResponseSuccess = putStageOrdersIdResponse204 & {
+  headers: Headers;
+};
+export type putStageOrdersIdResponseError = (
+  | putStageOrdersIdResponse404
+  | putStageOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutStageOrdersIdUrl = (id: number,) => {
+export type putStageOrdersIdResponse =
+  | putStageOrdersIdResponseSuccess
+  | putStageOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`
-}
+export const getPutStageOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putStageOrdersId = async (id: number,
-    stageOrder?: StageOrder, options?: RequestInit): Promise<putStageOrdersIdResponse> => {
-
-  return openApiFetch<putStageOrdersIdResponse>(getPutStageOrdersIdUrl(id),
-  {
+export const putStageOrdersId = async (
+  id: number,
+  stageOrder?: StageOrder,
+  options?: RequestInit
+): Promise<putStageOrdersIdResponse> => {
+  return openApiFetch<putStageOrdersIdResponse>(getPutStageOrdersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stageOrder)
-  }
-);}
+    body: JSON.stringify(stageOrder),
+  });
+};
 
-
-
-
-export const getPutStageOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutStageOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StageOrder | undefined }) => {
     return putStageOrdersId(id, arg, options);
-  }
-}
-export const getPutStageOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`] as const;
+  };
+};
+export const getPutStageOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`] as const;
 
-export type PutStageOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putStageOrdersId>>>
+export type PutStageOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putStageOrdersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutStageOrdersId = <TError = void | StageOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putStageOrdersId>>, TError, Key, StageOrder | undefined, Awaited<ReturnType<typeof putStageOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putStageOrdersId>>,
+      TError,
+      Key,
+      StageOrder | undefined,
+      Awaited<ReturnType<typeof putStageOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutStageOrdersIdMutationKey(id);
   const swrFn = getPutStageOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteStageOrdersIdResponse200 = {
-  data: StageOrder
-  status: 200
-}
+  data: StageOrder;
+  status: 200;
+};
 
 export type deleteStageOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteStageOrdersIdResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type deleteStageOrdersIdResponseSuccess = (deleteStageOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type deleteStageOrdersIdResponseError = (deleteStageOrdersIdResponse404 | deleteStageOrdersIdResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type deleteStageOrdersIdResponse = (deleteStageOrdersIdResponseSuccess | deleteStageOrdersIdResponseError)
+export type deleteStageOrdersIdResponseSuccess =
+  deleteStageOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteStageOrdersIdResponseError = (
+  | deleteStageOrdersIdResponse404
+  | deleteStageOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteStageOrdersIdUrl = (id: number,) => {
+export type deleteStageOrdersIdResponse =
+  | deleteStageOrdersIdResponseSuccess
+  | deleteStageOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`
-}
+export const getDeleteStageOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteStageOrdersId = async (id: number, options?: RequestInit): Promise<deleteStageOrdersIdResponse> => {
+export const deleteStageOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteStageOrdersIdResponse> => {
+  return openApiFetch<deleteStageOrdersIdResponse>(
+    getDeleteStageOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteStageOrdersIdResponse>(getDeleteStageOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteStageOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteStageOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteStageOrdersId(id, options);
-  }
-}
-export const getDeleteStageOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/${id}`] as const;
+  };
+};
+export const getDeleteStageOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/${id}`] as const;
 
-export type DeleteStageOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStageOrdersId>>>
+export type DeleteStageOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteStageOrdersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteStageOrdersId = <TError = void | StageOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteStageOrdersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteStageOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteStageOrdersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteStageOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteStageOrdersIdMutationKey(id);
   const swrFn = getDeleteStageOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStageOrdersGroupGroupIdResponse200 = {
-  data: StageOrder
-  status: 200
-}
+  data: StageOrder;
+  status: 200;
+};
 
 export type getStageOrdersGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStageOrdersGroupGroupIdResponse422 = {
-  data: StageOrder
-  status: 422
-}
-
-export type getStageOrdersGroupGroupIdResponseSuccess = (getStageOrdersGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getStageOrdersGroupGroupIdResponseError = (getStageOrdersGroupGroupIdResponse404 | getStageOrdersGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: StageOrder;
+  status: 422;
 };
 
-export type getStageOrdersGroupGroupIdResponse = (getStageOrdersGroupGroupIdResponseSuccess | getStageOrdersGroupGroupIdResponseError)
+export type getStageOrdersGroupGroupIdResponseSuccess =
+  getStageOrdersGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getStageOrdersGroupGroupIdResponseError = (
+  | getStageOrdersGroupGroupIdResponse404
+  | getStageOrdersGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStageOrdersGroupGroupIdUrl = (groupId: number,) => {
+export type getStageOrdersGroupGroupIdResponse =
+  | getStageOrdersGroupGroupIdResponseSuccess
+  | getStageOrdersGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/group/${groupId}`
-}
+export const getGetStageOrdersGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStageOrdersGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getStageOrdersGroupGroupIdResponse> => {
+export const getStageOrdersGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getStageOrdersGroupGroupIdResponse> => {
+  return openApiFetch<getStageOrdersGroupGroupIdResponse>(
+    getGetStageOrdersGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getStageOrdersGroupGroupIdResponse>(getGetStageOrdersGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetStageOrdersGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stage_orders/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetStageOrdersGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stage_orders/group/${groupId}`] as const;
-
-export type GetStageOrdersGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStageOrdersGroupGroupId>>>
+export type GetStageOrdersGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStageOrdersGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStageOrdersGroupGroupId = <TError = void | StageOrder>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStageOrdersGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStageOrdersGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStageOrdersGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getStageOrdersGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStageOrdersGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getStageOrdersGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

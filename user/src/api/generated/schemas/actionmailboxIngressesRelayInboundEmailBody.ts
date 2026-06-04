@@ -10,4 +10,5 @@
  */
 import type { ActionmailboxIngressesRelayInboundEmail } from './actionmailboxIngressesRelayInboundEmail';
 
-export type ActionmailboxIngressesRelayInboundEmailBody = ActionmailboxIngressesRelayInboundEmail;
+export type ActionmailboxIngressesRelayInboundEmailBody =
+  ActionmailboxIngressesRelayInboundEmail;

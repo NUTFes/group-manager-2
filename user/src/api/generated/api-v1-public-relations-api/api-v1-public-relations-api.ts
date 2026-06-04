@@ -9,247 +9,296 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1PublicRelationsApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1PublicRelationsApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetPublicRelationForAdminViewIdResponse200 = {
-  data: ApiV1PublicRelationsApi
-  status: 200
-}
+  data: ApiV1PublicRelationsApi;
+  status: 200;
+};
 
 export type getApiV1GetPublicRelationForAdminViewIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getApiV1GetPublicRelationForAdminViewIdResponse422 = {
-  data: ApiV1PublicRelationsApi
-  status: 422
-}
-
-export type getApiV1GetPublicRelationForAdminViewIdResponseSuccess = (getApiV1GetPublicRelationForAdminViewIdResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetPublicRelationForAdminViewIdResponseError = (getApiV1GetPublicRelationForAdminViewIdResponse404 | getApiV1GetPublicRelationForAdminViewIdResponse422) & {
-  headers: Headers;
+  data: ApiV1PublicRelationsApi;
+  status: 422;
 };
 
-export type getApiV1GetPublicRelationForAdminViewIdResponse = (getApiV1GetPublicRelationForAdminViewIdResponseSuccess | getApiV1GetPublicRelationForAdminViewIdResponseError)
+export type getApiV1GetPublicRelationForAdminViewIdResponseSuccess =
+  getApiV1GetPublicRelationForAdminViewIdResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetPublicRelationForAdminViewIdResponseError = (
+  | getApiV1GetPublicRelationForAdminViewIdResponse404
+  | getApiV1GetPublicRelationForAdminViewIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetApiV1GetPublicRelationForAdminViewIdUrl = (id: number,) => {
+export type getApiV1GetPublicRelationForAdminViewIdResponse =
+  | getApiV1GetPublicRelationForAdminViewIdResponseSuccess
+  | getApiV1GetPublicRelationForAdminViewIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_public_relation_for_admin_view/${id}`
-}
+export const getGetApiV1GetPublicRelationForAdminViewIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_public_relation_for_admin_view/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetPublicRelationForAdminViewId = async (id: number, options?: RequestInit): Promise<getApiV1GetPublicRelationForAdminViewIdResponse> => {
+export const getApiV1GetPublicRelationForAdminViewId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getApiV1GetPublicRelationForAdminViewIdResponse> => {
+  return openApiFetch<getApiV1GetPublicRelationForAdminViewIdResponse>(
+    getGetApiV1GetPublicRelationForAdminViewIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetPublicRelationForAdminViewIdResponse>(getGetApiV1GetPublicRelationForAdminViewIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetPublicRelationForAdminViewIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_public_relation_for_admin_view/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetPublicRelationForAdminViewIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_public_relation_for_admin_view/${id}`] as const;
-
-export type GetApiV1GetPublicRelationForAdminViewIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetPublicRelationForAdminViewId>>>
+export type GetApiV1GetPublicRelationForAdminViewIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetPublicRelationForAdminViewId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetPublicRelationForAdminViewId = <TError = void | ApiV1PublicRelationsApi>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetPublicRelationForAdminViewId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetApiV1GetPublicRelationForAdminViewId = <
+  TError = void | ApiV1PublicRelationsApi,
+>(
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getApiV1GetPublicRelationForAdminViewId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetPublicRelationForAdminViewIdKey(id) : null);
-  const swrFn = () => getApiV1GetPublicRelationForAdminViewId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled ? getGetApiV1GetPublicRelationForAdminViewIdKey(id) : null);
+  const swrFn = () =>
+    getApiV1GetPublicRelationForAdminViewId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetRefinementPublicRelationsResponse201 = {
-  data: ApiV1PublicRelationsApi
-  status: 201
-}
+  data: ApiV1PublicRelationsApi;
+  status: 201;
+};
 
 export type postApiV1GetRefinementPublicRelationsResponse422 = {
-  data: ApiV1PublicRelationsApi
-  status: 422
-}
-
-export type postApiV1GetRefinementPublicRelationsResponseSuccess = (postApiV1GetRefinementPublicRelationsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetRefinementPublicRelationsResponseError = (postApiV1GetRefinementPublicRelationsResponse422) & {
-  headers: Headers;
+  data: ApiV1PublicRelationsApi;
+  status: 422;
 };
 
-export type postApiV1GetRefinementPublicRelationsResponse = (postApiV1GetRefinementPublicRelationsResponseSuccess | postApiV1GetRefinementPublicRelationsResponseError)
+export type postApiV1GetRefinementPublicRelationsResponseSuccess =
+  postApiV1GetRefinementPublicRelationsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetRefinementPublicRelationsResponseError =
+  postApiV1GetRefinementPublicRelationsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetRefinementPublicRelationsResponse =
+  | postApiV1GetRefinementPublicRelationsResponseSuccess
+  | postApiV1GetRefinementPublicRelationsResponseError;
 
 export const getPostApiV1GetRefinementPublicRelationsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_public_relations`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_public_relations`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetRefinementPublicRelations = async (apiV1PublicRelationsApi?: ApiV1PublicRelationsApi, options?: RequestInit): Promise<postApiV1GetRefinementPublicRelationsResponse> => {
+export const postApiV1GetRefinementPublicRelations = async (
+  apiV1PublicRelationsApi?: ApiV1PublicRelationsApi,
+  options?: RequestInit
+): Promise<postApiV1GetRefinementPublicRelationsResponse> => {
+  return openApiFetch<postApiV1GetRefinementPublicRelationsResponse>(
+    getPostApiV1GetRefinementPublicRelationsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1PublicRelationsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetRefinementPublicRelationsResponse>(getPostApiV1GetRefinementPublicRelationsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1PublicRelationsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetRefinementPublicRelationsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetRefinementPublicRelationsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1PublicRelationsApi | undefined }) => {
     return postApiV1GetRefinementPublicRelations(arg, options);
-  }
-}
-export const getPostApiV1GetRefinementPublicRelationsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_refinement_public_relations`] as const;
+  };
+};
+export const getPostApiV1GetRefinementPublicRelationsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_refinement_public_relations`,
+  ] as const;
 
-export type PostApiV1GetRefinementPublicRelationsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>>
+export type PostApiV1GetRefinementPublicRelationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetRefinementPublicRelations = <TError = ApiV1PublicRelationsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>, TError, Key, ApiV1PublicRelationsApi | undefined, Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetRefinementPublicRelations = <
+  TError = ApiV1PublicRelationsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>,
+    TError,
+    Key,
+    ApiV1PublicRelationsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetRefinementPublicRelations>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetRefinementPublicRelationsMutationKey();
+  const swrFn =
+    getPostApiV1GetRefinementPublicRelationsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetRefinementPublicRelationsMutationKey();
-  const swrFn = getPostApiV1GetRefinementPublicRelationsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postApiV1GetSearchPublicRelationsResponse201 = {
-  data: ApiV1PublicRelationsApi
-  status: 201
-}
+  data: ApiV1PublicRelationsApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchPublicRelationsResponse422 = {
-  data: ApiV1PublicRelationsApi
-  status: 422
-}
-
-export type postApiV1GetSearchPublicRelationsResponseSuccess = (postApiV1GetSearchPublicRelationsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchPublicRelationsResponseError = (postApiV1GetSearchPublicRelationsResponse422) & {
-  headers: Headers;
+  data: ApiV1PublicRelationsApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchPublicRelationsResponse = (postApiV1GetSearchPublicRelationsResponseSuccess | postApiV1GetSearchPublicRelationsResponseError)
+export type postApiV1GetSearchPublicRelationsResponseSuccess =
+  postApiV1GetSearchPublicRelationsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchPublicRelationsResponseError =
+  postApiV1GetSearchPublicRelationsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchPublicRelationsResponse =
+  | postApiV1GetSearchPublicRelationsResponseSuccess
+  | postApiV1GetSearchPublicRelationsResponseError;
 
 export const getPostApiV1GetSearchPublicRelationsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_public_relations`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_public_relations`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchPublicRelations = async (apiV1PublicRelationsApi?: ApiV1PublicRelationsApi, options?: RequestInit): Promise<postApiV1GetSearchPublicRelationsResponse> => {
+export const postApiV1GetSearchPublicRelations = async (
+  apiV1PublicRelationsApi?: ApiV1PublicRelationsApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchPublicRelationsResponse> => {
+  return openApiFetch<postApiV1GetSearchPublicRelationsResponse>(
+    getPostApiV1GetSearchPublicRelationsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1PublicRelationsApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchPublicRelationsResponse>(getPostApiV1GetSearchPublicRelationsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1PublicRelationsApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchPublicRelationsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchPublicRelationsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1PublicRelationsApi | undefined }) => {
     return postApiV1GetSearchPublicRelations(arg, options);
-  }
-}
-export const getPostApiV1GetSearchPublicRelationsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_public_relations`] as const;
+  };
+};
+export const getPostApiV1GetSearchPublicRelationsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_public_relations`,
+  ] as const;
 
-export type PostApiV1GetSearchPublicRelationsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>>
+export type PostApiV1GetSearchPublicRelationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchPublicRelations = <TError = ApiV1PublicRelationsApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>, TError, Key, ApiV1PublicRelationsApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchPublicRelations = <
+  TError = ApiV1PublicRelationsApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>,
+    TError,
+    Key,
+    ApiV1PublicRelationsApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchPublicRelations>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchPublicRelationsMutationKey();
+  const swrFn =
+    getPostApiV1GetSearchPublicRelationsMutationFetcher(requestOptions);
 
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchPublicRelationsMutationKey();
-  const swrFn = getPostApiV1GetSearchPublicRelationsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

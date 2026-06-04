@@ -9,558 +9,646 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  RentalOrder
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { RentalOrder } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRentalOrdersResponse200 = {
-  data: RentalOrder
-  status: 200
-}
+  data: RentalOrder;
+  status: 200;
+};
 
 export type getRentalOrdersResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type getRentalOrdersResponseSuccess = (getRentalOrdersResponse200) & {
-  headers: Headers;
-};
-export type getRentalOrdersResponseError = (getRentalOrdersResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type getRentalOrdersResponse = (getRentalOrdersResponseSuccess | getRentalOrdersResponseError)
+export type getRentalOrdersResponseSuccess = getRentalOrdersResponse200 & {
+  headers: Headers;
+};
+export type getRentalOrdersResponseError = getRentalOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type getRentalOrdersResponse =
+  | getRentalOrdersResponseSuccess
+  | getRentalOrdersResponseError;
 
 export const getGetRentalOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentalOrders = async ( options?: RequestInit): Promise<getRentalOrdersResponse> => {
-
-  return openApiFetch<getRentalOrdersResponse>(getGetRentalOrdersUrl(),
-  {
+export const getRentalOrders = async (
+  options?: RequestInit
+): Promise<getRentalOrdersResponse> => {
+  return openApiFetch<getRentalOrdersResponse>(getGetRentalOrdersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetRentalOrdersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetRentalOrdersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders`] as const;
-
-export type GetRentalOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getRentalOrders>>>
+export type GetRentalOrdersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentalOrders>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetRentalOrders = <TError = RentalOrder>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentalOrders>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetRentalOrders = <TError = RentalOrder>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getRentalOrders>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentalOrdersKey() : null);
-  const swrFn = () => getRentalOrders(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetRentalOrdersKey() : null));
+  const swrFn = () => getRentalOrders(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postRentalOrdersResponse201 = {
-  data: RentalOrder
-  status: 201
-}
+  data: RentalOrder;
+  status: 201;
+};
 
 export type postRentalOrdersResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type postRentalOrdersResponseSuccess = (postRentalOrdersResponse201) & {
-  headers: Headers;
-};
-export type postRentalOrdersResponseError = (postRentalOrdersResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type postRentalOrdersResponse = (postRentalOrdersResponseSuccess | postRentalOrdersResponseError)
+export type postRentalOrdersResponseSuccess = postRentalOrdersResponse201 & {
+  headers: Headers;
+};
+export type postRentalOrdersResponseError = postRentalOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type postRentalOrdersResponse =
+  | postRentalOrdersResponseSuccess
+  | postRentalOrdersResponseError;
 
 export const getPostRentalOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRentalOrders = async (rentalOrder?: RentalOrder, options?: RequestInit): Promise<postRentalOrdersResponse> => {
-
-  return openApiFetch<postRentalOrdersResponse>(getPostRentalOrdersUrl(),
-  {
+export const postRentalOrders = async (
+  rentalOrder?: RentalOrder,
+  options?: RequestInit
+): Promise<postRentalOrdersResponse> => {
+  return openApiFetch<postRentalOrdersResponse>(getPostRentalOrdersUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalOrder)
-  }
-);}
+    body: JSON.stringify(rentalOrder),
+  });
+};
 
-
-
-
-export const getPostRentalOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostRentalOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalOrder | undefined }) => {
     return postRentalOrders(arg, options);
-  }
-}
-export const getPostRentalOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders`] as const;
+  };
+};
+export const getPostRentalOrdersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders`] as const;
 
-export type PostRentalOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postRentalOrders>>>
+export type PostRentalOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRentalOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostRentalOrders = <TError = RentalOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRentalOrders>>, TError, Key, RentalOrder | undefined, Awaited<ReturnType<typeof postRentalOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostRentalOrders = <TError = RentalOrder>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRentalOrders>>,
+    TError,
+    Key,
+    RentalOrder | undefined,
+    Awaited<ReturnType<typeof postRentalOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostRentalOrdersMutationKey();
   const swrFn = getPostRentalOrdersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRentalOrdersIdResponse200 = {
-  data: RentalOrder
-  status: 200
-}
+  data: RentalOrder;
+  status: 200;
+};
 
 export type getRentalOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRentalOrdersIdResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type getRentalOrdersIdResponseSuccess = (getRentalOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type getRentalOrdersIdResponseError = (getRentalOrdersIdResponse404 | getRentalOrdersIdResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type getRentalOrdersIdResponse = (getRentalOrdersIdResponseSuccess | getRentalOrdersIdResponseError)
+export type getRentalOrdersIdResponseSuccess = getRentalOrdersIdResponse200 & {
+  headers: Headers;
+};
+export type getRentalOrdersIdResponseError = (
+  | getRentalOrdersIdResponse404
+  | getRentalOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRentalOrdersIdUrl = (id: number,) => {
+export type getRentalOrdersIdResponse =
+  | getRentalOrdersIdResponseSuccess
+  | getRentalOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`
-}
+export const getGetRentalOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentalOrdersId = async (id: number, options?: RequestInit): Promise<getRentalOrdersIdResponse> => {
-
-  return openApiFetch<getRentalOrdersIdResponse>(getGetRentalOrdersIdUrl(id),
-  {
+export const getRentalOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getRentalOrdersIdResponse> => {
+  return openApiFetch<getRentalOrdersIdResponse>(getGetRentalOrdersIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetRentalOrdersIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetRentalOrdersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`] as const;
-
-export type GetRentalOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getRentalOrdersId>>>
+export type GetRentalOrdersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentalOrdersId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetRentalOrdersId = <TError = void | RentalOrder>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentalOrdersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRentalOrdersId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentalOrdersIdKey(id) : null);
-  const swrFn = () => getRentalOrdersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetRentalOrdersIdKey(id) : null));
+  const swrFn = () => getRentalOrdersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchRentalOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchRentalOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchRentalOrdersIdResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type patchRentalOrdersIdResponseSuccess = (patchRentalOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type patchRentalOrdersIdResponseError = (patchRentalOrdersIdResponse404 | patchRentalOrdersIdResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type patchRentalOrdersIdResponse = (patchRentalOrdersIdResponseSuccess | patchRentalOrdersIdResponseError)
+export type patchRentalOrdersIdResponseSuccess =
+  patchRentalOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type patchRentalOrdersIdResponseError = (
+  | patchRentalOrdersIdResponse404
+  | patchRentalOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchRentalOrdersIdUrl = (id: number,) => {
+export type patchRentalOrdersIdResponse =
+  | patchRentalOrdersIdResponseSuccess
+  | patchRentalOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`
-}
+export const getPatchRentalOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchRentalOrdersId = async (id: number,
-    rentalOrder?: RentalOrder, options?: RequestInit): Promise<patchRentalOrdersIdResponse> => {
+export const patchRentalOrdersId = async (
+  id: number,
+  rentalOrder?: RentalOrder,
+  options?: RequestInit
+): Promise<patchRentalOrdersIdResponse> => {
+  return openApiFetch<patchRentalOrdersIdResponse>(
+    getPatchRentalOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(rentalOrder),
+    }
+  );
+};
 
-  return openApiFetch<patchRentalOrdersIdResponse>(getPatchRentalOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalOrder)
-  }
-);}
-
-
-
-
-export const getPatchRentalOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchRentalOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalOrder | undefined }) => {
     return patchRentalOrdersId(id, arg, options);
-  }
-}
-export const getPatchRentalOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`] as const;
+  };
+};
+export const getPatchRentalOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`] as const;
 
-export type PatchRentalOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchRentalOrdersId>>>
+export type PatchRentalOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchRentalOrdersId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchRentalOrdersId = <TError = void | RentalOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchRentalOrdersId>>, TError, Key, RentalOrder | undefined, Awaited<ReturnType<typeof patchRentalOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchRentalOrdersId>>,
+      TError,
+      Key,
+      RentalOrder | undefined,
+      Awaited<ReturnType<typeof patchRentalOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchRentalOrdersIdMutationKey(id);
   const swrFn = getPatchRentalOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putRentalOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putRentalOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putRentalOrdersIdResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type putRentalOrdersIdResponseSuccess = (putRentalOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type putRentalOrdersIdResponseError = (putRentalOrdersIdResponse404 | putRentalOrdersIdResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type putRentalOrdersIdResponse = (putRentalOrdersIdResponseSuccess | putRentalOrdersIdResponseError)
+export type putRentalOrdersIdResponseSuccess = putRentalOrdersIdResponse204 & {
+  headers: Headers;
+};
+export type putRentalOrdersIdResponseError = (
+  | putRentalOrdersIdResponse404
+  | putRentalOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutRentalOrdersIdUrl = (id: number,) => {
+export type putRentalOrdersIdResponse =
+  | putRentalOrdersIdResponseSuccess
+  | putRentalOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`
-}
+export const getPutRentalOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putRentalOrdersId = async (id: number,
-    rentalOrder?: RentalOrder, options?: RequestInit): Promise<putRentalOrdersIdResponse> => {
-
-  return openApiFetch<putRentalOrdersIdResponse>(getPutRentalOrdersIdUrl(id),
-  {
+export const putRentalOrdersId = async (
+  id: number,
+  rentalOrder?: RentalOrder,
+  options?: RequestInit
+): Promise<putRentalOrdersIdResponse> => {
+  return openApiFetch<putRentalOrdersIdResponse>(getPutRentalOrdersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(rentalOrder)
-  }
-);}
+    body: JSON.stringify(rentalOrder),
+  });
+};
 
-
-
-
-export const getPutRentalOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutRentalOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: RentalOrder | undefined }) => {
     return putRentalOrdersId(id, arg, options);
-  }
-}
-export const getPutRentalOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`] as const;
+  };
+};
+export const getPutRentalOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`] as const;
 
-export type PutRentalOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putRentalOrdersId>>>
+export type PutRentalOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putRentalOrdersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutRentalOrdersId = <TError = void | RentalOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putRentalOrdersId>>, TError, Key, RentalOrder | undefined, Awaited<ReturnType<typeof putRentalOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putRentalOrdersId>>,
+      TError,
+      Key,
+      RentalOrder | undefined,
+      Awaited<ReturnType<typeof putRentalOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutRentalOrdersIdMutationKey(id);
   const swrFn = getPutRentalOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteRentalOrdersIdResponse200 = {
-  data: RentalOrder
-  status: 200
-}
+  data: RentalOrder;
+  status: 200;
+};
 
 export type deleteRentalOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteRentalOrdersIdResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type deleteRentalOrdersIdResponseSuccess = (deleteRentalOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type deleteRentalOrdersIdResponseError = (deleteRentalOrdersIdResponse404 | deleteRentalOrdersIdResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type deleteRentalOrdersIdResponse = (deleteRentalOrdersIdResponseSuccess | deleteRentalOrdersIdResponseError)
+export type deleteRentalOrdersIdResponseSuccess =
+  deleteRentalOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteRentalOrdersIdResponseError = (
+  | deleteRentalOrdersIdResponse404
+  | deleteRentalOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteRentalOrdersIdUrl = (id: number,) => {
+export type deleteRentalOrdersIdResponse =
+  | deleteRentalOrdersIdResponseSuccess
+  | deleteRentalOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`
-}
+export const getDeleteRentalOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteRentalOrdersId = async (id: number, options?: RequestInit): Promise<deleteRentalOrdersIdResponse> => {
+export const deleteRentalOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteRentalOrdersIdResponse> => {
+  return openApiFetch<deleteRentalOrdersIdResponse>(
+    getDeleteRentalOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteRentalOrdersIdResponse>(getDeleteRentalOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteRentalOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteRentalOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteRentalOrdersId(id, options);
-  }
-}
-export const getDeleteRentalOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/${id}`] as const;
+  };
+};
+export const getDeleteRentalOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/${id}`] as const;
 
-export type DeleteRentalOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRentalOrdersId>>>
+export type DeleteRentalOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteRentalOrdersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteRentalOrdersId = <TError = void | RentalOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteRentalOrdersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteRentalOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteRentalOrdersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteRentalOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteRentalOrdersIdMutationKey(id);
   const swrFn = getDeleteRentalOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getRentalOrdersGroupGroupIdResponse200 = {
-  data: RentalOrder
-  status: 200
-}
+  data: RentalOrder;
+  status: 200;
+};
 
 export type getRentalOrdersGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRentalOrdersGroupGroupIdResponse422 = {
-  data: RentalOrder
-  status: 422
-}
-
-export type getRentalOrdersGroupGroupIdResponseSuccess = (getRentalOrdersGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getRentalOrdersGroupGroupIdResponseError = (getRentalOrdersGroupGroupIdResponse404 | getRentalOrdersGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: RentalOrder;
+  status: 422;
 };
 
-export type getRentalOrdersGroupGroupIdResponse = (getRentalOrdersGroupGroupIdResponseSuccess | getRentalOrdersGroupGroupIdResponseError)
+export type getRentalOrdersGroupGroupIdResponseSuccess =
+  getRentalOrdersGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getRentalOrdersGroupGroupIdResponseError = (
+  | getRentalOrdersGroupGroupIdResponse404
+  | getRentalOrdersGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRentalOrdersGroupGroupIdUrl = (groupId: number,) => {
+export type getRentalOrdersGroupGroupIdResponse =
+  | getRentalOrdersGroupGroupIdResponseSuccess
+  | getRentalOrdersGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/group/${groupId}`
-}
+export const getGetRentalOrdersGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRentalOrdersGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getRentalOrdersGroupGroupIdResponse> => {
+export const getRentalOrdersGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getRentalOrdersGroupGroupIdResponse> => {
+  return openApiFetch<getRentalOrdersGroupGroupIdResponse>(
+    getGetRentalOrdersGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRentalOrdersGroupGroupIdResponse>(getGetRentalOrdersGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRentalOrdersGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rental_orders/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRentalOrdersGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rental_orders/group/${groupId}`] as const;
-
-export type GetRentalOrdersGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getRentalOrdersGroupGroupId>>>
+export type GetRentalOrdersGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRentalOrdersGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetRentalOrdersGroupGroupId = <TError = void | RentalOrder>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRentalOrdersGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getRentalOrdersGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRentalOrdersGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getRentalOrdersGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetRentalOrdersGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getRentalOrdersGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

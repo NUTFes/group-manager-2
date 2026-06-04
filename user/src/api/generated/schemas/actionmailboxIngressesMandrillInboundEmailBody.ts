@@ -10,4 +10,5 @@
  */
 import type { ActionmailboxIngressesMandrillInboundEmail } from './actionmailboxIngressesMandrillInboundEmail';
 
-export type ActionmailboxIngressesMandrillInboundEmailBody = ActionmailboxIngressesMandrillInboundEmail;
+export type ActionmailboxIngressesMandrillInboundEmailBody =
+  ActionmailboxIngressesMandrillInboundEmail;

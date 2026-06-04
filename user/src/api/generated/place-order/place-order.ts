@@ -9,558 +9,646 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  PlaceOrder
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { PlaceOrder } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getPlaceOrdersResponse200 = {
-  data: PlaceOrder
-  status: 200
-}
+  data: PlaceOrder;
+  status: 200;
+};
 
 export type getPlaceOrdersResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type getPlaceOrdersResponseSuccess = (getPlaceOrdersResponse200) & {
-  headers: Headers;
-};
-export type getPlaceOrdersResponseError = (getPlaceOrdersResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type getPlaceOrdersResponse = (getPlaceOrdersResponseSuccess | getPlaceOrdersResponseError)
+export type getPlaceOrdersResponseSuccess = getPlaceOrdersResponse200 & {
+  headers: Headers;
+};
+export type getPlaceOrdersResponseError = getPlaceOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type getPlaceOrdersResponse =
+  | getPlaceOrdersResponseSuccess
+  | getPlaceOrdersResponseError;
 
 export const getGetPlaceOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceOrders = async ( options?: RequestInit): Promise<getPlaceOrdersResponse> => {
-
-  return openApiFetch<getPlaceOrdersResponse>(getGetPlaceOrdersUrl(),
-  {
+export const getPlaceOrders = async (
+  options?: RequestInit
+): Promise<getPlaceOrdersResponse> => {
+  return openApiFetch<getPlaceOrdersResponse>(getGetPlaceOrdersUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPlaceOrdersKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPlaceOrdersKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders`] as const;
-
-export type GetPlaceOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceOrders>>>
+export type GetPlaceOrdersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceOrders>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetPlaceOrders = <TError = PlaceOrder>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceOrders>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetPlaceOrders = <TError = PlaceOrder>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getPlaceOrders>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceOrdersKey() : null);
-  const swrFn = () => getPlaceOrders(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetPlaceOrdersKey() : null));
+  const swrFn = () => getPlaceOrders(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postPlaceOrdersResponse201 = {
-  data: PlaceOrder
-  status: 201
-}
+  data: PlaceOrder;
+  status: 201;
+};
 
 export type postPlaceOrdersResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type postPlaceOrdersResponseSuccess = (postPlaceOrdersResponse201) & {
-  headers: Headers;
-};
-export type postPlaceOrdersResponseError = (postPlaceOrdersResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type postPlaceOrdersResponse = (postPlaceOrdersResponseSuccess | postPlaceOrdersResponseError)
+export type postPlaceOrdersResponseSuccess = postPlaceOrdersResponse201 & {
+  headers: Headers;
+};
+export type postPlaceOrdersResponseError = postPlaceOrdersResponse422 & {
+  headers: Headers;
+};
+
+export type postPlaceOrdersResponse =
+  | postPlaceOrdersResponseSuccess
+  | postPlaceOrdersResponseError;
 
 export const getPostPlaceOrdersUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postPlaceOrders = async (placeOrder?: PlaceOrder, options?: RequestInit): Promise<postPlaceOrdersResponse> => {
-
-  return openApiFetch<postPlaceOrdersResponse>(getPostPlaceOrdersUrl(),
-  {
+export const postPlaceOrders = async (
+  placeOrder?: PlaceOrder,
+  options?: RequestInit
+): Promise<postPlaceOrdersResponse> => {
+  return openApiFetch<postPlaceOrdersResponse>(getPostPlaceOrdersUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeOrder)
-  }
-);}
+    body: JSON.stringify(placeOrder),
+  });
+};
 
-
-
-
-export const getPostPlaceOrdersMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostPlaceOrdersMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceOrder | undefined }) => {
     return postPlaceOrders(arg, options);
-  }
-}
-export const getPostPlaceOrdersMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders`] as const;
+  };
+};
+export const getPostPlaceOrdersMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders`] as const;
 
-export type PostPlaceOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postPlaceOrders>>>
+export type PostPlaceOrdersMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPlaceOrders>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostPlaceOrders = <TError = PlaceOrder>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postPlaceOrders>>, TError, Key, PlaceOrder | undefined, Awaited<ReturnType<typeof postPlaceOrders>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostPlaceOrders = <TError = PlaceOrder>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postPlaceOrders>>,
+    TError,
+    Key,
+    PlaceOrder | undefined,
+    Awaited<ReturnType<typeof postPlaceOrders>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostPlaceOrdersMutationKey();
   const swrFn = getPostPlaceOrdersMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPlaceOrdersIdResponse200 = {
-  data: PlaceOrder
-  status: 200
-}
+  data: PlaceOrder;
+  status: 200;
+};
 
 export type getPlaceOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPlaceOrdersIdResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type getPlaceOrdersIdResponseSuccess = (getPlaceOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type getPlaceOrdersIdResponseError = (getPlaceOrdersIdResponse404 | getPlaceOrdersIdResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type getPlaceOrdersIdResponse = (getPlaceOrdersIdResponseSuccess | getPlaceOrdersIdResponseError)
+export type getPlaceOrdersIdResponseSuccess = getPlaceOrdersIdResponse200 & {
+  headers: Headers;
+};
+export type getPlaceOrdersIdResponseError = (
+  | getPlaceOrdersIdResponse404
+  | getPlaceOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPlaceOrdersIdUrl = (id: number,) => {
+export type getPlaceOrdersIdResponse =
+  | getPlaceOrdersIdResponseSuccess
+  | getPlaceOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`
-}
+export const getGetPlaceOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceOrdersId = async (id: number, options?: RequestInit): Promise<getPlaceOrdersIdResponse> => {
-
-  return openApiFetch<getPlaceOrdersIdResponse>(getGetPlaceOrdersIdUrl(id),
-  {
+export const getPlaceOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getPlaceOrdersIdResponse> => {
+  return openApiFetch<getPlaceOrdersIdResponse>(getGetPlaceOrdersIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetPlaceOrdersIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetPlaceOrdersIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`] as const;
-
-export type GetPlaceOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceOrdersId>>>
+export type GetPlaceOrdersIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceOrdersId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPlaceOrdersId = <TError = void | PlaceOrder>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceOrdersId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPlaceOrdersId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceOrdersIdKey(id) : null);
-  const swrFn = () => getPlaceOrdersId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPlaceOrdersIdKey(id) : null));
+  const swrFn = () => getPlaceOrdersId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchPlaceOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchPlaceOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchPlaceOrdersIdResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type patchPlaceOrdersIdResponseSuccess = (patchPlaceOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type patchPlaceOrdersIdResponseError = (patchPlaceOrdersIdResponse404 | patchPlaceOrdersIdResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type patchPlaceOrdersIdResponse = (patchPlaceOrdersIdResponseSuccess | patchPlaceOrdersIdResponseError)
+export type patchPlaceOrdersIdResponseSuccess =
+  patchPlaceOrdersIdResponse204 & {
+    headers: Headers;
+  };
+export type patchPlaceOrdersIdResponseError = (
+  | patchPlaceOrdersIdResponse404
+  | patchPlaceOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchPlaceOrdersIdUrl = (id: number,) => {
+export type patchPlaceOrdersIdResponse =
+  | patchPlaceOrdersIdResponseSuccess
+  | patchPlaceOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`
-}
+export const getPatchPlaceOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchPlaceOrdersId = async (id: number,
-    placeOrder?: PlaceOrder, options?: RequestInit): Promise<patchPlaceOrdersIdResponse> => {
+export const patchPlaceOrdersId = async (
+  id: number,
+  placeOrder?: PlaceOrder,
+  options?: RequestInit
+): Promise<patchPlaceOrdersIdResponse> => {
+  return openApiFetch<patchPlaceOrdersIdResponse>(
+    getPatchPlaceOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(placeOrder),
+    }
+  );
+};
 
-  return openApiFetch<patchPlaceOrdersIdResponse>(getPatchPlaceOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeOrder)
-  }
-);}
-
-
-
-
-export const getPatchPlaceOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchPlaceOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceOrder | undefined }) => {
     return patchPlaceOrdersId(id, arg, options);
-  }
-}
-export const getPatchPlaceOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`] as const;
+  };
+};
+export const getPatchPlaceOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`] as const;
 
-export type PatchPlaceOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchPlaceOrdersId>>>
+export type PatchPlaceOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchPlaceOrdersId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchPlaceOrdersId = <TError = void | PlaceOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchPlaceOrdersId>>, TError, Key, PlaceOrder | undefined, Awaited<ReturnType<typeof patchPlaceOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchPlaceOrdersId>>,
+      TError,
+      Key,
+      PlaceOrder | undefined,
+      Awaited<ReturnType<typeof patchPlaceOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchPlaceOrdersIdMutationKey(id);
   const swrFn = getPatchPlaceOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putPlaceOrdersIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putPlaceOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putPlaceOrdersIdResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type putPlaceOrdersIdResponseSuccess = (putPlaceOrdersIdResponse204) & {
-  headers: Headers;
-};
-export type putPlaceOrdersIdResponseError = (putPlaceOrdersIdResponse404 | putPlaceOrdersIdResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type putPlaceOrdersIdResponse = (putPlaceOrdersIdResponseSuccess | putPlaceOrdersIdResponseError)
+export type putPlaceOrdersIdResponseSuccess = putPlaceOrdersIdResponse204 & {
+  headers: Headers;
+};
+export type putPlaceOrdersIdResponseError = (
+  | putPlaceOrdersIdResponse404
+  | putPlaceOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutPlaceOrdersIdUrl = (id: number,) => {
+export type putPlaceOrdersIdResponse =
+  | putPlaceOrdersIdResponseSuccess
+  | putPlaceOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`
-}
+export const getPutPlaceOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putPlaceOrdersId = async (id: number,
-    placeOrder?: PlaceOrder, options?: RequestInit): Promise<putPlaceOrdersIdResponse> => {
-
-  return openApiFetch<putPlaceOrdersIdResponse>(getPutPlaceOrdersIdUrl(id),
-  {
+export const putPlaceOrdersId = async (
+  id: number,
+  placeOrder?: PlaceOrder,
+  options?: RequestInit
+): Promise<putPlaceOrdersIdResponse> => {
+  return openApiFetch<putPlaceOrdersIdResponse>(getPutPlaceOrdersIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(placeOrder)
-  }
-);}
+    body: JSON.stringify(placeOrder),
+  });
+};
 
-
-
-
-export const getPutPlaceOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutPlaceOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: PlaceOrder | undefined }) => {
     return putPlaceOrdersId(id, arg, options);
-  }
-}
-export const getPutPlaceOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`] as const;
+  };
+};
+export const getPutPlaceOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`] as const;
 
-export type PutPlaceOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof putPlaceOrdersId>>>
+export type PutPlaceOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putPlaceOrdersId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutPlaceOrdersId = <TError = void | PlaceOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putPlaceOrdersId>>, TError, Key, PlaceOrder | undefined, Awaited<ReturnType<typeof putPlaceOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putPlaceOrdersId>>,
+      TError,
+      Key,
+      PlaceOrder | undefined,
+      Awaited<ReturnType<typeof putPlaceOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutPlaceOrdersIdMutationKey(id);
   const swrFn = getPutPlaceOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deletePlaceOrdersIdResponse200 = {
-  data: PlaceOrder
-  status: 200
-}
+  data: PlaceOrder;
+  status: 200;
+};
 
 export type deletePlaceOrdersIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deletePlaceOrdersIdResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type deletePlaceOrdersIdResponseSuccess = (deletePlaceOrdersIdResponse200) & {
-  headers: Headers;
-};
-export type deletePlaceOrdersIdResponseError = (deletePlaceOrdersIdResponse404 | deletePlaceOrdersIdResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type deletePlaceOrdersIdResponse = (deletePlaceOrdersIdResponseSuccess | deletePlaceOrdersIdResponseError)
+export type deletePlaceOrdersIdResponseSuccess =
+  deletePlaceOrdersIdResponse200 & {
+    headers: Headers;
+  };
+export type deletePlaceOrdersIdResponseError = (
+  | deletePlaceOrdersIdResponse404
+  | deletePlaceOrdersIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeletePlaceOrdersIdUrl = (id: number,) => {
+export type deletePlaceOrdersIdResponse =
+  | deletePlaceOrdersIdResponseSuccess
+  | deletePlaceOrdersIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`
-}
+export const getDeletePlaceOrdersIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deletePlaceOrdersId = async (id: number, options?: RequestInit): Promise<deletePlaceOrdersIdResponse> => {
+export const deletePlaceOrdersId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deletePlaceOrdersIdResponse> => {
+  return openApiFetch<deletePlaceOrdersIdResponse>(
+    getDeletePlaceOrdersIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deletePlaceOrdersIdResponse>(getDeletePlaceOrdersIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeletePlaceOrdersIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeletePlaceOrdersIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deletePlaceOrdersId(id, options);
-  }
-}
-export const getDeletePlaceOrdersIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/${id}`] as const;
+  };
+};
+export const getDeletePlaceOrdersIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/${id}`] as const;
 
-export type DeletePlaceOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlaceOrdersId>>>
+export type DeletePlaceOrdersIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePlaceOrdersId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeletePlaceOrdersId = <TError = void | PlaceOrder>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deletePlaceOrdersId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deletePlaceOrdersId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deletePlaceOrdersId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deletePlaceOrdersId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeletePlaceOrdersIdMutationKey(id);
   const swrFn = getDeletePlaceOrdersIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getPlaceOrdersGroupGroupIdResponse200 = {
-  data: PlaceOrder
-  status: 200
-}
+  data: PlaceOrder;
+  status: 200;
+};
 
 export type getPlaceOrdersGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getPlaceOrdersGroupGroupIdResponse422 = {
-  data: PlaceOrder
-  status: 422
-}
-
-export type getPlaceOrdersGroupGroupIdResponseSuccess = (getPlaceOrdersGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getPlaceOrdersGroupGroupIdResponseError = (getPlaceOrdersGroupGroupIdResponse404 | getPlaceOrdersGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: PlaceOrder;
+  status: 422;
 };
 
-export type getPlaceOrdersGroupGroupIdResponse = (getPlaceOrdersGroupGroupIdResponseSuccess | getPlaceOrdersGroupGroupIdResponseError)
+export type getPlaceOrdersGroupGroupIdResponseSuccess =
+  getPlaceOrdersGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getPlaceOrdersGroupGroupIdResponseError = (
+  | getPlaceOrdersGroupGroupIdResponse404
+  | getPlaceOrdersGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetPlaceOrdersGroupGroupIdUrl = (groupId: number,) => {
+export type getPlaceOrdersGroupGroupIdResponse =
+  | getPlaceOrdersGroupGroupIdResponseSuccess
+  | getPlaceOrdersGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/group/${groupId}`
-}
+export const getGetPlaceOrdersGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getPlaceOrdersGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getPlaceOrdersGroupGroupIdResponse> => {
+export const getPlaceOrdersGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getPlaceOrdersGroupGroupIdResponse> => {
+  return openApiFetch<getPlaceOrdersGroupGroupIdResponse>(
+    getGetPlaceOrdersGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getPlaceOrdersGroupGroupIdResponse>(getGetPlaceOrdersGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetPlaceOrdersGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/place_orders/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetPlaceOrdersGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/place_orders/group/${groupId}`] as const;
-
-export type GetPlaceOrdersGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceOrdersGroupGroupId>>>
+export type GetPlaceOrdersGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlaceOrdersGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetPlaceOrdersGroupGroupId = <TError = void | PlaceOrder>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getPlaceOrdersGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getPlaceOrdersGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetPlaceOrdersGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getPlaceOrdersGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetPlaceOrdersGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getPlaceOrdersGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

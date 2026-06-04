@@ -9,777 +9,899 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  FoodProduct
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { FoodProduct } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getFoodProductsResponse200 = {
-  data: FoodProduct
-  status: 200
-}
+  data: FoodProduct;
+  status: 200;
+};
 
 export type getFoodProductsResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type getFoodProductsResponseSuccess = (getFoodProductsResponse200) & {
-  headers: Headers;
-};
-export type getFoodProductsResponseError = (getFoodProductsResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type getFoodProductsResponse = (getFoodProductsResponseSuccess | getFoodProductsResponseError)
+export type getFoodProductsResponseSuccess = getFoodProductsResponse200 & {
+  headers: Headers;
+};
+export type getFoodProductsResponseError = getFoodProductsResponse422 & {
+  headers: Headers;
+};
+
+export type getFoodProductsResponse =
+  | getFoodProductsResponseSuccess
+  | getFoodProductsResponseError;
 
 export const getGetFoodProductsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getFoodProducts = async ( options?: RequestInit): Promise<getFoodProductsResponse> => {
-
-  return openApiFetch<getFoodProductsResponse>(getGetFoodProductsUrl(),
-  {
+export const getFoodProducts = async (
+  options?: RequestInit
+): Promise<getFoodProductsResponse> => {
+  return openApiFetch<getFoodProductsResponse>(getGetFoodProductsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetFoodProductsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetFoodProductsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`] as const;
-
-export type GetFoodProductsQueryResult = NonNullable<Awaited<ReturnType<typeof getFoodProducts>>>
+export type GetFoodProductsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFoodProducts>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetFoodProducts = <TError = FoodProduct>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFoodProducts>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetFoodProducts = <TError = FoodProduct>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getFoodProducts>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFoodProductsKey() : null);
-  const swrFn = () => getFoodProducts(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetFoodProductsKey() : null));
+  const swrFn = () => getFoodProducts(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postFoodProductsResponse201 = {
-  data: FoodProduct
-  status: 201
-}
+  data: FoodProduct;
+  status: 201;
+};
 
 export type postFoodProductsResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type postFoodProductsResponseSuccess = (postFoodProductsResponse201) & {
-  headers: Headers;
-};
-export type postFoodProductsResponseError = (postFoodProductsResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type postFoodProductsResponse = (postFoodProductsResponseSuccess | postFoodProductsResponseError)
+export type postFoodProductsResponseSuccess = postFoodProductsResponse201 & {
+  headers: Headers;
+};
+export type postFoodProductsResponseError = postFoodProductsResponse422 & {
+  headers: Headers;
+};
+
+export type postFoodProductsResponse =
+  | postFoodProductsResponseSuccess
+  | postFoodProductsResponseError;
 
 export const getPostFoodProductsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postFoodProducts = async (foodProduct?: FoodProduct, options?: RequestInit): Promise<postFoodProductsResponse> => {
-
-  return openApiFetch<postFoodProductsResponse>(getPostFoodProductsUrl(),
-  {
+export const postFoodProducts = async (
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<postFoodProductsResponse> => {
+  return openApiFetch<postFoodProductsResponse>(getPostFoodProductsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
+    body: JSON.stringify(foodProduct),
+  });
+};
 
-
-
-
-export const getPostFoodProductsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostFoodProductsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return postFoodProducts(arg, options);
-  }
-}
-export const getPostFoodProductsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`] as const;
+  };
+};
+export const getPostFoodProductsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`] as const;
 
-export type PostFoodProductsMutationResult = NonNullable<Awaited<ReturnType<typeof postFoodProducts>>>
+export type PostFoodProductsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postFoodProducts>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostFoodProducts = <TError = FoodProduct>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFoodProducts>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof postFoodProducts>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostFoodProducts = <TError = FoodProduct>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postFoodProducts>>,
+    TError,
+    Key,
+    FoodProduct | undefined,
+    Awaited<ReturnType<typeof postFoodProducts>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostFoodProductsMutationKey();
   const swrFn = getPostFoodProductsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchFoodProductsResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchFoodProductsResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type patchFoodProductsResponseSuccess = (patchFoodProductsResponse204) & {
-  headers: Headers;
-};
-export type patchFoodProductsResponseError = (patchFoodProductsResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type patchFoodProductsResponse = (patchFoodProductsResponseSuccess | patchFoodProductsResponseError)
+export type patchFoodProductsResponseSuccess = patchFoodProductsResponse204 & {
+  headers: Headers;
+};
+export type patchFoodProductsResponseError = patchFoodProductsResponse422 & {
+  headers: Headers;
+};
+
+export type patchFoodProductsResponse =
+  | patchFoodProductsResponseSuccess
+  | patchFoodProductsResponseError;
 
 export const getPatchFoodProductsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchFoodProducts = async (foodProduct?: FoodProduct, options?: RequestInit): Promise<patchFoodProductsResponse> => {
-
-  return openApiFetch<patchFoodProductsResponse>(getPatchFoodProductsUrl(),
-  {
+export const patchFoodProducts = async (
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<patchFoodProductsResponse> => {
+  return openApiFetch<patchFoodProductsResponse>(getPatchFoodProductsUrl(), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
+    body: JSON.stringify(foodProduct),
+  });
+};
 
-
-
-
-export const getPatchFoodProductsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchFoodProductsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return patchFoodProducts(arg, options);
-  }
-}
-export const getPatchFoodProductsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products`] as const;
+  };
+};
+export const getPatchFoodProductsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products`] as const;
 
-export type PatchFoodProductsMutationResult = NonNullable<Awaited<ReturnType<typeof patchFoodProducts>>>
+export type PatchFoodProductsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchFoodProducts>>
+>;
 
 /**
  * @summary patch summary
  */
-export const usePatchFoodProducts = <TError = FoodProduct>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchFoodProducts>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof patchFoodProducts>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePatchFoodProducts = <TError = FoodProduct>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof patchFoodProducts>>,
+    TError,
+    Key,
+    FoodProduct | undefined,
+    Awaited<ReturnType<typeof patchFoodProducts>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchFoodProductsMutationKey();
   const swrFn = getPatchFoodProductsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getFoodProductsIdResponse200 = {
-  data: FoodProduct
-  status: 200
-}
+  data: FoodProduct;
+  status: 200;
+};
 
 export type getFoodProductsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getFoodProductsIdResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type getFoodProductsIdResponseSuccess = (getFoodProductsIdResponse200) & {
-  headers: Headers;
-};
-export type getFoodProductsIdResponseError = (getFoodProductsIdResponse404 | getFoodProductsIdResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type getFoodProductsIdResponse = (getFoodProductsIdResponseSuccess | getFoodProductsIdResponseError)
+export type getFoodProductsIdResponseSuccess = getFoodProductsIdResponse200 & {
+  headers: Headers;
+};
+export type getFoodProductsIdResponseError = (
+  | getFoodProductsIdResponse404
+  | getFoodProductsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetFoodProductsIdUrl = (id: number,) => {
+export type getFoodProductsIdResponse =
+  | getFoodProductsIdResponseSuccess
+  | getFoodProductsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`
-}
+export const getGetFoodProductsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getFoodProductsId = async (id: number, options?: RequestInit): Promise<getFoodProductsIdResponse> => {
-
-  return openApiFetch<getFoodProductsIdResponse>(getGetFoodProductsIdUrl(id),
-  {
+export const getFoodProductsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getFoodProductsIdResponse> => {
+  return openApiFetch<getFoodProductsIdResponse>(getGetFoodProductsIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetFoodProductsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetFoodProductsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`] as const;
-
-export type GetFoodProductsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFoodProductsId>>>
+export type GetFoodProductsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFoodProductsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetFoodProductsId = <TError = void | FoodProduct>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFoodProductsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getFoodProductsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFoodProductsIdKey(id) : null);
-  const swrFn = () => getFoodProductsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetFoodProductsIdKey(id) : null));
+  const swrFn = () => getFoodProductsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchFoodProductsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchFoodProductsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchFoodProductsIdResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type patchFoodProductsIdResponseSuccess = (patchFoodProductsIdResponse204) & {
-  headers: Headers;
-};
-export type patchFoodProductsIdResponseError = (patchFoodProductsIdResponse404 | patchFoodProductsIdResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type patchFoodProductsIdResponse = (patchFoodProductsIdResponseSuccess | patchFoodProductsIdResponseError)
+export type patchFoodProductsIdResponseSuccess =
+  patchFoodProductsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchFoodProductsIdResponseError = (
+  | patchFoodProductsIdResponse404
+  | patchFoodProductsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchFoodProductsIdUrl = (id: number,) => {
+export type patchFoodProductsIdResponse =
+  | patchFoodProductsIdResponseSuccess
+  | patchFoodProductsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`
-}
+export const getPatchFoodProductsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchFoodProductsId = async (id: number,
-    foodProduct?: FoodProduct, options?: RequestInit): Promise<patchFoodProductsIdResponse> => {
+export const patchFoodProductsId = async (
+  id: number,
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<patchFoodProductsIdResponse> => {
+  return openApiFetch<patchFoodProductsIdResponse>(
+    getPatchFoodProductsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(foodProduct),
+    }
+  );
+};
 
-  return openApiFetch<patchFoodProductsIdResponse>(getPatchFoodProductsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
-
-
-
-
-export const getPatchFoodProductsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchFoodProductsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return patchFoodProductsId(id, arg, options);
-  }
-}
-export const getPatchFoodProductsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`] as const;
+  };
+};
+export const getPatchFoodProductsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`] as const;
 
-export type PatchFoodProductsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchFoodProductsId>>>
+export type PatchFoodProductsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchFoodProductsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchFoodProductsId = <TError = void | FoodProduct>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchFoodProductsId>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof patchFoodProductsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchFoodProductsId>>,
+      TError,
+      Key,
+      FoodProduct | undefined,
+      Awaited<ReturnType<typeof patchFoodProductsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchFoodProductsIdMutationKey(id);
   const swrFn = getPatchFoodProductsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putFoodProductsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putFoodProductsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putFoodProductsIdResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type putFoodProductsIdResponseSuccess = (putFoodProductsIdResponse204) & {
-  headers: Headers;
-};
-export type putFoodProductsIdResponseError = (putFoodProductsIdResponse404 | putFoodProductsIdResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type putFoodProductsIdResponse = (putFoodProductsIdResponseSuccess | putFoodProductsIdResponseError)
+export type putFoodProductsIdResponseSuccess = putFoodProductsIdResponse204 & {
+  headers: Headers;
+};
+export type putFoodProductsIdResponseError = (
+  | putFoodProductsIdResponse404
+  | putFoodProductsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutFoodProductsIdUrl = (id: number,) => {
+export type putFoodProductsIdResponse =
+  | putFoodProductsIdResponseSuccess
+  | putFoodProductsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`
-}
+export const getPutFoodProductsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putFoodProductsId = async (id: number,
-    foodProduct?: FoodProduct, options?: RequestInit): Promise<putFoodProductsIdResponse> => {
-
-  return openApiFetch<putFoodProductsIdResponse>(getPutFoodProductsIdUrl(id),
-  {
+export const putFoodProductsId = async (
+  id: number,
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<putFoodProductsIdResponse> => {
+  return openApiFetch<putFoodProductsIdResponse>(getPutFoodProductsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
+    body: JSON.stringify(foodProduct),
+  });
+};
 
-
-
-
-export const getPutFoodProductsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutFoodProductsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return putFoodProductsId(id, arg, options);
-  }
-}
-export const getPutFoodProductsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`] as const;
+  };
+};
+export const getPutFoodProductsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`] as const;
 
-export type PutFoodProductsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putFoodProductsId>>>
+export type PutFoodProductsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putFoodProductsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutFoodProductsId = <TError = void | FoodProduct>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putFoodProductsId>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof putFoodProductsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putFoodProductsId>>,
+      TError,
+      Key,
+      FoodProduct | undefined,
+      Awaited<ReturnType<typeof putFoodProductsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutFoodProductsIdMutationKey(id);
   const swrFn = getPutFoodProductsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteFoodProductsIdResponse200 = {
-  data: FoodProduct
-  status: 200
-}
+  data: FoodProduct;
+  status: 200;
+};
 
 export type deleteFoodProductsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteFoodProductsIdResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type deleteFoodProductsIdResponseSuccess = (deleteFoodProductsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteFoodProductsIdResponseError = (deleteFoodProductsIdResponse404 | deleteFoodProductsIdResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type deleteFoodProductsIdResponse = (deleteFoodProductsIdResponseSuccess | deleteFoodProductsIdResponseError)
+export type deleteFoodProductsIdResponseSuccess =
+  deleteFoodProductsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteFoodProductsIdResponseError = (
+  | deleteFoodProductsIdResponse404
+  | deleteFoodProductsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteFoodProductsIdUrl = (id: number,) => {
+export type deleteFoodProductsIdResponse =
+  | deleteFoodProductsIdResponseSuccess
+  | deleteFoodProductsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`
-}
+export const getDeleteFoodProductsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteFoodProductsId = async (id: number, options?: RequestInit): Promise<deleteFoodProductsIdResponse> => {
+export const deleteFoodProductsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteFoodProductsIdResponse> => {
+  return openApiFetch<deleteFoodProductsIdResponse>(
+    getDeleteFoodProductsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteFoodProductsIdResponse>(getDeleteFoodProductsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteFoodProductsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteFoodProductsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteFoodProductsId(id, options);
-  }
-}
-export const getDeleteFoodProductsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/${id}`] as const;
+  };
+};
+export const getDeleteFoodProductsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/${id}`] as const;
 
-export type DeleteFoodProductsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteFoodProductsId>>>
+export type DeleteFoodProductsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteFoodProductsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteFoodProductsId = <TError = void | FoodProduct>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteFoodProductsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteFoodProductsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteFoodProductsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteFoodProductsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteFoodProductsIdMutationKey(id);
   const swrFn = getDeleteFoodProductsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postFoodProductsBulkUpsertResponse201 = {
-  data: FoodProduct
-  status: 201
-}
+  data: FoodProduct;
+  status: 201;
+};
 
 export type postFoodProductsBulkUpsertResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type postFoodProductsBulkUpsertResponseSuccess = (postFoodProductsBulkUpsertResponse201) & {
-  headers: Headers;
-};
-export type postFoodProductsBulkUpsertResponseError = (postFoodProductsBulkUpsertResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type postFoodProductsBulkUpsertResponse = (postFoodProductsBulkUpsertResponseSuccess | postFoodProductsBulkUpsertResponseError)
+export type postFoodProductsBulkUpsertResponseSuccess =
+  postFoodProductsBulkUpsertResponse201 & {
+    headers: Headers;
+  };
+export type postFoodProductsBulkUpsertResponseError =
+  postFoodProductsBulkUpsertResponse422 & {
+    headers: Headers;
+  };
+
+export type postFoodProductsBulkUpsertResponse =
+  | postFoodProductsBulkUpsertResponseSuccess
+  | postFoodProductsBulkUpsertResponseError;
 
 export const getPostFoodProductsBulkUpsertUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/bulk_upsert`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/bulk_upsert`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postFoodProductsBulkUpsert = async (foodProduct?: FoodProduct, options?: RequestInit): Promise<postFoodProductsBulkUpsertResponse> => {
+export const postFoodProductsBulkUpsert = async (
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<postFoodProductsBulkUpsertResponse> => {
+  return openApiFetch<postFoodProductsBulkUpsertResponse>(
+    getPostFoodProductsBulkUpsertUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(foodProduct),
+    }
+  );
+};
 
-  return openApiFetch<postFoodProductsBulkUpsertResponse>(getPostFoodProductsBulkUpsertUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
-
-
-
-
-export const getPostFoodProductsBulkUpsertMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostFoodProductsBulkUpsertMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return postFoodProductsBulkUpsert(arg, options);
-  }
-}
-export const getPostFoodProductsBulkUpsertMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/bulk_upsert`] as const;
+  };
+};
+export const getPostFoodProductsBulkUpsertMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/bulk_upsert`,
+  ] as const;
 
-export type PostFoodProductsBulkUpsertMutationResult = NonNullable<Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>>
+export type PostFoodProductsBulkUpsertMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostFoodProductsBulkUpsert = <TError = FoodProduct>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostFoodProductsBulkUpsert = <TError = FoodProduct>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>,
+    TError,
+    Key,
+    FoodProduct | undefined,
+    Awaited<ReturnType<typeof postFoodProductsBulkUpsert>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPostFoodProductsBulkUpsertMutationKey();
+  const swrKey =
+    swrOptions?.swrKey ?? getPostFoodProductsBulkUpsertMutationKey();
   const swrFn = getPostFoodProductsBulkUpsertMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getFoodProductsGroupGroupIdResponse200 = {
-  data: FoodProduct
-  status: 200
-}
+  data: FoodProduct;
+  status: 200;
+};
 
 export type getFoodProductsGroupGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getFoodProductsGroupGroupIdResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type getFoodProductsGroupGroupIdResponseSuccess = (getFoodProductsGroupGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getFoodProductsGroupGroupIdResponseError = (getFoodProductsGroupGroupIdResponse404 | getFoodProductsGroupGroupIdResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type getFoodProductsGroupGroupIdResponse = (getFoodProductsGroupGroupIdResponseSuccess | getFoodProductsGroupGroupIdResponseError)
+export type getFoodProductsGroupGroupIdResponseSuccess =
+  getFoodProductsGroupGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getFoodProductsGroupGroupIdResponseError = (
+  | getFoodProductsGroupGroupIdResponse404
+  | getFoodProductsGroupGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetFoodProductsGroupGroupIdUrl = (groupId: number,) => {
+export type getFoodProductsGroupGroupIdResponse =
+  | getFoodProductsGroupGroupIdResponseSuccess
+  | getFoodProductsGroupGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/group/${groupId}`
-}
+export const getGetFoodProductsGroupGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/group/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getFoodProductsGroupGroupId = async (groupId: number, options?: RequestInit): Promise<getFoodProductsGroupGroupIdResponse> => {
+export const getFoodProductsGroupGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getFoodProductsGroupGroupIdResponse> => {
+  return openApiFetch<getFoodProductsGroupGroupIdResponse>(
+    getGetFoodProductsGroupGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getFoodProductsGroupGroupIdResponse>(getGetFoodProductsGroupGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetFoodProductsGroupGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/group/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetFoodProductsGroupGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/group/${groupId}`] as const;
-
-export type GetFoodProductsGroupGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getFoodProductsGroupGroupId>>>
+export type GetFoodProductsGroupGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFoodProductsGroupGroupId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetFoodProductsGroupGroupId = <TError = void | FoodProduct>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getFoodProductsGroupGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getFoodProductsGroupGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetFoodProductsGroupGroupIdKey(groupId) : null);
-  const swrFn = () => getFoodProductsGroupGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetFoodProductsGroupGroupIdKey(groupId) : null));
+  const swrFn = () => getFoodProductsGroupGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postFoodProductsUpsertResponse201 = {
-  data: FoodProduct
-  status: 201
-}
+  data: FoodProduct;
+  status: 201;
+};
 
 export type postFoodProductsUpsertResponse422 = {
-  data: FoodProduct
-  status: 422
-}
-
-export type postFoodProductsUpsertResponseSuccess = (postFoodProductsUpsertResponse201) & {
-  headers: Headers;
-};
-export type postFoodProductsUpsertResponseError = (postFoodProductsUpsertResponse422) & {
-  headers: Headers;
+  data: FoodProduct;
+  status: 422;
 };
 
-export type postFoodProductsUpsertResponse = (postFoodProductsUpsertResponseSuccess | postFoodProductsUpsertResponseError)
+export type postFoodProductsUpsertResponseSuccess =
+  postFoodProductsUpsertResponse201 & {
+    headers: Headers;
+  };
+export type postFoodProductsUpsertResponseError =
+  postFoodProductsUpsertResponse422 & {
+    headers: Headers;
+  };
+
+export type postFoodProductsUpsertResponse =
+  | postFoodProductsUpsertResponseSuccess
+  | postFoodProductsUpsertResponseError;
 
 export const getPostFoodProductsUpsertUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/upsert`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/upsert`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postFoodProductsUpsert = async (foodProduct?: FoodProduct, options?: RequestInit): Promise<postFoodProductsUpsertResponse> => {
+export const postFoodProductsUpsert = async (
+  foodProduct?: FoodProduct,
+  options?: RequestInit
+): Promise<postFoodProductsUpsertResponse> => {
+  return openApiFetch<postFoodProductsUpsertResponse>(
+    getPostFoodProductsUpsertUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(foodProduct),
+    }
+  );
+};
 
-  return openApiFetch<postFoodProductsUpsertResponse>(getPostFoodProductsUpsertUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(foodProduct)
-  }
-);}
-
-
-
-
-export const getPostFoodProductsUpsertMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostFoodProductsUpsertMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: FoodProduct | undefined }) => {
     return postFoodProductsUpsert(arg, options);
-  }
-}
-export const getPostFoodProductsUpsertMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/food_products/upsert`] as const;
+  };
+};
+export const getPostFoodProductsUpsertMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/food_products/upsert`] as const;
 
-export type PostFoodProductsUpsertMutationResult = NonNullable<Awaited<ReturnType<typeof postFoodProductsUpsert>>>
+export type PostFoodProductsUpsertMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postFoodProductsUpsert>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostFoodProductsUpsert = <TError = FoodProduct>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postFoodProductsUpsert>>, TError, Key, FoodProduct | undefined, Awaited<ReturnType<typeof postFoodProductsUpsert>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostFoodProductsUpsert = <TError = FoodProduct>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postFoodProductsUpsert>>,
+    TError,
+    Key,
+    FoodProduct | undefined,
+    Awaited<ReturnType<typeof postFoodProductsUpsert>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostFoodProductsUpsertMutationKey();
   const swrFn = getPostFoodProductsUpsertMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

@@ -9,482 +9,547 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  StockerItem
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { StockerItem } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getStockerItemsResponse200 = {
-  data: StockerItem
-  status: 200
-}
+  data: StockerItem;
+  status: 200;
+};
 
 export type getStockerItemsResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type getStockerItemsResponseSuccess = (getStockerItemsResponse200) & {
-  headers: Headers;
-};
-export type getStockerItemsResponseError = (getStockerItemsResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type getStockerItemsResponse = (getStockerItemsResponseSuccess | getStockerItemsResponseError)
+export type getStockerItemsResponseSuccess = getStockerItemsResponse200 & {
+  headers: Headers;
+};
+export type getStockerItemsResponseError = getStockerItemsResponse422 & {
+  headers: Headers;
+};
+
+export type getStockerItemsResponse =
+  | getStockerItemsResponseSuccess
+  | getStockerItemsResponseError;
 
 export const getGetStockerItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStockerItems = async ( options?: RequestInit): Promise<getStockerItemsResponse> => {
-
-  return openApiFetch<getStockerItemsResponse>(getGetStockerItemsUrl(),
-  {
+export const getStockerItems = async (
+  options?: RequestInit
+): Promise<getStockerItemsResponse> => {
+  return openApiFetch<getStockerItemsResponse>(getGetStockerItemsUrl(), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStockerItemsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStockerItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items`] as const;
-
-export type GetStockerItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getStockerItems>>>
+export type GetStockerItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStockerItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetStockerItems = <TError = StockerItem>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStockerItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetStockerItems = <TError = StockerItem>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getStockerItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStockerItemsKey() : null);
-  const swrFn = () => getStockerItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetStockerItemsKey() : null));
+  const swrFn = () => getStockerItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postStockerItemsResponse201 = {
-  data: StockerItem
-  status: 201
-}
+  data: StockerItem;
+  status: 201;
+};
 
 export type postStockerItemsResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type postStockerItemsResponseSuccess = (postStockerItemsResponse201) & {
-  headers: Headers;
-};
-export type postStockerItemsResponseError = (postStockerItemsResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type postStockerItemsResponse = (postStockerItemsResponseSuccess | postStockerItemsResponseError)
+export type postStockerItemsResponseSuccess = postStockerItemsResponse201 & {
+  headers: Headers;
+};
+export type postStockerItemsResponseError = postStockerItemsResponse422 & {
+  headers: Headers;
+};
+
+export type postStockerItemsResponse =
+  | postStockerItemsResponseSuccess
+  | postStockerItemsResponseError;
 
 export const getPostStockerItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postStockerItems = async (stockerItem?: StockerItem, options?: RequestInit): Promise<postStockerItemsResponse> => {
-
-  return openApiFetch<postStockerItemsResponse>(getPostStockerItemsUrl(),
-  {
+export const postStockerItems = async (
+  stockerItem?: StockerItem,
+  options?: RequestInit
+): Promise<postStockerItemsResponse> => {
+  return openApiFetch<postStockerItemsResponse>(getPostStockerItemsUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerItem)
-  }
-);}
+    body: JSON.stringify(stockerItem),
+  });
+};
 
-
-
-
-export const getPostStockerItemsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostStockerItemsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerItem | undefined }) => {
     return postStockerItems(arg, options);
-  }
-}
-export const getPostStockerItemsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items`] as const;
+  };
+};
+export const getPostStockerItemsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items`] as const;
 
-export type PostStockerItemsMutationResult = NonNullable<Awaited<ReturnType<typeof postStockerItems>>>
+export type PostStockerItemsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postStockerItems>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostStockerItems = <TError = StockerItem>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postStockerItems>>, TError, Key, StockerItem | undefined, Awaited<ReturnType<typeof postStockerItems>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostStockerItems = <TError = StockerItem>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postStockerItems>>,
+    TError,
+    Key,
+    StockerItem | undefined,
+    Awaited<ReturnType<typeof postStockerItems>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostStockerItemsMutationKey();
   const swrFn = getPostStockerItemsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getStockerItemsIdResponse200 = {
-  data: StockerItem
-  status: 200
-}
+  data: StockerItem;
+  status: 200;
+};
 
 export type getStockerItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getStockerItemsIdResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type getStockerItemsIdResponseSuccess = (getStockerItemsIdResponse200) & {
-  headers: Headers;
-};
-export type getStockerItemsIdResponseError = (getStockerItemsIdResponse404 | getStockerItemsIdResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type getStockerItemsIdResponse = (getStockerItemsIdResponseSuccess | getStockerItemsIdResponseError)
+export type getStockerItemsIdResponseSuccess = getStockerItemsIdResponse200 & {
+  headers: Headers;
+};
+export type getStockerItemsIdResponseError = (
+  | getStockerItemsIdResponse404
+  | getStockerItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetStockerItemsIdUrl = (id: number,) => {
+export type getStockerItemsIdResponse =
+  | getStockerItemsIdResponseSuccess
+  | getStockerItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`
-}
+export const getGetStockerItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getStockerItemsId = async (id: number, options?: RequestInit): Promise<getStockerItemsIdResponse> => {
-
-  return openApiFetch<getStockerItemsIdResponse>(getGetStockerItemsIdUrl(id),
-  {
+export const getStockerItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getStockerItemsIdResponse> => {
+  return openApiFetch<getStockerItemsIdResponse>(getGetStockerItemsIdUrl(id), {
     ...options,
-    method: 'GET'
+    method: 'GET',
+  });
+};
 
+export const getGetStockerItemsIdKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`] as const;
 
-  }
-);}
-
-
-
-
-export const getGetStockerItemsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`] as const;
-
-export type GetStockerItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getStockerItemsId>>>
+export type GetStockerItemsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStockerItemsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetStockerItemsId = <TError = void | StockerItem>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getStockerItemsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getStockerItemsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetStockerItemsIdKey(id) : null);
-  const swrFn = () => getStockerItemsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetStockerItemsIdKey(id) : null));
+  const swrFn = () => getStockerItemsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchStockerItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchStockerItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchStockerItemsIdResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type patchStockerItemsIdResponseSuccess = (patchStockerItemsIdResponse204) & {
-  headers: Headers;
-};
-export type patchStockerItemsIdResponseError = (patchStockerItemsIdResponse404 | patchStockerItemsIdResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type patchStockerItemsIdResponse = (patchStockerItemsIdResponseSuccess | patchStockerItemsIdResponseError)
+export type patchStockerItemsIdResponseSuccess =
+  patchStockerItemsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchStockerItemsIdResponseError = (
+  | patchStockerItemsIdResponse404
+  | patchStockerItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchStockerItemsIdUrl = (id: number,) => {
+export type patchStockerItemsIdResponse =
+  | patchStockerItemsIdResponseSuccess
+  | patchStockerItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`
-}
+export const getPatchStockerItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchStockerItemsId = async (id: number,
-    stockerItem?: StockerItem, options?: RequestInit): Promise<patchStockerItemsIdResponse> => {
+export const patchStockerItemsId = async (
+  id: number,
+  stockerItem?: StockerItem,
+  options?: RequestInit
+): Promise<patchStockerItemsIdResponse> => {
+  return openApiFetch<patchStockerItemsIdResponse>(
+    getPatchStockerItemsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(stockerItem),
+    }
+  );
+};
 
-  return openApiFetch<patchStockerItemsIdResponse>(getPatchStockerItemsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerItem)
-  }
-);}
-
-
-
-
-export const getPatchStockerItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchStockerItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerItem | undefined }) => {
     return patchStockerItemsId(id, arg, options);
-  }
-}
-export const getPatchStockerItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`] as const;
+  };
+};
+export const getPatchStockerItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`] as const;
 
-export type PatchStockerItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchStockerItemsId>>>
+export type PatchStockerItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchStockerItemsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchStockerItemsId = <TError = void | StockerItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchStockerItemsId>>, TError, Key, StockerItem | undefined, Awaited<ReturnType<typeof patchStockerItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchStockerItemsId>>,
+      TError,
+      Key,
+      StockerItem | undefined,
+      Awaited<ReturnType<typeof patchStockerItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPatchStockerItemsIdMutationKey(id);
   const swrFn = getPatchStockerItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putStockerItemsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putStockerItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putStockerItemsIdResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type putStockerItemsIdResponseSuccess = (putStockerItemsIdResponse204) & {
-  headers: Headers;
-};
-export type putStockerItemsIdResponseError = (putStockerItemsIdResponse404 | putStockerItemsIdResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type putStockerItemsIdResponse = (putStockerItemsIdResponseSuccess | putStockerItemsIdResponseError)
+export type putStockerItemsIdResponseSuccess = putStockerItemsIdResponse204 & {
+  headers: Headers;
+};
+export type putStockerItemsIdResponseError = (
+  | putStockerItemsIdResponse404
+  | putStockerItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutStockerItemsIdUrl = (id: number,) => {
+export type putStockerItemsIdResponse =
+  | putStockerItemsIdResponseSuccess
+  | putStockerItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`
-}
+export const getPutStockerItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putStockerItemsId = async (id: number,
-    stockerItem?: StockerItem, options?: RequestInit): Promise<putStockerItemsIdResponse> => {
-
-  return openApiFetch<putStockerItemsIdResponse>(getPutStockerItemsIdUrl(id),
-  {
+export const putStockerItemsId = async (
+  id: number,
+  stockerItem?: StockerItem,
+  options?: RequestInit
+): Promise<putStockerItemsIdResponse> => {
+  return openApiFetch<putStockerItemsIdResponse>(getPutStockerItemsIdUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(stockerItem)
-  }
-);}
+    body: JSON.stringify(stockerItem),
+  });
+};
 
-
-
-
-export const getPutStockerItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutStockerItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: StockerItem | undefined }) => {
     return putStockerItemsId(id, arg, options);
-  }
-}
-export const getPutStockerItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`] as const;
+  };
+};
+export const getPutStockerItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`] as const;
 
-export type PutStockerItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putStockerItemsId>>>
+export type PutStockerItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putStockerItemsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutStockerItemsId = <TError = void | StockerItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putStockerItemsId>>, TError, Key, StockerItem | undefined, Awaited<ReturnType<typeof putStockerItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putStockerItemsId>>,
+      TError,
+      Key,
+      StockerItem | undefined,
+      Awaited<ReturnType<typeof putStockerItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutStockerItemsIdMutationKey(id);
   const swrFn = getPutStockerItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteStockerItemsIdResponse200 = {
-  data: StockerItem
-  status: 200
-}
+  data: StockerItem;
+  status: 200;
+};
 
 export type deleteStockerItemsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteStockerItemsIdResponse422 = {
-  data: StockerItem
-  status: 422
-}
-
-export type deleteStockerItemsIdResponseSuccess = (deleteStockerItemsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteStockerItemsIdResponseError = (deleteStockerItemsIdResponse404 | deleteStockerItemsIdResponse422) & {
-  headers: Headers;
+  data: StockerItem;
+  status: 422;
 };
 
-export type deleteStockerItemsIdResponse = (deleteStockerItemsIdResponseSuccess | deleteStockerItemsIdResponseError)
+export type deleteStockerItemsIdResponseSuccess =
+  deleteStockerItemsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteStockerItemsIdResponseError = (
+  | deleteStockerItemsIdResponse404
+  | deleteStockerItemsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteStockerItemsIdUrl = (id: number,) => {
+export type deleteStockerItemsIdResponse =
+  | deleteStockerItemsIdResponseSuccess
+  | deleteStockerItemsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`
-}
+export const getDeleteStockerItemsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteStockerItemsId = async (id: number, options?: RequestInit): Promise<deleteStockerItemsIdResponse> => {
+export const deleteStockerItemsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteStockerItemsIdResponse> => {
+  return openApiFetch<deleteStockerItemsIdResponse>(
+    getDeleteStockerItemsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteStockerItemsIdResponse>(getDeleteStockerItemsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteStockerItemsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteStockerItemsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteStockerItemsId(id, options);
-  }
-}
-export const getDeleteStockerItemsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/stocker_items/${id}`] as const;
+  };
+};
+export const getDeleteStockerItemsIdMutationKey = (id: number) =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/stocker_items/${id}`] as const;
 
-export type DeleteStockerItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStockerItemsId>>>
+export type DeleteStockerItemsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteStockerItemsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteStockerItemsId = <TError = void | StockerItem>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteStockerItemsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteStockerItemsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteStockerItemsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteStockerItemsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getDeleteStockerItemsIdMutationKey(id);
   const swrFn = getDeleteStockerItemsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

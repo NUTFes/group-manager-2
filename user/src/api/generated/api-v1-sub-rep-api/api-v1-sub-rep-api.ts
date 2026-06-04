@@ -8,97 +8,101 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ApiV1SubRepApi
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1SubRepApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postApiV1GetSearchSubRepsResponse201 = {
-  data: ApiV1SubRepApi
-  status: 201
-}
+  data: ApiV1SubRepApi;
+  status: 201;
+};
 
 export type postApiV1GetSearchSubRepsResponse422 = {
-  data: ApiV1SubRepApi
-  status: 422
-}
-
-export type postApiV1GetSearchSubRepsResponseSuccess = (postApiV1GetSearchSubRepsResponse201) & {
-  headers: Headers;
-};
-export type postApiV1GetSearchSubRepsResponseError = (postApiV1GetSearchSubRepsResponse422) & {
-  headers: Headers;
+  data: ApiV1SubRepApi;
+  status: 422;
 };
 
-export type postApiV1GetSearchSubRepsResponse = (postApiV1GetSearchSubRepsResponseSuccess | postApiV1GetSearchSubRepsResponseError)
+export type postApiV1GetSearchSubRepsResponseSuccess =
+  postApiV1GetSearchSubRepsResponse201 & {
+    headers: Headers;
+  };
+export type postApiV1GetSearchSubRepsResponseError =
+  postApiV1GetSearchSubRepsResponse422 & {
+    headers: Headers;
+  };
+
+export type postApiV1GetSearchSubRepsResponse =
+  | postApiV1GetSearchSubRepsResponseSuccess
+  | postApiV1GetSearchSubRepsResponseError;
 
 export const getPostApiV1GetSearchSubRepsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_sub_reps`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_sub_reps`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postApiV1GetSearchSubReps = async (apiV1SubRepApi?: ApiV1SubRepApi, options?: RequestInit): Promise<postApiV1GetSearchSubRepsResponse> => {
+export const postApiV1GetSearchSubReps = async (
+  apiV1SubRepApi?: ApiV1SubRepApi,
+  options?: RequestInit
+): Promise<postApiV1GetSearchSubRepsResponse> => {
+  return openApiFetch<postApiV1GetSearchSubRepsResponse>(
+    getPostApiV1GetSearchSubRepsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(apiV1SubRepApi),
+    }
+  );
+};
 
-  return openApiFetch<postApiV1GetSearchSubRepsResponse>(getPostApiV1GetSearchSubRepsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(apiV1SubRepApi)
-  }
-);}
-
-
-
-
-export const getPostApiV1GetSearchSubRepsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostApiV1GetSearchSubRepsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: ApiV1SubRepApi | undefined }) => {
     return postApiV1GetSearchSubReps(arg, options);
-  }
-}
-export const getPostApiV1GetSearchSubRepsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_search_sub_reps`] as const;
+  };
+};
+export const getPostApiV1GetSearchSubRepsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_search_sub_reps`,
+  ] as const;
 
-export type PostApiV1GetSearchSubRepsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>>
+export type PostApiV1GetSearchSubRepsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostApiV1GetSearchSubReps = <TError = ApiV1SubRepApi>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>, TError, Key, ApiV1SubRepApi | undefined, Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostApiV1GetSearchSubReps = <
+  TError = ApiV1SubRepApi,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>,
+    TError,
+    Key,
+    ApiV1SubRepApi | undefined,
+    Awaited<ReturnType<typeof postApiV1GetSearchSubReps>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPostApiV1GetSearchSubRepsMutationKey();
+  const swrKey =
+    swrOptions?.swrKey ?? getPostApiV1GetSearchSubRepsMutationKey();
   const swrFn = getPostApiV1GetSearchSubRepsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

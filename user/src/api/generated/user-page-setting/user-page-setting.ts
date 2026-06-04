@@ -9,482 +9,576 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Arguments,
-  Key,
-  SWRConfiguration
-} from 'swr';
-
+import type { Arguments, Key, SWRConfiguration } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  UserPageSetting
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { UserPageSetting } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getUserPageSettingsResponse200 = {
-  data: UserPageSetting
-  status: 200
-}
+  data: UserPageSetting;
+  status: 200;
+};
 
 export type getUserPageSettingsResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type getUserPageSettingsResponseSuccess = (getUserPageSettingsResponse200) & {
-  headers: Headers;
-};
-export type getUserPageSettingsResponseError = (getUserPageSettingsResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type getUserPageSettingsResponse = (getUserPageSettingsResponseSuccess | getUserPageSettingsResponseError)
+export type getUserPageSettingsResponseSuccess =
+  getUserPageSettingsResponse200 & {
+    headers: Headers;
+  };
+export type getUserPageSettingsResponseError =
+  getUserPageSettingsResponse422 & {
+    headers: Headers;
+  };
+
+export type getUserPageSettingsResponse =
+  | getUserPageSettingsResponseSuccess
+  | getUserPageSettingsResponseError;
 
 export const getGetUserPageSettingsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUserPageSettings = async ( options?: RequestInit): Promise<getUserPageSettingsResponse> => {
+export const getUserPageSettings = async (
+  options?: RequestInit
+): Promise<getUserPageSettingsResponse> => {
+  return openApiFetch<getUserPageSettingsResponse>(
+    getGetUserPageSettingsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getUserPageSettingsResponse>(getGetUserPageSettingsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUserPageSettingsKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings`] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetUserPageSettingsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings`] as const;
-
-export type GetUserPageSettingsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPageSettings>>>
+export type GetUserPageSettingsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUserPageSettings>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetUserPageSettings = <TError = UserPageSetting>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUserPageSettings>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetUserPageSettings = <TError = UserPageSetting>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getUserPageSettings>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUserPageSettingsKey() : null);
-  const swrFn = () => getUserPageSettings(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetUserPageSettingsKey() : null));
+  const swrFn = () => getUserPageSettings(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type postUserPageSettingsResponse201 = {
-  data: UserPageSetting
-  status: 201
-}
+  data: UserPageSetting;
+  status: 201;
+};
 
 export type postUserPageSettingsResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type postUserPageSettingsResponseSuccess = (postUserPageSettingsResponse201) & {
-  headers: Headers;
-};
-export type postUserPageSettingsResponseError = (postUserPageSettingsResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type postUserPageSettingsResponse = (postUserPageSettingsResponseSuccess | postUserPageSettingsResponseError)
+export type postUserPageSettingsResponseSuccess =
+  postUserPageSettingsResponse201 & {
+    headers: Headers;
+  };
+export type postUserPageSettingsResponseError =
+  postUserPageSettingsResponse422 & {
+    headers: Headers;
+  };
+
+export type postUserPageSettingsResponse =
+  | postUserPageSettingsResponseSuccess
+  | postUserPageSettingsResponseError;
 
 export const getPostUserPageSettingsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postUserPageSettings = async (userPageSetting?: UserPageSetting, options?: RequestInit): Promise<postUserPageSettingsResponse> => {
+export const postUserPageSettings = async (
+  userPageSetting?: UserPageSetting,
+  options?: RequestInit
+): Promise<postUserPageSettingsResponse> => {
+  return openApiFetch<postUserPageSettingsResponse>(
+    getPostUserPageSettingsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(userPageSetting),
+    }
+  );
+};
 
-  return openApiFetch<postUserPageSettingsResponse>(getPostUserPageSettingsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(userPageSetting)
-  }
-);}
-
-
-
-
-export const getPostUserPageSettingsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
+export const getPostUserPageSettingsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UserPageSetting | undefined }) => {
     return postUserPageSettings(arg, options);
-  }
-}
-export const getPostUserPageSettingsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings`] as const;
+  };
+};
+export const getPostUserPageSettingsMutationKey = () =>
+  [`${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings`] as const;
 
-export type PostUserPageSettingsMutationResult = NonNullable<Awaited<ReturnType<typeof postUserPageSettings>>>
+export type PostUserPageSettingsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postUserPageSettings>>
+>;
 
 /**
  * @summary post summary
  */
-export const usePostUserPageSettings = <TError = UserPageSetting>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postUserPageSettings>>, TError, Key, UserPageSetting | undefined, Awaited<ReturnType<typeof postUserPageSettings>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const usePostUserPageSettings = <TError = UserPageSetting>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postUserPageSettings>>,
+    TError,
+    Key,
+    UserPageSetting | undefined,
+    Awaited<ReturnType<typeof postUserPageSettings>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPostUserPageSettingsMutationKey();
   const swrFn = getPostUserPageSettingsMutationFetcher(requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getUserPageSettingsIdResponse200 = {
-  data: UserPageSetting
-  status: 200
-}
+  data: UserPageSetting;
+  status: 200;
+};
 
 export type getUserPageSettingsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getUserPageSettingsIdResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type getUserPageSettingsIdResponseSuccess = (getUserPageSettingsIdResponse200) & {
-  headers: Headers;
-};
-export type getUserPageSettingsIdResponseError = (getUserPageSettingsIdResponse404 | getUserPageSettingsIdResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type getUserPageSettingsIdResponse = (getUserPageSettingsIdResponseSuccess | getUserPageSettingsIdResponseError)
+export type getUserPageSettingsIdResponseSuccess =
+  getUserPageSettingsIdResponse200 & {
+    headers: Headers;
+  };
+export type getUserPageSettingsIdResponseError = (
+  | getUserPageSettingsIdResponse404
+  | getUserPageSettingsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetUserPageSettingsIdUrl = (id: number,) => {
+export type getUserPageSettingsIdResponse =
+  | getUserPageSettingsIdResponseSuccess
+  | getUserPageSettingsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`
-}
+export const getGetUserPageSettingsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getUserPageSettingsId = async (id: number, options?: RequestInit): Promise<getUserPageSettingsIdResponse> => {
+export const getUserPageSettingsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<getUserPageSettingsIdResponse> => {
+  return openApiFetch<getUserPageSettingsIdResponse>(
+    getGetUserPageSettingsIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getUserPageSettingsIdResponse>(getGetUserPageSettingsIdUrl(id),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUserPageSettingsIdKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetUserPageSettingsIdKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`] as const;
-
-export type GetUserPageSettingsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPageSettingsId>>>
+export type GetUserPageSettingsIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUserPageSettingsId>>
+>;
 
 /**
  * @summary get summary
  */
 export const useGetUserPageSettingsId = <TError = void | UserPageSetting>(
-  id: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getUserPageSettingsId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+  id: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getUserPageSettingsId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && id !== null && id !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetUserPageSettingsIdKey(id) : null);
-  const swrFn = () => getUserPageSettingsId(id, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && id !== null && id !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetUserPageSettingsIdKey(id) : null));
+  const swrFn = () => getUserPageSettingsId(id, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type patchUserPageSettingsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type patchUserPageSettingsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type patchUserPageSettingsIdResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type patchUserPageSettingsIdResponseSuccess = (patchUserPageSettingsIdResponse204) & {
-  headers: Headers;
-};
-export type patchUserPageSettingsIdResponseError = (patchUserPageSettingsIdResponse404 | patchUserPageSettingsIdResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type patchUserPageSettingsIdResponse = (patchUserPageSettingsIdResponseSuccess | patchUserPageSettingsIdResponseError)
+export type patchUserPageSettingsIdResponseSuccess =
+  patchUserPageSettingsIdResponse204 & {
+    headers: Headers;
+  };
+export type patchUserPageSettingsIdResponseError = (
+  | patchUserPageSettingsIdResponse404
+  | patchUserPageSettingsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPatchUserPageSettingsIdUrl = (id: number,) => {
+export type patchUserPageSettingsIdResponse =
+  | patchUserPageSettingsIdResponseSuccess
+  | patchUserPageSettingsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`
-}
+export const getPatchUserPageSettingsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`;
+};
 
 /**
  * patch description
  * @summary patch summary
  */
-export const patchUserPageSettingsId = async (id: number,
-    userPageSetting?: UserPageSetting, options?: RequestInit): Promise<patchUserPageSettingsIdResponse> => {
+export const patchUserPageSettingsId = async (
+  id: number,
+  userPageSetting?: UserPageSetting,
+  options?: RequestInit
+): Promise<patchUserPageSettingsIdResponse> => {
+  return openApiFetch<patchUserPageSettingsIdResponse>(
+    getPatchUserPageSettingsIdUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(userPageSetting),
+    }
+  );
+};
 
-  return openApiFetch<patchUserPageSettingsIdResponse>(getPatchUserPageSettingsIdUrl(id),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(userPageSetting)
-  }
-);}
-
-
-
-
-export const getPatchUserPageSettingsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPatchUserPageSettingsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UserPageSetting | undefined }) => {
     return patchUserPageSettingsId(id, arg, options);
-  }
-}
-export const getPatchUserPageSettingsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`] as const;
+  };
+};
+export const getPatchUserPageSettingsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`,
+  ] as const;
 
-export type PatchUserPageSettingsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchUserPageSettingsId>>>
+export type PatchUserPageSettingsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchUserPageSettingsId>>
+>;
 
 /**
  * @summary patch summary
  */
 export const usePatchUserPageSettingsId = <TError = void | UserPageSetting>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof patchUserPageSettingsId>>, TError, Key, UserPageSetting | undefined, Awaited<ReturnType<typeof patchUserPageSettingsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof patchUserPageSettingsId>>,
+      TError,
+      Key,
+      UserPageSetting | undefined,
+      Awaited<ReturnType<typeof patchUserPageSettingsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getPatchUserPageSettingsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getPatchUserPageSettingsIdMutationKey(id);
   const swrFn = getPatchUserPageSettingsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type putUserPageSettingsIdResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
 export type putUserPageSettingsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type putUserPageSettingsIdResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type putUserPageSettingsIdResponseSuccess = (putUserPageSettingsIdResponse204) & {
-  headers: Headers;
-};
-export type putUserPageSettingsIdResponseError = (putUserPageSettingsIdResponse404 | putUserPageSettingsIdResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type putUserPageSettingsIdResponse = (putUserPageSettingsIdResponseSuccess | putUserPageSettingsIdResponseError)
+export type putUserPageSettingsIdResponseSuccess =
+  putUserPageSettingsIdResponse204 & {
+    headers: Headers;
+  };
+export type putUserPageSettingsIdResponseError = (
+  | putUserPageSettingsIdResponse404
+  | putUserPageSettingsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getPutUserPageSettingsIdUrl = (id: number,) => {
+export type putUserPageSettingsIdResponse =
+  | putUserPageSettingsIdResponseSuccess
+  | putUserPageSettingsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`
-}
+export const getPutUserPageSettingsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`;
+};
 
 /**
  * put description
  * @summary put summary
  */
-export const putUserPageSettingsId = async (id: number,
-    userPageSetting?: UserPageSetting, options?: RequestInit): Promise<putUserPageSettingsIdResponse> => {
+export const putUserPageSettingsId = async (
+  id: number,
+  userPageSetting?: UserPageSetting,
+  options?: RequestInit
+): Promise<putUserPageSettingsIdResponse> => {
+  return openApiFetch<putUserPageSettingsIdResponse>(
+    getPutUserPageSettingsIdUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(userPageSetting),
+    }
+  );
+};
 
-  return openApiFetch<putUserPageSettingsIdResponse>(getPutUserPageSettingsIdUrl(id),
-  {
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(userPageSetting)
-  }
-);}
-
-
-
-
-export const getPutUserPageSettingsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getPutUserPageSettingsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, { arg }: { arg: UserPageSetting | undefined }) => {
     return putUserPageSettingsId(id, arg, options);
-  }
-}
-export const getPutUserPageSettingsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`] as const;
+  };
+};
+export const getPutUserPageSettingsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`,
+  ] as const;
 
-export type PutUserPageSettingsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putUserPageSettingsId>>>
+export type PutUserPageSettingsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putUserPageSettingsId>>
+>;
 
 /**
  * @summary put summary
  */
 export const usePutUserPageSettingsId = <TError = void | UserPageSetting>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof putUserPageSettingsId>>, TError, Key, UserPageSetting | undefined, Awaited<ReturnType<typeof putUserPageSettingsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof putUserPageSettingsId>>,
+      TError,
+      Key,
+      UserPageSetting | undefined,
+      Awaited<ReturnType<typeof putUserPageSettingsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
   const swrKey = swrOptions?.swrKey ?? getPutUserPageSettingsIdMutationKey(id);
   const swrFn = getPutUserPageSettingsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type deleteUserPageSettingsIdResponse200 = {
-  data: UserPageSetting
-  status: 200
-}
+  data: UserPageSetting;
+  status: 200;
+};
 
 export type deleteUserPageSettingsIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type deleteUserPageSettingsIdResponse422 = {
-  data: UserPageSetting
-  status: 422
-}
-
-export type deleteUserPageSettingsIdResponseSuccess = (deleteUserPageSettingsIdResponse200) & {
-  headers: Headers;
-};
-export type deleteUserPageSettingsIdResponseError = (deleteUserPageSettingsIdResponse404 | deleteUserPageSettingsIdResponse422) & {
-  headers: Headers;
+  data: UserPageSetting;
+  status: 422;
 };
 
-export type deleteUserPageSettingsIdResponse = (deleteUserPageSettingsIdResponseSuccess | deleteUserPageSettingsIdResponseError)
+export type deleteUserPageSettingsIdResponseSuccess =
+  deleteUserPageSettingsIdResponse200 & {
+    headers: Headers;
+  };
+export type deleteUserPageSettingsIdResponseError = (
+  | deleteUserPageSettingsIdResponse404
+  | deleteUserPageSettingsIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getDeleteUserPageSettingsIdUrl = (id: number,) => {
+export type deleteUserPageSettingsIdResponse =
+  | deleteUserPageSettingsIdResponseSuccess
+  | deleteUserPageSettingsIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`
-}
+export const getDeleteUserPageSettingsIdUrl = (id: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`;
+};
 
 /**
  * delete description
  * @summary delete summary
  */
-export const deleteUserPageSettingsId = async (id: number, options?: RequestInit): Promise<deleteUserPageSettingsIdResponse> => {
+export const deleteUserPageSettingsId = async (
+  id: number,
+  options?: RequestInit
+): Promise<deleteUserPageSettingsIdResponse> => {
+  return openApiFetch<deleteUserPageSettingsIdResponse>(
+    getDeleteUserPageSettingsIdUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
-  return openApiFetch<deleteUserPageSettingsIdResponse>(getDeleteUserPageSettingsIdUrl(id),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteUserPageSettingsIdMutationFetcher = (id: number, options?: SecondParameter<typeof openApiFetch>) => {
+export const getDeleteUserPageSettingsIdMutationFetcher = (
+  id: number,
+  options?: SecondParameter<typeof openApiFetch>
+) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteUserPageSettingsId(id, options);
-  }
-}
-export const getDeleteUserPageSettingsIdMutationKey = (id: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/user_page_settings/${id}`] as const;
+  };
+};
+export const getDeleteUserPageSettingsIdMutationKey = (id: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/user_page_settings/${id}`,
+  ] as const;
 
-export type DeleteUserPageSettingsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUserPageSettingsId>>>
+export type DeleteUserPageSettingsIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUserPageSettingsId>>
+>;
 
 /**
  * @summary delete summary
  */
 export const useDeleteUserPageSettingsId = <TError = void | UserPageSetting>(
-  id: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteUserPageSettingsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteUserPageSettingsId>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
+  id: number,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteUserPageSettingsId>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteUserPageSettingsId>>
+    > & { swrKey?: string };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
-
-  const swrKey = swrOptions?.swrKey ?? getDeleteUserPageSettingsIdMutationKey(id);
+  const swrKey =
+    swrOptions?.swrKey ?? getDeleteUserPageSettingsIdMutationKey(id);
   const swrFn = getDeleteUserPageSettingsIdMutationFetcher(id, requestOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

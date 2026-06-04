@@ -9,96 +9,110 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  CheckAllRegistered
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { CheckAllRegistered } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getCheckAllRegisteredGroupIdResponse200 = {
-  data: CheckAllRegistered
-  status: 200
-}
+  data: CheckAllRegistered;
+  status: 200;
+};
 
 export type getCheckAllRegisteredGroupIdResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getCheckAllRegisteredGroupIdResponse422 = {
-  data: CheckAllRegistered
-  status: 422
-}
-
-export type getCheckAllRegisteredGroupIdResponseSuccess = (getCheckAllRegisteredGroupIdResponse200) & {
-  headers: Headers;
-};
-export type getCheckAllRegisteredGroupIdResponseError = (getCheckAllRegisteredGroupIdResponse404 | getCheckAllRegisteredGroupIdResponse422) & {
-  headers: Headers;
+  data: CheckAllRegistered;
+  status: 422;
 };
 
-export type getCheckAllRegisteredGroupIdResponse = (getCheckAllRegisteredGroupIdResponseSuccess | getCheckAllRegisteredGroupIdResponseError)
+export type getCheckAllRegisteredGroupIdResponseSuccess =
+  getCheckAllRegisteredGroupIdResponse200 & {
+    headers: Headers;
+  };
+export type getCheckAllRegisteredGroupIdResponseError = (
+  | getCheckAllRegisteredGroupIdResponse404
+  | getCheckAllRegisteredGroupIdResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetCheckAllRegisteredGroupIdUrl = (groupId: number,) => {
+export type getCheckAllRegisteredGroupIdResponse =
+  | getCheckAllRegisteredGroupIdResponseSuccess
+  | getCheckAllRegisteredGroupIdResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/check_all_registered/${groupId}`
-}
+export const getGetCheckAllRegisteredGroupIdUrl = (groupId: number) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/check_all_registered/${groupId}`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getCheckAllRegisteredGroupId = async (groupId: number, options?: RequestInit): Promise<getCheckAllRegisteredGroupIdResponse> => {
+export const getCheckAllRegisteredGroupId = async (
+  groupId: number,
+  options?: RequestInit
+): Promise<getCheckAllRegisteredGroupIdResponse> => {
+  return openApiFetch<getCheckAllRegisteredGroupIdResponse>(
+    getGetCheckAllRegisteredGroupIdUrl(groupId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getCheckAllRegisteredGroupIdResponse>(getGetCheckAllRegisteredGroupIdUrl(groupId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetCheckAllRegisteredGroupIdKey = (groupId: number) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/check_all_registered/${groupId}`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetCheckAllRegisteredGroupIdKey = (groupId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/check_all_registered/${groupId}`] as const;
-
-export type GetCheckAllRegisteredGroupIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCheckAllRegisteredGroupId>>>
+export type GetCheckAllRegisteredGroupIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCheckAllRegisteredGroupId>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetCheckAllRegisteredGroupId = <TError = void | CheckAllRegistered>(
-  groupId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getCheckAllRegisteredGroupId>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetCheckAllRegisteredGroupId = <
+  TError = void | CheckAllRegistered,
+>(
+  groupId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<ReturnType<typeof getCheckAllRegisteredGroupId>>,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && groupId !== null && groupId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetCheckAllRegisteredGroupIdKey(groupId) : null);
-  const swrFn = () => getCheckAllRegisteredGroupId(groupId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false && groupId !== null && groupId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetCheckAllRegisteredGroupIdKey(groupId) : null));
+  const swrFn = () => getCheckAllRegisteredGroupId(groupId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

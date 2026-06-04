@@ -10,4 +10,5 @@
  */
 import type { ActionmailboxIngressesMailgunInboundEmail } from './actionmailboxIngressesMailgunInboundEmail';
 
-export type ActionmailboxIngressesMailgunInboundEmailBody = ActionmailboxIngressesMailgunInboundEmail;
+export type ActionmailboxIngressesMailgunInboundEmailBody =
+  ActionmailboxIngressesMailgunInboundEmail;

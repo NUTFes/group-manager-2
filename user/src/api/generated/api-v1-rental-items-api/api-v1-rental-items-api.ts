@@ -9,446 +9,543 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ApiV1RentalItemsApi
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ApiV1RentalItemsApi } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getApiV1GetAllRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetAllRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetAllRentableItemsResponseSuccess = (getApiV1GetAllRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetAllRentableItemsResponseError = (getApiV1GetAllRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetAllRentableItemsResponse = (getApiV1GetAllRentableItemsResponseSuccess | getApiV1GetAllRentableItemsResponseError)
+export type getApiV1GetAllRentableItemsResponseSuccess =
+  getApiV1GetAllRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetAllRentableItemsResponseError =
+  getApiV1GetAllRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetAllRentableItemsResponse =
+  | getApiV1GetAllRentableItemsResponseSuccess
+  | getApiV1GetAllRentableItemsResponseError;
 
 export const getGetApiV1GetAllRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_all_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_all_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetAllRentableItems = async ( options?: RequestInit): Promise<getApiV1GetAllRentableItemsResponse> => {
+export const getApiV1GetAllRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetAllRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetAllRentableItemsResponse>(
+    getGetApiV1GetAllRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetAllRentableItemsResponse>(getGetApiV1GetAllRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetAllRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_all_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetAllRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_all_rentable_items`] as const;
-
-export type GetApiV1GetAllRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetAllRentableItems>>>
+export type GetApiV1GetAllRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetAllRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetAllRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetAllRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetAllRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetAllRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetAllRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetAllRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetAllRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetAllRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetInsideShopRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetInsideShopRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetInsideShopRentableItemsResponseSuccess = (getApiV1GetInsideShopRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetInsideShopRentableItemsResponseError = (getApiV1GetInsideShopRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetInsideShopRentableItemsResponse = (getApiV1GetInsideShopRentableItemsResponseSuccess | getApiV1GetInsideShopRentableItemsResponseError)
+export type getApiV1GetInsideShopRentableItemsResponseSuccess =
+  getApiV1GetInsideShopRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetInsideShopRentableItemsResponseError =
+  getApiV1GetInsideShopRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetInsideShopRentableItemsResponse =
+  | getApiV1GetInsideShopRentableItemsResponseSuccess
+  | getApiV1GetInsideShopRentableItemsResponseError;
 
 export const getGetApiV1GetInsideShopRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_inside_shop_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_inside_shop_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetInsideShopRentableItems = async ( options?: RequestInit): Promise<getApiV1GetInsideShopRentableItemsResponse> => {
+export const getApiV1GetInsideShopRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetInsideShopRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetInsideShopRentableItemsResponse>(
+    getGetApiV1GetInsideShopRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetInsideShopRentableItemsResponse>(getGetApiV1GetInsideShopRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetInsideShopRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_inside_shop_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetInsideShopRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_inside_shop_rentable_items`] as const;
-
-export type GetApiV1GetInsideShopRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetInsideShopRentableItems>>>
+export type GetApiV1GetInsideShopRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetInsideShopRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetInsideShopRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetInsideShopRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetInsideShopRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetInsideShopRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetInsideShopRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetInsideShopRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetInsideShopRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetInsideShopRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetOutsideShopRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetOutsideShopRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetOutsideShopRentableItemsResponseSuccess = (getApiV1GetOutsideShopRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetOutsideShopRentableItemsResponseError = (getApiV1GetOutsideShopRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetOutsideShopRentableItemsResponse = (getApiV1GetOutsideShopRentableItemsResponseSuccess | getApiV1GetOutsideShopRentableItemsResponseError)
+export type getApiV1GetOutsideShopRentableItemsResponseSuccess =
+  getApiV1GetOutsideShopRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetOutsideShopRentableItemsResponseError =
+  getApiV1GetOutsideShopRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetOutsideShopRentableItemsResponse =
+  | getApiV1GetOutsideShopRentableItemsResponseSuccess
+  | getApiV1GetOutsideShopRentableItemsResponseError;
 
 export const getGetApiV1GetOutsideShopRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_outside_shop_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_outside_shop_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetOutsideShopRentableItems = async ( options?: RequestInit): Promise<getApiV1GetOutsideShopRentableItemsResponse> => {
+export const getApiV1GetOutsideShopRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetOutsideShopRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetOutsideShopRentableItemsResponse>(
+    getGetApiV1GetOutsideShopRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetOutsideShopRentableItemsResponse>(getGetApiV1GetOutsideShopRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetOutsideShopRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_outside_shop_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetOutsideShopRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_outside_shop_rentable_items`] as const;
-
-export type GetApiV1GetOutsideShopRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetOutsideShopRentableItems>>>
+export type GetApiV1GetOutsideShopRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetOutsideShopRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetOutsideShopRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetOutsideShopRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetOutsideShopRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetOutsideShopRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetOutsideShopRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetOutsideShopRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetOutsideShopRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetOutsideShopRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetRentableItemsResponseSuccess = (getApiV1GetRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetRentableItemsResponseError = (getApiV1GetRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetRentableItemsResponse = (getApiV1GetRentableItemsResponseSuccess | getApiV1GetRentableItemsResponseError)
+export type getApiV1GetRentableItemsResponseSuccess =
+  getApiV1GetRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetRentableItemsResponseError =
+  getApiV1GetRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetRentableItemsResponse =
+  | getApiV1GetRentableItemsResponseSuccess
+  | getApiV1GetRentableItemsResponseError;
 
 export const getGetApiV1GetRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetRentableItems = async ( options?: RequestInit): Promise<getApiV1GetRentableItemsResponse> => {
+export const getApiV1GetRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetRentableItemsResponse>(
+    getGetApiV1GetRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetRentableItemsResponse>(getGetApiV1GetRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_rentable_items`] as const;
-
-export type GetApiV1GetRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetRentableItems>>>
+export type GetApiV1GetRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetShopRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetShopRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetShopRentableItemsResponseSuccess = (getApiV1GetShopRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetShopRentableItemsResponseError = (getApiV1GetShopRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetShopRentableItemsResponse = (getApiV1GetShopRentableItemsResponseSuccess | getApiV1GetShopRentableItemsResponseError)
+export type getApiV1GetShopRentableItemsResponseSuccess =
+  getApiV1GetShopRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetShopRentableItemsResponseError =
+  getApiV1GetShopRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetShopRentableItemsResponse =
+  | getApiV1GetShopRentableItemsResponseSuccess
+  | getApiV1GetShopRentableItemsResponseError;
 
 export const getGetApiV1GetShopRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_shop_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_shop_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetShopRentableItems = async ( options?: RequestInit): Promise<getApiV1GetShopRentableItemsResponse> => {
+export const getApiV1GetShopRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetShopRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetShopRentableItemsResponse>(
+    getGetApiV1GetShopRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetShopRentableItemsResponse>(getGetApiV1GetShopRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetShopRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_shop_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetShopRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_shop_rentable_items`] as const;
-
-export type GetApiV1GetShopRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetShopRentableItems>>>
+export type GetApiV1GetShopRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetShopRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetShopRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetShopRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetShopRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetShopRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetShopRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetShopRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetShopRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetShopRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
 export type getApiV1GetStageRentableItemsResponse200 = {
-  data: ApiV1RentalItemsApi
-  status: 200
-}
+  data: ApiV1RentalItemsApi;
+  status: 200;
+};
 
 export type getApiV1GetStageRentableItemsResponse422 = {
-  data: ApiV1RentalItemsApi
-  status: 422
-}
-
-export type getApiV1GetStageRentableItemsResponseSuccess = (getApiV1GetStageRentableItemsResponse200) & {
-  headers: Headers;
-};
-export type getApiV1GetStageRentableItemsResponseError = (getApiV1GetStageRentableItemsResponse422) & {
-  headers: Headers;
+  data: ApiV1RentalItemsApi;
+  status: 422;
 };
 
-export type getApiV1GetStageRentableItemsResponse = (getApiV1GetStageRentableItemsResponseSuccess | getApiV1GetStageRentableItemsResponseError)
+export type getApiV1GetStageRentableItemsResponseSuccess =
+  getApiV1GetStageRentableItemsResponse200 & {
+    headers: Headers;
+  };
+export type getApiV1GetStageRentableItemsResponseError =
+  getApiV1GetStageRentableItemsResponse422 & {
+    headers: Headers;
+  };
+
+export type getApiV1GetStageRentableItemsResponse =
+  | getApiV1GetStageRentableItemsResponseSuccess
+  | getApiV1GetStageRentableItemsResponseError;
 
 export const getGetApiV1GetStageRentableItemsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_stage_rentable_items`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_stage_rentable_items`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getApiV1GetStageRentableItems = async ( options?: RequestInit): Promise<getApiV1GetStageRentableItemsResponse> => {
+export const getApiV1GetStageRentableItems = async (
+  options?: RequestInit
+): Promise<getApiV1GetStageRentableItemsResponse> => {
+  return openApiFetch<getApiV1GetStageRentableItemsResponse>(
+    getGetApiV1GetStageRentableItemsUrl(),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getApiV1GetStageRentableItemsResponse>(getGetApiV1GetStageRentableItemsUrl(),
-  {
-    ...options,
-    method: 'GET'
+export const getGetApiV1GetStageRentableItemsKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/get_stage_rentable_items`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetApiV1GetStageRentableItemsKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/get_stage_rentable_items`] as const;
-
-export type GetApiV1GetStageRentableItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1GetStageRentableItems>>>
+export type GetApiV1GetStageRentableItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiV1GetStageRentableItems>>
+>;
 
 /**
  * @summary get summary
  */
-export const useGetApiV1GetStageRentableItems = <TError = ApiV1RentalItemsApi>(
-   options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getApiV1GetStageRentableItems>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
-) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+export const useGetApiV1GetStageRentableItems = <
+  TError = ApiV1RentalItemsApi,
+>(options?: {
+  swr?: SWRConfiguration<
+    Awaited<ReturnType<typeof getApiV1GetStageRentableItems>>,
+    TError
+  > & { swrKey?: Key; enabled?: boolean };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetApiV1GetStageRentableItemsKey() : null);
-  const swrFn = () => getApiV1GetStageRentableItems(requestOptions)
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() => (isEnabled ? getGetApiV1GetStageRentableItemsKey() : null));
+  const swrFn = () => getApiV1GetStageRentableItems(requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

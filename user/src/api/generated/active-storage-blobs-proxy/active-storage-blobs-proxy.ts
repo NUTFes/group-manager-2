@@ -9,96 +9,123 @@
  * OpenAPI spec version: 1.0.0
  */
 import useSwr from 'swr';
-import type {
-  Key,
-  SWRConfiguration
-} from 'swr';
-
-import type {
-  ActivestorageBlobsProxy
-} from '../schemas';
-
+import type { Key, SWRConfiguration } from 'swr';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActivestorageBlobsProxy } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRailsActiveStorageBlobsProxySignedIdFilenameResponse200 = {
-  data: ActivestorageBlobsProxy
-  status: 200
-}
+  data: ActivestorageBlobsProxy;
+  status: 200;
+};
 
 export type getRailsActiveStorageBlobsProxySignedIdFilenameResponse404 = {
-  data: void
-  status: 404
-}
+  data: void;
+  status: 404;
+};
 
 export type getRailsActiveStorageBlobsProxySignedIdFilenameResponse422 = {
-  data: ActivestorageBlobsProxy
-  status: 422
-}
-
-export type getRailsActiveStorageBlobsProxySignedIdFilenameResponseSuccess = (getRailsActiveStorageBlobsProxySignedIdFilenameResponse200) & {
-  headers: Headers;
-};
-export type getRailsActiveStorageBlobsProxySignedIdFilenameResponseError = (getRailsActiveStorageBlobsProxySignedIdFilenameResponse404 | getRailsActiveStorageBlobsProxySignedIdFilenameResponse422) & {
-  headers: Headers;
+  data: ActivestorageBlobsProxy;
+  status: 422;
 };
 
-export type getRailsActiveStorageBlobsProxySignedIdFilenameResponse = (getRailsActiveStorageBlobsProxySignedIdFilenameResponseSuccess | getRailsActiveStorageBlobsProxySignedIdFilenameResponseError)
+export type getRailsActiveStorageBlobsProxySignedIdFilenameResponseSuccess =
+  getRailsActiveStorageBlobsProxySignedIdFilenameResponse200 & {
+    headers: Headers;
+  };
+export type getRailsActiveStorageBlobsProxySignedIdFilenameResponseError = (
+  | getRailsActiveStorageBlobsProxySignedIdFilenameResponse404
+  | getRailsActiveStorageBlobsProxySignedIdFilenameResponse422
+) & {
+  headers: Headers;
+};
 
-export const getGetRailsActiveStorageBlobsProxySignedIdFilenameUrl = (signedId: number,) => {
+export type getRailsActiveStorageBlobsProxySignedIdFilenameResponse =
+  | getRailsActiveStorageBlobsProxySignedIdFilenameResponseSuccess
+  | getRailsActiveStorageBlobsProxySignedIdFilenameResponseError;
 
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/proxy/${signedId}/*filename`
-}
+export const getGetRailsActiveStorageBlobsProxySignedIdFilenameUrl = (
+  signedId: number
+) => {
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/proxy/${signedId}/*filename`;
+};
 
 /**
  * get description
  * @summary get summary
  */
-export const getRailsActiveStorageBlobsProxySignedIdFilename = async (signedId: number, options?: RequestInit): Promise<getRailsActiveStorageBlobsProxySignedIdFilenameResponse> => {
+export const getRailsActiveStorageBlobsProxySignedIdFilename = async (
+  signedId: number,
+  options?: RequestInit
+): Promise<getRailsActiveStorageBlobsProxySignedIdFilenameResponse> => {
+  return openApiFetch<getRailsActiveStorageBlobsProxySignedIdFilenameResponse>(
+    getGetRailsActiveStorageBlobsProxySignedIdFilenameUrl(signedId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
-  return openApiFetch<getRailsActiveStorageBlobsProxySignedIdFilenameResponse>(getGetRailsActiveStorageBlobsProxySignedIdFilenameUrl(signedId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetRailsActiveStorageBlobsProxySignedIdFilenameKey = (
+  signedId: number
+) =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/active_storage/blobs/proxy/${signedId}/*filename`,
+  ] as const;
 
-
-  }
-);}
-
-
-
-
-export const getGetRailsActiveStorageBlobsProxySignedIdFilenameKey = (signedId: number,) => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/active_storage/blobs/proxy/${signedId}/*filename`] as const;
-
-export type GetRailsActiveStorageBlobsProxySignedIdFilenameQueryResult = NonNullable<Awaited<ReturnType<typeof getRailsActiveStorageBlobsProxySignedIdFilename>>>
+export type GetRailsActiveStorageBlobsProxySignedIdFilenameQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getRailsActiveStorageBlobsProxySignedIdFilename>>
+  >;
 
 /**
  * @summary get summary
  */
-export const useGetRailsActiveStorageBlobsProxySignedIdFilename = <TError = void | ActivestorageBlobsProxy>(
-  signedId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRailsActiveStorageBlobsProxySignedIdFilename>>, TError> & { swrKey?: Key, enabled?: boolean }, request?: SecondParameter<typeof openApiFetch> }
+export const useGetRailsActiveStorageBlobsProxySignedIdFilename = <
+  TError = void | ActivestorageBlobsProxy,
+>(
+  signedId: number,
+  options?: {
+    swr?: SWRConfiguration<
+      Awaited<
+        ReturnType<typeof getRailsActiveStorageBlobsProxySignedIdFilename>
+      >,
+      TError
+    > & { swrKey?: Key; enabled?: boolean };
+    request?: SecondParameter<typeof openApiFetch>;
+  }
 ) => {
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const isEnabled = swrOptions?.enabled !== false && signedId !== null && signedId !== undefined
-  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRailsActiveStorageBlobsProxySignedIdFilenameKey(signedId) : null);
-  const swrFn = () => getRailsActiveStorageBlobsProxySignedIdFilename(signedId, requestOptions)
+  const isEnabled =
+    swrOptions?.enabled !== false &&
+    signedId !== null &&
+    signedId !== undefined;
+  const swrKey =
+    swrOptions?.swrKey ??
+    (() =>
+      isEnabled
+        ? getGetRailsActiveStorageBlobsProxySignedIdFilenameKey(signedId)
+        : null);
+  const swrFn = () =>
+    getRailsActiveStorageBlobsProxySignedIdFilename(signedId, requestOptions);
 
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, {
-     revalidateOnFocus: false, revalidateOnReconnect: false, keepPreviousData: true, dedupingInterval: 10000,
-    ...swrOptions
-  })
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(
+    swrKey,
+    swrFn,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      keepPreviousData: true,
+      dedupingInterval: 10000,
+      ...swrOptions,
+    }
+  );
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};

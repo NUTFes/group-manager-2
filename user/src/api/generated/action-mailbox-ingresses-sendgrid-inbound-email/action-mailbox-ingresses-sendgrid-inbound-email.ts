@@ -8,97 +8,109 @@
  *             `special-key` to test the authorization filters.
  * OpenAPI spec version: 1.0.0
  */
-import type {
-  Key
-} from 'swr';
-
+import type { Key } from 'swr';
 import useSWRMutation from 'swr/mutation';
-import type {
-  SWRMutationConfiguration
-} from 'swr/mutation';
-
-import type {
-  ActionmailboxIngressesSendgridInboundEmail
-} from '../schemas';
-
+import type { SWRMutationConfiguration } from 'swr/mutation';
 import { openApiFetch } from '../../openapiFetcher';
+import type { ActionmailboxIngressesSendgridInboundEmail } from '../schemas';
 
-
-
-  type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type postRailsActionMailboxSendgridInboundEmailsResponse201 = {
-  data: ActionmailboxIngressesSendgridInboundEmail
-  status: 201
-}
+  data: ActionmailboxIngressesSendgridInboundEmail;
+  status: 201;
+};
 
 export type postRailsActionMailboxSendgridInboundEmailsResponse422 = {
-  data: ActionmailboxIngressesSendgridInboundEmail
-  status: 422
-}
-
-export type postRailsActionMailboxSendgridInboundEmailsResponseSuccess = (postRailsActionMailboxSendgridInboundEmailsResponse201) & {
-  headers: Headers;
-};
-export type postRailsActionMailboxSendgridInboundEmailsResponseError = (postRailsActionMailboxSendgridInboundEmailsResponse422) & {
-  headers: Headers;
+  data: ActionmailboxIngressesSendgridInboundEmail;
+  status: 422;
 };
 
-export type postRailsActionMailboxSendgridInboundEmailsResponse = (postRailsActionMailboxSendgridInboundEmailsResponseSuccess | postRailsActionMailboxSendgridInboundEmailsResponseError)
+export type postRailsActionMailboxSendgridInboundEmailsResponseSuccess =
+  postRailsActionMailboxSendgridInboundEmailsResponse201 & {
+    headers: Headers;
+  };
+export type postRailsActionMailboxSendgridInboundEmailsResponseError =
+  postRailsActionMailboxSendgridInboundEmailsResponse422 & {
+    headers: Headers;
+  };
+
+export type postRailsActionMailboxSendgridInboundEmailsResponse =
+  | postRailsActionMailboxSendgridInboundEmailsResponseSuccess
+  | postRailsActionMailboxSendgridInboundEmailsResponseError;
 
 export const getPostRailsActionMailboxSendgridInboundEmailsUrl = () => {
-
-
-
-
-  return `${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/action_mailbox/sendgrid/inbound_emails`
-}
+  return `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/action_mailbox/sendgrid/inbound_emails`;
+};
 
 /**
  * post description
  * @summary post summary
  */
-export const postRailsActionMailboxSendgridInboundEmails = async (actionmailboxIngressesSendgridInboundEmail?: ActionmailboxIngressesSendgridInboundEmail, options?: RequestInit): Promise<postRailsActionMailboxSendgridInboundEmailsResponse> => {
+export const postRailsActionMailboxSendgridInboundEmails = async (
+  actionmailboxIngressesSendgridInboundEmail?: ActionmailboxIngressesSendgridInboundEmail,
+  options?: RequestInit
+): Promise<postRailsActionMailboxSendgridInboundEmailsResponse> => {
+  return openApiFetch<postRailsActionMailboxSendgridInboundEmailsResponse>(
+    getPostRailsActionMailboxSendgridInboundEmailsUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(actionmailboxIngressesSendgridInboundEmail),
+    }
+  );
+};
 
-  return openApiFetch<postRailsActionMailboxSendgridInboundEmailsResponse>(getPostRailsActionMailboxSendgridInboundEmailsUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(actionmailboxIngressesSendgridInboundEmail)
-  }
-);}
-
-
-
-
-export const getPostRailsActionMailboxSendgridInboundEmailsMutationFetcher = ( options?: SecondParameter<typeof openApiFetch>) => {
-  return (_: Key, { arg }: { arg: ActionmailboxIngressesSendgridInboundEmail | undefined }) => {
+export const getPostRailsActionMailboxSendgridInboundEmailsMutationFetcher = (
+  options?: SecondParameter<typeof openApiFetch>
+) => {
+  return (
+    _: Key,
+    { arg }: { arg: ActionmailboxIngressesSendgridInboundEmail | undefined }
+  ) => {
     return postRailsActionMailboxSendgridInboundEmails(arg, options);
-  }
-}
-export const getPostRailsActionMailboxSendgridInboundEmailsMutationKey = () => [`${process.env.NEXT_PUBLIC_API_URL ?? ""}/rails/action_mailbox/sendgrid/inbound_emails`] as const;
+  };
+};
+export const getPostRailsActionMailboxSendgridInboundEmailsMutationKey = () =>
+  [
+    `${process.env.NEXT_PUBLIC_API_URL ?? ''}/rails/action_mailbox/sendgrid/inbound_emails`,
+  ] as const;
 
-export type PostRailsActionMailboxSendgridInboundEmailsMutationResult = NonNullable<Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>>
+export type PostRailsActionMailboxSendgridInboundEmailsMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>
+  >;
 
 /**
  * @summary post summary
  */
-export const usePostRailsActionMailboxSendgridInboundEmails = <TError = ActionmailboxIngressesSendgridInboundEmail>(
-   options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>, TError, Key, ActionmailboxIngressesSendgridInboundEmail | undefined, Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>> & { swrKey?: string }, request?: SecondParameter<typeof openApiFetch>}
-) => {
+export const usePostRailsActionMailboxSendgridInboundEmails = <
+  TError = ActionmailboxIngressesSendgridInboundEmail,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>,
+    TError,
+    Key,
+    ActionmailboxIngressesSendgridInboundEmail | undefined,
+    Awaited<ReturnType<typeof postRailsActionMailboxSendgridInboundEmails>>
+  > & { swrKey?: string };
+  request?: SecondParameter<typeof openApiFetch>;
+}) => {
+  const { swr: swrOptions, request: requestOptions } = options ?? {};
 
-  const {swr: swrOptions, request: requestOptions} = options ?? {}
+  const swrKey =
+    swrOptions?.swrKey ??
+    getPostRailsActionMailboxSendgridInboundEmailsMutationKey();
+  const swrFn =
+    getPostRailsActionMailboxSendgridInboundEmailsMutationFetcher(
+      requestOptions
+    );
 
-  const swrKey = swrOptions?.swrKey ?? getPostRailsActionMailboxSendgridInboundEmailsMutationKey();
-  const swrFn = getPostRailsActionMailboxSendgridInboundEmailsMutationFetcher(requestOptions);
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,
-    ...query
-  }
-}
+    ...query,
+  };
+};
