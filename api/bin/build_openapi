@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "yaml"
+
+ROOT = File.expand_path("..", __dir__)
+SOURCE_DIR = File.join(ROOT, "oas_docs", "src")
+OUTPUT_FILE = File.join(ROOT, "oas_docs", "dist", "oas_doc.yml")
+
+def merge_value!(target, source, path, source_file)
+  source.each do |key, value|
+    next target[key] = value unless target.key?(key)
+
+    current = target[key]
+    if current.is_a?(Hash) && value.is_a?(Hash)
+      merge_value!(current, value, path + [key], source_file)
+    elsif current == value
+      next
+    else
+      raise "OpenAPI merge conflict at #{path.push(key).join('.')} from #{source_file}"
+    end
+  end
+end
+
+document = {}
+
+Dir.glob(File.join(SOURCE_DIR, "**", "*.yml")).sort.each do |source_file|
+  data = YAML.load_file(source_file)
+  next if data.nil?
+
+  unless data.is_a?(Hash)
+    raise "OpenAPI source must be a YAML mapping: #{source_file}"
+  end
+
+  merge_value!(document, data, [], source_file)
+end
+
+schema_keys = %w[
+  $ref type allOf anyOf oneOf not items properties additionalProperties enum
+  format nullable description default example readOnly writeOnly required
+]
+request_body_keys = %w[$ref content description required]
+
+document.dig("components", "schemas")&.delete_if do |_name, schema|
+  schema.is_a?(Hash) && (schema.keys & schema_keys).empty?
+end
+
+document.dig("components", "requestBodies")&.delete_if do |_name, request_body|
+  request_body.is_a?(Hash) && (request_body.keys & request_body_keys).empty?
+end
+
+FileUtils.mkdir_p(File.dirname(OUTPUT_FILE))
+File.write(OUTPUT_FILE, YAML.dump(document))
+
+puts "Built #{OUTPUT_FILE} from #{SOURCE_DIR}"

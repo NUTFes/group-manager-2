@@ -1,0 +1,111 @@
+---
+paths:
+  "/announcements/{id}":
+    get:
+      tags:
+      - announcement
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+        '404':
+          description: announcement description
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - announcement
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: announcement description
+        '404':
+          description: announcement description
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Announcement"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - announcement
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: announcement description
+        '404':
+          description: announcement description
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Announcement"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - announcement
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+        '404':
+          description: announcement description
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Announcement"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

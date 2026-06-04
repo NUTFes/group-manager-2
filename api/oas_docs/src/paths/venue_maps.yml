@@ -1,0 +1,43 @@
+---
+paths:
+  "/venue_maps":
+    get:
+      tags:
+      - venue_map
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+      deprecated: false
+    post:
+      tags:
+      - venue_map
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/VenueMap"

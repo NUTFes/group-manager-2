@@ -1,0 +1,43 @@
+---
+paths:
+  "/contact_persons":
+    get:
+      tags:
+      - contact_person
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+    post:
+      tags:
+      - contact_person
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ContactPerson"

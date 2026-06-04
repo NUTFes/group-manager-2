@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/get_groups_have_no_cooking_process_order":
+    get:
+      tags:
+      - api/v1/groups_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+      deprecated: false

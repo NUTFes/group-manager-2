@@ -1,0 +1,43 @@
+---
+paths:
+  "/employees":
+    get:
+      tags:
+      - employee
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+      deprecated: false
+    post:
+      tags:
+      - employee
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Employee"

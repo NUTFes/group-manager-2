@@ -1,0 +1,43 @@
+---
+paths:
+  "/stocker_items":
+    get:
+      tags:
+      - stocker_item
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stocker_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerItem"
+        '422':
+          description: stocker_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerItem"
+      deprecated: false
+    post:
+      tags:
+      - stocker_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stocker_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerItem"
+        '422':
+          description: stocker_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/StockerItem"

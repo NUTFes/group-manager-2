@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_contact_person_show_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/contact_persons_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/contact_persons_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
+        '404':
+          description: api/v1/contact_persons_api description
+        '422':
+          description: api/v1/contact_persons_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

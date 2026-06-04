@@ -1,0 +1,43 @@
+---
+paths:
+  "/memos":
+    get:
+      tags:
+      - memo
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: memo description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Memo"
+        '422':
+          description: memo description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Memo"
+      deprecated: false
+    post:
+      tags:
+      - memo
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: memo description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Memo"
+        '422':
+          description: memo description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Memo"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Memo"

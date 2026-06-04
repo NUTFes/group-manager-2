@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/auth/password/edit":
+    get:
+      tags:
+      - devise_token_auth/password
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: devise_token_auth/password description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/devisetokenauth.Password"
+        '422':
+          description: devise_token_auth/password description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/devisetokenauth.Password"
+      deprecated: false

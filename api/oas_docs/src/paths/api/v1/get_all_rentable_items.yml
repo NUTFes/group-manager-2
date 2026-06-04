@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/get_all_rentable_items":
+    get:
+      tags:
+      - api/v1/rental_items_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_items_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '422':
+          description: api/v1/rental_items_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+      deprecated: false

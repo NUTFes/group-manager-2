@@ -1,0 +1,43 @@
+---
+paths:
+  "/place_orders":
+    get:
+      tags:
+      - place_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+    post:
+      tags:
+      - place_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceOrder"

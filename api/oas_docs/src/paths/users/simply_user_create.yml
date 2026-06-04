@@ -1,0 +1,24 @@
+---
+paths:
+  "/users/simply_user_create":
+    post:
+      tags:
+      - user
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/User"

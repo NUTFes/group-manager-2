@@ -64,7 +64,9 @@ services:
     ports:
       - "8003:3000"
     command: pnpm run dev
-    volumes: [./user:/app]
+    volumes:
+      - ./user:/app
+      - ./api/oas_docs/dist:/openapi:ro
     depends_on: [api]
 
 volumes:

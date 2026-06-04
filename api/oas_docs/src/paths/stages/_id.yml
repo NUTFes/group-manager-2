@@ -1,0 +1,111 @@
+---
+paths:
+  "/stages/{id}":
+    get:
+      tags:
+      - stage
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+        '404':
+          description: stage description
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - stage
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: stage description
+        '404':
+          description: stage description
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Stage"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - stage
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: stage description
+        '404':
+          description: stage description
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Stage"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - stage
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+        '404':
+          description: stage description
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

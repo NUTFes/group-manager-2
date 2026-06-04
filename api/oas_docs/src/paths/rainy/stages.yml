@@ -1,0 +1,22 @@
+---
+paths:
+  "/rainy/stages":
+    get:
+      tags:
+      - stage
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Stage"
+      deprecated: false

@@ -1,0 +1,43 @@
+---
+paths:
+  "/place_allow_lists":
+    get:
+      tags:
+      - place_allow_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+    post:
+      tags:
+      - place_allow_list
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceAllowList"

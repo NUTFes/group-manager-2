@@ -1,0 +1,43 @@
+---
+paths:
+  "/rental_item_allow_lists":
+    get:
+      tags:
+      - rental_item_allow_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItemAllowList"
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItemAllowList"
+      deprecated: false
+    post:
+      tags:
+      - rental_item_allow_list
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItemAllowList"
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItemAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/RentalItemAllowList"

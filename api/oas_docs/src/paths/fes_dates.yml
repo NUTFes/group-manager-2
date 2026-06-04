@@ -1,0 +1,43 @@
+---
+paths:
+  "/fes_dates":
+    get:
+      tags:
+      - fes_date
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+    post:
+      tags:
+      - fes_date
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FesDate"

@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/auth/sign_up":
+    get:
+      tags:
+      - api/auth/registration
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/auth/registration description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Registration"
+        '422':
+          description: api/auth/registration description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Registration"
+      deprecated: false

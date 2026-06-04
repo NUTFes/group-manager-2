@@ -1,0 +1,43 @@
+---
+paths:
+  "/stage_common_options":
+    get:
+      tags:
+      - stage_common_option
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+        '422':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+      deprecated: false
+    post:
+      tags:
+      - stage_common_option
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+        '422':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/StageCommonOption"

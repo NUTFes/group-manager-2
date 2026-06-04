@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/auth/sign_out":
+    delete:
+      tags:
+      - devise_token_auth/session
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/devisetokenauth.Session"
+        '422':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/devisetokenauth.Session"
+      deprecated: false

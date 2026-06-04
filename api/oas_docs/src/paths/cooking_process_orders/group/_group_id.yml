@@ -1,0 +1,31 @@
+---
+paths:
+  "/cooking_process_orders/group/{group_id}":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

@@ -4,6 +4,9 @@ import { FlatCompat } from '@eslint/eslintrc';
 const compat = new FlatCompat();
 
 const config = [
+  {
+    ignores: ['src/api/generated/**'],
+  },
   // 互換ユーティリティを使って従来の shareable config を読み込みます
   ...compat.extends('next/core-web-vitals'),
   ...compat.extends('next/typescript'),

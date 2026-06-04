@@ -1,0 +1,111 @@
+---
+paths:
+  "/fes_dates/{id}":
+    get:
+      tags:
+      - fes_date
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+        '404':
+          description: fes_date description
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - fes_date
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: fes_date description
+        '404':
+          description: fes_date description
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FesDate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - fes_date
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: fes_date description
+        '404':
+          description: fes_date description
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FesDate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - fes_date
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+        '404':
+          description: fes_date description
+        '422':
+          description: fes_date description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FesDate"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

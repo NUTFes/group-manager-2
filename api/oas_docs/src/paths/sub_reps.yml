@@ -1,0 +1,43 @@
+---
+paths:
+  "/sub_reps":
+    get:
+      tags:
+      - sub_rep
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+    post:
+      tags:
+      - sub_rep
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/SubRep"

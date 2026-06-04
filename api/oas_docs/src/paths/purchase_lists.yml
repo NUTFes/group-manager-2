@@ -1,0 +1,49 @@
+---
+paths:
+  "/purchase_lists":
+    get:
+      tags:
+      - purchase_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+    post:
+      tags:
+      - purchase_list
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PurchaseList"

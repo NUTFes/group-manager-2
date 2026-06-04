@@ -1,0 +1,111 @@
+---
+paths:
+  "/group_categories/{id}":
+    get:
+      tags:
+      - group_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+        '404':
+          description: group_category description
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - group_category
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: group_category description
+        '404':
+          description: group_category description
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/GroupCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - group_category
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: group_category description
+        '404':
+          description: group_category description
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/GroupCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - group_category
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+        '404':
+          description: group_category description
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GroupCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

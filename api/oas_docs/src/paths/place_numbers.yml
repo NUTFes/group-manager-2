@@ -1,0 +1,43 @@
+---
+paths:
+  "/place_numbers":
+    get:
+      tags:
+      - place_number
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+        '422':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+      deprecated: false
+    post:
+      tags:
+      - place_number
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+        '422':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceNumber"

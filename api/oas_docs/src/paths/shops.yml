@@ -1,0 +1,43 @@
+---
+paths:
+  "/shops":
+    get:
+      tags:
+      - shop
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: shop description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Shop"
+        '422':
+          description: shop description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Shop"
+      deprecated: false
+    post:
+      tags:
+      - shop
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: shop description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Shop"
+        '422':
+          description: shop description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Shop"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Shop"

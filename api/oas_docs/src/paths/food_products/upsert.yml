@@ -1,0 +1,24 @@
+---
+paths:
+  "/food_products/upsert":
+    post:
+      tags:
+      - food_product
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"

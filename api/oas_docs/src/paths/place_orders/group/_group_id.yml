@@ -1,0 +1,31 @@
+---
+paths:
+  "/place_orders/group/{group_id}":
+    get:
+      tags:
+      - place_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+        '404':
+          description: place_order description
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

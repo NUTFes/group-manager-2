@@ -1,0 +1,43 @@
+---
+paths:
+  "/un_registered_groups":
+    get:
+      tags:
+      - un_registered_group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+    post:
+      tags:
+      - un_registered_group
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/UnRegisteredGroup"

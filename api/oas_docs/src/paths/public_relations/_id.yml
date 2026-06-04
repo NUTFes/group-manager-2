@@ -1,0 +1,111 @@
+---
+paths:
+  "/public_relations/{id}":
+    get:
+      tags:
+      - public_relation
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+        '404':
+          description: public_relation description
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - public_relation
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: public_relation description
+        '404':
+          description: public_relation description
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PublicRelation"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - public_relation
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: public_relation description
+        '404':
+          description: public_relation description
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PublicRelation"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - public_relation
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+        '404':
+          description: public_relation description
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

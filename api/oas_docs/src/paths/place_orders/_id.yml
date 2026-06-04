@@ -1,0 +1,111 @@
+---
+paths:
+  "/place_orders/{id}":
+    get:
+      tags:
+      - place_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+        '404':
+          description: place_order description
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place_order description
+        '404':
+          description: place_order description
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - place_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place_order description
+        '404':
+          description: place_order description
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+        '404':
+          description: place_order description
+        '422':
+          description: place_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

@@ -1,0 +1,111 @@
+---
+paths:
+  "/place_allow_lists/{id}":
+    get:
+      tags:
+      - place_allow_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+        '404':
+          description: place_allow_list description
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place_allow_list
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place_allow_list description
+        '404':
+          description: place_allow_list description
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceAllowList"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - place_allow_list
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place_allow_list description
+        '404':
+          description: place_allow_list description
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceAllowList"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place_allow_list
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+        '404':
+          description: place_allow_list description
+        '422':
+          description: place_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceAllowList"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

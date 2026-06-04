@@ -1,0 +1,43 @@
+---
+paths:
+  "/public_relations":
+    get:
+      tags:
+      - public_relation
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+    post:
+      tags:
+      - public_relation
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PublicRelation"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PublicRelation"

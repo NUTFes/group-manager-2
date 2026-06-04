@@ -1,0 +1,43 @@
+---
+paths:
+  "/api/auth/sessions":
+    get:
+      tags:
+      - api/auth/session
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+    post:
+      tags:
+      - api/auth/session
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.auth.Session"

@@ -1,0 +1,35 @@
+---
+paths:
+  "/purchase_lists/group/{group_id}":
+    get:
+      tags:
+      - purchase_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+        '404':
+          description: purchase_list description
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

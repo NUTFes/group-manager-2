@@ -1,0 +1,111 @@
+---
+paths:
+  "/api/auth/sessions/{id}":
+    get:
+      tags:
+      - api/auth/session
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+        '404':
+          description: api/auth/session description
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - api/auth/session
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/auth/session description
+        '404':
+          description: api/auth/session description
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.auth.Session"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - api/auth/session
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: api/auth/session description
+        '404':
+          description: api/auth/session description
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.auth.Session"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - api/auth/session
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+        '404':
+          description: api/auth/session description
+        '422':
+          description: api/auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.auth.Session"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

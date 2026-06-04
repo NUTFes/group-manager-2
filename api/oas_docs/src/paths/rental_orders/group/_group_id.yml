@@ -1,0 +1,31 @@
+---
+paths:
+  "/rental_orders/group/{group_id}":
+    get:
+      tags:
+      - rental_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalOrder"
+        '404':
+          description: rental_order description
+        '422':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

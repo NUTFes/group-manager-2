@@ -1,0 +1,37 @@
+---
+paths:
+  "/api/v1/update_user/{id}/{role_id}":
+    get:
+      tags:
+      - api/v1/user
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.User"
+        '404':
+          description: api/v1/user description
+        '422':
+          description: api/v1/user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.User"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+      - name: role_id
+        in: path
+        description: role_id
+        required: true
+        schema:
+          type: integer

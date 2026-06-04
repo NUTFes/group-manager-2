@@ -1,0 +1,31 @@
+---
+paths:
+  "/print_pdf/employees/{fes_year_id}/output":
+    get:
+      tags:
+      - print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+        '404':
+          description: print_pdf description
+        '422':
+          description: print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer

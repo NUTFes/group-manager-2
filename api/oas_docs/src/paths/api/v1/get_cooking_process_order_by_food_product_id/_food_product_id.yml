@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_cooking_process_order_by_food_product_id/{food_product_id}":
+    get:
+      tags:
+      - api/v1/cooking_process_orders_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/cooking_process_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '404':
+          description: api/v1/cooking_process_orders_api description
+        '422':
+          description: api/v1/cooking_process_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+      deprecated: false
+      parameters:
+      - name: food_product_id
+        in: path
+        description: food_product_id
+        required: true
+        schema:
+          type: integer

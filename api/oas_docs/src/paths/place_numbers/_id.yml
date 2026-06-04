@@ -1,0 +1,57 @@
+---
+paths:
+  "/place_numbers/{id}":
+    put:
+      tags:
+      - place_number
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place_number description
+        '404':
+          description: place_number description
+        '422':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceNumber"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place_number
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+        '404':
+          description: place_number description
+        '422':
+          description: place_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceNumber"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

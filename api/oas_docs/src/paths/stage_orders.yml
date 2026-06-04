@@ -1,0 +1,43 @@
+---
+paths:
+  "/stage_orders":
+    get:
+      tags:
+      - stage_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+        '422':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+      deprecated: false
+    post:
+      tags:
+      - stage_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+        '422':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/StageOrder"

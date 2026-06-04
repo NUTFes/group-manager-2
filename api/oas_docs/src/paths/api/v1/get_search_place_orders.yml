@@ -1,0 +1,24 @@
+---
+paths:
+  "/api/v1/get_search_place_orders":
+    post:
+      tags:
+      - api/v1/place_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"

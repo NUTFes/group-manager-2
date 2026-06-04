@@ -1,0 +1,43 @@
+---
+paths:
+  "/rentable_items":
+    get:
+      tags:
+      - rentable_item
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rentable_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentableItem"
+        '422':
+          description: rentable_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentableItem"
+      deprecated: false
+    post:
+      tags:
+      - rentable_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rentable_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentableItem"
+        '422':
+          description: rentable_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentableItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/RentableItem"

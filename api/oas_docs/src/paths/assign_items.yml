@@ -1,0 +1,43 @@
+---
+paths:
+  "/assign_items":
+    get:
+      tags:
+      - assign_item
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AssignItem"
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AssignItem"
+      deprecated: false
+    post:
+      tags:
+      - assign_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AssignItem"
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AssignItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/AssignItem"
