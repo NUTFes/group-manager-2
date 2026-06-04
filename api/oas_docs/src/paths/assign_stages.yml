@@ -1,0 +1,43 @@
+---
+paths:
+  "/assign_stages":
+    get:
+      tags:
+      - assign_stage
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: assign_stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_stage.yml#/components/schemas/AssignStage"
+        '422':
+          description: assign_stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_stage.yml#/components/schemas/AssignStage"
+      deprecated: false
+    post:
+      tags:
+      - assign_stage
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: assign_stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_stage.yml#/components/schemas/AssignStage"
+        '422':
+          description: assign_stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_stage.yml#/components/schemas/AssignStage"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/assign_stage.yml#/components/requestBodies/AssignStage"

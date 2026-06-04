@@ -1,0 +1,24 @@
+---
+paths:
+  "/api/v1/get_search_power_orders":
+    post:
+      tags:
+      - api/v1/power_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/power_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"
+        '422':
+          description: api/v1/power_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"
+      deprecated: false
+      requestBody:
+        "$ref": "../../../components/requestBodies/api/v1/power_orders.yml#/components/requestBodies/api.v1.PowerOrdersApi"

@@ -1,0 +1,57 @@
+---
+paths:
+  "/stage_numbers/{id}":
+    put:
+      tags:
+      - stage_number
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: stage_number description
+        '404':
+          description: stage_number description
+        '422':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/stage_number.yml#/components/requestBodies/StageNumber"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - stage_number
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+        '404':
+          description: stage_number description
+        '422':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

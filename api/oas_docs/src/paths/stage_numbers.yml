@@ -1,0 +1,43 @@
+---
+paths:
+  "/stage_numbers":
+    get:
+      tags:
+      - stage_number
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+        '422':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+      deprecated: false
+    post:
+      tags:
+      - stage_number
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+        '422':
+          description: stage_number description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage_number.yml#/components/schemas/StageNumber"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/stage_number.yml#/components/requestBodies/StageNumber"

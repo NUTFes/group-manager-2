@@ -1,0 +1,31 @@
+---
+paths:
+  "/groups/user/{user_id}":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/group.yml#/components/schemas/Group"
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/group.yml#/components/schemas/Group"
+      deprecated: false
+      parameters:
+      - name: user_id
+        in: path
+        description: user_id
+        required: true
+        schema:
+          type: integer

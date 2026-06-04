@@ -1,0 +1,43 @@
+---
+paths:
+  "/group_categories":
+    get:
+      tags:
+      - group_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group_category.yml#/components/schemas/GroupCategory"
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group_category.yml#/components/schemas/GroupCategory"
+      deprecated: false
+    post:
+      tags:
+      - group_category
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group_category.yml#/components/schemas/GroupCategory"
+        '422':
+          description: group_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group_category.yml#/components/schemas/GroupCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/group_category.yml#/components/requestBodies/GroupCategory"

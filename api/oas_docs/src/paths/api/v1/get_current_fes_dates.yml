@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/get_current_fes_dates":
+    get:
+      tags:
+      - api/v1/fes_dates_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/fes_dates_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/fes_dates.yml#/components/schemas/api.v1.FesDatesApi"
+        '422':
+          description: api/v1/fes_dates_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/fes_dates.yml#/components/schemas/api.v1.FesDatesApi"
+      deprecated: false

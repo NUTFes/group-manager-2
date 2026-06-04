@@ -1,0 +1,111 @@
+---
+paths:
+  "/venue_maps/{id}":
+    get:
+      tags:
+      - venue_map
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - venue_map
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: venue_map description
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/venue_map.yml#/components/requestBodies/VenueMap"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - venue_map
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: venue_map description
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/venue_map.yml#/components/requestBodies/VenueMap"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - venue_map
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

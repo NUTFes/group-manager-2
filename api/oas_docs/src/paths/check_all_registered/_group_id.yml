@@ -1,0 +1,31 @@
+---
+paths:
+  "/check_all_registered/{group_id}":
+    get:
+      tags:
+      - check_all_registered
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: check_all_registered description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/check_all_registered.yml#/components/schemas/CheckAllRegistered"
+        '404':
+          description: check_all_registered description
+        '422':
+          description: check_all_registered description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/check_all_registered.yml#/components/schemas/CheckAllRegistered"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

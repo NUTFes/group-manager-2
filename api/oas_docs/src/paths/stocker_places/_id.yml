@@ -1,0 +1,111 @@
+---
+paths:
+  "/stocker_places/{id}":
+    get:
+      tags:
+      - stocker_place
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+        '404':
+          description: stocker_place description
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - stocker_place
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: stocker_place description
+        '404':
+          description: stocker_place description
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/stocker_place.yml#/components/requestBodies/StockerPlace"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - stocker_place
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: stocker_place description
+        '404':
+          description: stocker_place description
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/stocker_place.yml#/components/requestBodies/StockerPlace"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - stocker_place
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+        '404':
+          description: stocker_place description
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

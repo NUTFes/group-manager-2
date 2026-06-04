@@ -1,0 +1,111 @@
+---
+paths:
+  "/rental_item_allow_lists/{id}":
+    get:
+      tags:
+      - rental_item_allow_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+        '404':
+          description: rental_item_allow_list description
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - rental_item_allow_list
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: rental_item_allow_list description
+        '404':
+          description: rental_item_allow_list description
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/rental_item_allow_list.yml#/components/requestBodies/RentalItemAllowList"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - rental_item_allow_list
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: rental_item_allow_list description
+        '404':
+          description: rental_item_allow_list description
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/rental_item_allow_list.yml#/components/requestBodies/RentalItemAllowList"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - rental_item_allow_list
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+        '404':
+          description: rental_item_allow_list description
+        '422':
+          description: rental_item_allow_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

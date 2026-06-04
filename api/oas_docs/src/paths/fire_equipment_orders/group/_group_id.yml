@@ -1,0 +1,31 @@
+---
+paths:
+  "/fire_equipment_orders/group/{group_id}":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

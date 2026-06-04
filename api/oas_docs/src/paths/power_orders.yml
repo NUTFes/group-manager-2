@@ -1,0 +1,43 @@
+---
+paths:
+  "/power_orders":
+    get:
+      tags:
+      - power_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+    post:
+      tags:
+      - power_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/power_order.yml#/components/requestBodies/PowerOrder"

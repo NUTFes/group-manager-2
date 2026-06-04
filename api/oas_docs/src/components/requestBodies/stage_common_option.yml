@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/StageCommonOption"
+            "$ref": "../schemas/stage_common_option.yml#/components/schemas/StageCommonOption"

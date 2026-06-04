@@ -80,9 +80,13 @@ fmt:
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
 
-openapi:
-	docker compose run --rm api bundle exec rake routes:oas:docs
-	docker compose run --rm api bundle exec rake routes:oas:build
+openapi: openapi-codegen
+
+openapi-build:
+	docker compose run --rm user pnpm run openapi:bundle
+
+openapi-codegen: openapi-build
+	docker compose run --rm user pnpm run api:generate
 
 erd:
 	docker compose run --rm api bundle exec rake erd filetype=png filename=er

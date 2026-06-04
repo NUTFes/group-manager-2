@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/current_user/groups/places":
+    get:
+      tags:
+      - api/v1/current_user_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/current_user_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../../components/schemas/api/v1/current_user.yml#/components/schemas/api.v1.CurrentUserApi"
+        '422':
+          description: api/v1/current_user_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../../components/schemas/api/v1/current_user.yml#/components/schemas/api.v1.CurrentUserApi"
+      deprecated: false

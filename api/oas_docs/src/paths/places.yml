@@ -1,0 +1,43 @@
+---
+paths:
+  "/places":
+    get:
+      tags:
+      - place
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/place.yml#/components/schemas/Place"
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+    post:
+      tags:
+      - place
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/place.yml#/components/schemas/Place"
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/place.yml#/components/requestBodies/Place"

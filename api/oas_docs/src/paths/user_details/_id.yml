@@ -1,0 +1,111 @@
+---
+paths:
+  "/user_details/{id}":
+    get:
+      tags:
+      - user_detail
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+        '404':
+          description: user_detail description
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - user_detail
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: user_detail description
+        '404':
+          description: user_detail description
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/user_detail.yml#/components/requestBodies/UserDetail"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - user_detail
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: user_detail description
+        '404':
+          description: user_detail description
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/user_detail.yml#/components/requestBodies/UserDetail"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - user_detail
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+        '404':
+          description: user_detail description
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

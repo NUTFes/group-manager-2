@@ -1,0 +1,43 @@
+---
+paths:
+  "/fire_equipment_orders":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+    post:
+      tags:
+      - fire_equipment_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/fire_equipment_order.yml#/components/requestBodies/FireEquipmentOrder"

@@ -1,0 +1,43 @@
+---
+paths:
+  "/fes_years":
+    get:
+      tags:
+      - fes_year
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fes_year.yml#/components/schemas/FesYear"
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+    post:
+      tags:
+      - fes_year
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fes_year.yml#/components/schemas/FesYear"
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/fes_year.yml#/components/requestBodies/FesYear"

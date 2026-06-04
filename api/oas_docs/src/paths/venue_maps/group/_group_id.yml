@@ -1,0 +1,31 @@
+---
+paths:
+  "/venue_maps/group/{group_id}":
+    get:
+      tags:
+      - venue_map
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/venue_map.yml#/components/schemas/VenueMap"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

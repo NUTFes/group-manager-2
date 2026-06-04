@@ -1,0 +1,43 @@
+---
+paths:
+  "/assign_rental_items":
+    get:
+      tags:
+      - assign_rental_item
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: assign_rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_rental_item.yml#/components/schemas/AssignRentalItem"
+        '422':
+          description: assign_rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_rental_item.yml#/components/schemas/AssignRentalItem"
+      deprecated: false
+    post:
+      tags:
+      - assign_rental_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: assign_rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_rental_item.yml#/components/schemas/AssignRentalItem"
+        '422':
+          description: assign_rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_rental_item.yml#/components/schemas/AssignRentalItem"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/assign_rental_item.yml#/components/requestBodies/AssignRentalItem"

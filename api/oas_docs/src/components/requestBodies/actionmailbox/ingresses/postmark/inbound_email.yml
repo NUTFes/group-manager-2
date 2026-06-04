@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
+            "$ref": "../../../../schemas/actionmailbox/ingresses/postmark/inbound_email.yml#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"

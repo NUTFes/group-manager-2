@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    api.v1.OrderInfosApi:
+      content:
+        application/json:
+          schema:
+            "$ref": "../../../schemas/api/v1/order_infos.yml#/components/schemas/api.v1.OrderInfosApi"

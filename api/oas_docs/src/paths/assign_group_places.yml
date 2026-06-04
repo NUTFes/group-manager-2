@@ -1,0 +1,43 @@
+---
+paths:
+  "/assign_group_places":
+    get:
+      tags:
+      - assign_group_place
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: assign_group_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_group_place.yml#/components/schemas/AssignGroupPlace"
+        '422':
+          description: assign_group_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_group_place.yml#/components/schemas/AssignGroupPlace"
+      deprecated: false
+    post:
+      tags:
+      - assign_group_place
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: assign_group_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_group_place.yml#/components/schemas/AssignGroupPlace"
+        '422':
+          description: assign_group_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/assign_group_place.yml#/components/schemas/AssignGroupPlace"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/assign_group_place.yml#/components/requestBodies/AssignGroupPlace"

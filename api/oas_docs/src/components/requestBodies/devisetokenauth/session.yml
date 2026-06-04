@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/devisetokenauth.Session"
+            "$ref": "../../schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"

@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/activestorage.DirectUpload"
+            "$ref": "../../schemas/activestorage/direct_upload.yml#/components/schemas/activestorage.DirectUpload"

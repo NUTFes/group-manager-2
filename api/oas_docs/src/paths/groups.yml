@@ -1,0 +1,43 @@
+---
+paths:
+  "/groups":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group.yml#/components/schemas/Group"
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group.yml#/components/schemas/Group"
+      deprecated: false
+    post:
+      tags:
+      - group
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group.yml#/components/schemas/Group"
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/group.yml#/components/schemas/Group"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/group.yml#/components/requestBodies/Group"

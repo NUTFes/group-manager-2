@@ -1,0 +1,31 @@
+---
+paths:
+  "/power_orders/group/{group_id}":
+    get:
+      tags:
+      - power_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+        '404':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

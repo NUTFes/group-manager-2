@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/UnRegisteredGroup"
+            "$ref": "../schemas/un_registered_group.yml#/components/schemas/UnRegisteredGroup"

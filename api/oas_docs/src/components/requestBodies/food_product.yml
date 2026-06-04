@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/FoodProduct"
+            "$ref": "../schemas/food_product.yml#/components/schemas/FoodProduct"

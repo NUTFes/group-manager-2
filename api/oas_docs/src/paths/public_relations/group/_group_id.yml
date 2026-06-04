@@ -1,0 +1,31 @@
+---
+paths:
+  "/public_relations/group/{group_id}":
+    get:
+      tags:
+      - public_relation
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/public_relation.yml#/components/schemas/PublicRelation"
+        '404':
+          description: public_relation description
+        '422':
+          description: public_relation description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/public_relation.yml#/components/schemas/PublicRelation"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

@@ -1,0 +1,111 @@
+---
+paths:
+  "/places/{id}":
+    get:
+      tags:
+      - place
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+        '404':
+          description: place description
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place description
+        '404':
+          description: place description
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/place.yml#/components/requestBodies/Place"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - place
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place description
+        '404':
+          description: place description
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/place.yml#/components/requestBodies/Place"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+        '404':
+          description: place description
+        '422':
+          description: place description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/place.yml#/components/schemas/Place"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/AssignStage"
+            "$ref": "../schemas/assign_stage.yml#/components/schemas/AssignStage"

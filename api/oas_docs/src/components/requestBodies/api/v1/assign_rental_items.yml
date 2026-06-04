@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    api.v1.AssignRentalItemsApi:
+      content:
+        application/json:
+          schema:
+            "$ref": "../../../schemas/api/v1/assign_rental_items.yml#/components/schemas/api.v1.AssignRentalItemsApi"

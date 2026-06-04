@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_public_relation_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/public_relations_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/public_relations.yml#/components/schemas/api.v1.PublicRelationsApi"
+        '404':
+          description: api/v1/public_relations_api description
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/public_relations.yml#/components/schemas/api.v1.PublicRelationsApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

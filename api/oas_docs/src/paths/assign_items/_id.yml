@@ -1,0 +1,111 @@
+---
+paths:
+  "/assign_items/{id}":
+    get:
+      tags:
+      - assign_item
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+        '404':
+          description: assign_item description
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - assign_item
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: assign_item description
+        '404':
+          description: assign_item description
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/assign_item.yml#/components/requestBodies/AssignItem"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - assign_item
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: assign_item description
+        '404':
+          description: assign_item description
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/assign_item.yml#/components/requestBodies/AssignItem"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - assign_item
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+        '404':
+          description: assign_item description
+        '422':
+          description: assign_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/assign_item.yml#/components/schemas/AssignItem"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
