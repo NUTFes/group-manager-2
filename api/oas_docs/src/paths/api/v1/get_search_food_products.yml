@@ -1,0 +1,24 @@
+---
+paths:
+  "/api/v1/get_search_food_products":
+    post:
+      tags:
+      - api/v1/food_products_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/food_products_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/food_products.yml#/components/schemas/api.v1.FoodProductsApi"
+        '422':
+          description: api/v1/food_products_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/food_products.yml#/components/schemas/api.v1.FoodProductsApi"
+      deprecated: false
+      requestBody:
+        "$ref": "../../../components/requestBodies/api/v1/food_products.yml#/components/requestBodies/api.v1.FoodProductsApi"

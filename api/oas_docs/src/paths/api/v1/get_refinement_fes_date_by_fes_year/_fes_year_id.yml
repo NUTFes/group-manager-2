@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_refinement_fes_date_by_fes_year/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/fes_dates_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/fes_dates_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/fes_dates.yml#/components/schemas/api.v1.FesDatesApi"
+        '404':
+          description: api/v1/fes_dates_api description
+        '422':
+          description: api/v1/fes_dates_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/fes_dates.yml#/components/schemas/api.v1.FesDatesApi"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer

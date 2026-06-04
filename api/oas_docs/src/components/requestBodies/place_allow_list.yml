@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/PlaceAllowList"
+            "$ref": "../schemas/place_allow_list.yml#/components/schemas/PlaceAllowList"

@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/get_cooking_process_orders_csv":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/output_csv.yml#/components/schemas/api.v1.OutputCsv"
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/output_csv.yml#/components/schemas/api.v1.OutputCsv"
+      deprecated: false

@@ -1,0 +1,22 @@
+---
+paths:
+  "/current_user":
+    get:
+      tags:
+      - user
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user.yml#/components/schemas/User"
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user.yml#/components/schemas/User"
+      deprecated: false

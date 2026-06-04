@@ -1,0 +1,24 @@
+---
+paths:
+  "/employees/upsert":
+    post:
+      tags:
+      - employee
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/employee.yml#/components/schemas/Employee"
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/employee.yml#/components/schemas/Employee"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/employee.yml#/components/requestBodies/Employee"

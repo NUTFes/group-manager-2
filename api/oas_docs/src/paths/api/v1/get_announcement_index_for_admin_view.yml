@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/get_announcement_index_for_admin_view":
+    get:
+      tags:
+      - api/v1/announcements_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/announcements_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/announcements.yml#/components/schemas/api.v1.AnnouncementsApi"
+        '422':
+          description: api/v1/announcements_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/api/v1/announcements.yml#/components/schemas/api.v1.AnnouncementsApi"
+      deprecated: false

@@ -1,0 +1,111 @@
+---
+paths:
+  "/fes_years/{id}":
+    get:
+      tags:
+      - fes_year
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+        '404':
+          description: fes_year description
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - fes_year
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: fes_year description
+        '404':
+          description: fes_year description
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/fes_year.yml#/components/requestBodies/FesYear"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - fes_year
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: fes_year description
+        '404':
+          description: fes_year description
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/fes_year.yml#/components/requestBodies/FesYear"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - fes_year
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+        '404':
+          description: fes_year description
+        '422':
+          description: fes_year description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/fes_year.yml#/components/schemas/FesYear"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/FesDate"
+            "$ref": "../schemas/fes_date.yml#/components/schemas/FesDate"

@@ -1,0 +1,43 @@
+---
+paths:
+  "/user_details":
+    get:
+      tags:
+      - user_detail
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+    post:
+      tags:
+      - user_detail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+        '422':
+          description: user_detail description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_detail.yml#/components/schemas/UserDetail"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/user_detail.yml#/components/requestBodies/UserDetail"

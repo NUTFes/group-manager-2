@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_food_products_csv/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/output_csv.yml#/components/schemas/api.v1.OutputCsv"
+        '404':
+          description: api/v1/output_csv description
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/output_csv.yml#/components/schemas/api.v1.OutputCsv"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer

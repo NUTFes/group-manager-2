@@ -1,0 +1,43 @@
+---
+paths:
+  "/cooking_process_orders":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/cooking_process_order.yml#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/cooking_process_order.yml#/components/schemas/CookingProcessOrder"
+      deprecated: false
+    post:
+      tags:
+      - cooking_process_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/cooking_process_order.yml#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/cooking_process_order.yml#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/cooking_process_order.yml#/components/requestBodies/CookingProcessOrder"

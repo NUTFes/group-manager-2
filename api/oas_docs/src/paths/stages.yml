@@ -1,0 +1,43 @@
+---
+paths:
+  "/stages":
+    get:
+      tags:
+      - stage
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage.yml#/components/schemas/Stage"
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage.yml#/components/schemas/Stage"
+      deprecated: false
+    post:
+      tags:
+      - stage
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage.yml#/components/schemas/Stage"
+        '422':
+          description: stage description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/stage.yml#/components/schemas/Stage"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/stage.yml#/components/requestBodies/Stage"

@@ -1,0 +1,43 @@
+---
+paths:
+  "/user_page_settings":
+    get:
+      tags:
+      - user_page_setting
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user_page_setting description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_page_setting.yml#/components/schemas/UserPageSetting"
+        '422':
+          description: user_page_setting description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_page_setting.yml#/components/schemas/UserPageSetting"
+      deprecated: false
+    post:
+      tags:
+      - user_page_setting
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: user_page_setting description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_page_setting.yml#/components/schemas/UserPageSetting"
+        '422':
+          description: user_page_setting description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/user_page_setting.yml#/components/schemas/UserPageSetting"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/user_page_setting.yml#/components/requestBodies/UserPageSetting"

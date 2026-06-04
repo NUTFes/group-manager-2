@@ -1,2 +1,905 @@
 ---
 openapi: 3.0.0
+info:
+  "$ref": "./info.yml#/info"
+servers:
+  "$ref": "./servers.yml#/servers"
+security:
+  "$ref": "./security.yml#/security"
+tags:
+  "$ref": "./tags.yml#/tags"
+externalDocs:
+  "$ref": "./external_docs.yml#/externalDocs"
+paths:
+  "/announcements":
+    "$ref": "./paths/announcements.yml#/paths/~1announcements"
+  "/announcements/{id}":
+    "$ref": "./paths/announcements/_id.yml#/paths/~1announcements~1{id}"
+  "/api/auth":
+    "$ref": "./paths/api/auth.yml#/paths/~1api~1auth"
+  "/api/auth/cancel":
+    "$ref": "./paths/api/auth/cancel.yml#/paths/~1api~1auth~1cancel"
+  "/api/auth/edit":
+    "$ref": "./paths/api/auth/edit.yml#/paths/~1api~1auth~1edit"
+  "/api/auth/password":
+    "$ref": "./paths/api/auth/password.yml#/paths/~1api~1auth~1password"
+  "/api/auth/password/edit":
+    "$ref": "./paths/api/auth/password/edit.yml#/paths/~1api~1auth~1password~1edit"
+  "/api/auth/password/new":
+    "$ref": "./paths/api/auth/password/new.yml#/paths/~1api~1auth~1password~1new"
+  "/api/auth/sessions":
+    "$ref": "./paths/api/auth/sessions.yml#/paths/~1api~1auth~1sessions"
+  "/api/auth/sessions/{id}":
+    "$ref": "./paths/api/auth/sessions/_id.yml#/paths/~1api~1auth~1sessions~1{id}"
+  "/api/auth/sign_in":
+    "$ref": "./paths/api/auth/sign_in.yml#/paths/~1api~1auth~1sign_in"
+  "/api/auth/sign_out":
+    "$ref": "./paths/api/auth/sign_out.yml#/paths/~1api~1auth~1sign_out"
+  "/api/auth/sign_up":
+    "$ref": "./paths/api/auth/sign_up.yml#/paths/~1api~1auth~1sign_up"
+  "/api/auth/validate_token":
+    "$ref": "./paths/api/auth/validate_token.yml#/paths/~1api~1auth~1validate_token"
+  "/api/v1/create_health_center_submission_status_comment":
+    "$ref": "./paths/api/v1/create_health_center_submission_status_comment.yml#/paths/~1api~1v1~1create_health_center_submission_status_comment"
+  "/api/v1/current_user":
+    "$ref": "./paths/api/v1/current_user.yml#/paths/~1api~1v1~1current_user"
+  "/api/v1/current_user/current_regist_info":
+    "$ref": "./paths/api/v1/current_user/current_regist_info.yml#/paths/~1api~1v1~1current_user~1current_regist_info"
+  "/api/v1/current_user/edit_user_info":
+    "$ref": "./paths/api/v1/current_user/edit_user_info.yml#/paths/~1api~1v1~1current_user~1edit_user_info"
+  "/api/v1/current_user/get_user_detail_raw":
+    "$ref": "./paths/api/v1/current_user/get_user_detail_raw.yml#/paths/~1api~1v1~1current_user~1get_user_detail_raw"
+  "/api/v1/current_user/groups":
+    "$ref": "./paths/api/v1/current_user/groups.yml#/paths/~1api~1v1~1current_user~1groups"
+  "/api/v1/current_user/groups/places":
+    "$ref": "./paths/api/v1/current_user/groups/places.yml#/paths/~1api~1v1~1current_user~1groups~1places"
+  "/api/v1/current_user/is_login":
+    "$ref": "./paths/api/v1/current_user/is_login.yml#/paths/~1api~1v1~1current_user~1is_login"
+  "/api/v1/current_user/password_reset":
+    "$ref": "./paths/api/v1/current_user/password_reset.yml#/paths/~1api~1v1~1current_user~1password_reset"
+  "/api/v1/current_user/regist_info":
+    "$ref": "./paths/api/v1/current_user/regist_info.yml#/paths/~1api~1v1~1current_user~1regist_info"
+  "/api/v1/dashboard":
+    "$ref": "./paths/api/v1/dashboard.yml#/paths/~1api~1v1~1dashboard"
+  "/api/v1/get_all_rentable_items":
+    "$ref": "./paths/api/v1/get_all_rentable_items.yml#/paths/~1api~1v1~1get_all_rentable_items"
+  "/api/v1/get_announcement_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_announcement_for_admin_view/_id.yml#/paths/~1api~1v1~1get_announcement_for_admin_view~1{id}"
+  "/api/v1/get_announcement_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_announcement_index_for_admin_view.yml#/paths/~1api~1v1~1get_announcement_index_for_admin_view"
+  "/api/v1/get_announcement_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_announcement_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_announcement_show_for_admin_view~1{id}"
+  "/api/v1/get_announcements_csv":
+    "$ref": "./paths/api/v1/get_announcements_csv.yml#/paths/~1api~1v1~1get_announcements_csv"
+  "/api/v1/get_assign_rental_items_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_assign_rental_items_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_assign_rental_items_csv~1{fes_year_id}"
+  "/api/v1/get_contact_person_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_contact_person_index_for_admin_view.yml#/paths/~1api~1v1~1get_contact_person_index_for_admin_view"
+  "/api/v1/get_contact_person_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_contact_person_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_contact_person_show_for_admin_view~1{id}"
+  "/api/v1/get_cooking_process_order_by_food_product_id/{food_product_id}":
+    "$ref": "./paths/api/v1/get_cooking_process_order_by_food_product_id/_food_product_id.yml#/paths/~1api~1v1~1get_cooking_process_order_by_food_product_id~1{food_product_id}"
+  "/api/v1/get_cooking_process_order_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_cooking_process_order_for_admin_view/_id.yml#/paths/~1api~1v1~1get_cooking_process_order_for_admin_view~1{id}"
+  "/api/v1/get_cooking_process_orders_csv":
+    "$ref": "./paths/api/v1/get_cooking_process_orders_csv.yml#/paths/~1api~1v1~1get_cooking_process_orders_csv"
+  "/api/v1/get_current_fes_dates":
+    "$ref": "./paths/api/v1/get_current_fes_dates.yml#/paths/~1api~1v1~1get_current_fes_dates"
+  "/api/v1/get_employee_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_employee_index_for_admin_view.yml#/paths/~1api~1v1~1get_employee_index_for_admin_view"
+  "/api/v1/get_employee_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_employee_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_employee_show_for_admin_view~1{id}"
+  "/api/v1/get_employees_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_employees_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_employees_csv~1{fes_year_id}"
+  "/api/v1/get_food_product_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_food_product_index_for_admin_view.yml#/paths/~1api~1v1~1get_food_product_index_for_admin_view"
+  "/api/v1/get_food_product_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_food_product_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_food_product_show_for_admin_view~1{id}"
+  "/api/v1/get_food_products_by_group_id/{group_id}":
+    "$ref": "./paths/api/v1/get_food_products_by_group_id/_group_id.yml#/paths/~1api~1v1~1get_food_products_by_group_id~1{group_id}"
+  "/api/v1/get_food_products_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_food_products_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_food_products_csv~1{fes_year_id}"
+  "/api/v1/get_food_products_have_no_cooking_process_order":
+    "$ref": "./paths/api/v1/get_food_products_have_no_cooking_process_order.yml#/paths/~1api~1v1~1get_food_products_have_no_cooking_process_order"
+  "/api/v1/get_group_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_group_for_admin_view/_id.yml#/paths/~1api~1v1~1get_group_for_admin_view~1{id}"
+  "/api/v1/get_group_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_group_index_for_admin_view.yml#/paths/~1api~1v1~1get_group_index_for_admin_view"
+  "/api/v1/get_group_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_group_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_group_show_for_admin_view~1{id}"
+  "/api/v1/get_groups_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_groups_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_groups_csv~1{fes_year_id}"
+  "/api/v1/get_groups_have_no_announcement":
+    "$ref": "./paths/api/v1/get_groups_have_no_announcement.yml#/paths/~1api~1v1~1get_groups_have_no_announcement"
+  "/api/v1/get_groups_have_no_cooking_process_order":
+    "$ref": "./paths/api/v1/get_groups_have_no_cooking_process_order.yml#/paths/~1api~1v1~1get_groups_have_no_cooking_process_order"
+  "/api/v1/get_groups_have_no_public_relation":
+    "$ref": "./paths/api/v1/get_groups_have_no_public_relation.yml#/paths/~1api~1v1~1get_groups_have_no_public_relation"
+  "/api/v1/get_groups_have_no_venue_map":
+    "$ref": "./paths/api/v1/get_groups_have_no_venue_map.yml#/paths/~1api~1v1~1get_groups_have_no_venue_map"
+  "/api/v1/get_groups_refinemented_by_current_fes_year":
+    "$ref": "./paths/api/v1/get_groups_refinemented_by_current_fes_year.yml#/paths/~1api~1v1~1get_groups_refinemented_by_current_fes_year"
+  "/api/v1/get_health_center_submission_status_counts/{group_id}":
+    "$ref": "./paths/api/v1/get_health_center_submission_status_counts/_group_id.yml#/paths/~1api~1v1~1get_health_center_submission_status_counts~1{group_id}"
+  "/api/v1/get_health_center_submission_status_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_health_center_submission_status_index_for_admin_view.yml#/paths/~1api~1v1~1get_health_center_submission_status_index_for_admin_view"
+  "/api/v1/get_health_center_submission_status_show_for_admin_view/{group_id}":
+    "$ref": "./paths/api/v1/get_health_center_submission_status_show_for_admin_view/_group_id.yml#/paths/~1api~1v1~1get_health_center_submission_status_show_for_admin_view~1{group_id}"
+  "/api/v1/get_inside_shop_rentable_items":
+    "$ref": "./paths/api/v1/get_inside_shop_rentable_items.yml#/paths/~1api~1v1~1get_inside_shop_rentable_items"
+  "/api/v1/get_order_info_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_order_info_for_admin_view/_id.yml#/paths/~1api~1v1~1get_order_info_for_admin_view~1{id}"
+  "/api/v1/get_order_status_check_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_order_status_check_for_admin_view/_id.yml#/paths/~1api~1v1~1get_order_status_check_for_admin_view~1{id}"
+  "/api/v1/get_outside_shop_rentable_items":
+    "$ref": "./paths/api/v1/get_outside_shop_rentable_items.yml#/paths/~1api~1v1~1get_outside_shop_rentable_items"
+  "/api/v1/get_place_order_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_place_order_index_for_admin_view.yml#/paths/~1api~1v1~1get_place_order_index_for_admin_view"
+  "/api/v1/get_place_order_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_place_order_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_place_order_show_for_admin_view~1{id}"
+  "/api/v1/get_place_orders_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_place_orders_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_place_orders_csv~1{fes_year_id}"
+  "/api/v1/get_power_order_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_power_order_index_for_admin_view.yml#/paths/~1api~1v1~1get_power_order_index_for_admin_view"
+  "/api/v1/get_power_order_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_power_order_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_power_order_show_for_admin_view~1{id}"
+  "/api/v1/get_power_orders_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_power_orders_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_power_orders_csv~1{fes_year_id}"
+  "/api/v1/get_public_relation_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_public_relation_for_admin_view/_id.yml#/paths/~1api~1v1~1get_public_relation_for_admin_view~1{id}"
+  "/api/v1/get_public_relations_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_public_relations_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_public_relations_csv~1{fes_year_id}"
+  "/api/v1/get_purchase_list_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_purchase_list_index_for_admin_view.yml#/paths/~1api~1v1~1get_purchase_list_index_for_admin_view"
+  "/api/v1/get_purchase_list_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_purchase_list_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_purchase_list_show_for_admin_view~1{id}"
+  "/api/v1/get_purchase_lists_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_purchase_lists_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_purchase_lists_csv~1{fes_year_id}"
+  "/api/v1/get_refinement_announcements":
+    "$ref": "./paths/api/v1/get_refinement_announcements.yml#/paths/~1api~1v1~1get_refinement_announcements"
+  "/api/v1/get_refinement_assign_rental_item":
+    "$ref": "./paths/api/v1/get_refinement_assign_rental_item.yml#/paths/~1api~1v1~1get_refinement_assign_rental_item"
+  "/api/v1/get_refinement_contact_persons":
+    "$ref": "./paths/api/v1/get_refinement_contact_persons.yml#/paths/~1api~1v1~1get_refinement_contact_persons"
+  "/api/v1/get_refinement_cooking_process_orders":
+    "$ref": "./paths/api/v1/get_refinement_cooking_process_orders.yml#/paths/~1api~1v1~1get_refinement_cooking_process_orders"
+  "/api/v1/get_refinement_employees":
+    "$ref": "./paths/api/v1/get_refinement_employees.yml#/paths/~1api~1v1~1get_refinement_employees"
+  "/api/v1/get_refinement_fes_date_by_fes_year/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_refinement_fes_date_by_fes_year/_fes_year_id.yml#/paths/~1api~1v1~1get_refinement_fes_date_by_fes_year~1{fes_year_id}"
+  "/api/v1/get_refinement_food_products":
+    "$ref": "./paths/api/v1/get_refinement_food_products.yml#/paths/~1api~1v1~1get_refinement_food_products"
+  "/api/v1/get_refinement_groups":
+    "$ref": "./paths/api/v1/get_refinement_groups.yml#/paths/~1api~1v1~1get_refinement_groups"
+  "/api/v1/get_refinement_order_infos":
+    "$ref": "./paths/api/v1/get_refinement_order_infos.yml#/paths/~1api~1v1~1get_refinement_order_infos"
+  "/api/v1/get_refinement_order_status_check":
+    "$ref": "./paths/api/v1/get_refinement_order_status_check.yml#/paths/~1api~1v1~1get_refinement_order_status_check"
+  "/api/v1/get_refinement_place_orders":
+    "$ref": "./paths/api/v1/get_refinement_place_orders.yml#/paths/~1api~1v1~1get_refinement_place_orders"
+  "/api/v1/get_refinement_power_orders":
+    "$ref": "./paths/api/v1/get_refinement_power_orders.yml#/paths/~1api~1v1~1get_refinement_power_orders"
+  "/api/v1/get_refinement_public_relations":
+    "$ref": "./paths/api/v1/get_refinement_public_relations.yml#/paths/~1api~1v1~1get_refinement_public_relations"
+  "/api/v1/get_refinement_purchase_lists":
+    "$ref": "./paths/api/v1/get_refinement_purchase_lists.yml#/paths/~1api~1v1~1get_refinement_purchase_lists"
+  "/api/v1/get_refinement_rental_orders":
+    "$ref": "./paths/api/v1/get_refinement_rental_orders.yml#/paths/~1api~1v1~1get_refinement_rental_orders"
+  "/api/v1/get_refinement_representatives":
+    "$ref": "./paths/api/v1/get_refinement_representatives.yml#/paths/~1api~1v1~1get_refinement_representatives"
+  "/api/v1/get_refinement_stage_common_options":
+    "$ref": "./paths/api/v1/get_refinement_stage_common_options.yml#/paths/~1api~1v1~1get_refinement_stage_common_options"
+  "/api/v1/get_refinement_stage_orders":
+    "$ref": "./paths/api/v1/get_refinement_stage_orders.yml#/paths/~1api~1v1~1get_refinement_stage_orders"
+  "/api/v1/get_refinement_stocker_item":
+    "$ref": "./paths/api/v1/get_refinement_stocker_item.yml#/paths/~1api~1v1~1get_refinement_stocker_item"
+  "/api/v1/get_refinement_users":
+    "$ref": "./paths/api/v1/get_refinement_users.yml#/paths/~1api~1v1~1get_refinement_users"
+  "/api/v1/get_refinement_venue_maps":
+    "$ref": "./paths/api/v1/get_refinement_venue_maps.yml#/paths/~1api~1v1~1get_refinement_venue_maps"
+  "/api/v1/get_rentable_items":
+    "$ref": "./paths/api/v1/get_rentable_items.yml#/paths/~1api~1v1~1get_rentable_items"
+  "/api/v1/get_rental_order_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_rental_order_index_for_admin_view.yml#/paths/~1api~1v1~1get_rental_order_index_for_admin_view"
+  "/api/v1/get_rental_order_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_rental_order_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_rental_order_show_for_admin_view~1{id}"
+  "/api/v1/get_rental_orders_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_rental_orders_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_rental_orders_csv~1{fes_year_id}"
+  "/api/v1/get_representative_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_representative_index_for_admin_view.yml#/paths/~1api~1v1~1get_representative_index_for_admin_view"
+  "/api/v1/get_representative_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_representative_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_representative_show_for_admin_view~1{id}"
+  "/api/v1/get_search_announcements":
+    "$ref": "./paths/api/v1/get_search_announcements.yml#/paths/~1api~1v1~1get_search_announcements"
+  "/api/v1/get_search_contact_persons":
+    "$ref": "./paths/api/v1/get_search_contact_persons.yml#/paths/~1api~1v1~1get_search_contact_persons"
+  "/api/v1/get_search_cooking_process_orders":
+    "$ref": "./paths/api/v1/get_search_cooking_process_orders.yml#/paths/~1api~1v1~1get_search_cooking_process_orders"
+  "/api/v1/get_search_employees":
+    "$ref": "./paths/api/v1/get_search_employees.yml#/paths/~1api~1v1~1get_search_employees"
+  "/api/v1/get_search_food_products":
+    "$ref": "./paths/api/v1/get_search_food_products.yml#/paths/~1api~1v1~1get_search_food_products"
+  "/api/v1/get_search_groups":
+    "$ref": "./paths/api/v1/get_search_groups.yml#/paths/~1api~1v1~1get_search_groups"
+  "/api/v1/get_search_order_infos":
+    "$ref": "./paths/api/v1/get_search_order_infos.yml#/paths/~1api~1v1~1get_search_order_infos"
+  "/api/v1/get_search_order_status_check":
+    "$ref": "./paths/api/v1/get_search_order_status_check.yml#/paths/~1api~1v1~1get_search_order_status_check"
+  "/api/v1/get_search_place_orders":
+    "$ref": "./paths/api/v1/get_search_place_orders.yml#/paths/~1api~1v1~1get_search_place_orders"
+  "/api/v1/get_search_power_orders":
+    "$ref": "./paths/api/v1/get_search_power_orders.yml#/paths/~1api~1v1~1get_search_power_orders"
+  "/api/v1/get_search_public_relations":
+    "$ref": "./paths/api/v1/get_search_public_relations.yml#/paths/~1api~1v1~1get_search_public_relations"
+  "/api/v1/get_search_purchase_lists":
+    "$ref": "./paths/api/v1/get_search_purchase_lists.yml#/paths/~1api~1v1~1get_search_purchase_lists"
+  "/api/v1/get_search_rental_orders":
+    "$ref": "./paths/api/v1/get_search_rental_orders.yml#/paths/~1api~1v1~1get_search_rental_orders"
+  "/api/v1/get_search_representatives":
+    "$ref": "./paths/api/v1/get_search_representatives.yml#/paths/~1api~1v1~1get_search_representatives"
+  "/api/v1/get_search_stage_common_options":
+    "$ref": "./paths/api/v1/get_search_stage_common_options.yml#/paths/~1api~1v1~1get_search_stage_common_options"
+  "/api/v1/get_search_stage_orders":
+    "$ref": "./paths/api/v1/get_search_stage_orders.yml#/paths/~1api~1v1~1get_search_stage_orders"
+  "/api/v1/get_search_sub_reps":
+    "$ref": "./paths/api/v1/get_search_sub_reps.yml#/paths/~1api~1v1~1get_search_sub_reps"
+  "/api/v1/get_search_users":
+    "$ref": "./paths/api/v1/get_search_users.yml#/paths/~1api~1v1~1get_search_users"
+  "/api/v1/get_search_venue_maps":
+    "$ref": "./paths/api/v1/get_search_venue_maps.yml#/paths/~1api~1v1~1get_search_venue_maps"
+  "/api/v1/get_shop_rentable_items":
+    "$ref": "./paths/api/v1/get_shop_rentable_items.yml#/paths/~1api~1v1~1get_shop_rentable_items"
+  "/api/v1/get_stage_common_option_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_stage_common_option_index_for_admin_view.yml#/paths/~1api~1v1~1get_stage_common_option_index_for_admin_view"
+  "/api/v1/get_stage_common_option_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_stage_common_option_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_stage_common_option_show_for_admin_view~1{id}"
+  "/api/v1/get_stage_common_options_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_stage_common_options_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_stage_common_options_csv~1{fes_year_id}"
+  "/api/v1/get_stage_order_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_stage_order_index_for_admin_view.yml#/paths/~1api~1v1~1get_stage_order_index_for_admin_view"
+  "/api/v1/get_stage_order_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_stage_order_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_stage_order_show_for_admin_view~1{id}"
+  "/api/v1/get_stage_orders_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_stage_orders_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_stage_orders_csv~1{fes_year_id}"
+  "/api/v1/get_stage_rentable_items":
+    "$ref": "./paths/api/v1/get_stage_rentable_items.yml#/paths/~1api~1v1~1get_stage_rentable_items"
+  "/api/v1/get_sub_reps_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_sub_reps_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_sub_reps_csv~1{fes_year_id}"
+  "/api/v1/get_user_index_for_admin_view":
+    "$ref": "./paths/api/v1/get_user_index_for_admin_view.yml#/paths/~1api~1v1~1get_user_index_for_admin_view"
+  "/api/v1/get_user_show_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_user_show_for_admin_view/_id.yml#/paths/~1api~1v1~1get_user_show_for_admin_view~1{id}"
+  "/api/v1/get_user_with_user_detail":
+    "$ref": "./paths/api/v1/get_user_with_user_detail.yml#/paths/~1api~1v1~1get_user_with_user_detail"
+  "/api/v1/get_user_with_user_details":
+    "$ref": "./paths/api/v1/get_user_with_user_details.yml#/paths/~1api~1v1~1get_user_with_user_details"
+  "/api/v1/get_users_csv/{fes_year_id}":
+    "$ref": "./paths/api/v1/get_users_csv/_fes_year_id.yml#/paths/~1api~1v1~1get_users_csv~1{fes_year_id}"
+  "/api/v1/get_venue_map_for_admin_view/{id}":
+    "$ref": "./paths/api/v1/get_venue_map_for_admin_view/_id.yml#/paths/~1api~1v1~1get_venue_map_for_admin_view~1{id}"
+  "/api/v1/update_health_center_submission_status/{id}":
+    "$ref": "./paths/api/v1/update_health_center_submission_status/_id.yml#/paths/~1api~1v1~1update_health_center_submission_status~1{id}"
+  "/api/v1/update_user/{id}/{role_id}":
+    "$ref": "./paths/api/v1/update_user/_id/_role_id.yml#/paths/~1api~1v1~1update_user~1{id}~1{role_id}"
+  "/api/v1/users/edit_user_info":
+    "$ref": "./paths/api/v1/users/edit_user_info.yml#/paths/~1api~1v1~1users~1edit_user_info"
+  "/api/v1/users/get_user_detail":
+    "$ref": "./paths/api/v1/users/get_user_detail.yml#/paths/~1api~1v1~1users~1get_user_detail"
+  "/api/v1/users/reset_password":
+    "$ref": "./paths/api/v1/users/reset_password.yml#/paths/~1api~1v1~1users~1reset_password"
+  "/api/v1/users/show":
+    "$ref": "./paths/api/v1/users/show.yml#/paths/~1api~1v1~1users~1show"
+  "/assign_group_places":
+    "$ref": "./paths/assign_group_places.yml#/paths/~1assign_group_places"
+  "/assign_group_places/{id}":
+    "$ref": "./paths/assign_group_places/_id.yml#/paths/~1assign_group_places~1{id}"
+  "/assign_items":
+    "$ref": "./paths/assign_items.yml#/paths/~1assign_items"
+  "/assign_items/{id}":
+    "$ref": "./paths/assign_items/_id.yml#/paths/~1assign_items~1{id}"
+  "/assign_rental_items":
+    "$ref": "./paths/assign_rental_items.yml#/paths/~1assign_rental_items"
+  "/assign_rental_items/{id}":
+    "$ref": "./paths/assign_rental_items/_id.yml#/paths/~1assign_rental_items~1{id}"
+  "/assign_stages":
+    "$ref": "./paths/assign_stages.yml#/paths/~1assign_stages"
+  "/assign_stages/{id}":
+    "$ref": "./paths/assign_stages/_id.yml#/paths/~1assign_stages~1{id}"
+  "/check_all_registered/{group_id}":
+    "$ref": "./paths/check_all_registered/_group_id.yml#/paths/~1check_all_registered~1{group_id}"
+  "/contact_persons":
+    "$ref": "./paths/contact_persons.yml#/paths/~1contact_persons"
+  "/contact_persons/{id}":
+    "$ref": "./paths/contact_persons/_id.yml#/paths/~1contact_persons~1{id}"
+  "/cooking_process_orders":
+    "$ref": "./paths/cooking_process_orders.yml#/paths/~1cooking_process_orders"
+  "/cooking_process_orders/{id}":
+    "$ref": "./paths/cooking_process_orders/_id.yml#/paths/~1cooking_process_orders~1{id}"
+  "/cooking_process_orders/group/{group_id}":
+    "$ref": "./paths/cooking_process_orders/group/_group_id.yml#/paths/~1cooking_process_orders~1group~1{group_id}"
+  "/cooking_process_orders/upsert":
+    "$ref": "./paths/cooking_process_orders/upsert.yml#/paths/~1cooking_process_orders~1upsert"
+  "/current_user":
+    "$ref": "./paths/current_user.yml#/paths/~1current_user"
+  "/employees":
+    "$ref": "./paths/employees.yml#/paths/~1employees"
+  "/employees/{id}":
+    "$ref": "./paths/employees/_id.yml#/paths/~1employees~1{id}"
+  "/employees/group/{group_id}":
+    "$ref": "./paths/employees/group/_group_id.yml#/paths/~1employees~1group~1{group_id}"
+  "/employees/upsert":
+    "$ref": "./paths/employees/upsert.yml#/paths/~1employees~1upsert"
+  "/fes_dates":
+    "$ref": "./paths/fes_dates.yml#/paths/~1fes_dates"
+  "/fes_dates/{id}":
+    "$ref": "./paths/fes_dates/_id.yml#/paths/~1fes_dates~1{id}"
+  "/fes_years":
+    "$ref": "./paths/fes_years.yml#/paths/~1fes_years"
+  "/fes_years/{id}":
+    "$ref": "./paths/fes_years/_id.yml#/paths/~1fes_years~1{id}"
+  "/fire_equipment_orders":
+    "$ref": "./paths/fire_equipment_orders.yml#/paths/~1fire_equipment_orders"
+  "/fire_equipment_orders/{id}":
+    "$ref": "./paths/fire_equipment_orders/_id.yml#/paths/~1fire_equipment_orders~1{id}"
+  "/fire_equipment_orders/group/{group_id}":
+    "$ref": "./paths/fire_equipment_orders/group/_group_id.yml#/paths/~1fire_equipment_orders~1group~1{group_id}"
+  "/food_products":
+    "$ref": "./paths/food_products.yml#/paths/~1food_products"
+  "/food_products/{id}":
+    "$ref": "./paths/food_products/_id.yml#/paths/~1food_products~1{id}"
+  "/food_products/bulk_upsert":
+    "$ref": "./paths/food_products/bulk_upsert.yml#/paths/~1food_products~1bulk_upsert"
+  "/food_products/group/{group_id}":
+    "$ref": "./paths/food_products/group/_group_id.yml#/paths/~1food_products~1group~1{group_id}"
+  "/food_products/upsert":
+    "$ref": "./paths/food_products/upsert.yml#/paths/~1food_products~1upsert"
+  "/group_categories":
+    "$ref": "./paths/group_categories.yml#/paths/~1group_categories"
+  "/group_categories/{id}":
+    "$ref": "./paths/group_categories/_id.yml#/paths/~1group_categories~1{id}"
+  "/group_identification":
+    "$ref": "./paths/group_identification.yml#/paths/~1group_identification"
+  "/group_identification/{id}":
+    "$ref": "./paths/group_identification/_id.yml#/paths/~1group_identification~1{id}"
+  "/groups":
+    "$ref": "./paths/groups.yml#/paths/~1groups"
+  "/groups/{id}":
+    "$ref": "./paths/groups/_id.yml#/paths/~1groups~1{id}"
+  "/groups/user/{user_id}":
+    "$ref": "./paths/groups/user/_user_id.yml#/paths/~1groups~1user~1{user_id}"
+  "/memos":
+    "$ref": "./paths/memos.yml#/paths/~1memos"
+  "/memos/{id}":
+    "$ref": "./paths/memos/_id.yml#/paths/~1memos~1{id}"
+  "/news":
+    "$ref": "./paths/news.yml#/paths/~1news"
+  "/news/{id}":
+    "$ref": "./paths/news/_id.yml#/paths/~1news~1{id}"
+  "/place_allow_lists":
+    "$ref": "./paths/place_allow_lists.yml#/paths/~1place_allow_lists"
+  "/place_allow_lists/{id}":
+    "$ref": "./paths/place_allow_lists/_id.yml#/paths/~1place_allow_lists~1{id}"
+  "/place_numbers":
+    "$ref": "./paths/place_numbers.yml#/paths/~1place_numbers"
+  "/place_numbers/{id}":
+    "$ref": "./paths/place_numbers/_id.yml#/paths/~1place_numbers~1{id}"
+  "/place_orders":
+    "$ref": "./paths/place_orders.yml#/paths/~1place_orders"
+  "/place_orders/{id}":
+    "$ref": "./paths/place_orders/_id.yml#/paths/~1place_orders~1{id}"
+  "/place_orders/group/{group_id}":
+    "$ref": "./paths/place_orders/group/_group_id.yml#/paths/~1place_orders~1group~1{group_id}"
+  "/places":
+    "$ref": "./paths/places.yml#/paths/~1places"
+  "/places/{id}":
+    "$ref": "./paths/places/_id.yml#/paths/~1places~1{id}"
+  "/power_orders":
+    "$ref": "./paths/power_orders.yml#/paths/~1power_orders"
+  "/power_orders/{id}":
+    "$ref": "./paths/power_orders/_id.yml#/paths/~1power_orders~1{id}"
+  "/power_orders/group/{group_id}":
+    "$ref": "./paths/power_orders/group/_group_id.yml#/paths/~1power_orders~1group~1{group_id}"
+  "/print_pdf/all_groups_info/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/all_groups_info/_fes_year_id/output.yml#/paths/~1print_pdf~1all_groups_info~1{fes_year_id}~1output"
+  "/print_pdf/contacts/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/contacts/_fes_year_id/output.yml#/paths/~1print_pdf~1contacts~1{fes_year_id}~1output"
+  "/print_pdf/employees/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/employees/_fes_year_id/output.yml#/paths/~1print_pdf~1employees~1{fes_year_id}~1output"
+  "/print_pdf/food_products/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/food_products/_fes_year_id/output.yml#/paths/~1print_pdf~1food_products~1{fes_year_id}~1output"
+  "/print_pdf/group/{group_id}/output":
+    "$ref": "./paths/print_pdf/group/_group_id/output.yml#/paths/~1print_pdf~1group~1{group_id}~1output"
+  "/print_pdf/group_all/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/group_all/_fes_year_id/output.yml#/paths/~1print_pdf~1group_all~1{fes_year_id}~1output"
+  "/print_pdf/group_info/{group_id}/output":
+    "$ref": "./paths/print_pdf/group_info/_group_id/output.yml#/paths/~1print_pdf~1group_info~1{group_id}~1output"
+  "/print_pdf/health_office_documents/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/health_office_documents/_fes_year_id/output.yml#/paths/~1print_pdf~1health_office_documents~1{fes_year_id}~1output"
+  "/print_pdf/power/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/power/_fes_year_id/output.yml#/paths/~1print_pdf~1power~1{fes_year_id}~1output"
+  "/print_pdf/rental_items_list/{fes_year_id}/output":
+    "$ref": "./paths/print_pdf/rental_items_list/_fes_year_id/output.yml#/paths/~1print_pdf~1rental_items_list~1{fes_year_id}~1output"
+  "/public_relations":
+    "$ref": "./paths/public_relations.yml#/paths/~1public_relations"
+  "/public_relations/{id}":
+    "$ref": "./paths/public_relations/_id.yml#/paths/~1public_relations~1{id}"
+  "/public_relations/group/{group_id}":
+    "$ref": "./paths/public_relations/group/_group_id.yml#/paths/~1public_relations~1group~1{group_id}"
+  "/purchase_lists":
+    "$ref": "./paths/purchase_lists.yml#/paths/~1purchase_lists"
+  "/purchase_lists/{id}":
+    "$ref": "./paths/purchase_lists/_id.yml#/paths/~1purchase_lists~1{id}"
+  "/purchase_lists/food_product":
+    "$ref": "./paths/purchase_lists/food_product.yml#/paths/~1purchase_lists~1food_product"
+  "/purchase_lists/group/{group_id}":
+    "$ref": "./paths/purchase_lists/group/_group_id.yml#/paths/~1purchase_lists~1group~1{group_id}"
+  "/purchase_lists/upsert":
+    "$ref": "./paths/purchase_lists/upsert.yml#/paths/~1purchase_lists~1upsert"
+  "/rails/action_mailbox/mailgun/inbound_emails/mime":
+    "$ref": "./paths/rails/action_mailbox/mailgun/inbound_emails/mime.yml#/paths/~1rails~1action_mailbox~1mailgun~1inbound_emails~1mime"
+  "/rails/action_mailbox/mandrill/inbound_emails":
+    "$ref": "./paths/rails/action_mailbox/mandrill/inbound_emails.yml#/paths/~1rails~1action_mailbox~1mandrill~1inbound_emails"
+  "/rails/action_mailbox/postmark/inbound_emails":
+    "$ref": "./paths/rails/action_mailbox/postmark/inbound_emails.yml#/paths/~1rails~1action_mailbox~1postmark~1inbound_emails"
+  "/rails/action_mailbox/relay/inbound_emails":
+    "$ref": "./paths/rails/action_mailbox/relay/inbound_emails.yml#/paths/~1rails~1action_mailbox~1relay~1inbound_emails"
+  "/rails/action_mailbox/sendgrid/inbound_emails":
+    "$ref": "./paths/rails/action_mailbox/sendgrid/inbound_emails.yml#/paths/~1rails~1action_mailbox~1sendgrid~1inbound_emails"
+  "/rails/active_storage/blobs/{signed_id}/*filename":
+    "$ref": "./paths/rails/active_storage/blobs/_signed_id/*filename.yml#/paths/~1rails~1active_storage~1blobs~1{signed_id}~1*filename"
+  "/rails/active_storage/blobs/proxy/{signed_id}/*filename":
+    "$ref": "./paths/rails/active_storage/blobs/proxy/_signed_id/*filename.yml#/paths/~1rails~1active_storage~1blobs~1proxy~1{signed_id}~1*filename"
+  "/rails/active_storage/blobs/redirect/{signed_id}/*filename":
+    "$ref": "./paths/rails/active_storage/blobs/redirect/_signed_id/*filename.yml#/paths/~1rails~1active_storage~1blobs~1redirect~1{signed_id}~1*filename"
+  "/rails/active_storage/direct_uploads":
+    "$ref": "./paths/rails/active_storage/direct_uploads.yml#/paths/~1rails~1active_storage~1direct_uploads"
+  "/rails/active_storage/disk/{encoded_key}/*filename":
+    "$ref": "./paths/rails/active_storage/disk/_encoded_key/*filename.yml#/paths/~1rails~1active_storage~1disk~1{encoded_key}~1*filename"
+  "/rails/active_storage/disk/{encoded_token}":
+    "$ref": "./paths/rails/active_storage/disk/_encoded_token.yml#/paths/~1rails~1active_storage~1disk~1{encoded_token}"
+  "/rails/active_storage/representations/{signed_blob_id}/{variation_key}/*filename":
+    "$ref": "./paths/rails/active_storage/representations/_signed_blob_id/_variation_key/*filename.yml#/paths/~1rails~1active_storage~1representations~1{signed_blob_id}~1{variation_key}~1*filename"
+  "/rails/active_storage/representations/proxy/{signed_blob_id}/{variation_key}/*filename":
+    "$ref": "./paths/rails/active_storage/representations/proxy/_signed_blob_id/_variation_key/*filename.yml#/paths/~1rails~1active_storage~1representations~1proxy~1{signed_blob_id}~1{variation_key}~1*filename"
+  "/rails/active_storage/representations/redirect/{signed_blob_id}/{variation_key}/*filename":
+    "$ref": "./paths/rails/active_storage/representations/redirect/_signed_blob_id/_variation_key/*filename.yml#/paths/~1rails~1active_storage~1representations~1redirect~1{signed_blob_id}~1{variation_key}~1*filename"
+  "/rails/conductor/action_mailbox/{inbound_email_id}/reroute":
+    "$ref": "./paths/rails/conductor/action_mailbox/_inbound_email_id/reroute.yml#/paths/~1rails~1conductor~1action_mailbox~1{inbound_email_id}~1reroute"
+  "/rails/conductor/action_mailbox/inbound_emails":
+    "$ref": "./paths/rails/conductor/action_mailbox/inbound_emails.yml#/paths/~1rails~1conductor~1action_mailbox~1inbound_emails"
+  "/rails/conductor/action_mailbox/inbound_emails/{id}":
+    "$ref": "./paths/rails/conductor/action_mailbox/inbound_emails/_id.yml#/paths/~1rails~1conductor~1action_mailbox~1inbound_emails~1{id}"
+  "/rails/conductor/action_mailbox/inbound_emails/sources":
+    "$ref": "./paths/rails/conductor/action_mailbox/inbound_emails/sources.yml#/paths/~1rails~1conductor~1action_mailbox~1inbound_emails~1sources"
+  "/rails/conductor/action_mailbox/inbound_emails/sources/new":
+    "$ref": "./paths/rails/conductor/action_mailbox/inbound_emails/sources/new.yml#/paths/~1rails~1conductor~1action_mailbox~1inbound_emails~1sources~1new"
+  "/rainy/stages":
+    "$ref": "./paths/rainy/stages.yml#/paths/~1rainy~1stages"
+  "/rentable_items":
+    "$ref": "./paths/rentable_items.yml#/paths/~1rentable_items"
+  "/rentable_items/{id}":
+    "$ref": "./paths/rentable_items/_id.yml#/paths/~1rentable_items~1{id}"
+  "/rental_item_allow_lists":
+    "$ref": "./paths/rental_item_allow_lists.yml#/paths/~1rental_item_allow_lists"
+  "/rental_item_allow_lists/{id}":
+    "$ref": "./paths/rental_item_allow_lists/_id.yml#/paths/~1rental_item_allow_lists~1{id}"
+  "/rental_items":
+    "$ref": "./paths/rental_items.yml#/paths/~1rental_items"
+  "/rental_items/{id}":
+    "$ref": "./paths/rental_items/_id.yml#/paths/~1rental_items~1{id}"
+  "/rental_orders":
+    "$ref": "./paths/rental_orders.yml#/paths/~1rental_orders"
+  "/rental_orders/{id}":
+    "$ref": "./paths/rental_orders/_id.yml#/paths/~1rental_orders~1{id}"
+  "/rental_orders/group/{group_id}":
+    "$ref": "./paths/rental_orders/group/_group_id.yml#/paths/~1rental_orders~1group~1{group_id}"
+  "/shops":
+    "$ref": "./paths/shops.yml#/paths/~1shops"
+  "/shops/{id}":
+    "$ref": "./paths/shops/_id.yml#/paths/~1shops~1{id}"
+  "/stage_common_options":
+    "$ref": "./paths/stage_common_options.yml#/paths/~1stage_common_options"
+  "/stage_common_options/{id}":
+    "$ref": "./paths/stage_common_options/_id.yml#/paths/~1stage_common_options~1{id}"
+  "/stage_common_options/group/{group_id}":
+    "$ref": "./paths/stage_common_options/group/_group_id.yml#/paths/~1stage_common_options~1group~1{group_id}"
+  "/stage_numbers":
+    "$ref": "./paths/stage_numbers.yml#/paths/~1stage_numbers"
+  "/stage_numbers/{id}":
+    "$ref": "./paths/stage_numbers/_id.yml#/paths/~1stage_numbers~1{id}"
+  "/stage_orders":
+    "$ref": "./paths/stage_orders.yml#/paths/~1stage_orders"
+  "/stage_orders/{id}":
+    "$ref": "./paths/stage_orders/_id.yml#/paths/~1stage_orders~1{id}"
+  "/stage_orders/group/{group_id}":
+    "$ref": "./paths/stage_orders/group/_group_id.yml#/paths/~1stage_orders~1group~1{group_id}"
+  "/stages":
+    "$ref": "./paths/stages.yml#/paths/~1stages"
+  "/stages/{id}":
+    "$ref": "./paths/stages/_id.yml#/paths/~1stages~1{id}"
+  "/stocker_items":
+    "$ref": "./paths/stocker_items.yml#/paths/~1stocker_items"
+  "/stocker_items/{id}":
+    "$ref": "./paths/stocker_items/_id.yml#/paths/~1stocker_items~1{id}"
+  "/stocker_places":
+    "$ref": "./paths/stocker_places.yml#/paths/~1stocker_places"
+  "/stocker_places/{id}":
+    "$ref": "./paths/stocker_places/_id.yml#/paths/~1stocker_places~1{id}"
+  "/sub_reps":
+    "$ref": "./paths/sub_reps.yml#/paths/~1sub_reps"
+  "/sub_reps/{id}":
+    "$ref": "./paths/sub_reps/_id.yml#/paths/~1sub_reps~1{id}"
+  "/sub_reps/group/{group_id}":
+    "$ref": "./paths/sub_reps/group/_group_id.yml#/paths/~1sub_reps~1group~1{group_id}"
+  "/sunny/stages":
+    "$ref": "./paths/sunny/stages.yml#/paths/~1sunny~1stages"
+  "/un_registered_groups":
+    "$ref": "./paths/un_registered_groups.yml#/paths/~1un_registered_groups"
+  "/un_registered_groups/{id}":
+    "$ref": "./paths/un_registered_groups/_id.yml#/paths/~1un_registered_groups~1{id}"
+  "/un_registered_groups/group":
+    "$ref": "./paths/un_registered_groups/group.yml#/paths/~1un_registered_groups~1group"
+  "/user_details":
+    "$ref": "./paths/user_details.yml#/paths/~1user_details"
+  "/user_details/{id}":
+    "$ref": "./paths/user_details/_id.yml#/paths/~1user_details~1{id}"
+  "/user_page_settings":
+    "$ref": "./paths/user_page_settings.yml#/paths/~1user_page_settings"
+  "/user_page_settings/{id}":
+    "$ref": "./paths/user_page_settings/_id.yml#/paths/~1user_page_settings~1{id}"
+  "/users":
+    "$ref": "./paths/users.yml#/paths/~1users"
+  "/users/{id}":
+    "$ref": "./paths/users/_id.yml#/paths/~1users~1{id}"
+  "/users/simply_user_create":
+    "$ref": "./paths/users/simply_user_create.yml#/paths/~1users~1simply_user_create"
+  "/venue_maps":
+    "$ref": "./paths/venue_maps.yml#/paths/~1venue_maps"
+  "/venue_maps/{id}":
+    "$ref": "./paths/venue_maps/_id.yml#/paths/~1venue_maps~1{id}"
+  "/venue_maps/group/{group_id}":
+    "$ref": "./paths/venue_maps/group/_group_id.yml#/paths/~1venue_maps~1group~1{group_id}"
+components:
+  schemas:
+    actionmailbox.ingresses.mailgun.InboundEmail:
+      "$ref": "./components/schemas/actionmailbox/ingresses/mailgun/inbound_email.yml#/components/schemas/actionmailbox.ingresses.mailgun.InboundEmail"
+    actionmailbox.ingresses.mandrill.InboundEmail:
+      "$ref": "./components/schemas/actionmailbox/ingresses/mandrill/inbound_email.yml#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
+    actionmailbox.ingresses.postmark.InboundEmail:
+      "$ref": "./components/schemas/actionmailbox/ingresses/postmark/inbound_email.yml#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
+    actionmailbox.ingresses.relay.InboundEmail:
+      "$ref": "./components/schemas/actionmailbox/ingresses/relay/inbound_email.yml#/components/schemas/actionmailbox.ingresses.relay.InboundEmail"
+    actionmailbox.ingresses.sendgrid.InboundEmail:
+      "$ref": "./components/schemas/actionmailbox/ingresses/sendgrid/inbound_email.yml#/components/schemas/actionmailbox.ingresses.sendgrid.InboundEmail"
+    activestorage.blobs.Proxy:
+      "$ref": "./components/schemas/activestorage/blobs/proxy.yml#/components/schemas/activestorage.blobs.Proxy"
+    activestorage.blobs.Redirect:
+      "$ref": "./components/schemas/activestorage/blobs/redirect.yml#/components/schemas/activestorage.blobs.Redirect"
+    activestorage.DirectUpload:
+      "$ref": "./components/schemas/activestorage/direct_upload.yml#/components/schemas/activestorage.DirectUpload"
+    activestorage.Disk:
+      "$ref": "./components/schemas/activestorage/disk.yml#/components/schemas/activestorage.Disk"
+    activestorage.representations.Proxy:
+      "$ref": "./components/schemas/activestorage/representations/proxy.yml#/components/schemas/activestorage.representations.Proxy"
+    activestorage.representations.Redirect:
+      "$ref": "./components/schemas/activestorage/representations/redirect.yml#/components/schemas/activestorage.representations.Redirect"
+    Announcement:
+      "$ref": "./components/schemas/announcement.yml#/components/schemas/Announcement"
+    api.auth.Registration:
+      "$ref": "./components/schemas/api/auth/registration.yml#/components/schemas/api.auth.Registration"
+    api.auth.Session:
+      "$ref": "./components/schemas/api/auth/session.yml#/components/schemas/api.auth.Session"
+    api.v1.AnnouncementsApi:
+      "$ref": "./components/schemas/api/v1/announcements.yml#/components/schemas/api.v1.AnnouncementsApi"
+    api.v1.AssignRentalItemsApi:
+      "$ref": "./components/schemas/api/v1/assign_rental_items.yml#/components/schemas/api.v1.AssignRentalItemsApi"
+    api.v1.ContactPersonsApi:
+      "$ref": "./components/schemas/api/v1/contact_persons.yml#/components/schemas/api.v1.ContactPersonsApi"
+    api.v1.CookingProcessOrdersApi:
+      "$ref": "./components/schemas/api/v1/cooking_process_orders.yml#/components/schemas/api.v1.CookingProcessOrdersApi"
+    api.v1.CurrentUserApi:
+      "$ref": "./components/schemas/api/v1/current_user.yml#/components/schemas/api.v1.CurrentUserApi"
+    api.v1.DashboardApi:
+      "$ref": "./components/schemas/api/v1/dashboard.yml#/components/schemas/api.v1.DashboardApi"
+    api.v1.EmployeesApi:
+      "$ref": "./components/schemas/api/v1/employees.yml#/components/schemas/api.v1.EmployeesApi"
+    api.v1.FesDatesApi:
+      "$ref": "./components/schemas/api/v1/fes_dates.yml#/components/schemas/api.v1.FesDatesApi"
+    api.v1.FoodProductsApi:
+      "$ref": "./components/schemas/api/v1/food_products.yml#/components/schemas/api.v1.FoodProductsApi"
+    api.v1.GroupsApi:
+      "$ref": "./components/schemas/api/v1/groups.yml#/components/schemas/api.v1.GroupsApi"
+    api.v1.HealthCenterSubmissionStatusesApi:
+      "$ref": "./components/schemas/api/v1/health_center_submission_statuses.yml#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+    api.v1.OrderInfosApi:
+      "$ref": "./components/schemas/api/v1/order_infos.yml#/components/schemas/api.v1.OrderInfosApi"
+    api.v1.OrderStatusCheckApi:
+      "$ref": "./components/schemas/api/v1/order_status_check.yml#/components/schemas/api.v1.OrderStatusCheckApi"
+    api.v1.OutputCsv:
+      "$ref": "./components/schemas/api/v1/output_csv.yml#/components/schemas/api.v1.OutputCsv"
+    api.v1.PlaceOrdersApi:
+      "$ref": "./components/schemas/api/v1/place_orders.yml#/components/schemas/api.v1.PlaceOrdersApi"
+    api.v1.PowerOrdersApi:
+      "$ref": "./components/schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"
+    api.v1.PublicRelationsApi:
+      "$ref": "./components/schemas/api/v1/public_relations.yml#/components/schemas/api.v1.PublicRelationsApi"
+    api.v1.PurchaseListsApi:
+      "$ref": "./components/schemas/api/v1/purchase_lists.yml#/components/schemas/api.v1.PurchaseListsApi"
+    api.v1.RentalItemsApi:
+      "$ref": "./components/schemas/api/v1/rental_items.yml#/components/schemas/api.v1.RentalItemsApi"
+    api.v1.RentalOrdersApi:
+      "$ref": "./components/schemas/api/v1/rental_orders.yml#/components/schemas/api.v1.RentalOrdersApi"
+    api.v1.RepresentativesApi:
+      "$ref": "./components/schemas/api/v1/representatives.yml#/components/schemas/api.v1.RepresentativesApi"
+    api.v1.StageCommonOptionsApi:
+      "$ref": "./components/schemas/api/v1/stage_common_options.yml#/components/schemas/api.v1.StageCommonOptionsApi"
+    api.v1.StageOrdersApi:
+      "$ref": "./components/schemas/api/v1/stage_orders.yml#/components/schemas/api.v1.StageOrdersApi"
+    api.v1.SubRepApi:
+      "$ref": "./components/schemas/api/v1/sub_rep.yml#/components/schemas/api.v1.SubRepApi"
+    api.v1.User:
+      "$ref": "./components/schemas/api/v1/user.yml#/components/schemas/api.v1.User"
+    api.v1.UserApi:
+      "$ref": "./components/schemas/api/v1/user_endpoint.yml#/components/schemas/api.v1.UserApi"
+    api.v1.UsersApi:
+      "$ref": "./components/schemas/api/v1/users.yml#/components/schemas/api.v1.UsersApi"
+    api.v1.VenueMapsApi:
+      "$ref": "./components/schemas/api/v1/venue_maps.yml#/components/schemas/api.v1.VenueMapsApi"
+    AssignGroupPlace:
+      "$ref": "./components/schemas/assign_group_place.yml#/components/schemas/AssignGroupPlace"
+    AssignItem:
+      "$ref": "./components/schemas/assign_item.yml#/components/schemas/AssignItem"
+    AssignRentalItem:
+      "$ref": "./components/schemas/assign_rental_item.yml#/components/schemas/AssignRentalItem"
+    AssignStage:
+      "$ref": "./components/schemas/assign_stage.yml#/components/schemas/AssignStage"
+    CheckAllRegistered:
+      "$ref": "./components/schemas/check_all_registered.yml#/components/schemas/CheckAllRegistered"
+    ContactPerson:
+      "$ref": "./components/schemas/contact_person.yml#/components/schemas/ContactPerson"
+    CookingProcessOrder:
+      "$ref": "./components/schemas/cooking_process_order.yml#/components/schemas/CookingProcessOrder"
+    devisetokenauth.Password:
+      "$ref": "./components/schemas/devisetokenauth/password.yml#/components/schemas/devisetokenauth.Password"
+    devisetokenauth.Session:
+      "$ref": "./components/schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"
+    devisetokenauth.TokenValidation:
+      "$ref": "./components/schemas/devisetokenauth/token_validation.yml#/components/schemas/devisetokenauth.TokenValidation"
+    Employee:
+      "$ref": "./components/schemas/employee.yml#/components/schemas/Employee"
+    FesDate:
+      "$ref": "./components/schemas/fes_date.yml#/components/schemas/FesDate"
+    FesYear:
+      "$ref": "./components/schemas/fes_year.yml#/components/schemas/FesYear"
+    FireEquipmentOrder:
+      "$ref": "./components/schemas/fire_equipment_order.yml#/components/schemas/FireEquipmentOrder"
+    FoodProduct:
+      "$ref": "./components/schemas/food_product.yml#/components/schemas/FoodProduct"
+    Group:
+      "$ref": "./components/schemas/group.yml#/components/schemas/Group"
+    GroupCategory:
+      "$ref": "./components/schemas/group_category.yml#/components/schemas/GroupCategory"
+    GroupIdentification:
+      "$ref": "./components/schemas/group_identification.yml#/components/schemas/GroupIdentification"
+    Memo:
+      "$ref": "./components/schemas/memo.yml#/components/schemas/Memo"
+    News:
+      "$ref": "./components/schemas/news.yml#/components/schemas/News"
+    Place:
+      "$ref": "./components/schemas/place.yml#/components/schemas/Place"
+    PlaceAllowList:
+      "$ref": "./components/schemas/place_allow_list.yml#/components/schemas/PlaceAllowList"
+    PlaceNumber:
+      "$ref": "./components/schemas/place_number.yml#/components/schemas/PlaceNumber"
+    PlaceOrder:
+      "$ref": "./components/schemas/place_order.yml#/components/schemas/PlaceOrder"
+    PowerOrder:
+      "$ref": "./components/schemas/power_order.yml#/components/schemas/PowerOrder"
+    PrintPdf:
+      "$ref": "./components/schemas/print_pdf.yml#/components/schemas/PrintPdf"
+    PublicRelation:
+      "$ref": "./components/schemas/public_relation.yml#/components/schemas/PublicRelation"
+    PurchaseList:
+      "$ref": "./components/schemas/purchase_list.yml#/components/schemas/PurchaseList"
+    rails.conductor.actionmailbox.InboundEmail:
+      "$ref": "./components/schemas/rails/conductor/actionmailbox/inbound_email.yml#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
+    rails.conductor.actionmailbox.inboundemails.Source:
+      "$ref": "./components/schemas/rails/conductor/actionmailbox/inboundemails/source.yml#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
+    rails.conductor.actionmailbox.Reroute:
+      "$ref": "./components/schemas/rails/conductor/actionmailbox/reroute.yml#/components/schemas/rails.conductor.actionmailbox.Reroute"
+    RentableItem:
+      "$ref": "./components/schemas/rentable_item.yml#/components/schemas/RentableItem"
+    RentalItem:
+      "$ref": "./components/schemas/rental_item.yml#/components/schemas/RentalItem"
+    RentalItemAllowList:
+      "$ref": "./components/schemas/rental_item_allow_list.yml#/components/schemas/RentalItemAllowList"
+    RentalOrder:
+      "$ref": "./components/schemas/rental_order.yml#/components/schemas/RentalOrder"
+    Shop:
+      "$ref": "./components/schemas/shop.yml#/components/schemas/Shop"
+    Stage:
+      "$ref": "./components/schemas/stage.yml#/components/schemas/Stage"
+    StageCommonOption:
+      "$ref": "./components/schemas/stage_common_option.yml#/components/schemas/StageCommonOption"
+    StageNumber:
+      "$ref": "./components/schemas/stage_number.yml#/components/schemas/StageNumber"
+    StageOrder:
+      "$ref": "./components/schemas/stage_order.yml#/components/schemas/StageOrder"
+    StockerItem:
+      "$ref": "./components/schemas/stocker_item.yml#/components/schemas/StockerItem"
+    StockerPlace:
+      "$ref": "./components/schemas/stocker_place.yml#/components/schemas/StockerPlace"
+    SubRep:
+      "$ref": "./components/schemas/sub_rep.yml#/components/schemas/SubRep"
+    UnRegisteredGroup:
+      "$ref": "./components/schemas/un_registered_group.yml#/components/schemas/UnRegisteredGroup"
+    User:
+      "$ref": "./components/schemas/user.yml#/components/schemas/User"
+    UserDetail:
+      "$ref": "./components/schemas/user_detail.yml#/components/schemas/UserDetail"
+    UserPageSetting:
+      "$ref": "./components/schemas/user_page_setting.yml#/components/schemas/UserPageSetting"
+    VenueMap:
+      "$ref": "./components/schemas/venue_map.yml#/components/schemas/VenueMap"
+  requestBodies:
+    actionmailbox.ingresses.mailgun.InboundEmail:
+      "$ref": "./components/requestBodies/actionmailbox/ingresses/mailgun/inbound_email.yml#/components/requestBodies/actionmailbox.ingresses.mailgun.InboundEmail"
+    actionmailbox.ingresses.mandrill.InboundEmail:
+      "$ref": "./components/requestBodies/actionmailbox/ingresses/mandrill/inbound_email.yml#/components/requestBodies/actionmailbox.ingresses.mandrill.InboundEmail"
+    actionmailbox.ingresses.postmark.InboundEmail:
+      "$ref": "./components/requestBodies/actionmailbox/ingresses/postmark/inbound_email.yml#/components/requestBodies/actionmailbox.ingresses.postmark.InboundEmail"
+    actionmailbox.ingresses.relay.InboundEmail:
+      "$ref": "./components/requestBodies/actionmailbox/ingresses/relay/inbound_email.yml#/components/requestBodies/actionmailbox.ingresses.relay.InboundEmail"
+    actionmailbox.ingresses.sendgrid.InboundEmail:
+      "$ref": "./components/requestBodies/actionmailbox/ingresses/sendgrid/inbound_email.yml#/components/requestBodies/actionmailbox.ingresses.sendgrid.InboundEmail"
+    activestorage.DirectUpload:
+      "$ref": "./components/requestBodies/activestorage/direct_upload.yml#/components/requestBodies/activestorage.DirectUpload"
+    activestorage.Disk:
+      "$ref": "./components/requestBodies/activestorage/disk.yml#/components/requestBodies/activestorage.Disk"
+    Announcement:
+      "$ref": "./components/requestBodies/announcement.yml#/components/requestBodies/Announcement"
+    api.auth.Registration:
+      "$ref": "./components/requestBodies/api/auth/registration.yml#/components/requestBodies/api.auth.Registration"
+    api.auth.Session:
+      "$ref": "./components/requestBodies/api/auth/session.yml#/components/requestBodies/api.auth.Session"
+    api.v1.AnnouncementsApi:
+      "$ref": "./components/requestBodies/api/v1/announcements.yml#/components/requestBodies/api.v1.AnnouncementsApi"
+    api.v1.AssignRentalItemsApi:
+      "$ref": "./components/requestBodies/api/v1/assign_rental_items.yml#/components/requestBodies/api.v1.AssignRentalItemsApi"
+    api.v1.ContactPersonsApi:
+      "$ref": "./components/requestBodies/api/v1/contact_persons.yml#/components/requestBodies/api.v1.ContactPersonsApi"
+    api.v1.CookingProcessOrdersApi:
+      "$ref": "./components/requestBodies/api/v1/cooking_process_orders.yml#/components/requestBodies/api.v1.CookingProcessOrdersApi"
+    api.v1.CurrentUserApi:
+      "$ref": "./components/requestBodies/api/v1/current_user.yml#/components/requestBodies/api.v1.CurrentUserApi"
+    api.v1.EmployeesApi:
+      "$ref": "./components/requestBodies/api/v1/employees.yml#/components/requestBodies/api.v1.EmployeesApi"
+    api.v1.FoodProductsApi:
+      "$ref": "./components/requestBodies/api/v1/food_products.yml#/components/requestBodies/api.v1.FoodProductsApi"
+    api.v1.GroupsApi:
+      "$ref": "./components/requestBodies/api/v1/groups.yml#/components/requestBodies/api.v1.GroupsApi"
+    api.v1.HealthCenterSubmissionStatusesApi:
+      "$ref": "./components/requestBodies/api/v1/health_center_submission_statuses.yml#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+    api.v1.OrderInfosApi:
+      "$ref": "./components/requestBodies/api/v1/order_infos.yml#/components/requestBodies/api.v1.OrderInfosApi"
+    api.v1.OrderStatusCheckApi:
+      "$ref": "./components/requestBodies/api/v1/order_status_check.yml#/components/requestBodies/api.v1.OrderStatusCheckApi"
+    api.v1.PlaceOrdersApi:
+      "$ref": "./components/requestBodies/api/v1/place_orders.yml#/components/requestBodies/api.v1.PlaceOrdersApi"
+    api.v1.PowerOrdersApi:
+      "$ref": "./components/requestBodies/api/v1/power_orders.yml#/components/requestBodies/api.v1.PowerOrdersApi"
+    api.v1.PublicRelationsApi:
+      "$ref": "./components/requestBodies/api/v1/public_relations.yml#/components/requestBodies/api.v1.PublicRelationsApi"
+    api.v1.PurchaseListsApi:
+      "$ref": "./components/requestBodies/api/v1/purchase_lists.yml#/components/requestBodies/api.v1.PurchaseListsApi"
+    api.v1.RentalOrdersApi:
+      "$ref": "./components/requestBodies/api/v1/rental_orders.yml#/components/requestBodies/api.v1.RentalOrdersApi"
+    api.v1.RepresentativesApi:
+      "$ref": "./components/requestBodies/api/v1/representatives.yml#/components/requestBodies/api.v1.RepresentativesApi"
+    api.v1.StageCommonOptionsApi:
+      "$ref": "./components/requestBodies/api/v1/stage_common_options.yml#/components/requestBodies/api.v1.StageCommonOptionsApi"
+    api.v1.StageOrdersApi:
+      "$ref": "./components/requestBodies/api/v1/stage_orders.yml#/components/requestBodies/api.v1.StageOrdersApi"
+    api.v1.SubRepApi:
+      "$ref": "./components/requestBodies/api/v1/sub_rep.yml#/components/requestBodies/api.v1.SubRepApi"
+    api.v1.User:
+      "$ref": "./components/requestBodies/api/v1/user.yml#/components/requestBodies/api.v1.User"
+    api.v1.VenueMapsApi:
+      "$ref": "./components/requestBodies/api/v1/venue_maps.yml#/components/requestBodies/api.v1.VenueMapsApi"
+    AssignGroupPlace:
+      "$ref": "./components/requestBodies/assign_group_place.yml#/components/requestBodies/AssignGroupPlace"
+    AssignItem:
+      "$ref": "./components/requestBodies/assign_item.yml#/components/requestBodies/AssignItem"
+    AssignRentalItem:
+      "$ref": "./components/requestBodies/assign_rental_item.yml#/components/requestBodies/AssignRentalItem"
+    AssignStage:
+      "$ref": "./components/requestBodies/assign_stage.yml#/components/requestBodies/AssignStage"
+    ContactPerson:
+      "$ref": "./components/requestBodies/contact_person.yml#/components/requestBodies/ContactPerson"
+    CookingProcessOrder:
+      "$ref": "./components/requestBodies/cooking_process_order.yml#/components/requestBodies/CookingProcessOrder"
+    devisetokenauth.Password:
+      "$ref": "./components/requestBodies/devisetokenauth/password.yml#/components/requestBodies/devisetokenauth.Password"
+    devisetokenauth.Session:
+      "$ref": "./components/requestBodies/devisetokenauth/session.yml#/components/requestBodies/devisetokenauth.Session"
+    Employee:
+      "$ref": "./components/requestBodies/employee.yml#/components/requestBodies/Employee"
+    FesDate:
+      "$ref": "./components/requestBodies/fes_date.yml#/components/requestBodies/FesDate"
+    FesYear:
+      "$ref": "./components/requestBodies/fes_year.yml#/components/requestBodies/FesYear"
+    FireEquipmentOrder:
+      "$ref": "./components/requestBodies/fire_equipment_order.yml#/components/requestBodies/FireEquipmentOrder"
+    FoodProduct:
+      "$ref": "./components/requestBodies/food_product.yml#/components/requestBodies/FoodProduct"
+    Group:
+      "$ref": "./components/requestBodies/group.yml#/components/requestBodies/Group"
+    GroupCategory:
+      "$ref": "./components/requestBodies/group_category.yml#/components/requestBodies/GroupCategory"
+    GroupIdentification:
+      "$ref": "./components/requestBodies/group_identification.yml#/components/requestBodies/GroupIdentification"
+    Memo:
+      "$ref": "./components/requestBodies/memo.yml#/components/requestBodies/Memo"
+    News:
+      "$ref": "./components/requestBodies/news.yml#/components/requestBodies/News"
+    Place:
+      "$ref": "./components/requestBodies/place.yml#/components/requestBodies/Place"
+    PlaceAllowList:
+      "$ref": "./components/requestBodies/place_allow_list.yml#/components/requestBodies/PlaceAllowList"
+    PlaceNumber:
+      "$ref": "./components/requestBodies/place_number.yml#/components/requestBodies/PlaceNumber"
+    PlaceOrder:
+      "$ref": "./components/requestBodies/place_order.yml#/components/requestBodies/PlaceOrder"
+    PowerOrder:
+      "$ref": "./components/requestBodies/power_order.yml#/components/requestBodies/PowerOrder"
+    PublicRelation:
+      "$ref": "./components/requestBodies/public_relation.yml#/components/requestBodies/PublicRelation"
+    PurchaseList:
+      "$ref": "./components/requestBodies/purchase_list.yml#/components/requestBodies/PurchaseList"
+    rails.conductor.actionmailbox.InboundEmail:
+      "$ref": "./components/requestBodies/rails/conductor/actionmailbox/inbound_email.yml#/components/requestBodies/rails.conductor.actionmailbox.InboundEmail"
+    rails.conductor.actionmailbox.inboundemails.Source:
+      "$ref": "./components/requestBodies/rails/conductor/actionmailbox/inboundemails/source.yml#/components/requestBodies/rails.conductor.actionmailbox.inboundemails.Source"
+    rails.conductor.actionmailbox.Reroute:
+      "$ref": "./components/requestBodies/rails/conductor/actionmailbox/reroute.yml#/components/requestBodies/rails.conductor.actionmailbox.Reroute"
+    RentableItem:
+      "$ref": "./components/requestBodies/rentable_item.yml#/components/requestBodies/RentableItem"
+    RentalItem:
+      "$ref": "./components/requestBodies/rental_item.yml#/components/requestBodies/RentalItem"
+    RentalItemAllowList:
+      "$ref": "./components/requestBodies/rental_item_allow_list.yml#/components/requestBodies/RentalItemAllowList"
+    RentalOrder:
+      "$ref": "./components/requestBodies/rental_order.yml#/components/requestBodies/RentalOrder"
+    Shop:
+      "$ref": "./components/requestBodies/shop.yml#/components/requestBodies/Shop"
+    Stage:
+      "$ref": "./components/requestBodies/stage.yml#/components/requestBodies/Stage"
+    StageCommonOption:
+      "$ref": "./components/requestBodies/stage_common_option.yml#/components/requestBodies/StageCommonOption"
+    StageNumber:
+      "$ref": "./components/requestBodies/stage_number.yml#/components/requestBodies/StageNumber"
+    StageOrder:
+      "$ref": "./components/requestBodies/stage_order.yml#/components/requestBodies/StageOrder"
+    StockerItem:
+      "$ref": "./components/requestBodies/stocker_item.yml#/components/requestBodies/StockerItem"
+    StockerPlace:
+      "$ref": "./components/requestBodies/stocker_place.yml#/components/requestBodies/StockerPlace"
+    SubRep:
+      "$ref": "./components/requestBodies/sub_rep.yml#/components/requestBodies/SubRep"
+    UnRegisteredGroup:
+      "$ref": "./components/requestBodies/un_registered_group.yml#/components/requestBodies/UnRegisteredGroup"
+    User:
+      "$ref": "./components/requestBodies/user.yml#/components/requestBodies/User"
+    UserDetail:
+      "$ref": "./components/requestBodies/user_detail.yml#/components/requestBodies/UserDetail"
+    UserPageSetting:
+      "$ref": "./components/requestBodies/user_page_setting.yml#/components/requestBodies/UserPageSetting"
+    VenueMap:
+      "$ref": "./components/requestBodies/venue_map.yml#/components/requestBodies/VenueMap"
+  securitySchemes:
+    ClientAuth:
+      "$ref": "./components/securitySchemes/client_auth.yml#/components/securitySchemes/ClientAuth"
+    DeviseAuth:
+      "$ref": "./components/securitySchemes/devise_auth.yml#/components/securitySchemes/DeviseAuth"
+    UidAuth:
+      "$ref": "./components/securitySchemes/uid_auth.yml#/components/securitySchemes/UidAuth"

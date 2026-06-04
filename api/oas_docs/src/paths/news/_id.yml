@@ -1,0 +1,111 @@
+---
+paths:
+  "/news/{id}":
+    get:
+      tags:
+      - news
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+        '404':
+          description: news description
+        '422':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - news
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: news description
+        '404':
+          description: news description
+        '422':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/news.yml#/components/requestBodies/News"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - news
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: news description
+        '404':
+          description: news description
+        '422':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/news.yml#/components/requestBodies/News"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - news
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+        '404':
+          description: news description
+        '422':
+          description: news description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/news.yml#/components/schemas/News"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

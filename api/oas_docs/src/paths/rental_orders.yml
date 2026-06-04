@@ -1,0 +1,43 @@
+---
+paths:
+  "/rental_orders":
+    get:
+      tags:
+      - rental_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/rental_order.yml#/components/schemas/RentalOrder"
+        '422':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/rental_order.yml#/components/schemas/RentalOrder"
+      deprecated: false
+    post:
+      tags:
+      - rental_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/rental_order.yml#/components/schemas/RentalOrder"
+        '422':
+          description: rental_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/rental_order.yml#/components/schemas/RentalOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/rental_order.yml#/components/requestBodies/RentalOrder"

@@ -1,0 +1,111 @@
+---
+paths:
+  "/power_orders/{id}":
+    get:
+      tags:
+      - power_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+        '404':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - power_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: power_order description
+        '404':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/power_order.yml#/components/requestBodies/PowerOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - power_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: power_order description
+        '404':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/power_order.yml#/components/requestBodies/PowerOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - power_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+        '404':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/power_order.yml#/components/schemas/PowerOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

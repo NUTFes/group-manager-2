@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_employee_show_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/employees_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/employees.yml#/components/schemas/api.v1.EmployeesApi"
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/employees.yml#/components/schemas/api.v1.EmployeesApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

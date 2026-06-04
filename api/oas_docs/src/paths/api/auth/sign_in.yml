@@ -1,0 +1,43 @@
+---
+paths:
+  "/api/auth/sign_in":
+    get:
+      tags:
+      - devise_token_auth/session
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"
+        '422':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"
+      deprecated: false
+    post:
+      tags:
+      - devise_token_auth/session
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"
+        '422':
+          description: devise_token_auth/session description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/devisetokenauth/session.yml#/components/schemas/devisetokenauth.Session"
+      deprecated: false
+      requestBody:
+        "$ref": "../../../components/requestBodies/devisetokenauth/session.yml#/components/requestBodies/devisetokenauth.Session"

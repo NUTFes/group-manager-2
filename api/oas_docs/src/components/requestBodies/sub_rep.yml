@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/SubRep"
+            "$ref": "../schemas/sub_rep.yml#/components/schemas/SubRep"

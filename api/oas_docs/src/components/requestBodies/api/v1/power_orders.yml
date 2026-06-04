@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    api.v1.PowerOrdersApi:
+      content:
+        application/json:
+          schema:
+            "$ref": "../../../schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"

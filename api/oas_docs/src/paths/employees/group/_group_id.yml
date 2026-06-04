@@ -1,0 +1,31 @@
+---
+paths:
+  "/employees/group/{group_id}":
+    get:
+      tags:
+      - employee
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/employee.yml#/components/schemas/Employee"
+        '404':
+          description: employee description
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../components/schemas/employee.yml#/components/schemas/Employee"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer

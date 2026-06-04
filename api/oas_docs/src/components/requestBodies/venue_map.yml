@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/VenueMap"
+            "$ref": "../schemas/venue_map.yml#/components/schemas/VenueMap"

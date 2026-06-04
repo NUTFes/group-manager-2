@@ -1,0 +1,43 @@
+---
+paths:
+  "/announcements":
+    get:
+      tags:
+      - announcement
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/announcement.yml#/components/schemas/Announcement"
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/announcement.yml#/components/schemas/Announcement"
+      deprecated: false
+    post:
+      tags:
+      - announcement
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/announcement.yml#/components/schemas/Announcement"
+        '422':
+          description: announcement description
+          content:
+            application/json:
+              schema:
+                "$ref": "../components/schemas/announcement.yml#/components/schemas/Announcement"
+      deprecated: false
+      requestBody:
+        "$ref": "../components/requestBodies/announcement.yml#/components/requestBodies/Announcement"

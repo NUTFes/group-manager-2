@@ -1,0 +1,31 @@
+---
+paths:
+  "/api/v1/get_power_order_show_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/power_orders_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/power_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"
+        '404':
+          description: api/v1/power_orders_api description
+        '422':
+          description: api/v1/power_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/power_orders.yml#/components/schemas/api.v1.PowerOrdersApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

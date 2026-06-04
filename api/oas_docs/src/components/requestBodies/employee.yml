@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/Employee"
+            "$ref": "../schemas/employee.yml#/components/schemas/Employee"

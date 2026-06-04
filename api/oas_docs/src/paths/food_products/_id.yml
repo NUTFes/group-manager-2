@@ -1,0 +1,111 @@
+---
+paths:
+  "/food_products/{id}":
+    get:
+      tags:
+      - food_product
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+        '404':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - food_product
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: food_product description
+        '404':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/food_product.yml#/components/requestBodies/FoodProduct"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - food_product
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: food_product description
+        '404':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "../../components/requestBodies/food_product.yml#/components/requestBodies/FoodProduct"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - food_product
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+        '404':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../components/schemas/food_product.yml#/components/schemas/FoodProduct"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

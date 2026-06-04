@@ -1,0 +1,29 @@
+---
+paths:
+  "/api/v1/update_health_center_submission_status/{id}":
+    patch:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/health_center_submission_statuses_api description
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "../../../../components/schemas/api/v1/health_center_submission_statuses.yml#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "../../../../components/requestBodies/api/v1/health_center_submission_statuses.yml#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
