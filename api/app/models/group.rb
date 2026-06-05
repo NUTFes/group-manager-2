@@ -22,7 +22,9 @@ class Group < ApplicationRecord
   belongs_to :user
   belongs_to :fes_year
   belongs_to :group_category
-  belongs_to :uses_place, class_name: 'StockerPlace', optional: true
+  belongs_to :uses_place, class_name: 'Place', optional: true
+
+  validates :uses_place, presence: true, if: -> { uses_place_id.present? }
   has_one :stage_common_option, dependent: :destroy
   has_many :power_orders, dependent: :destroy
   has_one :sub_rep, dependent: :destroy
