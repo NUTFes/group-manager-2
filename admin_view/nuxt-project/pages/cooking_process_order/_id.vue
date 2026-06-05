@@ -61,7 +61,7 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2">調理工程（原文）</th>
+              <th colspan="2">調理工程（申請原文）</th>
               <td>
                 <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
