@@ -18,43 +18,43 @@ export const useCookingProcessOrder = (
   isDeadline: boolean,
   isRegistered?: boolean
 ) => {
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const [hasInitializedEditing, setHasInitializedEditing] = useState(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-  const { t } = useTranslation('common');
-  const cookingProcessOrderTexts = {
-    title: t('applications.cookingProcessOrder.title'),
-    general: {
-      loading: t('general.loading'),
-    },
-    warning: t('applications.cookingProcessOrder.warning'),
-    summary: {
-      labels: {
-        foodProduct: t(
-          'applications.cookingProcessOrder.summary.labels.foodProduct'
-        ),
-        preOpen: t('applications.cookingProcessOrder.summary.labels.preOpen'),
-        duringOpen: t(
-          'applications.cookingProcessOrder.summary.labels.duringOpen'
-        ),
-        description: t(
-          'applications.cookingProcessOrder.summary.labels.description'
-        ),
-      },
-      status: {
-        use: t('applications.cookingProcessOrder.summary.status.use'),
-        notUse: t('applications.cookingProcessOrder.summary.status.notUse'),
-        notRegistered: t(
-          'applications.cookingProcessOrder.summary.status.notRegistered'
-        ),
-      },
-    },
-    buttons: {
-      save: t('form.actions.save'),
-      register: t('form.actions.register'),
-      edit: t('form.actions.edit'),
-    },
-  };
+    const [isEditing, setIsEditing] = useState<boolean | null>(null);
+    const [hasInitializedEditing, setHasInitializedEditing] = useState(false);
+    const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+    const { t } = useTranslation('common');
+    const cookingProcessOrderTexts = {
+        title: t('applications.cookingProcessOrder.title'),
+        general: {
+            loading: t('general.loading'),
+        },
+        warning: t('applications.cookingProcessOrder.warning'),
+        summary: {
+            labels: {
+                foodProduct: t(
+                    'applications.cookingProcessOrder.summary.labels.foodProduct'
+                ),
+                preOpen: t('applications.cookingProcessOrder.summary.labels.preOpen'),
+                duringOpen: t(
+                    'applications.cookingProcessOrder.summary.labels.duringOpen'
+                ),
+                description: t(
+                    'applications.cookingProcessOrder.summary.labels.description'
+                ),
+            },
+            status: {
+                use: t('applications.cookingProcessOrder.summary.status.use'),
+                notUse: t('applications.cookingProcessOrder.summary.status.notUse'),
+                notRegistered: t(
+                    'applications.cookingProcessOrder.summary.status.notRegistered'
+                ),
+            },
+        },
+        buttons: {
+            save: t('form.actions.save'),
+            register: t('form.actions.register'),
+            edit: t('form.actions.edit'),
+        },
+    };
 
   const {
     cookingProcessOrders,
@@ -167,32 +167,31 @@ export const useCookingProcessOrder = (
     }
   });
 
-  useEffect(() => {
-    if (!isExist) {
-      setHasInitializedEditing(false);
-    }
-  }, [isExist]);
+    // データ取得完了後にisExistがfalseであれば初期化を許可
+    useEffect(() => {
+        if (!isDataLoading && !isExist && hasInitializedEditing && isEditing === false) {
+            setHasInitializedEditing(false);
+        }
+    }, [isDataLoading, isExist, hasInitializedEditing, isEditing]);
 
-  useEffect(() => {
-    if (hasInitializedEditing || isRegistered === undefined || isDataLoading) {
-      return;
-    }
+    useEffect(() => {
+        if (
+            hasInitializedEditing ||
+            isRegistered === undefined ||
+            isDataLoading
+        ) {
+            return;
+        }
 
-    if (!isExist && cookingTargetFoodProducts.length > 0 && !isDeadline) {
-      setIsEditing(true);
-    } else {
-      setIsEditing(false);
-    }
+        if (!isExist && cookingTargetFoodProducts.length > 0 && !isDeadline) {
+            setIsEditing(true);
+        } else {
+            setIsEditing(false);
+        }
 
-    setHasInitializedEditing(true);
-  }, [
-    // hasInitializedEditing,
-    isRegistered,
-    isDataLoading,
-    cookingTargetFoodProducts,
-    isDeadline,
-    isExist,
-  ]);
+        setHasInitializedEditing(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline, isExist]);
 
   return {
     methods,
