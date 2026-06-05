@@ -3,7 +3,7 @@
 class AssignRentalItem < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item
-  belongs_to :stocker_place, class_name: 'StockerPlace', foreign_key: :stocker_place_id, optional: true
+  belongs_to :stocker_place, class_name: 'StockerPlace', optional: true
   belongs_to :rental_place, class_name: 'StockerPlace', optional: true
 
   validates :rental_place, presence: true, if: -> { rental_place_id.present? }
