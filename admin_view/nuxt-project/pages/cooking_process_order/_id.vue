@@ -61,7 +61,7 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2">テント内</th>
+              <th colspan="2">調理工程（原文）</th>
               <td>
                 <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
@@ -69,6 +69,19 @@
                 <div v-else>
                   <div style="white-space: pre-line">
                     {{ cooking_process_order.cooking_process_order.tent }}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2">調理工程（日本語訳）</th>
+              <td>
+                <div v-if="cooking_process_order.cooking_process_order === null">
+                  未登録
+                </div>
+                <div v-else>
+                  <div style="white-space: pre-line">
+                    {{ cooking_process_order.cooking_process_order.tent_ja }}
                   </div>
                 </div>
               </td>
