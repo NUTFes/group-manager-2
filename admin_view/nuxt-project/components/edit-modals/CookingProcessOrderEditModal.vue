@@ -26,7 +26,7 @@
       </div>
       <div>
         <h3>調理工程</h3>
-        <template v-if="tent_ja">
+        <template v-if="hasTranslatedTent">
           <h4>原文</h4>
           <p style="color: black; white-space: pre-line;">{{ tent }}</p>
           <h4>提出文章</h4>
@@ -58,6 +58,7 @@ export default {
       during_open_kitchen: null,
       tent: "",
       tent_ja: "",
+      hasTranslatedTent: false,
     };
   },
   watch: {
@@ -70,6 +71,7 @@ export default {
         this.during_open_kitchen = cookingProcessOrder.during_open_kitchen ?? null;
         this.tent = cookingProcessOrder.tent || "";
         this.tent_ja = cookingProcessOrder.tent_ja || "";
+        this.hasTranslatedTent = Boolean(cookingProcessOrder.tent_ja);
       },
     },
   },
