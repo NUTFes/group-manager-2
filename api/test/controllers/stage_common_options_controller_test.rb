@@ -37,4 +37,28 @@ class StageCommonOptionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
   end
+
+  test 'should not create stage_common_option with invalid params' do
+    assert_no_difference('StageCommonOption.count') do
+      post stage_common_options_url, params: { group_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show stage_common_option with invalid id' do
+    get stage_common_option_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update stage_common_option with invalid id' do
+    patch stage_common_option_url(99999), params: { bgm: false }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy stage_common_option with invalid id' do
+    assert_no_difference('StageCommonOption.count') do
+      delete stage_common_option_url(99999), as: :json
+    end
+    assert_response :not_found
+  end
 end

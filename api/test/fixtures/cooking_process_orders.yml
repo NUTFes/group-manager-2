@@ -9,7 +9,7 @@ one:
 
 two:
   id: 2
-  group_id: 2
+  group_id: 1
   food_product_id: 2
   pre_open_kitchen: false
   during_open_kitchen: false

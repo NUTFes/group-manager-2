@@ -37,4 +37,28 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
   end
+
+  test 'should not create stage_order with invalid params' do
+    assert_no_difference('StageOrder.count') do
+      post stage_orders_url, params: { group_id: nil, fes_date_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show stage_order with invalid id' do
+    get stage_order_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update stage_order with invalid id' do
+    patch stage_order_url(99999), params: { is_sunny: false }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy stage_order with invalid id' do
+    assert_no_difference('StageOrder.count') do
+      delete stage_order_url(99999), as: :json
+    end
+    assert_response :not_found
+  end
 end

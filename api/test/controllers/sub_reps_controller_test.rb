@@ -37,4 +37,23 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
   end
+
+  test 'should not create sub_rep with invalid params' do
+    assert_no_difference('SubRep.count') do
+      post sub_reps_url, params: { group_id: nil, department_id: nil, grade_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not update sub_rep with invalid id' do
+    patch sub_rep_url(99999), params: { name: @sub_rep.name }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy sub_rep with invalid id' do
+    assert_no_difference('SubRep.count') do
+      delete sub_rep_url(99999), as: :json
+    end
+    assert_response :not_found
+  end
 end

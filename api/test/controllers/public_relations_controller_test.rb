@@ -37,4 +37,28 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
   end
+
+  test 'should not create public_relation with invalid params' do
+    assert_no_difference('PublicRelation.count') do
+      post public_relations_url, params: { group_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show public_relation with invalid id' do
+    get public_relation_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update public_relation with invalid id' do
+    patch public_relation_url(99999), params: { blurb: @public_relation.blurb }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy public_relation with invalid id' do
+    assert_no_difference('PublicRelation.count') do
+      delete public_relation_url(99999), as: :json
+    end
+    assert_response :not_found
+  end
 end

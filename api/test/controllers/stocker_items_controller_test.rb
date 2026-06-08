@@ -37,4 +37,28 @@ class StockerItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
   end
+
+  test 'should not create stocker_item with invalid params' do
+    assert_no_difference('StockerItem.count') do
+      post stocker_items_url, params: { rental_item_id: nil, stocker_place_id: nil, fes_year_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show stocker_item with invalid id' do
+    get stocker_item_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update stocker_item with invalid id' do
+    patch stocker_item_url(99999), params: { num: 1 }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy stocker_item with invalid id' do
+    assert_no_difference('StockerItem.count') do
+      delete stocker_item_url(99999), as: :json
+    end
+    assert_response :not_found
+  end
 end

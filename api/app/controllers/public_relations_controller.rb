@@ -14,8 +14,12 @@ class PublicRelationsController < ApplicationController
   end
 
   def create
-    @public_relation = PublicRelation.create(public_relation_params)
-    render json: fmt(created, @public_relation)
+    @public_relation = PublicRelation.new(public_relation_params)
+    if @public_relation.save
+      render json: fmt(created, @public_relation)
+    else
+      render json: fmt(unprocessable_entity, @public_relation.errors), status: :unprocessable_entity
+    end
   end
 
   def update
@@ -40,7 +44,7 @@ class PublicRelationsController < ApplicationController
     if PublicRelation.exists?(params[:id])
       @public_relation = PublicRelation.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}"), status: :not_found
     end
   end
 

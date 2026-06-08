@@ -33,8 +33,12 @@ class GroupIdentificationController < ApplicationController
   end
 
   def create
-    @group_identification = GroupIdentification.create(group_identification_params)
-    render json: fmt(created, @group_identification)
+    @group_identification = GroupIdentification.new(group_identification_params)
+    if @group_identification.save
+      render json: fmt(created, @group_identification)
+    else
+      render json: fmt(unprocessable_entity, @group_identification.errors), status: :unprocessable_entity
+    end
   end
 
   def update
@@ -53,7 +57,7 @@ class GroupIdentificationController < ApplicationController
     if GroupIdentification.exists?(params[:id])
       @group_identification = GroupIdentification.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found group_identification = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found group_identification = #{params[:id]}"), status: :not_found
     end
   end
 

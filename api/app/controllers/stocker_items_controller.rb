@@ -19,10 +19,12 @@ class StockerItemsController < ApplicationController
   # POST /stocker_items
   # POST /stocker_items.json
   def create
-    @stocker_item = StockerItem.create(stocker_item_params)
-    render json: fmt(created, @stocker_item)
-    # @stocker_items = StockerItem.all
-    # render json: @stocker_items
+    @stocker_item = StockerItem.new(stocker_item_params)
+    if @stocker_item.save
+      render json: fmt(created, @stocker_item)
+    else
+      render json: fmt(unprocessable_entity, @stocker_item.errors), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /stocker_items/1
@@ -46,7 +48,7 @@ class StockerItemsController < ApplicationController
     if StockerItem.exists?(params[:id])
       @stocker_item = StockerItem.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found stocker_item = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found stocker_item = #{params[:id]}"), status: :not_found
     end
   end
 
