@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
+
 export type FormItem = {
   label: string;
-  content: string | number | boolean | undefined;
+  content: ReactNode;
   isEditable?: boolean;
 };

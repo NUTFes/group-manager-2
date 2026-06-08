@@ -6,6 +6,7 @@
   },
   "general": {
     "loading": "Loading...",
+    "autoTranslated": "<Auto Translation>",
     "errors": {
       "fetch": "Failed to fetch data."
     }
