@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_01_000001) do
+ActiveRecord::Schema.define(version: 2026_05_28_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
     t.bigint "food_product_id", null: false
+    t.text "tent_ja"
     t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end

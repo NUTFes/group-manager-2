@@ -73,7 +73,7 @@
             <h3><%= fp.name %></h3>
             <div class="detail-area">
               <% if cpo %>
-                <%= cpo.tent.present? ? simple_format(cpo.tent) : '調理工程が未登録です。' %><br>
+                <%= cpo.tent_for_submission.present? ? simple_format(cpo.tent_for_submission) : '調理工程が未登録です。' %><br>
               <% else %>
                 <span>（調理工程未登録）</span>
               <% end %>
