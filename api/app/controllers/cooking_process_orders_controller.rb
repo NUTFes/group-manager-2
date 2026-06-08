@@ -53,7 +53,7 @@ class CookingProcessOrdersController < ApplicationController
   def upsert
     keys = %i[
       id group_id food_product_id pre_open_kitchen during_open_kitchen
-      tent tent_ja tent_source_hash created_at updated_at
+      tent tent_ja created_at updated_at
     ]
     now = Time.current
     raw_orders = params[:cooking_process_orders].map(&:to_unsafe_h)
@@ -125,19 +125,14 @@ class CookingProcessOrdersController < ApplicationController
   def apply_tent_translation(attrs, existing: nil, preserve_existing_translation: false)
     return attrs unless attrs.key?(:tent)
 
-    normalized_tent = attrs[:tent].to_s.strip
-    current_hash = cooking_process_order_tent_hash(normalized_tent)
+    normalized_tent = normalize_tent(attrs[:tent])
     attrs[:tent] = normalized_tent
 
-    if existing&.tent_source_hash == current_hash
-      if preserve_existing_translation
-        attrs[:tent_ja] = existing.tent_ja unless tent_ja_provided?(attrs)
-        attrs[:tent_source_hash] = existing.tent_source_hash
-      end
+    if existing && normalized_tent == normalize_tent(existing.tent)
+      attrs[:tent_ja] = existing.tent_ja if preserve_existing_translation && !tent_ja_provided?(attrs)
       return attrs
     end
 
-    attrs[:tent_source_hash] = current_hash
     attrs[:tent_ja] = translated_tent_ja(normalized_tent) unless tent_ja_provided?(attrs)
     attrs
   end
@@ -150,11 +145,12 @@ class CookingProcessOrdersController < ApplicationController
     return nil if tent.blank?
     return nil unless translatable_english_text?(tent)
 
-    translate_to_ja(tent)
+    translated = translate_to_ja(tent)
+    translated == tent ? nil : translated
   end
 
-  def cooking_process_order_tent_hash(tent)
-    Digest::SHA256.hexdigest(tent.to_s)
+  def normalize_tent(tent)
+    tent.to_s.strip
   end
 
   def existing_cooking_process_orders(raw_orders)

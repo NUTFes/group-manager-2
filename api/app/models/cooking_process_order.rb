@@ -46,8 +46,7 @@ class CookingProcessOrder < ApplicationRecord
       pre_open_kitchen: pre_open_kitchen,
       during_open_kitchen: during_open_kitchen,
       tent: tent,
-      tent_ja: tent_ja,
-      tent_source_hash: tent_source_hash
+      tent_ja: tent_ja
     }
   end
 
