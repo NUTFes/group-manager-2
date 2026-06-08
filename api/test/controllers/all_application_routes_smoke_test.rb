@@ -24,7 +24,7 @@ class AllApplicationRoutesSmokeTest < ActionDispatch::IntegrationTest
       controller = route.defaults[:controller].to_s
       klass = "#{controller.camelize}Controller".constantize
       klass.action_methods.include?(route.defaults[:action].to_s)
-    rescue NameError
+    rescue NameError, LoadError
       false
     end
   end

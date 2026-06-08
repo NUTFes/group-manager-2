@@ -15,6 +15,6 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     )
 
     assert_not duplicate.valid?
-    assert duplicate.errors[:application_type].present?
+    assert_includes duplicate.errors[:application_type], 'has already been taken'
   end
 end
