@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Create CI env files
-        run: touch webhook.env
+        run: touch webhook.env api/.env
 
       - name: Build Docker images
         run: docker compose build api user
