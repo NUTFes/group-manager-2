@@ -12,10 +12,12 @@ const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
   const newsListTexts = useNewsListTexts();
 
-  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => a.id - b.id);
+  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => {
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+  });
 
   const formattedDates = sortedNews.map((item: News) => {
-    const date = new Date(item.createdAt);
+    const date = new Date(item.updatedAt);
     const formattedDate = format(date, 'yyyy/MM/dd');
     return formattedDate;
   });
