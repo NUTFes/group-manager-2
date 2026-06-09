@@ -8,55 +8,58 @@ import {
   unregisteredStatus,
 } from './support/homeMocks';
 
-const applicationRows = [
+const applicationsUsingRegistrationAndEditSettings = [
   {
     title: '物品申請',
-    registrationFlag: 'addRentalOrder',
-    editFlag: 'isEditRentalOrder',
+    registrationStatusKey: 'rentalItem',
+    registrationSettingKey: 'addRentalOrder',
+    editSettingKey: 'isEditRentalOrder',
   },
   {
     title: '電力申請',
-    registrationFlag: 'addPowerOrder',
-    editFlag: 'isEditPowerOrder',
+    registrationStatusKey: 'powerOrder',
+    registrationSettingKey: 'addPowerOrder',
+    editSettingKey: 'isEditPowerOrder',
   },
   {
     title: '従業員申請',
-    registrationFlag: 'addEmployee',
-    editFlag: 'isEditEmployee',
+    registrationStatusKey: 'employee',
+    registrationSettingKey: 'addEmployee',
+    editSettingKey: 'isEditEmployee',
   },
   {
     title: '販売品申請',
-    registrationFlag: 'addFoodProduct',
-    editFlag: 'isEditFoodProduct',
+    registrationStatusKey: 'foodProduct',
+    registrationSettingKey: 'addFoodProduct',
+    editSettingKey: 'isEditFoodProduct',
   },
   {
     title: '購入品申請',
-    registrationFlag: 'addPurchaseList',
-    editFlag: 'isEditPurchaseList',
+    registrationStatusKey: 'purchaseList',
+    registrationSettingKey: 'addPurchaseList',
+    editSettingKey: 'isEditPurchaseList',
   },
   {
     title: '火気使用申請',
-    registrationFlag: 'addFireEquipmentOrder',
-    editFlag: 'isEditFireEquipmentOrder',
+    registrationStatusKey: 'fireEquipmentOrder',
+    registrationSettingKey: 'addFireEquipmentOrder',
+    editSettingKey: 'isEditFireEquipmentOrder',
   },
 ] as const;
+
+const userPageSettingKeysUnderTest =
+  applicationsUsingRegistrationAndEditSettings.flatMap((row) => [
+    row.registrationSettingKey,
+    row.editSettingKey,
+  ]);
 
 const settingWithOnly = (enabledFlag: string): UserPageSettings => ({
   ...baseSettings,
   isRegistGroup: false,
   isEditGroup: false,
-  addRentalOrder: false,
-  isEditRentalOrder: false,
-  addPowerOrder: false,
-  isEditPowerOrder: false,
-  addEmployee: false,
-  isEditEmployee: false,
-  addFoodProduct: false,
-  isEditFoodProduct: false,
-  addPurchaseList: false,
-  isEditPurchaseList: false,
-  addFireEquipmentOrder: false,
-  isEditFireEquipmentOrder: false,
+  ...Object.fromEntries(
+    userPageSettingKeysUnderTest.map((key) => [key, false])
+  ),
   [enabledFlag]: true,
 });
 
@@ -67,11 +70,14 @@ test.describe('home applications user page setting behavior', () => {
   test('treats the registration toggle as correct for applications that are not registered yet', async ({
     page,
   }) => {
-    for (const row of applicationRows) {
+    for (const row of applicationsUsingRegistrationAndEditSettings) {
       await setupHomeApiMocks({
         page,
-        userPageSettings: settingWithOnly(row.registrationFlag),
-        registrationStatus: unregisteredStatus,
+        userPageSettings: settingWithOnly(row.registrationSettingKey),
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: false,
+        },
       });
       await page.goto('/home');
 
@@ -82,11 +88,14 @@ test.describe('home applications user page setting behavior', () => {
   test('does not use edit toggles to open applications that are not registered yet', async ({
     page,
   }) => {
-    for (const row of applicationRows) {
+    for (const row of applicationsUsingRegistrationAndEditSettings) {
       await setupHomeApiMocks({
         page,
-        userPageSettings: settingWithOnly(row.editFlag),
-        registrationStatus: unregisteredStatus,
+        userPageSettings: settingWithOnly(row.editSettingKey),
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: false,
+        },
       });
       await page.goto('/home');
 
@@ -99,11 +108,14 @@ test.describe('home applications user page setting behavior', () => {
   test('treats the edit toggle as correct for applications that are already registered', async ({
     page,
   }) => {
-    for (const row of applicationRows) {
+    for (const row of applicationsUsingRegistrationAndEditSettings) {
       await setupHomeApiMocks({
         page,
-        userPageSettings: settingWithOnly(row.editFlag),
-        registrationStatus: registeredStatus,
+        userPageSettings: settingWithOnly(row.editSettingKey),
+        registrationStatus: {
+          ...unregisteredStatus,
+          [row.registrationStatusKey]: true,
+        },
       });
       await page.goto('/home');
 
@@ -114,11 +126,14 @@ test.describe('home applications user page setting behavior', () => {
   test('does not use registration toggles to reopen applications that are already registered', async ({
     page,
   }) => {
-    for (const row of applicationRows) {
+    for (const row of applicationsUsingRegistrationAndEditSettings) {
       await setupHomeApiMocks({
         page,
-        userPageSettings: settingWithOnly(row.registrationFlag),
-        registrationStatus: registeredStatus,
+        userPageSettings: settingWithOnly(row.registrationSettingKey),
+        registrationStatus: {
+          ...unregisteredStatus,
+          [row.registrationStatusKey]: true,
+        },
       });
       await page.goto('/home');
 
