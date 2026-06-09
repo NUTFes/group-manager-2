@@ -43,7 +43,7 @@ const NewsList: FC<NewsListProps> = () => {
             {newsListTexts.title}
           </div>
         </div>
-        <div className="flex flex-col gap-4 max-h-96 overflow-y-auto pr-2">
+        <div className="flex max-h-96 flex-col gap-4 overflow-y-auto pr-2">
           {isLoading ? (
             <div className="text-base text-font">{newsListTexts.loading}</div>
           ) : error ? (
