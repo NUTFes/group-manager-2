@@ -149,6 +149,7 @@ test.describe('home applications user page setting behavior', () => {
     await setupHomeApiMocks({
       page,
       userPageSettings: settingWithOnly('isRegistGroup'),
+      groupRegistered: false,
       registrationStatus: { ...unregisteredStatus, group: false },
     });
     await page.goto('/home');

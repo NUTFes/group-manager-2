@@ -39,9 +39,33 @@ jobs:
           done
 
       - name: Prepare Rails database
+        run: docker compose run --rm api rails db:prepare
+
+      - name: Prepare E2E database records
         run: |
-          docker compose run --rm api rails db:prepare
-          docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
+          docker compose run --rm api rails runner '
+            Role.find_or_create_by!(id: 1) { |role| role.name = "管理者" }
+            FesYear.find_or_create_by!(id: 1) { |fes_year| fes_year.year_num = 2026 }
+            GroupCategory.find_or_create_by!(id: 1) do |category|
+              category.name = "食品販売"
+              category.name_en = "Food sales"
+            end
+            User.find_or_create_by!(id: 1) do |user|
+              user.name = "E2E User"
+              user.email = "e2e@example.com"
+              user.password = "password"
+              user.password_confirmation = "password"
+              user.role_id = 1
+            end
+            Group.find_or_create_by!(id: 1) do |group|
+              group.name = "E2E group"
+              group.project_name = "E2E project"
+              group.activity = "E2E activity"
+              group.user_id = 1
+              group.group_category_id = 1
+              group.fes_year_id = 1
+            end
+          '
 
       - name: Install user dependencies
         run: docker compose run --rm user pnpm install --frozen-lockfile
