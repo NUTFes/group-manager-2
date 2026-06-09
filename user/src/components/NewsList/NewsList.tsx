@@ -1,7 +1,7 @@
-import { News, useGetNews } from '@/api/newsApi';
-import FormContainer from '@/components/FormContainer';
-import { format } from 'date-fns';
 import { FC } from 'react';
+import { News, useGetNews } from '@/api/newsApi';
+import { format } from 'date-fns';
+import FormContainer from '@/components/FormContainer';
 import { useNewsListTexts } from './hooks';
 
 type NewsListProps = {
@@ -43,7 +43,7 @@ const NewsList: FC<NewsListProps> = () => {
             {newsListTexts.title}
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 max-h-96 overflow-y-auto pr-2">
           {isLoading ? (
             <div className="text-base text-font">{newsListTexts.loading}</div>
           ) : error ? (
