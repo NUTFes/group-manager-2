@@ -1,0 +1,69 @@
+name: User E2E
+
+on:
+  pull_request:
+    branches: ["gm3/develop"]
+
+concurrency:
+  group: user-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Playwright:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: docker compose build api user
+
+      - name: Start database
+        run: docker compose up -d db
+
+      - name: Wait for database
+        run: |
+          i=0
+          until docker compose exec -T db mysqladmin ping -h 127.0.0.1 -uroot -ppassword --silent; do
+            i=$((i + 1))
+            test "$i" -ge 60 && exit 1
+            sleep 1
+          done
+
+      - name: Prepare Rails database
+        run: |
+          docker compose run --rm api rails db:prepare
+          docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
+
+      - name: Install user dependencies
+        run: docker compose run --rm user pnpm install --frozen-lockfile
+
+      - name: Start Rails API
+        run: docker compose up -d api
+
+      - name: Run Playwright E2E
+        run: |
+          docker compose run --rm user sh -lc '
+            i=0
+            until node -e "require(\"http\").get(\"http://api:3000\", () => process.exit(0)).on(\"error\", () => process.exit(1))"; do
+              i=$((i + 1))
+              test "$i" -ge 60 && exit 1
+              sleep 1
+            done
+            pnpm exec playwright install chromium >/dev/null
+            PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e
+          '
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            user/playwright-report
+            user/test-results
+          if-no-files-found: ignore
+
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker compose down -v
