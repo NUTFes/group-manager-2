@@ -1,7 +1,7 @@
-import { FC } from 'react';
 import { News, useGetNews } from '@/api/newsApi';
-import { format } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
+import { format } from 'date-fns';
+import { FC } from 'react';
 import { useNewsListTexts } from './hooks';
 
 type NewsListProps = {
@@ -26,7 +26,7 @@ const NewsList: FC<NewsListProps> = () => {
     return (
       <div key={item.id} className="flex flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
-        <span className="w-full break-words whitespace-pre-line text-base font-medium text-font">
+        <span className="w-full whitespace-pre-line break-words text-base font-medium text-font">
           {item.body}
         </span>
       </div>
