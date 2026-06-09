@@ -21,7 +21,6 @@ import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
 import VenueMap from '@/components/Applications/VenueMap';
 import ViceRepresentative from '@/components/Applications/ViceRepresentative';
-import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import NewsList from '@/components/NewsList';
 import { useUser } from '@/hooks/useUser';
 
@@ -41,12 +40,6 @@ type CheckAllRegisteredGroups = {
   subRep?: boolean;
   fireEquipmentOrder?: boolean;
 };
-
-const isApplicationDeadline = (
-  isRegistered: boolean | undefined,
-  canAdd: boolean | undefined,
-  canEdit: boolean | undefined
-) => resolveApplicationAccess({ isRegistered, canAdd, canEdit }).isDeadline;
 
 type GroupCategoryContentProps = {
   groupCategoryId: number | undefined;
@@ -73,21 +66,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -97,11 +82,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <Employees
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.employee,
-            userPageSettings?.addEmployee,
-            userPageSettings?.isEditEmployee
-          )}
+          isDeadline={!userPageSettings?.isEditEmployee}
           isRegistered={checkAllRegisteredGroups?.employee}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           groupId={groupId}
@@ -113,19 +94,11 @@ const GroupCategoryContent = ({
         />
         <FoodProduct
           groupId={groupId}
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.foodProduct,
-            userPageSettings?.addFoodProduct,
-            userPageSettings?.isEditFoodProduct
-          )}
+          isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <PurchaseLists
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.purchaseList,
-            userPageSettings?.addPurchaseList,
-            userPageSettings?.isEditPurchaseList
-          )}
+          isDeadline={!userPageSettings?.isEditPurchaseList}
           isRegistered={checkAllRegisteredGroups?.purchaseList}
           groupId={groupId}
         />
@@ -152,21 +125,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -182,11 +147,7 @@ const GroupCategoryContent = ({
         />
         <FoodProduct
           groupId={groupId}
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.foodProduct,
-            userPageSettings?.addFoodProduct,
-            userPageSettings?.isEditFoodProduct
-          )}
+          isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <FireEquipment
@@ -202,21 +163,13 @@ const GroupCategoryContent = ({
     return (
       <>
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Stage
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.stageOrder,
-            userPageSettings?.addStageOrder,
-            userPageSettings?.isEditStageOrder
-          )}
+          isDeadline={!userPageSettings?.isEditStageOrder}
           isRegistered={checkAllRegisteredGroups?.stageOrder}
           groupId={groupId}
         />
@@ -226,11 +179,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -251,21 +200,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -297,21 +238,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -343,21 +276,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <RentItems
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.rentalItem,
-            userPageSettings?.addRentalOrder,
-            userPageSettings?.isEditRentalOrder
-          )}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
         />
         <Power
-          isDeadline={isApplicationDeadline(
-            checkAllRegisteredGroups?.powerOrder,
-            userPageSettings?.addPowerOrder,
-            userPageSettings?.isEditPowerOrder
-          )}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
@@ -401,11 +326,7 @@ export default function HomePage() {
       <div className="order-2 flex flex-1 flex-col lg:order-1">
         {/* Group申請がまだの場合はGroup申請のみ表示 */}
         <Group
-          isDeadline={isApplicationDeadline(
-            isGroupRegistered,
-            userPageSettings?.isRegistGroup,
-            userPageSettings?.isEditGroup
-          )}
+          isDeadline={!userPageSettings?.isRegistGroup}
           isRegistered={isGroupRegistered}
           groupId={displayGroupId}
           userId={userId || 0}
