@@ -341,6 +341,8 @@ test.describe('home application action availability', () => {
     await page.goto('/home');
     await applicationButton(page, '団体申請').click();
     await page.getByLabel('団体名').fill('E2E edited group');
+    await page.getByLabel('企画名').fill('E2E edited project');
+    await page.getByLabel('企画内容').fill('E2E edited activity');
     await page.getByRole('button', { name: '修正', exact: true }).click();
 
     await expect
