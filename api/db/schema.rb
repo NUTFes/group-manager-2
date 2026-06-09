@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
     t.bigint "food_product_id", null: false
+    t.text "tent_ja"
     t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
