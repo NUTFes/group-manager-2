@@ -32,7 +32,7 @@ services:
     container_name: "API"
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
-    env_file: [webhook.env, ./api/.env]
+    env_file: [webhook.env, .env]
     depends_on: [db]
 
   admin_view:
