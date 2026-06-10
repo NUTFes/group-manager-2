@@ -17,6 +17,7 @@ type FireEquipmentProps = {
 type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
   groupId: number;
   canSubmit: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const Content: FC<ContentProps> = ({
@@ -29,6 +30,8 @@ const Content: FC<ContentProps> = ({
   hasUnregistered,
   noApplicationItems,
   isLoading,
+  isResubmission,
+  status,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const readOnlyItems = hasUnregistered ? noApplicationItems : formItem;
@@ -44,7 +47,7 @@ const Content: FC<ContentProps> = ({
     return <FormList items={readOnlyItems} />;
   }
 
-  if (isDeadline && isResubmission) {
+  if (!canSubmit && isResubmission) {
     return (
       <FireEquipmentFormView
         groupId={groupId}
