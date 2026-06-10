@@ -26,6 +26,7 @@ export const useCookingProcessOrder = (
     title: t('applications.cookingProcessOrder.title'),
     general: {
       loading: t('general.loading'),
+      autoTranslated: t('general.autoTranslated'),
     },
     warning: t('applications.cookingProcessOrder.warning'),
     summary: {

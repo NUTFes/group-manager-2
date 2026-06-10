@@ -45,8 +45,11 @@ class CookingProcessOrdersController < ApplicationController
       cooking_process_order_params.to_h.symbolize_keys,
       existing: @cooking_process_order
     )
-    @cooking_process_order.update(attrs)
-    render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
+    if @cooking_process_order.update(attrs)
+      render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
+    else
+      render json: fmt(error, @cooking_process_order.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   # POST /cooking_process_orders/upsert

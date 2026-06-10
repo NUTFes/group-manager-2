@@ -102,7 +102,7 @@ const FormList: FC<FormListProps> = ({
               </span>
             )}
           </div>
-          <div className="mt-2 h-6 text-base font-medium text-font md:h-10">
+          <div className="mt-2 min-h-6 text-base font-medium text-font md:min-h-10">
             {(item as FormItem).content}
           </div>
         </div>
