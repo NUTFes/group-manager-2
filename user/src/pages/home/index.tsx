@@ -5,7 +5,10 @@ import {
   HealthCenterSubmissionStatusResponse,
   useGetHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
-import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import {
+  type UserPageSettings,
+  useGetUserPageSettings,
+} from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
@@ -24,22 +27,6 @@ import VenueMap from '@/components/Applications/VenueMap';
 import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
 import { useUser } from '@/hooks/useUser';
-
-type UserPageSettings = {
-  isEditPlace?: boolean;
-  isEditRentalOrder?: boolean;
-  isEditPowerOrder?: boolean;
-  isEditPublicRelation?: boolean;
-  isEditEmployee?: boolean;
-  isEditVenueMap?: boolean;
-  isEditFoodProduct?: boolean;
-  isEditPurchaseList?: boolean;
-  isEditCookingProcess?: boolean;
-  isEditStageOrder?: boolean;
-  isEditStageCommonOption?: boolean;
-  isRegistGroup?: boolean;
-  isEditSubRep?: boolean;
-};
 
 type CheckAllRegisteredGroups = {
   placeOrder?: boolean;
@@ -153,6 +140,8 @@ const GroupCategoryContent = ({
           status={cookingProcessOrderSubmission?.status}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
           status={fireEquipmentSubmission?.status}
@@ -195,6 +184,8 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -263,6 +254,8 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -299,6 +292,8 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -348,12 +343,16 @@ export default function HomePage() {
     mutateGroupByUserId,
     isLoading: isLoadingGroupByUserId,
   } = useGetGroupByUserId(userId);
-  const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
+  const groupId = groupUserIdAndGroupCategoryId?.id;
+  const displayGroupId = groupId ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
     useGetCheckAllRegisteredGroups(groupId);
+  const registrationStatus: CheckAllRegisteredGroups =
+    checkAllRegisteredGroups ?? {};
+  const isGroupRegistered = groupId ? registrationStatus.group === true : false;
   const { healthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
 
@@ -363,29 +362,29 @@ export default function HomePage() {
         {/* Group申請がまだの場合はGroup申請のみ表示 */}
         <Group
           isDeadline={!userPageSettings?.isRegistGroup}
-          isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId}
+          isRegistered={isGroupRegistered}
+          groupId={displayGroupId}
           userId={userId || 0}
           isGroupResolved={isGroupResolved}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           mutateGroupByUserId={mutateGroupByUserId}
         />
 
-        {checkAllRegisteredGroups?.group && (
+        {isGroupRegistered && (
           <ViceRepresentative
             isDeadline={!userPageSettings?.isEditSubRep}
-            isRegistered={checkAllRegisteredGroups?.subRep}
-            groupId={groupId}
+            isRegistered={registrationStatus.subRep}
+            groupId={displayGroupId}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           />
         )}
 
-        {checkAllRegisteredGroups?.group && (
+        {isGroupRegistered && (
           <GroupCategoryContent
             groupCategoryId={groupCategoryId}
             userPageSettings={userPageSettings}
-            checkAllRegisteredGroups={checkAllRegisteredGroups}
-            groupId={groupId}
+            checkAllRegisteredGroups={registrationStatus}
+            groupId={displayGroupId}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             healthCenterSubmissionStatus={healthCenterSubmissionStatus}
           />

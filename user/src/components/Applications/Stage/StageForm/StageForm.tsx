@@ -97,7 +97,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
     <>
       {isFormMode === null ? (
         <div className="w-[400px] py-4 text-center">
-          <p>データを読み込み中です...</p>
+          <p>{stageFormTexts.loading}</p>
         </div>
       ) : isFormMode ? (
         <FormContainer>

@@ -45,7 +45,12 @@ class CookingProcessOrder < ApplicationRecord
       group_id: group_id,
       pre_open_kitchen: pre_open_kitchen,
       during_open_kitchen: during_open_kitchen,
-      tent: tent
+      tent: tent,
+      tent_ja: tent_ja
     }
+  end
+
+  def tent_for_submission
+    tent_ja.presence || tent
   end
 end

@@ -13,11 +13,13 @@ class RentalItemsController < ApplicationController
   end
 
   def create
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
     @rental_item = RentalItem.create(rental_item_params)
     render json: fmt(created, @rental_item)
   end
 
   def update
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
     @rental_item.update(rental_item_params)
     render json: fmt(created, @rental_item, "Updated rental_item id = #{params[:id]}")
   end
@@ -25,6 +27,11 @@ class RentalItemsController < ApplicationController
   def destroy
     @rental_item.destroy
     render json: fmt(ok, [], "Deleted rental_item = #{params[:id]}")
+  end
+
+  def translate
+    translated = translate_to_en(params[:text])
+    render json: fmt(ok, { name_en: translated })
   end
 
   private

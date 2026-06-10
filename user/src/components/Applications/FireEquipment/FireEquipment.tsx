@@ -3,34 +3,45 @@ import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatus
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FireEquipmentFormView } from './components';
+import { useFireEquipmentTexts } from './constant';
 import { useFireEquipmentHooks } from './hooks';
 
 type FireEquipmentProps = {
-  isDeadline?: boolean;
+  canAdd?: boolean;
+  canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
   status?: HealthCenterSubmissionStatus;
 };
 
-const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
-  const {
-    isEditing,
-    handleEditClick,
-    formItem,
-    fireEquipment,
-    hasUnregistered,
-    noApplicationItems,
-    isLoading,
-    isResubmission,
-  } = useFireEquipmentHooks(groupId, status);
+type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
+  groupId: number;
+  canSubmit: boolean;
+};
+
+const Content: FC<ContentProps> = ({
+  groupId,
+  canSubmit,
+  isEditing,
+  handleEditClick,
+  formItem,
+  fireEquipment,
+  hasUnregistered,
+  noApplicationItems,
+  isLoading,
+}) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
+  const readOnlyItems = hasUnregistered ? noApplicationItems : formItem;
 
   if (isLoading) {
-    return <p className="text-sm text-gray-400">読み込み中...</p>;
+    return (
+      <p className="text-sm text-gray-400">{fireEquipmentTexts.loading}</p>
+    );
   }
 
   // 締め切り後
-  if (isDeadline && !isResubmission) {
-    return <FormList items={formItem} />;
+  if (!canSubmit) {
+    return <FormList items={readOnlyItems} />;
   }
 
   if (isDeadline && isResubmission) {
@@ -53,7 +64,7 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
         groupId={groupId}
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
-        submitLabel="更新"
+        submitLabel={fireEquipmentTexts.buttons.update}
         disableValidate
         status={status}
       />
@@ -94,19 +105,35 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
 
 const FireEquipment: FC<FireEquipmentProps> = ({
   groupId,
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered,
   status,
 }) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
+  const fireEquipmentHooks = useFireEquipmentHooks(groupId);
+  const hasFireEquipmentOrder =
+    fireEquipmentHooks.fireEquipment !== undefined ||
+    fireEquipmentHooks.hasUnregistered;
+  const canSubmit = hasFireEquipmentOrder ? !!canEdit : !!canAdd;
+  const isExist = fireEquipmentHooks.isLoading
+    ? isRegistered
+    : hasFireEquipmentOrder;
+
   return (
     <AccordionMenu
-      title={'火気使用申請'}
-      isEdit={!isDeadline}
-      isExist={isRegistered}
+      title={fireEquipmentTexts.title}
+      isEdit={canSubmit}
+      isExist={isExist}
       required={true}
       status={status}
     >
-      <Content groupId={groupId} isDeadline={isDeadline} status={status} />
+      <Content
+        groupId={groupId}
+        canSubmit={canSubmit}
+        {...fireEquipmentHooks}
+        status={status}
+      />
     </AccordionMenu>
   );
 };

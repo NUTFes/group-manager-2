@@ -7,11 +7,7 @@ import Selector from '@/components/Form/Selector/Selector';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
-import {
-  FIRE_EQUIPMENT_FUEL_PLACEHOLDER_ID,
-  FIRE_EQUIPMENT_INSTRUCTIONS,
-  fireEquipmentFormFields,
-} from '../constant';
+import { useFireEquipmentTexts } from '../constant';
 import { convertToBoolToString } from './hooks';
 import { FireEquipmentFormValues } from './schema';
 
@@ -34,51 +30,32 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
   validate,
   submitLabel,
 }) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
+
   return (
     <FormContainer>
       <div className="flex flex-col">
         <div className="flex flex-col gap-10 text-[#484848]">
           <TextBox
-            label={fireEquipmentFormFields.NAME}
+            label={fireEquipmentTexts.fields.name}
             required
             value={values.name}
             onChange={(value) => setValue('name', value)}
             error={errors.name?.message}
           />
           <TextBox
-            label={fireEquipmentFormFields.QUANTITY}
+            label={fireEquipmentTexts.fields.quantity}
             required
             type="number"
             value={values.quantity.toString()}
-            note="半角数字のみ"
+            note={fireEquipmentTexts.notes.quantity}
             onChange={(value) => setValue('quantity', Number(value))}
             error={errors.quantity?.message}
           />
           <Selector
-            label={fireEquipmentFormFields.FUEL}
+            label={fireEquipmentTexts.fields.fuel}
             required
-            options={[
-              {
-                id: FIRE_EQUIPMENT_FUEL_PLACEHOLDER_ID,
-                name: '選択してください',
-                disabled: true,
-              },
-              {
-                id: Number(FireEquipmentFuel.GAS_BOTTLE),
-                name: 'カセットガス',
-                disabled: false,
-              },
-              {
-                id: Number(FireEquipmentFuel.LP_GAS),
-                name: 'LPガス',
-                disabled: false,
-              },
-              {
-                id: Number(FireEquipmentFuel.CHARCOAL),
-                name: '炭',
-                disabled: false,
-              },
-            ]}
+            options={fireEquipmentTexts.fuelOptions}
             value={values.fuel}
             onChange={(value) =>
               setValue('fuel', Number(value) as FireEquipmentFuel)
@@ -86,17 +63,17 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             error={errors.fuel?.message}
           />
           <TextArea
-            label={fireEquipmentFormFields.USAGE}
+            label={fireEquipmentTexts.fields.usage}
             required
             value={values.usage}
             onChange={(value) => setValue('usage', value)}
             error={errors.usage?.message}
           />
           <Radio
-            label={fireEquipmentFormFields.IS_TAKEAWAY}
+            label={fireEquipmentTexts.fields.isTakeaway}
             options={[
-              { id: 1, name: 'はい' },
-              { id: 2, name: 'いいえ' },
+              { id: 1, name: fireEquipmentTexts.radio.options.yes },
+              { id: 2, name: fireEquipmentTexts.radio.options.no },
             ]}
             value={convertToBoolToString(values.isTakeaway)}
             onChange={(value) => {
@@ -106,23 +83,23 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             error={errors.isTakeaway?.message}
           />
           <p className="-mt-10 max-w-[400px] break-words text-xs text-[#484848]">
-            {FIRE_EQUIPMENT_INSTRUCTIONS.TAKEAWAY_NOTICE.split('\n').map(
-              (line, index) => (
+            {fireEquipmentTexts.notes.takeaway
+              .split('\n')
+              .map((line, index) => (
                 <span key={index}>
                   {line}
                   {index === 0 && <br />}
                 </span>
-              )
-            )}
+              ))}
           </p>
           <p className="max-w-[400px] break-words text-xs text-[#484848]">
-            {FIRE_EQUIPMENT_INSTRUCTIONS.REMARK_NOTICE}
+            {fireEquipmentTexts.notes.remark}
           </p>
           <TextArea
-            label={fireEquipmentFormFields.REMARK}
+            label={fireEquipmentTexts.fields.remark}
             // 「火気を毎日テントから持ち帰ることができますか？」の質問で必須にするかしないか判定する
             required
-            requireMessage="いいえを押した場合必須"
+            requireMessage={fireEquipmentTexts.notes.remarkRequired}
             value={values.remarks || ''}
             onChange={(value) => setValue('remarks', value)}
             error={errors.remarks?.message}
@@ -138,7 +115,7 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
                 type="button"
                 onClick={handleEditCancel}
               >
-                キャンセル
+                {fireEquipmentTexts.buttons.cancel}
               </Button>
             </div>
           )}
@@ -148,7 +125,9 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             type="submit"
             isDisable={validate && validate()}
           >
-            {isEditing ? '修正' : (submitLabel ?? '登録')}
+            {isEditing
+              ? fireEquipmentTexts.buttons.edit
+              : (submitLabel ?? fireEquipmentTexts.buttons.register)}
           </Button>
         </div>
       </div>

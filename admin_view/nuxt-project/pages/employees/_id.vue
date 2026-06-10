@@ -49,38 +49,12 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsEmployeeEditModal
       v-if="isOpenEditModal"
-      title="従業員の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>氏名</h3>
-          <input v-model="name" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>学籍番号</h3>
-          <input v-model="studentId" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>検便</h3>
-          <select v-model="stoolTestID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in stoolTestList"
-              :key="list.id"
-              :value="list.id"
-            >
-              {{ list.value }}
-            </option>
-          </select>
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
-      </template>
-    </EditModal>
+      :employee="employee"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"

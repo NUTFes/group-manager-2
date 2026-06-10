@@ -31,7 +31,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
         venue_map: group.venue_map&.id,
         announcement: group.announcement&.status,
         cooking_process_order: group.cooking_process_order&.id,
-        fire_equipment_order: group.fire_equipment_orders.none? ? nil : group.fire_equipment_orders[0].status
+        fire_equipment_order: group.fire_equipment_orders.none? ? nil : group.fire_equipment_orders[0].id
       }
     end
   end

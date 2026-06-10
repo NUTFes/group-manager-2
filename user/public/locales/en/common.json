@@ -85,6 +85,10 @@
     "toasts": {
       "loginFailed": "Failed to sign in",
       "loginSuccess": "Signed in successfully"
+    },
+    "validation": {
+      "required": "Enter this field.",
+      "email": "Enter a valid email address."
     }
   },
   "registerCarousel": {
@@ -427,7 +431,7 @@
       }
     },
     "foodProduct": {
-      "title": "Food product application",
+      "title": "Product for sales application",
       "loading": "Loading...",
       "errors": {
         "fetch": "Failed to fetch data."
@@ -886,10 +890,69 @@
         "fileType": "Only png or jpeg files are supported.",
         "checklist": "Confirm every item."
       }
+    },
+    "fireEquipment": {
+      "title": "Fire Use Application",
+      "fields": {
+        "name": "Fire equipment name",
+        "quantity": "Number of units",
+        "fuel": "Fuel",
+        "usage": "Purpose of use",
+        "isTakeaway": "Can you take the fire equipment out of the tent every day?",
+        "remark": "Remarks"
+      },
+      "fuel": {
+        "gasBottle": "Cassette gas",
+        "lpGas": "LP gas",
+        "charcoal": "Charcoal"
+      },
+      "radio": {
+        "question": "Will you use fire equipment?",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "notes": {
+        "quantity": "Half-width numbers only",
+        "takeaway": "In principle, take fire equipment back with you every day unless you cannot do so.\nLeaving fire equipment inside the tent may cause a fire.",
+        "remark": "If you select No, write the reason in the remarks field.",
+        "remarkRequired": "Required if you select No",
+        "excludedItems": "Electric hot plates and IH cookers are not included."
+      },
+      "summary": {
+        "noApplication": {
+          "label": "Fire use application not required (saved)",
+          "description": "We will not use fire equipment."
+        }
+      },
+      "messages": {
+        "deleteSuccess": "Deleted the fire use application.",
+        "deleteFailed": "Failed to delete. Please try again.",
+        "noApplicationSuccess": "Saved that no fire use application is needed.",
+        "registerSuccess": "Fire use application submitted.",
+        "updateSuccess": "Fire use application updated.",
+        "submitFailed": "Submission failed: {{message}}"
+      },
+      "validation": {
+        "required": "Enter this field.",
+        "quantity": "Enter a number of 1 or more.",
+        "fuel": "Select a fuel.",
+        "remarkRequired": "Remarks are required when you cannot take the equipment back every day.",
+        "group": "Select a group."
+      }
     }
   },
   "auth": {
     "logout": "Log out"
+  },
+  "userModal": {
+    "guest": "Guest",
+    "noEmail": "No email address",
+    "toasts": {
+      "logoutSuccess": "Logged out.",
+      "logoutFailed": "Failed to log out."
+    }
   },
   "footer": {
     "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."

@@ -13,8 +13,17 @@ class ShopsController < ApplicationController
   end
 
   def create
-    @shop = Shop.create(shop_params)
-    render json: fmt(created, @shop)
+    max_attempts = 3
+    attempts = 0
+    begin
+      attempts += 1
+      new_id = Shop.next_regular_id
+      @shop = Shop.create(shop_params.to_h.merge(id: new_id))
+      render json: fmt(created, @shop) and return
+    rescue ActiveRecord::RecordNotUnique => e
+      retry if attempts < max_attempts
+      render json: fmt(internal_server_error, [], "Failed to create shop after #{max_attempts} attempts: #{e.message}")
+    end
   end
 
   def update
