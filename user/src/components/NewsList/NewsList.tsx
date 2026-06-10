@@ -28,14 +28,24 @@ const NewsList: FC<NewsListProps> = () => {
     })
     .map(({ item }) => item);
 
-  const formattedDates = sortedNews.map((item: News) => {
-    const date = new Date(item.updatedAt);
-    const formattedDate = format(date, 'yyyy/MM/dd');
-    return formattedDate;
+  const sortedNewsWithMeta = sortedNews.map((item: News) => {
+    let formattedDate = '';
+    try {
+      const ts = Date.parse(item.updatedAt);
+      if (Number.isNaN(ts)) {
+        formattedDate = 'Invalid date';
+      } else {
+        formattedDate = format(new Date(ts), 'yyyy/MM/dd');
+      }
+    } catch {
+      formattedDate = 'Invalid date';
+    }
+    return { item, formattedDate };
   });
 
-  const newsList = sortedNews.map((item: News, index: number) => {
-    const date = formattedDates[index] ?? newsListTexts.none;
+  const newsList = sortedNewsWithMeta.map(({ item, formattedDate }) => {
+    const date =
+      formattedDate === 'Invalid date' ? newsListTexts.none : formattedDate;
 
     return (
       <div key={item.id} className="flex flex-col gap-2">
