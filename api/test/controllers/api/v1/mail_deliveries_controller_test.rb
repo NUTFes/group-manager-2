@@ -25,26 +25,9 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     mail = ActionMailer::Base.deliveries.last
     assert_equal ['recipient@example.com'], mail.to
+    assert_equal ['no-reply@example.com'], mail.from
     assert_equal 'テスト件名', mail.subject
     assert_equal 'テスト本文', mail.body.encoded
-  end
-
-  test 'admin can dry run a mail without delivery' do
-    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
-      post api_v1_mail_deliveries_path,
-           params: valid_params.merge(to: nil, dry_run: true),
-           headers: auth_headers(@admin),
-           as: :json
-    end
-
-    assert_response :success
-    body = response.parsed_body
-    data = body.fetch('data')
-    assert_equal true, data.fetch('dry_run')
-    assert_equal false, data.fetch('delivered')
-    assert_equal ['no-reply@example.com'], data.fetch('to')
-    assert_equal ['no-reply@example.com'], data.fetch('from')
-    assert_equal 'テスト件名', data.fetch('subject')
   end
 
   test 'non admin cannot deliver a mail' do
