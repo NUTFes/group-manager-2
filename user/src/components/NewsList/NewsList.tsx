@@ -48,9 +48,9 @@ const NewsList: FC<NewsListProps> = () => {
       formattedDate === 'Invalid date' ? newsListTexts.none : formattedDate;
 
     return (
-      <div key={item.id} className="flex flex-col gap-2">
+      <div key={item.id} className="flex min-w-0 flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
-        <span className="w-full whitespace-pre-line break-words text-base font-medium text-font">
+        <span className="w-full min-w-0 whitespace-pre-line break-words text-base font-medium text-font">
           {item.body}
         </span>
       </div>
@@ -65,7 +65,12 @@ const NewsList: FC<NewsListProps> = () => {
             {newsListTexts.title}
           </div>
         </div>
-        <div className="flex max-h-96 flex-col gap-4 overflow-y-auto pr-2">
+        <div
+          className="flex max-h-96 w-full min-w-0 flex-col gap-4 overflow-y-auto pr-2"
+          role="region"
+          aria-label={newsListTexts.title}
+          tabIndex={0}
+        >
           {isLoading ? (
             <div className="text-base text-font">{newsListTexts.loading}</div>
           ) : error ? (
