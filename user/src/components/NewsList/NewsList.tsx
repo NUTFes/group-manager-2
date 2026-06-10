@@ -12,9 +12,21 @@ const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
   const newsListTexts = useNewsListTexts();
 
-  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => {
-    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-  });
+  const sortedNews: News[] = [...(news ?? [])]
+    .map((item, idx) => {
+      let ts = Date.parse(item.updatedAt);
+      if (Number.isNaN(ts)) {
+        ts = 0;
+      }
+      return { item, ts, idx };
+    })
+    .sort((a, b) => {
+      if (b.ts !== a.ts) {
+        return b.ts - a.ts;
+      }
+      return a.idx - b.idx;
+    })
+    .map(({ item }) => item);
 
   const formattedDates = sortedNews.map((item: News) => {
     const date = new Date(item.updatedAt);
