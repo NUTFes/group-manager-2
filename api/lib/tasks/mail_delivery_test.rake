@@ -55,11 +55,11 @@ namespace :mail do
       base_url: ENV.fetch('MAIL_DELIVERY_TEST_API_URL', 'http://api:3000')
     )
     headers = client.sign_in(
-      email: ENV.fetch('MAIL_DELIVERY_TEST_EMAIL'),
-      password: ENV.fetch('MAIL_DELIVERY_TEST_PASSWORD')
+      email: required_env('MAIL_DELIVERY_TEST_EMAIL'),
+      password: required_env('MAIL_DELIVERY_TEST_PASSWORD')
     )
 
-    to = ENV.fetch('MAIL_DELIVERY_TEST_TO', ENV.fetch('GMAIL_ADDRESS'))
+    to = required_env('MAIL_DELIVERY_TEST_TO')
     subject = ENV.fetch('MAIL_DELIVERY_TEST_SUBJECT', 'Group Manager mail delivery API test')
     body = ENV.fetch(
       'MAIL_DELIVERY_TEST_BODY',
@@ -70,5 +70,9 @@ namespace :mail do
 
     puts "Requested mail delivery API at #{ENV.fetch('MAIL_DELIVERY_TEST_API_URL', 'http://api:3000')}"
     puts "Sent test email to #{to}"
+  end
+
+  def required_env(key)
+    ENV.fetch(key) { abort "Set #{key} in .env or command env." }
   end
 end

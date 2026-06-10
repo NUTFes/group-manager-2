@@ -17,8 +17,8 @@ class MailDeliveryTestTaskTest < ActiveSupport::TestCase
     ENV['GMAIL_ADDRESS'] = 'sender@example.com'
     ENV['MAIL_DELIVERY_TEST_EMAIL'] = 'admin@example.com'
     ENV['MAIL_DELIVERY_TEST_PASSWORD'] = 'password'
+    ENV['MAIL_DELIVERY_TEST_TO'] = 'recipient@example.com'
     ENV.delete('MAIL_DELIVERY_TEST_API_URL')
-    ENV.delete('MAIL_DELIVERY_TEST_TO')
     ENV.delete('MAIL_DELIVERY_TEST_SUBJECT')
     ENV.delete('MAIL_DELIVERY_TEST_BODY')
   end
@@ -49,7 +49,7 @@ class MailDeliveryTestTaskTest < ActiveSupport::TestCase
     assert_equal ['/api/auth/sign_in', '/api/v1/mail_deliveries'], request_paths
     assert_equal({ 'email' => 'admin@example.com', 'password' => 'password' }, JSON.parse(requests.first.body))
     assert_equal(
-      { 'to' => 'sender@example.com', 'subject' => 'Group Manager mail delivery API test' },
+      { 'to' => 'recipient@example.com', 'subject' => 'Group Manager mail delivery API test' },
       JSON.parse(requests.second.body).slice('to', 'subject')
     )
     assert_equal 'token', requests.second['access-token']
@@ -60,7 +60,7 @@ class MailDeliveryTestTaskTest < ActiveSupport::TestCase
   test 'can override API URL recipient and message' do
     ENV['ALLOW_MAIL_DELIVERY_TEST'] = 'true'
     ENV['MAIL_DELIVERY_TEST_API_URL'] = 'https://group-manager-api.example.com'
-    ENV['MAIL_DELIVERY_TEST_TO'] = 'recipient@example.com'
+    ENV['MAIL_DELIVERY_TEST_TO'] = 'custom-recipient@example.com'
     ENV['MAIL_DELIVERY_TEST_SUBJECT'] = 'custom subject'
     ENV['MAIL_DELIVERY_TEST_BODY'] = 'custom body'
     requests = []
@@ -72,7 +72,7 @@ class MailDeliveryTestTaskTest < ActiveSupport::TestCase
     assert_equal 'group-manager-api.example.com', requests.first.uri.hostname
     assert_equal true, requests.first.uri.instance_of?(URI::HTTPS)
     assert_equal(
-      { 'to' => 'recipient@example.com', 'subject' => 'custom subject', 'body' => 'custom body' },
+      { 'to' => 'custom-recipient@example.com', 'subject' => 'custom subject', 'body' => 'custom body' },
       JSON.parse(requests.second.body)
     )
   end
