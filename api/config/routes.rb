@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
+
   # 識別番号割り当て
   get 'group_identification' => 'group_identification#index'
   post 'group_identification' => 'group_identification#create'
@@ -290,6 +292,8 @@ Rails.application.routes.draw do
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
       #---CSV出力
+      resources :mail_deliveries, only: [:create]
+
       get 'get_groups_csv/:fes_year_id' => 'output_csv#output_groups_csv'
       get 'get_sub_reps_csv/:fes_year_id' => 'output_csv#output_sub_reps_csv'
       get 'get_rental_orders_csv/:fes_year_id' => 'output_csv#output_rental_orders_csv'
