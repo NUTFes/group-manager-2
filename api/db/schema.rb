@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_05_01_000001) do
+ActiveRecord::Schema.define(version: 2026_06_05_063647) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stocker_place_id"
+    t.bigint "rental_place_id"
+    t.index ["rental_place_id"], name: "index_assign_rental_items_on_rental_place_id"
   end
 
   create_table "assign_stages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -70,6 +72,7 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
     t.bigint "food_product_id", null: false
+    t.text "tent_ja"
     t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
@@ -170,6 +173,8 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.boolean "committee"
     t.boolean "is_international"
     t.boolean "is_external"
+    t.bigint "uses_place_id"
+    t.index ["uses_place_id"], name: "index_groups_on_uses_place_id"
   end
 
   create_table "health_center_submission_statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -489,9 +494,11 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "assign_rental_items", "stocker_places", column: "rental_place_id"
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "groups", "stocker_places", column: "uses_place_id"
   add_foreign_key "health_center_submission_statuses", "groups"
   add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"

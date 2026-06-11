@@ -61,15 +61,20 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2">テント内</th>
+              <th colspan="2">調理工程</th>
               <td>
                 <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
-                <div v-else>
-                  <div style="white-space: pre-line">
-                    {{ cooking_process_order.cooking_process_order.tent }}
-                  </div>
+                <div v-else style="white-space: pre-line">
+                  <template v-if="cooking_process_order.cooking_process_order.tent_ja">
+                    {{ cooking_process_order.cooking_process_order.tent_ja }}<br><br>
+                    {{ '<翻訳前の原文>' }}
+                    {{ cooking_process_order.cooking_process_order.tent || "未入力" }}
+                  </template>
+                  <template v-else>
+                    {{ cooking_process_order.cooking_process_order.tent || "未入力" }}
+                  </template>
                 </div>
               </td>
             </tr>
@@ -100,44 +105,13 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsCookingProcessOrderEditModal
       v-if="isOpenEditModal"
-      title="調理工程申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>調理場：営業前</h3>
-          <div class="radio-group">
-            <input type="radio" id="preOpenKitchenYes" :value="true" v-model="pre_open_kitchen" />
-            <label for="preOpenKitchenYes">使用する</label>
-          </div>
-          <div class="radio-group">
-            <input type="radio" id="preOpenKitchenNo" :value="false" v-model="pre_open_kitchen" />
-            <label for="preOpenKitchenNo">使用しない</label>
-          </div>
-        </div>
-
-        <div>
-          <h3>調理場：営業中</h3>
-          <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenYes" :value="true" v-model="during_open_kitchen" />
-            <label for="duringOpenKitchenYes">使用する</label>
-          </div>
-          <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenNo" :value="false" v-model="during_open_kitchen" />
-            <label for="duringOpenKitchenNo">使用しない</label>
-          </div>
-        </div>
-        <div>
-          <h3>テント内での作業内容</h3>
-          <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
-      </template>
-    </EditModal>
+      :cooking-process-order="cooking_process_order"
+      @close="closeEditModal"
+      @saved="reload"
+      @error="openSnackBar"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"

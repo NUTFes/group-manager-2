@@ -273,7 +273,9 @@ Rails.application.routes.draw do
       get 'get_health_center_submission_status_show_for_admin_view/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_show_for_admin_view'
       get 'get_health_center_submission_status_counts/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_counts'
       patch 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
+      post 'upsert_health_center_submission_status' => 'health_center_submission_statuses_api#upsert_health_center_submission_status'
       post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
+      post 'sync_health_center_submission_statuses' => 'health_center_submission_statuses_api#sync_health_center_submission_statuses'
 
       #---開催日
       get 'get_refinement_fes_date_by_fes_year/:fes_year_id' => 'fes_dates_api#get_refinement_fes_date_by_fes_year'

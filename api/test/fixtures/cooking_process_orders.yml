@@ -1,11 +1,18 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
+one:
+  group_id: 1
+  food_product_id: 1
+  pre_open_kitchen: false
+  during_open_kitchen: false
+  tent: Boil noodles.
+  tent_ja: 麺をゆでる。
+
+two:
+  group_id: 1
+  food_product_id: 2
+  pre_open_kitchen: false
+  during_open_kitchen: false
+  tent: Grill vegetables.
+  tent_ja: 野菜を焼く。
 # column: value

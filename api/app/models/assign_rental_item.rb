@@ -3,7 +3,10 @@
 class AssignRentalItem < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item
-  belongs_to :stocker_place
+  belongs_to :stocker_place, class_name: 'StockerPlace', optional: true
+  belongs_to :rental_place, class_name: 'StockerPlace', optional: true
+
+  validates :rental_place, presence: true, if: -> { rental_place_id.present? }
 
   def self.with_groups_and_rental_item
     @record = AssignRentalItem.preload(:group)

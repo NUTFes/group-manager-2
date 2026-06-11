@@ -6,6 +6,7 @@
   },
   "general": {
     "loading": "読み込み中...",
+    "autoTranslated": "<自動翻訳>",
     "errors": {
       "fetch": "データの取得に失敗しました。"
     }

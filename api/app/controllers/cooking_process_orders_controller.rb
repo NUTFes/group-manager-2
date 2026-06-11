@@ -26,9 +26,12 @@ class CookingProcessOrdersController < ApplicationController
 
   # POST /cooking_process_orders
   def create
-    @cooking_process_order = CookingProcessOrder.new(cooking_process_order_params)
+    attrs = cooking_process_order_params.to_h.symbolize_keys
     food_product = FoodProduct.find(params[:cooking_process_order][:food_product_id])
-    @cooking_process_order.group_id = food_product.group_id
+    attrs[:group_id] = food_product.group_id
+    attrs = apply_tent_translation(attrs)
+
+    @cooking_process_order = CookingProcessOrder.new(attrs)
     if @cooking_process_order.save
       render json: fmt(created, @cooking_process_order)
     else
@@ -38,22 +41,39 @@ class CookingProcessOrdersController < ApplicationController
 
   # PATCH/PUT /cooking_process_orders/1
   def update
-    @cooking_process_order.update(cooking_process_order_params)
-    render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
+    attrs = apply_tent_translation(
+      cooking_process_order_params.to_h.symbolize_keys,
+      existing: @cooking_process_order
+    )
+    if @cooking_process_order.update(attrs)
+      render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
+    else
+      render json: fmt(error, @cooking_process_order.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   # POST /cooking_process_orders/upsert
   def upsert
-    keys = %i[id group_id food_product_id pre_open_kitchen during_open_kitchen tent created_at updated_at]
+    keys = %i[
+      id group_id food_product_id pre_open_kitchen during_open_kitchen
+      tent tent_ja created_at updated_at
+    ]
     now = Time.current
+    raw_orders = params[:cooking_process_orders].map(&:to_unsafe_h)
+    existing_orders = existing_cooking_process_orders(raw_orders)
 
-    upserts = params[:cooking_process_orders].map do |order|
+    upserts = raw_orders.map do |order|
       attrs = ActionController::Parameters
-              .new(order.to_unsafe_h)
+              .new(order)
               .permit(*keys)
               .to_h
               .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+      attrs = apply_tent_translation(
+        attrs,
+        existing: existing_cooking_process_order_for(attrs, existing_orders),
+        preserve_existing_translation: true
+      )
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
       attrs
@@ -96,6 +116,74 @@ class CookingProcessOrdersController < ApplicationController
 
   # Only allow a list of trusted parameters through
   def cooking_process_order_params
-    params.require(:cooking_process_order).permit(:pre_open_kitchen, :during_open_kitchen, :tent, :food_product_id)
+    params.require(:cooking_process_order).permit(
+      :pre_open_kitchen,
+      :during_open_kitchen,
+      :tent,
+      :tent_ja,
+      :food_product_id
+    )
+  end
+
+  def apply_tent_translation(attrs, existing: nil, preserve_existing_translation: false)
+    return attrs unless attrs.key?(:tent)
+
+    normalized_tent = normalize_tent(attrs[:tent])
+    attrs[:tent] = normalized_tent
+
+    if existing && normalized_tent == normalize_tent(existing.tent)
+      attrs[:tent_ja] = existing.tent_ja if preserve_existing_translation && !tent_ja_provided?(attrs)
+      return attrs
+    end
+
+    attrs[:tent_ja] = translated_tent_ja(normalized_tent) unless tent_ja_provided?(attrs)
+    attrs
+  end
+
+  def tent_ja_provided?(attrs)
+    attrs.key?(:tent_ja) && attrs[:tent_ja].present?
+  end
+
+  def translated_tent_ja(tent)
+    return nil if tent.blank?
+    return nil unless translatable_english_text?(tent)
+
+    translated = translate_to_ja(tent)
+    translated == tent ? nil : translated
+  end
+
+  def normalize_tent(tent)
+    tent.to_s.strip
+  end
+
+  def existing_cooking_process_orders(raw_orders)
+    ids = raw_orders.filter_map do |order|
+      order['id'].presence || order[:id].presence
+    end
+    food_product_ids = raw_orders.filter_map do |order|
+      order['food_product_id'].presence || order[:food_product_id].presence
+    end
+
+    records_by_id =
+      CookingProcessOrder
+      .where(id: ids)
+      .index_by { |order| order.id.to_s }
+    records_by_food_product_id =
+      CookingProcessOrder
+      .where(food_product_id: food_product_ids)
+      .index_by { |order| order.food_product_id.to_s }
+
+    {
+      by_id: records_by_id,
+      by_food_product_id: records_by_food_product_id
+    }
+  end
+
+  def existing_cooking_process_order_for(attrs, existing_orders)
+    if attrs[:id].present?
+      existing_orders[:by_id][attrs[:id].to_s]
+    elsif attrs[:food_product_id].present?
+      existing_orders[:by_food_product_id][attrs[:food_product_id].to_s]
+    end
   end
 end
