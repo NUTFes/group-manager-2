@@ -19,8 +19,8 @@ const API_ENDPOINTS = {
 } as const;
 
 export const useFoodProductHooks = (
-    groupId: number,
-    isRegistered?: boolean
+  groupId: number,
+  isRegistered?: boolean
 ) => {
   const { t } = useTranslation('common');
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
@@ -38,16 +38,16 @@ export const useFoodProductHooks = (
   const { remove } = useApiMutations();
 
   const foodProducts: RegisteredProduct[] | null =
-      apiFoodProducts?.length > 0
-          ? apiFoodProducts.map((product: FoodProductResponse) => ({
-            id: product.id.toString(),
-            name: product.name,
-            isAlcohol: product.isAlcohol ?? false,
-            isCooking: product.isCooking ?? false,
-            day1Quantity: product.firstDayNum?.toString() || '0',
-            day2Quantity: product.secondDayNum?.toString() || '0',
-          }))
-          : null;
+    apiFoodProducts?.length > 0
+      ? apiFoodProducts.map((product: FoodProductResponse) => ({
+          id: product.id.toString(),
+          name: product.name,
+          isAlcohol: product.isAlcohol ?? false,
+          isCooking: product.isCooking ?? false,
+          day1Quantity: product.firstDayNum?.toString() || '0',
+          day2Quantity: product.secondDayNum?.toString() || '0',
+        }))
+      : null;
 
   const hasError = !!error;
 
@@ -67,10 +67,10 @@ export const useFoodProductHooks = (
     {
       label: t('applications.foodProduct.view.summaryLabel'),
       content: foodProducts?.length
-          ? t('applications.foodProduct.view.registered', {
+        ? t('applications.foodProduct.view.registered', {
             count: foodProducts.length,
           })
-          : t('applications.foodProduct.view.none'),
+        : t('applications.foodProduct.view.none'),
     },
   ];
 
@@ -80,9 +80,9 @@ export const useFoodProductHooks = (
 
   const mutateCookingProcessOrders = async () => {
     await mutate(
-        (key) =>
-            Array.isArray(key) &&
-            key[0] === `/cooking_process_orders/group/${groupId}`
+      (key) =>
+        Array.isArray(key) &&
+        key[0] === `/cooking_process_orders/group/${groupId}`
     );
   };
 
@@ -90,10 +90,10 @@ export const useFoodProductHooks = (
     try {
       const currentProductIds = foodProducts?.map((p) => parseInt(p.id)) || [];
       const newProductIds = products
-          .map((p) => (p.id ? parseInt(p.id) : null))
-          .filter((id): id is number => id !== null);
+        .map((p) => (p.id ? parseInt(p.id) : null))
+        .filter((id): id is number => id !== null);
       const toDeleteIds = currentProductIds.filter(
-          (id) => !newProductIds.includes(id)
+        (id) => !newProductIds.includes(id)
       );
 
       for (const deleteId of toDeleteIds) {
@@ -144,14 +144,14 @@ export const useFoodProductHooks = (
 
       if (error instanceof Error) {
         if (
-            error.message.includes('認証が必要') ||
-            error.message.includes('User is not authenticated')
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
         ) {
           errorMessage = t('applications.foodProduct.messages.authRequired');
         } else {
           errorMessage = t(
-              'applications.foodProduct.messages.updateFailedDetail',
-              { message: error.message }
+            'applications.foodProduct.messages.updateFailedDetail',
+            { message: error.message }
           );
         }
       }
@@ -180,9 +180,8 @@ export const useFoodProductHooks = (
 
       await mutateFoodProducts();
       await mutate(
-          (key) =>
-              Array.isArray(key) &&
-              key[0] === `/food_products/group/${groupId}`
+        (key) =>
+          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
       );
 
       setIsEditing(false);
@@ -198,14 +197,14 @@ export const useFoodProductHooks = (
 
       if (error instanceof Error) {
         if (
-            error.message.includes('認証が必要') ||
-            error.message.includes('User is not authenticated')
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
         ) {
           errorMessage = t('applications.foodProduct.messages.authRequired');
         } else {
           errorMessage = t(
-              'applications.foodProduct.messages.createFailedDetail',
-              { message: error.message }
+            'applications.foodProduct.messages.createFailedDetail',
+            { message: error.message }
           );
         }
       }
@@ -220,7 +219,7 @@ export const useFoodProductHooks = (
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
-          (product) => product.id === id
+        (product) => product.id === id
       );
 
       if (!productToRemove) {
@@ -233,41 +232,40 @@ export const useFoodProductHooks = (
       const result = await remove(deleteEndpoint);
 
       if (
-          result &&
-          typeof result === 'object' &&
-          'success' in result &&
-          !result.success
+        result &&
+        typeof result === 'object' &&
+        'success' in result &&
+        !result.success
       ) {
         throw new Error(
-            result.error?.message ||
+          result.error?.message ||
             t('applications.foodProduct.messages.deleteFailed')
         );
       }
 
       await mutateFoodProducts();
       await mutate(
-          (key) =>
-              Array.isArray(key) &&
-              key[0] === `/food_products/group/${groupId}`
+        (key) =>
+          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
       );
       await mutateCookingProcessOrders();
 
       toast.success(
-          t('applications.foodProduct.messages.deleteSuccess', {
-            name: productToRemove.name,
-          }),
-          {
-            position: 'top-right',
-            autoClose: 3000,
-          }
+        t('applications.foodProduct.messages.deleteSuccess', {
+          name: productToRemove.name,
+        }),
+        {
+          position: 'top-right',
+          autoClose: 3000,
+        }
       );
     } catch (error) {
       console.error('販売品削除エラー:', error);
 
       if (error instanceof Error) {
         if (
-            error.message.includes('User is not authenticated') ||
-            error.message.includes('認証が必要')
+          error.message.includes('User is not authenticated') ||
+          error.message.includes('認証が必要')
         ) {
           toast.error(t('applications.foodProduct.messages.authRequired'), {
             position: 'top-right',
@@ -280,13 +278,13 @@ export const useFoodProductHooks = (
           });
         } else {
           toast.error(
-              t('applications.foodProduct.messages.deleteFailedDetail', {
-                message: error.message,
-              }),
-              {
-                position: 'top-right',
-                autoClose: 5000,
-              }
+            t('applications.foodProduct.messages.deleteFailedDetail', {
+              message: error.message,
+            }),
+            {
+              position: 'top-right',
+              autoClose: 5000,
+            }
           );
         }
       } else {
