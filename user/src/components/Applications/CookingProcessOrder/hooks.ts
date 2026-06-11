@@ -22,6 +22,7 @@ export const useCookingProcessOrder = (
     const [hasInitializedEditing, setHasInitializedEditing] = useState(false);
     const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
     const { t } = useTranslation('common');
+
     const cookingProcessOrderTexts = {
         title: t('applications.cookingProcessOrder.title'),
         general: {
@@ -167,7 +168,7 @@ export const useCookingProcessOrder = (
         }
     });
 
-    // データ取得完了後にisExistがfalseであれば初期化を許可
+    // データ取得完了後にisExistがfalseかつカード表示状態であれば初期化を許可
     useEffect(() => {
         if (!isDataLoading && !isExist && hasInitializedEditing && isEditing === false) {
             setHasInitializedEditing(false);
@@ -190,8 +191,14 @@ export const useCookingProcessOrder = (
         }
 
         setHasInitializedEditing(true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline, isExist]);
+    }, [
+        hasInitializedEditing,
+        isRegistered,
+        isDataLoading,
+        cookingTargetFoodProducts,
+        isDeadline,
+        isExist,
+    ]);
 
     return {
         methods,
