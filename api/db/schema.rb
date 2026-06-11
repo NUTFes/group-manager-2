@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stocker_place_id"
-    t.integer "rental_place_id"
+    t.bigint "rental_place_id"
     t.index ["rental_place_id"], name: "index_assign_rental_items_on_rental_place_id"
   end
 
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.boolean "committee"
     t.boolean "is_international"
     t.boolean "is_external"
-    t.integer "uses_place_id"
+    t.bigint "uses_place_id"
     t.index ["uses_place_id"], name: "index_groups_on_uses_place_id"
   end
 
@@ -494,9 +494,11 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "assign_rental_items", "stocker_places", column: "rental_place_id"
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "groups", "stocker_places", column: "uses_place_id"
   add_foreign_key "health_center_submission_statuses", "groups"
   add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
