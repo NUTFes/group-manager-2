@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class GroupTest < ActiveSupport::TestCase
-  fixtures :group_categories, :fes_years, :places
+  fixtures :group_categories, :fes_years, :places, :stocker_places
 
   def setup
     @user = User.create!(
@@ -15,7 +15,7 @@ class GroupTest < ActiveSupport::TestCase
     )
     @group_category = group_categories(:one)
     @fes_year = fes_years(:one)
-    @place = places(:one)
+    @stocker_place = stocker_places(:one)
   end
 
   test 'should be valid with a valid uses_place' do
@@ -26,10 +26,10 @@ class GroupTest < ActiveSupport::TestCase
       user: @user,
       group_category: @group_category,
       fes_year: @fes_year,
-      uses_place: @place
+      uses_place: @stocker_place
     )
     assert group.valid?
-    assert_equal @place, group.uses_place
+    assert_equal @stocker_place, group.uses_place
   end
 
   test 'should be valid without uses_place' do
