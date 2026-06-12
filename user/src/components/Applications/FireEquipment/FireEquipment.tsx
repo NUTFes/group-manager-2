@@ -12,7 +12,6 @@ type FireEquipmentProps = {
   isRegistered?: boolean | undefined;
   groupId: number;
   status?: HealthCenterSubmissionStatus;
-  isResubmission?: boolean;
 };
 
 type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
@@ -113,14 +112,13 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canEdit,
   isRegistered,
   status,
-  isResubmission,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const fireEquipmentHooks = useFireEquipmentHooks(groupId, status);
   const hasFireEquipmentOrder =
     fireEquipmentHooks.fireEquipment !== undefined ||
     fireEquipmentHooks.hasUnregistered;
-  const effectiveCanEdit = isResubmission ? true : canEdit;
+  const effectiveCanEdit = fireEquipmentHooks.isResubmission ? true : canEdit;
   const canSubmit = hasFireEquipmentOrder ? !!effectiveCanEdit : !!canAdd;
   const isExist = fireEquipmentHooks.isLoading
     ? isRegistered
