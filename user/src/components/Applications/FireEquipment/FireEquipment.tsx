@@ -12,6 +12,7 @@ type FireEquipmentProps = {
   isRegistered?: boolean | undefined;
   groupId: number;
   status?: HealthCenterSubmissionStatus;
+  isResubmission?: boolean;
 };
 
 type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
@@ -42,22 +43,22 @@ const Content: FC<ContentProps> = ({
     );
   }
 
-  // 締め切り後
-  if (!canSubmit) {
-    return <FormList items={readOnlyItems} />;
-  }
-
-  if (!canSubmit && isResubmission) {
+  if (isResubmission) {
     return (
       <FireEquipmentFormView
         groupId={groupId}
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
-        submitLabel="更新"
+        submitLabel={fireEquipmentTexts.buttons.update}
         disableValidate // 再提出時は変更検知バリデーションを無効化（スキーマ検証は有効）
         status={status}
       />
     );
+  }
+
+  // 締め切り後
+  if (!canSubmit) {
+    return <FormList items={readOnlyItems} />;
   }
 
   // 火気不使用として登録済み・編集モード：登録フォームを表示
@@ -112,13 +113,15 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canEdit,
   isRegistered,
   status,
+  isResubmission,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
-  const fireEquipmentHooks = useFireEquipmentHooks(groupId);
+  const fireEquipmentHooks = useFireEquipmentHooks(groupId, status);
   const hasFireEquipmentOrder =
     fireEquipmentHooks.fireEquipment !== undefined ||
     fireEquipmentHooks.hasUnregistered;
-  const canSubmit = hasFireEquipmentOrder ? !!canEdit : !!canAdd;
+  const effectiveCanEdit = isResubmission ? true : canEdit;
+  const canSubmit = hasFireEquipmentOrder ? !!effectiveCanEdit : !!canAdd;
   const isExist = fireEquipmentHooks.isLoading
     ? isRegistered
     : hasFireEquipmentOrder;

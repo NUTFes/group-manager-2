@@ -112,11 +112,6 @@ export const useFireEquipmentOrder = (
       }
       await mutateFireEquipmentOrder();
 
-      if (status === 'waiting_resubmission') {
-        // status更新処理
-        await updateStatus('unapproved');
-      }
-
       toast.success(fireEquipmentTexts.messages.noApplicationSuccess);
       handleEditCancel?.();
     } catch (error) {
