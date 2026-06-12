@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_05_063647) do
+ActiveRecord::Schema.define(version: 2026_06_12_073910) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -223,6 +223,14 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "place_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["parent_id"], name: "index_place_categories_on_parent_id"
+  end
+
   create_table "place_numbers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_id"
     t.integer "group_identification_id"
@@ -386,6 +394,8 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
     t.integer "stock_item_status"
     t.integer "assign_item_status"
     t.string "name_en"
+    t.bigint "place_category_id"
+    t.index ["place_category_id"], name: "index_stocker_places_on_place_category_id"
   end
 
   create_table "stool_tests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -500,6 +510,8 @@ ActiveRecord::Schema.define(version: 2026_06_05_063647) do
   add_foreign_key "fire_equipment_orders", "groups"
   add_foreign_key "groups", "stocker_places", column: "uses_place_id"
   add_foreign_key "health_center_submission_statuses", "groups"
+  add_foreign_key "place_categories", "place_categories", column: "parent_id"
+  add_foreign_key "stocker_places", "place_categories"
   add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end
