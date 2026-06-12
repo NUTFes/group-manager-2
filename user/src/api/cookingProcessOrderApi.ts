@@ -10,6 +10,7 @@ export type CookingProcessOrder = {
   preOpenKitchen: boolean;
   duringOpenKitchen: boolean;
   tent?: string | null;
+  tentJa?: string | null;
 };
 
 export type CookingProcessOrderResponse = {
@@ -21,6 +22,7 @@ export type CookingProcessOrderResponse = {
   preOpenKitchen: boolean;
   duringOpenKitchen: boolean;
   tent?: string | null;
+  tentJa?: string | null;
 };
 
 export type ApiStatus = {

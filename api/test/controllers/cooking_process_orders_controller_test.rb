@@ -221,6 +221,80 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal [[changed_tent, 'JA']], calls
   end
 
+  test 'create fails without food_product_id' do
+    assert_no_difference('CookingProcessOrder.count') do
+      post cooking_process_orders_url,
+           params: {
+             cooking_process_order: {
+               pre_open_kitchen: true,
+               during_open_kitchen: false,
+               tent: unique_tent('Boil noodles')
+             }
+           },
+           as: :json
+    end
+    assert_response :not_found
+  end
+
+  test 'create fails with invalid food_product_id' do
+    assert_no_difference('CookingProcessOrder.count') do
+      post cooking_process_orders_url,
+           params: {
+             cooking_process_order: {
+               food_product_id: -1,
+               pre_open_kitchen: true,
+               during_open_kitchen: false,
+               tent: unique_tent('Boil noodles')
+             }
+           },
+           as: :json
+    end
+    assert_response :not_found
+  end
+
+  test 'upsert does not create on validation error' do
+    assert_no_difference('CookingProcessOrder.count') do
+      stub_deepl_translate_original do
+        post upsert_cooking_process_orders_url,
+             params: {
+               cooking_process_orders: [
+                 {
+                   group_id: @group.id,
+                   food_product_id: nil,
+                   pre_open_kitchen: true,
+                   during_open_kitchen: true,
+                   tent: unique_tent('Boil noodles')
+                 }
+               ]
+             },
+             as: :json
+      end
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'update does not change record when params invalid' do
+    order = create_cooking_process_order(
+      tent: unique_tent('Boil noodles'),
+      tent_ja: '麺をゆでる。'
+    )
+
+    stub_deepl_translate_raises do
+      put cooking_process_order_url(order),
+          params: {
+            cooking_process_order: {
+              food_product_id: nil,
+              tent: order.tent
+            }
+          },
+          as: :json
+    end
+
+    assert_response :unprocessable_entity
+    order.reload
+    assert_not_nil order.food_product_id
+  end
+
   private
 
   def create_food_product

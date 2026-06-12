@@ -116,7 +116,20 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                                 label:
                                   cookingProcessOrderTexts.summary.labels
                                     .description,
-                                content: cookingProcessOrder.tent || '',
+                                content: cookingProcessOrder.tentJa ? (
+                                  <div className="whitespace-pre-wrap">
+                                    {cookingProcessOrder.tent}
+                                    <br />
+                                    <br />
+                                    {`<${cookingProcessOrderTexts.general.autoTranslated}>`}
+                                    <br />
+                                    {cookingProcessOrder.tentJa}
+                                  </div>
+                                ) : (
+                                  <div className="whitespace-pre-wrap">
+                                    {cookingProcessOrder.tent || ''}
+                                  </div>
+                                ),
                               },
                             ]
                           : [

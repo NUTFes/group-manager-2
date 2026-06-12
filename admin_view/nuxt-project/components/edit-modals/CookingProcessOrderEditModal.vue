@@ -25,8 +25,16 @@
         </div>
       </div>
       <div>
-        <h3>テント内での作業内容</h3>
-        <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
+        <h3>調理工程</h3>
+        <template v-if="hasTranslatedTent">
+          <h4>原文</h4>
+          <p style="color: black; white-space: pre-line;">{{ tent }}</p>
+          <h4>提出文章</h4>
+          <textarea v-model="tent_ja" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
+        </template>
+        <template v-else>
+          <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
+        </template>
       </div>
     </template>
     <template v-slot:method>
@@ -49,6 +57,8 @@ export default {
       pre_open_kitchen: null,
       during_open_kitchen: null,
       tent: "",
+      tent_ja: "",
+      hasTranslatedTent: false,
     };
   },
   watch: {
@@ -60,6 +70,8 @@ export default {
         this.pre_open_kitchen = cookingProcessOrder.pre_open_kitchen ?? null;
         this.during_open_kitchen = cookingProcessOrder.during_open_kitchen ?? null;
         this.tent = cookingProcessOrder.tent || "";
+        this.tent_ja = cookingProcessOrder.tent_ja || "";
+        this.hasTranslatedTent = Boolean(cookingProcessOrder.tent_ja);
       },
     },
   },
@@ -79,6 +91,7 @@ export default {
         pre_open_kitchen: this.pre_open_kitchen,
         during_open_kitchen: this.during_open_kitchen,
         tent: this.tent,
+        tent_ja: this.tent_ja,
       };
 
       try {
@@ -102,6 +115,10 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  color: var(--accent-5);
+}
+
 .radio-group {
   display: flex;
   align-items: center;

@@ -118,7 +118,16 @@
                 <tr>
                   <th>調理工程</th>
                   <td colspan="2">
-                    <div style="white-space: pre-line">{{ order.tent || "未入力" }}</div>
+                    <div style="white-space: pre-line">
+                      <template v-if="order.tent_ja">
+                        {{ order.tent_ja }}<br><br>
+                        {{ '<翻訳前の原文>' }}
+                        {{ order.tent || "未入力" }}
+                      </template>
+                      <template v-else>
+                        {{ order.tent || "未入力" }}
+                      </template>
+                    </div>
                   </td>
                 </tr>
               </VerticalTable>

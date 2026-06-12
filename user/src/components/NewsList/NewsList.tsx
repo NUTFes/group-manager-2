@@ -12,21 +12,45 @@ const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
   const newsListTexts = useNewsListTexts();
 
-  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => a.id - b.id);
+  const sortedNews: News[] = [...(news ?? [])]
+    .map((item, idx) => {
+      let ts = Date.parse(item.updatedAt);
+      if (Number.isNaN(ts)) {
+        ts = 0;
+      }
+      return { item, ts, idx };
+    })
+    .sort((a, b) => {
+      if (b.ts !== a.ts) {
+        return b.ts - a.ts;
+      }
+      return a.idx - b.idx;
+    })
+    .map(({ item }) => item);
 
-  const formattedDates = sortedNews.map((item: News) => {
-    const date = new Date(item.createdAt);
-    const formattedDate = format(date, 'yyyy/MM/dd');
-    return formattedDate;
+  const sortedNewsWithMeta = sortedNews.map((item: News) => {
+    let formattedDate = '';
+    try {
+      const ts = Date.parse(item.updatedAt);
+      if (Number.isNaN(ts)) {
+        formattedDate = 'Invalid date';
+      } else {
+        formattedDate = format(new Date(ts), 'yyyy/MM/dd');
+      }
+    } catch {
+      formattedDate = 'Invalid date';
+    }
+    return { item, formattedDate };
   });
 
-  const newsList = sortedNews.map((item: News, index: number) => {
-    const date = formattedDates[index] ?? newsListTexts.none;
+  const newsList = sortedNewsWithMeta.map(({ item, formattedDate }) => {
+    const date =
+      formattedDate === 'Invalid date' ? newsListTexts.none : formattedDate;
 
     return (
-      <div key={item.id} className="flex flex-col gap-2">
+      <div key={item.id} className="flex min-w-0 flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
-        <span className="w-full whitespace-pre-line text-base font-medium text-font">
+        <span className="w-full min-w-0 whitespace-pre-line break-words text-base font-medium text-font">
           {item.body}
         </span>
       </div>
@@ -41,7 +65,12 @@ const NewsList: FC<NewsListProps> = () => {
             {newsListTexts.title}
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div
+          className="flex max-h-96 w-full min-w-0 flex-col gap-4 overflow-y-auto pr-2"
+          role="region"
+          aria-label={newsListTexts.title}
+          tabIndex={0}
+        >
           {isLoading ? (
             <div className="text-base text-font">{newsListTexts.loading}</div>
           ) : error ? (
