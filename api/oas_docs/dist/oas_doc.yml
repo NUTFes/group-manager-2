@@ -2385,6 +2385,9 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+            text/csv:
+              schema:
+                type: string
         '404':
           description: api/v1/output_csv description
         '422':
@@ -2733,6 +2736,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '404':
           description: api/v1/output_pdf description
         '422':
@@ -2948,6 +2955,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '422':
           description: api/v1/print_pdf description
           content:
@@ -2968,6 +2979,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '422':
           description: api/v1/print_pdf description
           content:
