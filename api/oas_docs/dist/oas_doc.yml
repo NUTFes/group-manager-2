@@ -11446,10 +11446,27 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+        rental_item_id:
+          type: integer
+        num:
+          type: integer
+        stocker_place_id:
+          type: integer
+          nullable: true
         rental_place_id:
           type: integer
           format: int64
           nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     AssignStage:
       type: object
       properties:
@@ -11531,10 +11548,36 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        project_name:
+          type: string
+        activity:
+          type: string
+        user_id:
+          type: integer
+        group_category_id:
+          type: integer
+        fes_year_id:
+          type: integer
+        committee:
+          type: boolean
+        is_international:
+          type: boolean
+        is_external:
+          type: boolean
         uses_place_id:
           type: integer
           format: int64
           nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     GroupCategory:
       type: object
       properties:
