@@ -357,7 +357,7 @@ class Api::V1::OutputCsvController < ApplicationController
         if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
           group_dup_student_ids[group.id] << emp_student
           next
-        elsif emp_norm.present? && group_seen_normalized.include?(emp_norm)
+        elsif !student_id_dup_check_target && emp_norm.present? && group_seen_normalized.include?(emp_norm)
           group_dup_names[group.id] << emp_norm
           next
         end
