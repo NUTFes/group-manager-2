@@ -19,7 +19,6 @@ export const useCookingProcessOrder = (
   isRegistered?: boolean
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const [hasInitializedEditing, setHasInitializedEditing] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const { t } = useTranslation('common');
 
@@ -169,37 +168,36 @@ export const useCookingProcessOrder = (
     }
   });
 
-  // データ取得完了後にisExistがfalseかつカード表示状態であれば初期化を許可
   useEffect(() => {
-    if (
-      !isDataLoading &&
-      !isExist &&
-      hasInitializedEditing &&
-      isEditing === false
-    ) {
-      setHasInitializedEditing(false);
-    }
-  }, [isDataLoading, isExist, hasInitializedEditing, isEditing]);
-
-  useEffect(() => {
-    if (hasInitializedEditing || isRegistered === undefined || isDataLoading) {
+    if (isRegistered === undefined || isDataLoading) {
       return;
     }
 
-    if (!isExist && cookingTargetFoodProducts.length > 0 && !isDeadline) {
-      setIsEditing(true);
-    } else {
+    if (cookingTargetFoodProducts.length === 0) {
       setIsEditing(false);
+      return;
     }
 
-    setHasInitializedEditing(true);
+    if (isDeadline) {
+      setIsEditing(false);
+      return;
+    }
+
+    if (!isExist) {
+      setIsEditing(true);
+      return;
+    }
+
+    if (isEditing === null) {
+      setIsEditing(false);
+    }
   }, [
-    hasInitializedEditing,
     isRegistered,
     isDataLoading,
-    cookingTargetFoodProducts,
+    cookingTargetFoodProducts.length,
     isDeadline,
     isExist,
+    isEditing,
   ]);
 
   return {
