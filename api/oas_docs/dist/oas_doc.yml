@@ -2735,7 +2735,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OutputPdf"
+                "$ref": "#/components/schemas/OutputPdf"
             application/pdf:
               schema:
                 type: string
@@ -2747,7 +2747,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OutputPdf"
+                "$ref": "#/components/schemas/OutputPdf"
       deprecated: false
       parameters:
       - name: group_id
@@ -2954,7 +2954,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
             application/pdf:
               schema:
                 type: string
@@ -2964,7 +2964,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false
   "/api/v1/output_pdf/rental_items":
     get:
@@ -2978,7 +2978,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
             application/pdf:
               schema:
                 type: string
@@ -11357,7 +11357,7 @@ components:
         id:
           type: integer
           format: int64
-    api.v1.OutputPdf: {}
+    OutputPdf: {}
     api.v1.PlaceOrdersApi:
       type: object
       properties:
@@ -11365,6 +11365,12 @@ components:
           type: integer
           format: int64
     api.v1.PowerOrdersApi:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    PrintPdf:
       type: object
       properties:
         id:
@@ -11642,12 +11648,6 @@ components:
           type: integer
           format: int64
     PowerOrder:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    PrintPdf:
       type: object
       properties:
         id:
