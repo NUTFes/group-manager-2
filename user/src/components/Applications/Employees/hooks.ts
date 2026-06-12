@@ -527,8 +527,8 @@ export const useEmployeesApplicationHooks = (
           toast.error(t('applications.employees.messages.statusUpdateFailed'));
           throw error; // Re-throw to prevent setEditing(false) on failure
         }
-        setEditing(false);
       }
+      setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
     }
