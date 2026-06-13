@@ -100,7 +100,7 @@ export default {
           icon: "people",
           click: "/users",
         },
-        { title: "会場一覧", icon: "place", click: "/places" },
+        { title: "会場選択肢一覧", icon: "place", click: "/places" },
         // {
         //   title: "使用可能会場一覧",
         //   icon: "add_location_alt",
