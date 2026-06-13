@@ -51,7 +51,7 @@ export default {
       immediate: true,
       handler() {
         const employee = this.getEmployee();
-        this.groupId = employee.group_id || null;
+        this.groupId = employee.group_id || this.$route.params.id;
         this.name = employee.name || null;
         this.studentId = employee.student_id || null;
         this.stoolTestID = this.resolveStoolTestId(employee);
@@ -70,13 +70,13 @@ export default {
         検便無: 2,
         検便有: 3,
       };
-      const status = this.employee?.stool_test?.status || this.employee?.stool_test_status;
-      return statusToId[status] || null;
+      const status = employee.stool_test || this.employee?.stool_test?.status || this.employee?.stool_test_status;
+      return statusToId[status] || 1;
     },
     async edit() {
       const employee = this.getEmployee();
       const params = new URLSearchParams({
-        group_id: String(this.groupId ?? ""),
+        group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),

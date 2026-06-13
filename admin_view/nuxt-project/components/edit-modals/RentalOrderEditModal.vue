@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     getRentalOrder() {
-      return this.rentalOrder?.rental_order || this.rentalOrder || {};
+      return this.rentalOrder?.rental_item?.rental_item || this.rentalOrder?.rental_item || this.rentalOrder?.rental_order || this.rentalOrder || {};
     },
     async fetchRentableItems() {
       const resRentableItems = await this.$axios.$get("/api/v1/get_all_rentable_items");
@@ -71,11 +71,12 @@ export default {
     },
     async edit() {
       const rentalOrder = this.getRentalOrder();
+      const groupId = rentalOrder.group_id || this.$route.params.id;
       const url =
         "/rental_orders/" +
         rentalOrder.id +
         "?group_id=" +
-        rentalOrder.group_id +
+        groupId +
         "&rental_item_id=" +
         this.rentalItemID +
         "&num=" +

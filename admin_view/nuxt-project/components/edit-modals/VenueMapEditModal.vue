@@ -128,7 +128,7 @@ export default {
           getDownloadURL(uploadTask.snapshot.ref)
             .then((downloadURL) => {
               const venueMap = this.getVenueMap();
-              const groupId = venueMap.group_id || venueMap.group?.id;
+              const groupId = venueMap.group_id || venueMap.group?.id || this.$route.params.id;
               const data = {
                 group_id: groupId,
                 picture_name: uploadTask.snapshot.ref.name,

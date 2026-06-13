@@ -18,4 +18,18 @@ class FireEquipmentOrder < ApplicationRecord
   def self.fuel_options_for_select
     FUEL_TRANSLATIONS.map { |key, value| [value, key] }
   end
+
+  def to_info_h
+    {
+      id: id,
+      group_id: group_id,
+      name: name,
+      quantity: quantity,
+      fuel: fuel,
+      fuel_japanese: fuel_japanese,
+      usage: usage,
+      is_takeaway: is_takeaway,
+      remark: remark
+    }
+  end
 end

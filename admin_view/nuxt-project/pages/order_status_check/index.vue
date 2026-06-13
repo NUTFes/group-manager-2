@@ -54,7 +54,9 @@
           </th>
         </template>
         <template v-slot:table-body>
-          <tr v-for="(group, index) in groups" :key="index">
+          <tr v-for="(group, index) in groups" :key="index"
+            @click="() => $router.push({ path: `/order_status_check/` + group.group.id })"
+            class="clickable-row">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
             <td :class="{ unregistered: !group.sub_rep && !isUnregistered(group.group.id, 'sub_rep') }">
@@ -396,5 +398,11 @@ export default {
   background: none; /* 線形グラデーションを上書きして無効にします */
   -webkit-background-clip: initial !important; /* デフォルトの状態に戻します */
   -webkit-text-fill-color: black !important;
+}
+.clickable-row {
+  cursor: pointer;
+}
+.clickable-row:hover {
+  background-color: #f5f5f5;
 }
 </style>

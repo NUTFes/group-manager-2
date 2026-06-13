@@ -141,14 +141,24 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: if group.fire_equipment_orders.none?
+                                 nil
+                               else
+                                 group.fire_equipment_orders.map do |fire_equipment_order|
+                                   {
+                                     fire_equipment_order: fire_equipment_order.to_info_h
+                                   }
+                                 end
+                               end
       }
     end
   end
@@ -211,14 +221,24 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: if group.fire_equipment_orders.none?
+                                 nil
+                               else
+                                 group.fire_equipment_orders.map do |fire_equipment_order|
+                                   {
+                                     fire_equipment_order: fire_equipment_order.to_info_h
+                                   }
+                                 end
+                               end
       }
     return @record
   end
@@ -281,14 +301,24 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: if group.fire_equipment_orders.none?
+                                 nil
+                               else
+                                 group.fire_equipment_orders.map do |fire_equipment_order|
+                                   {
+                                     fire_equipment_order: fire_equipment_order.to_info_h
+                                   }
+                                 end
+                               end
       }
     end
   end
