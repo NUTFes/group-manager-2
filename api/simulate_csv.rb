@@ -48,7 +48,7 @@ def test_logic(groups)
       emp_student = employee.student_id
       common_student_ids = [UserDetail_STUDENT_ID_EXTERNAL, UserDetail_STUDENT_ID_STAFF]
 
-      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && common_student_ids.exclude?(emp_student)
+      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && !common_student_ids.include?(emp_student)
 
       if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
         group_dup_student_ids[group.id] << emp_student
@@ -75,7 +75,7 @@ g1 = GroupMock.new(1, 'Group 1', [
 # Test 2: 99999999
 g2 = GroupMock.new(2, 'Group 2', [
                      EmployeeMock.new('教員A', 99999999),
-                     EmployeeMock.new('教員B', 99999999)
+                     EmployeeMock.new('教員A', 99999999)
                    ], nil, nil)
 
 puts test_logic([g1, g2]).inspect
