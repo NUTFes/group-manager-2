@@ -2,7 +2,7 @@
 
 class PlaceCategoriesController < ApplicationController
   before_action :set_place_category, only: %i[show update destroy]
-  
+
   def index
     @place_categories = PlaceCategory.all
     render json: fmt(ok, @place_categories)
@@ -26,7 +26,7 @@ class PlaceCategoriesController < ApplicationController
     if @place_category.destroy
       render json: fmt(ok, [], "Deleted place_category = #{params[:id]}")
     else
-      render json: fmt(internal_server_error, [], @place_category.errors.full_messages.join(", ")), status: :internal_server_error
+      render json: fmt(internal_server_error, [], @place_category.errors.full_messages.join(', ')), status: :internal_server_error
     end
   end
 
@@ -43,4 +43,4 @@ class PlaceCategoriesController < ApplicationController
   def place_category_params
     params.permit(:name, :parent_id)
   end
-end 
+end

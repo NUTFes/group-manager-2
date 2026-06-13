@@ -10,7 +10,7 @@ place_categories = [
   { id: 7, name: '2階', parent_id: 5 },
   { id: 8, name: '3階', parent_id: 5 },
   { id: 9, name: '屋外食販', parent_id: nil },
-  { id: 10, name: '体育館', parent_id: nil },
+  { id: 10, name: '体育館', parent_id: nil }
 ]
 
 place_categories.each do |category|

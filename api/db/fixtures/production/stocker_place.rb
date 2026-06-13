@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 stocker_places = [
-  { id: 1, name: 'AL1', name_en: 'AL1', stock_item_status: 1, assign_item_status: 1, place_category_id:2},
-  { id: 2, name: 'AL2', name_en: 'AL2', stock_item_status: 1, assign_item_status: 1, place_category_id: 2},
-  { id: 3, name: 'AL3', name_en: 'AL3', stock_item_status: 1, assign_item_status: 1, place_category_id: 2},
+  { id: 1, name: 'AL1', name_en: 'AL1', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
+  { id: 2, name: 'AL2', name_en: 'AL2', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
+  { id: 3, name: 'AL3', name_en: 'AL3', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
   { id: 4, name: '講義棟103', name_en: 'Lecture Building 103', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
   { id: 5, name: '講義棟104', name_en: 'Lecture Building 104', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
   { id: 6, name: '講義棟105', name_en: 'Lecture Building 105', stock_item_status: 1, assign_item_status: 1, place_category_id: 2 },
