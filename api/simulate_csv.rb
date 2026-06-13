@@ -23,13 +23,13 @@ def test_logic(groups)
     rep_norm = nil
     rep_student = nil
     group_seen_student_ids = Set.new
-    group_seen_normalized = Set.new
+    group_seen_norm_and_id = Set.new
 
     if rep
       rep_norm = rep.name.to_s.gsub(/[[:space:]\u3000]+/, '')
       rep_student = rep.user_detail&.student_id
       group_seen_student_ids << rep_student if rep_student.present?
-      group_seen_normalized << rep_norm if rep_norm.present?
+      group_seen_norm_and_id << [rep_norm, rep_student] if rep_norm.present?
       persons << { group_id: group.id, group: group.name, name: rep.name.to_s, student_id: rep_student, roles: ['代'] }
     end
 
@@ -38,7 +38,7 @@ def test_logic(groups)
       sub_rep_norm = sub_rep.name.to_s.gsub(/[[:space:]\u3000]+/, '')
       sub_rep_student = sub_rep.student_id
       group_seen_student_ids << sub_rep_student if sub_rep_student.present?
-      group_seen_normalized << sub_rep_norm if sub_rep_norm.present?
+      group_seen_norm_and_id << [sub_rep_norm, sub_rep_student] if sub_rep_norm.present?
       persons << { group_id: group.id, group: group.name, name: sub_rep.name.to_s, student_id: sub_rep_student, roles: ['副'] }
     end
 
@@ -48,19 +48,19 @@ def test_logic(groups)
       emp_student = employee.student_id
       common_student_ids = [UserDetail_STUDENT_ID_EXTERNAL, UserDetail_STUDENT_ID_STAFF]
 
-      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && common_student_ids.exclude?(emp_student)
+      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && !common_student_ids.include?(emp_student)
 
       if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
         group_dup_student_ids[group.id] << emp_student
         next
-      elsif !student_id_dup_check_target && emp_norm != '' && group_seen_normalized.include?(emp_norm)
-        group_dup_names[group.id] << emp_norm
+      elsif !student_id_dup_check_target && emp_norm != '' && group_seen_norm_and_id.include?([emp_norm, emp_student])
+        group_dup_names[group.id] << [emp_norm, emp_student]
         next
       end
 
       persons << { group_id: group.id, group: group.name, name: emp_name, student_id: emp_student, roles: [] }
       group_seen_student_ids << emp_student if emp_student
-      group_seen_normalized << emp_norm if emp_norm != ''
+      group_seen_norm_and_id << [emp_norm, emp_student] if emp_norm != ''
     end
   end
   persons
