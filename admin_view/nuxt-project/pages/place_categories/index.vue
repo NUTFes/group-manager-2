@@ -1,0 +1,193 @@
+<template>
+  <div class="main-content" v-if="this.$role(roleID).places.read">
+    <SubHeader pageTitle="エリア一覧">
+      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(category, index) in formattedPlaceCategories"
+            :key="index"
+            @click="
+              () => {
+                if (category.id !== '—') {
+                  $router.push({ path: `/place_categories/` + category.id });
+                }
+              }
+            "
+          >
+            <td>{{ category.id }}</td>
+            <td>{{ category.formattedName }}</td>
+            <td>{{ category.childrenCount }}</td>
+            <td>{{ category.stockerPlacesCount }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="エリアの追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>エリア名</h3>
+          <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>親エリア</h3>
+          <select v-model="parentId">
+            <option value="">未指定（親エリアなし）</option>
+            <option
+              v-for="cat in topLevelCategories"
+              :key="cat.id"
+              :value="cat.id"
+            >
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+  </div>
+  <h1 v-else>閲覧権限がありません</h1>
+</template>
+
+<script>
+import { mapState } from "vuex";
+export default {
+  watchQuery: ["page"],
+  data() {
+    return {
+      placeCategories: [],
+      stockerPlaces: [],
+      headers: ["ID", "エリア名", "下層エリア数", "紐づく在庫場所数"],
+      isOpenAddModal: false,
+      isOpenSnackBar: false,
+      name: "",
+      parentId: "",
+      message: "",
+    };
+  },
+  async asyncData({ $axios }) {
+    const url = "/place_categories";
+    const res = await $axios.$get(url);
+    const spRes = await $axios.$get("/stocker_places");
+    return {
+      placeCategories: res.data,
+      stockerPlaces: spRes.data,
+    };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    formattedPlaceCategories() {
+      let categories = this.placeCategories.map((cat) => {
+        const parent = this.placeCategories.find((p) => p.id === cat.parent_id);
+        const childrenCount = this.placeCategories.filter((p) => p.parent_id === cat.id).length;
+        const stockerPlacesCount = this.stockerPlaces.filter((sp) => sp.place_category_id === cat.id).length;
+        return {
+          ...cat,
+          formattedName: parent ? `${parent.name} / ${cat.name}` : cat.name,
+          parentName: parent ? parent.name : "未指定",
+          childrenCount,
+          stockerPlacesCount,
+        };
+      });
+      categories.sort((a, b) => {
+        const groupA = a.parent_id || a.id;
+        const groupB = b.parent_id || b.id;
+        if (groupA !== groupB) return groupA - groupB;
+        
+        const isChildA = a.parent_id ? 1 : 0;
+        const isChildB = b.parent_id ? 1 : 0;
+        if (isChildA !== isChildB) return isChildA - isChildB;
+        
+        return a.id - b.id;
+      });
+      const unassignedStockerPlacesCount = this.stockerPlaces.filter(sp => !sp.place_category_id).length;
+      categories.push({
+        id: "—",
+        name: "未指定",
+        formattedName: "未指定",
+        parentName: "—",
+        childrenCount: "—",
+        stockerPlacesCount: unassignedStockerPlacesCount,
+      });
+      return categories;
+    },
+    topLevelCategories() {
+      return this.placeCategories.filter((cat) => !cat.parent_id);
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)) || 0)
+    });
+  },
+  methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+    openAddModal() {
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/place_categories/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.placeCategories.push(response.data);
+      });
+    },
+    async submit() {
+      const url = "/place_categories";
+      let params = new URLSearchParams();
+      params.append("name", this.name);
+      if (this.parentId !== "") {
+        params.append("parent_id", this.parentId);
+      }
+
+      this.$axios.$post(url, params).then((response) => {
+        this.openSnackBar(response.data.name + "を追加しました");
+        this.name = "";
+        this.parentId = "";
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
+    },
+  },
+};
+</script>

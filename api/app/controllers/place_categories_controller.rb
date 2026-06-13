@@ -23,8 +23,11 @@ class PlaceCategoriesController < ApplicationController
   end
 
   def destroy
-    @place_category.destroy
-    render json: fmt(ok, [], "Deleted place_category = #{params[:id]}")
+    if @place_category.destroy
+      render json: fmt(ok, [], "Deleted place_category = #{params[:id]}")
+    else
+      render json: fmt(internal_server_error, [], @place_category.errors.full_messages.join(", ")), status: :internal_server_error
+    end
   end
 
   private
