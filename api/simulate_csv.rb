@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'set'
 
 # Mocks
-class GroupMock < Struct.new(:id, :name, :employees, :user, :sub_rep); end
-class EmployeeMock < Struct.new(:name, :student_id); end
-class UserMock < Struct.new(:name, :user_detail); end
-class UserDetailMock < Struct.new(:student_id); end
+GroupMock = Struct.new(:id, :name, :employees, :user, :sub_rep)
+EmployeeMock = Struct.new(:name, :student_id)
+UserMock = Struct.new(:name, :user_detail)
+UserDetailMock = Struct.new(:student_id)
 
 # Test case: 2 regular students, diff ID, same name
 # Test case: 99999999 staff
@@ -46,7 +48,7 @@ def test_logic(groups)
       emp_student = employee.student_id
       common_student_ids = [UserDetail_STUDENT_ID_EXTERNAL, UserDetail_STUDENT_ID_STAFF]
 
-      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && !common_student_ids.include?(emp_student)
+      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && common_student_ids.exclude?(emp_student)
 
       if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
         group_dup_student_ids[group.id] << emp_student
@@ -65,15 +67,15 @@ def test_logic(groups)
 end
 
 # Test 1: Same name, different IDs
-g1 = GroupMock.new(1, "Group 1", [
-  EmployeeMock.new("山田太郎", 11111111),
-  EmployeeMock.new("山田太郎", 22222222)
-], nil, nil)
+g1 = GroupMock.new(1, 'Group 1', [
+                     EmployeeMock.new('山田太郎', 11111111),
+                     EmployeeMock.new('山田太郎', 22222222)
+                   ], nil, nil)
 
 # Test 2: 99999999
-g2 = GroupMock.new(2, "Group 2", [
-  EmployeeMock.new("教員A", 99999999),
-  EmployeeMock.new("教員B", 99999999)
-], nil, nil)
+g2 = GroupMock.new(2, 'Group 2', [
+                     EmployeeMock.new('教員A', 99999999),
+                     EmployeeMock.new('教員B', 99999999)
+                   ], nil, nil)
 
 puts test_logic([g1, g2]).inspect
