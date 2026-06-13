@@ -1793,6 +1793,26 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_groups_for_fire_equipment_order":
+    get:
+      tags:
+      - api/v1/groups_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+      deprecated: false
   "/api/v1/get_groups_have_no_announcement":
     get:
       tags:
@@ -2037,6 +2057,28 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/sync_health_center_submission_statuses":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
   "/api/v1/update_health_center_submission_status/{id}":
     patch:
       tags:
@@ -2064,6 +2106,28 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/upsert_health_center_submission_status":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
   "/api/v1/get_order_info_for_admin_view/{id}":
     get:
       tags:
@@ -2280,6 +2344,35 @@ paths:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
       deprecated: false
   "/api/v1/get_employees_csv/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '404':
+          description: api/v1/output_csv description
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_fire_equipment_orders_csv/{fes_year_id}":
     get:
       tags:
       - api/v1/output_csv
@@ -2627,6 +2720,35 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_project_check_list_pdf/{group_id}":
+    get:
+      tags:
+      - api/v1/output_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputPdf"
+        '404':
+          description: api/v1/output_pdf description
+        '422':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputPdf"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_place_order_index_for_admin_view":
     get:
       tags:
@@ -2813,6 +2935,46 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrdersApi"
+  "/api/v1/output_pdf/power_orders":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PrintPdf"
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PrintPdf"
+      deprecated: false
+  "/api/v1/output_pdf/rental_items":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PrintPdf"
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PrintPdf"
+      deprecated: false
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
       tags:
@@ -6920,6 +7082,156 @@ paths:
         required: true
         schema:
           type: integer
+  "/place_categories":
+    get:
+      tags:
+      - place_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+    post:
+      tags:
+      - place_category
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+  "/place_categories/{id}":
+    get:
+      tags:
+      - place_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place_category
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - place_category
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place_category
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/place_numbers":
     get:
       tags:
@@ -8467,6 +8779,28 @@ paths:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
       deprecated: false
+    post:
+      tags:
+      - rental_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+        '422':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/RentalItem"
+  "/rental_items/translate":
     post:
       tags:
       - rental_item
@@ -11158,6 +11492,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.OutputPdf: {}
     api.v1.PlaceOrdersApi:
       type: object
       properties:
@@ -11170,6 +11505,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.PrintPdf: {}
     api.v1.PublicRelationsApi:
       type: object
       properties:
@@ -11377,6 +11713,23 @@ components:
         id:
           type: integer
           format: int64
+    PlaceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        parent_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     PlaceNumber:
       type: object
       properties:
@@ -11497,6 +11850,19 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        name_en:
+          type: string
+        stock_item_status:
+          type: integer
+        assign_item_status:
+          type: integer
+        place_category_id:
+          type: integer
+          nullable: true
+        place_category:
+          "$ref": "#/components/schemas/PlaceCategory"
     SubRep:
       type: object
       properties:
@@ -11790,6 +12156,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/PlaceAllowList"
+    PlaceCategory:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/PlaceCategory"
     PlaceNumber:
       content:
         application/json:

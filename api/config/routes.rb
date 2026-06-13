@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
+  resources :place_categories
   resources :rental_orders do
     collection do
       get 'group/:group_id', to: 'rental_orders#get_by_group_id'

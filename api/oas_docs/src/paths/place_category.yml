@@ -1,89 +1,67 @@
 ---
 paths:
-  "/rental_items":
+  "/place_categories":
     get:
       tags:
-      - rental_item
+      - place_category
       summary: get summary
       description: get description
       responses:
         '200':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
     post:
       tags:
-      - rental_item
+      - place_category
       summary: post summary
       description: post description
       responses:
         '201':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
-        "$ref": "#/components/requestBodies/RentalItem"
-  "/rental_items/translate":
-    post:
-      tags:
-      - rental_item
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: rental_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/RentalItem"
-        '422':
-          description: rental_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/RentalItem"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/RentalItem"
-  "/rental_items/{id}":
+        "$ref": "#/components/requestBodies/PlaceCategory"
+  "/place_categories/{id}":
     get:
       tags:
-      - rental_item
+      - place_category
       summary: get summary
       description: get description
       responses:
         '200':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
         '404':
-          description: rental_item description
+          description: place_category description
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       parameters:
       - name: id
@@ -94,23 +72,23 @@ paths:
           type: integer
     patch:
       tags:
-      - rental_item
+      - place_category
       summary: patch summary
       description: patch description
       responses:
         '204':
-          description: rental_item description
+          description: place_category description
         '404':
-          description: rental_item description
+          description: place_category description
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
-        "$ref": "#/components/requestBodies/RentalItem"
+        "$ref": "#/components/requestBodies/PlaceCategory"
       parameters:
       - name: id
         in: path
@@ -120,23 +98,23 @@ paths:
           type: integer
     put:
       tags:
-      - rental_item
+      - place_category
       summary: put summary
       description: put description
       responses:
         '204':
-          description: rental_item description
+          description: place_category description
         '404':
-          description: rental_item description
+          description: place_category description
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
-        "$ref": "#/components/requestBodies/RentalItem"
+        "$ref": "#/components/requestBodies/PlaceCategory"
       parameters:
       - name: id
         in: path
@@ -146,24 +124,24 @@ paths:
           type: integer
     delete:
       tags:
-      - rental_item
+      - place_category
       summary: delete summary
       description: delete description
       responses:
         '200':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
         '404':
-          description: rental_item description
+          description: place_category description
         '422':
-          description: rental_item description
+          description: place_category description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       parameters:
       - name: id

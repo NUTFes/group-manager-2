@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    PlaceCategory:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/PlaceCategory"
