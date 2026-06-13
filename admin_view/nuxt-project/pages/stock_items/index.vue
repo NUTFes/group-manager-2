@@ -110,7 +110,7 @@ export default {
           headers: [
               "ID",
               "部屋名",
-              "Area",
+              "エリア",
               "在庫登録",
               "割当",
           ],
