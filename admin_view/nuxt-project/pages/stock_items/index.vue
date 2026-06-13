@@ -6,6 +6,18 @@
       </CommonButton>
     </SubHeader>
 
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="filterPlaceCategories"
+          :on_click="refinementStockerPlaces"
+          value="formattedName"
+        >
+          {{ refPlaceCategory }}
+        </SearchDropDown>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -21,6 +33,7 @@
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
+            <td>{{ formattedCategoryName(stocker_place.place_category_id) }}</td>
             <td>{{ stocker_place.stock_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
             <td>{{ stocker_place.assign_item_status === 1 ? "未登録" : stocker_place.assign_item_status === 2 ? "登録中" : "登録完了" }}</td>
           </tr>
@@ -37,6 +50,19 @@
         <div>
           <h3>部屋名</h3>
           <input v-model="roomName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>エリア</h3>
+          <select v-model="placeCategoryId">
+            <option value="">未指定</option>
+            <option
+              v-for="placeCategory in formattedPlaceCategories"
+              :key="placeCategory.id"
+              :value="placeCategory.id"
+            >
+              {{ placeCategory.formattedName }}
+            </option>
+          </select>
         </div>
         <!-- <div>
           <h3>在庫登録</h3>
@@ -84,6 +110,7 @@ export default {
           headers: [
               "ID",
               "部屋名",
+              "Area",
               "在庫登録",
               "割当",
           ],
@@ -91,6 +118,11 @@ export default {
           stocker_place: [],
           roomName: [],
           roomNameList: [],
+          placeCategories: [],
+          allStockerPlaces: [],
+          refPlaceCategory: "Area: ALL",
+          refPlaceCategoryId: 0,
+          placeCategoryId: null,
           stockItemStatus: [],
           assignItemStatus: [],
           stockItemStatusList: [
@@ -109,14 +141,50 @@ export default {
 	async asyncData({ $axios }) {
 		const stockerPlacesUrl = "/stocker_places";
 		const stockerPlacesRes = await $axios.$get(stockerPlacesUrl);
+		const placeCategoriesUrl = "/place_categories";
+		const placeCategoriesRes = await $axios.$get(placeCategoriesUrl);
 		return {
-			stockerPlaces: stockerPlacesRes.data
+			allStockerPlaces: stockerPlacesRes.data,
+			stockerPlaces: stockerPlacesRes.data,
+			placeCategories: placeCategoriesRes.data
 		}
 	},
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    formattedPlaceCategories() {
+      if (!this.placeCategories) return [];
+      let categories = JSON.parse(JSON.stringify(this.placeCategories));
+      categories = categories.map(cat => {
+        if (cat.parent_id) {
+          const parent = this.placeCategories.find(p => p.id === cat.parent_id);
+          cat.formattedName = parent ? `${parent.name} / ${cat.name}` : cat.name;
+        } else {
+          cat.formattedName = cat.name;
+        }
+        return cat;
+      });
+
+      categories.sort((a, b) => {
+        const groupA = a.parent_id || a.id;
+        const groupB = b.parent_id || b.id;
+        if (groupA !== groupB) return groupA - groupB;
+        
+        const isChildA = a.parent_id ? 1 : 0;
+        const isChildB = b.parent_id ? 1 : 0;
+        if (isChildA !== isChildB) return isChildA - isChildB;
+        
+        return a.id - b.id;
+      });
+      return categories;
+    },
+    filterPlaceCategories() {
+      return [
+        { id: -1, formattedName: "未指定" },
+        ...this.formattedPlaceCategories
+      ];
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);
@@ -129,6 +197,7 @@ export default {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
     },
     openAddModal() {
+      this.placeCategoryId = null;
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
     },
@@ -138,7 +207,8 @@ export default {
     reload(id) {
       const url = "/stocker_places/" + id;
       this.$axios.$get(url).then((response) => {
-        this.stocker_place.data.push(response.data);
+        this.allStockerPlaces.push(response.data);
+        this.refinementStockerPlaces(this.refPlaceCategoryId, this.formattedPlaceCategories);
         console.log(response)
       })
       .catch(error =>
@@ -146,14 +216,14 @@ export default {
         console.log(error)
       })
       ;
-      console.log(this.stocker_place)
     },
     async submit() {
       const url =
         "/stocker_places/" +
         "?name=" +
         this.roomName +
-        "&stock_item_status=1&assign_item_status=1";
+        "&stock_item_status=1&assign_item_status=1" +
+        (this.placeCategoryId ? "&place_category_id=" + this.placeCategoryId : "");
 
       this.$axios.$post(url).then((response) => {
         this.roomName = "";
@@ -162,6 +232,29 @@ export default {
         this.reload(response.data.id);
         this.closeAddModal();
       });
+    },
+    refinementStockerPlaces(item_id, name_list) {
+      this.refPlaceCategoryId = item_id;
+      if (item_id === 0) {
+        this.refPlaceCategory = "Area: ALL";
+        this.stockerPlaces = this.allStockerPlaces;
+      } else if (item_id === -1) {
+        this.refPlaceCategory = "未指定";
+        this.stockerPlaces = this.allStockerPlaces.filter(p => !p.place_category_id);
+      } else {
+        const cat = name_list.find(n => n.id === item_id);
+        this.refPlaceCategory = cat ? cat.formattedName : "ALL";
+        this.stockerPlaces = this.allStockerPlaces.filter(p => {
+          if (p.place_category_id === item_id) return true;
+          const pCat = name_list.find(n => n.id === p.place_category_id);
+          return pCat && pCat.parent_id === item_id;
+        });
+      }
+    },
+    formattedCategoryName(id) {
+      if (!id) return "未指定";
+      const cat = this.formattedPlaceCategories.find(c => c.id === id);
+      return cat ? cat.formattedName : "未指定";
     },
   },
 };
