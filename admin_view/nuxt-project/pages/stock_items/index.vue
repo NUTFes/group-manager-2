@@ -103,6 +103,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   watchQuery: ["page"],
   data() {
@@ -155,28 +156,14 @@ export default {
     }),
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
-      let categories = JSON.parse(JSON.stringify(this.placeCategories));
-      categories = categories.map(cat => {
-        if (cat.parent_id) {
-          const parent = this.placeCategories.find(p => p.id === cat.parent_id);
-          cat.formattedName = parent ? `${parent.name} / ${cat.name}` : cat.name;
-        } else {
-          cat.formattedName = cat.name;
-        }
-        return cat;
+      let categories = this.placeCategories.map(cat => {
+        return {
+          ...cat,
+          formattedName: getFormattedName(cat, this.placeCategories),
+          sortKey: getSortKey(cat, this.placeCategories)
+        };
       });
-
-      categories.sort((a, b) => {
-        const groupA = a.parent_id || a.id;
-        const groupB = b.parent_id || b.id;
-        if (groupA !== groupB) return groupA - groupB;
-        
-        const isChildA = a.parent_id ? 1 : 0;
-        const isChildB = b.parent_id ? 1 : 0;
-        if (isChildA !== isChildB) return isChildA - isChildB;
-        
-        return a.id - b.id;
-      });
+      categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
       return categories;
     },
     filterPlaceCategories() {

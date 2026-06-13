@@ -51,22 +51,11 @@
             <td>紐づく在庫場所</td>
             <td class="text-left">
               <ul class="in-table-tree">
-                <li>
-                  <strong>{{ placeCategory.name }}</strong>
-                  <ul class="tree-ul">
-                    <li v-for="sp in directStockerPlaces" :key="'sp-'+sp.id">
-                      <span class="tree-symbol">├─</span> {{ sp.name }}
-                    </li>
-                    <li v-for="child in children" :key="'cat-'+child.id">
-                      <span class="tree-symbol">├─</span> {{ child.name }}
-                      <ul class="tree-ul-inner">
-                        <li v-for="csp in getStockerPlacesFor(child.id)" :key="'csp-'+csp.id">
-                          <span class="tree-symbol">├─</span> {{ csp.name }}
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
+                <AreaTreeNode 
+                  :category="placeCategory"
+                  :allCategories="placeCategories"
+                  :allStockerPlaces="stockerPlaces"
+                />
               </ul>
             </td>
           </tr>
@@ -90,11 +79,11 @@
           <select v-model="parentId">
             <option value="">未指定（親エリアなし）</option>
             <option
-              v-for="cat in topLevelCategories"
+              v-for="cat in selectableCategories"
               :key="cat.id"
               :value="cat.id"
             >
-              {{ cat.name }}
+              {{ cat.formattedName }}
             </option>
           </select>
         </div>
@@ -124,7 +113,12 @@
 
 <script>
 import { mapState } from "vuex";
+import AreaTreeNode from "../../components/AreaTreeNode.vue";
+import { getFormattedName, getSortKey, getDescendantIds } from "../../utils/place_category_utils";
 export default {
+  components: {
+    AreaTreeNode
+  },
   data() {
     return {
       placeCategory: [],
@@ -165,15 +159,21 @@ export default {
     parentName() {
       if (!this.placeCategory.parent_id) return "未指定";
       const parent = this.placeCategories.find(p => p.id === this.placeCategory.parent_id);
-      return parent ? parent.name : "未指定";
+      return parent ? getFormattedName(parent, this.placeCategories) : "未指定";
     },
     formattedName() {
-      if (!this.placeCategory.parent_id) return this.placeCategory.name;
-      const parent = this.placeCategories.find(p => p.id === this.placeCategory.parent_id);
-      return parent ? `${parent.name} / ${this.placeCategory.name}` : this.placeCategory.name;
+      return getFormattedName(this.placeCategory, this.placeCategories);
     },
-    topLevelCategories() {
-      return this.placeCategories.filter(cat => !cat.parent_id && cat.id !== this.placeCategory.id);
+    selectableCategories() {
+      const descendantIds = getDescendantIds(this.placeCategory.id, this.placeCategories);
+      return this.placeCategories
+        .filter(cat => cat.id !== this.placeCategory.id && !descendantIds.includes(cat.id))
+        .map(cat => ({
+          ...cat,
+          formattedName: getFormattedName(cat, this.placeCategories),
+          sortKey: getSortKey(cat, this.placeCategories)
+        }))
+        .sort((a, b) => a.sortKey.localeCompare(b.sortKey));
     }
   },
   methods: {
