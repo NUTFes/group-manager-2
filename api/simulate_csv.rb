@@ -48,7 +48,7 @@ def test_logic(groups)
       emp_student = employee.student_id
       common_student_ids = [UserDetail_STUDENT_ID_EXTERNAL, UserDetail_STUDENT_ID_STAFF]
 
-      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && !common_student_ids.include?(emp_student)
+      student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && common_student_ids.exclude?(emp_student)
 
       if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
         group_dup_student_ids[group.id] << emp_student
