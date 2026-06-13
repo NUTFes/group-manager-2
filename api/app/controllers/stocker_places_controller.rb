@@ -5,11 +5,11 @@ class StockerPlacesController < ApplicationController
 
   def index
     @stocker_places = StockerPlace.includes(:place_category).all
-    render json: fmt(ok, @stocker_places.as_json(include :place_category))
+    render json: fmt(ok, @stocker_places.as_json(include: :place_category))
   end
 
   def show
-    render json: fmt(ok, @stocker_place.as_json(include :place_category))
+    render json: fmt(ok, @stocker_place.as_json(include: :place_category))
   end
 
   def create
