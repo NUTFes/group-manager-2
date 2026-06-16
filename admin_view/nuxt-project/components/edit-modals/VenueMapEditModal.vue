@@ -13,7 +13,7 @@
             ファイル形式は[.pngか.jpeg又は.jpg]にしてください
           </div>
           <div v-else-if="isFileCheck === true" style="color: red">
-            ファイル名は「参加形式_団体名」の形式で入力してください
+            ファイル名は「^[^\\/:*?"<>|\r\n]+$」を含まない形式で入力してください
           </div>
           <div v-else-if="isFileSizeCheck === true" style="color: red">
             ファイルサイズは20MB以下にしてください
@@ -76,8 +76,7 @@ export default {
         const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
-        
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
         const fileSizeLimit = 20 * 1024 * 1024; // 20MB
         this.isFileSizeCheck = file.size > fileSizeLimit;
 
