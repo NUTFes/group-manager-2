@@ -107,7 +107,7 @@ export default {
     formattedPlaceCategories() {
       let categories = this.placeCategories.map((cat) => {
         const parent = this.placeCategories.find((p) => p.id === cat.parent_id);
-        const childrenCount = this.placeCategories.filter((p) => p.parent_id === cat.id).length;
+        const childrenCount = getDescendantIds(cat.id, this.placeCategories).length;
         const stockerPlacesCount = this.stockerPlaces.filter((sp) => sp.place_category_id === cat.id).length;
         return {
           ...cat,
@@ -145,6 +145,9 @@ export default {
       window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)) || 0)
     });
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
     saveScrollPosition() {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
@@ -167,6 +170,8 @@ export default {
       const url = "/place_categories/" + id;
       this.$axios.$get(url).then((response) => {
         this.placeCategories.push(response.data);
+      }).catch((error) => {
+        this.openSnackBar("データの再読み込みに失敗しました");
       });
     },
     async submit() {
@@ -183,6 +188,8 @@ export default {
         this.parentId = "";
         this.reload(response.data.id);
         this.closeAddModal();
+      }).catch((error) => {
+        this.openSnackBar("追加に失敗しました");
       });
     },
   },

@@ -48,21 +48,33 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '201':
+        '200':
           description: rental_item description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                type: object
+                properties:
+                  name_en:
+                    type: string
         '422':
           description: rental_item description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RentalItem"
+                type: object
+                properties:
+                  name_en:
+                    type: string
       deprecated: false
       requestBody:
-        "$ref": "#/components/requestBodies/RentalItem"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
   "/rental_items/{id}":
     get:
       tags:

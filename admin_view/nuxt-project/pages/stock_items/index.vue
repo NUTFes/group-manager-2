@@ -205,12 +205,14 @@ export default {
       ;
     },
     async submit() {
-      const url =
-        "/stocker_places/" +
-        "?name=" +
-        this.roomName +
-        "&stock_item_status=1&assign_item_status=1" +
-        (this.placeCategoryId ? "&place_category_id=" + this.placeCategoryId : "");
+      let params = new URLSearchParams();
+      params.append("name", this.roomName);
+      params.append("stock_item_status", "1");
+      params.append("assign_item_status", "1");
+      if (this.placeCategoryId) {
+        params.append("place_category_id", this.placeCategoryId);
+      }
+      const url = "/stocker_places/?" + params.toString();
 
       this.$axios.$post(url).then((response) => {
         this.roomName = "";
@@ -231,11 +233,20 @@ export default {
       } else {
         const cat = name_list.find(n => n.id === item_id);
         this.refPlaceCategory = cat ? cat.formattedName : "ALL";
-        this.stockerPlaces = this.allStockerPlaces.filter(p => {
-          if (p.place_category_id === item_id) return true;
-          const pCat = name_list.find(n => n.id === p.place_category_id);
-          return pCat && pCat.parent_id === item_id;
-        });
+        
+        const descendantSet = new Set([item_id]);
+        let queue = [item_id];
+        while (queue.length > 0) {
+          const currentId = queue.shift();
+          const children = name_list.filter(n => n.parent_id === currentId);
+          children.forEach(child => {
+            if (!descendantSet.has(child.id)) {
+              descendantSet.add(child.id);
+              queue.push(child.id);
+            }
+          });
+        }
+        this.stockerPlaces = this.allStockerPlaces.filter(p => descendantSet.has(p.place_category_id));
       }
     },
     formattedCategoryName(id) {

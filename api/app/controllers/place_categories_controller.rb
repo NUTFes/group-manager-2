@@ -13,13 +13,20 @@ class PlaceCategoriesController < ApplicationController
   end
 
   def create
-    @place_category = PlaceCategory.create(place_category_params)
-    render json: fmt(ok, @place_category)
+    @place_category = PlaceCategory.new(place_category_params)
+    if @place_category.save
+      render json: fmt(ok, @place_category), status: :created
+    else
+      render json: fmt(unprocessable_entity, @place_category.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def update
-    @place_category.update(place_category_params)
-    render json: fmt(created, @place_category, "Updated place_category id = #{params[:id]}")
+    if @place_category.update(place_category_params)
+      render json: fmt(ok, @place_category, "Updated place_category id = #{params[:id]}"), status: :ok
+    else
+      render json: fmt(unprocessable_entity, @place_category.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -36,7 +43,7 @@ class PlaceCategoriesController < ApplicationController
     if PlaceCategory.exists?(params[:id])
       @place_category = PlaceCategory.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found place_category = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found place_category = #{params[:id]}"), status: :not_found
     end
   end
 

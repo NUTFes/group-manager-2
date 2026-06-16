@@ -6,5 +6,7 @@ class CreatePlaceCategories < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+
+    add_check_constraint :place_categories, "parent_id IS NULL OR parent_id <> id", name: "check_parent_id_not_self"
   end
 end

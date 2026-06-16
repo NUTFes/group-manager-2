@@ -5,4 +5,4 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/PlaceCategory"
+            "$ref": "#/components/schemas/PlaceCategoryRequest"

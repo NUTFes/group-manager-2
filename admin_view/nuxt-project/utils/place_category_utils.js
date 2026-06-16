@@ -28,12 +28,15 @@ export function getSortKey(cat, allCategories) {
   return keys.join("/");
 }
 
-export function getDescendantIds(catId, allCategories) {
+export function getDescendantIds(catId, allCategories, visited = new Set()) {
+  if (visited.has(catId)) return [];
+  visited.add(catId);
+
   let ids = [];
   const children = allCategories.filter((c) => c.parent_id === catId);
   for (const child of children) {
     ids.push(child.id);
-    ids = ids.concat(getDescendantIds(child.id, allCategories));
+    ids = ids.concat(getDescendantIds(child.id, allCategories, visited));
   }
   return ids;
 }

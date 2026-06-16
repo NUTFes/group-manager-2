@@ -12,13 +12,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
         '422':
           description: api/v1/print_pdf description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false
   "/api/v1/output_pdf/rental_items":
     get:
@@ -32,11 +32,11 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
         '422':
           description: api/v1/print_pdf description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false

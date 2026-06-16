@@ -534,17 +534,14 @@ export default {
       },
 
     async editPlace() {
-      const placeUrl =
-        "/stocker_places/" +
-        this.id +
-        "?name=" +
-        this.roomName +
-        "&stock_item_status=" +
-        this.stockItemStatus +
-        "&assign_item_status=" +
-        this.assignItemStatus +
-        "&place_category_id=" +
-        this.placeCategoryId;
+      let params = new URLSearchParams();
+      params.append("name", this.roomName);
+      params.append("stock_item_status", this.stockItemStatus);
+      params.append("assign_item_status", this.assignItemStatus);
+      if (this.placeCategoryId) {
+        params.append("place_category_id", this.placeCategoryId);
+      }
+      const placeUrl = "/stocker_places/" + this.id + "?" + params.toString();
 
       await this.$axios.$put(placeUrl).then((response) => {
         this.closePlaceEditModal();
