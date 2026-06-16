@@ -12,6 +12,7 @@ paths:
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -27,6 +28,13 @@ paths:
                     type: array
                     items:
                       "$ref": "#/components/schemas/PlaceCategory"
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
     post:
       tags:
       - place_category
@@ -38,6 +46,7 @@ paths:
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -56,6 +65,7 @@ paths:
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -86,40 +96,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                      message:
-                        type: string
-                      option:
-                        type: string
-                  data:
-                    "$ref": "#/components/schemas/PlaceCategory"
-        '404':
-          description: place_category description
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - place_category
-      summary: patch summary
-      description: patch description
-      responses:
-        '200':
-          description: place_category description
-          content:
-            application/json:
-              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -140,6 +117,31 @@ paths:
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place_category
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -155,6 +157,24 @@ paths:
                     type: array
                     items:
                       type: string
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -171,6 +191,31 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
         '200':
           description: place_category description
           content:
@@ -189,28 +234,6 @@ paths:
                         type: string
                   data:
                     "$ref": "#/components/schemas/PlaceCategory"
-        '404':
-          description: place_category description
-        '422':
-          description: place_category description
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: object
-                    properties:
-                      code:
-                        type: integer
-                      message:
-                        type: string
-                      option:
-                        type: string
-                  data:
-                    type: array
-                    items:
-                      type: string
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -232,6 +255,7 @@ paths:
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/PlaceCategory"
                 type: object
                 properties:
                   status:
@@ -249,6 +273,12 @@ paths:
                       type: string
         '404':
           description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
         '500':
           description: place_category description
           content:

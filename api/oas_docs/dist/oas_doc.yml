@@ -2947,13 +2947,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
         '422':
           description: api/v1/print_pdf description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false
   "/api/v1/output_pdf/rental_items":
     get:
@@ -2967,13 +2967,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
         '422':
           description: api/v1/print_pdf description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
@@ -7095,6 +7095,21 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/PlaceCategory"
         '422':
           description: place_category description
           content:
@@ -7114,12 +7129,40 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
         '422':
           description: place_category description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7136,6 +7179,19 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
         '404':
           description: place_category description
         '422':
@@ -7168,6 +7224,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7194,6 +7283,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7216,6 +7338,21 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
         '404':
           description: place_category description
         '422':
@@ -7224,6 +7361,26 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+        '500':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
       deprecated: false
       parameters:
       - name: id
@@ -8819,9 +8976,29 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+                type: object
+                properties:
+                  name_en:
+                    type: string
+        '200':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name_en:
+                    type: string
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
   "/rental_items/{id}":
     get:
       tags:
@@ -11505,7 +11682,12 @@ components:
         id:
           type: integer
           format: int64
-    api.v1.PrintPdf: {}
+    PrintPdf:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
     api.v1.PublicRelationsApi:
       type: object
       properties:
@@ -11730,6 +11912,16 @@ components:
         updated_at:
           type: string
           format: date-time
+    PlaceCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        parent_id:
+          type: integer
+          nullable: true
+      required:
+      - name
     PlaceNumber:
       type: object
       properties:
@@ -11743,12 +11935,6 @@ components:
           type: integer
           format: int64
     PowerOrder:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    PrintPdf:
       type: object
       properties:
         id:
@@ -12160,7 +12346,7 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/PlaceCategory"
+            "$ref": "#/components/schemas/PlaceCategoryRequest"
     PlaceNumber:
       content:
         application/json:
