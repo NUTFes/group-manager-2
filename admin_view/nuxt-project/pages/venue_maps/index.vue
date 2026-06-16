@@ -213,7 +213,7 @@ export default {
         const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
         const fileSizeLimit = 20 * 1024 * 1024; // 20MB
         this.isFileSizeCheck = file.size > fileSizeLimit;
 
@@ -230,16 +230,17 @@ export default {
           );
           this.isInvalidFile = true;
           return;
-          // ファイル名のチェック。"_"で区切られているかどうかのチェック
+          // ファイル名のバリデーション。「^\/:*?"<>|\r\n」が含まれていないかどうか
         } else if (!fileNameRegex.test(file.name)) {
           this.openSnackBar(
-            "ファイル名は「参加形式_団体名」の形式で入力してください"
+            "ファイル名は「^[^\\/:*?\"<>|\r\n]+$」を含まない形式で入力してください"
           );
           this.isFileCheck = true;
           return;
         } else {
           this.isInvalidFile = false;
           this.isFileCheck = false;
+          this.isFileSizeCheck = false;
           this.isFile = true;
         }
       }
