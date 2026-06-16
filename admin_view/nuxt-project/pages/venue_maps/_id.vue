@@ -109,6 +109,7 @@ export default {
       isInvalidFile: false,
       isFile: false,
       isFileCheck: false,
+      isFileSizeCheck: false,
     };
   },
   computed: {
@@ -160,7 +161,15 @@ export default {
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
         const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
-
+        const fileSizeLimit = 20 * 1024 * 1024; // 20MB
+        this.isFileSizeCheck = file.size > fileSizeLimit;
+        
+        // ファイルサイズのバリデーション
+        if(this.isFileSizeCheck){
+          this.openSnackBar(
+            "ファイルサイズは20MB以下にしてください。"
+          );
+          this.isFileSizeCheck = true;
         // ファイル形式のバリデーション
         if (this.isInvalidFile) {
           this.openSnackBar(
@@ -178,6 +187,7 @@ export default {
         } else {
           this.isInvalidFile = false;
           this.isFileCheck = false;
+          this.isFileSizeCheck = false;
           this.isFile = true;
         }
       }
