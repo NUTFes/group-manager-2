@@ -11,6 +11,6 @@ class CommentTest < ActiveSupport::TestCase
     comment = Comment.new(commentable: health_center_submission_statuses(:food_product_unapproved), body: nil)
 
     assert_not comment.valid?
-    assert_includes comment.errors[:body], "can't be blank"
+    assert comment.errors.added?(:body, :blank)
   end
 end

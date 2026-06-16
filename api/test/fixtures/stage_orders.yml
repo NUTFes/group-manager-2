@@ -1,6 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   group_id: 1
   is_sunny: false
   fes_date_id: 1
@@ -15,6 +16,7 @@ one:
   cleanup_end_time: MyString
 
 two:
+  id: 2
   group_id: 1
   is_sunny: false
   fes_date_id: 1

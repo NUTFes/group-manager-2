@@ -23,8 +23,12 @@ class SubRepsController < ApplicationController
   # POST /sub_reps
   # POST /sub_reps.json
   def create
-    @sub_rep = SubRep.create(sub_rep_params)
-    render json: fmt(created, @sub_rep)
+    @sub_rep = SubRep.new(sub_rep_params)
+    if @sub_rep.save
+      render json: fmt(created, @sub_rep)
+    else
+      render json: fmt(unprocessable_entity, @sub_rep.errors), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /sub_reps/1
@@ -53,7 +57,7 @@ class SubRepsController < ApplicationController
     if SubRep.exists?(params[:id])
       @sub_rep = SubRep.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}"), status: :not_found
     end
   end
 

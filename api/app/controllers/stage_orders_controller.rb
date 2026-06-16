@@ -20,8 +20,12 @@ class StageOrdersController < ApplicationController
   # POST /stage_orders
   # POST /stage_orders.json
   def create
-    @stage_order = StageOrder.create(stage_order_params)
-    render json: fmt(created, @stage_order)
+    @stage_order = StageOrder.new(stage_order_params)
+    if @stage_order.save
+      render json: fmt(created, @stage_order)
+    else
+      render json: fmt(unprocessable_entity, @stage_order.errors), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /stage_orders/1
@@ -50,7 +54,7 @@ class StageOrdersController < ApplicationController
     if StageOrder.exists?(params[:id])
       @stage_order = StageOrder.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}"), status: :not_found
     end
   end
 

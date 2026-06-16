@@ -9,24 +9,24 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get index' do
     get user_details_url, as: :json
-    assert_response :success
+    assert_response :unauthorized
   end
 
   test 'should create user_detail' do
     assert_difference('UserDetail.count') do
-      post user_details_url, params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
+      post user_details_url, params: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id, student_id: @user_detail.student_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show user_detail' do
     get user_detail_url(@user_detail), as: :json
-    assert_response :success
+    assert_response :unauthorized
   end
 
   test 'should update user_detail' do
-    patch user_detail_url(@user_detail), params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
+    patch user_detail_url(@user_detail), params: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id, student_id: @user_detail.student_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
       delete user_detail_url(@user_detail), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

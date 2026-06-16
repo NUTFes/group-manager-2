@@ -1,9 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   name: MyString
-  is_rentable: false
+  is_stage_rentable: false
+  is_inside_shop_rentable: false
+  is_outside_shop_rentable: false
 
 two:
+  id: 2
   name: MyString
-  is_rentable: false
+  is_stage_rentable: false
+  is_inside_shop_rentable: false
+  is_outside_shop_rentable: false

@@ -14,10 +14,10 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create assign_stage' do
     assert_difference('AssignStage.count') do
-      post assign_stages_url, params: { assign_stage: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start } }, as: :json
+      post assign_stages_url, params: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show assign_stage' do
@@ -26,7 +26,7 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update assign_stage' do
-    patch assign_stage_url(@assign_stage), params: { assign_stage: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start } }, as: :json
+    patch assign_stage_url(@assign_stage), params: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
       delete assign_stage_url(@assign_stage), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   place_order_id: 1
   place_id: 1
 
 two:
+  id: 2
   place_order_id: 1
   place_id: 1

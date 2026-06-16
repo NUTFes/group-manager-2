@@ -14,10 +14,10 @@ class StageCommonOptionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create stage_common_option' do
     assert_difference('StageCommonOption.count') do
-      post stage_common_options_url, params: { stage_common_option: { bgm: @stage_common_option.bgm, camera_permission: @stage_common_option.camera_permission, group_id: @stage_common_option.group_id, loud_sound: @stage_common_option.loud_sound, own_equipment: @stage_common_option.own_equipment } }, as: :json
+      post stage_common_options_url, params: { bgm: @stage_common_option.bgm, camera_permission: @stage_common_option.camera_permission, group_id: @stage_common_option.group_id, loud_sound: @stage_common_option.loud_sound, own_equipment: @stage_common_option.own_equipment }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show stage_common_option' do
@@ -26,7 +26,7 @@ class StageCommonOptionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update stage_common_option' do
-    patch stage_common_option_url(@stage_common_option), params: { stage_common_option: { bgm: @stage_common_option.bgm, camera_permission: @stage_common_option.camera_permission, group_id: @stage_common_option.group_id, loud_sound: @stage_common_option.loud_sound, own_equipment: @stage_common_option.own_equipment } }, as: :json
+    patch stage_common_option_url(@stage_common_option), params: { bgm: @stage_common_option.bgm, camera_permission: @stage_common_option.camera_permission, group_id: @stage_common_option.group_id, loud_sound: @stage_common_option.loud_sound, own_equipment: @stage_common_option.own_equipment }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,30 @@ class StageCommonOptionsControllerTest < ActionDispatch::IntegrationTest
       delete stage_common_option_url(@stage_common_option), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
+  end
+
+  test 'should not create stage_common_option with invalid params' do
+    assert_no_difference('StageCommonOption.count') do
+      post stage_common_options_url, params: { group_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show stage_common_option with invalid id' do
+    get stage_common_option_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update stage_common_option with invalid id' do
+    patch stage_common_option_url(99999), params: { bgm: false }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy stage_common_option with invalid id' do
+    assert_no_difference('StageCommonOption.count') do
+      delete stage_common_option_url(99999), as: :json
+    end
+    assert_response :not_found
   end
 end

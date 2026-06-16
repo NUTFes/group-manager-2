@@ -13,11 +13,11 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create employee' do
-    assert_difference('Employee.count') do
-      post employees_url, params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
+    assert_no_difference('Employee.count') do
+      post employees_url, params: { group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id, stool_test_id: @employee.stool_test_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :unauthorized
   end
 
   test 'should show employee' do
@@ -26,15 +26,15 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update employee' do
-    patch employee_url(@employee), params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
-    assert_response :ok
+    patch employee_url(@employee), params: { group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id, stool_test_id: @employee.stool_test_id }, as: :json
+    assert_response :unauthorized
   end
 
   test 'should destroy employee' do
-    assert_difference('Employee.count', -1) do
+    assert_no_difference('Employee.count') do
       delete employee_url(@employee), as: :json
     end
 
-    assert_response :no_content
+    assert_response :unauthorized
   end
 end

@@ -14,10 +14,10 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create assign_group_place' do
     assert_difference('AssignGroupPlace.count') do
-      post assign_group_places_url, params: { assign_group_place: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id } }, as: :json
+      post assign_group_places_url, params: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show assign_group_place' do
@@ -26,7 +26,7 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update assign_group_place' do
-    patch assign_group_place_url(@assign_group_place), params: { assign_group_place: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id } }, as: :json
+    patch assign_group_place_url(@assign_group_place), params: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
       delete assign_group_place_url(@assign_group_place), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

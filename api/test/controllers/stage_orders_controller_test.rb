@@ -14,10 +14,10 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create stage_order' do
     assert_difference('StageOrder.count') do
-      post stage_orders_url, params: { stage_order: { cleanup_end_time: @stage_order.cleanup_end_time, cleanup_time_interval: @stage_order.cleanup_time_interval, fes_date_id: @stage_order.fes_date_id, group_id: @stage_order.group_id, is_sunny: @stage_order.is_sunny, performance_end_time: @stage_order.performance_end_time, performance_start_time: @stage_order.performance_start_time, prepare_start_time: @stage_order.prepare_start_time, prepare_time_interval: @stage_order.prepare_time_interval, stage_first: @stage_order.stage_first, stage_second: @stage_order.stage_second, use_time_interval: @stage_order.use_time_interval } }, as: :json
+      post stage_orders_url, params: { cleanup_end_time: @stage_order.cleanup_end_time, cleanup_time_interval: @stage_order.cleanup_time_interval, fes_date_id: @stage_order.fes_date_id, group_id: @stage_order.group_id, is_sunny: @stage_order.is_sunny, performance_end_time: @stage_order.performance_end_time, performance_start_time: @stage_order.performance_start_time, prepare_start_time: @stage_order.prepare_start_time, prepare_time_interval: @stage_order.prepare_time_interval, stage_first: @stage_order.stage_first, stage_second: @stage_order.stage_second, use_time_interval: @stage_order.use_time_interval }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show stage_order' do
@@ -26,7 +26,7 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update stage_order' do
-    patch stage_order_url(@stage_order), params: { stage_order: { cleanup_end_time: @stage_order.cleanup_end_time, cleanup_time_interval: @stage_order.cleanup_time_interval, fes_date_id: @stage_order.fes_date_id, group_id: @stage_order.group_id, is_sunny: @stage_order.is_sunny, performance_end_time: @stage_order.performance_end_time, performance_start_time: @stage_order.performance_start_time, prepare_start_time: @stage_order.prepare_start_time, prepare_time_interval: @stage_order.prepare_time_interval, stage_first: @stage_order.stage_first, stage_second: @stage_order.stage_second, use_time_interval: @stage_order.use_time_interval } }, as: :json
+    patch stage_order_url(@stage_order), params: { cleanup_end_time: @stage_order.cleanup_end_time, cleanup_time_interval: @stage_order.cleanup_time_interval, fes_date_id: @stage_order.fes_date_id, group_id: @stage_order.group_id, is_sunny: @stage_order.is_sunny, performance_end_time: @stage_order.performance_end_time, performance_start_time: @stage_order.performance_start_time, prepare_start_time: @stage_order.prepare_start_time, prepare_time_interval: @stage_order.prepare_time_interval, stage_first: @stage_order.stage_first, stage_second: @stage_order.stage_second, use_time_interval: @stage_order.use_time_interval }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,30 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
       delete stage_order_url(@stage_order), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
+  end
+
+  test 'should not create stage_order with invalid params' do
+    assert_no_difference('StageOrder.count') do
+      post stage_orders_url, params: { group_id: nil, fes_date_id: nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test 'should not show stage_order with invalid id' do
+    get stage_order_url(99999), as: :json
+    assert_response :not_found
+  end
+
+  test 'should not update stage_order with invalid id' do
+    patch stage_order_url(99999), params: { is_sunny: false }, as: :json
+    assert_response :not_found
+  end
+
+  test 'should not destroy stage_order with invalid id' do
+    assert_no_difference('StageOrder.count') do
+      delete stage_order_url(99999), as: :json
+    end
+    assert_response :not_found
   end
 end

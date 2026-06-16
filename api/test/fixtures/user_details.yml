@@ -1,13 +1,17 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  tel: 1
+  id: 1
+  tel: '09012345678'
   grade_id: 1
   department_id: 1
-  user: one
+  user_id: 1
+  student_id: 12345678
 
 two:
-  tel: 1
+  id: 2
+  tel: '09012345679'
   grade_id: 1
   department_id: 1
-  user: two
+  user_id: 2
+  student_id: 12345679

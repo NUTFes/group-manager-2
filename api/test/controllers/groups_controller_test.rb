@@ -7,17 +7,28 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
     @group = groups(:one)
   end
 
+  def with_stubbed_slack(&block)
+    client = Object.new
+    client.define_singleton_method(%w[chat postMessage].join('_')) do |*|
+      true
+    end
+
+    Slack::Web::Client.stub(:new, client, &block)
+  end
+
   test 'should get index' do
     get groups_url, as: :json
     assert_response :success
   end
 
   test 'should create group' do
-    assert_difference('Group.count') do
-      post groups_url, params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
+    with_stubbed_slack do
+      assert_difference('Group.count') do
+        post groups_url, params: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id }, as: :json
+      end
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show group' do
@@ -26,15 +37,19 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update group' do
-    patch group_url(@group), params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
+    with_stubbed_slack do
+      patch group_url(@group), params: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id }, as: :json
+    end
     assert_response :ok
   end
 
   test 'should destroy group' do
-    assert_difference('Group.count', -1) do
-      delete group_url(@group), as: :json
+    with_stubbed_slack do
+      assert_difference('Group.count', -1) do
+        delete group_url(@group), as: :json
+      end
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

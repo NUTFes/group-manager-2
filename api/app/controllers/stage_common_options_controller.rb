@@ -20,8 +20,12 @@ class StageCommonOptionsController < ApplicationController
   # POST /stage_common_options
   # POST /stage_common_options.json
   def create
-    @stage_common_option = StageCommonOption.create(stage_common_option_params)
-    render json: fmt(created, @stage_common_option)
+    @stage_common_option = StageCommonOption.new(stage_common_option_params)
+    if @stage_common_option.save
+      render json: fmt(created, @stage_common_option)
+    else
+      render json: fmt(unprocessable_entity, @stage_common_option.errors), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /stage_common_options/1
@@ -50,7 +54,7 @@ class StageCommonOptionsController < ApplicationController
     if StageCommonOption.exists?(params[:id])
       @stage_common_option = StageCommonOption.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}")
+      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}"), status: :not_found
     end
   end
 

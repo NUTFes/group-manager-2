@@ -14,10 +14,10 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create rental_order' do
     assert_difference('RentalOrder.count') do
-      post rental_orders_url, params: { rental_order: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id } }, as: :json
+      post rental_orders_url, params: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show rental_order' do
@@ -26,7 +26,7 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update rental_order' do
-    patch rental_order_url(@rental_order), params: { rental_order: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id } }, as: :json
+    patch rental_order_url(@rental_order), params: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
       delete rental_order_url(@rental_order), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

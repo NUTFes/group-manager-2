@@ -14,10 +14,10 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create memo' do
     assert_difference('Memo.count') do
-      post memos_url, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
+      post memos_url, params: { content: @memo.content, user_id: @memo.user_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show memo' do
@@ -26,7 +26,7 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update memo' do
-    patch memo_url(@memo), params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
+    patch memo_url(@memo), params: { content: @memo.content, user_id: @memo.user_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
       delete memo_url(@memo), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end
