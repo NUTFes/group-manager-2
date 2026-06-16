@@ -90,7 +90,7 @@
             ファイル形式は[.pngか.jpeg又は.jpg]にしてください
           </div>
           <div v-else-if="isFileCheck && !isInvalidFile" style="color: red">
-            ファイル名は「参加形式_団体名」の形式で入力してください
+            ファイル名は「^[^\\/:*?"<>|\r\n]+$」を含まない形式で入力してください
           </div>
           <div v-else-if="isFileSizeCheck === true" style="color: red">
             ファイルサイズは20MB以下にしてください
