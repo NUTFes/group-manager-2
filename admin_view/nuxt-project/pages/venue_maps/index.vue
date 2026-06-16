@@ -86,10 +86,10 @@
             <input type="file" accept=".png, .jpg" @change="fileUpload" />
             {{ files[0].name }}
           </label>
-          <div v-if="isInvalidFile && !isFileCheck" style="color: red">
+          <div v-if="isInvalidFile === true" style="color: red">
             ファイル形式は[.pngか.jpeg又は.jpg]にしてください
           </div>
-          <div v-else-if="isFileCheck && !isInvalidFile" style="color: red">
+          <div v-else-if="isFileCheck === true" style="color: red">
             ファイル名は「^[^\\/:*?"<>|\r\n]+$」を含まない形式で入力してください
           </div>
           <div v-else-if="isFileSizeCheck === true" style="color: red">
