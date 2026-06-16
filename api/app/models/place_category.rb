@@ -3,8 +3,8 @@
 class PlaceCategory < ApplicationRecord
   has_many :stocker_places, dependent: :nullify
 
-  belongs_to :parent, class_name: 'PlaceCategory', optional: true
-  has_many :children, class_name: 'PlaceCategory', foreign_key: 'parent_id', dependent: :restrict_with_error
+  belongs_to :parent, class_name: 'PlaceCategory', optional: true, inverse_of: :children
+  has_many :children, class_name: 'PlaceCategory', foreign_key: 'parent_id', dependent: :restrict_with_error, inverse_of: :parent
 
   validate :parent_cannot_be_self_or_descendant
 
