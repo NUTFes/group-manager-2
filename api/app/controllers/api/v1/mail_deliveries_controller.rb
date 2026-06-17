@@ -5,6 +5,7 @@ class Api::V1::MailDeliveriesController < ApplicationController
   before_action :require_admin!
 
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP
+  MULTIPLE_RECIPIENTS_REGEXP = /[,;]|\S+@\S+\s+\S+@\S+|<[^>]+>.*<[^>]+>/
 
   def create
     errors = validate_mail_delivery_params
@@ -37,13 +38,18 @@ class Api::V1::MailDeliveriesController < ApplicationController
     errors << 'to is required' if mail_delivery_params[:to].blank?
     errors << 'subject is required' if mail_delivery_params[:subject].blank?
     errors << 'body is required' if mail_delivery_params[:body].blank?
-    errors << 'to must be a single email address' if multiple_recipients?
-    errors << 'to is invalid' if mail_delivery_params[:to].present? && !valid_email?
+    if mail_delivery_params[:to].present?
+      if multiple_recipients?
+        errors << 'to must be a single email address'
+      elsif !valid_email?
+        errors << 'to is invalid'
+      end
+    end
     errors
   end
 
   def multiple_recipients?
-    mail_delivery_params[:to].to_s.match?(/[,;]/)
+    mail_delivery_params[:to].to_s.match?(MULTIPLE_RECIPIENTS_REGEXP)
   end
 
   def valid_email?

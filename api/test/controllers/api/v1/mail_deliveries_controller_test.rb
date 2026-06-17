@@ -6,12 +6,17 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
   setup do
+    @original_gmail_address = ENV['GMAIL_ADDRESS']
     ENV['GMAIL_ADDRESS'] = 'no-reply@example.com'
     ActionMailer::Base.deliveries.clear
     Role.create!(id: 1, name: 'admin')
     Role.create!(id: 2, name: 'user')
     @admin = create_user!(email: 'admin@example.com', role_id: 1)
     @user = create_user!(email: 'user@example.com', role_id: 2)
+  end
+
+  teardown do
+    ENV['GMAIL_ADDRESS'] = @original_gmail_address
   end
 
   test 'admin can deliver a mail' do
@@ -80,6 +85,31 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'to must be a single email address'
+  end
+
+  test 'space separated multiple recipients return unprocessable entity' do
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post api_v1_mail_deliveries_path,
+           params: valid_params.merge(to: 'one@example.com two@example.com'),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'to must be a single email address'
+  end
+
+  test 'multiple display-name recipients return unprocessable entity' do
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post api_v1_mail_deliveries_path,
+           params: valid_params.merge(to: 'One <one@example.com> Two <two@example.com>'),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'to must be a single email address'
   end
 
   private

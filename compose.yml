@@ -32,7 +32,7 @@ services:
     container_name: "API"
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
-    env_file: [webhook.env, .env]
+    env_file: [webhook.env, .env, ./api/.env]
     environment:
       - TZ=Asia/Tokyo
     depends_on: [db]
