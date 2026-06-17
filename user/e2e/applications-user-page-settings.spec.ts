@@ -67,10 +67,10 @@ const applicationButton = (page: Page, title: string) =>
   page.getByRole('button').filter({ hasText: title });
 
 test.describe('home applications user page setting behavior', () => {
-  test('treats the registration toggle as correct for applications that are not registered yet', async ({
-    page,
-  }) => {
-    for (const row of applicationsUsingRegistrationAndEditSettings) {
+  for (const row of applicationsUsingRegistrationAndEditSettings) {
+    test(`${row.title}: 未登録時は登録フラグが開いていれば受付中`, async ({
+      page,
+    }) => {
       await setupHomeApiMocks({
         page,
         userPageSettings: settingWithOnly(row.registrationSettingKey),
@@ -82,13 +82,11 @@ test.describe('home applications user page setting behavior', () => {
       await page.goto('/home');
 
       await expect(applicationButton(page, row.title)).toContainText('受付中');
-    }
-  });
+    });
 
-  test('does not use edit toggles to open applications that are not registered yet', async ({
-    page,
-  }) => {
-    for (const row of applicationsUsingRegistrationAndEditSettings) {
+    test(`${row.title}: 未登録時は編集フラグだけでは受付中にならない`, async ({
+      page,
+    }) => {
       await setupHomeApiMocks({
         page,
         userPageSettings: settingWithOnly(row.editSettingKey),
@@ -102,13 +100,11 @@ test.describe('home applications user page setting behavior', () => {
       await expect(applicationButton(page, row.title)).toContainText(
         '受付終了'
       );
-    }
-  });
+    });
 
-  test('treats the edit toggle as correct for applications that are already registered', async ({
-    page,
-  }) => {
-    for (const row of applicationsUsingRegistrationAndEditSettings) {
+    test(`${row.title}: 登録済み時は編集フラグが開いていれば受付中`, async ({
+      page,
+    }) => {
       await setupHomeApiMocks({
         page,
         userPageSettings: settingWithOnly(row.editSettingKey),
@@ -120,13 +116,11 @@ test.describe('home applications user page setting behavior', () => {
       await page.goto('/home');
 
       await expect(applicationButton(page, row.title)).toContainText('受付中');
-    }
-  });
+    });
 
-  test('does not use registration toggles to reopen applications that are already registered', async ({
-    page,
-  }) => {
-    for (const row of applicationsUsingRegistrationAndEditSettings) {
+    test(`${row.title}: 登録済み時は登録フラグだけでは受付中にならない`, async ({
+      page,
+    }) => {
       await setupHomeApiMocks({
         page,
         userPageSettings: settingWithOnly(row.registrationSettingKey),
@@ -140,10 +134,10 @@ test.describe('home applications user page setting behavior', () => {
       await expect(applicationButton(page, row.title)).toContainText(
         '受付終了'
       );
-    }
-  });
+    });
+  }
 
-  test('uses the group registration toggle before group registration and the group edit toggle after group registration', async ({
+  test('団体申請: 団体登録前は isRegistGroup、登録後は isEditGroup を参照する', async ({
     page,
   }) => {
     await setupHomeApiMocks({

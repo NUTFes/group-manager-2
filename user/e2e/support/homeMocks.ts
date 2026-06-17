@@ -309,10 +309,7 @@ export const setupHomeApiMocks = async ({
   });
 };
 
-export const normalizeApiPath = (pathname: string) =>
-  pathname.startsWith('/undefined/')
-    ? pathname.replace('/undefined', '')
-    : pathname;
+export const normalizeApiPath = (pathname: string) => pathname;
 
 export const fulfillJson = async (route: Route, body: unknown) => {
   await route.fulfill({
