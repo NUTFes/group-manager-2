@@ -121,6 +121,68 @@ const categoryCases = [
 const applicationButton = (page: Page, title: string) =>
   page.getByRole('button').filter({ hasText: title });
 
+const applicationsUsingAddAndEditSettings = [
+  {
+    title: '物品申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'rentalItem',
+    addSettingKey: 'addRentalOrder',
+    editSettingKey: 'isEditRentalOrder',
+  },
+  {
+    title: '電力申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'powerOrder',
+    addSettingKey: 'addPowerOrder',
+    editSettingKey: 'isEditPowerOrder',
+  },
+  {
+    title: '従業員申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'employee',
+    addSettingKey: 'addEmployee',
+    editSettingKey: 'isEditEmployee',
+    registrationControlText:
+      '「代表」と「副代表」以外の従業員申請を行いますか？',
+  },
+  {
+    title: '販売品申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'foodProduct',
+    addSettingKey: 'addFoodProduct',
+    editSettingKey: 'isEditFoodProduct',
+    registrationControlText: '販売品名',
+  },
+  {
+    title: '購入品申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'purchaseList',
+    addSettingKey: 'addPurchaseList',
+    editSettingKey: 'isEditPurchaseList',
+  },
+  {
+    title: 'ステージ申請',
+    groupCategoryId: GROUP_CATEGORY.STAGE,
+    registrationStatusKey: 'stageOrder',
+    addSettingKey: 'addStageOrder',
+    editSettingKey: 'isEditStageOrder',
+    registrationControlText: '開催日',
+  },
+  {
+    title: '火気使用申請',
+    groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
+    registrationStatusKey: 'fireEquipmentOrder',
+    addSettingKey: 'addFireEquipmentOrder',
+    editSettingKey: 'isEditFireEquipmentOrder',
+  },
+] as const;
+
+const registrationButton = (page: Page) =>
+  page.getByRole('button', { name: '登録', exact: true });
+
+const editButton = (page: Page) =>
+  page.getByRole('button', { name: /修正|編集/ });
+
 test.describe('home application category behavior', () => {
   for (const categoryCase of categoryCases) {
     test(`shows current application set for ${categoryCase.name}`, async ({
@@ -304,6 +366,104 @@ test.describe('home application form submissions', () => {
 });
 
 test.describe('home application action availability', () => {
+  for (const row of applicationsUsingAddAndEditSettings) {
+    test(`does not show ${row.title} registration controls when add setting is closed`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: false,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: false,
+          [row.editSettingKey]: true,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+
+      await expect(registrationButton(page)).toHaveCount(0);
+    });
+
+    test(`shows ${row.title} registration controls when add setting is open`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: false,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: true,
+          [row.editSettingKey]: false,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+
+      const registrationControl =
+        'registrationControlText' in row
+          ? page.getByText(row.registrationControlText).first()
+          : registrationButton(page).first();
+      await expect(registrationControl).toBeVisible();
+    });
+
+    test(`does not show ${row.title} edit controls when edit setting is closed`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: true,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: true,
+          [row.editSettingKey]: false,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+
+      await expect(editButton(page)).toHaveCount(0);
+    });
+
+    test(`shows ${row.title} edit controls when edit setting is open`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: true,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: false,
+          [row.editSettingKey]: true,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+
+      await expect(editButton(page).first()).toBeVisible();
+    });
+  }
+
   test('does not show the group registration form when group registration is closed', async ({
     page,
   }) => {

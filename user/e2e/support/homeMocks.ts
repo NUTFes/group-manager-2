@@ -180,12 +180,17 @@ export const setupHomeApiMocks = async ({
     }
 
     if (path === '/api/v1/get_current_fes_dates') {
-      await fulfillJson(route, apiResponse([]));
+      await fulfillJson(route, apiResponse([fesDate()]));
       return;
     }
 
     if (path === '/sunny/stages' || path === '/rainy/stages') {
-      await fulfillJson(route, apiResponse([]));
+      await fulfillJson(route, apiResponse([stageOption(path)]));
+      return;
+    }
+
+    if (path === '/shops') {
+      await fulfillJson(route, apiResponse([shop()]));
       return;
     }
 
@@ -197,6 +202,65 @@ export const setupHomeApiMocks = async ({
           place(3, '学生食堂前'),
         ],
       });
+      return;
+    }
+
+    if (path === `/rental_orders/group/${GROUP_ID}`) {
+      await fulfillJson(
+        route,
+        apiResponse(
+          effectiveRegistrationStatus.rentalItem ? [rentalOrder()] : []
+        )
+      );
+      return;
+    }
+
+    if (path === `/power_orders/group/${GROUP_ID}`) {
+      await fulfillJson(
+        route,
+        apiResponse(
+          effectiveRegistrationStatus.powerOrder ? [powerOrder()] : []
+        )
+      );
+      return;
+    }
+
+    if (path === `/employees/group/${GROUP_ID}`) {
+      await fulfillJson(
+        route,
+        apiResponse(effectiveRegistrationStatus.employee ? [employee()] : [])
+      );
+      return;
+    }
+
+    if (path === `/food_products/group/${GROUP_ID}`) {
+      await fulfillJson(
+        route,
+        apiResponse(
+          effectiveRegistrationStatus.foodProduct ||
+            effectiveRegistrationStatus.purchaseList
+            ? [foodProduct()]
+            : []
+        )
+      );
+      return;
+    }
+
+    if (path === '/purchase_lists/food_product') {
+      await fulfillJson(
+        route,
+        apiResponse(
+          effectiveRegistrationStatus.purchaseList ? [purchaseList()] : []
+        )
+      );
+      return;
+    }
+
+    if (path === '/stage_orders') {
+      await fulfillJson(
+        route,
+        apiResponse(effectiveRegistrationStatus.stageOrder ? stageOrders() : [])
+      );
       return;
     }
 
@@ -293,3 +357,116 @@ const place = (id: number, name: string) => ({
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 });
+
+const rentalOrder = () => ({
+  id: 1,
+  groupId: GROUP_ID,
+  rentalItemId: 1,
+  num: 1,
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const powerOrder = () => ({
+  id: 1,
+  groupId: GROUP_ID,
+  item: 'E2E IHヒーター',
+  power: 1000,
+  manufacturer: 'E2E maker',
+  model: 'E2E model',
+  itemUrl: 'https://example.com/power',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const employee = () => ({
+  id: 1,
+  groupId: GROUP_ID,
+  name: 'E2E employee',
+  studentId: '12345678',
+  stoolTestId: '1',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const foodProduct = () => ({
+  id: 1,
+  groupId: GROUP_ID,
+  name: 'E2E food',
+  isCooking: true,
+  firstDayNum: 10,
+  secondDayNum: 10,
+  isAlcohol: false,
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const purchaseList = () => ({
+  id: 1,
+  foodProductId: 1,
+  shopId: 1,
+  fesDateId: 1,
+  items: 'E2E ingredient',
+  isFresh: false,
+  purchaseDate: '2026-06-01',
+  url: null,
+  remark: 'E2E remark',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const shop = () => ({
+  id: 1,
+  name: 'E2E shop',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+});
+
+const fesDate = () => ({
+  id: 1,
+  daysNum: 1,
+  date: '2026-06-01',
+  day: '月',
+});
+
+const stageOption = (path: string) => ({
+  id: path === '/sunny/stages' ? 1 : 2,
+  name: path === '/sunny/stages' ? 'E2E 晴れステージ' : 'E2E 雨ステージ',
+});
+
+const stageOrders = () => [
+  {
+    id: 1,
+    groupId: GROUP_ID,
+    fesDateId: 1,
+    isSunny: true,
+    stageFirst: 1,
+    stageSecond: 1,
+    useTimeInterval: '30',
+    prepareTimeInterval: '10',
+    cleanupTimeInterval: '10',
+    prepareStartTime: null,
+    performanceStartTime: null,
+    performanceEndTime: null,
+    cleanupEndTime: null,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 2,
+    groupId: GROUP_ID,
+    fesDateId: 1,
+    isSunny: false,
+    stageFirst: 2,
+    stageSecond: 2,
+    useTimeInterval: '30',
+    prepareTimeInterval: '10',
+    cleanupTimeInterval: '10',
+    prepareStartTime: null,
+    performanceStartTime: null,
+    performanceEndTime: null,
+    cleanupEndTime: null,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+];

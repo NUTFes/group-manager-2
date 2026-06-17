@@ -293,6 +293,10 @@
         "fetchTitle": "Error:",
         "fetchDescription": "Failed to load data. Please reload the page."
       },
+      "deadline": {
+        "title": "The application period has ended",
+        "description": "New equipment rental applications are not available outside the application period."
+      },
       "radio": {
         "question": "Will you submit a rental request?",
         "options": {
