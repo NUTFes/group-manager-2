@@ -55,7 +55,7 @@
         </template>
         <template v-slot:table-body>
           <tr v-for="(group, index) in groups" :key="index"
-            @click="() => $router.push({ path: `/order_status_check/` + group.group.id })"
+            @click="$router.push(`/order_status_check/${group.group.id}`)"
             class="clickable-row">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>

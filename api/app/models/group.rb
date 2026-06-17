@@ -150,15 +150,7 @@ class Group < ApplicationRecord
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
         cooking_process_order: group.cooking_process_order&.to_info_h,
-        fire_equipment_orders: if group.fire_equipment_orders.none?
-                                 nil
-                               else
-                                 group.fire_equipment_orders.map do |fire_equipment_order|
-                                   {
-                                     fire_equipment_order: fire_equipment_order.to_info_h
-                                   }
-                                 end
-                               end
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end
@@ -230,15 +222,7 @@ class Group < ApplicationRecord
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
         cooking_process_order: group.cooking_process_order&.to_info_h,
-        fire_equipment_orders: if group.fire_equipment_orders.none?
-                                 nil
-                               else
-                                 group.fire_equipment_orders.map do |fire_equipment_order|
-                                   {
-                                     fire_equipment_order: fire_equipment_order.to_info_h
-                                   }
-                                 end
-                               end
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     return @record
   end
@@ -310,15 +294,7 @@ class Group < ApplicationRecord
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
         cooking_process_order: group.cooking_process_order&.to_info_h,
-        fire_equipment_orders: if group.fire_equipment_orders.none?
-                                 nil
-                               else
-                                 group.fire_equipment_orders.map do |fire_equipment_order|
-                                   {
-                                     fire_equipment_order: fire_equipment_order.to_info_h
-                                   }
-                                 end
-                               end
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end

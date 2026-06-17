@@ -1,8 +1,6 @@
 <template>
   <table class="vertical-table">
-    <tbody>
-      <slot></slot>
-    </tbody>
+    <slot></slot>
   </table>
 </template>
 <style>
