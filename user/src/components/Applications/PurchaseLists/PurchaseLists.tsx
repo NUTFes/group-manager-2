@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
@@ -16,7 +17,7 @@ export type PurchaseListsProps = {
   isDeadline: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
-  status?: string;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const PurchaseLists: FC<PurchaseListsProps> = ({

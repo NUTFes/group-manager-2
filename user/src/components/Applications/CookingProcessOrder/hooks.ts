@@ -5,6 +5,7 @@ import {
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
+  HealthCenterSubmissionStatus,
   useGetHealthCenterSubmissionStatus,
   useUpdateHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
@@ -21,7 +22,7 @@ export const useCookingProcessOrder = (
   groupId: number | undefined,
   isDeadline: boolean,
   isRegistered?: boolean,
-  status?: string
+  status?: HealthCenterSubmissionStatus
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
+  HealthCenterSubmissionStatus,
   useGetHealthCenterSubmissionStatus,
   useUpdateHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
@@ -283,7 +284,7 @@ export const usePurchaseListsForm = (
   groupId: number,
   initialData: PurchaseItem[] | undefined,
   onSuccess: () => void,
-  status?: string
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
   const { trigger: createPurchaseList } = useCreatePurchaseList();

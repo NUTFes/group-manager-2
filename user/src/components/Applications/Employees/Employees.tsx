@@ -53,7 +53,7 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
-  status?: string; // 申請のステータス（APPLICATION_STATUSの値）
+  status?: HealthCenterSubmissionStatus; // 申請のステータス
 };
 /**
  * 従業員申請のコンテンツ部分

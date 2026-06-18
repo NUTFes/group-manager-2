@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
@@ -10,7 +11,7 @@ type CookingProcessOrderProps = {
   isRegistered: boolean | undefined;
   groupId: number;
   isDeadline: boolean;
-  status?: string;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
