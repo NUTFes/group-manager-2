@@ -33,6 +33,15 @@ const { SSR_API_URL, NEXT_PUBLIC_API_URL } =
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+      },
+    ],
+  },
+
   env: {
     SSR_API_URL,
     NEXT_PUBLIC_API_URL,

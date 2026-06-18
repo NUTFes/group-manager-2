@@ -155,6 +155,7 @@ export const useVenueMapFormHooks = (
   const [fileName, setFileName] = useState<string | null>(
     venueMap?.pictureName || null
   );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const values = watch();
 
@@ -168,6 +169,7 @@ export const useVenueMapFormHooks = (
         const file = target.files[0];
         setValue('image', file, { shouldDirty: true });
         setFileName(file.name);
+        setPreviewUrl(URL.createObjectURL(file));
       }
     };
     input.click();
@@ -272,6 +274,7 @@ export const useVenueMapFormHooks = (
     values,
     fileName,
     setFileName,
+    previewUrl,
     isFetching,
     fetchError,
     isMutating: createIsMutating || updateIsMutating,
