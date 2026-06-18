@@ -493,6 +493,17 @@ export const useEmployeesApplicationHooks = (
     try {
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
+
+      // 再提出完了時
+      if (status === 'waiting_resubmission') {
+        try {
+          await updateStatus('unapproved');
+        } catch (error) {
+          console.error('Failed to update submission status:', error);
+          toast.error(t('applications.employees.messages.statusUpdateFailed'));
+          throw error;
+        }
+      }
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
