@@ -557,8 +557,10 @@ export const useEmployeesApplicationHooks = (
 
   /**
    * 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）
+   * 再提出待ちの場合は編集可能なので、deadline モードにしない
    */
-  const isDeadlineMode = isDeadline && !isUnregisteredGroup && !isEmployeesData;
+  const isDeadlineMode =
+    isDeadline && !isResubmission && !isUnregisteredGroup && !isEmployeesData;
 
   /**
    * フォームリスト表示状態かどうか
