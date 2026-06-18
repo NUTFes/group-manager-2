@@ -782,7 +782,8 @@
         "deleteSuccess": "従業員を削除しました。",
         "deleteFailed": "従業員の削除に失敗しました。",
         "registerUnregisteredFailed": "登録に失敗しました。",
-        "deleteUnregisteredFailed": "削除に失敗しました。"
+        "deleteUnregisteredFailed": "削除に失敗しました。",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "validation": {
         "name": "従業員名は必須です",

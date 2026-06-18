@@ -782,7 +782,8 @@
         "deleteSuccess": "Employee deleted.",
         "deleteFailed": "Failed to delete the employee.",
         "registerUnregisteredFailed": "Failed to save.",
-        "deleteUnregisteredFailed": "Failed to delete."
+        "deleteUnregisteredFailed": "Failed to delete.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "validation": {
         "name": "Employee name is required.",
