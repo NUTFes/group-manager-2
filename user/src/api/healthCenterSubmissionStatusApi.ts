@@ -17,29 +17,6 @@ export type ApiResponse<T> = {
   data: T;
 };
 
-// Rails enum status の文字列→数値マッピング
-// type STATUS_MAP = {
-//   unapproved: 0;
-//   waiting_resubmission: 1;
-//   approved: 2;
-//   unsubmitted: 3;
-// };
-
-// type APPLICATION_TYPE = {
-//   FOOD_PRODUCT: 0;
-//   PURCHASE_LIST: 1;
-//   COOKING_PROCESS_ORDER: 2;
-//   EMPLOYEE: 3;
-//   VENUE_MAP: 4;
-//   EQUIPMENT: 5;
-// };
-
-// type SubmissionItem = {
-//   id: number;
-//   applicationType: string; // camelcaseKeys により application_type → applicationType に変換される
-//   status: string; // Rails enum は文字列で返るが、値は変換されない
-// };
-
 export type HealthCenterSubmissionStatus =
   | 'unapproved'
   | 'waiting_resubmission'
@@ -48,7 +25,7 @@ export type HealthCenterSubmissionStatus =
 
 export type HealthCenterSubmissionStatusResponse = {
   id: number;
-  group_id: number;
+  groupId: number;
   applicationType: string;
   status: HealthCenterSubmissionStatus;
   createdAt: string;
