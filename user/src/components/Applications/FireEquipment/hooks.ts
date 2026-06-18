@@ -3,15 +3,11 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import { useFireEquipmentTexts } from './constant';
 
-export const useFireEquipmentHooks = (
-  groupId: number,
-  status?: HealthCenterSubmissionStatus
-) => {
+export const useFireEquipmentHooks = (groupId: number) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
@@ -56,7 +52,6 @@ export const useFireEquipmentHooks = (
       : [];
 
   const [isEditing, setIsEditing] = useState(false);
-  const isResubmission = status === 'waiting_resubmission';
 
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
@@ -91,6 +86,5 @@ export const useFireEquipmentHooks = (
     fireEquipment,
     isLoading,
     mutateFireEquipmentOrder,
-    isResubmission,
   };
 };

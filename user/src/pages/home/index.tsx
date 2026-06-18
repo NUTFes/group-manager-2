@@ -81,7 +81,7 @@ const GroupCategoryContent = ({
     const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
       (s) => s.applicationType === 'cooking_process_order'
     );
-    const fireEquipmentSubmission = healthCenterSubmissionStatus?.find(
+    const RentalItemsSubmission = healthCenterSubmissionStatus?.find(
       (s) => s.applicationType === 'equipment'
     );
 
@@ -97,6 +97,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={RentalItemsSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -144,7 +145,6 @@ const GroupCategoryContent = ({
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={fireEquipmentSubmission?.status}
         />
       </>
     );

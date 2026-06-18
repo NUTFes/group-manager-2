@@ -4,11 +4,6 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
-import {
-  HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
-} from '@/api/healthCenterSubmissionStatusApi';
 import { NO_ID_STRING, YES_ID_STRING } from '@/utils/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -24,8 +19,7 @@ import {
 export const useFireEquipmentOrder = (
   groupId: number,
   fireEquipmentData?: FireEquipmentResponse,
-  handleEditCancel?: () => void,
-  status?: HealthCenterSubmissionStatus
+  handleEditCancel?: () => void
 ) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const { mutateFireEquipmentOrder } =
@@ -140,29 +134,6 @@ export const useFireEquipmentOrder = (
     );
   };
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const fireEquipmentSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'equipment'
-    );
-
-    if (!fireEquipmentSubmission?.id) {
-      throw new Error('Fire equipment submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: fireEquipmentSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
-
   // 火気申請の登録・更新
   const onSubmitFireEquipment = async (formData: FireEquipmentFormValues) => {
     const payload = {
@@ -184,12 +155,6 @@ export const useFireEquipmentOrder = (
         toast.success(fireEquipmentTexts.messages.registerSuccess);
       }
       await mutateFireEquipmentOrder();
-
-      // 再提出完了時
-      if (status === 'waiting_resubmission') {
-        // status更新処理
-        await updateStatus('unapproved');
-      }
 
       // 成功後に編集モードを終了
       handleEditCancel?.();
