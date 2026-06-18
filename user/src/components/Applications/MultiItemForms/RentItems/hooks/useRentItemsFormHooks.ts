@@ -1,6 +1,11 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  HealthCenterSubmissionStatus,
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   ORDER_TYPES,
   useAllRentableItems,
   useCheckUnRegisteredGroup,
@@ -66,6 +71,7 @@ const TABLE_CHAIR_MAX_COUNT = {
 
 export const useRentItemsFormHooks = (
   groupId: number,
+  status?: HealthCenterSubmissionStatus,
   groupCategoryId?: number // 団体カテゴリID
 ) => {
   const { t } = useTranslation('common');
@@ -142,6 +148,33 @@ export const useRentItemsFormHooks = (
 
     // その他の物品は20個まで
     return DEFAULT_MAX_COUNT;
+  };
+
+  // ステータス情報を取得
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  // 再提出判定
+  const isResubmission = status === 'waiting_resubmission';
+
+  // ステータス更新関数
+  const updateStatus = async (newStatus: 'unapproved') => {
+    const rentItemsSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'equipment'
+    );
+
+    if (!rentItemsSubmission?.id) {
+      throw new Error('RentItems submission status not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: rentItemsSubmission.id,
+      body: { status: newStatus },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
   };
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
@@ -611,6 +644,11 @@ export const useRentItemsFormHooks = (
             : t('applications.rentItems.messages.createSuccess')
         );
 
+        // ✅ 再提出完了時にステータス更新
+        if (isResubmission) {
+          await updateStatus('unapproved');
+        }
+
         await mutateRentalOrders();
         setIsEditMode(false);
         userChangedLocationType.current = false;
@@ -809,5 +847,7 @@ export const useRentItemsFormHooks = (
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
+    updateStatus,
+    isResubmission,
   };
 };
