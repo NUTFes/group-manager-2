@@ -32,11 +32,3 @@ export const RADIO_VALUE = {
 // 申請の必要性の型定義
 export type NeedApplicationValue =
   (typeof NEED_APPLICATION)[keyof typeof NEED_APPLICATION];
-
-// 申請のステータス
-export const APPLICATION_STATUS = {
-  UNAPPROVED: 0, // 未確認
-  WAITING_SUBMISSION: 1, // 再提出待ち
-  APPROVED: 2, // 承認済
-  UNSUBMITTED: 3, // 未提出
-} as const;
