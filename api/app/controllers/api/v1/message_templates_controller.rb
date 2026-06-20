@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 class Api::V1::MessageTemplatesController < ApplicationController
-  rescue_from ArgumentError, with: :render_unprocessable_argument
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ArgumentError do |error|
+    render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do
+    render json: fmt(not_found, [], "Not found message_template id = #{params[:id]}"), status: :not_found
+  end
 
   before_action :authenticate_api_user!
   before_action :require_admin!
@@ -67,13 +72,5 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def duplicate_params
     params.permit(:locale, :name, :subject, :body)
-  end
-
-  def render_unprocessable_argument(error)
-    render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
-  end
-
-  def render_not_found
-    render json: fmt(not_found, [], "Not found message_template id = #{params[:id]}"), status: :not_found
   end
 end
