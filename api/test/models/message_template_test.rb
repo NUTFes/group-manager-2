@@ -92,6 +92,19 @@ class MessageTemplateTest < ActiveSupport::TestCase
     assert_match(/is not a valid locale/, error.message)
   end
 
+  test 'seeds create default templates idempotently' do
+    assert_difference('MessageTemplate.count', 2) do
+      load Rails.root.join('db/seeds.rb')
+    end
+
+    assert_no_difference('MessageTemplate.count') do
+      load Rails.root.join('db/seeds.rb')
+    end
+
+    assert MessageTemplate.exists?(name: 'GM再提出依頼', locale: :ja)
+    assert MessageTemplate.exists?(name: 'GM Resubmission Request', locale: :en)
+  end
+
   private
 
   def valid_attributes

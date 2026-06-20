@@ -8,7 +8,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-MessageTemplate.find_or_create_by!(name: 'GM再提出依頼', locale: 'ja') do |template|
+MessageTemplate.find_or_create_by!(name: 'GM再提出依頼', locale: :ja) do |template|
   template.subject = '【GM再提出】：申請内容に不備があったため、修正し再提出をお願いします。'
   template.body = <<~BODY
     {group_name} 代表 {user_name} 様
@@ -34,7 +34,7 @@ MessageTemplate.find_or_create_by!(name: 'GM再提出依頼', locale: 'ja') do |
   BODY
 end
 
-MessageTemplate.find_or_create_by!(name: 'GM Resubmission Request', locale: 'en') do |template|
+MessageTemplate.find_or_create_by!(name: 'GM Resubmission Request', locale: :en) do |template|
   template.subject = '[GM Resubmission Request] Please revise and resubmit your application.'
   template.body = <<~BODY
     Dear {user_name},
