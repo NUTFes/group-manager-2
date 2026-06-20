@@ -51,6 +51,16 @@ class MessageTemplateTest < ActiveSupport::TestCase
     assert_equal "1行目\n2行目\n3行目", template.body
   end
 
+  test 'requires locale name subject and body' do
+    template = MessageTemplate.new
+
+    assert_not template.valid?
+    assert template.errors.added?(:locale, :blank)
+    assert template.errors.added?(:name, :blank)
+    assert template.errors.added?(:subject, :blank)
+    assert template.errors.added?(:body, :blank)
+  end
+
   test 'does not allow duplicate name in same locale' do
     MessageTemplate.create!(valid_attributes)
     duplicate_template = MessageTemplate.new(valid_attributes)
