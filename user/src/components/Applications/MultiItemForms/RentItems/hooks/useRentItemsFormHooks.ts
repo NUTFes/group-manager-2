@@ -2,8 +2,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
@@ -150,32 +149,10 @@ export const useRentItemsFormHooks = (
     return DEFAULT_MAX_COUNT;
   };
 
-  // ステータス情報を取得
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
   // 再提出判定
   const isResubmission = status === 'waiting_resubmission';
 
-  // ステータス更新関数
-  const updateStatus = async (newStatus: 'unapproved') => {
-    const rentItemsSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'equipment'
-    );
-
-    if (!rentItemsSubmission?.id) {
-      throw new Error('RentItems submission status not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: rentItemsSubmission.id,
-      body: { status: newStatus },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
   const isStageGroup = groupCategoryId === GROUP_CATEGORY.STAGE;

@@ -42,6 +42,28 @@ export const useUpdateHealthCenterSubmissionStatus = () => {
   );
 };
 
+export const useUpdateSubmissionStatusFor = (
+  groupId: number | undefined,
+  applicationType: string
+) => {
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger } = useUpdateHealthCenterSubmissionStatus()();
+
+  return async (status: 'unapproved') => {
+    const submission = healthCenterSubmissionStatus.find(
+      (s) => s.applicationType === applicationType
+    );
+
+    if (!submission?.id) {
+      throw new Error(`${applicationType} submission status id not found`);
+    }
+
+    await trigger({ id: submission.id, body: { status } });
+    await mutateHealthCenterSubmissionStatus();
+  };
+};
+
 // 既存の団体申請を取得するフック
 export const useGetHealthCenterSubmissionStatus = (
   groupId: number | undefined

@@ -21,8 +21,7 @@ import {
 } from '@/api/employeesApi';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
@@ -393,28 +392,7 @@ export const useEmployeesApplicationHooks = (
     onError: (message: string) => toast.error(message),
   };
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const employeeSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'employee'
-    );
-
-    if (!employeeSubmission?.id) {
-      throw new Error('Employee submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: employeeSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'employee');
 
   // ビジネスロジック関連のhooks
   const employeesBusinessHooks = useEmployeesBusinessHooks(

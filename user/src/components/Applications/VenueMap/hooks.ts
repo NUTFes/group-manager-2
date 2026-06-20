@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
@@ -30,28 +29,7 @@ export const useVenueMapHooks = (
     setIsEditing(!isEditing);
   };
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const venueMapSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'venue_map'
-    );
-
-    if (!venueMapSubmission?.id) {
-      throw new Error('Venue map submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: venueMapSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'venue_map');
 
   // フォーム送信が成功したら表示モードに切り替え
   const handleFormSubmitted = async () => {

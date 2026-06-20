@@ -6,8 +6,7 @@ import {
 import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
@@ -144,28 +143,10 @@ export const useCookingProcessOrder = (
     }
   }, [isDataLoading]);
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const cookingProcessOrderSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'cooking_process_order'
-    );
-
-    if (!cookingProcessOrderSubmission?.id) {
-      throw new Error('Cooking process order submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: cookingProcessOrderSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(
+    groupId,
+    'cooking_process_order'
+  );
 
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);

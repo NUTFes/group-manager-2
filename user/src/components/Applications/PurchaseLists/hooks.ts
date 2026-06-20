@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
   useCreatePurchaseList,
@@ -292,28 +291,7 @@ export const usePurchaseListsForm = (
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const purchaseListsSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'purchase_list'
-    );
-
-    if (!purchaseListsSubmission?.id) {
-      throw new Error('Purchase lists submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: purchaseListsSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'purchase_list');
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),

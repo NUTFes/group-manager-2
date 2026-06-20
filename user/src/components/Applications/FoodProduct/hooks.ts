@@ -6,8 +6,7 @@ import {
 } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
-  useGetHealthCenterSubmissionStatus,
-  useUpdateHealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
@@ -90,28 +89,7 @@ export const useFoodProductHooks = (
     setIsEditing((prev) => !prev);
   };
 
-  //ステータス変更処理
-  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
-    useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
-
-  const updateStatus = async (status: 'unapproved') => {
-    const foodProductsSubmission = healthCenterSubmissionStatus.find(
-      (submission) => submission.applicationType === 'food_product'
-    );
-
-    if (!foodProductsSubmission?.id) {
-      throw new Error('Food products submission status id not found');
-    }
-
-    await patchHealthCenterSubmissionStatus({
-      id: foodProductsSubmission.id,
-      body: { status },
-    });
-
-    await mutateHealthCenterSubmissionStatus();
-  };
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'food_product');
 
   // 販売品データを完全に置き換える関数（更新時に使用）
   const setFoodProductsData = async (products: ProductInput[]) => {
