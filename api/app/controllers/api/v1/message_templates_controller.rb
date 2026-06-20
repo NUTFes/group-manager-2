@@ -2,6 +2,7 @@
 
 class Api::V1::MessageTemplatesController < ApplicationController
   rescue_from ArgumentError, with: :render_unprocessable_argument
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   before_action :authenticate_api_user!
   before_action :require_admin!
@@ -70,5 +71,9 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def render_unprocessable_argument(error)
     render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
+  end
+
+  def render_not_found
+    render json: fmt(not_found, [], "Not found message_template id = #{params[:id]}"), status: :not_found
   end
 end

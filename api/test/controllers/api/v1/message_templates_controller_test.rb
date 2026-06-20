@@ -14,13 +14,15 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'admin can get templates' do
-    MessageTemplate.create!(valid_params)
-    MessageTemplate.create!(valid_params.merge(locale: 'en', name: 'GM Resubmission Request'))
+    first_template = MessageTemplate.create!(valid_params.merge(name: 'Bテンプレート', locale: 'en'))
+    second_template = MessageTemplate.create!(valid_params.merge(name: 'Aテンプレート'))
+    third_template = MessageTemplate.create!(valid_params.merge(name: 'Bテンプレート'))
 
     get api_v1_message_templates_path, headers: auth_headers(@admin), as: :json
 
     assert_response :success
-    assert_equal 2, response.parsed_body['data'].size
+    assert_equal 3, response_data.size
+    assert_equal [second_template.id, third_template.id, first_template.id], response_data.pluck('id')
   end
 
   test 'admin can get template' do
@@ -29,8 +31,13 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     get api_v1_message_template_path(template), headers: auth_headers(@admin), as: :json
 
     assert_response :success
-    assert_equal template.id, response.parsed_body['data']['id']
-    assert_equal 'ja', response.parsed_body['data']['locale']
+    assert_template_response(response_data, template)
+  end
+
+  test 'admin cannot get missing template' do
+    get api_v1_message_template_path(0), headers: auth_headers(@admin), as: :json
+
+    assert_response :not_found
   end
 
   test 'non admin cannot get templates' do
@@ -45,6 +52,27 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'non admin cannot create template' do
+    assert_no_difference('MessageTemplate.count') do
+      post api_v1_message_templates_path,
+           params: valid_params,
+           headers: auth_headers(@user),
+           as: :json
+    end
+
+    assert_response :forbidden
+  end
+
+  test 'unauthenticated request cannot create template' do
+    assert_no_difference('MessageTemplate.count') do
+      post api_v1_message_templates_path,
+           params: valid_params,
+           as: :json
+    end
+
+    assert_response :unauthorized
+  end
+
   test 'admin can create template' do
     assert_difference('MessageTemplate.count', 1) do
       post api_v1_message_templates_path,
@@ -54,6 +82,8 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :created
+    created_template = MessageTemplate.order(:created_at).last
+    assert_template_response(response_data, created_template)
   end
 
   test 'admin cannot create template without required params' do
@@ -91,6 +121,29 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test 'non admin cannot update template' do
+    template = MessageTemplate.create!(valid_params)
+
+    patch api_v1_message_template_path(template),
+          params: { subject: '更新後件名' },
+          headers: auth_headers(@user),
+          as: :json
+
+    assert_response :forbidden
+    assert_equal '件名', template.reload.subject
+  end
+
+  test 'unauthenticated request cannot update template' do
+    template = MessageTemplate.create!(valid_params)
+
+    patch api_v1_message_template_path(template),
+          params: { subject: '更新後件名' },
+          as: :json
+
+    assert_response :unauthorized
+    assert_equal '件名', template.reload.subject
+  end
+
   test 'admin can update template' do
     template = MessageTemplate.create!(valid_params)
 
@@ -101,6 +154,75 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal '更新後件名', template.reload.subject
+    assert_template_response(response_data, template)
+  end
+
+  test 'admin cannot update missing template' do
+    patch api_v1_message_template_path(0),
+          params: { subject: '更新後件名' },
+          headers: auth_headers(@admin),
+          as: :json
+
+    assert_response :not_found
+  end
+
+  test 'admin cannot update template with blank body' do
+    template = MessageTemplate.create!(valid_params)
+
+    patch api_v1_message_template_path(template),
+          params: { body: '' },
+          headers: auth_headers(@admin),
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '本文', template.reload.body
+  end
+
+  test 'admin cannot update template with unsupported locale' do
+    template = MessageTemplate.create!(valid_params)
+
+    patch api_v1_message_template_path(template),
+          params: { locale: 'fr' },
+          headers: auth_headers(@admin),
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal 'ja', template.reload.locale
+  end
+
+  test 'admin cannot update template to duplicate name in same locale' do
+    template = MessageTemplate.create!(valid_params)
+    other_template = MessageTemplate.create!(valid_params.merge(name: '別テンプレート'))
+
+    patch api_v1_message_template_path(other_template),
+          params: { name: template.name, locale: template.locale },
+          headers: auth_headers(@admin),
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '別テンプレート', other_template.reload.name
+  end
+
+  test 'non admin cannot duplicate template' do
+    template = MessageTemplate.create!(valid_params)
+
+    assert_no_difference('MessageTemplate.count') do
+      post duplicate_api_v1_message_template_path(template),
+           headers: auth_headers(@user),
+           as: :json
+    end
+
+    assert_response :forbidden
+  end
+
+  test 'unauthenticated request cannot duplicate template' do
+    template = MessageTemplate.create!(valid_params)
+
+    assert_no_difference('MessageTemplate.count') do
+      post duplicate_api_v1_message_template_path(template), as: :json
+    end
+
+    assert_response :unauthorized
   end
 
   test 'admin can duplicate template' do
@@ -118,6 +240,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal template.locale, duplicated.locale
     assert_equal template.subject, duplicated.subject
     assert_equal template.body, duplicated.body
+    assert_template_response(response_data, duplicated)
   end
 
   test 'admin can duplicate template with overrides' do
@@ -134,6 +257,44 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'en', duplicated.locale
     assert_equal template.subject, duplicated.subject
     assert_equal template.body, duplicated.body
+    assert_template_response(response_data, duplicated)
+  end
+
+  test 'admin cannot duplicate missing template' do
+    assert_no_difference('MessageTemplate.count') do
+      post duplicate_api_v1_message_template_path(0),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :not_found
+  end
+
+  test 'admin cannot duplicate template with duplicate name in same locale' do
+    template = MessageTemplate.create!(valid_params)
+    MessageTemplate.create!(valid_params.merge(name: '既存コピー'))
+
+    assert_no_difference('MessageTemplate.count') do
+      post duplicate_api_v1_message_template_path(template),
+           params: { name: '既存コピー' },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'admin cannot duplicate template with unsupported locale' do
+    template = MessageTemplate.create!(valid_params)
+
+    assert_no_difference('MessageTemplate.count') do
+      post duplicate_api_v1_message_template_path(template),
+           params: { locale: 'fr' },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
   end
 
   private
@@ -161,5 +322,17 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
 
   def auth_headers(user)
     user.create_new_auth_token
+  end
+
+  def response_data
+    response.parsed_body['data']
+  end
+
+  def assert_template_response(data, template)
+    assert_equal template.id, data['id']
+    assert_equal template.name, data['name']
+    assert_equal template.locale, data['locale']
+    assert_equal template.subject, data['subject']
+    assert_equal template.body, data['body']
   end
 end
