@@ -94,8 +94,12 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     );
   }
 
-  // 締め切り後で、かつデータがない（未登録）場合
-  if (isDeadline && (!purchaseLists || purchaseLists.length === 0)) {
+  // 締め切り後で、データがない（未登録）かつ再提出でない場合
+  if (
+    isDeadline &&
+    (!purchaseLists || purchaseLists.length === 0) &&
+    status !== 'waiting_resubmission'
+  ) {
     return (
       <AccordionMenu
         title={title}
@@ -134,13 +138,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     );
   }
 
-  //締め切り後でデータがあり、再提出の場合
-  if (
-    isDeadline &&
-    purchaseLists &&
-    purchaseLists.length > 0 &&
-    status === 'waiting_resubmission'
-  ) {
+  //締め切り後で再提出の場合
+  if (isDeadline && purchaseLists && status === 'waiting_resubmission') {
     return (
       <AccordionMenu
         title={title}
