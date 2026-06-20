@@ -13,11 +13,24 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     @user = create_user!(email: 'user-template@example.com', role_id: 2)
   end
 
-  test 'admin can get default templates' do
+  test 'admin can get templates' do
+    MessageTemplate.create!(valid_params)
+    MessageTemplate.create!(valid_params.merge(locale: 'en', name: 'GM Resubmission Request'))
+
     get api_v1_message_templates_path, headers: auth_headers(@admin), as: :json
 
     assert_response :success
     assert_equal 2, response.parsed_body['data'].size
+  end
+
+  test 'admin can get template' do
+    template = MessageTemplate.create!(valid_params)
+
+    get api_v1_message_template_path(template), headers: auth_headers(@admin), as: :json
+
+    assert_response :success
+    assert_equal template.id, response.parsed_body['data']['id']
+    assert_equal 'ja', response.parsed_body['data']['locale']
   end
 
   test 'non admin cannot get templates' do
@@ -41,6 +54,41 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :created
+  end
+
+  test 'admin cannot create template without required params' do
+    assert_no_difference('MessageTemplate.count') do
+      post api_v1_message_templates_path,
+           params: { locale: 'ja' },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'admin cannot create template with unsupported locale' do
+    assert_no_difference('MessageTemplate.count') do
+      post api_v1_message_templates_path,
+           params: valid_params.merge(locale: 'fr'),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'admin cannot create duplicate name in same locale' do
+    MessageTemplate.create!(valid_params)
+
+    assert_no_difference('MessageTemplate.count') do
+      post api_v1_message_templates_path,
+           params: valid_params,
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
   end
 
   test 'admin can update template' do

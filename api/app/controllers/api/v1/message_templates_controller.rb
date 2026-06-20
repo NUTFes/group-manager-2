@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Api::V1::MessageTemplatesController < ApplicationController
+  rescue_from ArgumentError, with: :render_unprocessable_argument
+
   before_action :authenticate_api_user!
   before_action :require_admin!
-  before_action :ensure_default_templates, only: %i[index show]
   before_action :set_message_template, only: %i[show update duplicate]
 
   def index
@@ -26,7 +27,7 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def update
     if @message_template.update(message_template_params)
-      render json: fmt(created, @message_template, "Updated message_template id = #{params[:id]}")
+      render json: fmt(ok, @message_template, "Updated message_template id = #{params[:id]}")
     else
       render json: fmt(unprocessable_entity, @message_template.errors.full_messages), status: :unprocessable_entity
     end
@@ -55,10 +56,6 @@ class Api::V1::MessageTemplatesController < ApplicationController
     render json: fmt({ code: 403, message: 'Forbidden' }), status: :forbidden
   end
 
-  def ensure_default_templates
-    MessageTemplate.ensure_defaults!
-  end
-
   def set_message_template
     @message_template = MessageTemplate.find(params[:id])
   end
@@ -69,5 +66,9 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def duplicate_params
     params.permit(:locale, :name, :subject, :body)
+  end
+
+  def render_unprocessable_argument(error)
+    render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
   end
 end
