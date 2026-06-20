@@ -218,6 +218,14 @@ export const useFoodProductHooks = (
         position: 'top-right',
         autoClose: 3000,
       });
+
+      if (status === 'waiting_resubmission') {
+        try {
+          await updateStatus('unapproved');
+        } catch (statusError) {
+          console.error('販売品ステータス更新エラー:', statusError);
+        }
+      }
     } catch (error) {
       console.error('販売品登録エラー:', error);
 

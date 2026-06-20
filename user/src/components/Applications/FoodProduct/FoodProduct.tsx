@@ -75,6 +75,19 @@ const Content: FC<ContentProps> = ({
     );
   }
 
+  if (isResubmission) {
+    return (
+      <FoodProductForm
+        groupId={groupId}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+      />
+    );
+  }
+
   // 締め切り後で、かつデータがない（未登録）場合
   if (isDeadline && (!foodProducts || foodProducts.length === 0)) {
     return (
@@ -104,19 +117,6 @@ const Content: FC<ContentProps> = ({
           </p>
         </div>
       </div>
-    );
-  }
-
-  if (isResubmission) {
-    return (
-      <FoodProductForm
-        groupId={groupId}
-        toEdit={toEdit}
-        foodProducts={foodProducts}
-        addFoodProducts={addFoodProducts}
-        removeFoodProduct={removeFoodProduct}
-        setFoodProductsData={setFoodProductsData}
-      />
     );
   }
 
