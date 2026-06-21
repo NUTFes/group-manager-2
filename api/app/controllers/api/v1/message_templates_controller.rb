@@ -11,7 +11,7 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   before_action :authenticate_api_user!
   before_action :require_admin!
-  before_action :set_message_template, only: %i[show update duplicate]
+  before_action :set_message_template, only: %i[show update create_copy]
 
   def index
     templates = MessageTemplate.order(:name, :locale)
@@ -39,12 +39,12 @@ class Api::V1::MessageTemplatesController < ApplicationController
     end
   end
 
-  def duplicate
+  def create_copy
     template = MessageTemplate.new(
-      locale: duplicate_params[:locale].presence || @message_template.locale,
-      name: duplicate_params[:name].presence || "#{@message_template.name} のコピー",
-      subject: duplicate_params[:subject].presence || @message_template.subject,
-      body: duplicate_params[:body].presence || @message_template.body
+      locale: create_copy_params[:locale].presence || @message_template.locale,
+      name: create_copy_params[:name].presence || "#{@message_template.name} のコピー",
+      subject: create_copy_params[:subject].presence || @message_template.subject,
+      body: create_copy_params[:body].presence || @message_template.body
     )
 
     if template.save
@@ -70,7 +70,7 @@ class Api::V1::MessageTemplatesController < ApplicationController
     params.permit(:locale, :name, :subject, :body)
   end
 
-  def duplicate_params
+  def create_copy_params
     params.permit(:locale, :name, :subject, :body)
   end
 end

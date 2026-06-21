@@ -108,7 +108,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'admin cannot create duplicate name in same locale' do
+  test 'admin cannot create template with same name in same locale' do
     MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
@@ -190,7 +190,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'ja', template.reload.locale
   end
 
-  test 'admin cannot update template to duplicate name in same locale' do
+  test 'admin cannot update template to same name in same locale' do
     template = MessageTemplate.create!(valid_params)
     other_template = MessageTemplate.create!(valid_params.merge(name: '別テンプレート'))
 
@@ -203,11 +203,11 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal '別テンプレート', other_template.reload.name
   end
 
-  test 'non admin cannot duplicate template' do
+  test 'non admin cannot create template copy' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      post duplicate_api_v1_message_template_path(template),
+      post create_copy_api_v1_message_template_path(template),
            headers: auth_headers(@user),
            as: :json
     end
@@ -215,54 +215,54 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test 'unauthenticated request cannot duplicate template' do
+  test 'unauthenticated request cannot create template copy' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      post duplicate_api_v1_message_template_path(template), as: :json
+      post create_copy_api_v1_message_template_path(template), as: :json
     end
 
     assert_response :unauthorized
   end
 
-  test 'admin can duplicate template' do
+  test 'admin can create template copy from source template' do
     template = MessageTemplate.create!(valid_params)
 
     assert_difference('MessageTemplate.count', 1) do
-      post duplicate_api_v1_message_template_path(template),
+      post create_copy_api_v1_message_template_path(template),
            headers: auth_headers(@admin),
            as: :json
     end
 
     assert_response :created
-    duplicated = MessageTemplate.order(:created_at).last
-    assert_equal 'GM再提出依頼 のコピー', duplicated.name
-    assert_equal template.locale, duplicated.locale
-    assert_equal template.subject, duplicated.subject
-    assert_equal template.body, duplicated.body
-    assert_template_response(response_data, duplicated)
+    copied_template = MessageTemplate.order(:created_at).last
+    assert_equal 'GM再提出依頼 のコピー', copied_template.name
+    assert_equal template.locale, copied_template.locale
+    assert_equal template.subject, copied_template.subject
+    assert_equal template.body, copied_template.body
+    assert_template_response(response_data, copied_template)
   end
 
-  test 'admin can duplicate template with overrides' do
+  test 'admin can create template copy with overrides' do
     template = MessageTemplate.create!(valid_params)
 
-    post duplicate_api_v1_message_template_path(template),
+    post create_copy_api_v1_message_template_path(template),
          params: { name: '英語コピー', locale: 'en' },
          headers: auth_headers(@admin),
          as: :json
 
     assert_response :created
-    duplicated = MessageTemplate.order(:created_at).last
-    assert_equal '英語コピー', duplicated.name
-    assert_equal 'en', duplicated.locale
-    assert_equal template.subject, duplicated.subject
-    assert_equal template.body, duplicated.body
-    assert_template_response(response_data, duplicated)
+    copied_template = MessageTemplate.order(:created_at).last
+    assert_equal '英語コピー', copied_template.name
+    assert_equal 'en', copied_template.locale
+    assert_equal template.subject, copied_template.subject
+    assert_equal template.body, copied_template.body
+    assert_template_response(response_data, copied_template)
   end
 
-  test 'admin cannot duplicate missing template' do
+  test 'admin cannot create template copy from missing source template' do
     assert_no_difference('MessageTemplate.count') do
-      post duplicate_api_v1_message_template_path(0),
+      post create_copy_api_v1_message_template_path(0),
            headers: auth_headers(@admin),
            as: :json
     end
@@ -270,12 +270,12 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test 'admin cannot duplicate template with duplicate name in same locale' do
+  test 'admin cannot create template copy with same name in same locale' do
     template = MessageTemplate.create!(valid_params)
     MessageTemplate.create!(valid_params.merge(name: '既存コピー'))
 
     assert_no_difference('MessageTemplate.count') do
-      post duplicate_api_v1_message_template_path(template),
+      post create_copy_api_v1_message_template_path(template),
            params: { name: '既存コピー' },
            headers: auth_headers(@admin),
            as: :json
@@ -284,11 +284,11 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'admin cannot duplicate template with unsupported locale' do
+  test 'admin cannot create template copy with unsupported locale' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      post duplicate_api_v1_message_template_path(template),
+      post create_copy_api_v1_message_template_path(template),
            params: { locale: 'fr' },
            headers: auth_headers(@admin),
            as: :json

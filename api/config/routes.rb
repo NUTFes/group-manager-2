@@ -294,7 +294,7 @@ Rails.application.routes.draw do
       #---CSV出力
       resources :message_templates, only: %i[index show create] do
         member do
-          post :duplicate
+          post :create_copy
         end
       end
       patch 'message_templates/:id' => 'message_templates#update'
