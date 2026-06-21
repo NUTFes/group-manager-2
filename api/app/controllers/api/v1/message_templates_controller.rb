@@ -39,8 +39,8 @@ class Api::V1::MessageTemplatesController < ApplicationController
     end
   end
 
+  # 複製画面で元テンプレートと区別できる初期値を返すため、保存前の段階でコピー名を付与する。
   def copy_source
-    # 複製画面で元テンプレートと区別できる初期値を返すため、保存前の段階でコピー名を付与する。
     copy_source = {
       locale: @message_template.locale,
       name: "#{@message_template.name} のコピー",
