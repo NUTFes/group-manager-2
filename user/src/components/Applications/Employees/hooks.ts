@@ -465,6 +465,21 @@ export const useEmployeesApplicationHooks = (
   };
 
   /**
+   * 再提出完了時の処理
+   */
+  const completeResubmission = async () => {
+    if (status !== 'waiting_resubmission') return true;
+    try {
+      await updateStatus('unapproved');
+      return true;
+    } catch (e) {
+      console.error(e);
+      toast.error(t('applications.employees.messages.statusUpdateFailed'));
+      return false;
+    }
+  };
+
+  /**
    * 「代表・副代表のみで活動」選択時の登録処理
    */
   const handleNoApplicationClick = async () => {
@@ -472,15 +487,7 @@ export const useEmployeesApplicationHooks = (
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
 
-      // 再提出完了時
-      if (status === 'waiting_resubmission') {
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(t('applications.employees.messages.statusUpdateFailed'));
-        }
-      }
+      if (!(await completeResubmission())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -506,15 +513,7 @@ export const useEmployeesApplicationHooks = (
       }
 
       // 再提出完了時
-      if (status === 'waiting_resubmission') {
-        // status更新処理
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(t('applications.employees.messages.statusUpdateFailed'));
-        }
-      }
+      if (!(await completeResubmission())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
