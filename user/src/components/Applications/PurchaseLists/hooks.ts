@@ -395,6 +395,7 @@ export const usePurchaseListsForm = (
           toast.error(
             t('applications.purchaseLists.messages.statusUpdateFailed')
           );
+          return;
         }
       }
       onSuccess();
