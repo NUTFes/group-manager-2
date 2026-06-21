@@ -39,7 +39,7 @@ test.describe("メールテンプレート管理画面", () => {
       "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}{group_name}"
     );
 
-    await page.getByRole("button", { name: "新規作成" }).click();
+    await page.getByRole("button", { name: "リセット" }).click();
     await page.getByPlaceholder("例: GM再提出依頼").fill("新規テンプレート");
     await page.getByPlaceholder("件名を入力してください").fill("新規件名");
     await page.getByPlaceholder("本文を入力してください").fill("本文");

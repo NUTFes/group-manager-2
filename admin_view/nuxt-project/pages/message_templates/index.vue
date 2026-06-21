@@ -1,10 +1,6 @@
 <template>
   <div class="main-content message-templates-page">
-    <SubHeader pageTitle="メールテンプレート管理">
-      <CommonButton iconName="add_circle" :on_click="startCreate">
-        新規作成
-      </CommonButton>
-    </SubHeader>
+    <SubHeader pageTitle="メールテンプレート管理" />
 
     <div class="template-layout">
       <Card width="100%">
@@ -35,6 +31,13 @@
         <div class="editor-panel__header">
           <h3>{{ form.id ? "テンプレート編集" : "テンプレート作成" }}</h3>
           <div class="editor-panel__actions">
+            <CommonButton
+              iconName="restart_alt"
+              :on_click="startCreate"
+              :disabled="isSaving"
+            >
+              リセット
+            </CommonButton>
             <CommonButton
               iconName="content_copy"
               :on_click="copySource"
