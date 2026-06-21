@@ -16,7 +16,7 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     await page.request.delete(`${API_URL}/_e2e/requests`);
   });
 
-  // 再提出画面のテスト送信導線。
+  // テストケース: 再提出画面からテストメールを送信する導線。
   // 画面上の団体名・代表者名・コメント本文をtemplate_valuesとして送信APIへ渡すことを確認する。
   test("再提出メールをテスト送信できる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });

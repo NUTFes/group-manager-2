@@ -16,7 +16,7 @@ test.describe("メールテンプレート管理画面", () => {
     await page.request.delete(`${API_URL}/_e2e/requests`);
   });
 
-  // テンプレート管理画面の主要導線。
+  // テストケース: テンプレート管理画面の主要導線。
   // 編集、保存前複製、新規作成で期待するAPI payloadが送られることを確認する。
   test("テンプレートの作成・編集・複製初期値反映ができる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
