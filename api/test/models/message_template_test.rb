@@ -92,13 +92,14 @@ class MessageTemplateTest < ActiveSupport::TestCase
     assert_match(/is not a valid locale/, error.message)
   end
 
-  test 'seeds create default templates idempotently' do
+  # seed-fu用fixtureを繰り返し読み込んでも、初期テンプレートが重複作成されないことを確認する。
+  test 'seed fixtures create default templates idempotently' do
     assert_difference('MessageTemplate.count', 2) do
-      load Rails.root.join('db/seeds.rb')
+      load Rails.root.join('db/fixtures/develop/message_template.rb')
     end
 
     assert_no_difference('MessageTemplate.count') do
-      load Rails.root.join('db/seeds.rb')
+      load Rails.root.join('db/fixtures/develop/message_template.rb')
     end
 
     assert MessageTemplate.exists?(name: 'GM再提出依頼', locale: :ja)
