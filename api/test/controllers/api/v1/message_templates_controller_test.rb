@@ -221,105 +221,50 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal '別テンプレート', other_template.reload.name
   end
 
-  # コピー作成時の認可失敗系。非管理者が元テンプレートからコピーを作成できないことを確認する。
-  test 'non admin cannot create template copy' do
+  # コピー元取得時の認可失敗系。非管理者が複製用の初期値を取得できないことを確認する。
+  test 'non admin cannot get template copy source' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      post create_copy_api_v1_message_template_path(template),
-           headers: auth_headers(@user),
-           as: :json
+      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@user), as: :json
     end
 
     assert_response :forbidden
   end
 
-  # コピー作成時の認証失敗系。未認証では元テンプレートからコピーを作成できないことを確認する。
-  test 'unauthenticated request cannot create template copy' do
+  # コピー元取得時の認証失敗系。未認証では複製用の初期値を取得できないことを確認する。
+  test 'unauthenticated request cannot get template copy source' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      post create_copy_api_v1_message_template_path(template), as: :json
+      get copy_source_api_v1_message_template_path(template), as: :json
     end
 
     assert_response :unauthorized
   end
 
-  # コピー作成の正常系。元テンプレートの内容を引き継いだ新規レコードを作成できることを確認する。
-  test 'admin can create template copy from source template' do
+  # コピー元取得の正常系。DB保存せず、複製編集フォーム用の初期値を返すことを確認する。
+  test 'admin can get template copy source' do
     template = MessageTemplate.create!(valid_params)
 
-    assert_difference('MessageTemplate.count', 1) do
-      post create_copy_api_v1_message_template_path(template),
-           headers: auth_headers(@admin),
-           as: :json
+    assert_no_difference('MessageTemplate.count') do
+      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@admin), as: :json
     end
 
-    assert_response :created
-    copied_template = MessageTemplate.order(:created_at).last
-    assert_equal 'GM再提出依頼 のコピー', copied_template.name
-    assert_equal template.locale, copied_template.locale
-    assert_equal template.subject, copied_template.subject
-    assert_equal template.body, copied_template.body
-    assert_template_response(response_data, copied_template)
+    assert_response :success
+    assert_equal template.locale, response_data['locale']
+    assert_equal 'GM再提出依頼 のコピー', response_data['name']
+    assert_equal template.subject, response_data['subject']
+    assert_equal template.body, response_data['body']
   end
 
-  # コピー作成の正常系。コピー作成時にname/localeを上書き指定できることを確認する。
-  test 'admin can create template copy with overrides' do
-    template = MessageTemplate.create!(valid_params)
-
-    post create_copy_api_v1_message_template_path(template),
-         params: { name: '英語コピー', locale: 'en' },
-         headers: auth_headers(@admin),
-         as: :json
-
-    assert_response :created
-    copied_template = MessageTemplate.order(:created_at).last
-    assert_equal '英語コピー', copied_template.name
-    assert_equal 'en', copied_template.locale
-    assert_equal template.subject, copied_template.subject
-    assert_equal template.body, copied_template.body
-    assert_template_response(response_data, copied_template)
-  end
-
-  # コピー作成時の失敗系。存在しない元テンプレートIDを指定した場合に404を返すことを確認する。
-  test 'admin cannot create template copy from missing source template' do
+  # コピー元取得時の失敗系。存在しない元テンプレートIDを指定した場合に404を返すことを確認する。
+  test 'admin cannot get template copy source from missing source template' do
     assert_no_difference('MessageTemplate.count') do
-      post create_copy_api_v1_message_template_path(0),
-           headers: auth_headers(@admin),
-           as: :json
+      get copy_source_api_v1_message_template_path(0), headers: auth_headers(@admin), as: :json
     end
 
     assert_response :not_found
-  end
-
-  # コピー作成時の一意制約失敗系。同一locale内で既存テンプレートと同じnameのコピーを作成できないことを確認する。
-  test 'admin cannot create template copy with same name in same locale' do
-    template = MessageTemplate.create!(valid_params)
-    MessageTemplate.create!(valid_params.merge(name: '既存コピー'))
-
-    assert_no_difference('MessageTemplate.count') do
-      post create_copy_api_v1_message_template_path(template),
-           params: { name: '既存コピー' },
-           headers: auth_headers(@admin),
-           as: :json
-    end
-
-    assert_response :unprocessable_entity
-  end
-
-  # コピー作成時のバリデーション失敗系。enum未定義のlocaleではコピーを作成できないことを確認する。
-  test 'admin cannot create template copy with unsupported locale' do
-    template = MessageTemplate.create!(valid_params)
-
-    assert_no_difference('MessageTemplate.count') do
-      post create_copy_api_v1_message_template_path(template),
-           params: { locale: 'fr' },
-           headers: auth_headers(@admin),
-           as: :json
-    end
-
-    assert_response :unprocessable_entity
   end
 
   private

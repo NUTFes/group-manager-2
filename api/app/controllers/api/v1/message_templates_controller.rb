@@ -11,7 +11,7 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   before_action :authenticate_api_user!
   before_action :require_admin!
-  before_action :set_message_template, only: %i[show update create_copy]
+  before_action :set_message_template, only: %i[show update copy_source]
 
   def index
     templates = MessageTemplate.order(:name, :locale)
@@ -39,19 +39,14 @@ class Api::V1::MessageTemplatesController < ApplicationController
     end
   end
 
-  def create_copy
-    template = MessageTemplate.new(
-      locale: create_copy_params[:locale].presence || @message_template.locale,
-      name: create_copy_params[:name].presence || "#{@message_template.name} のコピー",
-      subject: create_copy_params[:subject].presence || @message_template.subject,
-      body: create_copy_params[:body].presence || @message_template.body
-    )
-
-    if template.save
-      render json: fmt(created, template), status: :created
-    else
-      render json: fmt(unprocessable_entity, template.errors.full_messages), status: :unprocessable_entity
-    end
+  def copy_source
+    # 複製画面で元テンプレートと区別できる初期値を返すため、保存前の段階でコピー名を付与する。
+    render json: fmt(ok, {
+                       locale: @message_template.locale,
+                       name: "#{@message_template.name} のコピー",
+                       subject: @message_template.subject,
+                       body: @message_template.body
+                     })
   end
 
   private
@@ -67,10 +62,6 @@ class Api::V1::MessageTemplatesController < ApplicationController
   end
 
   def message_template_params
-    params.permit(:locale, :name, :subject, :body)
-  end
-
-  def create_copy_params
     params.permit(:locale, :name, :subject, :body)
   end
 end
