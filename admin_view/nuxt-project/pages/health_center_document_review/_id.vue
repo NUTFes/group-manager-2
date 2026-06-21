@@ -416,13 +416,13 @@
             <h3>メッセージ</h3>
           </div>
           <div class="comment-form">
-            <div class="test-mail-panel">
-              <label class="test-mail-label" for="message-template-select">
+            <div class="message-template-panel">
+              <label class="message-template-label" for="message-template-select">
                 テンプレート
               </label>
               <select
                 id="message-template-select"
-                class="test-mail-select"
+                class="message-template-select"
                 v-model="selectedMessageTemplateId"
               >
                 <option value="">テンプレートを選択</option>
@@ -434,29 +434,12 @@
                   {{ template.name }}（{{ template.locale }}）
                 </option>
               </select>
-              <label class="test-mail-label" for="test-mail-to">
-                テスト送信先
-              </label>
-              <input
-                id="test-mail-to"
-                class="test-mail-input"
-                type="email"
-                placeholder="test@example.com"
-                v-model="testMailTo"
-              />
-              <CommonButton
-                iconName="mark_email_read"
-                :on_click="onSendTestMail"
-                :disabled="isSendingTestMail || !canSendTestMail"
-              >
-                テスト送信
-              </CommonButton>
               <p
-                v-if="testMailResultMessage"
-                class="test-mail-result"
+                v-if="messageSendResult"
+                class="message-send-result"
                 role="status"
               >
-                {{ testMailResultMessage }}
+                {{ messageSendResult }}
               </p>
             </div>
             <textarea
@@ -464,7 +447,13 @@
               placeholder="メールで送信するコメント"
               v-model="commentBody"
             ></textarea>
-            <CommonButton iconName="send" :on_click="onSubmitComment">送信</CommonButton>
+            <CommonButton
+              iconName="send"
+              :on_click="onSubmitComment"
+              :disabled="isSendingMessage || !canSendMessage"
+            >
+              送信
+            </CommonButton>
           </div>
 
           <div class="comment-history">
@@ -694,9 +683,8 @@ export default {
       commentBody: "",
       messageTemplates: [],
       selectedMessageTemplateId: "",
-      testMailTo: "",
-      isSendingTestMail: false,
-      testMailResultMessage: "",
+      isSendingMessage: false,
+      messageSendResult: "",
     };
   },
   watch: {
@@ -773,9 +761,9 @@ export default {
         (template) => String(template.id) === String(this.selectedMessageTemplateId)
       );
     },
-    canSendTestMail() {
+    canSendMessage() {
       return Boolean(
-        this.testMailTo.trim() &&
+        this.group.user.email &&
           this.selectedMessageTemplate &&
           this.commentBody.trim()
       );
@@ -784,7 +772,6 @@ export default {
   async mounted() {
     await this.reloadPageData();
     await this.loadMessageTemplates();
-    this.testMailTo = window.localStorage.getItem("uid") || "";
     window.scrollTo(0, 0);
   },
   methods: {
@@ -902,43 +889,24 @@ export default {
       const submission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
       const body = this.commentBody.trim();
 
-      if (!body) return;
+      if (!this.canSendMessage || this.isSendingMessage) return;
 
-      const commentRes = await this.$axios.$post(
-        HEALTH_CENTER_COMMENT_CREATE_ENDPOINT,
-        {
-          group_id: this.group.group.id,
-          application_type: BULK_MESSAGE_APPLICATION_TYPE,
-          body,
-        }
-      );
-
-      if (submission && !submission.id && commentRes.data?.commentable_id) {
-        submission.id = commentRes.data.commentable_id;
-      }
-
-      const targetSubmission = submission || this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
-      if (targetSubmission) {
-        targetSubmission.comments = [
-          ...(targetSubmission.comments || []),
-          {
-            ...commentRes.data,
-          },
-        ];
-      }
-      this.commentBody = "";
-    },
-    async onSendTestMail() {
-      if (!this.canSendTestMail || this.isSendingTestMail) return;
-
-      this.isSendingTestMail = true;
-      this.testMailResultMessage = "";
+      this.isSendingMessage = true;
+      this.messageSendResult = "";
 
       try {
-        // TODO: 再提出メール送信フローに統合するまでの暫定導線。
-        // 本実装ではステータス更新・コメント登録・メール送信の責務整理に合わせて削除する。
+        const commentRes = await this.$axios.$post(
+          HEALTH_CENTER_COMMENT_CREATE_ENDPOINT,
+          {
+            group_id: this.group.group.id,
+            application_type: BULK_MESSAGE_APPLICATION_TYPE,
+            body,
+          }
+        );
+
+        // TODO: 再提出メール送信フローが正式実装されたら、コメント登録とメール送信の責務を整理する。
         await this.$axios.$post(MAIL_DELIVERIES_ENDPOINT, {
-          to: this.testMailTo.trim(),
+          to: this.group.user.email,
           subject: this.selectedMessageTemplate.subject,
           body: this.selectedMessageTemplate.body,
           template_values: {
@@ -947,11 +915,26 @@ export default {
             resubmit_memo: this.commentBody.trim(),
           },
         });
-        this.testMailResultMessage = "テストメールを送信しました";
+
+        if (submission && !submission.id && commentRes.data?.commentable_id) {
+          submission.id = commentRes.data.commentable_id;
+        }
+
+        const targetSubmission = submission || this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
+        if (targetSubmission) {
+          targetSubmission.comments = [
+            ...(targetSubmission.comments || []),
+            {
+              ...commentRes.data,
+            },
+          ];
+        }
+        this.commentBody = "";
+        this.messageSendResult = "メッセージを送信しました";
       } catch (error) {
-        this.testMailResultMessage = "テストメールの送信に失敗しました";
+        this.messageSendResult = "メッセージの送信に失敗しました";
       } finally {
-        this.isSendingTestMail = false;
+        this.isSendingMessage = false;
       }
     },
     openFoodProductModal(foodProduct) {
@@ -1121,7 +1104,7 @@ export default {
   margin-top: 16px;
 }
 
-.test-mail-panel {
+.message-template-panel {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
@@ -1129,14 +1112,13 @@ export default {
   margin-bottom: 12px;
 }
 
-.test-mail-label {
+.message-template-label {
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-8);
 }
 
-.test-mail-select,
-.test-mail-input {
+.message-template-select {
   width: 100%;
   min-height: 40px;
   padding: 8px 10px;
@@ -1147,13 +1129,12 @@ export default {
   font-size: 14px;
 }
 
-.test-mail-select:focus,
-.test-mail-input:focus {
+.message-template-select:focus {
   outline: none;
   border-color: var(--button-primary);
 }
 
-.test-mail-result {
+.message-send-result {
   margin: 0;
   font-size: 13px;
   color: var(--accent-8);

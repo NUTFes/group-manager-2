@@ -209,6 +209,25 @@ http
       return;
     }
 
+    if (
+      url.pathname ===
+        "/api/v1/create_health_center_submission_status_comment" &&
+      request.method === "POST"
+    ) {
+      const payload = await readBody(request);
+      requests.push({ method: "POST", path: url.pathname, payload });
+      sendJson(response, 201, {
+        status: { code: 201, message: "Created" },
+        data: {
+          id: 1,
+          commentable_id: 1,
+          body: payload.body,
+          created_at: "2026-06-21T10:00:00.000+09:00",
+        },
+      });
+      return;
+    }
+
     if (url.pathname === "/api/v1/mail_deliveries" && request.method === "POST") {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
