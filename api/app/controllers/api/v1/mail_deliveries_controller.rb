@@ -13,8 +13,8 @@ class Api::V1::MailDeliveriesController < ApplicationController
 
     mail = GenericMailer.plain_text_email(
       to: mail_delivery_params[:to],
-      subject: mail_delivery_params[:subject],
-      body: mail_delivery_params[:body]
+      subject: rendered_subject,
+      body: rendered_body
     )
     mail.deliver_now
 
@@ -31,6 +31,33 @@ class Api::V1::MailDeliveriesController < ApplicationController
 
   def mail_delivery_params
     params.permit(:to, :subject, :body)
+  end
+
+  def template_values
+    return {} if params[:template_values].blank?
+
+    params.require(:template_values).permit(MessageTemplate::SUPPORTED_VARIABLES).to_h
+  end
+
+  def rendered_subject
+    return mail_delivery_params[:subject] if template_values.blank?
+
+    message_template_for_render.render_subject(template_values)
+  end
+
+  def rendered_body
+    return mail_delivery_params[:body] if template_values.blank?
+
+    message_template_for_render.render_body(template_values)
+  end
+
+  def message_template_for_render
+    @message_template_for_render ||= MessageTemplate.new(
+      locale: :ja,
+      name: 'mail_delivery',
+      subject: mail_delivery_params[:subject],
+      body: mail_delivery_params[:body]
+    )
   end
 
   def validate_mail_delivery_params
