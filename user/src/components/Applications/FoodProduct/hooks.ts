@@ -142,24 +142,31 @@ export const useFoodProductHooks = (
         await mutateFoodProducts();
       }, 500);
 
-      // 成功時のみビューモードに戻す
-      setIsEditing(false);
+      const finalizeResubmission = async (): Promise<boolean> => {
+        if (status !== 'waiting_resubmission') return true;
 
-      toast.success(t('applications.foodProduct.messages.updateSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-
-      if (status === 'waiting_resubmission') {
         try {
           await updateStatus('unapproved');
+          return true;
         } catch (e) {
           console.error(e);
           toast.error(
             t('applications.foodProduct.messages.statusUpdateFailed')
           );
+          return false;
         }
-      }
+      };
+
+      // 成功時のみビューモードに戻す
+      setIsEditing(false);
+
+      const statusUpdated = await finalizeResubmission();
+      if (!statusUpdated) return;
+
+      toast.success(t('applications.foodProduct.messages.updateSuccess'), {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } catch (error) {
       console.error('販売品更新エラー:', error);
 
@@ -214,24 +221,31 @@ export const useFoodProductHooks = (
         await mutateFoodProducts();
       }, 500);
 
-      // 成功時のみビューモードに戻す
-      setIsEditing(false);
+      const finalizeResubmission = async (): Promise<boolean> => {
+        if (status !== 'waiting_resubmission') return true;
 
-      toast.success(t('applications.foodProduct.messages.createSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-
-      if (status === 'waiting_resubmission') {
         try {
           await updateStatus('unapproved');
+          return true;
         } catch (e) {
           console.error(e);
           toast.error(
             t('applications.foodProduct.messages.statusUpdateFailed')
           );
+          return false;
         }
-      }
+      };
+
+      // 成功時のみビューモードに戻す
+      setIsEditing(false);
+
+      const statusUpdated = await finalizeResubmission();
+      if (!statusUpdated) return;
+
+      toast.success(t('applications.foodProduct.messages.createSuccess'), {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } catch (error) {
       console.error('販売品登録エラー:', error);
 
