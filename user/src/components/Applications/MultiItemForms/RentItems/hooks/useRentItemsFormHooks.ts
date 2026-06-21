@@ -522,6 +522,16 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
+  const finalizeresubmission = async () => {
+    if (!isResubmission) return;
+    try {
+      await updateStatus('unapproved');
+    } catch (e) {
+      console.error(e);
+      toast.error(t('applications.rentItems.messages.statusUpdateFailed'));
+    }
+  };
+
   // 物品申請を行わない場合の登録処理
   const registerNoItems = async () => {
     try {
@@ -566,6 +576,7 @@ export const useRentItemsFormHooks = (
 
       // API更新の通知
       await mutateRentalOrders();
+      await finalizeresubmission();
       // 成功時のトースト通知
       toast.success(
         t('applications.rentItems.messages.registerNoItemsSuccess')
@@ -621,18 +632,8 @@ export const useRentItemsFormHooks = (
             : t('applications.rentItems.messages.createSuccess')
         );
 
-        // ✅ 再提出完了時にステータス更新
-        if (isResubmission) {
-          try {
-            await updateStatus('unapproved');
-          } catch (e) {
-            console.error(e);
-            toast.error(
-              t('applications.rentItems.messages.statusUpdateFailed')
-            );
-          }
-        }
         await mutateRentalOrders();
+        await finalizeresubmission();
         setIsEditMode(false);
         userChangedLocationType.current = false;
       } else {
