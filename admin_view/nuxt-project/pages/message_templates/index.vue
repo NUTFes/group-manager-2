@@ -280,10 +280,6 @@ export default {
   width: 100%;
 }
 
-.selected {
-  background: rgba(0, 0, 0, 0.06);
-}
-
 .editor-panel {
   display: flex;
   flex-direction: column;
@@ -389,5 +385,6 @@ textarea {
   border: none;
   border-bottom: solid 1px var(--accent-2);
   box-shadow: none;
+  background: rgba(0, 0, 0, 0.06);
 }
 </style>
