@@ -129,6 +129,96 @@ http
       return;
     }
 
+    if (url.pathname === "/api/v1/get_group_show_for_admin_view/1") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: {
+          group: {
+            id: 1,
+            name: "技大祭企画",
+            project_name: "食品販売",
+          },
+          user: {
+            name: "山田太郎",
+            email: "representative@example.com",
+          },
+        },
+      });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/get_health_center_submission_status_show_for_admin_view/1") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: {
+          submissions: [
+            {
+              id: 1,
+              application_type: "food_product",
+              status: "waiting_resubmission",
+              comments: [],
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    if (url.pathname === "/user_page_settings/1") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: { fes_year_id: 1 },
+      });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/get_health_center_submission_status_index_for_admin_view") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [
+          {
+            group: { id: 1, fes_year_id: 1 },
+            group_category: 1,
+            fes_year: { id: 1 },
+          },
+        ],
+      });
+      return;
+    }
+
+    if (
+      [
+        "/food_products/group/1",
+        "/cooking_process_orders/group/1",
+        "/employees/group/1",
+        "/rental_orders/group/1",
+        "/shops",
+        "/rental_items",
+        "/un_registered_groups",
+      ].includes(url.pathname)
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
+    if (url.pathname === "/venue_maps/group/1") {
+      sendJson(response, 404, { error: "Not found" });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/mail_deliveries" && request.method === "POST") {
+      const payload = await readBody(request);
+      requests.push({ method: "POST", path: url.pathname, payload });
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
     sendJson(response, 404, { error: "Not found" });
   })
   .listen(port, "127.0.0.1");

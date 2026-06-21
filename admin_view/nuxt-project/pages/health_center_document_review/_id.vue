@@ -416,6 +416,49 @@
             <h3>メッセージ</h3>
           </div>
           <div class="comment-form">
+            <div class="test-mail-panel">
+              <label class="test-mail-label" for="message-template-select">
+                テンプレート
+              </label>
+              <select
+                id="message-template-select"
+                class="test-mail-select"
+                v-model="selectedMessageTemplateId"
+              >
+                <option value="">テンプレートを選択</option>
+                <option
+                  v-for="template in messageTemplates"
+                  :key="template.id"
+                  :value="String(template.id)"
+                >
+                  {{ template.name }}（{{ template.locale }}）
+                </option>
+              </select>
+              <label class="test-mail-label" for="test-mail-to">
+                テスト送信先
+              </label>
+              <input
+                id="test-mail-to"
+                class="test-mail-input"
+                type="email"
+                placeholder="test@example.com"
+                v-model="testMailTo"
+              />
+              <CommonButton
+                iconName="mark_email_read"
+                :on_click="onSendTestMail"
+                :disabled="isSendingTestMail || !canSendTestMail"
+              >
+                テスト送信
+              </CommonButton>
+              <p
+                v-if="testMailResultMessage"
+                class="test-mail-result"
+                role="status"
+              >
+                {{ testMailResultMessage }}
+              </p>
+            </div>
             <textarea
               class="comment-textarea"
               placeholder="メールで送信するコメント"
@@ -500,6 +543,8 @@ const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/upsert_health_center_submission_status";
 const HEALTH_CENTER_COMMENT_CREATE_ENDPOINT =
   "/api/v1/create_health_center_submission_status_comment";
+const MESSAGE_TEMPLATES_ENDPOINT = "/api/v1/message_templates";
+const MAIL_DELIVERIES_ENDPOINT = "/api/v1/mail_deliveries";
 const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
@@ -647,6 +692,11 @@ export default {
         { value: "unsubmitted", label: "未提出" },
       ],
       commentBody: "",
+      messageTemplates: [],
+      selectedMessageTemplateId: "",
+      testMailTo: "",
+      isSendingTestMail: false,
+      testMailResultMessage: "",
     };
   },
   watch: {
@@ -718,9 +768,23 @@ export default {
     approvedCount() {
       return this.submissions.filter((submission) => submission.status === "approved").length;
     },
+    selectedMessageTemplate() {
+      return this.messageTemplates.find(
+        (template) => String(template.id) === String(this.selectedMessageTemplateId)
+      );
+    },
+    canSendTestMail() {
+      return Boolean(
+        this.testMailTo.trim() &&
+          this.selectedMessageTemplate &&
+          this.commentBody.trim()
+      );
+    },
   },
   async mounted() {
     await this.reloadPageData();
+    await this.loadMessageTemplates();
+    this.testMailTo = window.localStorage.getItem("uid") || "";
     window.scrollTo(0, 0);
   },
   methods: {
@@ -737,6 +801,21 @@ export default {
           return;
         }
         throw error;
+      }
+    },
+    async loadMessageTemplates() {
+      try {
+        const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
+        this.messageTemplates = response.data || [];
+        const defaultTemplate =
+          this.messageTemplates.find(
+            (template) => template.locale === "ja" && template.name.includes("再提出")
+          ) || this.messageTemplates[0];
+        if (defaultTemplate) {
+          this.selectedMessageTemplateId = String(defaultTemplate.id);
+        }
+      } catch (error) {
+        this.messageTemplates = [];
       }
     },
     onPrevGroup() {
@@ -848,6 +927,32 @@ export default {
         ];
       }
       this.commentBody = "";
+    },
+    async onSendTestMail() {
+      if (!this.canSendTestMail || this.isSendingTestMail) return;
+
+      this.isSendingTestMail = true;
+      this.testMailResultMessage = "";
+
+      try {
+        // TODO: 再提出メール送信フローに統合するまでの暫定導線。
+        // 本実装ではステータス更新・コメント登録・メール送信の責務整理に合わせて削除する。
+        await this.$axios.$post(MAIL_DELIVERIES_ENDPOINT, {
+          to: this.testMailTo.trim(),
+          subject: this.selectedMessageTemplate.subject,
+          body: this.selectedMessageTemplate.body,
+          template_values: {
+            group_name: this.group.group.name,
+            user_name: this.group.user.name,
+            resubmit_memo: this.commentBody.trim(),
+          },
+        });
+        this.testMailResultMessage = "テストメールを送信しました";
+      } catch (error) {
+        this.testMailResultMessage = "テストメールの送信に失敗しました";
+      } finally {
+        this.isSendingTestMail = false;
+      }
     },
     openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
@@ -1014,6 +1119,44 @@ export default {
 .comment-history {
   width: 100%;
   margin-top: 16px;
+}
+
+.test-mail-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.test-mail-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-8);
+}
+
+.test-mail-select,
+.test-mail-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.test-mail-select:focus,
+.test-mail-input:focus {
+  outline: none;
+  border-color: var(--button-primary);
+}
+
+.test-mail-result {
+  margin: 0;
+  font-size: 13px;
+  color: var(--accent-8);
 }
 
 .comment-accordion {

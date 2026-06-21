@@ -10,6 +10,7 @@ const apiURL =
 module.exports = defineConfig({
   testDir: "./e2e",
   timeout: 30 * 1000,
+  workers: 1,
   expect: {
     timeout: 5 * 1000,
   },
