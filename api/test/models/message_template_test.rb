@@ -45,6 +45,19 @@ class MessageTemplateTest < ActiveSupport::TestCase
     assert_equal '企画団体 代表者 修正してください', template.render_body(values)
   end
 
+  # テンプレート保存済みレコードに依存せず、任意の件名・本文文字列を送信直前に置換できることを確認する。
+  test 'renders text without a message template instance' do
+    text = '{group_name} 代表 {user_name} 様 {unknown}'
+
+    rendered_text = MessageTemplate.render_text(
+      text,
+      group_name: '企画団体',
+      user_name: '代表者'
+    )
+
+    assert_equal '企画団体 代表 代表者 様 {unknown}', rendered_text
+  end
+
   test 'normalizes body newlines before save' do
     template = MessageTemplate.create!(valid_attributes.merge(body: "1行目\r\n2行目\r3行目"))
 

@@ -17,7 +17,7 @@ test.describe("メールテンプレート管理画面", () => {
   });
 
   // テストケース: テンプレート管理画面の主要導線。
-  // 編集、保存前複製、新規作成で期待するAPI payloadが送られることを確認する。
+  // 編集、保存前複製、リセット後の新規保存で期待するAPI payloadが送られることを確認する。
   test("テンプレートの作成・編集・複製初期値反映ができる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.$nuxt));
@@ -25,7 +25,15 @@ test.describe("メールテンプレート管理画面", () => {
 
     await expect(page.getByText("メールテンプレート管理")).toBeVisible();
     await expect(page.getByText("GM再提出依頼")).toBeVisible();
+    await page
+      .getByRole("cell", { name: "GM Resubmission Request", exact: true })
+      .click();
+    await page.getByRole("button", { name: "複製" }).click();
+    await expect(page.getByPlaceholder("例: GM再提出依頼")).toHaveValue(
+      "GM Resubmission Request copy"
+    );
 
+    await page.getByText("GM再提出依頼").click();
     await page.getByPlaceholder("件名を入力してください").fill("更新後件名");
     await page.getByRole("button", { name: "保存" }).click();
     await expect(page.getByText("テンプレートを更新しました")).toBeVisible();

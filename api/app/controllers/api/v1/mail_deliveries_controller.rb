@@ -12,7 +12,7 @@ class Api::V1::MailDeliveriesController < ApplicationController
     return render json: fmt(unprocessable_entity, errors), status: :unprocessable_entity if errors.present?
 
     mail = GenericMailer.plain_text_email(
-      to: mail_delivery_params[:to],
+      to: mail_delivery_base_params[:to],
       subject: rendered_subject,
       body: rendered_body
     )
@@ -29,7 +29,7 @@ class Api::V1::MailDeliveriesController < ApplicationController
     render json: fmt({ code: 403, message: 'Forbidden' }), status: :forbidden
   end
 
-  def mail_delivery_params
+  def mail_delivery_base_params
     params.permit(:to, :subject, :body)
   end
 
@@ -40,32 +40,23 @@ class Api::V1::MailDeliveriesController < ApplicationController
   end
 
   def rendered_subject
-    return mail_delivery_params[:subject] if template_values.blank?
+    return mail_delivery_base_params[:subject] if template_values.blank?
 
-    message_template_for_render.render_subject(template_values)
+    MessageTemplate.render_text(mail_delivery_base_params[:subject], template_values)
   end
 
   def rendered_body
-    return mail_delivery_params[:body] if template_values.blank?
+    return mail_delivery_base_params[:body] if template_values.blank?
 
-    message_template_for_render.render_body(template_values)
-  end
-
-  def message_template_for_render
-    @message_template_for_render ||= MessageTemplate.new(
-      locale: :ja,
-      name: 'mail_delivery',
-      subject: mail_delivery_params[:subject],
-      body: mail_delivery_params[:body]
-    )
+    MessageTemplate.render_text(mail_delivery_base_params[:body], template_values)
   end
 
   def validate_mail_delivery_params
     errors = []
-    errors << 'to is required' if mail_delivery_params[:to].blank?
-    errors << 'subject is required' if mail_delivery_params[:subject].blank?
-    errors << 'body is required' if mail_delivery_params[:body].blank?
-    if mail_delivery_params[:to].present?
+    errors << 'to is required' if mail_delivery_base_params[:to].blank?
+    errors << 'subject is required' if mail_delivery_base_params[:subject].blank?
+    errors << 'body is required' if mail_delivery_base_params[:body].blank?
+    if mail_delivery_base_params[:to].present?
       if multiple_recipients?
         errors << 'to must be a single email address'
       elsif !valid_email?
@@ -76,10 +67,10 @@ class Api::V1::MailDeliveriesController < ApplicationController
   end
 
   def multiple_recipients?
-    mail_delivery_params[:to].to_s.match?(MULTIPLE_RECIPIENTS_REGEXP)
+    mail_delivery_base_params[:to].to_s.match?(MULTIPLE_RECIPIENTS_REGEXP)
   end
 
   def valid_email?
-    mail_delivery_params[:to].to_s.match?(EMAIL_REGEXP)
+    mail_delivery_base_params[:to].to_s.match?(EMAIL_REGEXP)
   end
 end

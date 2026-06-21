@@ -12,6 +12,14 @@ const templates = [
     body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
     updated_at: "2026-06-21T10:00:00.000+09:00",
   },
+  {
+    id: 2,
+    locale: "en",
+    name: "GM Resubmission Request",
+    subject: "GM resubmission request",
+    body: "Dear {user_name},\n\n{resubmit_memo}",
+    updated_at: "2026-06-21T10:00:00.000+09:00",
+  },
 ];
 
 const sendJson = (response, status, body, headers = {}) => {
@@ -124,6 +132,19 @@ http
           name: "GM再提出依頼のコピー",
           subject: "【GM再提出】修正をお願いします",
           body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
+        },
+      });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/message_templates/2/copy_source") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: {
+          locale: "en",
+          name: "GM Resubmission Request copy",
+          subject: "GM resubmission request",
+          body: "Dear {user_name},\n\n{resubmit_memo}",
         },
       });
       return;

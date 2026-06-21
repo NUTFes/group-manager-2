@@ -794,10 +794,7 @@ export default {
       try {
         const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
         this.messageTemplates = response.data || [];
-        const defaultTemplate =
-          this.messageTemplates.find(
-            (template) => template.locale === "ja" && template.name.includes("再提出")
-          ) || this.messageTemplates[0];
+        const defaultTemplate = this.messageTemplates[0];
         if (defaultTemplate) {
           this.selectedMessageTemplateId = String(defaultTemplate.id);
         }

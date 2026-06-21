@@ -12,23 +12,23 @@ class MessageTemplate < ApplicationRecord
 
   before_save :normalize_newlines
 
-  def render_subject(values)
-    render_text(subject, values)
-  end
-
-  def render_body(values)
-    render_text(body, values)
-  end
-
-  private
-
-  def render_text(text, values)
+  def self.render_text(text, values)
     normalized_values = values.to_h.stringify_keys
 
     text.gsub(/\{(#{SUPPORTED_VARIABLES.join('|')})\}/) do
       normalized_values[Regexp.last_match(1)].to_s
     end
   end
+
+  def render_subject(values)
+    self.class.render_text(subject, values)
+  end
+
+  def render_body(values)
+    self.class.render_text(body, values)
+  end
+
+  private
 
   def normalize_newlines
     self.body = body.gsub(/\r\n?/, "\n") if body.present?

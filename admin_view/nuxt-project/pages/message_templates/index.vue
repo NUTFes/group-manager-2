@@ -171,18 +171,22 @@ export default {
     async copySource() {
       if (!this.form.id) return;
 
-      const response = await this.$axios.$get(
-        `/api/v1/message_templates/${this.form.id}/copy_source`
-      );
-      this.selectedTemplateId = null;
-      this.form = {
-        id: null,
-        locale: response.data.locale,
-        name: response.data.name,
-        subject: response.data.subject,
-        body: response.data.body,
-      };
-      this.openSnackBar("複製用の内容を作成しました");
+      try {
+        const response = await this.$axios.$get(
+          `/api/v1/message_templates/${this.form.id}/copy_source`
+        );
+        this.selectedTemplateId = null;
+        this.form = {
+          id: null,
+          locale: response.data.locale,
+          name: response.data.name,
+          subject: response.data.subject,
+          body: response.data.body,
+        };
+        this.openSnackBar("複製用の内容を作成しました");
+      } catch (error) {
+        this.openSnackBar("複製用の内容作成に失敗しました");
+      }
     },
     insertVariable(key) {
       const token = `{${key}}`;

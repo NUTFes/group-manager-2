@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2",
-    "@playwright/test": "^1.42.1",
+    "@playwright/test": "^1.61.0",
     "@vue/runtime-dom": "^3.5.13",
     "eslint": "7.32.0",
     "eslint-config-prettier": "^8.3.0",
