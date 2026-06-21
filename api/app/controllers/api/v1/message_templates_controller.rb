@@ -52,9 +52,10 @@ class Api::V1::MessageTemplatesController < ApplicationController
   private
 
   def require_admin!
-    return if current_api_user&.role_id == 1
+    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
+    return if [1, 2].include?(current_api_user&.role_id)
 
-    render json: fmt({ code: 403, message: 'Forbidden' }), status: :forbidden
+    render json: fmt({ code: 403, message: 'Forbidden' }, []), status: :forbidden
   end
 
   def set_message_template

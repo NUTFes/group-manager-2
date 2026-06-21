@@ -9,8 +9,10 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     MessageTemplate.delete_all
     Role.create!(id: 1, name: 'admin')
     Role.create!(id: 2, name: 'user')
+    Role.create!(id: 3, name: 'guest')
     @admin = create_user!(email: 'admin-template@example.com', role_id: 1)
-    @user = create_user!(email: 'user-template@example.com', role_id: 2)
+    @operator = create_user!(email: 'operator-template@example.com', role_id: 2)
+    @restricted_user = create_user!(email: 'restricted-template@example.com', role_id: 3)
   end
 
   # 一覧取得の正常系。管理者がテンプレート一覧を取得でき、name/locale順で返ることを確認する。
@@ -24,6 +26,16 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 3, response_data.size
     assert_equal [second_template.id, third_template.id, first_template.id], response_data.pluck('id')
+  end
+
+  # 一覧取得の正常系。暫定的に許可対象としているrole_id 2でもテンプレート一覧を取得できることを確認する。
+  test 'role 2 user can get templates' do
+    MessageTemplate.create!(valid_params)
+
+    get api_v1_message_templates_path, headers: auth_headers(@operator), as: :json
+
+    assert_response :success
+    assert_equal 1, response_data.size
   end
 
   # 詳細取得の正常系。管理者が指定IDのテンプレートを取得でき、レスポンス内容がDBと一致することを確認する。
@@ -43,9 +55,9 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # 認可の失敗系。非管理者が一覧取得できないことを確認する。
-  test 'non admin cannot get templates' do
-    get api_v1_message_templates_path, headers: auth_headers(@user), as: :json
+  # 認可の失敗系。許可対象外のroleでは一覧取得できないことを確認する。
+  test 'restricted user cannot get templates' do
+    get api_v1_message_templates_path, headers: auth_headers(@restricted_user), as: :json
 
     assert_response :forbidden
   end
@@ -57,12 +69,12 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  # 作成時の認可失敗系。非管理者がテンプレートを作成できないことを確認する。
-  test 'non admin cannot create template' do
+  # 作成時の認可失敗系。許可対象外のroleではテンプレートを作成できないことを確認する。
+  test 'restricted user cannot create template' do
     assert_no_difference('MessageTemplate.count') do
       post api_v1_message_templates_path,
            params: valid_params,
-           headers: auth_headers(@user),
+           headers: auth_headers(@restricted_user),
            as: :json
     end
 
@@ -92,6 +104,18 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :created
     created_template = MessageTemplate.order(:created_at).last
     assert_template_response(response_data, created_template)
+  end
+
+  # 作成の正常系。暫定的に許可対象としているrole_id 2でもテンプレートを作成できることを確認する。
+  test 'role 2 user can create template' do
+    assert_difference('MessageTemplate.count', 1) do
+      post api_v1_message_templates_path,
+           params: valid_params.merge(name: 'role2テンプレート'),
+           headers: auth_headers(@operator),
+           as: :json
+    end
+
+    assert_response :created
   end
 
   # 作成時のバリデーション失敗系。必須項目不足では作成されず422を返すことを確認する。
@@ -132,13 +156,13 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  # 更新時の認可失敗系。非管理者がテンプレートを更新できず、DB内容も変わらないことを確認する。
-  test 'non admin cannot update template' do
+  # 更新時の認可失敗系。許可対象外のroleではテンプレートを更新できず、DB内容も変わらないことを確認する。
+  test 'restricted user cannot update template' do
     template = MessageTemplate.create!(valid_params)
 
     patch api_v1_message_template_path(template),
           params: { subject: '更新後件名' },
-          headers: auth_headers(@user),
+          headers: auth_headers(@restricted_user),
           as: :json
 
     assert_response :forbidden
@@ -169,6 +193,19 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal '更新後件名', template.reload.subject
     assert_template_response(response_data, template)
+  end
+
+  # 更新の正常系。暫定的に許可対象としているrole_id 2でもテンプレートを更新できることを確認する。
+  test 'role 2 user can update template' do
+    template = MessageTemplate.create!(valid_params)
+
+    patch api_v1_message_template_path(template),
+          params: { subject: 'role2更新後件名' },
+          headers: auth_headers(@operator),
+          as: :json
+
+    assert_response :success
+    assert_equal 'role2更新後件名', template.reload.subject
   end
 
   # 更新時の失敗系。存在しないIDを指定した場合に404を返すことを確認する。
@@ -221,12 +258,12 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal '別テンプレート', other_template.reload.name
   end
 
-  # コピー元取得時の認可失敗系。非管理者が複製用の初期値を取得できないことを確認する。
-  test 'non admin cannot get template copy source' do
+  # コピー元取得時の認可失敗系。許可対象外のroleでは複製用の初期値を取得できないことを確認する。
+  test 'restricted user cannot get template copy source' do
     template = MessageTemplate.create!(valid_params)
 
     assert_no_difference('MessageTemplate.count') do
-      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@user), as: :json
+      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@restricted_user), as: :json
     end
 
     assert_response :forbidden
@@ -256,6 +293,18 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'GM再提出依頼 のコピー', response_data['name']
     assert_equal template.subject, response_data['subject']
     assert_equal template.body, response_data['body']
+  end
+
+  # コピー元取得の正常系。暫定的に許可対象としているrole_id 2でも複製用の初期値を取得できることを確認する。
+  test 'role 2 user can get template copy source' do
+    template = MessageTemplate.create!(valid_params)
+
+    assert_no_difference('MessageTemplate.count') do
+      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@operator), as: :json
+    end
+
+    assert_response :success
+    assert_equal 'GM再提出依頼 のコピー', response_data['name']
   end
 
   # コピー元取得時の失敗系。存在しない元テンプレートIDを指定した場合に404を返すことを確認する。
