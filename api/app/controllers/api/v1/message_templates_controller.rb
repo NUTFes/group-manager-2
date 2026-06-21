@@ -41,12 +41,14 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def copy_source
     # 複製画面で元テンプレートと区別できる初期値を返すため、保存前の段階でコピー名を付与する。
-    render json: fmt(ok, {
-                       locale: @message_template.locale,
-                       name: "#{@message_template.name} のコピー",
-                       subject: @message_template.subject,
-                       body: @message_template.body
-                     })
+    copy_source = {
+      locale: @message_template.locale,
+      name: "#{@message_template.name} のコピー",
+      subject: @message_template.subject,
+      body: @message_template.body
+    }
+
+    render json: fmt(ok, copy_source)
   end
 
   private
@@ -55,7 +57,8 @@ class Api::V1::MessageTemplatesController < ApplicationController
     # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
     return if [1, 2].include?(current_api_user&.role_id)
 
-    render json: fmt({ code: 403, message: 'Forbidden' }, []), status: :forbidden
+    render json: fmt({ code: 403, message: 'Forbidden' }, []),
+           status: :forbidden
   end
 
   def set_message_template
