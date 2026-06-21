@@ -346,7 +346,8 @@
         "submitFailed": "Failed to submit the rental request.",
         "updateSuccess": "Rental request updated.",
         "createSuccess": "Rental request submitted.",
-        "editStartFailed": "Failed to start editing."
+        "editStartFailed": "Failed to start editing.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "validation": {
         "selectItem": "Please select an item.",
@@ -417,7 +418,8 @@
         "bulkCreateSuccess": "Submitted multiple purchase applications.",
         "updateSuccess": "Purchase application updated.",
         "createSuccess": "Purchase application submitted.",
-        "submitFailed": "Failed to submit."
+        "submitFailed": "Failed to submit.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "validation": {
         "foodProduct": "Select a product.",
@@ -497,7 +499,8 @@
         "deleteFailed": "Failed to delete the product.",
         "deleteFailedDetail": "Failed to delete the product: {{message}}",
         "deleteNotFound": "Could not find the product to delete.",
-        "authRequired": "Authentication is required. Please sign in."
+        "authRequired": "Authentication is required. Please sign in.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "validation": {
         "name": "Enter a product name.",
@@ -837,7 +840,8 @@
       },
       "messages": {
         "updateSuccess": "Cooking processes updated.",
-        "updateFailed": "Failed to update the cooking processes."
+        "updateFailed": "Failed to update the cooking processes.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "validation": {
         "tentRequired": "Enter the cooking details.",
@@ -881,7 +885,8 @@
         "imgurMissing": "Imgur Client ID is not configured. Check your environment variables.",
         "imgurUploadFailed": "Failed to upload the image.",
         "submitSuccess": "Submitted successfully.",
-        "submitFailed": "Submission failed. Please try again later."
+        "submitFailed": "Submission failed. Please try again later.",
+        "statusUpdateFailed": "Failed to update the submission status."
       },
       "buttons": {
         "submitting": "Submitting..."

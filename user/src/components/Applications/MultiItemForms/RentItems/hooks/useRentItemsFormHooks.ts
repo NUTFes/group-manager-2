@@ -623,9 +623,15 @@ export const useRentItemsFormHooks = (
 
         // ✅ 再提出完了時にステータス更新
         if (isResubmission) {
-          await updateStatus('unapproved');
+          try {
+            await updateStatus('unapproved');
+          } catch (e) {
+            console.error(e);
+            toast.error(
+              t('applications.rentItems.messages.statusUpdateFailed')
+            );
+          }
         }
-
         await mutateRentalOrders();
         setIsEditMode(false);
         userChangedLocationType.current = false;

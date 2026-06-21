@@ -166,18 +166,21 @@ export const useCookingProcessOrder = (
       await upsertCookingProcessOrders({
         body: { cooking_process_orders: payload },
       });
-
-      // 再提出完了時
-      if (status === 'waiting_resubmission') {
-        // status更新処理
-        await updateStatus('unapproved');
-      }
-
       await mutateCookingProcessOrders();
       toast.success(
         t('applications.cookingProcessOrder.messages.updateSuccess')
       );
-      setIsEditing(false);
+
+      // 再提出完了時
+      if (status === 'waiting_resubmission') {
+        try {
+          await updateStatus('unapproved');
+          setIsEditing(false);
+        } catch (e) {
+          console.error(e);
+          toast.error(t('...statusUpdateFailed'));
+        }
+      }
     } catch (e) {
       console.error(e);
       toast.error(t('applications.cookingProcessOrder.messages.updateFailed'));

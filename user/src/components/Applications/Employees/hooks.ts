@@ -476,10 +476,9 @@ export const useEmployeesApplicationHooks = (
       if (status === 'waiting_resubmission') {
         try {
           await updateStatus('unapproved');
-        } catch (error) {
-          console.error('Failed to update submission status:', error);
+        } catch (e) {
+          console.error(e);
           toast.error(t('applications.employees.messages.statusUpdateFailed'));
-          throw error;
         }
       }
       setEditing(false);
@@ -511,10 +510,9 @@ export const useEmployeesApplicationHooks = (
         // status更新処理
         try {
           await updateStatus('unapproved');
-        } catch (error) {
-          console.error('Failed to update submission status:', error);
+        } catch (e) {
+          console.error(e);
           toast.error(t('applications.employees.messages.statusUpdateFailed'));
-          throw error; // Re-throw to prevent setEditing(false) on failure
         }
       }
       setEditing(false);

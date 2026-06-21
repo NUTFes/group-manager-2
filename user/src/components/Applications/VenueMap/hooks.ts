@@ -5,6 +5,7 @@ import {
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
+import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
 
@@ -35,11 +36,10 @@ export const useVenueMapHooks = (
   const handleFormSubmitted = async () => {
     if (status === 'waiting_resubmission') {
       try {
-        // status更新処理
         await updateStatus('unapproved');
-      } catch (error) {
-        console.error('Failed to update submission status:', error);
-        // Consider showing a user-facing error message
+      } catch (e) {
+        console.error(e);
+        toast.error(t('applications.venueMap.messages.statusUpdateFailed'));
       }
     }
 

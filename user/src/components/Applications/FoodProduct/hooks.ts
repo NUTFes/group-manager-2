@@ -153,8 +153,11 @@ export const useFoodProductHooks = (
       if (status === 'waiting_resubmission') {
         try {
           await updateStatus('unapproved');
-        } catch (statusError) {
-          console.error('販売品ステータス更新エラー:', statusError);
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.foodProduct.messages.statusUpdateFailed')
+          );
         }
       }
     } catch (error) {
@@ -222,8 +225,11 @@ export const useFoodProductHooks = (
       if (status === 'waiting_resubmission') {
         try {
           await updateStatus('unapproved');
-        } catch (statusError) {
-          console.error('販売品ステータス更新エラー:', statusError);
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.foodProduct.messages.statusUpdateFailed')
+          );
         }
       }
     } catch (error) {

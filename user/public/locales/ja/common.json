@@ -346,7 +346,8 @@
         "submitFailed": "物品申請の送信に失敗しました",
         "updateSuccess": "物品申請を更新しました",
         "createSuccess": "物品申請を登録しました",
-        "editStartFailed": "編集モードの開始に失敗しました"
+        "editStartFailed": "編集モードの開始に失敗しました",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "validation": {
         "selectItem": "物品を選択してください",
@@ -417,7 +418,8 @@
         "bulkCreateSuccess": "複数の購入品申請が登録されました",
         "updateSuccess": "購入品申請が更新されました",
         "createSuccess": "購入品申請が登録されました",
-        "submitFailed": "登録に失敗しました"
+        "submitFailed": "登録に失敗しました",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "validation": {
         "foodProduct": "販売品名を選択してください",
@@ -497,7 +499,8 @@
         "deleteFailed": "販売品の削除に失敗しました。",
         "deleteFailedDetail": "販売品の削除に失敗しました: {{message}}",
         "deleteNotFound": "削除対象の商品が見つかりませんでした。",
-        "authRequired": "認証が必要です。ログインしてください。"
+        "authRequired": "認証が必要です。ログインしてください。",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "validation": {
         "name": "販売品名を入力してください",
@@ -837,7 +840,8 @@
       },
       "messages": {
         "updateSuccess": "調理工程を更新しました。",
-        "updateFailed": "調理工程の更新に失敗しました。"
+        "updateFailed": "調理工程の更新に失敗しました。",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "validation": {
         "tentRequired": "調理内容を入力してください",
@@ -881,7 +885,8 @@
         "imgurMissing": "Imgur Client IDが設定されていません。環境変数を確認してください。",
         "imgurUploadFailed": "画像のアップロードに失敗しました。",
         "submitSuccess": "送信しました。",
-        "submitFailed": "送信に失敗しました。時間を置いて再度お試しください。"
+        "submitFailed": "送信に失敗しました。時間を置いて再度お試しください。",
+        "statusUpdateFailed": "ステータスの更新に失敗しました。"
       },
       "buttons": {
         "submitting": "送信中..."

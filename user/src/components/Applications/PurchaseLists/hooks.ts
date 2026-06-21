@@ -388,11 +388,16 @@ export const usePurchaseListsForm = (
       }
 
       if (status === 'waiting_resubmission') {
-        await updateStatus('unapproved');
+        try {
+          await updateStatus('unapproved');
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.purchaseLists.messages.statusUpdateFailed')
+          );
+        }
       }
-
       onSuccess();
-
       reset(formData); // 送信後もフォーム内容は維持
     } catch {
       toast.error(t('applications.purchaseLists.messages.submitFailed'));
