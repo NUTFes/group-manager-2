@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content message-templates-page">
     <SubHeader pageTitle="メールテンプレート管理">
       <CommonButton iconName="add_circle" :on_click="startCreate">
         新規作成
@@ -380,5 +380,14 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+</style>
+
+<style>
+.message-templates-page .normal-table tr:hover {
+  transform: none;
+  border: none;
+  border-bottom: solid 1px var(--accent-2);
+  box-shadow: none;
 }
 </style>
