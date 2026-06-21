@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Api::V1::MessageTemplatesController < ApplicationController
+  COPY_SUFFIX = { 'ja' => ' のコピー', 'en' => ' copy' }.freeze
+
+  before_action :authenticate_api_user!
+  before_action :require_admin!
+  before_action :set_message_template, only: %i[show update copy_source]
+
   rescue_from ArgumentError do |error|
     render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
   end
@@ -8,10 +14,6 @@ class Api::V1::MessageTemplatesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do
     render json: fmt(not_found, [], "Not found message_template id = #{params[:id]}"), status: :not_found
   end
-
-  before_action :authenticate_api_user!
-  before_action :require_admin!
-  before_action :set_message_template, only: %i[show update copy_source]
 
   def index
     templates = MessageTemplate.order(:name, :locale)
@@ -43,7 +45,7 @@ class Api::V1::MessageTemplatesController < ApplicationController
   def copy_source
     copy_source = {
       locale: @message_template.locale,
-      name: "#{@message_template.name} のコピー",
+      name: "#{@message_template.name}#{COPY_SUFFIX[@message_template.locale]}",
       subject: @message_template.subject,
       body: @message_template.body
     }

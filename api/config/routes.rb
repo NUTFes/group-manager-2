@@ -292,12 +292,11 @@ Rails.application.routes.draw do
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
       #---CSV出力
-      resources :message_templates, only: %i[index show create] do
+      resources :message_templates, only: %i[index show create update] do
         member do
           get :copy_source
         end
       end
-      patch 'message_templates/:id' => 'message_templates#update'
       resources :mail_deliveries, only: [:create]
 
       get 'get_groups_csv/:fes_year_id' => 'output_csv#output_groups_csv'

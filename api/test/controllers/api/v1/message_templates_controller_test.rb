@@ -295,6 +295,18 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal template.body, response_data['body']
   end
 
+  # コピー元取得の正常系。英語テンプレートでは英語用suffixのcopy nameを返すことを確認する。
+  test 'admin can get english template copy source' do
+    template = MessageTemplate.create!(valid_params.merge(locale: 'en', name: 'Resubmission Request'))
+
+    assert_no_difference('MessageTemplate.count') do
+      get copy_source_api_v1_message_template_path(template), headers: auth_headers(@admin), as: :json
+    end
+
+    assert_response :success
+    assert_equal 'Resubmission Request copy', response_data['name']
+  end
+
   # コピー元取得の正常系。暫定的に許可対象としているrole_id 2でも複製用の初期値を取得できることを確認する。
   test 'role 2 user can get template copy source' do
     template = MessageTemplate.create!(valid_params)
