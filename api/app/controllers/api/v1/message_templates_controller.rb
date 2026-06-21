@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 class Api::V1::MessageTemplatesController < ApplicationController
-  COPY_SUFFIX = { 'ja' => ' のコピー', 'en' => ' copy' }.freeze
+  COPY_SUFFIX = { 'ja' => 'のコピー', 'en' => ' copy' }.freeze
 
   before_action :authenticate_api_user!
   before_action :require_admin!
   before_action :set_message_template, only: %i[show update copy_source]
-
-  rescue_from ArgumentError do |error|
-    render json: fmt(unprocessable_entity, [error.message]), status: :unprocessable_entity
-  end
+  before_action :validate_locale_param, only: %i[create update]
 
   rescue_from ActiveRecord::RecordNotFound do
     render json: fmt(not_found, [], "Not found message_template id = #{params[:id]}"), status: :not_found
@@ -65,6 +62,14 @@ class Api::V1::MessageTemplatesController < ApplicationController
 
   def set_message_template
     @message_template = MessageTemplate.find(params[:id])
+  end
+
+  def validate_locale_param
+    return if params[:locale].blank?
+    return if MessageTemplate.locales.key?(params[:locale])
+
+    render json: fmt(unprocessable_entity, ['locale is invalid']),
+           status: :unprocessable_entity
   end
 
   def message_template_params

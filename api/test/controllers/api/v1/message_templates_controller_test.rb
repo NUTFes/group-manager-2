@@ -48,6 +48,24 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_template_response(response_data, template)
   end
 
+  # 詳細取得の認可失敗系。許可対象外のroleでは取得できないことを確認する。
+  test 'restricted user cannot get template' do
+    template = MessageTemplate.create!(valid_params)
+
+    get api_v1_message_template_path(template), headers: auth_headers(@restricted_user), as: :json
+
+    assert_response :forbidden
+  end
+
+  # 詳細取得の認証失敗系。未認証では取得できないことを確認する。
+  test 'unauthenticated request cannot get template' do
+    template = MessageTemplate.create!(valid_params)
+
+    get api_v1_message_template_path(template), as: :json
+
+    assert_response :unauthorized
+  end
+
   # 詳細取得の失敗系。存在しないIDを指定した場合に404を返すことを確認する。
   test 'admin cannot get missing template' do
     get api_v1_message_template_path(0), headers: auth_headers(@admin), as: :json
@@ -290,7 +308,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal template.locale, response_data['locale']
-    assert_equal 'GM再提出依頼 のコピー', response_data['name']
+    assert_equal "#{template.name}のコピー", response_data['name']
     assert_equal template.subject, response_data['subject']
     assert_equal template.body, response_data['body']
   end
@@ -304,7 +322,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_equal 'Resubmission Request copy', response_data['name']
+    assert_equal "#{template.name} copy", response_data['name']
   end
 
   # コピー元取得の正常系。暫定的に許可対象としているrole_id 2でも複製用の初期値を取得できることを確認する。
@@ -316,7 +334,7 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_equal 'GM再提出依頼 のコピー', response_data['name']
+    assert_equal "#{template.name}のコピー", response_data['name']
   end
 
   # コピー元取得時の失敗系。存在しない元テンプレートIDを指定した場合に404を返すことを確認する。
