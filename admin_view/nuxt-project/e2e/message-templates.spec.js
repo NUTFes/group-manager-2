@@ -16,8 +16,8 @@ test.describe("メールテンプレート管理画面", () => {
     await page.request.delete(`${API_URL}/_e2e/requests`);
   });
 
-  // テストケース: テンプレート管理画面の主要導線。
-  // 新規作成、編集、複製がそれぞれモーダル経由で実行され、期待するAPI payloadが送られることを確認する。
+  // 正常系: テンプレート管理画面の主要導線。
+  // 新規作成、編集、複製がそれぞれモーダル経由で実行され、期待するAPI payloadが送られることを検証する。
   test("テンプレートの作成・編集・複製初期値反映ができる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.$nuxt));
@@ -93,6 +93,62 @@ test.describe("メールテンプレート管理画面", () => {
           name: "GM Resubmission Request copy",
           subject: "GM resubmission request",
           body: "Dear {user_name},\n\n{resubmit_memo}{group_name}",
+        },
+      },
+    ]);
+  });
+
+  // 異常系: 必須項目が不足している場合の保存抑止。
+  // 新規作成モーダルで必須項目が空のまま保存した場合、バリデーションメッセージを表示しAPI送信しないことを検証する。
+  test("必須項目が不足している場合はテンプレートを保存しない", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/message_templates"));
+
+    await expect(page.getByText("メールテンプレート管理")).toBeVisible();
+    await page.getByRole("button", { name: "新規作成" }).click();
+    await expect(page.getByText("メールテンプレート作成")).toBeVisible();
+
+    await page.getByPlaceholder("例: GM再提出依頼").fill("入力不足テンプレート");
+    await page.getByRole("button", { name: "保存" }).click();
+    await expect(
+      page.getByText("テンプレート名、言語、件名、本文を入力してください")
+    ).toBeVisible();
+
+    const requests = await page.request
+      .get(`${API_URL}/_e2e/requests`)
+      .then((response) => response.json());
+    expect(requests).toEqual([]);
+  });
+
+  // 異常系: テンプレート保存APIが失敗した場合の表示。
+  // APIがエラーを返した場合、失敗メッセージを表示し、送信したpayloadは保持したまま成功扱いにしないことを検証する。
+  test("テンプレート保存APIが失敗した場合は失敗メッセージを表示する", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/message_templates"));
+
+    await expect(page.getByText("メールテンプレート管理")).toBeVisible();
+    await page.getByRole("button", { name: "新規作成" }).click();
+    await expect(page.getByText("メールテンプレート作成")).toBeVisible();
+    await page.getByPlaceholder("例: GM再提出依頼").fill("保存失敗テンプレート");
+    await page.getByPlaceholder("件名を入力してください").fill("保存失敗件名");
+    await page.getByPlaceholder("本文を入力してください").fill("保存失敗本文");
+    await page.getByRole("button", { name: "保存" }).click();
+    await expect(page.getByText("テンプレートの保存に失敗しました")).toBeVisible();
+
+    const requests = await page.request
+      .get(`${API_URL}/_e2e/requests`)
+      .then((response) => response.json());
+    expect(requests).toEqual([
+      {
+        method: "POST",
+        path: "/api/v1/message_templates",
+        payload: {
+          locale: "ja",
+          name: "保存失敗テンプレート",
+          subject: "保存失敗件名",
+          body: "保存失敗本文",
         },
       },
     ]);

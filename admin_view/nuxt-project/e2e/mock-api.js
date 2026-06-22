@@ -104,6 +104,14 @@ http
       if (request.method === "POST") {
         const payload = await readBody(request);
         requests.push({ method: "POST", path: url.pathname, payload });
+        if (payload.name === "保存失敗テンプレート") {
+          sendJson(response, 422, {
+            status: { code: 422, message: "Unprocessable Entity" },
+            data: ["name has already been taken"],
+          });
+          return;
+        }
+
         sendJson(response, 201, {
           status: { code: 201, message: "Created" },
           data: { id: 2, ...payload, updated_at: templates[0].updated_at },
@@ -252,6 +260,14 @@ http
     if (url.pathname === "/api/v1/mail_deliveries" && request.method === "POST") {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
+      if (payload.template_values?.resubmit_memo === "送信失敗テスト") {
+        sendJson(response, 500, {
+          status: { code: 500, message: "Internal Server Error" },
+          data: [],
+        });
+        return;
+      }
+
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: [],

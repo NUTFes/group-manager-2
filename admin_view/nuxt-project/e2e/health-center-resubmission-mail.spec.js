@@ -16,8 +16,8 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     await page.request.delete(`${API_URL}/_e2e/requests`);
   });
 
-  // テストケース: 再提出画面の送信前プレビューを経由したメッセージ送信導線。
-  // 送信ボタンだけではAPI送信せず、プレビューで差し込み後の内容を確認してから送信APIへ渡すことを確認する。
+  // 正常系: 再提出画面の送信前プレビューを経由したメッセージ送信導線。
+  // テンプレート選択とコメント入力後、送信前プレビューを確認してからコメント登録APIとメール送信APIへ渡すことを検証する。
   test("再提出メッセージ送信時にメールも送信できる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.$nuxt));
@@ -98,5 +98,69 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
         },
       },
     });
+  });
+
+  // 異常系: テンプレート未選択またはコメント未入力では送信できない。
+  // 必須入力が欠けている間は送信ボタンが無効で、プレビュー表示やAPI送信が発生しないことを検証する。
+  test("テンプレート未選択またはコメント未入力では送信できない", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() =>
+      window.$nuxt.$router.push("/health_center_document_review/1")
+    );
+
+    await expect(page.getByText("メッセージ")).toBeVisible();
+    const sendButton = page.getByRole("button", { name: "送信" });
+    const commentTextarea = page.locator(".comment-textarea");
+
+    await expect(page.locator("#message-template-select")).toHaveValue("");
+    await expect(sendButton).toBeDisabled();
+
+    await page.locator("#message-template-select").selectOption("1");
+    await expect(sendButton).toBeDisabled();
+
+    await page.locator("#message-template-select").selectOption("");
+    await commentTextarea.fill("食品名を修正してください。", { force: true });
+    await expect(sendButton).toBeDisabled();
+    await expect(page.locator(".edit-modal")).toHaveCount(0);
+
+    const requests = await page.request
+      .get(`${API_URL}/_e2e/requests`)
+      .then((response) => response.json());
+    expect(requests).toEqual([]);
+  });
+
+  // 異常系: メール送信APIが失敗した場合の表示。
+  // プレビュー確定後にメール送信APIがエラーを返した場合、失敗メッセージを表示して成功扱いにしないことを検証する。
+  test("メール送信APIが失敗した場合は失敗メッセージを表示する", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() =>
+      window.$nuxt.$router.push("/health_center_document_review/1")
+    );
+
+    await expect(page.getByText("メッセージ")).toBeVisible();
+    await page.locator("#message-template-select").selectOption("1");
+    await page.locator(".comment-textarea").fill("送信失敗テスト", { force: true });
+    await page.getByRole("button", { name: "送信" }).click();
+    await expect(page.locator(".edit-modal").getByText("送信内容の確認")).toBeVisible();
+
+    await page.getByRole("button", { name: "送信する" }).click();
+    await expect(page.getByText("メッセージの送信に失敗しました")).toBeVisible();
+
+    const requests = await page.request
+      .get(`${API_URL}/_e2e/requests`)
+      .then((response) => response.json());
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        method: "POST",
+        path: "/api/v1/mail_deliveries",
+        payload: expect.objectContaining({
+          template_values: expect.objectContaining({
+            resubmit_memo: "送信失敗テスト",
+          }),
+        }),
+      })
+    );
   });
 });
