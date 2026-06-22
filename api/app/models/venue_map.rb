@@ -3,6 +3,8 @@
 class VenueMap < ApplicationRecord
   belongs_to :group
 
+  after_create :ensure_health_center_submission_status
+
   def to_info_h
     {
       id: id,
@@ -12,5 +14,15 @@ class VenueMap < ApplicationRecord
       created_at: created_at,
       updated_at: updated_at
     }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :venue_map,
+      status: :unapproved
+    )
   end
 end

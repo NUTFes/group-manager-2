@@ -198,12 +198,12 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
         group: group,
         group_category: group.group_category,
         fes_year: group.fes_year,
-        food_product: statuses['food_product']&.status,
-        purchase_list: statuses['purchase_list']&.status,
-        cooking_process_order: statuses['cooking_process_order']&.status,
-        employee: statuses['employee']&.status,
-        venue_map: statuses['venue_map']&.status,
-        equipment: statuses['equipment']&.status
+        food_product: statuses['food_product']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        purchase_list: statuses['purchase_list']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        cooking_process_order: statuses['cooking_process_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        employee: statuses['employee']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        venue_map: statuses['venue_map']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        equipment: statuses['equipment']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS
       }
     end
   end
@@ -217,7 +217,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       {
         id: submission_status&.id,
         application_type: application_type,
-        status: submission_status&.status,
+        status: submission_status&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
         comments: submission_status&.comments || [],
         detail: fetch_detail_for(group, application_type)
       }

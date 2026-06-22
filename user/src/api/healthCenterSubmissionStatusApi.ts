@@ -1,6 +1,7 @@
 import {
   useAuthenticatedGet,
   useAuthenticatedPatchWithId,
+  useAuthenticatedPost,
 } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
@@ -8,6 +9,8 @@ const API_ENDPOINTS = {
     '/api/v1/get_health_center_submission_status_show_for_admin_view',
   UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
     '/api/v1/update_health_center_submission_status',
+  UPSERT_HEALTH_CENTER_SUBMISSION_STATUS:
+    '/api/v1/upsert_health_center_submission_status',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -42,24 +45,44 @@ export const useUpdateHealthCenterSubmissionStatus = () => {
   );
 };
 
+export const useUpsertHealthCenterSubmissionStatus = () => {
+  return useAuthenticatedPost(
+    API_ENDPOINTS.UPSERT_HEALTH_CENTER_SUBMISSION_STATUS
+  );
+};
+
 export const useUpdateSubmissionStatusFor = (
   groupId: number | undefined,
   applicationType: string
 ) => {
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
-  const { trigger } = useUpdateHealthCenterSubmissionStatus()();
+  const { trigger: updateTrigger } = useUpdateHealthCenterSubmissionStatus()();
+  const { trigger: upsertTrigger } = useUpsertHealthCenterSubmissionStatus();
 
-  return async (status: 'unapproved') => {
+  return async (status: HealthCenterSubmissionStatus) => {
     const submission = healthCenterSubmissionStatus.find(
       (s) => s.applicationType === applicationType
     );
 
-    if (!submission?.id) {
-      throw new Error(`${applicationType} submission status id not found`);
+    if (submission?.id) {
+      await updateTrigger({ id: submission.id, body: { status } });
+    } else {
+      if (!groupId) {
+        throw new Error(
+          `${applicationType} submission status groupId not found`
+        );
+      }
+
+      await upsertTrigger({
+        body: {
+          group_id: groupId,
+          application_type: applicationType,
+          status,
+        },
+      });
     }
 
-    await trigger({ id: submission.id, body: { status } });
     await mutateHealthCenterSubmissionStatus();
   };
 };

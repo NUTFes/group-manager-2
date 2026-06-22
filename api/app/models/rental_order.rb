@@ -4,6 +4,8 @@ class RentalOrder < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item
 
+  after_create :ensure_health_center_submission_status
+
   def self.with_groups_and_rental_item
     @record = RentalOrder.preload(:group)
                          .map do |rental_order|

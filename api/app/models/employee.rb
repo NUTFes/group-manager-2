@@ -4,6 +4,8 @@ class Employee < ApplicationRecord
   belongs_to :group
   belongs_to :stool_test
 
+  after_create :ensure_health_center_submission_status
+
   def self.with_groups
     @record = Employee.preload(:group)
                       .map do |employee|
@@ -31,5 +33,15 @@ class Employee < ApplicationRecord
       student_id: student_id,
       stool_test: stool_test.status
     }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :employee,
+      status: :unapproved
+    )
   end
 end
