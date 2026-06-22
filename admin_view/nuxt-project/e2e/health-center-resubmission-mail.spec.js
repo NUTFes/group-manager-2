@@ -28,25 +28,29 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     await expect(page.getByText("メッセージ")).toBeVisible();
     await expect(page.getByText("技大祭企画")).toBeVisible();
     await expect(page.getByText("代表者: 山田太郎")).toBeVisible();
+    await expect(page.locator("#message-template-select")).toHaveValue("");
 
     const commentTextarea = page.locator(".comment-textarea");
     await commentTextarea.scrollIntoViewIfNeeded();
     await commentTextarea.fill("食品名を修正してください。", { force: true });
 
     const sendButton = page.getByRole("button", { name: "送信" });
+    await expect(sendButton).toBeDisabled();
+    await page.locator("#message-template-select").selectOption("1");
+    await expect(sendButton).toBeEnabled();
     await sendButton.scrollIntoViewIfNeeded();
     await sendButton.click();
-    const previewDialog = page.getByRole("dialog", { name: "送信内容の確認" });
-    await expect(previewDialog).toBeVisible();
-    await expect(previewDialog.getByText("representative@example.com")).toBeVisible();
+    const previewModal = page.locator(".edit-modal");
+    await expect(previewModal.getByText("送信内容の確認")).toBeVisible();
+    await expect(previewModal.getByText("representative@example.com")).toBeVisible();
     await expect(
-      previewDialog.getByText("【GM再提出】修正をお願いします")
+      previewModal.getByText("【GM再提出】修正をお願いします")
     ).toBeVisible();
     await expect(
-      previewDialog.getByText("技大祭企画 代表 山田太郎 様")
+      previewModal.getByText("技大祭企画 代表 山田太郎 様")
     ).toBeVisible();
     await expect(
-      previewDialog.getByText("食品名を修正してください。")
+      previewModal.getByText("食品名を修正してください。")
     ).toBeVisible();
 
     const requestsBeforeConfirm = await page.request

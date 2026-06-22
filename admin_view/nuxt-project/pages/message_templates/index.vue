@@ -1,103 +1,162 @@
 <template>
   <div class="main-content message-templates-page">
-    <SubHeader pageTitle="メールテンプレート管理" />
+    <SubHeader pageTitle="メールテンプレート管理">
+      <CommonButton
+        iconName="add_circle"
+        :on_click="openCreateModal"
+        :disabled="isSaving"
+      >
+        新規作成
+      </CommonButton>
+      <CommonButton
+        iconName="edit"
+        :on_click="openEditModal"
+        :disabled="!selectedTemplate || isSaving"
+      >
+        編集
+      </CommonButton>
+      <CommonButton
+        iconName="content_copy"
+        :on_click="openCopyModal"
+        :disabled="!selectedTemplate || isSaving"
+      >
+        複製
+      </CommonButton>
+    </SubHeader>
 
-    <div class="template-layout">
-      <Card width="100%">
-        <Table>
-          <template v-slot:table-header>
-            <th v-for="(header, index) in headers" :key="index">
-              {{ header }}
-            </th>
-          </template>
-          <template v-slot:table-body>
-            <tr
-              v-for="template in templates"
-              :key="template.id"
-              :class="{ selected: selectedTemplateId === template.id }"
-              @click="selectTemplate(template)"
-            >
-              <td>{{ template.id }}</td>
-              <td>{{ template.name }}</td>
-              <td>{{ localeLabel(template.locale) }}</td>
-              <td>{{ template.subject }}</td>
-              <td>{{ template.updated_at | formatDate }}</td>
-            </tr>
-          </template>
-        </Table>
-      </Card>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="template in templates"
+            :key="template.id"
+            :class="{ selected: selectedTemplateId === template.id }"
+            @click="selectTemplate(template)"
+          >
+            <td>{{ template.id }}</td>
+            <td>{{ template.name }}</td>
+            <td>{{ localeLabel(template.locale) }}</td>
+            <td>{{ template.subject }}</td>
+            <td>{{ template.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-      <section class="editor-panel">
-        <div class="editor-panel__header">
-          <h3>{{ form.id ? "テンプレート編集" : "テンプレート作成" }}</h3>
-          <div class="editor-panel__actions">
-            <CommonButton
-              iconName="restart_alt"
-              :on_click="startCreate"
-              :disabled="isSaving"
+    <AddModal
+      v-if="isOpenCreateModal"
+      :title="createModalTitle"
+      @close="closeTemplateModal"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>テンプレート名</h3>
+          <input v-model="form.name" placeholder="例: GM再提出依頼" />
+        </div>
+        <div>
+          <h3>言語</h3>
+          <select v-model="form.locale">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div>
+          <h3>件名</h3>
+          <input v-model="form.subject" placeholder="件名を入力してください" />
+        </div>
+        <div class="modal-insert-buttons">
+          <h3>差し込み</h3>
+          <div class="insert-buttons">
+            <button
+              v-for="variable in templateVariables"
+              :key="variable.key"
+              type="button"
+              @click="insertVariable(variable.key)"
             >
-              リセット
-            </CommonButton>
-            <CommonButton
-              iconName="content_copy"
-              :on_click="copySource"
-              :disabled="!form.id || isSaving"
-            >
-              複製
-            </CommonButton>
-            <CommonButton
-              iconName="save"
-              :on_click="saveTemplate"
-              :disabled="isSaving"
-            >
-              保存
-            </CommonButton>
+              {{ variable.label }}
+            </button>
           </div>
         </div>
-
-        <div class="form-grid">
-          <label>
-            <span>テンプレート名</span>
-            <input v-model="form.name" placeholder="例: GM再提出依頼" />
-          </label>
-
-          <label>
-            <span>言語</span>
-            <select v-model="form.locale">
-              <option value="ja">日本語</option>
-              <option value="en">English</option>
-            </select>
-          </label>
-        </div>
-
-        <label>
-          <span>件名</span>
-          <input v-model="form.subject" placeholder="件名を入力してください" />
-        </label>
-
-        <div class="insert-buttons">
-          <span>差し込み</span>
-          <button
-            v-for="variable in templateVariables"
-            :key="variable.key"
-            type="button"
-            @click="insertVariable(variable.key)"
-          >
-            {{ variable.label }}
-          </button>
-        </div>
-
-        <label>
-          <span>本文</span>
+        <div>
+          <h3>本文</h3>
           <textarea
             ref="bodyTextarea"
             v-model="form.body"
-            rows="18"
+            rows="12"
             placeholder="本文を入力してください"
           />
-        </label>
-      </section>
-    </div>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton
+          iconName="save"
+          :on_click="saveTemplate"
+          :disabled="isSaving"
+        >
+          保存
+        </CommonButton>
+      </template>
+    </AddModal>
+
+    <EditModal
+      v-if="isOpenEditModal"
+      title="メールテンプレート編集"
+      @close="closeTemplateModal"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>テンプレート名</h3>
+          <input v-model="form.name" placeholder="例: GM再提出依頼" />
+        </div>
+        <div>
+          <h3>言語</h3>
+          <select v-model="form.locale">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div>
+          <h3>件名</h3>
+          <input v-model="form.subject" placeholder="件名を入力してください" />
+        </div>
+        <div class="modal-insert-buttons">
+          <h3>差し込み</h3>
+          <div class="insert-buttons">
+            <button
+              v-for="variable in templateVariables"
+              :key="variable.key"
+              type="button"
+              @click="insertVariable(variable.key)"
+            >
+              {{ variable.label }}
+            </button>
+          </div>
+        </div>
+        <div>
+          <h3>本文</h3>
+          <textarea
+            ref="bodyTextarea"
+            v-model="form.body"
+            rows="12"
+            placeholder="本文を入力してください"
+          />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton
+          iconName="save"
+          :on_click="saveTemplate"
+          :disabled="isSaving"
+        >
+          保存
+        </CommonButton>
+      </template>
+    </EditModal>
 
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
@@ -120,6 +179,9 @@ export default {
         subject: "",
         body: "",
       },
+      isOpenCreateModal: false,
+      isOpenEditModal: false,
+      isCopyCreateMode: false,
       isSaving: false,
       isOpenSnackBar: false,
       message: "",
@@ -130,16 +192,23 @@ export default {
       ],
     };
   },
+  computed: {
+    selectedTemplate() {
+      return this.templates.find(
+        (template) => template.id === this.selectedTemplateId
+      );
+    },
+    createModalTitle() {
+      return this.isCopyCreateMode
+        ? "メールテンプレート複製"
+        : "メールテンプレート作成";
+    },
+  },
   async asyncData({ $axios }) {
     const response = await $axios.$get("/api/v1/message_templates");
     return {
       templates: response.data || [],
     };
-  },
-  mounted() {
-    if (this.templates.length > 0) {
-      this.selectTemplate(this.templates[0]);
-    }
   },
   methods: {
     blankForm() {
@@ -156,26 +225,34 @@ export default {
     },
     selectTemplate(template) {
       this.selectedTemplateId = template.id;
+    },
+    setFormFromTemplate(template, id = template.id) {
       this.form = {
-        id: template.id,
+        id,
         locale: template.locale,
         name: template.name,
         subject: template.subject,
         body: template.body,
       };
     },
-    startCreate() {
+    openCreateModal() {
       this.selectedTemplateId = null;
       this.form = this.blankForm();
+      this.isCopyCreateMode = false;
+      this.isOpenCreateModal = true;
     },
-    async copySource() {
-      if (!this.form.id) return;
+    openEditModal() {
+      if (!this.selectedTemplate) return;
+      this.setFormFromTemplate(this.selectedTemplate);
+      this.isOpenEditModal = true;
+    },
+    async openCopyModal() {
+      if (!this.selectedTemplate) return;
 
       try {
         const response = await this.$axios.$get(
-          `/api/v1/message_templates/${this.form.id}/copy_source`
+          `/api/v1/message_templates/${this.selectedTemplate.id}/copy_source`
         );
-        this.selectedTemplateId = null;
         this.form = {
           id: null,
           locale: response.data.locale,
@@ -183,10 +260,25 @@ export default {
           subject: response.data.subject,
           body: response.data.body,
         };
-        this.openSnackBar("複製用の内容を作成しました");
+        this.isCopyCreateMode = true;
+        this.isOpenCreateModal = true;
       } catch (error) {
         this.openSnackBar("複製用の内容作成に失敗しました");
       }
+    },
+    closeTemplateModal() {
+      if (this.isSaving) return;
+      this.resetTemplateModal();
+    },
+    resetTemplateModal() {
+      this.isOpenCreateModal = false;
+      this.isOpenEditModal = false;
+      this.isCopyCreateMode = false;
+      this.form = this.blankForm();
+    },
+    startCreate() {
+      this.selectedTemplateId = null;
+      this.form = this.blankForm();
     },
     insertVariable(key) {
       const token = `{${key}}`;
@@ -249,6 +341,7 @@ export default {
         }
 
         await this.reloadTemplates(savedTemplateId);
+        this.resetTemplateModal();
       } catch (error) {
         this.openSnackBar("テンプレートの保存に失敗しました");
       } finally {
@@ -262,7 +355,7 @@ export default {
         (template) => template.id === selectedTemplateId
       );
       if (selected) {
-        this.selectTemplate(selected);
+        this.selectedTemplateId = selected.id;
       } else {
         this.startCreate();
       }
@@ -280,76 +373,6 @@ export default {
 </script>
 
 <style scoped>
-.template-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
-  gap: 24px;
-  width: 100%;
-}
-
-.editor-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-width: 0;
-  padding: 24px;
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-}
-
-.editor-panel__header {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-}
-
-.editor-panel__header h3 {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-.editor-panel__actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px;
-  gap: 16px;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  min-height: 42px;
-  padding: 10px 12px;
-  border: 1px solid #d8d8d8;
-  border-radius: 4px;
-  color: var(--accent-7);
-  font-size: 14px;
-  letter-spacing: 0;
-}
-
-textarea {
-  resize: vertical;
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
 .insert-buttons {
   display: flex;
   align-items: center;
@@ -357,6 +380,10 @@ textarea {
   flex-wrap: wrap;
   font-size: 13px;
   font-weight: 600;
+}
+
+.modal-insert-buttons {
+  width: 500px;
 }
 
 .insert-buttons button {
@@ -368,20 +395,9 @@ textarea {
   cursor: pointer;
 }
 
-@media (max-width: 1080px) {
-  .template-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 640px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .editor-panel__header {
-    align-items: flex-start;
-    flex-direction: column;
+  .modal-insert-buttons {
+    width: 100%;
   }
 }
 </style>

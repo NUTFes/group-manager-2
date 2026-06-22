@@ -519,68 +519,44 @@
       @error="openEditError"
     />
 
-    <div
+    <EditModal
       v-if="isPreviewModalOpen"
-      class="mail-preview-overlay"
-      role="presentation"
-      @click.self="closeMessagePreview"
+      title="送信内容の確認"
+      @close="closeMessagePreview"
     >
-      <div
-        class="mail-preview-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="mail-preview-title"
-      >
-        <div class="mail-preview-header">
-          <div>
-            <h3 id="mail-preview-title">送信内容の確認</h3>
-            <p>内容はこれでよろしいですか？</p>
-          </div>
-          <button
-            type="button"
-            class="mail-preview-close"
-            aria-label="プレビューを閉じる"
-            @click="closeMessagePreview"
-          >
-            ×
-          </button>
+      <template v-slot:form>
+        <div class="mail-preview-field">
+          <h3>宛先</h3>
+          <p>{{ group.user.email }}</p>
         </div>
-
-        <div class="mail-preview-fields">
-          <div class="mail-preview-row">
-            <span class="mail-preview-label">宛先</span>
-            <span class="mail-preview-value">{{ group.user.email }}</span>
-          </div>
-          <div class="mail-preview-row">
-            <span class="mail-preview-label">件名</span>
-            <span class="mail-preview-value">{{ renderedMessageSubject }}</span>
-          </div>
-          <div class="mail-preview-body">
-            <span class="mail-preview-label">本文</span>
-            <pre>{{ renderedMessageBody }}</pre>
-          </div>
+        <div class="mail-preview-field">
+          <h3>件名</h3>
+          <p>{{ renderedMessageSubject }}</p>
         </div>
-
+        <div class="mail-preview-field">
+          <h3>本文</h3>
+          <pre>{{ renderedMessageBody }}</pre>
+        </div>
+      </template>
+      <template v-slot:method>
         <div class="mail-preview-actions">
-          <button
-            type="button"
-            class="mail-preview-secondary-button"
+          <CommonButton
+            iconName="close"
+            :on_click="closeMessagePreview"
             :disabled="isSendingMessage"
-            @click="closeMessagePreview"
           >
             キャンセル
-          </button>
-          <button
-            type="button"
-            class="mail-preview-primary-button"
+          </CommonButton>
+          <CommonButton
+            iconName="send"
+            :on_click="confirmMessageSend"
             :disabled="isSendingMessage"
-            @click="confirmMessageSend"
           >
             {{ isSendingMessage ? "送信中" : "送信する" }}
-          </button>
+          </CommonButton>
         </div>
-      </div>
-    </div>
+      </template>
+    </EditModal>
 
   </div>
 </template>
@@ -879,12 +855,10 @@ export default {
       try {
         const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
         this.messageTemplates = response.data || [];
-        const defaultTemplate = this.messageTemplates[0];
-        if (defaultTemplate) {
-          this.selectedMessageTemplateId = String(defaultTemplate.id);
-        }
+        this.selectedMessageTemplateId = "";
       } catch (error) {
         this.messageTemplates = [];
+        this.selectedMessageTemplateId = "";
       }
     },
     onPrevGroup() {
@@ -1277,86 +1251,13 @@ export default {
   border-color: var(--button-primary);
 }
 
-.mail-preview-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(17, 24, 39, 0.45);
+.mail-preview-field {
+  width: 100%;
 }
 
-.mail-preview-modal {
-  width: min(720px, 100%);
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
-  padding: 24px;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.22);
-  box-sizing: border-box;
-}
-
-.mail-preview-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.mail-preview-header h3 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.mail-preview-header p {
-  margin: 6px 0 0;
-  color: var(--accent-7);
-}
-
-.mail-preview-close {
-  min-width: 32px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  background: #ffffff;
-  color: var(--accent-8);
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.mail-preview-fields {
-  display: grid;
-  gap: 12px;
-}
-
-.mail-preview-row,
-.mail-preview-body {
-  display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 12px;
-  align-items: start;
-}
-
-.mail-preview-label {
-  color: var(--accent-7);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.mail-preview-value {
-  word-break: break-word;
-}
-
-.mail-preview-body pre {
-  min-height: 220px;
-  max-height: 380px;
+.mail-preview-field p,
+.mail-preview-field pre {
+  width: 500px;
   overflow-y: auto;
   margin: 0;
   padding: 12px;
@@ -1371,39 +1272,19 @@ export default {
   word-break: break-word;
 }
 
+.mail-preview-field p {
+  min-height: 20px;
+}
+
+.mail-preview-field pre {
+  min-height: 220px;
+  max-height: 380px;
+}
+
 .mail-preview-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
-}
-
-.mail-preview-secondary-button,
-.mail-preview-primary-button {
-  min-height: 40px;
-  padding: 0 16px;
-  border-radius: 4px;
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.mail-preview-secondary-button {
-  border: 1px solid var(--accent-2);
-  background: #ffffff;
-  color: var(--accent-8);
-}
-
-.mail-preview-primary-button {
-  border: 1px solid var(--button-primary);
-  background: var(--button-primary);
-  color: #ffffff;
-}
-
-.mail-preview-secondary-button:disabled,
-.mail-preview-primary-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .textarea-container {
