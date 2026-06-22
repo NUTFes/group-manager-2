@@ -16,8 +16,8 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     await page.request.delete(`${API_URL}/_e2e/requests`);
   });
 
-  // テストケース: 再提出画面の送信ボタンからメッセージを送信する導線。
-  // コメント登録後に、画面上の団体名・代表者名・コメント本文をtemplate_valuesとして送信APIへ渡すことを確認する。
+  // テストケース: 再提出画面の送信前プレビューを経由したメッセージ送信導線。
+  // 送信ボタンだけではAPI送信せず、プレビューで差し込み後の内容を確認してから送信APIへ渡すことを確認する。
   test("再提出メッセージ送信時にメールも送信できる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.$nuxt));
@@ -36,6 +36,25 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     const sendButton = page.getByRole("button", { name: "送信" });
     await sendButton.scrollIntoViewIfNeeded();
     await sendButton.click();
+    const previewDialog = page.getByRole("dialog", { name: "送信内容の確認" });
+    await expect(previewDialog).toBeVisible();
+    await expect(previewDialog.getByText("representative@example.com")).toBeVisible();
+    await expect(
+      previewDialog.getByText("【GM再提出】修正をお願いします")
+    ).toBeVisible();
+    await expect(
+      previewDialog.getByText("技大祭企画 代表 山田太郎 様")
+    ).toBeVisible();
+    await expect(
+      previewDialog.getByText("食品名を修正してください。")
+    ).toBeVisible();
+
+    const requestsBeforeConfirm = await page.request
+      .get(`${API_URL}/_e2e/requests`)
+      .then((response) => response.json());
+    expect(requestsBeforeConfirm).toEqual([]);
+
+    await page.getByRole("button", { name: "送信する" }).click();
     await expect(page.getByText("メッセージを送信しました")).toBeVisible();
 
     const requests = await page.request

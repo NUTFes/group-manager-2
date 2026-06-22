@@ -449,7 +449,7 @@
             ></textarea>
             <CommonButton
               iconName="send"
-              :on_click="onSubmitComment"
+              :on_click="openMessagePreview"
               :disabled="isSendingMessage || !canSendMessage"
             >
               送信
@@ -518,6 +518,69 @@
       @saved="onEditorSaved"
       @error="openEditError"
     />
+
+    <div
+      v-if="isPreviewModalOpen"
+      class="mail-preview-overlay"
+      role="presentation"
+      @click.self="closeMessagePreview"
+    >
+      <div
+        class="mail-preview-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mail-preview-title"
+      >
+        <div class="mail-preview-header">
+          <div>
+            <h3 id="mail-preview-title">送信内容の確認</h3>
+            <p>内容はこれでよろしいですか？</p>
+          </div>
+          <button
+            type="button"
+            class="mail-preview-close"
+            aria-label="プレビューを閉じる"
+            @click="closeMessagePreview"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="mail-preview-fields">
+          <div class="mail-preview-row">
+            <span class="mail-preview-label">宛先</span>
+            <span class="mail-preview-value">{{ group.user.email }}</span>
+          </div>
+          <div class="mail-preview-row">
+            <span class="mail-preview-label">件名</span>
+            <span class="mail-preview-value">{{ renderedMessageSubject }}</span>
+          </div>
+          <div class="mail-preview-body">
+            <span class="mail-preview-label">本文</span>
+            <pre>{{ renderedMessageBody }}</pre>
+          </div>
+        </div>
+
+        <div class="mail-preview-actions">
+          <button
+            type="button"
+            class="mail-preview-secondary-button"
+            :disabled="isSendingMessage"
+            @click="closeMessagePreview"
+          >
+            キャンセル
+          </button>
+          <button
+            type="button"
+            class="mail-preview-primary-button"
+            :disabled="isSendingMessage"
+            @click="confirmMessageSend"
+          >
+            {{ isSendingMessage ? "送信中" : "送信する" }}
+          </button>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -685,6 +748,7 @@ export default {
       selectedMessageTemplateId: "",
       isSendingMessage: false,
       messageSendResult: "",
+      isPreviewModalOpen: false,
     };
   },
   watch: {
@@ -766,6 +830,27 @@ export default {
         this.group.user.email &&
           this.selectedMessageTemplate &&
           this.commentBody.trim()
+      );
+    },
+    messageTemplateValues() {
+      return {
+        group_name: this.group.group.name,
+        user_name: this.group.user.name,
+        resubmit_memo: this.commentBody.trim(),
+      };
+    },
+    renderedMessageSubject() {
+      if (!this.selectedMessageTemplate) return "";
+      return this.renderTemplateText(
+        this.selectedMessageTemplate.subject,
+        this.messageTemplateValues
+      );
+    },
+    renderedMessageBody() {
+      if (!this.selectedMessageTemplate) return "";
+      return this.renderTemplateText(
+        this.selectedMessageTemplate.body,
+        this.messageTemplateValues
       );
     },
   },
@@ -882,11 +967,32 @@ export default {
         savedSubmission.status = response.data.status;
       }
     },
+    renderTemplateText(text, values) {
+      return String(text || "").replace(
+        /\{(group_name|user_name|resubmit_memo)\}/g,
+        (_, key) => String(values[key] || "")
+      );
+    },
+    openMessagePreview() {
+      if (!this.canSendMessage || this.isSendingMessage) return;
+      this.messageSendResult = "";
+      this.isPreviewModalOpen = true;
+    },
+    closeMessagePreview() {
+      if (this.isSendingMessage) return;
+      this.isPreviewModalOpen = false;
+    },
+    async confirmMessageSend() {
+      const succeeded = await this.onSubmitComment();
+      if (succeeded) {
+        this.isPreviewModalOpen = false;
+      }
+    },
     async onSubmitComment() {
       const submission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
       const body = this.commentBody.trim();
 
-      if (!this.canSendMessage || this.isSendingMessage) return;
+      if (!this.canSendMessage || this.isSendingMessage) return false;
 
       this.isSendingMessage = true;
       this.messageSendResult = "";
@@ -906,11 +1012,7 @@ export default {
           to: this.group.user.email,
           subject: this.selectedMessageTemplate.subject,
           body: this.selectedMessageTemplate.body,
-          template_values: {
-            group_name: this.group.group.name,
-            user_name: this.group.user.name,
-            resubmit_memo: this.commentBody.trim(),
-          },
+          template_values: this.messageTemplateValues,
         });
 
         if (submission && !submission.id && commentRes.data?.commentable_id) {
@@ -928,8 +1030,10 @@ export default {
         }
         this.commentBody = "";
         this.messageSendResult = "メッセージを送信しました";
+        return true;
       } catch (error) {
         this.messageSendResult = "メッセージの送信に失敗しました";
+        return false;
       } finally {
         this.isSendingMessage = false;
       }
@@ -1171,6 +1275,135 @@ export default {
 .comment-textarea:focus {
   outline: none;
   border-color: var(--button-primary);
+}
+
+.mail-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.45);
+}
+
+.mail-preview-modal {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.22);
+  box-sizing: border-box;
+}
+
+.mail-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.mail-preview-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.mail-preview-header p {
+  margin: 6px 0 0;
+  color: var(--accent-7);
+}
+
+.mail-preview-close {
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--accent-8);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mail-preview-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.mail-preview-row,
+.mail-preview-body {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.mail-preview-label {
+  color: var(--accent-7);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mail-preview-value {
+  word-break: break-word;
+}
+
+.mail-preview-body pre {
+  min-height: 220px;
+  max-height: 380px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  background: #fafafa;
+  color: #222;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mail-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.mail-preview-secondary-button,
+.mail-preview-primary-button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mail-preview-secondary-button {
+  border: 1px solid var(--accent-2);
+  background: #ffffff;
+  color: var(--accent-8);
+}
+
+.mail-preview-primary-button {
+  border: 1px solid var(--button-primary);
+  background: var(--button-primary);
+  color: #ffffff;
+}
+
+.mail-preview-secondary-button:disabled,
+.mail-preview-primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .textarea-container {
