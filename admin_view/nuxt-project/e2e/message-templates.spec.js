@@ -17,7 +17,7 @@ test.describe("メールテンプレート管理画面", () => {
   });
 
   // 正常系: テンプレート管理画面の主要導線。
-  // 新規作成、編集、複製がそれぞれモーダル経由で実行され、期待するAPI payloadが送られることを検証する。
+  // 新規作成はヘッダーから、編集・複製は一覧選択後の詳細モーダルから実行され、期待するAPI payloadが送られることを検証する。
   test("テンプレートの作成・編集・複製初期値反映ができる", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.$nuxt));
@@ -25,9 +25,6 @@ test.describe("メールテンプレート管理画面", () => {
 
     await expect(page.getByText("メールテンプレート管理")).toBeVisible();
     await expect(page.getByText("GM再提出依頼")).toBeVisible();
-
-    await expect(page.getByRole("button", { name: "編集" })).toBeDisabled();
-    await expect(page.getByRole("button", { name: "複製" })).toBeDisabled();
 
     await page.getByRole("button", { name: "新規作成" }).click();
     await expect(page.getByText("メールテンプレート作成")).toBeVisible();
@@ -38,8 +35,12 @@ test.describe("メールテンプレート管理画面", () => {
     await page.getByRole("button", { name: "保存" }).click();
     await expect(page.getByText("テンプレートを作成しました")).toBeVisible();
 
-    await page.getByText("GM再提出依頼").click();
-    await page.getByRole("button", { name: "編集" }).click();
+    await page
+      .getByRole("cell", { name: "GM再提出依頼", exact: true })
+      .click();
+    const detailModal = page.locator(".edit-modal");
+    await expect(detailModal.getByText("メールテンプレート詳細")).toBeVisible();
+    await detailModal.getByRole("button", { name: "編集" }).click();
     await expect(page.getByText("メールテンプレート編集")).toBeVisible();
     await page.getByPlaceholder("件名を入力してください").fill("更新後件名");
     await page.getByRole("button", { name: "保存" }).click();
@@ -48,7 +49,11 @@ test.describe("メールテンプレート管理画面", () => {
     await page
       .getByRole("cell", { name: "GM Resubmission Request", exact: true })
       .click();
-    await page.getByRole("button", { name: "複製" }).click();
+    const englishDetailModal = page.locator(".edit-modal");
+    await expect(
+      englishDetailModal.getByText("メールテンプレート詳細")
+    ).toBeVisible();
+    await englishDetailModal.getByRole("button", { name: "複製" }).click();
     await expect(page.getByText("メールテンプレート複製")).toBeVisible();
     await expect(page.getByPlaceholder("例: GM再提出依頼")).toHaveValue(
       "GM Resubmission Request copy"

@@ -8,20 +8,6 @@
       >
         新規作成
       </CommonButton>
-      <CommonButton
-        iconName="edit"
-        :on_click="openEditModal"
-        :disabled="!selectedTemplate || isSaving"
-      >
-        編集
-      </CommonButton>
-      <CommonButton
-        iconName="content_copy"
-        :on_click="openCopyModal"
-        :disabled="!selectedTemplate || isSaving"
-      >
-        複製
-      </CommonButton>
     </SubHeader>
 
     <Card width="100%">
@@ -47,6 +33,49 @@
         </template>
       </Table>
     </Card>
+
+    <EditModal
+      v-if="isOpenDetailModal && selectedTemplate"
+      title="メールテンプレート詳細"
+      @close="closeDetailModal"
+    >
+      <template v-slot:form>
+        <div class="template-detail-field">
+          <h3>テンプレート名</h3>
+          <p>{{ selectedTemplate.name }}</p>
+        </div>
+        <div class="template-detail-field">
+          <h3>言語</h3>
+          <p>{{ localeLabel(selectedTemplate.locale) }}</p>
+        </div>
+        <div class="template-detail-field">
+          <h3>件名</h3>
+          <p>{{ selectedTemplate.subject }}</p>
+        </div>
+        <div class="template-detail-field">
+          <h3>本文</h3>
+          <pre>{{ selectedTemplate.body }}</pre>
+        </div>
+      </template>
+      <template v-slot:method>
+        <div class="template-detail-actions">
+          <CommonButton
+            iconName="edit"
+            :on_click="openEditModalFromDetail"
+            :disabled="isSaving"
+          >
+            編集
+          </CommonButton>
+          <CommonButton
+            iconName="content_copy"
+            :on_click="openCopyModalFromDetail"
+            :disabled="isSaving"
+          >
+            複製
+          </CommonButton>
+        </div>
+      </template>
+    </EditModal>
 
     <AddModal
       v-if="isOpenCreateModal"
@@ -181,6 +210,7 @@ export default {
       },
       isOpenCreateModal: false,
       isOpenEditModal: false,
+      isOpenDetailModal: false,
       isCopyCreateMode: false,
       isSaving: false,
       isOpenSnackBar: false,
@@ -225,6 +255,7 @@ export default {
     },
     selectTemplate(template) {
       this.selectedTemplateId = template.id;
+      this.isOpenDetailModal = true;
     },
     setFormFromTemplate(template, id = template.id) {
       this.form = {
@@ -239,12 +270,17 @@ export default {
       this.selectedTemplateId = null;
       this.form = this.blankForm();
       this.isCopyCreateMode = false;
+      this.isOpenDetailModal = false;
       this.isOpenCreateModal = true;
     },
     openEditModal() {
       if (!this.selectedTemplate) return;
       this.setFormFromTemplate(this.selectedTemplate);
+      this.isOpenDetailModal = false;
       this.isOpenEditModal = true;
+    },
+    openEditModalFromDetail() {
+      this.openEditModal();
     },
     async openCopyModal() {
       if (!this.selectedTemplate) return;
@@ -261,10 +297,18 @@ export default {
           body: response.data.body,
         };
         this.isCopyCreateMode = true;
+        this.isOpenDetailModal = false;
         this.isOpenCreateModal = true;
       } catch (error) {
         this.openSnackBar("複製用の内容作成に失敗しました");
       }
+    },
+    async openCopyModalFromDetail() {
+      await this.openCopyModal();
+    },
+    closeDetailModal() {
+      if (this.isSaving) return;
+      this.isOpenDetailModal = false;
     },
     closeTemplateModal() {
       if (this.isSaving) return;
@@ -273,6 +317,7 @@ export default {
     resetTemplateModal() {
       this.isOpenCreateModal = false;
       this.isOpenEditModal = false;
+      this.isOpenDetailModal = false;
       this.isCopyCreateMode = false;
       this.form = this.blankForm();
     },
@@ -377,7 +422,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow-x: auto;
   font-size: 13px;
   font-weight: 600;
 }
@@ -387,16 +434,52 @@ export default {
 }
 
 .insert-buttons button {
+  flex: 0 0 auto;
   min-height: 32px;
   padding: 6px 10px;
   border: 1px solid #d8d8d8;
   border-radius: 4px;
   background: #ffffff;
+  color: var(--accent-7);
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.template-detail-field {
+  width: 500px;
+}
+
+.template-detail-field p,
+.template-detail-field pre {
+  box-sizing: border-box;
+  width: 500px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--accent-7);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.template-detail-field pre {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.template-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 @media (max-width: 640px) {
-  .modal-insert-buttons {
+  .modal-insert-buttons,
+  .template-detail-field,
+  .template-detail-field p,
+  .template-detail-field pre {
     width: 100%;
   }
 }
