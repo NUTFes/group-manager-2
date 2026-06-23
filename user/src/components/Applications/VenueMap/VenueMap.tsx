@@ -138,7 +138,10 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
       </AccordionMenu>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {venueMap?.picturePath && (
-          <div className="relative h-[80vh] w-[80vw] max-w-[880px]">
+          <div
+            className="relative h-[80vh] w-[80vw] max-w-[880px]"
+            onClick={() => setIsModalOpen(false)}
+          >
             <Image
               src={venueMap.picturePath}
               alt={venueMap.pictureName ?? ''}
