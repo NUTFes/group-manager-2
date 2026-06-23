@@ -163,4 +163,28 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
       })
     );
   });
+
+  // 異常系: 認証切れなどで401が返った場合の再ログイン導線。
+  // 401時に通常のエラー画面ではなく再ログイン案内ページへ遷移し、ログイン画面へ戻れることを検証する。
+  test("401が返った場合は再ログイン案内ページへ遷移する", async ({ page }) => {
+    await page.route(`${API_URL}/api/v1/get_group_show_for_admin_view/1`, (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Unauthorized" }),
+      })
+    );
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() =>
+      window.$nuxt.$router.push("/health_center_document_review/1")
+    );
+
+    await expect(
+      page.getByRole("heading", { name: "再度ログインしてください" })
+    ).toBeVisible();
+    await page.getByRole("button", { name: "ログイン画面に戻る" }).click();
+    await expect(page.locator(".login")).toBeVisible();
+  });
 });

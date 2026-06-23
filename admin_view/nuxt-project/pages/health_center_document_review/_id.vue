@@ -845,7 +845,7 @@ export default {
         Object.assign(this, freshData);
       } catch (error) {
         if (error?.response?.status === 401) {
-          this.$router.push("/");
+          this.$router.push("/reauthentication_required");
           return;
         }
         throw error;
