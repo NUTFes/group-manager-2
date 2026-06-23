@@ -134,7 +134,10 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
       )}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {displayImageUrl && (
-          <div className="relative h-[80vh] w-[80vw] max-w-[880px]">
+          <div
+            className="relative h-[80vh] w-[80vw] max-w-[880px]"
+            onClick={() => setIsModalOpen(false)}
+          >
             <Image
               src={displayImageUrl}
               alt={fileName ?? venueMap?.pictureName ?? ''}
