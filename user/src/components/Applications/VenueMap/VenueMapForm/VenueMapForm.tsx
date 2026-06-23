@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
+import Image from 'next/image';
 import { VenueMapResponse } from '@/api/venueMapApi';
 import Button from '@/components/Button/Button';
 import Checkbox from '@/components/Form/CheckBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
 import Modal from '@/components/Modal/Modal';
 import Upload from '@/components/Upload/Upload';
-import Image from 'next/image';
 import { useVenueMapFormHooks } from './hooks';
 
 type VenueMapFormProps = {
