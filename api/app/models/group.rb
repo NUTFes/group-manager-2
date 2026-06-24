@@ -88,7 +88,7 @@ class Group < ApplicationRecord
     @record = Group.includes(
       :user, :group_category, :fes_year, :sub_rep, :place_order,
       :stage_orders, :stage_common_option, :power_orders, :rental_orders,
-      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
       :public_relation, :venue_map, :announcement, :cooking_process_order,
       :fire_equipment_orders
     ).all
@@ -166,7 +166,7 @@ class Group < ApplicationRecord
     group = Group.includes(
       :user, :group_category, :fes_year, :sub_rep, :place_order,
       :stage_orders, :stage_common_option, :power_orders, :rental_orders,
-      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
       :public_relation, :venue_map, :announcement, :cooking_process_order,
       :fire_equipment_orders
     ).find(group_id)
@@ -244,7 +244,7 @@ class Group < ApplicationRecord
     @record = Group.includes(
       :user, :group_category, :fes_year, :sub_rep, :place_order,
       :stage_orders, :stage_common_option, :power_orders, :rental_orders,
-      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
       :public_relation, :venue_map, :announcement, :cooking_process_order,
       :fire_equipment_orders
     ).where(groups: { fes_year_id: fes_year_id })
@@ -322,7 +322,7 @@ class Group < ApplicationRecord
     @record = Group.includes(
       :user, :group_category, :fes_year, :sub_rep, :place_order,
       :stage_orders, :stage_common_option, :power_orders, :rental_orders,
-      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
       :public_relation, :venue_map, :announcement, :cooking_process_order,
       :fire_equipment_orders
     ).where('name like ?', "%#{word}%")
