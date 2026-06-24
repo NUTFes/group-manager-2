@@ -83,8 +83,8 @@ export default {
       });
       const url = `/sub_reps/${sr.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", sr.id);
         this.$emit("close");
       });
     },

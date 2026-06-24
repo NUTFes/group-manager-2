@@ -55,8 +55,8 @@ export default {
       });
       const url = `/announcements/${ann.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", ann.id);
         this.$emit("close");
       });
     },

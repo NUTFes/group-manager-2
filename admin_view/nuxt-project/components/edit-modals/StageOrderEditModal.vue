@@ -114,8 +114,8 @@ export default {
       });
       const url = `/stage_orders/${so.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", so.id);
         this.$emit("close");
       });
     },

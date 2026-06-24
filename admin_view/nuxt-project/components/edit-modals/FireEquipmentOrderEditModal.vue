@@ -97,8 +97,8 @@ export default {
       });
       const url = `/fire_equipment_orders/${feo.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", feo.id);
         this.$emit("close");
       });
     },

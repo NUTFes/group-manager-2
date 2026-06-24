@@ -81,8 +81,8 @@ export default {
       });
       const url = `/stage_common_options/${sco.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", sco.id);
         this.$emit("close");
       });
     },

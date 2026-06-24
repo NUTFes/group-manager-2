@@ -83,8 +83,8 @@ export default {
         this.num;
 
       try {
-        const response = await this.$axios.$put(url);
-        this.$emit("saved", response.data.id);
+        await this.$axios.$put(url);
+        this.$emit("saved", ro.id);
         this.$emit("close");
       } catch (e) {
         // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)

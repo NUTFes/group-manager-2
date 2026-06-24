@@ -133,8 +133,8 @@ export default {
       const url = `/groups/${g.id}?${params.toString()}`;
 
       try {
-        const response = await this.$axios.$put(url);
-        this.$emit("saved", response.data.id);
+        await this.$axios.$put(url);
+        this.$emit("saved", g.id);
         this.$emit("close");
       } catch (e) {
         console.error(e);

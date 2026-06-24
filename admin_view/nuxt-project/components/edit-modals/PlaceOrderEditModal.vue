@@ -69,8 +69,8 @@ export default {
       });
       const url = `/place_orders/${po.id}?${params.toString()}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", po.id);
         this.$emit("close");
       });
     },

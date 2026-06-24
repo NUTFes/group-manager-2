@@ -115,8 +115,8 @@ export default {
       }).toString();
       const url = `/purchase_lists/${purchaseList.id}?${query}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url).then(() => {
+        this.$emit("saved", purchaseList.id);
         this.$emit("close");
       });
     },
