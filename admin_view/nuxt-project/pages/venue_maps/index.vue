@@ -214,8 +214,8 @@ export default {
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
         const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
-        const fileSizeLimit = 20 * 1024 * 1024; // 20MB
-        this.isFileSizeCheck = file.size > fileSizeLimit;
+        const FILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20MB
+        this.isFileSizeCheck = file.size > FILE_SIZE_LIMIT;
 
         // ファイルサイズのバリデーション
         if(this.isFileSizeCheck){
