@@ -175,12 +175,13 @@ export const useCookingProcessOrder = (
       if (status !== 'unapproved') {
         try {
           await updateStatus('unapproved');
-          setIsEditing(false);
         } catch (e) {
           console.error(e);
           toast.error(t('...statusUpdateFailed'));
+          return;
         }
       }
+      setIsEditing(false);
     } catch (e) {
       console.error(e);
       toast.error(t('applications.cookingProcessOrder.messages.updateFailed'));
