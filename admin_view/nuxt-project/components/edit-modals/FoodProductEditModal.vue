@@ -89,8 +89,8 @@ export default {
         is_cooking: String(this.isCooking ?? ""),
         first_day_num: String(this.first ?? ""),
         second_day_num: String(this.second ?? ""),
-      }).toString();
-      const url = `/food_products/${foodProduct.id}?${query}`;
+      };
+      const url = `/food_products/${foodProduct.id}`;
 
       try {
         const response = await this.$axios.$put(url, data);

@@ -56,7 +56,7 @@
                   </td>
                 </tr>
               
-              <tr class="selectable-row" @click="group.sub_rep ? openModal('sub_rep', group.sub_rep) : null">
+              <tr :class="{'selectable-row': !!group.sub_rep}" @click.stop="group.sub_rep ? openModal('sub_rep', group.sub_rep) : null">
                 <th>副代表</th>
                 <td>
                   <template v-if="group.sub_rep">
@@ -68,6 +68,7 @@
                   <template v-else>未登録</template>
                 </td>
               </tr>
+              </tbody>
             </VerticalTable>
           </Card>
         </Column>
@@ -125,7 +126,7 @@
                   <th>備考</th>
                   <td>{{ group.place_order.remark }}</td>
                 </tr>
-              
+              </tbody>
             </VerticalTable>
             <p v-else-if="isUnregistered('place_order')">申請しない</p>
             <p v-else>未登録</p>
@@ -204,7 +205,7 @@
                   <th>大きな音</th>
                   <td>{{ group.stage_common_option.loud_sound ? '〇' : '×' }}</td>
                 </tr>
-              
+              </tbody>
             </VerticalTable>
             <p v-else-if="isUnregistered('stage_common_option')">申請しない</p>
             <p v-else>未登録</p>
@@ -260,7 +261,7 @@
                     <span v-else>未登録</span>
                   </td>
                 </tr>
-              
+              </tbody>
             </VerticalTable>
             <p v-else-if="isUnregistered('public_relation')">申請しない</p>
             <p v-else>未登録</p>
@@ -395,7 +396,7 @@
                       <th>営業中調理</th>
                       <td>{{ fpWrapper.cooking_process_order.during_open_kitchen ? "〇" : "×" }}</td>
                     </tr>
-                  
+                  </tbody>
                 </VerticalTable>
                 <p v-else-if="isUnregistered('cooking_process_order')">申請しない</p>
                 <p v-else>調理工程未登録</p>
@@ -539,8 +540,8 @@ export default {
     await this.fetchAllGroupIds();
   },
   methods: {
-    async fetchData() {
-      this.loading = true;
+    async fetchData(silent = false) {
+      if (!silent) this.loading = true;
       try {
         const [orderInfoRes, unregRes] = await Promise.all([
           this.$axios.$get(`/api/v1/get_order_info_for_admin_view/${this.$route.params.id}`),
@@ -555,8 +556,10 @@ export default {
           console.error(error);
         }
       } finally {
-        this.loading = false;
-        window.scrollTo(0, 0);
+        if (!silent) {
+          this.loading = false;
+          window.scrollTo(0, 0);
+        }
       }
     },
     async fetchAllGroupIds() {
@@ -624,7 +627,7 @@ export default {
       window.open(url, '_blank', 'noopener,noreferrer');
     },
     async onEditorSaved() {
-      await this.fetchData();
+      await this.fetchData(true);
     }
   }
 };

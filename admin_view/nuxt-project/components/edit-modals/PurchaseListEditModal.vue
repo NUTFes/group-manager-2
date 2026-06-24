@@ -116,8 +116,8 @@ export default {
         is_fresh: String(this.isFresh ?? ""),
         url: String(this.url ?? ""),
         remark: String(this.remark ?? ""),
-      }).toString();
-      const url = `/purchase_lists/${purchaseList.id}?${query}`;
+      };
+      const url = `/purchase_lists/${purchaseList.id}`;
 
       await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", purchaseList.id);
