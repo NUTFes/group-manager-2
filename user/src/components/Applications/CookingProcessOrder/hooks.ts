@@ -177,7 +177,9 @@ export const useCookingProcessOrder = (
           await updateStatus('unapproved');
         } catch (e) {
           console.error(e);
-          toast.error(t('...statusUpdateFailed'));
+          toast.error(
+            t('applications.cookingProcessOrder.messages.statusUpdateFailed')
+          );
           return;
         }
       }

@@ -522,13 +522,15 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
-  const updateStatusToUnapproved = async () => {
-    if (status === 'unapproved') return;
+  const updateStatusToUnapproved = async (): Promise<boolean> => {
+    if (status === 'unapproved') return true;
     try {
       await updateStatus('unapproved');
+      return true;
     } catch (e) {
       console.error(e);
       toast.error(t('applications.rentItems.messages.statusUpdateFailed'));
+      return false;
     }
   };
 
@@ -571,12 +573,13 @@ export const useRentItemsFormHooks = (
 
       // 状態を更新
       setValue('hasItems', false);
-      setIsEditMode(false);
       setHasExplicitlyDeclinedItems(true);
 
       // API更新の通知
       await mutateRentalOrders();
-      await updateStatusToUnapproved();
+      const statusUpdated = await updateStatusToUnapproved();
+      if (!statusUpdated) return false;
+      setIsEditMode(false);
       // 成功時のトースト通知
       toast.success(
         t('applications.rentItems.messages.registerNoItemsSuccess')
@@ -633,7 +636,8 @@ export const useRentItemsFormHooks = (
         );
 
         await mutateRentalOrders();
-        await updateStatusToUnapproved();
+        const statusUpdated = await updateStatusToUnapproved();
+        if (!statusUpdated) return;
         setIsEditMode(false);
         userChangedLocationType.current = false;
       } else {

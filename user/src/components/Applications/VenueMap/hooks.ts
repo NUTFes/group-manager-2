@@ -40,6 +40,7 @@ export const useVenueMapHooks = (
       } catch (e) {
         console.error(e);
         toast.error(t('applications.venueMap.messages.statusUpdateFailed'));
+        return;
       }
     }
 
