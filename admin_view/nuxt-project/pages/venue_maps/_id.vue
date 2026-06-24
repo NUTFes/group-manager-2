@@ -180,7 +180,7 @@ export default {
           // ファイル名のバリデーション。「^\/:*?"<>|\r\n」が含まれているかどうかのチェック
         } else if (!fileNameRegex.test(file.name)) {
           this.openSnackBar(
-            "ファイル名は「^[^\\/:*?\"<>|\r\n]+$」を含まない形式で入力してください"
+            "ファイル名には、日本語・英数字・ハイフン（-）・アンダースコア（_）・スペース「」が使用できます。"
           );
           this.isFileCheck = true;
           return;
