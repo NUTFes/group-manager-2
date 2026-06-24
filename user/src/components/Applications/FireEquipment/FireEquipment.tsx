@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import FormList from '@/components/FormList';
 import { FireEquipmentFormView } from './components';
 import { useFireEquipmentTexts } from './constant';
@@ -97,7 +98,11 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   const hasFireEquipmentOrder =
     fireEquipmentHooks.fireEquipment !== undefined ||
     fireEquipmentHooks.hasUnregistered;
-  const canSubmit = hasFireEquipmentOrder ? !!canEdit : !!canAdd;
+  const canSubmit = resolveApplicationAccess({
+    isRegistered,
+    canAdd,
+    canEdit,
+  }).canSubmit;
   const isExist = fireEquipmentHooks.isLoading
     ? isRegistered
     : hasFireEquipmentOrder;

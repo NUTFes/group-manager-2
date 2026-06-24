@@ -79,7 +79,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </p>
             <p>{rentItemsFormTexts.summary.noApplication.description}</p>
           </div>
-          {isDeadline && (
+          {!isDeadline && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
               <Button
                 size="pc"
@@ -145,7 +145,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           ))}
         </div>
 
-        {isDeadline && (
+        {!isDeadline && (
           <div className="mt-4 flex w-full items-center justify-center gap-4">
             <Button
               size="pc"
@@ -158,6 +158,21 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </Button>
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (isDeadline) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+        <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+          <h3 className="mb-2 text-lg font-semibold text-gray-800">
+            {rentItemsFormTexts.deadline.title}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {rentItemsFormTexts.deadline.description}
+          </p>
+        </div>
       </div>
     );
   }

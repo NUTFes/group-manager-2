@@ -775,6 +775,10 @@ export const useRentItemsFormHooks = (
       contactLimit: t('applications.rentItems.notes.contactLimit'),
       contactEmail: t('applications.rentItems.notes.contactEmail'),
     },
+    deadline: {
+      title: t('applications.rentItems.deadline.title'),
+      description: t('applications.rentItems.deadline.description'),
+    },
     buttons: {
       edit: t('form.actions.edit'),
       register: t('form.actions.register'),

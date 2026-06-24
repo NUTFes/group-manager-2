@@ -27,7 +27,7 @@ const RentItems: FC<RentItemsProps> = ({
       <RentItemsForm
         groupId={groupId}
         groupCategoryId={groupCategoryId}
-        isDeadline={!isDeadline}
+        isDeadline={!!isDeadline}
       />
     </AccordionMenu>
   );

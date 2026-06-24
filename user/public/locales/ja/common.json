@@ -294,6 +294,10 @@
         "fetchTitle": "エラー：",
         "fetchDescription": "データの取得に失敗しました。ページを再読込してください。"
       },
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "物品申請の受付期間外のため、新規申請はできません。"
+      },
       "radio": {
         "question": "物品申請を行いますか？",
         "options": {
