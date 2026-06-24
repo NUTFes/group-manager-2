@@ -71,7 +71,7 @@ export default {
         検便有: 3,
       };
       const status = employee.stool_test || this.employee?.stool_test?.status || this.employee?.stool_test_status;
-      return statusToId[status] || 1;
+      return statusToId[status] || null;
     },
     async edit() {
       const employee = this.getEmployee();
