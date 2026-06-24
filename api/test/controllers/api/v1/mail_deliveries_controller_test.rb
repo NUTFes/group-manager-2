@@ -6,7 +6,7 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
   setup do
-    @original_gmail_address = ENV['GMAIL_ADDRESS']
+    @original_gmail_address = ENV.fetch('GMAIL_ADDRESS', nil)
     ENV['GMAIL_ADDRESS'] = 'no-reply@example.com'
     ActionMailer::Base.deliveries.clear
     Role.create!(id: 1, name: 'admin')

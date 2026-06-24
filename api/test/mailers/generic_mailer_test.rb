@@ -6,7 +6,7 @@ class GenericMailerTest < ActionMailer::TestCase
   self.fixture_table_names = []
 
   setup do
-    @original_gmail_address = ENV['GMAIL_ADDRESS']
+    @original_gmail_address = ENV.fetch('GMAIL_ADDRESS', nil)
     ENV['GMAIL_ADDRESS'] = 'no-reply@example.com'
   end
 
