@@ -118,12 +118,6 @@
               <div v-if="group.public_relation">◯</div>
               <div v-else>✖️</div>
             </td>
-            <!-- アナウンス -->
-            <td :class="{ unregistered: !group.announcement }">
-              <div v-if="group.announcement==='申請済み'">◯</div>
-              <div v-else-if="group.announcement==='申請しない'">ー</div>
-              <div v-else>✖️</div>
-            </td>
             <!-- 模擬店平面図 -->
             <td :class="{ unregistered: !group.venue_map && group.group_category === 1 }">
               <div v-if="group.venue_map">◯</div>
@@ -169,7 +163,6 @@ export default {
         "販売品",
         "購入品",
         "PR",
-        "アナウンス",
         "模擬店平面図",
         "調理工程",
         "火気使用申請",
