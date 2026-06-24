@@ -158,4 +158,26 @@ test.describe("メールテンプレート管理画面", () => {
       },
     ]);
   });
+
+  // 異常系: 画面初期表示APIが401を返した場合の共通再ログイン導線。
+  // 個別画面のcatchに依存せず、共通axios interceptorで再ログイン案内ページへ遷移することを検証する。
+  test("一覧取得APIが401を返した場合は再ログイン案内ページへ遷移する", async ({ page }) => {
+    await page.route(`${API_URL}/api/v1/message_templates`, (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Unauthorized" }),
+      })
+    );
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/message_templates"));
+
+    await expect(
+      page.getByRole("heading", { name: "再度ログインしてください" })
+    ).toBeVisible();
+    await page.getByRole("button", { name: "ログイン画面に戻る" }).click();
+    await expect(page.locator(".login")).toBeVisible();
+  });
 });
