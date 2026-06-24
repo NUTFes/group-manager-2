@@ -2,6 +2,7 @@ const http = require("http");
 
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
+const unauthorizedPaths = new Set();
 
 const templates = [
   {
@@ -65,7 +66,20 @@ http
 
     if (url.pathname === "/_e2e/requests" && request.method === "DELETE") {
       requests.length = 0;
+      unauthorizedPaths.clear();
       sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (url.pathname === "/_e2e/unauthorized" && request.method === "POST") {
+      const payload = await readBody(request);
+      unauthorizedPaths.add(payload.path);
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (unauthorizedPaths.has(url.pathname)) {
+      sendJson(response, 401, { error: "Unauthorized" });
       return;
     }
 
