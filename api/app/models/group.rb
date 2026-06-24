@@ -381,7 +381,8 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
