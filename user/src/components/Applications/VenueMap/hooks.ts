@@ -34,7 +34,7 @@ export const useVenueMapHooks = (
 
   // フォーム送信が成功したら表示モードに切り替え
   const handleFormSubmitted = async () => {
-    if (status === 'waiting_resubmission') {
+    if (status !== 'unapproved') {
       try {
         await updateStatus('unapproved');
       } catch (e) {

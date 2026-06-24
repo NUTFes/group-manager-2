@@ -172,7 +172,7 @@ export const useCookingProcessOrder = (
       );
 
       // 再提出完了時
-      if (status === 'waiting_resubmission') {
+      if (status !== 'unapproved') {
         try {
           await updateStatus('unapproved');
           setIsEditing(false);

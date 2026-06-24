@@ -142,8 +142,8 @@ export const useFoodProductHooks = (
         await mutateFoodProducts();
       }, 500);
 
-      const finalizeResubmission = async (): Promise<boolean> => {
-        if (status !== 'waiting_resubmission') return true;
+      const updateStatusToUnapproved = async (): Promise<boolean> => {
+        if (status === 'unapproved') return true;
 
         try {
           await updateStatus('unapproved');
@@ -160,7 +160,7 @@ export const useFoodProductHooks = (
       // 成功時のみビューモードに戻す
       setIsEditing(false);
 
-      const statusUpdated = await finalizeResubmission();
+      const statusUpdated = await updateStatusToUnapproved();
       if (!statusUpdated) return;
 
       toast.success(t('applications.foodProduct.messages.updateSuccess'), {
@@ -221,8 +221,8 @@ export const useFoodProductHooks = (
         await mutateFoodProducts();
       }, 500);
 
-      const finalizeResubmission = async (): Promise<boolean> => {
-        if (status !== 'waiting_resubmission') return true;
+      const updateStatusToUnapproved = async (): Promise<boolean> => {
+        if (status === 'unapproved') return true;
 
         try {
           await updateStatus('unapproved');
@@ -239,7 +239,7 @@ export const useFoodProductHooks = (
       // 成功時のみビューモードに戻す
       setIsEditing(false);
 
-      const statusUpdated = await finalizeResubmission();
+      const statusUpdated = await updateStatusToUnapproved();
       if (!statusUpdated) return;
 
       toast.success(t('applications.foodProduct.messages.createSuccess'), {

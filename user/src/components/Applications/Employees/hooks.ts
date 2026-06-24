@@ -465,10 +465,10 @@ export const useEmployeesApplicationHooks = (
   };
 
   /**
-   * 再提出完了時の処理
+   * ステータス更新処理
    */
-  const completeResubmission = async () => {
-    if (status !== 'waiting_resubmission') return true;
+  const updateStatusToUnapproved = async () => {
+    if (status === 'unapproved') return true;
     try {
       await updateStatus('unapproved');
       return true;
@@ -487,7 +487,7 @@ export const useEmployeesApplicationHooks = (
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
 
-      if (!(await completeResubmission())) return;
+      if (!(await updateStatusToUnapproved())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -513,7 +513,7 @@ export const useEmployeesApplicationHooks = (
       }
 
       // 再提出完了時
-      if (!(await completeResubmission())) return;
+      if (!(await updateStatusToUnapproved())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み

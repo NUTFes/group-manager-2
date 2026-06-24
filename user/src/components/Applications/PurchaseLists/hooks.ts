@@ -387,7 +387,7 @@ export const usePurchaseListsForm = (
         }
       }
 
-      if (status === 'waiting_resubmission') {
+      if (status !== 'unapproved') {
         try {
           await updateStatus('unapproved');
         } catch (e) {

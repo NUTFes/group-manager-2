@@ -522,8 +522,8 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
-  const finalizeresubmission = async () => {
-    if (!isResubmission) return;
+  const updateStatusToUnapproved = async () => {
+    if (status === 'unapproved') return;
     try {
       await updateStatus('unapproved');
     } catch (e) {
@@ -576,7 +576,7 @@ export const useRentItemsFormHooks = (
 
       // API更新の通知
       await mutateRentalOrders();
-      await finalizeresubmission();
+      await updateStatusToUnapproved();
       // 成功時のトースト通知
       toast.success(
         t('applications.rentItems.messages.registerNoItemsSuccess')
@@ -633,7 +633,7 @@ export const useRentItemsFormHooks = (
         );
 
         await mutateRentalOrders();
-        await finalizeresubmission();
+        await updateStatusToUnapproved();
         setIsEditMode(false);
         userChangedLocationType.current = false;
       } else {

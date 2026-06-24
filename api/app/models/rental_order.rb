@@ -36,4 +36,16 @@ class RentalOrder < ApplicationRecord
       num: num
     }
   end
+
+  private
+
+  def ensure_health_center_submission_status
+    return unless Group.exists?(group_id)
+
+    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :equipmant,
+      status: :unapproved
+    )
+  end
 end
