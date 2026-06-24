@@ -386,10 +386,11 @@ class Group < ApplicationRecord
                            }
                          end
                        end,
-        public_relation: group.public_relation&.id,
-        venue_map: group.venue_map&.id,
-        announcement: group.announcement&.id,
-        cooking_process_order: group.cooking_process_order&.id
+        public_relation: group.public_relation&.to_info_h,
+        venue_map: group.venue_map&.to_info_h,
+        announcement: group.announcement&.to_info_h,
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end
