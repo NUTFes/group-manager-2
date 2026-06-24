@@ -228,6 +228,13 @@ export const useVenueMapFormHooks = (
     }
   }, [createError, updateError, t]);
 
+  useEffect(() => {
+    if (!previewUrl) return;
+    return () => {
+      URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   const onSubmit = async (formData: VenueMapFormData) => {
     try {
       let picturePath = venueMap?.picturePath || '';
