@@ -295,7 +295,7 @@
             <div class="section-header">
               <h2>模擬店平面図</h2>
             </div>
-            <div v-if="group.venue_map" class="selectable-row" @click="openModal('venue_map', group.venue_map)" style="width: 100%;">
+            <div v-if="group.venue_map" class="selectable-row" @click="openModal('venue_map', { ...group.venue_map, group_name: group.group.name })" style="width: 100%;">
               <img v-if="group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="venue-map-image" style="width: 100%; height: auto; display: block;" />
             </div>
             <p v-else-if="isUnregistered('venue_map')">申請しない</p>
