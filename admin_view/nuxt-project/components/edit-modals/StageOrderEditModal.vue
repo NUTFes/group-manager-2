@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     getStageOrder() {
-      return this.stageOrder?.stage_order?.stage_order || this.stageOrder?.stage_order || this.stageOrder || {};
+      return this.stageOrder?.stage_order || this.stageOrder || {};
     },
     async edit() {
       const so = this.getStageOrder();
