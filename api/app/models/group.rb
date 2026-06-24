@@ -85,7 +85,13 @@ class Group < ApplicationRecord
 
   # 全てのgroupとそれが持つorderを取得する
   def self.with_order_infos
-    @record = Group.all
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).all
                    .map  do |group|
       {
         group: group,
@@ -157,7 +163,13 @@ class Group < ApplicationRecord
 
   # 指定したIDのgroupとそれが持つorderを取得する
   def self.with_order_info(group_id)
-    group = Group.find(group_id)
+    group = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).find(group_id)
     @record =
       {
         group: group,
@@ -229,7 +241,13 @@ class Group < ApplicationRecord
 
   # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
-    @record = Group.where(groups: { fes_year_id: fes_year_id })
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).where(groups: { fes_year_id: fes_year_id })
                    .map do |group|
       {
         group: group,
@@ -301,7 +319,13 @@ class Group < ApplicationRecord
 
   # 検索ワードに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_search_word(word)
-    @record = Group.where('name like ?', "%#{word}%")
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: [:purchase_lists, :cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).where('name like ?', "%#{word}%")
                    .map do |group|
       {
         group: group,
