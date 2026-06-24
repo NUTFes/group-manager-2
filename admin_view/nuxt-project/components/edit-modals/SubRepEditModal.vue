@@ -72,7 +72,7 @@ export default {
     },
     async edit() {
       const sr = this.getSubRep();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
         student_id: this.studentId ?? "",
@@ -80,10 +80,10 @@ export default {
         grade_id: String(this.gradeId ?? ""),
         tel: this.tel ?? "",
         email: this.email ?? "",
-      });
-      const url = `/sub_reps/${sr.id}?${params.toString()}`;
+      };
+      const url = `/sub_reps/${sr.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", sr.id);
         this.$emit("close");
       });
