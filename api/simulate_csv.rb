@@ -10,8 +10,8 @@ UserDetailMock = Struct.new(:student_id)
 
 # Test case: 2 regular students, diff ID, same name
 # Test case: 99999999 staff
-UserDetail_STUDENT_ID_EXTERNAL = 88888888
-UserDetail_STUDENT_ID_STAFF = 99999999
+USER_DETAIL_STUDENT_ID_EXTERNAL = 88888888
+USER_DETAIL_STUDENT_ID_STAFF = 99999999
 
 def test_logic(groups)
   persons = []
@@ -46,7 +46,7 @@ def test_logic(groups)
       emp_name = employee.name.to_s
       emp_norm = emp_name.gsub(/[[:space:]\u3000]+/, '')
       emp_student = employee.student_id
-      common_student_ids = [UserDetail_STUDENT_ID_EXTERNAL, UserDetail_STUDENT_ID_STAFF]
+      common_student_ids = [USER_DETAIL_STUDENT_ID_EXTERNAL, USER_DETAIL_STUDENT_ID_STAFF]
 
       student_id_dup_check_target = !emp_student.nil? && emp_student.to_s != '' && common_student_ids.exclude?(emp_student)
 
