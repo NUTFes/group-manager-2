@@ -55,7 +55,7 @@
                     <span v-else>未登録</span>
                   </td>
                 </tr>
-              </tbody>
+              
               <tr class="selectable-row" @click="group.sub_rep ? openModal('sub_rep', group.sub_rep) : null">
                 <th>副代表</th>
                 <td>
@@ -125,7 +125,7 @@
                   <th>備考</th>
                   <td>{{ group.place_order.remark }}</td>
                 </tr>
-              </tbody>
+              
             </VerticalTable>
             <p v-else-if="isUnregistered('place_order')">申請しない</p>
             <p v-else>未登録</p>
@@ -204,7 +204,7 @@
                   <th>大きな音</th>
                   <td>{{ group.stage_common_option.loud_sound ? '〇' : '×' }}</td>
                 </tr>
-              </tbody>
+              
             </VerticalTable>
             <p v-else-if="isUnregistered('stage_common_option')">申請しない</p>
             <p v-else>未登録</p>
@@ -260,7 +260,7 @@
                     <span v-else>未登録</span>
                   </td>
                 </tr>
-              </tbody>
+              
             </VerticalTable>
             <p v-else-if="isUnregistered('public_relation')">申請しない</p>
             <p v-else>未登録</p>
@@ -395,7 +395,7 @@
                       <th>営業中調理</th>
                       <td>{{ fpWrapper.cooking_process_order.during_open_kitchen ? "〇" : "×" }}</td>
                     </tr>
-                  </tbody>
+                  
                 </VerticalTable>
                 <p v-else-if="isUnregistered('cooking_process_order')">申請しない</p>
                 <p v-else>調理工程未登録</p>
