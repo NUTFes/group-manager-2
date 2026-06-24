@@ -10,15 +10,27 @@
       </div>
       <div>
         <h3>開催日ID</h3>
-        <input v-model="fesDateId" type="number" placeholder="入力してください" />
+        <input
+          v-model="fesDateId"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>第1希望ステージID</h3>
-        <input v-model="stageFirst" type="number" placeholder="入力してください" />
+        <input
+          v-model="stageFirst"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>第2希望ステージID</h3>
-        <input v-model="stageSecond" type="number" placeholder="入力してください" />
+        <input
+          v-model="stageSecond"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>使用時間</h3>
@@ -99,7 +111,7 @@ export default {
     },
     async edit() {
       const so = this.getStageOrder();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         is_sunny: String(this.isSunny),
         fes_date_id: String(this.fesDateId ?? ""),
@@ -111,10 +123,10 @@ export default {
         prepare_content: this.prepareContent ?? "",
         performance_content: this.performanceContent ?? "",
         cleanup_content: this.cleanupContent ?? "",
-      });
-      const url = `/stage_orders/${so.id}?${params.toString()}`;
+      };
+      const url = `/stage_orders/${so.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", so.id);
         this.$emit("close");
       });

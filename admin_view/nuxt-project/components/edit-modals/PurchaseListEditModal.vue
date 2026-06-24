@@ -22,7 +22,11 @@
         <h3>なまものか</h3>
         <select v-model="isFresh">
           <option disabled value="">選択してください</option>
-          <option v-for="list in isFreshList" :key="list.id" :value="list.value">
+          <option
+            v-for="list in isFreshList"
+            :key="list.id"
+            :value="list.value"
+          >
             {{ list.text }}
           </option>
         </select>
@@ -104,7 +108,7 @@ export default {
     },
     async edit() {
       const purchaseList = this.getPurchaseList();
-      const query = new URLSearchParams({
+      const data = {
         food_product_id: String(purchaseList.food_product_id ?? ""),
         shop_id: String(this.shopID ?? ""),
         purchase_date: String(this.purchase_date ?? ""),
@@ -115,7 +119,7 @@ export default {
       }).toString();
       const url = `/purchase_lists/${purchaseList.id}?${query}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", purchaseList.id);
         this.$emit("close");
       });

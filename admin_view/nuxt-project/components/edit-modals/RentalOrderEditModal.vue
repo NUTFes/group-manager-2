@@ -5,7 +5,11 @@
         <h3>物品</h3>
         <select v-model="rentalItemID">
           <option disabled value="">選択してください</option>
-          <option v-for="item in rentableItemList" :key="item.id" :value="item.id">
+          <option
+            v-for="item in rentableItemList"
+            :key="item.id"
+            :value="item.id"
+          >
             {{ item.name }}
           </option>
         </select>
@@ -63,28 +67,33 @@ export default {
   },
   methods: {
     getRentalOrder() {
-      return this.rentalOrder?.rental_item?.rental_item || this.rentalOrder?.rental_item || this.rentalOrder?.rental_order || this.rentalOrder || {};
+      return (
+        this.rentalOrder?.rental_item?.rental_item ||
+        this.rentalOrder?.rental_item ||
+        this.rentalOrder?.rental_order ||
+        this.rentalOrder ||
+        {}
+      );
     },
     async fetchRentableItems() {
-      const resRentableItems = await this.$axios.$get("/api/v1/get_all_rentable_items");
+      const resRentableItems = await this.$axios.$get(
+        "/api/v1/get_all_rentable_items"
+      );
       this.rentableItemList = resRentableItems.data || [];
     },
     async edit() {
       const rentalOrder = this.getRentalOrder();
       const groupId = rentalOrder.group_id || this.$route.params.id;
-      const url =
-        "/rental_orders/" +
-        rentalOrder.id +
-        "?group_id=" +
-        groupId +
-        "&rental_item_id=" +
-        this.rentalItemID +
-        "&num=" +
-        this.num;
+      const data = {
+        group_id: groupId,
+        rental_item_id: this.rentalItemID,
+        num: this.num,
+      };
+      const url = `/rental_orders/${rentalOrder.id}`;
 
       try {
-        await this.$axios.$put(url);
-        this.$emit("saved", ro.id);
+        await this.$axios.$put(url, data);
+        this.$emit("saved", rentalOrder.id);
         this.$emit("close");
       } catch (e) {
         // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)

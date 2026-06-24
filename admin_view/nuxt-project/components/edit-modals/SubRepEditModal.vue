@@ -11,7 +11,11 @@
       </div>
       <div>
         <h3>学科ID</h3>
-        <input v-model="departmentId" type="number" placeholder="入力してください" />
+        <input
+          v-model="departmentId"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>学年ID</h3>

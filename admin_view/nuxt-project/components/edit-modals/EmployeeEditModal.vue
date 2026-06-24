@@ -70,20 +70,23 @@ export default {
         検便無: 2,
         検便有: 3,
       };
-      const status = employee.stool_test || this.employee?.stool_test?.status || this.employee?.stool_test_status;
+      const status =
+        employee.stool_test ||
+        this.employee?.stool_test?.status ||
+        this.employee?.stool_test_status;
       return statusToId[status] || null;
     },
     async edit() {
       const employee = this.getEmployee();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),
-      });
-      const url = `/employees/${employee.id}?${params.toString()}`;
+      };
+      const url = `/employees/${employee.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", employee.id);
         this.$emit("close");
       });

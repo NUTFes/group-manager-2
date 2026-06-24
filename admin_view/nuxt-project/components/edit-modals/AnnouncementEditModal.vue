@@ -48,14 +48,14 @@ export default {
     },
     async edit() {
       const ann = this.getAnnouncement();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         message: this.message ?? "",
         status: this.status ?? "",
-      });
-      const url = `/announcements/${ann.id}?${params.toString()}`;
+      };
+      const url = `/announcements/${ann.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", ann.id);
         this.$emit("close");
       });

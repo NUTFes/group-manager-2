@@ -56,20 +56,25 @@ export default {
   },
   methods: {
     getPlaceOrder() {
-      return this.placeOrder?.place_order?.place_order || this.placeOrder?.place_order || this.placeOrder || {};
+      return (
+        this.placeOrder?.place_order?.place_order ||
+        this.placeOrder?.place_order ||
+        this.placeOrder ||
+        {}
+      );
     },
     async edit() {
       const po = this.getPlaceOrder();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         first: String(this.first ?? ""),
         second: String(this.second ?? ""),
         third: String(this.third ?? ""),
         remark: this.remark ?? "",
-      });
-      const url = `/place_orders/${po.id}?${params.toString()}`;
+      };
+      const url = `/place_orders/${po.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", po.id);
         this.$emit("close");
       });

@@ -48,14 +48,14 @@ export default {
     },
     async edit() {
       const pr = this.getPublicRelation();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         blurb: this.blurb ?? "",
         picture_path: this.picturePath ?? "",
-      });
-      const url = `/public_relations/${pr.id}?${params.toString()}`;
+      };
+      const url = `/public_relations/${pr.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", pr.id);
         this.$emit("close");
       });

@@ -9,7 +9,11 @@
         <h3>調理するか</h3>
         <select v-model="isCooking">
           <option disabled value="">選択してください</option>
-          <option v-for="isCook in isCookingList" :key="isCook.id" :value="isCook.value">
+          <option
+            v-for="isCook in isCookingList"
+            :key="isCook.id"
+            :value="isCook.value"
+          >
             {{ isCook.text }}
           </option>
         </select>
@@ -79,7 +83,7 @@ export default {
         return;
       }
 
-      const query = new URLSearchParams({
+      const data = {
         group_id: String(foodProduct.group_id ?? ""),
         name,
         is_cooking: String(this.isCooking ?? ""),
@@ -89,7 +93,7 @@ export default {
       const url = `/food_products/${foodProduct.id}?${query}`;
 
       try {
-        const response = await this.$axios.$put(url);
+        const response = await this.$axios.$put(url, data);
         const savedId = response?.data?.id;
 
         if (typeof savedId === "undefined") {

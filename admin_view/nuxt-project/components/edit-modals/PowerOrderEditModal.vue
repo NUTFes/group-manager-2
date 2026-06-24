@@ -66,17 +66,17 @@ export default {
     },
     async edit() {
       const po = this.getPowerOrder();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         item: this.item ?? "",
         power: String(this.power ?? ""),
         manufacturer: this.manufacturer ?? "",
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
-      });
-      const url = `/power_orders/${po.id}?${params.toString()}`;
+      };
+      const url = `/power_orders/${po.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", po.id);
         this.$emit("close");
       });

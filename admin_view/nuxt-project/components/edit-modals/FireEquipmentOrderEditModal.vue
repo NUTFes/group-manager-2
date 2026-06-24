@@ -7,7 +7,11 @@
       </div>
       <div>
         <h3>数量</h3>
-        <input v-model="quantity" type="number" placeholder="入力してください" />
+        <input
+          v-model="quantity"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>燃料 (1:ガスボンベ, 2:LPガス, 3:炭)</h3>
@@ -67,7 +71,7 @@ export default {
         this.groupId = feo.group_id || this.$route.params.id;
         this.name = feo.name || null;
         this.quantity = feo.quantity || null;
-        
+
         let fuelVal = 0;
         if (feo.fuel === "gas_bottle" || feo.fuel === 1) fuelVal = 1;
         else if (feo.fuel === "lp_gas" || feo.fuel === 2) fuelVal = 2;
@@ -82,11 +86,15 @@ export default {
   },
   methods: {
     getFireEquipmentOrder() {
-      return this.fireEquipmentOrder?.fire_equipment_order || this.fireEquipmentOrder || {};
+      return (
+        this.fireEquipmentOrder?.fire_equipment_order ||
+        this.fireEquipmentOrder ||
+        {}
+      );
     },
     async edit() {
       const feo = this.getFireEquipmentOrder();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
         quantity: String(this.quantity ?? ""),
@@ -94,10 +102,10 @@ export default {
         usage: this.usage ?? "",
         is_takeaway: String(this.isTakeaway),
         remark: this.remark ?? "",
-      });
-      const url = `/fire_equipment_orders/${feo.id}?${params.toString()}`;
+      };
+      const url = `/fire_equipment_orders/${feo.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", feo.id);
         this.$emit("close");
       });

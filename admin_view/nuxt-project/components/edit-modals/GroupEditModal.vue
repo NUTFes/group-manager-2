@@ -9,7 +9,11 @@
         <h3>申請者</h3>
         <select v-model="committee">
           <option disabled value="">選択してください</option>
-          <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
+          <option
+            v-for="applicant in applicantList"
+            :key="applicant.id"
+            :value="applicant.bool"
+          >
             {{ applicant.value }}
           </option>
         </select>
@@ -29,11 +33,11 @@
       </div>
       <div>
         <h3>国際</h3>
-        <input type="checkbox" v-model="international"/>
+        <input type="checkbox" v-model="international" />
       </div>
       <div>
         <h3>学外</h3>
-        <input type="checkbox" v-model="external"/>
+        <input type="checkbox" v-model="external" />
       </div>
       <div>
         <h3>企画名</h3>
@@ -120,7 +124,7 @@ export default {
     },
     async edit() {
       const g = this.getGroup();
-      const params = new URLSearchParams({
+      const data = {
         name: this.groupName,
         committee: this.committee,
         project_name: this.projectName,
@@ -129,11 +133,11 @@ export default {
         fes_year_id: this.fesYearId,
         is_international: this.international,
         is_external: this.external,
-      });
-      const url = `/groups/${g.id}?${params.toString()}`;
+      };
+      const url = `/groups/${g.id}`;
 
       try {
-        await this.$axios.$put(url);
+        await this.$axios.$put(url, data);
         this.$emit("saved", g.id);
         this.$emit("close");
       } catch (e) {

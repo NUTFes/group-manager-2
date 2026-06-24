@@ -68,20 +68,24 @@ export default {
   },
   methods: {
     getStageCommonOption() {
-      return this.stageCommonOption?.stage_common_option || this.stageCommonOption || {};
+      return (
+        this.stageCommonOption?.stage_common_option ||
+        this.stageCommonOption ||
+        {}
+      );
     },
     async edit() {
       const sco = this.getStageCommonOption();
-      const params = new URLSearchParams({
+      const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         own_equipment: String(this.ownEquipment),
         bgm: String(this.bgm),
         camera_permission: String(this.cameraPermission),
         loud_sound: String(this.loudSound),
-      });
-      const url = `/stage_common_options/${sco.id}?${params.toString()}`;
+      };
+      const url = `/stage_common_options/${sco.id}`;
 
-      await this.$axios.$put(url).then(() => {
+      await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", sco.id);
         this.$emit("close");
       });

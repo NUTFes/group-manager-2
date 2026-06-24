@@ -19,7 +19,12 @@
       </div>
     </template>
     <template v-slot:method>
-      <CommonButton iconName="edit" :disabled="isPush.disabled || !isFile" :on_click="edit">{{ buttonState }}</CommonButton>
+      <CommonButton
+        iconName="edit"
+        :disabled="isPush.disabled || !isFile"
+        :on_click="edit"
+        >{{ buttonState }}</CommonButton
+      >
     </template>
   </EditModal>
 </template>
@@ -122,13 +127,19 @@ export default {
           console.error(error);
           this.isPush.disabled = false;
           this.buttonState = "登録";
-          this.$emit("error", error?.message || "ファイルのアップロードに失敗しました");
+          this.$emit(
+            "error",
+            error?.message || "ファイルのアップロードに失敗しました"
+          );
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref)
             .then((downloadURL) => {
               const venueMap = this.getVenueMap();
-              const groupId = venueMap.group_id || venueMap.group?.id || this.$route.params.id;
+              const groupId =
+                venueMap.group_id ||
+                venueMap.group?.id ||
+                this.$route.params.id;
               const data = {
                 group_id: groupId,
                 picture_name: uploadTask.snapshot.ref.name,
@@ -139,7 +150,12 @@ export default {
                 console.error(err);
                 this.isPush.disabled = false;
                 this.buttonState = "登録";
-                this.$emit("error", err?.response?.data?.message || err?.message || "保存に失敗しました");
+                this.$emit(
+                  "error",
+                  err?.response?.data?.message ||
+                    err?.message ||
+                    "保存に失敗しました"
+                );
               };
 
               if (this.venueMap?.venue_map || venueMap.id) {
@@ -170,7 +186,10 @@ export default {
               console.error(err);
               this.isPush.disabled = false;
               this.buttonState = "登録";
-              this.$emit("error", err?.message || "ダウンロードURLの取得に失敗しました");
+              this.$emit(
+                "error",
+                err?.message || "ダウンロードURLの取得に失敗しました"
+              );
             });
         }
       );
