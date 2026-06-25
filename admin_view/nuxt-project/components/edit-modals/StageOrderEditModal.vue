@@ -44,18 +44,7 @@
         <h3>片付け時間</h3>
         <input v-model="cleanupTimeInterval" placeholder="入力してください" />
       </div>
-      <div>
-        <h3>準備内容</h3>
-        <input v-model="prepareContent" placeholder="入力してください" />
-      </div>
-      <div>
-        <h3>パフォーマンス内容</h3>
-        <input v-model="performanceContent" placeholder="入力してください" />
-      </div>
-      <div>
-        <h3>片付け内容</h3>
-        <input v-model="cleanupContent" placeholder="入力してください" />
-      </div>
+
     </template>
     <template v-slot:method>
       <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
@@ -81,9 +70,6 @@ export default {
       useTimeInterval: null,
       prepareTimeInterval: null,
       cleanupTimeInterval: null,
-      prepareContent: null,
-      performanceContent: null,
-      cleanupContent: null,
     };
   },
   watch: {
@@ -99,9 +85,6 @@ export default {
         this.useTimeInterval = so.use_time_interval || null;
         this.prepareTimeInterval = so.prepare_time_interval || null;
         this.cleanupTimeInterval = so.cleanup_time_interval || null;
-        this.prepareContent = so.prepare_content || null;
-        this.performanceContent = so.performance_content || null;
-        this.cleanupContent = so.cleanup_content || null;
       },
     },
   },
@@ -120,9 +103,6 @@ export default {
         use_time_interval: this.useTimeInterval ?? "",
         prepare_time_interval: this.prepareTimeInterval ?? "",
         cleanup_time_interval: this.cleanupTimeInterval ?? "",
-        prepare_content: this.prepareContent ?? "",
-        performance_content: this.performanceContent ?? "",
-        cleanup_content: this.cleanupContent ?? "",
       };
       const url = `/stage_orders/${so.id}`;
 

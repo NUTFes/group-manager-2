@@ -27,14 +27,19 @@ class StageOrder < ApplicationRecord
 
   def to_info_h
     return {
+      id: id,
+      group_id: group_id,
+      fes_date_id: fes_date_id,
       stage_order: nil? ? nil : self,
       is_sunny: is_sunny.nil?,
       year: fes_date.fes_year.year_num,
       date: fes_date.date,
       day: fes_date.day,
       day_num: fes_date.days_num,
-      stage_first: stage_first.nil? ? nil : _stage_name(stage_first),
-      stage_second: stage_second.nil? ? nil : _stage_name(stage_second),
+      stage_first: stage_first,
+      stage_second: stage_second,
+      stage_first_name: stage_first.nil? ? nil : _stage_name(stage_first),
+      stage_second_name: stage_second.nil? ? nil : _stage_name(stage_second),
       use_time_interval: use_time_interval,
       prepare_time_interval: prepare_time_interval,
       cleanup_time_interval: cleanup_time_interval,

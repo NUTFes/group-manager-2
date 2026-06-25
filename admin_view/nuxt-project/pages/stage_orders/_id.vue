@@ -47,11 +47,11 @@
           </tr>
           <tr>
             <th>第一希望</th>
-            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
           </tr>
           <tr>
             <th>第二希望</th>
-            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
           </tr>
           <tr>
             <th>準備時間幅</th>

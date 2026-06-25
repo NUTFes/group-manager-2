@@ -161,19 +161,18 @@
             <VerticalTable v-if="group.stage_orders && group.stage_orders.length > 0">
               <tr>
                 <th>希望ステージ</th>
-                <th>パフォーマンス内容</th>
                 <th>準備・片付け・演奏時間</th>
               </tr>
               <tr v-for="(orderWrapper, index) in group.stage_orders" :key="index" class="selectable-row" @click="openModal('stage_order', orderWrapper)">
                 <td>
-                  1: {{ orderWrapper.stage_order.stage_first }}<br>
-                  2: {{ orderWrapper.stage_order.stage_second }}
+                  1: {{ orderWrapper.stage_order.stage_first_name }}<br>
+                  2: {{ orderWrapper.stage_order.stage_second_name }}
                 </td>
-                <td>{{ orderWrapper.stage_order.performance_content }}</td>
                 <td>
-                  準備: {{ orderWrapper.stage_order.time_point_start }}<br>
-                  演奏: {{ orderWrapper.stage_order.time_interval }}分<br>
-                  片付け: {{ orderWrapper.stage_order.time_point_end }}
+                  【時間(分)】<br>
+                  準備: {{ orderWrapper.stage_order.prepare_time_interval || '未設定' }} / 
+                  演奏: {{ orderWrapper.stage_order.use_time_interval || '未設定' }} / 
+                  片付け: {{ orderWrapper.stage_order.cleanup_time_interval || '未設定' }}
                 </td>
               </tr>
             </VerticalTable>
