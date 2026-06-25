@@ -33,12 +33,14 @@ class CommentTest < ActiveSupport::TestCase
     )
   end
 
+  # 正常系: 保健所提出ステータスに紐づくpolymorphic commentとして保存できる。
   test 'is valid with a polymorphic commentable' do
     comment = Comment.new(commentable: @submission_status, body: '購入先の記載を追加してください')
 
     assert comment.valid?
   end
 
+  # バリデーション: メモ本文が空の場合は保存できない。
   test 'requires a body' do
     comment = Comment.new(commentable: @submission_status, body: nil)
 
@@ -46,6 +48,7 @@ class CommentTest < ActiveSupport::TestCase
     assert comment.errors.added?(:body, :blank)
   end
 
+  # 初期値: メール送信結果が確定するまでは再送可能なfailedとして扱う。
   test 'defaults mail delivery status to failed' do
     comment = Comment.new(commentable: @submission_status, body: '再提出依頼')
 

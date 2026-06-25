@@ -35,6 +35,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     ENV['GMAIL_ADDRESS'] = @original_gmail_address
   end
 
+  # 正常系: メモをfailedで保存後、メール送信成功時にsentへ更新する。
   test 'creates failed comment first and marks it sent when mail delivery succeeds' do
     assert_difference('Comment.count', 1) do
       assert_difference -> { ActionMailer::Base.deliveries.size }, 1 do
@@ -53,6 +54,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_includes comment.body, '食品名を修正してください。'
   end
 
+  # 異常系: メール送信で例外が発生しても、再送可能なfailedメモを残す。
   test 'keeps failed comment when mail delivery raises' do
     failing_delivery = Object.new
     def failing_delivery.deliver_now!
@@ -80,6 +82,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_equal 'failed', response.parsed_body['data']['mail_delivery_status']
   end
 
+  # 再送信: failedの保存済みメモを再送し、成功時にsentへ更新する。
   test 'resends failed comment and marks it sent' do
     submission_status = HealthCenterSubmissionStatus.create!(
       group: @group,
