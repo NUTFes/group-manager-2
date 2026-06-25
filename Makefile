@@ -99,3 +99,6 @@ openapi:
 
 erd:
 	docker compose run --rm api bundle exec rake erd filetype=png filename=er
+
+rubocop:
+	docker compose exec api bundle exec rubocop -a --no-server
