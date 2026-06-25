@@ -60,7 +60,7 @@ test.describe("メールテンプレート管理画面", () => {
     );
     await page.getByRole("button", { name: "団体名" }).click();
     await expect(page.locator("textarea")).toHaveValue(
-      "Dear {user_name},\n\n{resubmit_memo}{group_name}"
+      "Dear {user_name},\n\nPlease revise the application.{group_name}"
     );
     await page.getByRole("button", { name: "保存" }).click();
     await expect(page.getByText("テンプレートを作成しました")).toBeVisible();
@@ -87,7 +87,7 @@ test.describe("メールテンプレート管理画面", () => {
           locale: "ja",
           name: "GM再提出依頼",
           subject: "更新後件名",
-          body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
+          body: "{group_name} 代表 {user_name} 様\n\n食品名を修正してください。",
         },
       },
       {
@@ -97,7 +97,7 @@ test.describe("メールテンプレート管理画面", () => {
           locale: "en",
           name: "GM Resubmission Request copy",
           subject: "GM resubmission request",
-          body: "Dear {user_name},\n\n{resubmit_memo}{group_name}",
+          body: "Dear {user_name},\n\nPlease revise the application.{group_name}",
         },
       },
     ]);

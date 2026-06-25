@@ -10,7 +10,7 @@ const templates = [
     locale: "ja",
     name: "GM再提出依頼",
     subject: "【GM再提出】修正をお願いします",
-    body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
+    body: "{group_name} 代表 {user_name} 様\n\n食品名を修正してください。",
     updated_at: "2026-06-21T10:00:00.000+09:00",
   },
   {
@@ -18,7 +18,7 @@ const templates = [
     locale: "en",
     name: "GM Resubmission Request",
     subject: "GM resubmission request",
-    body: "Dear {user_name},\n\n{resubmit_memo}",
+    body: "Dear {user_name},\n\nPlease revise the application.",
     updated_at: "2026-06-21T10:00:00.000+09:00",
   },
 ];
@@ -157,7 +157,7 @@ http
           locale: "ja",
           name: "GM再提出依頼のコピー",
           subject: "【GM再提出】修正をお願いします",
-          body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
+          body: "{group_name} 代表 {user_name} 様\n\n食品名を修正してください。",
         },
       });
       return;
@@ -170,7 +170,7 @@ http
           locale: "en",
           name: "GM Resubmission Request copy",
           subject: "GM resubmission request",
-          body: "Dear {user_name},\n\n{resubmit_memo}",
+          body: "Dear {user_name},\n\nPlease revise the application.",
         },
       });
       return;
@@ -272,9 +272,7 @@ http
       const comment = {
         id: 1,
         commentable_id: 1,
-        body:
-          "件名: 【GM再提出】修正をお願いします\n\n" +
-          `技大祭企画 代表 山田太郎 様\n\n${payload.body}`,
+        body: `件名: 【GM再提出】修正をお願いします\n\n${payload.body}`,
         mail_delivery_status:
           payload.body === "送信失敗テスト" ? "failed" : "sent",
         created_at: "2026-06-21T10:00:00.000+09:00",

@@ -123,11 +123,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
     mail_values = {
       group_name: group.name,
-      user_name: group.user.name,
-      resubmit_memo: params[:body].to_s.strip
+      user_name: group.user.name
     }
     subject = template.render_subject(mail_values)
-    body = template.render_body(mail_values)
+    body = params[:body].to_s.strip
     comment_body = build_mail_comment_body(subject, body)
 
     comment = save_failed_mail_comment!(comment_body)

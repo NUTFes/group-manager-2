@@ -36,17 +36,16 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   # 送信直前のテンプレート変数置換。
-  # 本文中の{group_name}/{user_name}/{resubmit_memo}が実際に配送されるメール本文で置換されることを確認する。
+  # 本文中の{group_name}/{user_name}が実際に配送されるメール本文で置換されることを確認する。
   test 'admin can deliver a mail with rendered template variables' do
     assert_difference -> { ActionMailer::Base.deliveries.size }, 1 do
       post api_v1_mail_deliveries_path,
            params: valid_params.merge(
              subject: '再提出依頼: {group_name}',
-             body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}",
+             body: '{group_name} 代表 {user_name} 様',
              template_values: {
                group_name: '技大祭企画',
-               user_name: '山田太郎',
-               resubmit_memo: '食品名を修正してください。'
+               user_name: '山田太郎'
              }
            ),
            headers: auth_headers(@admin),
@@ -56,7 +55,7 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     mail = ActionMailer::Base.deliveries.last
     assert_equal '再提出依頼: 技大祭企画', mail.subject
-    assert_equal "技大祭企画 代表 山田太郎 様\n\n食品名を修正してください。",
+    assert_equal '技大祭企画 代表 山田太郎 様',
                  mail.body.encoded.gsub(/\r\n?/, "\n")
   end
 

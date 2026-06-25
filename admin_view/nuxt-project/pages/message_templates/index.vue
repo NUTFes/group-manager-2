@@ -218,7 +218,6 @@ export default {
       templateVariables: [
         { key: "group_name", label: "団体名" },
         { key: "user_name", label: "代表者名" },
-        { key: "resubmit_memo", label: "再提出メモ" },
       ],
     };
   },

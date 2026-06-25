@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MessageTemplate < ApplicationRecord
-  SUPPORTED_VARIABLES = %w[group_name user_name resubmit_memo].freeze
+  SUPPORTED_VARIABLES = %w[group_name user_name].freeze
 
   enum locale: { ja: 0, en: 1 }
 

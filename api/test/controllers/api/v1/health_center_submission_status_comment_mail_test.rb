@@ -27,7 +27,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
       locale: 'ja',
       name: 'GM再提出依頼',
       subject: '再提出依頼: {group_name}',
-      body: "{group_name} 代表 {user_name} 様\n\n{resubmit_memo}"
+      body: '{group_name} 代表 {user_name} 様'
     )
   end
 

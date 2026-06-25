@@ -749,6 +749,9 @@ export default {
         await this.reloadPageData();
       },
     },
+    selectedMessageTemplateId() {
+      this.applySelectedMessageTemplate();
+    },
   },
   computed: {
     currentGroupId() {
@@ -828,7 +831,6 @@ export default {
       return {
         group_name: this.group.group.name,
         user_name: this.group.user.name,
-        resubmit_memo: this.commentBody.trim(),
       };
     },
     renderedMessageSubject() {
@@ -839,11 +841,7 @@ export default {
       );
     },
     renderedMessageBody() {
-      if (!this.selectedMessageTemplate) return "";
-      return this.renderTemplateText(
-        this.selectedMessageTemplate.body,
-        this.messageTemplateValues
-      );
+      return this.commentBody.trim();
     },
   },
   async mounted() {
@@ -967,9 +965,18 @@ export default {
     },
     renderTemplateText(text, values) {
       return String(text || "").replace(
-        /\{(group_name|user_name|resubmit_memo)\}/g,
+        /\{(group_name|user_name)\}/g,
         (_, key) => String(values[key] || "")
       );
+    },
+    applySelectedMessageTemplate() {
+      if (!this.selectedMessageTemplate) return;
+
+      this.commentBody = this.renderTemplateText(
+        this.selectedMessageTemplate.body,
+        this.messageTemplateValues
+      );
+      this.messageSendResult = "";
     },
     openMessagePreview() {
       if (!this.canSendMessage || this.isSendingMessage) return;
@@ -1012,6 +1019,7 @@ export default {
 
         this.upsertCommentInSubmission(commentRes.data);
         this.commentBody = "";
+        this.selectedMessageTemplateId = "";
         this.messageSendResult = "メッセージを送信しました";
         return true;
       } catch (error) {
@@ -1019,6 +1027,7 @@ export default {
         if (savedComment?.id) {
           this.upsertCommentInSubmission(savedComment);
           this.commentBody = "";
+          this.selectedMessageTemplateId = "";
           this.isPreviewModalOpen = false;
         }
         this.messageSendResult = "メッセージの送信に失敗しました";
