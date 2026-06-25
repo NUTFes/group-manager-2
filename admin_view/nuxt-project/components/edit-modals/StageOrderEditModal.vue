@@ -9,40 +9,58 @@
         </select>
       </div>
       <div>
-        <h3>開催日ID</h3>
-        <input
-          v-model="fesDateId"
-          type="number"
-          placeholder="入力してください"
-        />
+        <h3>開催日</h3>
+        <select v-model="fesDateId">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in fesDatesList" :key="list.id" :value="list.id">
+            {{ list.date }}
+          </option>
+        </select>
       </div>
       <div>
-        <h3>第1希望ステージID</h3>
-        <input
-          v-model="stageFirst"
-          type="number"
-          placeholder="入力してください"
-        />
+        <h3>第1希望ステージ</h3>
+        <select v-model="stageFirst">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in stageList" :key="list.id" :value="list.id">
+            {{ list.name }}
+          </option>
+        </select>
       </div>
       <div>
-        <h3>第2希望ステージID</h3>
-        <input
-          v-model="stageSecond"
-          type="number"
-          placeholder="入力してください"
-        />
+        <h3>第2希望ステージ</h3>
+        <select v-model="stageSecond">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in stageList" :key="list.id" :value="list.id">
+            {{ list.name }}
+          </option>
+        </select>
       </div>
       <div>
         <h3>使用時間</h3>
-        <input v-model="useTimeInterval" placeholder="入力してください" />
+        <select v-model="useTimeInterval">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in timeBox" :key="list" :value="list">
+            {{ list }}
+          </option>
+        </select>
       </div>
       <div>
         <h3>準備時間</h3>
-        <input v-model="prepareTimeInterval" placeholder="入力してください" />
+        <select v-model="prepareTimeInterval">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in timeBox" :key="list" :value="list">
+            {{ list }}
+          </option>
+        </select>
       </div>
       <div>
         <h3>片付け時間</h3>
-        <input v-model="cleanupTimeInterval" placeholder="入力してください" />
+        <select v-model="cleanupTimeInterval">
+          <option disabled value="">選択してください</option>
+          <option v-for="list in timeBox" :key="list" :value="list">
+            {{ list }}
+          </option>
+        </select>
       </div>
 
     </template>
@@ -64,13 +82,27 @@ export default {
     return {
       groupId: null,
       isSunny: true,
-      fesDateId: null,
-      stageFirst: null,
-      stageSecond: null,
-      useTimeInterval: null,
-      prepareTimeInterval: null,
-      cleanupTimeInterval: null,
+      fesDateId: "",
+      stageFirst: "",
+      stageSecond: "",
+      useTimeInterval: "",
+      prepareTimeInterval: "",
+      cleanupTimeInterval: "",
+      fesDatesList: [],
+      stageList: [],
+      timeBox: [
+        "5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分",
+        "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分",
+        "105分", "110分", "115分", "120分"
+      ]
     };
+  },
+  async mounted() {
+    const fesDatesRes = await this.$axios.$get("/api/v1/get_current_fes_dates");
+    this.fesDatesList = fesDatesRes.data;
+    
+    const stageRes = await this.$axios.$get("/stages");
+    this.stageList = stageRes.data;
   },
   watch: {
     stageOrder: {
@@ -78,13 +110,13 @@ export default {
       handler() {
         const so = this.getStageOrder();
         this.groupId = so.group_id || this.$route.params.id;
-        this.isSunny = so.is_sunny ?? true;
-        this.fesDateId = so.fes_date_id || null;
-        this.stageFirst = so.stage_first || null;
-        this.stageSecond = so.stage_second || null;
-        this.useTimeInterval = so.use_time_interval || null;
-        this.prepareTimeInterval = so.prepare_time_interval || null;
-        this.cleanupTimeInterval = so.cleanup_time_interval || null;
+        this.isSunny = so.is_sunny == null ? true : [true, 'true', 1, '1'].includes(so.is_sunny);
+        this.fesDateId = so.fes_date_id || "";
+        this.stageFirst = so.stage_first || "";
+        this.stageSecond = so.stage_second || "";
+        this.useTimeInterval = so.use_time_interval || "";
+        this.prepareTimeInterval = so.prepare_time_interval || "";
+        this.cleanupTimeInterval = so.cleanup_time_interval || "";
       },
     },
   },

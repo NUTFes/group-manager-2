@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>晴れ希望</th>
-            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ [true, 'true', 1, '1'].includes(stageOrder.stage_order.is_sunny) ? '晴れ' : '雨' }}</td>
           </tr>
           <tr>
             <th>希望日</th>

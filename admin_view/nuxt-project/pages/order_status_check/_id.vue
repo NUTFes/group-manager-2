@@ -160,10 +160,12 @@
             </div>
             <VerticalTable v-if="group.stage_orders && group.stage_orders.length > 0">
               <tr>
+                <th>天気</th>
                 <th>希望ステージ</th>
                 <th>準備・片付け・演奏時間</th>
               </tr>
               <tr v-for="(orderWrapper, index) in group.stage_orders" :key="index" class="selectable-row" @click="openModal('stage_order', orderWrapper)">
+                <td>{{ [true, 'true', 1, '1'].includes(orderWrapper.stage_order.is_sunny) ? '晴れ' : '雨' }}</td>
                 <td>
                   1: {{ orderWrapper.stage_order.stage_first_name }}<br>
                   2: {{ orderWrapper.stage_order.stage_second_name }}

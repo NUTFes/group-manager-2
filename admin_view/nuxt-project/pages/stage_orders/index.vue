@@ -80,7 +80,7 @@
           >
             <td>{{ stageOrder.stage_order.id }}</td>
             <td>{{ stageOrder.group.name }}</td>
-            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ [true, 'true', 1, '1'].includes(stageOrder.stage_order.is_sunny) ? '晴れ' : '雨' }}</td>
             <td>{{ stageOrder.stage_order_info.date }}</td>
             <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
             <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>

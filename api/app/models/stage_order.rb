@@ -31,7 +31,7 @@ class StageOrder < ApplicationRecord
       group_id: group_id,
       fes_date_id: fes_date_id,
       stage_order: nil? ? nil : self,
-      is_sunny: is_sunny.nil?,
+      is_sunny: is_sunny,
       year: fes_date.fes_year.year_num,
       date: fes_date.date,
       day: fes_date.day,
