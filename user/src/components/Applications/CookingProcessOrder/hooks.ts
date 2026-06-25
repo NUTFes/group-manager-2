@@ -200,7 +200,7 @@ export const useCookingProcessOrder = (
       return;
     }
 
-    if (isDeadline) {
+    if (isDeadline && status !== 'waiting_resubmission') {
       setIsEditing(false);
       return;
     }
@@ -220,6 +220,7 @@ export const useCookingProcessOrder = (
     isDeadline,
     isExist,
     isEditing,
+    status,
   ]);
 
   return {
