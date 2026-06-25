@@ -234,11 +234,11 @@ export const useFoodProductHooks = (
         }
       };
 
-      // 成功時のみビューモードに戻す
-      setIsEditing(false);
-
       const statusUpdated = await updateStatusToUnapproved();
       if (!statusUpdated) return;
+
+      // 成功時のみビューモードに戻す
+      setIsEditing(false);
 
       toast.success(t('applications.foodProduct.messages.createSuccess'), {
         position: 'top-right',
