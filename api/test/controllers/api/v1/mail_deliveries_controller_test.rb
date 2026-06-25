@@ -10,9 +10,11 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
     ENV['GMAIL_ADDRESS'] = 'no-reply@example.com'
     ActionMailer::Base.deliveries.clear
     Role.create!(id: 1, name: 'admin')
-    Role.create!(id: 2, name: 'user')
+    Role.create!(id: 2, name: 'staff')
+    Role.create!(id: 3, name: 'user')
     @admin = create_user!(email: 'admin@example.com', role_id: 1)
-    @user = create_user!(email: 'user@example.com', role_id: 2)
+    @staff = create_user!(email: 'staff@example.com', role_id: 2)
+    @user = create_user!(email: 'user@example.com', role_id: 3)
   end
 
   teardown do
@@ -59,7 +61,19 @@ class Api::V1::MailDeliveriesControllerTest < ActionDispatch::IntegrationTest
                  mail.body.encoded.gsub(/\r\n?/, "\n")
   end
 
-  test 'non admin cannot deliver a mail' do
+  # 暫定権限の正常系。role_id 2 の staff でもメール送信APIを利用できることを確認する。
+  test 'staff can deliver a mail' do
+    assert_difference -> { ActionMailer::Base.deliveries.size }, 1 do
+      post api_v1_mail_deliveries_path,
+           params: valid_params,
+           headers: auth_headers(@staff),
+           as: :json
+    end
+
+    assert_response :success
+  end
+
+  test 'general user cannot deliver a mail' do
     assert_no_difference -> { ActionMailer::Base.deliveries.size } do
       post api_v1_mail_deliveries_path,
            params: valid_params,
