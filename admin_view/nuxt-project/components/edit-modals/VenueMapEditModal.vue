@@ -13,7 +13,10 @@
             ファイル形式は[.pngか.jpeg又は.jpg]にしてください
           </div>
           <div v-else-if="isFileCheck === true" style="color: red">
-            ファイル名は「参加形式_団体名」の形式で入力してください
+            ファイル名には、日本語・英数字・ハイフン（-）・アンダースコア（_）・スペース「」が使用できます。
+          </div>
+          <div v-else-if="isFileSizeCheck === true" style="color: red">
+            ファイルサイズは20MB以下にしてください
           </div>
         </label>
       </div>
@@ -41,6 +44,7 @@ export default {
       isInvalidFile: false,
       isFile: false,
       isFileCheck: false,
+      isFileSizeCheck: false,
       groupName: "",
       files: null,
       progress: 0,
@@ -72,9 +76,16 @@ export default {
         const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
+        const fILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20MB
+        this.isFileSizeCheck = file.size > fILE_SIZE_LIMIT;
 
-        if (this.isInvalidFile) {
+        // ファイルサイズのバリデーション
+        if(this.isFileSizeCheck){
+          this.isFileSizeCheck = true;
+          this.isFile = false;
+          // ファイル形式のバリデーション
+        } else if (this.isInvalidFile) {
           this.isInvalidFile = true;
           this.isFile = false;
           return;
