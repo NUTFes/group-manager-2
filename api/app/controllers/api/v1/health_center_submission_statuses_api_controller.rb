@@ -95,11 +95,15 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
     end
 
-    @comment = @submission_status.comments.build(body: params[:body])
+    @comment = @submission_status.comments.build(
+      body: params[:body],
+      mail_delivery_status: :not_send
+    )
     if @comment.save
       render json: fmt(created, {
                          id: @comment.id,
                          body: @comment.body,
+                         mail_delivery_status: @comment.mail_delivery_status,
                          created_at: @comment.created_at,
                          commentable_type: @comment.commentable_type,
                          commentable_id: @comment.commentable_id

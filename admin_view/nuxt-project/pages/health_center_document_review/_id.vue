@@ -934,12 +934,16 @@ export default {
       return classMap[value] || classMap.unapproved;
     },
     mailDeliveryStatusLabel(status) {
-      return status === "sent" ? "送信済み" : "未送信または送信失敗";
+      if (status === "sent") return "送信済み";
+      if (status === "not_send") return "送信しない";
+
+      return "未送信または送信失敗";
     },
     mailDeliveryStatusClass(status) {
-      return status === "sent"
-        ? "mail-delivery-status--sent"
-        : "mail-delivery-status--failed";
+      if (status === "sent") return "mail-delivery-status--sent";
+      if (status === "not_send") return "mail-delivery-status--not-send";
+
+      return "mail-delivery-status--failed";
     },
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
@@ -1650,6 +1654,11 @@ export default {
 .mail-delivery-status--failed {
   background: #fff3dc;
   color: #9a5b00;
+}
+
+.mail-delivery-status--not-send {
+  background: #eeeeee;
+  color: #555;
 }
 
 @media (max-width: 900px) {
