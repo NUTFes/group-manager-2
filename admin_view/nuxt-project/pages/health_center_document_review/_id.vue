@@ -446,6 +446,7 @@
               class="comment-textarea"
               placeholder="メールで送信するコメント"
               v-model="commentBody"
+              :disabled="!selectedMessageTemplate || isSendingMessage"
             ></textarea>
             <CommonButton
               iconName="send"
@@ -970,7 +971,10 @@ export default {
       );
     },
     applySelectedMessageTemplate() {
-      if (!this.selectedMessageTemplate) return;
+      if (!this.selectedMessageTemplate) {
+        this.commentBody = "";
+        return;
+      }
 
       this.commentBody = this.renderTemplateText(
         this.selectedMessageTemplate.body,
@@ -1319,6 +1323,12 @@ export default {
 .comment-textarea:focus {
   outline: none;
   border-color: var(--button-primary);
+}
+
+.comment-textarea:disabled {
+  background: #f5f5f5;
+  color: #777;
+  cursor: not-allowed;
 }
 
 .mail-preview-field {

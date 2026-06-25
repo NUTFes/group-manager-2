@@ -34,7 +34,9 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     await expect(sendButton).toBeDisabled();
     const commentTextarea = page.locator(".comment-textarea");
     await commentTextarea.scrollIntoViewIfNeeded();
+    await expect(commentTextarea).toBeDisabled();
     await page.locator("#message-template-select").selectOption("1");
+    await expect(commentTextarea).toBeEnabled();
     await expect(commentTextarea).toHaveValue(
       "技大祭企画 代表 山田太郎 様\n\n食品名を修正してください。"
     );
@@ -98,14 +100,16 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
 
     await expect(page.locator("#message-template-select")).toHaveValue("");
     await expect(sendButton).toBeDisabled();
-
-    await commentTextarea.fill("食品名を修正してください。", { force: true });
-    await expect(sendButton).toBeDisabled();
+    await expect(commentTextarea).toBeDisabled();
 
     await page.locator("#message-template-select").selectOption("1");
+    await expect(commentTextarea).toBeEnabled();
     await expect(sendButton).toBeEnabled();
     await commentTextarea.fill("", { force: true });
     await expect(sendButton).toBeDisabled();
+    await page.locator("#message-template-select").selectOption("");
+    await expect(commentTextarea).toBeDisabled();
+    await expect(commentTextarea).toHaveValue("");
     await expect(page.locator(".edit-modal")).toHaveCount(0);
 
     const requests = await page.request
