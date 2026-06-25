@@ -299,6 +299,19 @@ Naming/PredicateMethod:
 Naming/ConstantName:
   Enabled: true
 
+# 全ファイルに frozen_string_literal コメントを強制
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+# safe navigation operator (&.) の使用を推奨
+# 例: foo && foo.bar → foo&.bar
+Style/SafeNavigation:
+  Enabled: true
+
+# has_many / has_one に dependent: オプションを強制
+Rails/HasManyOrHasOneDependent:
+  Enabled: true
+
 # ============================================
 # RSpec（テストコード）
 # ============================================

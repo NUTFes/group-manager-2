@@ -89,7 +89,7 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         group: group,
-        user: group.user.nil? ? nil : group.user,
+        user: group.user,
         group_category: group.group_category&.name,
         fes_year: group.fes_year&.year_num,
         sub_rep: group.sub_rep&.to_info_h,
@@ -159,7 +159,7 @@ class Group < ApplicationRecord
     @record =
       {
         group: group,
-        user: group.user.nil? ? nil : group.user,
+        user: group.user,
         group_category: group.group_category&.name,
         fes_year: group.fes_year&.year_num,
         sub_rep: group.sub_rep&.to_info_h,
@@ -229,7 +229,7 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         group: group,
-        user: group.user.nil? ? nil : group.user,
+        user: group.user,
         group_category: group.group_category&.name,
         fes_year: group.fes_year&.year_num,
         sub_rep: group.sub_rep&.to_info_h,
@@ -299,7 +299,7 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         group: group,
-        user: group.user.nil? ? nil : group.user,
+        user: group.user,
         group_category: group.group_category&.name,
         fes_year: group.fes_year&.year_num,
         sub_rep: group.sub_rep&.to_info_h,
@@ -397,7 +397,7 @@ class Group < ApplicationRecord
                        else
                          {
                            food_product: group.food_products.first&.id,
-                           purchase_lists: group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+                           purchase_lists: group.food_products.first.purchase_lists.first&.id
                          }
                        end,
         public_relation: group.public_relation&.id,
@@ -428,7 +428,7 @@ class Group < ApplicationRecord
                        else
                          {
                            food_product: group.food_products.first&.id,
-                           purchase_lists: group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+                           purchase_lists: group.food_products.first.purchase_lists.first&.id
                          }
                        end,
         public_relation: group.public_relation&.id,
@@ -854,12 +854,14 @@ class Group < ApplicationRecord
 
   # 割り当てられたステージを取得
   def stage
-    return group_identification.nil? || group_identification.stage_number.nil? ? nil : group_identification.stage_number.stage.name
+    stage_number = group_identification&.stage_number
+    stage_number&.stage&.name
   end
 
   # 割り当てられた会場を取得
   def place
-    return group_identification.nil? || group_identification.place_number.nil? ? nil : group_identification.place_number.place.name
+    place_number = group_identification&.place_number
+    place_number&.place&.name
   end
 
   # 識別番号取得

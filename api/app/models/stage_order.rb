@@ -27,7 +27,7 @@ class StageOrder < ApplicationRecord
 
   def to_info_h
     return {
-      stage_order: nil? ? nil : self,
+      stage_order: self,
       is_sunny: is_sunny.nil?,
       year: fes_date.fes_year.year_num,
       date: fes_date.date,
