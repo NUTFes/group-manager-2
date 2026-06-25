@@ -44,7 +44,7 @@ class RentalOrder < ApplicationRecord
 
     HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: group_id,
-      application_type: :equipmant,
+      application_type: :equipment,
       status: :unapproved
     )
   end
