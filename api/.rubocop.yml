@@ -16,6 +16,11 @@
 # --------------------------------------------
 inherit_from: .rubocop_todo.yml
 
+# .rubocop_todo.yml の Exclude リストを上書きせずマージする
+inherit_mode:
+  merge:
+    - Exclude
+
 # --------------------------------------------
 # 2) 使用プラグイン
 #    - Rails: Rails向けのCop
@@ -242,13 +247,19 @@ Metrics/BlockLength:
     - 'app/models/group.rb'         # 業務上の長いブロックが多い
     - 'app/models/user.rb'          # 同上
 
-# ABC サイズ（代入・分岐・条件の複雑さ）をチェックしない
+# ABC サイズ（代入・分岐・条件の複雑さ）
 Metrics/AbcSize:
-  Enabled: false
+  Max: 30
+  Exclude:
+    - 'app/controllers/api/v1/output_csv_controller.rb'
 
-# メソッドの行数上限をチェックしない
+# メソッドの行数上限
 Metrics/MethodLength:
-  Enabled: false
+  Max: 30
+  Exclude:
+    - 'app/models/group.rb'
+    - 'app/models/user.rb'
+    - 'app/controllers/api/v1/output_csv_controller.rb'
 
 # クラスの行数上限をチェックしない
 Metrics/ClassLength:
@@ -258,13 +269,17 @@ Metrics/ClassLength:
 Metrics/ParameterLists:
   Enabled: false
 
-# サイクロマティック複雑度のチェックを無効化
+# 循環的複雑度（if/for などの分岐数）
 Metrics/CyclomaticComplexity:
-  Enabled: false
+  Max: 10
 
-# 体感複雑度のチェックを無効化
+# 体感複雑度
 Metrics/PerceivedComplexity:
-  Enabled: false
+  Max: 10
+
+# ネストの深さ
+Metrics/BlockNesting:
+  Max: 5
 
 # ============================================
 # Performance（パフォーマンス最適化）
@@ -302,10 +317,6 @@ Naming/PredicateMethod:
 # 例: HOGE_NUMBER = 42
 Naming/ConstantName:
   Enabled: true
-
-# 全ファイルに frozen_string_literal コメントを強制
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
 
 # safe navigation operator (&.) の使用を推奨
 # 例: foo && foo.bar → foo&.bar
