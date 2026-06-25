@@ -28,6 +28,7 @@ class FoodProduct < ApplicationRecord
   def to_info_h
     return {
       id: id,
+      group_id: group_id,
       name: name,
       is_cooking: is_cooking,
       first_day_num: first_day_num,

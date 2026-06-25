@@ -73,7 +73,9 @@ export default {
       const foodProduct = this.getFoodProduct();
       const name = this.name?.trim();
 
-      if (!foodProduct.group_id) {
+      const groupId = foodProduct.group_id || this.$route?.params?.id;
+
+      if (!groupId) {
         this.$emit("error", "団体情報が取得できませんでした");
         return;
       }
@@ -84,7 +86,7 @@ export default {
       }
 
       const data = {
-        group_id: String(foodProduct.group_id ?? ""),
+        group_id: String(groupId),
         name,
         is_cooking: String(this.isCooking ?? ""),
         first_day_num: String(this.first ?? ""),
