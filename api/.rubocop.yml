@@ -294,6 +294,11 @@ Naming/PredicatePrefix:
 Naming/PredicateMethod:
   Enabled: false
 
+# マジックナンバー等の定数は UPPER_SNAKE_CASE で定義することを強制
+# 例: HOGE_NUMBER = 42
+Naming/ConstantName:
+  Enabled: true
+
 # ============================================
 # RSpec（テストコード）
 # ============================================
