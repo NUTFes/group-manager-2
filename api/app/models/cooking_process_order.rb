@@ -43,6 +43,7 @@ class CookingProcessOrder < ApplicationRecord
     {
       id: id,
       group_id: group_id,
+      food_product_id: food_product_id,
       pre_open_kitchen: pre_open_kitchen,
       during_open_kitchen: during_open_kitchen,
       tent: tent,
