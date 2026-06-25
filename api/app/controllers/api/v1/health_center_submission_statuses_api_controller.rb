@@ -10,6 +10,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     upsert_health_center_submission_status
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
+    create_health_center_submission_status_comment_mail
+    resend_health_center_submission_status_comment_mail
     sync_health_center_submission_statuses
   ]
 
@@ -107,6 +109,57 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     end
   end
 
+  # メモを保存し、保存済みメモの本文をメール送信する
+  def create_health_center_submission_status_comment_mail
+    errors = validate_comment_mail_params
+    return render json: fmt(unprocessable_entity, errors), status: :unprocessable_entity if errors.present?
+
+    template = MessageTemplate.find_by(id: params[:message_template_id])
+    return render json: fmt(not_found, [], 'message_template not found'), status: :not_found if template.nil?
+
+    group = Group.includes(:user).find_by(id: params[:group_id])
+    return render json: fmt(not_found, [], 'group not found'), status: :not_found if group.nil?
+    return render json: fmt(unprocessable_entity, [], 'representative email is required'), status: :unprocessable_entity if group.user&.email.blank?
+
+    mail_values = {
+      group_name: group.name,
+      user_name: group.user.name,
+      resubmit_memo: params[:body].to_s.strip
+    }
+    subject = template.render_subject(mail_values)
+    body = template.render_body(mail_values)
+    comment_body = build_mail_comment_body(subject, body)
+
+    comment = save_failed_mail_comment!(comment_body)
+    deliver_comment_mail!(comment, to: group.user.email, subject: subject, body: body)
+
+    render json: fmt(created, comment_response(comment)), status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: fmt(unprocessable_entity, e.record.errors.full_messages), status: :unprocessable_entity
+  rescue StandardError => e
+    render json: fmt({ code: 502, message: 'Mail delivery failed' }, comment_response(comment), e.message),
+           status: :bad_gateway
+  end
+
+  # failed の保存済みメモを再送信する
+  def resend_health_center_submission_status_comment_mail
+    comment = Comment.includes(commentable: { group: :user }).find_by(id: params[:comment_id])
+    return render json: fmt(not_found, [], 'comment not found'), status: :not_found if comment.nil?
+    return render json: fmt(unprocessable_entity, [], 'comment is already sent'), status: :unprocessable_entity if comment.sent?
+    return render json: fmt(unprocessable_entity, [], 'comment is not a health center submission status comment'), status: :unprocessable_entity unless comment.commentable.is_a?(HealthCenterSubmissionStatus)
+
+    group = comment.commentable.group
+    return render json: fmt(unprocessable_entity, [], 'representative email is required'), status: :unprocessable_entity if group.user&.email.blank?
+
+    subject, body = parse_mail_comment_body(comment.body)
+    deliver_comment_mail!(comment, to: group.user.email, subject: subject, body: body)
+
+    render json: fmt(ok, comment_response(comment))
+  rescue StandardError => e
+    render json: fmt({ code: 502, message: 'Mail delivery failed' }, comment_response(comment), e.message),
+           status: :bad_gateway
+  end
+
   # 申請状況を同期する（提出状況に基づいてステータスを自動作成）
   def sync_health_center_submission_statuses
     groups = Group.preload(
@@ -170,6 +223,72 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     else
       render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
     end
+  end
+
+  def validate_comment_mail_params
+    errors = []
+    errors << 'group_id is required' if params[:group_id].blank?
+    errors << 'application_type is required' if params[:application_type].blank?
+    errors << 'Invalid application_type' if params[:application_type].present? && !valid_application_type?(params[:application_type].to_s)
+    errors << 'message_template_id is required' if params[:message_template_id].blank?
+    errors << 'body is required' if params[:body].to_s.strip.blank?
+    errors
+  end
+
+  def save_failed_mail_comment!(body)
+    submission_status = nil
+    comment = nil
+
+    ActiveRecord::Base.transaction do
+      submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+      raise ActiveRecord::RecordInvalid, HealthCenterSubmissionStatus.new if submission_status.nil?
+
+      submission_status.save! if submission_status.new_record?
+      comment = submission_status.comments.create!(
+        body: body,
+        mail_delivery_status: :failed
+      )
+    end
+
+    comment
+  rescue ActiveRecord::RecordNotUnique
+    submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    submission_status.comments.create!(
+      body: body,
+      mail_delivery_status: :failed
+    )
+  end
+
+  def deliver_comment_mail!(comment, to:, subject:, body:)
+    GenericMailer.plain_text_email(
+      to: to,
+      subject: subject,
+      body: body
+    ).deliver_now!
+    comment.update!(mail_delivery_status: :sent)
+  end
+
+  def build_mail_comment_body(subject, body)
+    "件名: #{subject}\n\n#{body}"
+  end
+
+  def parse_mail_comment_body(comment_body)
+    subject_line, body = comment_body.to_s.split("\n\n", 2)
+    subject = subject_line.to_s.sub(/\A件名:\s*/, '')
+    [subject, body.to_s]
+  end
+
+  def comment_response(comment)
+    return {} if comment.nil?
+
+    {
+      id: comment.id,
+      body: comment.body,
+      mail_delivery_status: comment.mail_delivery_status,
+      created_at: comment.created_at,
+      commentable_type: comment.commentable_type,
+      commentable_id: comment.commentable_id
+    }
   end
 
   def resolve_submission_status(default_status: nil)

@@ -41,7 +41,11 @@ const readBody = (request) =>
       body += chunk;
     });
     request.on("end", () => {
-      resolve(body ? JSON.parse(body) : {});
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (error) {
+        resolve({});
+      }
     });
   });
 
@@ -190,7 +194,10 @@ http
       return;
     }
 
-    if (url.pathname === "/api/v1/get_health_center_submission_status_show_for_admin_view/1") {
+    if (
+      url.pathname ===
+      "/api/v1/get_health_center_submission_status_show_for_admin_view/1"
+    ) {
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: {
@@ -215,7 +222,10 @@ http
       return;
     }
 
-    if (url.pathname === "/api/v1/get_health_center_submission_status_index_for_admin_view") {
+    if (
+      url.pathname ===
+      "/api/v1/get_health_center_submission_status_index_for_admin_view"
+    ) {
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: [
@@ -254,37 +264,54 @@ http
 
     if (
       url.pathname ===
-        "/api/v1/create_health_center_submission_status_comment" &&
+        "/api/v1/create_health_center_submission_status_comment_mail" &&
       request.method === "POST"
     ) {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
-      sendJson(response, 201, {
-        status: { code: 201, message: "Created" },
-        data: {
-          id: 1,
-          commentable_id: 1,
-          body: payload.body,
-          created_at: "2026-06-21T10:00:00.000+09:00",
-        },
-      });
-      return;
-    }
+      const comment = {
+        id: 1,
+        commentable_id: 1,
+        body:
+          "件名: 【GM再提出】修正をお願いします\n\n" +
+          `技大祭企画 代表 山田太郎 様\n\n${payload.body}`,
+        mail_delivery_status:
+          payload.body === "送信失敗テスト" ? "failed" : "sent",
+        created_at: "2026-06-21T10:00:00.000+09:00",
+      };
 
-    if (url.pathname === "/api/v1/mail_deliveries" && request.method === "POST") {
-      const payload = await readBody(request);
-      requests.push({ method: "POST", path: url.pathname, payload });
-      if (payload.template_values?.resubmit_memo === "送信失敗テスト") {
-        sendJson(response, 500, {
-          status: { code: 500, message: "Internal Server Error" },
-          data: [],
+      if (payload.body === "送信失敗テスト") {
+        sendJson(response, 502, {
+          status: { code: 502, message: "Mail delivery failed" },
+          data: comment,
         });
         return;
       }
 
+      sendJson(response, 201, {
+        status: { code: 201, message: "Created" },
+        data: comment,
+      });
+      return;
+    }
+
+    if (
+      url.pathname ===
+        "/api/v1/resend_health_center_submission_status_comment_mail/1" &&
+      request.method === "POST"
+    ) {
+      requests.push({ method: "POST", path: url.pathname, payload: {} });
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
-        data: [],
+        data: {
+          id: 1,
+          commentable_id: 1,
+          body:
+            "件名: 【GM再提出】修正をお願いします\n\n" +
+            "技大祭企画 代表 山田太郎 様\n\n送信失敗テスト",
+          mail_delivery_status: "sent",
+          created_at: "2026-06-21T10:00:00.000+09:00",
+        },
       });
       return;
     }

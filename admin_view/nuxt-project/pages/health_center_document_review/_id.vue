@@ -465,8 +465,22 @@
             >
               <summary>
                 {{ formatCommentTimestamp(comment.created_at) }}
+                <span
+                  class="mail-delivery-status"
+                  :class="mailDeliveryStatusClass(comment.mail_delivery_status)"
+                >
+                  {{ mailDeliveryStatusLabel(comment.mail_delivery_status) }}
+                </span>
               </summary>
               <p class="comment-body">{{ comment.body }}</p>
+              <CommonButton
+                v-if="comment.mail_delivery_status === 'failed'"
+                iconName="send"
+                :on_click="() => resendCommentMail(comment)"
+                :disabled="isSendingMessage || resendingCommentId === comment.id"
+              >
+                {{ resendingCommentId === comment.id ? "再送信中" : "再送信" }}
+              </CommonButton>
             </details>
             <p v-if="sortedComments.length === 0">送信履歴はまだありません</p>
           </div>
@@ -569,10 +583,11 @@ const HEALTH_CENTER_SHOW_ENDPOINT =
   "/api/v1/get_health_center_submission_status_show_for_admin_view/";
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/upsert_health_center_submission_status";
-const HEALTH_CENTER_COMMENT_CREATE_ENDPOINT =
-  "/api/v1/create_health_center_submission_status_comment";
+const HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT =
+  "/api/v1/create_health_center_submission_status_comment_mail";
+const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
+  "/api/v1/resend_health_center_submission_status_comment_mail";
 const MESSAGE_TEMPLATES_ENDPOINT = "/api/v1/message_templates";
-const MAIL_DELIVERIES_ENDPOINT = "/api/v1/mail_deliveries";
 const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
@@ -723,6 +738,7 @@ export default {
       messageTemplates: [],
       selectedMessageTemplateId: "",
       isSendingMessage: false,
+      resendingCommentId: null,
       messageSendResult: "",
       isPreviewModalOpen: false,
     };
@@ -918,6 +934,14 @@ export default {
 
       return classMap[value] || classMap.unapproved;
     },
+    mailDeliveryStatusLabel(status) {
+      return status === "sent" ? "送信済み" : "未送信または送信失敗";
+    },
+    mailDeliveryStatusClass(status) {
+      return status === "sent"
+        ? "mail-delivery-status--sent"
+        : "mail-delivery-status--failed";
+    },
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
       const payload = {
@@ -973,44 +997,81 @@ export default {
 
       try {
         const commentRes = await this.$axios.$post(
-          HEALTH_CENTER_COMMENT_CREATE_ENDPOINT,
+          HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT,
           {
             group_id: this.group.group.id,
             application_type: BULK_MESSAGE_APPLICATION_TYPE,
+            message_template_id: this.selectedMessageTemplate.id,
             body,
           }
         );
-
-        // TODO: 再提出メール送信フローが正式実装されたら、コメント登録とメール送信の責務を整理する。
-        await this.$axios.$post(MAIL_DELIVERIES_ENDPOINT, {
-          to: this.group.user.email,
-          subject: this.selectedMessageTemplate.subject,
-          body: this.selectedMessageTemplate.body,
-          template_values: this.messageTemplateValues,
-        });
 
         if (submission && !submission.id && commentRes.data?.commentable_id) {
           submission.id = commentRes.data.commentable_id;
         }
 
-        const targetSubmission = submission || this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
-        if (targetSubmission) {
-          targetSubmission.comments = [
-            ...(targetSubmission.comments || []),
-            {
-              ...commentRes.data,
-            },
-          ];
-        }
+        this.upsertCommentInSubmission(commentRes.data);
         this.commentBody = "";
         this.messageSendResult = "メッセージを送信しました";
         return true;
       } catch (error) {
+        const savedComment = error?.response?.data?.data;
+        if (savedComment?.id) {
+          this.upsertCommentInSubmission(savedComment);
+          this.commentBody = "";
+          this.isPreviewModalOpen = false;
+        }
         this.messageSendResult = "メッセージの送信に失敗しました";
         return false;
       } finally {
         this.isSendingMessage = false;
       }
+    },
+    async resendCommentMail(comment) {
+      if (!comment?.id || this.isSendingMessage || this.resendingCommentId) {
+        return;
+      }
+
+      this.resendingCommentId = comment.id;
+      this.messageSendResult = "";
+      try {
+        const response = await this.$axios.$post(
+          `${HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT}/${comment.id}`
+        );
+        this.upsertCommentInSubmission(response.data);
+        this.messageSendResult = "メッセージを再送信しました";
+      } catch (error) {
+        const savedComment = error?.response?.data?.data;
+        if (savedComment?.id) {
+          this.upsertCommentInSubmission(savedComment);
+        }
+        this.messageSendResult = "メッセージの再送信に失敗しました";
+      } finally {
+        this.resendingCommentId = null;
+      }
+    },
+    upsertCommentInSubmission(comment) {
+      if (!comment?.id) return;
+
+      let targetSubmission = this.submissions.find(
+        (submission) => submission.id === comment.commentable_id
+      );
+      if (!targetSubmission) {
+        targetSubmission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
+      }
+      if (!targetSubmission) return;
+      if (!targetSubmission.id && comment.commentable_id) {
+        targetSubmission.id = comment.commentable_id;
+      }
+
+      const comments = targetSubmission.comments || [];
+      const commentIndex = comments.findIndex((item) => item.id === comment.id);
+      if (commentIndex >= 0) {
+        comments.splice(commentIndex, 1, { ...comments[commentIndex], ...comment });
+      } else {
+        comments.push(comment);
+      }
+      targetSubmission.comments = [...comments];
     },
     openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
@@ -1548,6 +1609,28 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+}
+
+.mail-delivery-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.mail-delivery-status--sent {
+  background: #e7f5ec;
+  color: #1f7a3f;
+}
+
+.mail-delivery-status--failed {
+  background: #fff3dc;
+  color: #9a5b00;
 }
 
 @media (max-width: 900px) {
