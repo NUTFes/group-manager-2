@@ -38,7 +38,7 @@ class Employee < ApplicationRecord
   private
 
   def ensure_health_center_submission_status
-    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
       group_id: group_id,
       application_type: :employee,
       status: :unapproved
