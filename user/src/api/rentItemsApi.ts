@@ -182,7 +182,19 @@ export const useMutateRentalOrders = () => {
         }
       }
 
-      await Promise.all(promises);
+      // 💡 Promise.all から Promise.allSettled に変更（全員の結果を安全に待つ）
+      const results = await Promise.allSettled(promises);
+
+      // いずれかのリクエストでエラー（rejected）が発生しているか確認
+      const rejectedResult = results.find((r) => r.status === 'rejected') as
+        | PromiseRejectedResult
+        | undefined;
+
+      if (rejectedResult) {
+        // 失敗したエラーを throw して、安全に下の catch ブロックへ流す
+        throw rejectedResult.reason;
+      }
+
       return { success: true };
     } catch (error) {
       console.error('物品申請エラー:', error);
@@ -197,7 +209,16 @@ export const useMutateRentalOrders = () => {
         remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
       );
 
-      await Promise.all(promises);
+      // 💡 削除側も同様に、複数同時エラーでクラッシュしないよう allSettled に変更
+      const results = await Promise.allSettled(promises);
+      const rejectedResult = results.find((r) => r.status === 'rejected') as
+        | PromiseRejectedResult
+        | undefined;
+
+      if (rejectedResult) {
+        throw rejectedResult.reason;
+      }
+
       return { success: true };
     } catch (error) {
       console.error('物品申請削除エラー:', error);
