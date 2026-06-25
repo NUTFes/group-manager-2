@@ -1,0 +1,35 @@
+---
+paths:
+  "/api/v1/get_project_check_list_pdf/{group_id}":
+    get:
+      tags:
+      - api/v1/output_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OutputPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: api/v1/output_pdf description
+        '422':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OutputPdf"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
