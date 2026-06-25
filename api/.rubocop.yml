@@ -221,6 +221,10 @@ Style/StringLiteralsInInterpolation:
 Style/RescueModifier:
   Enabled: false
 
+# return nil は return に統一
+Style/ReturnNil:
+  Enabled: true
+
 # ============================================
 # Metrics（複雑さ・サイズ制限）
 #   ※ 既存コードを尊重して多くを無効化/緩和

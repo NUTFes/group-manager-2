@@ -47,7 +47,7 @@ class StageOrder < ApplicationRecord
 
   def _stage_name(stage_id)
     if Stage.where(id: stage_id).empty?
-      return nil
+      return
     else
       return Stage.find(stage_id).name
     end

@@ -38,7 +38,7 @@ class PlaceOrder < ApplicationRecord
   # 会場が存在するかを確認したのちnameを返す
   def _place_name(place_id)
     if Place.where(id: place_id).empty?
-      return nil
+      return
     else
       return Place.find(place_id).name
     end
