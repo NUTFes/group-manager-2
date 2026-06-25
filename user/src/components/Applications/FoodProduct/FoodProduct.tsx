@@ -174,7 +174,7 @@ const FoodProduct: FC<FoodProductProps> = ({
     <AccordionMenu
       title={foodProductViewTexts.title}
       isEdit={!isDeadline}
-      isExist={isRegistered}
+      isExist={!!foodProducts && foodProducts.length > 0}
       required
       status={status}
     >

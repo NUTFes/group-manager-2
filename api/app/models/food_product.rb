@@ -40,7 +40,7 @@ class FoodProduct < ApplicationRecord
   def ensure_health_center_submission_status
     return unless Group.exists?(group_id)
 
-    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
       group_id: group_id,
       application_type: :food_product,
       status: :unapproved

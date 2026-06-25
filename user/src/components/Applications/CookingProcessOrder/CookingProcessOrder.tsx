@@ -38,8 +38,8 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     <AccordionMenu
       title={cookingProcessOrderTexts.title}
       isEdit={!isDeadline}
-      isExist={isRegistered}
-      isRegistered={isRegistered}
+      isExist={!!isExist}
+      isRegistered={!!isExist}
       required
       status={status}
     >
