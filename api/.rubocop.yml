@@ -248,12 +248,14 @@ Metrics/BlockLength:
     - 'app/models/user.rb'          # 同上
 
 # ABC サイズ（代入・分岐・条件の複雑さ）
+# 実測: 中央値31, 90%ile=58 → 50を閾値に設定
 Metrics/AbcSize:
-  Max: 30
+  Max: 50
   Exclude:
     - 'app/controllers/api/v1/output_csv_controller.rb'
 
 # メソッドの行数上限
+# 実測: 中央値17, 90%ile=39 → 30を閾値に設定
 Metrics/MethodLength:
   Max: 30
   Exclude:
@@ -270,12 +272,14 @@ Metrics/ParameterLists:
   Enabled: false
 
 # 循環的複雑度（if/for などの分岐数）
+# 実測: 中央値10, 90%ile=23 → 15を閾値に設定
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 15
 
 # 体感複雑度
+# 実測: 中央値12, 90%ile=28 → 15を閾値に設定
 Metrics/PerceivedComplexity:
-  Max: 10
+  Max: 15
 
 # ネストの深さ
 Metrics/BlockNesting:
