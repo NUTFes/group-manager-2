@@ -165,7 +165,7 @@
                 <th>準備・片付け・演奏時間</th>
               </tr>
               <tr v-for="(orderWrapper, index) in group.stage_orders" :key="index" class="selectable-row" @click="openModal('stage_order', orderWrapper)">
-                <td>{{ [true, 'true', 1, '1'].includes(orderWrapper.stage_order.is_sunny) ? '晴れ' : '雨' }}</td>
+                <td>{{ formatWeather(orderWrapper.stage_order.is_sunny) }}</td>
                 <td>
                   1: {{ orderWrapper.stage_order.stage_first_name }}<br>
                   2: {{ orderWrapper.stage_order.stage_second_name }}
@@ -468,6 +468,7 @@ import StageCommonOptionEditModal from "~/components/edit-modals/StageCommonOpti
 import StageOrderEditModal from "~/components/edit-modals/StageOrderEditModal.vue";
 import SubRepEditModal from "~/components/edit-modals/SubRepEditModal.vue";
 import VenueMapEditModal from "~/components/edit-modals/VenueMapEditModal.vue";
+import { formatWeather } from '~/utils/constants';
 
 export default {
   components: {
@@ -541,6 +542,7 @@ export default {
     await this.fetchAllGroupIds();
   },
   methods: {
+    formatWeather,
     async fetchData(silent = false) {
       if (!silent) this.loading = true;
       try {

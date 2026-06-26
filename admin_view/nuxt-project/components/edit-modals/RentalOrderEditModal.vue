@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      rentalItemID: null,
+      rentalItemID: "",
       num: null,
       rentableItemList: [],
     };
@@ -49,7 +49,7 @@ export default {
       immediate: true,
       handler() {
         const rentalOrder = this.getRentalOrder();
-        this.rentalItemID = rentalOrder.rental_item_id ?? null;
+        this.rentalItemID = rentalOrder.rental_item_id ?? "";
         this.num = rentalOrder.num ?? null;
       },
     },

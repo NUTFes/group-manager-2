@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>晴れ希望</th>
-            <td>{{ [true, 'true', 1, '1'].includes(stageOrder.stage_order.is_sunny) ? '晴れ' : '雨' }}</td>
+            <td>{{ formatWeather(stageOrder.stage_order.is_sunny) }}</td>
           </tr>
           <tr>
             <th>希望日</th>
@@ -232,6 +232,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatWeather, timeBoxOptions } from '~/utils/constants';
 export default {
   watchQuery: ["page"],
   data() {
@@ -245,31 +246,7 @@ export default {
         { id: 1, text: "はい", value: true },
         { id: 2, text: "いいえ", value: false },
       ],
-      timeBox: [
-        "5分",
-        "10分",
-        "15分",
-        "20分",
-        "25分",
-        "30分",
-        "35分",
-        "40分",
-        "45分",
-        "50分",
-        "55分",
-        "60分",
-        "65分",
-        "70分",
-        "75分",
-        "80分",
-        "90分",
-        "95分",
-        "100分",
-        "105分",
-        "110分",
-        "115分",
-        "120分",
-      ],
+      timeBox: timeBoxOptions,
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
       minute_range: [
         "00",
@@ -335,6 +312,7 @@ export default {
     }
   },
   methods: {
+    formatWeather,
     async openEditModal() {
       const groupsListUrl =
         "/api/v1/get_groups_refinemented_by_current_fes_year";

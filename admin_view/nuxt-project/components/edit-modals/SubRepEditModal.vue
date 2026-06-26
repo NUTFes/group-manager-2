@@ -10,16 +10,22 @@
         <input v-model="studentId" placeholder="入力してください" />
       </div>
       <div>
-        <h3>学科ID</h3>
-        <input
-          v-model="departmentId"
-          type="number"
-          placeholder="入力してください"
-        />
+        <h3>学科</h3>
+        <select v-model="departmentId">
+          <option disabled value="">選択してください</option>
+          <option v-for="department in departmentList" :key="department.id" :value="department.id">
+            {{ department.name }}
+          </option>
+        </select>
       </div>
       <div>
-        <h3>学年ID</h3>
-        <input v-model="gradeId" type="number" placeholder="入力してください" />
+        <h3>学年</h3>
+        <select v-model="gradeId">
+          <option disabled value="">選択してください</option>
+          <option v-for="grade in gradeList" :key="grade.id" :value="grade.id">
+            {{ grade.name }}
+          </option>
+        </select>
       </div>
       <div>
         <h3>電話番号</h3>
@@ -37,6 +43,8 @@
 </template>
 
 <script>
+import { departmentList, gradeList } from "../../utils/constants";
+
 export default {
   props: {
     subRep: {
@@ -49,10 +57,12 @@ export default {
       groupId: null,
       name: null,
       studentId: null,
-      departmentId: null,
-      gradeId: null,
+      departmentId: "",
+      gradeId: "",
       tel: null,
       email: null,
+      departmentList,
+      gradeList,
     };
   },
   watch: {
@@ -63,8 +73,8 @@ export default {
         this.groupId = sr.group_id || this.$route.params.id;
         this.name = sr.name || null;
         this.studentId = sr.student_id || null;
-        this.departmentId = sr.department_id || null;
-        this.gradeId = sr.grade_id || null;
+        this.departmentId = sr.department_id || "";
+        this.gradeId = sr.grade_id || "";
         this.tel = sr.tel || null;
         this.email = sr.email || null;
       },

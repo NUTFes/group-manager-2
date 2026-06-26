@@ -66,8 +66,8 @@ export default {
       ],
       shopList: [],
       items: null,
-      shopID: null,
-      isFresh: null,
+      shopID: "",
+      isFresh: "",
       purchase_date: null,
       url: null,
       remark: null,
@@ -79,8 +79,8 @@ export default {
       handler() {
         const purchaseList = this.getPurchaseList();
         this.items = purchaseList.items || null;
-        this.shopID = purchaseList.shop_id || null;
-        this.isFresh = purchaseList.is_fresh ?? null;
+        this.shopID = purchaseList.shop_id || "";
+        this.isFresh = purchaseList.is_fresh ?? "";
         this.purchase_date = purchaseList.purchase_date || null;
         this.url = purchaseList.url || null;
         this.remark = purchaseList.remark || null;

@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import { timeBoxOptions } from "../../utils/constants";
+
 export default {
   props: {
     stageOrder: {
@@ -90,11 +92,7 @@ export default {
       cleanupTimeInterval: "",
       fesDatesList: [],
       stageList: [],
-      timeBox: [
-        "5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分",
-        "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分",
-        "105分", "110分", "115分", "120分"
-      ]
+      timeBox: timeBoxOptions,
     };
   },
   async mounted() {

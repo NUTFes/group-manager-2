@@ -38,7 +38,7 @@ export default {
       groupId: null,
       name: null,
       studentId: null,
-      stoolTestID: null,
+      stoolTestID: "",
       stoolTestList: [
         { id: 1, value: "検便準備中" },
         { id: 2, value: "検便無" },
@@ -54,7 +54,7 @@ export default {
         this.groupId = employee.group_id || this.$route.params.id;
         this.name = employee.name || null;
         this.studentId = employee.student_id || null;
-        this.stoolTestID = this.resolveStoolTestId(employee);
+        this.stoolTestID = this.resolveStoolTestId(employee) || "";
       },
     },
   },

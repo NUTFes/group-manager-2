@@ -2,16 +2,31 @@
   <EditModal @close="$emit('close')" title="会場申請の編集">
     <template v-slot:form>
       <div>
-        <h3>第1希望 (会場ID)</h3>
-        <input v-model="first" type="number" placeholder="入力してください" />
+        <h3>第1希望</h3>
+        <select v-model="first">
+          <option disabled value="">選択してください</option>
+          <option v-for="place in placeList" :key="place.id" :value="place.id">
+            {{ place.name }}
+          </option>
+        </select>
       </div>
       <div>
-        <h3>第2希望 (会場ID)</h3>
-        <input v-model="second" type="number" placeholder="入力してください" />
+        <h3>第2希望</h3>
+        <select v-model="second">
+          <option disabled value="">選択してください</option>
+          <option v-for="place in placeList" :key="place.id" :value="place.id">
+            {{ place.name }}
+          </option>
+        </select>
       </div>
       <div>
-        <h3>第3希望 (会場ID)</h3>
-        <input v-model="third" type="number" placeholder="入力してください" />
+        <h3>第3希望</h3>
+        <select v-model="third">
+          <option disabled value="">選択してください</option>
+          <option v-for="place in placeList" :key="place.id" :value="place.id">
+            {{ place.name }}
+          </option>
+        </select>
       </div>
       <div>
         <h3>備考</h3>
@@ -35,11 +50,16 @@ export default {
   data() {
     return {
       groupId: null,
-      first: null,
-      second: null,
-      third: null,
-      remark: null,
+      first: "",
+      second: "",
+      third: "",
+      remark: "",
+      placeList: [],
     };
+  },
+  async mounted() {
+    const res = await this.$axios.$get("/places");
+    this.placeList = res.data;
   },
   watch: {
     placeOrder: {
@@ -47,10 +67,10 @@ export default {
       handler() {
         const po = this.getPlaceOrder();
         this.groupId = po.group_id || this.$route.params.id;
-        this.first = po.first || null;
-        this.second = po.second || null;
-        this.third = po.third || null;
-        this.remark = po.remark || null;
+        this.first = po.first || "";
+        this.second = po.second || "";
+        this.third = po.third || "";
+        this.remark = po.remark || "";
       },
     },
   },
