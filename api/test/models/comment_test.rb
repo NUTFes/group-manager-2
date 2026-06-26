@@ -48,10 +48,10 @@ class CommentTest < ActiveSupport::TestCase
     assert comment.errors.added?(:body, :blank)
   end
 
-  # 初期値: メール送信結果が確定するまでは再送可能なfailedとして扱う。
-  test 'defaults mail delivery status to failed' do
+  # 初期値: 明示しないコメントはメール送信しない通常メモとして扱う。
+  test 'defaults mail delivery status to not_send' do
     comment = Comment.new(commentable: @submission_status, body: '再提出依頼')
 
-    assert comment.failed?
+    assert comment.not_send?
   end
 end

@@ -19,6 +19,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
   ]
+  before_action :require_mail_delivery_role!, only: %i[
+    create_health_center_submission_status_comment_mail
+    resend_health_center_submission_status_comment_mail
+  ]
 
   #---取得（GET）
 
@@ -148,7 +152,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   def resend_health_center_submission_status_comment_mail
     comment = Comment.includes(commentable: { group: :user }).find_by(id: params[:comment_id])
     return render json: fmt(not_found, [], 'comment not found'), status: :not_found if comment.nil?
-    return render json: fmt(unprocessable_entity, [], 'comment is already sent'), status: :unprocessable_entity if comment.sent?
+    return render json: fmt(unprocessable_entity, [], 'comment is not failed'), status: :unprocessable_entity unless comment.failed?
     return render json: fmt(unprocessable_entity, [], 'comment is not a health center submission status comment'), status: :unprocessable_entity unless comment.commentable.is_a?(HealthCenterSubmissionStatus)
 
     group = comment.commentable.group
@@ -236,6 +240,14 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     errors << 'message_template_id is required' if params[:message_template_id].blank?
     errors << 'body is required' if params[:body].to_s.strip.blank?
     errors
+  end
+
+  def require_mail_delivery_role!
+    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
+    return if [1, 2].include?(current_api_user&.role_id)
+
+    render json: fmt({ code: 403, message: 'Forbidden' }, []),
+           status: :forbidden
   end
 
   def save_failed_mail_comment!(body)

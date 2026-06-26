@@ -11,7 +11,11 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     ActionMailer::Base.deliveries.clear
 
     Role.create!(id: 1, name: 'admin')
+    Role.create!(id: 2, name: 'staff')
+    Role.create!(id: 3, name: 'user')
     @admin = create_user!(email: 'admin-health-mail@example.com', role_id: 1)
+    @staff = create_user!(email: 'staff-health-mail@example.com', role_id: 2)
+    @user = create_user!(email: 'user-health-mail@example.com', role_id: 3)
     @representative = create_user!(email: 'representative@example.com', role_id: 1)
     group_category = GroupCategory.create!(name: '食品販売')
     fes_year = FesYear.create!(year_num: 2026)
@@ -52,6 +56,35 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_equal 'sent', response.parsed_body['data']['mail_delivery_status']
     assert_includes comment.body, '件名: 再提出依頼: 技大祭企画'
     assert_includes comment.body, '食品名を修正してください。'
+  end
+
+  # 暫定権限の正常系。role_id 2 の staff でもメール送信付きメモを作成できることを確認する。
+  test 'staff can create comment with mail delivery' do
+    assert_difference('Comment.count', 1) do
+      assert_difference -> { ActionMailer::Base.deliveries.size }, 1 do
+        post '/api/v1/create_health_center_submission_status_comment_mail',
+             params: valid_params,
+             headers: auth_headers(@staff),
+             as: :json
+      end
+    end
+
+    assert_response :created
+    assert Comment.last.sent?
+  end
+
+  # 権限: role_id 1/2 以外は代表者へのメール送信付きメモを作成できない。
+  test 'general user cannot create comment with mail delivery' do
+    assert_no_difference('Comment.count') do
+      assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+        post '/api/v1/create_health_center_submission_status_comment_mail',
+             params: valid_params,
+             headers: auth_headers(@user),
+             as: :json
+      end
+    end
+
+    assert_response :forbidden
   end
 
   # 異常系: メール送信で例外が発生しても、再送可能なfailedメモを残す。
@@ -103,6 +136,69 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_response :success
     assert comment.reload.sent?
     assert_equal '再提出依頼: 技大祭企画', ActionMailer::Base.deliveries.last.subject
+  end
+
+  # 再送信の防御: 送信しない通常メモはAPIを直接叩いても再送できない。
+  test 'does not resend not_send comment' do
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :food_product,
+      status: :waiting_resubmission
+    )
+    comment = submission_status.comments.create!(
+      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      mail_delivery_status: :not_send
+    )
+
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post "/api/v1/resend_health_center_submission_status_comment_mail/#{comment.id}",
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  # 再送信の防御: 送信済みメモはAPIを直接叩いても再送できない。
+  test 'does not resend sent comment' do
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :food_product,
+      status: :waiting_resubmission
+    )
+    comment = submission_status.comments.create!(
+      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      mail_delivery_status: :sent
+    )
+
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post "/api/v1/resend_health_center_submission_status_comment_mail/#{comment.id}",
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  # 権限: role_id 1/2 以外は保存済みメモの再送信もできない。
+  test 'general user cannot resend comment mail' do
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :food_product,
+      status: :waiting_resubmission
+    )
+    comment = submission_status.comments.create!(
+      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      mail_delivery_status: :failed
+    )
+
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post "/api/v1/resend_health_center_submission_status_comment_mail/#{comment.id}",
+           headers: auth_headers(@user),
+           as: :json
+    end
+
+    assert_response :forbidden
   end
 
   private
