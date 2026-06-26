@@ -7,3 +7,24 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+        rental_item_id:
+          type: integer
+        num:
+          type: integer
+        stocker_place_id:
+          type: integer
+          nullable: true
+        rental_place_id:
+          type: integer
+          format: int64
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true

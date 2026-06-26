@@ -4,6 +4,10 @@ import {
   useUpsertCookingProcessOrders,
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
+import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -16,7 +20,8 @@ import {
 export const useCookingProcessOrder = (
   groupId: number | undefined,
   isDeadline: boolean,
-  isRegistered?: boolean
+  isRegistered?: boolean,
+  status?: HealthCenterSubmissionStatus
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -138,6 +143,11 @@ export const useCookingProcessOrder = (
     }
   }, [isDataLoading]);
 
+  const updateStatus = useUpdateSubmissionStatusFor(
+    groupId,
+    'cooking_process_order'
+  );
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };
@@ -156,11 +166,23 @@ export const useCookingProcessOrder = (
       await upsertCookingProcessOrders({
         body: { cooking_process_orders: payload },
       });
-
       await mutateCookingProcessOrders();
       toast.success(
         t('applications.cookingProcessOrder.messages.updateSuccess')
       );
+
+      // 再提出完了時
+      if (status !== 'unapproved') {
+        try {
+          await updateStatus('unapproved');
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.cookingProcessOrder.messages.statusUpdateFailed')
+          );
+          return;
+        }
+      }
       setIsEditing(false);
     } catch (e) {
       console.error(e);
@@ -178,7 +200,7 @@ export const useCookingProcessOrder = (
       return;
     }
 
-    if (isDeadline) {
+    if (isDeadline && status !== 'waiting_resubmission') {
       setIsEditing(false);
       return;
     }
@@ -198,6 +220,7 @@ export const useCookingProcessOrder = (
     isDeadline,
     isExist,
     isEditing,
+    status,
   ]);
 
   return {

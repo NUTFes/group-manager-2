@@ -52,6 +52,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
       : [];
 
   const [isEditing, setIsEditing] = useState(false);
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };

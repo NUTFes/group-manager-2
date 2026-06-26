@@ -5,6 +5,8 @@ class CookingProcessOrder < ApplicationRecord
   belongs_to :group
   belongs_to :food_product
 
+  after_create :ensure_health_center_submission_status
+
   # 全ての CookingProcessOrder レコードとそれらの group をプリロードしてハッシュで返すクラスメソッド
   def self.with_groups
     @records = CookingProcessOrder.preload(:group)
@@ -53,5 +55,15 @@ class CookingProcessOrder < ApplicationRecord
 
   def tent_for_submission
     tent_ja.presence || tent
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :cooking_process_order,
+      status: :unapproved
+    )
   end
 end

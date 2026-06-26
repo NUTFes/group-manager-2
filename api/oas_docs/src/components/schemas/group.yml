@@ -7,3 +7,33 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        project_name:
+          type: string
+        activity:
+          type: string
+        user_id:
+          type: integer
+        group_category_id:
+          type: integer
+        fes_year_id:
+          type: integer
+        committee:
+          type: boolean
+        is_international:
+          type: boolean
+        is_external:
+          type: boolean
+        uses_place_id:
+          type: integer
+          format: int64
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
