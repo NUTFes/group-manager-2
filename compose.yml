@@ -33,6 +33,8 @@ services:
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
     env_file: [webhook.env, ./api/.env]
+    environment:
+      - TZ=Asia/Tokyo
     depends_on: [db]
 
   admin_view:
