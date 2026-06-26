@@ -25,7 +25,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   validates :application_type, presence: true, uniqueness: { scope: :group_id }
   validates :status, presence: true
 
-  after_update_commit :notify_slack_if_resubmitted_to_unapproved
+  after_update_commit :notify_slack_on_unapproved_resubmission
 
   APPLICATION_TYPE_JA = {
     'food_product' => '販売品申請',
@@ -67,11 +67,11 @@ class HealthCenterSubmissionStatus < ApplicationRecord
 
   private
 
-  def notify_slack_if_resubmitted_to_unapproved
+  def notify_slack_on_unapproved_resubmission
     was_resubmission = status_before_last_save == 'waiting_resubmission'
-    is_unapproved_now = status == 'unapproved'
+    is_unapproved = status == 'unapproved'
 
-    if saved_change_to_status? && was_resubmission && is_unapproved_now
+    if saved_change_to_status? && was_resubmission && is_unapproved
       client = Slack::Web::Client.new
 
       application_type_name = APPLICATION_TYPE_JA[application_type.to_s] || application_type
