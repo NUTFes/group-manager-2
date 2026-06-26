@@ -79,19 +79,18 @@ class HealthCenterSubmissionStatus < ApplicationRecord
       project_name = group.project_name
       group_category_name = group.group_category&.name
 
-      message_text = "
-      「#{group_name}」が再提出されました
-      ーーーーーーーーーーーーーーーー
-      参加団体：#{group_name}
-      企画名：#{project_name}
-      参加形式：#{group_category_name}
+      message_text = <<~MSG
+        「#{group_name}」が再提出されました
+        ーーーーーーーーーーーーーーーー
+        参加団体：#{group_name}
+        企画名：#{project_name}
+        参加形式：#{group_category_name}
 
-      申請種類：#{application_type_name}
+        申請種類：#{application_type_name}
 
-
-      管理者画面にログインして内容を確認し、承認してください
-      ーーーーーーーーーーーーーーーー
-      "
+        管理者画面にログインして内容を確認し、承認してください
+        ーーーーーーーーーーーーーーーー
+      MSG
 
       begin
         client.chat_postMessage(
