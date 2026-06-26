@@ -20,8 +20,8 @@ class StageOrderTest < ActiveSupport::TestCase
     )
     
     stage_order.stub(:group, group) do
-      stage_order.stub(:stage_first, stage1) do
-        stage_order.stub(:stage_second, stage2) do
+      stage_order.stub(:first_stage_obj, stage1) do
+        stage_order.stub(:second_stage_obj, stage2) do
           info = stage_order.to_info_h
           
           assert_not_nil info
@@ -43,8 +43,8 @@ class StageOrderTest < ActiveSupport::TestCase
     stage_order = StageOrder.new(is_sunny: true)
     
     stage_order.stub(:group, nil) do
-      stage_order.stub(:stage_first, stage1) do
-        stage_order.stub(:stage_second, stage2) do
+      stage_order.stub(:first_stage_obj, stage1) do
+        stage_order.stub(:second_stage_obj, stage2) do
           assert_nil stage_order.to_info_h
         end
       end
@@ -58,8 +58,8 @@ class StageOrderTest < ActiveSupport::TestCase
     stage_order = StageOrder.new(is_sunny: true)
     
     stage_order.stub(:group, group) do
-      stage_order.stub(:stage_first, nil) do
-        stage_order.stub(:stage_second, stage2) do
+      stage_order.stub(:first_stage_obj, nil) do
+        stage_order.stub(:second_stage_obj, stage2) do
           assert_nil stage_order.to_info_h
         end
       end

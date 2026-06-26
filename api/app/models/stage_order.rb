@@ -4,9 +4,11 @@ class StageOrder < ApplicationRecord
   belongs_to :group
   belongs_to :fes_date
   has_one :assign_stage, dependent: :destroy
+  belongs_to :first_stage_obj, class_name: 'Stage', foreign_key: 'stage_first', optional: true
+  belongs_to :second_stage_obj, class_name: 'Stage', foreign_key: 'stage_second', optional: true
 
   def self.with_groups
-    @record = StageOrder.preload(:group)
+    @record = StageOrder.preload(:group, :first_stage_obj, :second_stage_obj)
                         .map do |stage_order|
       {
         stage_order: stage_order,
@@ -38,8 +40,8 @@ class StageOrder < ApplicationRecord
       day_num: fes_date.days_num,
       stage_first: stage_first,
       stage_second: stage_second,
-      stage_first_name: stage_first.nil? ? nil : _stage_name(stage_first),
-      stage_second_name: stage_second.nil? ? nil : _stage_name(stage_second),
+      stage_first_name: first_stage_obj&.name,
+      stage_second_name: second_stage_obj&.name,
       use_time_interval: use_time_interval,
       prepare_time_interval: prepare_time_interval,
       cleanup_time_interval: cleanup_time_interval,
@@ -48,13 +50,5 @@ class StageOrder < ApplicationRecord
       performance_end_time: performance_end_time,
       cleanup_end_time: cleanup_end_time
     }
-  end
-
-  def _stage_name(stage_id)
-    if Stage.where(id: stage_id).empty?
-      return nil
-    else
-      return Stage.find(stage_id).name
-    end
   end
 end
