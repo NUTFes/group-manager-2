@@ -80,7 +80,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
       group_category_name = group.group_category&.name
 
       message_text = <<~MSG
-        「#{group_name}」が再提出されました
+        参加団体「#{group_name}」の申請が再提出されました
         ーーーーーーーーーーーーーーーー
         参加団体：#{group_name}
         企画名：#{project_name}
