@@ -137,7 +137,7 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '200':
+        '201':
           description: api/v1/health_center_submission_statuses_api description
           content:
             application/json:
@@ -151,6 +151,12 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
         '502':
           description: api/v1/health_center_submission_statuses_api description
           content:
@@ -158,6 +164,8 @@ paths:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
       deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
       parameters:
       - name: comment_id
         in: path
@@ -165,6 +173,28 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/sync_health_center_submission_statuses":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
   "/api/v1/update_health_center_submission_status/{id}":
     patch:
       tags:
@@ -192,3 +222,25 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/upsert_health_center_submission_status":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"

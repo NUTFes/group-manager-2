@@ -20,6 +20,10 @@ import {
   useUpsertEmployees,
 } from '@/api/employeesApi';
 import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
@@ -364,16 +368,19 @@ export const useUnregisteredGroupHooks = (
  * @param groupId - 対象のグループID
  * @param isDeadline - 申請期限が過ぎているかどうか
  * @param mutateCheckAllRegisteredGroups - グループ登録状況を更新するコールバック
+ * @param status - 申請のステータス（APPLICATION_STATUSの値）
  * @returns コンポーネントで必要なすべての状態とハンドラ
  */
 export const useEmployeesApplicationHooks = (
   groupId: number,
   isDeadline?: boolean,
-  mutateCheckAllRegisteredGroups?: () => void
+  mutateCheckAllRegisteredGroups?: () => void,
+  status?: HealthCenterSubmissionStatus
 ) => {
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
+  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
@@ -384,6 +391,8 @@ export const useEmployeesApplicationHooks = (
     },
     onError: (message: string) => toast.error(message),
   };
+
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'employee');
 
   // ビジネスロジック関連のhooks
   const employeesBusinessHooks = useEmployeesBusinessHooks(
@@ -456,12 +465,29 @@ export const useEmployeesApplicationHooks = (
   };
 
   /**
+   * ステータス更新処理
+   */
+  const updateStatusToUnapproved = async () => {
+    if (status === 'unapproved') return true;
+    try {
+      await updateStatus('unapproved');
+      return true;
+    } catch (e) {
+      console.error(e);
+      toast.error(t('applications.employees.messages.statusUpdateFailed'));
+      return false;
+    }
+  };
+
+  /**
    * 「代表・副代表のみで活動」選択時の登録処理
    */
   const handleNoApplicationClick = async () => {
     try {
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
+
+      if (!(await updateStatusToUnapproved())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -485,6 +511,9 @@ export const useEmployeesApplicationHooks = (
         await employeesBusinessHooks.handleNoApplicationSubmit();
         await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       }
+
+      // 再提出完了時
+      if (!(await updateStatusToUnapproved())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -503,8 +532,10 @@ export const useEmployeesApplicationHooks = (
 
   /**
    * 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）
+   * 再提出待ちの場合は編集可能なので、deadline モードにしない
    */
-  const isDeadlineMode = isDeadline && !isUnregisteredGroup && !isEmployeesData;
+  const isDeadlineMode =
+    isDeadline && !isResubmission && !isUnregisteredGroup && !isEmployeesData;
 
   /**
    * フォームリスト表示状態かどうか
@@ -577,8 +608,10 @@ export const useEmployeesApplicationHooks = (
     handleEditClick,
     handleNoApplicationClick,
     handleSubmit,
+    updateStatus,
 
     // UI用プロパティ
     isDeadline,
+    isResubmission,
   };
 };

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
 import {
@@ -13,8 +14,8 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
+  status?: HealthCenterSubmissionStatus;
 };
-
 type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
@@ -24,6 +25,7 @@ type ContentProps = {
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
   groupId: number;
+  isResubmission: boolean;
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
   removeFoodProduct: (id: string) => Promise<void>;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
@@ -45,6 +47,7 @@ const Content: FC<ContentProps> = ({
   removeFoodProduct,
   setFoodProductsData,
   foodProductViewTexts,
+  isResubmission,
 }) => {
   if (isLoading) {
     return (
@@ -69,6 +72,19 @@ const Content: FC<ContentProps> = ({
       <div className="py-10 text-center text-red-500">
         {foodProductViewTexts.errors.fetch}
       </div>
+    );
+  }
+
+  if (isResubmission) {
+    return (
+      <FoodProductForm
+        groupId={groupId}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+      />
     );
   }
 
@@ -138,6 +154,7 @@ const FoodProduct: FC<FoodProductProps> = ({
   groupId,
   isDeadline,
   isRegistered,
+  status,
 }) => {
   const {
     formItem,
@@ -150,14 +167,16 @@ const FoodProduct: FC<FoodProductProps> = ({
     removeFoodProduct,
     setFoodProductsData,
     foodProductViewTexts,
-  } = useFoodProductHooks(groupId, isRegistered);
+    isResubmission,
+  } = useFoodProductHooks(groupId, isRegistered, status);
 
   return (
     <AccordionMenu
       title={foodProductViewTexts.title}
       isEdit={!isDeadline}
-      isExist={isRegistered}
+      isExist={!!foodProducts && foodProducts.length > 0}
       required
+      status={status}
     >
       <Content
         isLoading={isLoading}
@@ -165,6 +184,7 @@ const FoodProduct: FC<FoodProductProps> = ({
         isDeadline={isDeadline}
         isEditing={isEditing}
         toEdit={toEdit}
+        isResubmission={isResubmission}
         foodProducts={foodProducts}
         formItem={formItem}
         groupId={groupId}

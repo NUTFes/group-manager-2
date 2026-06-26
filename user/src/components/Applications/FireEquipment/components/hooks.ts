@@ -105,6 +105,7 @@ export const useFireEquipmentOrder = (
         });
       }
       await mutateFireEquipmentOrder();
+
       toast.success(fireEquipmentTexts.messages.noApplicationSuccess);
       handleEditCancel?.();
     } catch (error) {
@@ -154,6 +155,7 @@ export const useFireEquipmentOrder = (
         toast.success(fireEquipmentTexts.messages.registerSuccess);
       }
       await mutateFireEquipmentOrder();
+
       // 成功後に編集モードを終了
       handleEditCancel?.();
     } catch (error) {

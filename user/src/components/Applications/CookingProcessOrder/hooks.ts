@@ -1,9 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   useGetCookingProcessOrder,
   useUpsertCookingProcessOrders,
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
+import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -16,12 +20,13 @@ import {
 export const useCookingProcessOrder = (
   groupId: number | undefined,
   isDeadline: boolean,
-  isRegistered?: boolean
+  isRegistered?: boolean,
+  status?: HealthCenterSubmissionStatus
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const { t } = useTranslation('common');
+
   const cookingProcessOrderTexts = {
     title: t('applications.cookingProcessOrder.title'),
     general: {
@@ -138,6 +143,11 @@ export const useCookingProcessOrder = (
     }
   }, [isDataLoading]);
 
+  const updateStatus = useUpdateSubmissionStatusFor(
+    groupId,
+    'cooking_process_order'
+  );
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };
@@ -156,11 +166,23 @@ export const useCookingProcessOrder = (
       await upsertCookingProcessOrders({
         body: { cooking_process_orders: payload },
       });
-
       await mutateCookingProcessOrders();
       toast.success(
         t('applications.cookingProcessOrder.messages.updateSuccess')
       );
+
+      // 再提出完了時
+      if (status !== 'unapproved') {
+        try {
+          await updateStatus('unapproved');
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.cookingProcessOrder.messages.statusUpdateFailed')
+          );
+          return;
+        }
+      }
       setIsEditing(false);
     } catch (e) {
       console.error(e);
@@ -169,22 +191,37 @@ export const useCookingProcessOrder = (
   });
 
   useEffect(() => {
-    if (
-      hasInitializedEditing.current ||
-      isRegistered === undefined ||
-      isDataLoading
-    ) {
+    if (isRegistered === undefined || isDataLoading) {
       return;
     }
 
-    if (!isRegistered && cookingTargetFoodProducts.length > 0 && !isDeadline) {
-      setIsEditing(true);
-    } else {
+    if (cookingTargetFoodProducts.length === 0) {
       setIsEditing(false);
+      return;
     }
 
-    hasInitializedEditing.current = true;
-  }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline]);
+    if (isDeadline && status !== 'waiting_resubmission') {
+      setIsEditing(false);
+      return;
+    }
+
+    if (!isExist) {
+      setIsEditing(true);
+      return;
+    }
+
+    if (isEditing === null) {
+      setIsEditing(false);
+    }
+  }, [
+    isRegistered,
+    isDataLoading,
+    cookingTargetFoodProducts.length,
+    isDeadline,
+    isExist,
+    isEditing,
+    status,
+  ]);
 
   return {
     methods,

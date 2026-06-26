@@ -164,7 +164,6 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             try {
               const success = await onSubmit(data);
               if (success) {
-                toEdit();
                 // checkAllRegisteredGroupsを更新
                 if (mutateCheckAllRegisteredGroups) {
                   await mutateCheckAllRegisteredGroups();

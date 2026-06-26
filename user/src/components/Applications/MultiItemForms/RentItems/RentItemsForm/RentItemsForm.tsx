@@ -1,5 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { useRentItemsFormHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
@@ -14,12 +15,14 @@ type RentItemsFormProps = {
   groupId: number;
   groupCategoryId?: number; // 団体カテゴリID
   isDeadline: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const RentItemsForm: FC<RentItemsFormProps> = ({
   groupId,
   groupCategoryId,
   isDeadline,
+  status,
 }) => {
   const {
     form,
@@ -45,7 +48,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品ID別の最大個数を取得する関数
     rentItemsFormTexts,
-  } = useRentItemsFormHooks(groupId, groupCategoryId);
+  } = useRentItemsFormHooks(groupId, status, groupCategoryId);
 
   if (isLoading) {
     return (
@@ -79,7 +82,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </p>
             <p>{rentItemsFormTexts.summary.noApplication.description}</p>
           </div>
-          {isDeadline && (
+          {(isDeadline || status === 'waiting_resubmission') && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
               <Button
                 size="pc"
@@ -145,7 +148,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           ))}
         </div>
 
-        {isDeadline && (
+        {(isDeadline || status === 'waiting_resubmission') && (
           <div className="mt-4 flex w-full items-center justify-center gap-4">
             <Button
               size="pc"

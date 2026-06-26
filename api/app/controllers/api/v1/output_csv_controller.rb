@@ -315,13 +315,13 @@ class Api::V1::OutputCsvController < ApplicationController
       rep_student = nil
       # グループ内既出チェック用セット
       group_seen_student_ids = Set.new
-      group_seen_normalized = Set.new
+      group_seen_norm_and_id = Set.new
       if rep
         rep_norm = rep.name.to_s.gsub(/[[:space:]\u3000]+/, '')
         rep_student = rep.user_detail&.student_id
         # mark seen
         group_seen_student_ids << rep_student if rep_student.present?
-        group_seen_normalized << rep_norm if rep_norm.present?
+        group_seen_norm_and_id << [rep_norm, rep_student] if rep_norm.present?
         persons << { group_id: group.id, group: group.name, name: rep.name.to_s, student_id: rep_student, roles: ['代'] }
       end
 
@@ -334,7 +334,7 @@ class Api::V1::OutputCsvController < ApplicationController
         sub_rep_student = sub_rep.student_id
         # mark seen
         group_seen_student_ids << sub_rep_student if sub_rep_student.present?
-        group_seen_normalized << sub_rep_norm if sub_rep_norm.present?
+        group_seen_norm_and_id << [sub_rep_norm, sub_rep_student] if sub_rep_norm.present?
         persons << { group_id: group.id, group: group.name, name: sub_rep.name.to_s, student_id: sub_rep_student, roles: ['副'] }
       end
 
@@ -357,15 +357,15 @@ class Api::V1::OutputCsvController < ApplicationController
         if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
           group_dup_student_ids[group.id] << emp_student
           next
-        elsif emp_norm.present? && group_seen_normalized.include?(emp_norm)
-          group_dup_names[group.id] << emp_norm
+        elsif !student_id_dup_check_target && emp_norm.present? && group_seen_norm_and_id.include?([emp_norm, emp_student])
+          group_dup_names[group.id] << [emp_norm, emp_student]
           next
         end
 
         # 正常な従業員は persons に追加し、グループ内の既出に追加する
         persons << { group_id: group.id, group: group.name, name: emp_name, student_id: emp_student, roles: [] }
         group_seen_student_ids << emp_student if emp_student.present?
-        group_seen_normalized << emp_norm if emp_norm.present?
+        group_seen_norm_and_id << [emp_norm, emp_student] if emp_norm.present?
       end
     end
 
@@ -443,7 +443,7 @@ class Api::V1::OutputCsvController < ApplicationController
         remark = ''
         if p[:is_student] && p[:student_id].present?
           remark = '同一団体内で2重登録（非表示で対応）' if group_dup_student_ids[current_group_id].include?(p[:student_id])
-        elsif group_dup_names[current_group_id].include?(p[:normalized_name])
+        elsif group_dup_names[current_group_id].include?([p[:normalized_name], p[:student_id]])
           remark = '同一団体内で2重登録（非表示で対応）'
         end
 
