@@ -1,0 +1,22 @@
+---
+paths:
+  "/letter_opener":
+    get:
+      tags:
+      - letter_opener_web/engine
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/engine description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Engine"
+        '422':
+          description: letter_opener_web/engine description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Engine"
+      deprecated: false

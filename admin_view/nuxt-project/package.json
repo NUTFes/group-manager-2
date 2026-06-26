@@ -7,7 +7,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "format": "prettier --write --ignore-path .gitignore './**/*.{js,vue,json,css}'"
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,vue,json,css}'",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2",
+    "@playwright/test": "^1.61.0",
     "@vue/runtime-dom": "^3.5.13",
     "eslint": "7.32.0",
     "eslint-config-prettier": "^8.3.0",

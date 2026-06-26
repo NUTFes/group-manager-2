@@ -15,8 +15,6 @@ MessageTemplate.seed(:name, :locale,
                          申請内容について確認したいことがありますのでご連絡しております。
                          以下をご確認のうえ、GMにて再提出をお願いいたします。
 
-                         {resubmit_memo}
-
                          その他、ご不明点がございましたらお気軽にご質問ください。
 
                          ご確認よろしくお願いいたします。
@@ -40,8 +38,6 @@ MessageTemplate.seed(:name, :locale,
                          Please check the following and resubmit your application through GM.
 
                          Group: {group_name}
-
-                         {resubmit_memo}
 
                          If you have any questions, please feel free to contact us.
 

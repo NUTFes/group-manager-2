@@ -13,36 +13,47 @@ class MessageTemplateTest < ActiveSupport::TestCase
     template = MessageTemplate.new(
       valid_attributes.merge(
         subject: 'Subject {group_name} {unknown}',
-        body: '{group_name} {user_name} {resubmit_memo} {unknown}'
+        body: '{group_name} {user_name} {unknown}'
       )
     )
 
     values = {
       'group_name' => '企画団体',
-      'user_name' => '代表者',
-      'resubmit_memo' => '修正してください'
+      'user_name' => '代表者'
     }
 
     assert_equal 'Subject 企画団体 {unknown}', template.render_subject(values)
-    assert_equal '企画団体 代表者 修正してください {unknown}', template.render_body(values)
+    assert_equal '企画団体 代表者 {unknown}', template.render_body(values)
   end
 
   test 'renders supported variables with symbol keys' do
     template = MessageTemplate.new(
       valid_attributes.merge(
         subject: 'Subject {group_name}',
-        body: '{group_name} {user_name} {resubmit_memo}'
+        body: '{group_name} {user_name}'
       )
     )
 
     values = {
       group_name: '企画団体',
-      user_name: '代表者',
-      resubmit_memo: '修正してください'
+      user_name: '代表者'
     }
 
     assert_equal 'Subject 企画団体', template.render_subject(values)
-    assert_equal '企画団体 代表者 修正してください', template.render_body(values)
+    assert_equal '企画団体 代表者', template.render_body(values)
+  end
+
+  # テンプレート保存済みレコードに依存せず、任意の件名・本文文字列を送信直前に置換できることを確認する。
+  test 'renders text without a message template instance' do
+    text = '{group_name} 代表 {user_name} 様 {unknown}'
+
+    rendered_text = MessageTemplate.render_text(
+      text,
+      group_name: '企画団体',
+      user_name: '代表者'
+    )
+
+    assert_equal '企画団体 代表 代表者 様 {unknown}', rendered_text
   end
 
   test 'normalizes body newlines before save' do

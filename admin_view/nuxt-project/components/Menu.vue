@@ -226,6 +226,11 @@ export default {
         },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
+        {
+          title: "メールテンプレート",
+          icon: "mail",
+          click: "/message_templates",
+        },
         { title: "書類印刷", icon: "print", click: "/print" },
         {
           title: "ユーザー画面制御",
