@@ -25,7 +25,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   validates :application_type, presence: true, uniqueness: { scope: :group_id }
   validates :status, presence: true
 
-  after_update :notify_slack_if_resubmitted_to_unapproved
+  after_update_commit :notify_slack_if_resubmitted_to_unapproved
 
   APPLICATION_TYPE_JA = {
     'food_product' => '販売品申請',
@@ -78,7 +78,6 @@ class HealthCenterSubmissionStatus < ApplicationRecord
       group_name = group.name
       project_name = group.project_name
       group_category_name = group.group_category&.name
-      admin_url = "#{ENV.fetch('ADMIN_FRONT_URL', '')}/health_center_document_review/#{group_id}"
 
       message_text = "
       「#{group_name}」が再提出されました
@@ -91,7 +90,6 @@ class HealthCenterSubmissionStatus < ApplicationRecord
 
 
       管理者画面にログインして内容を確認し、承認してください
-      URL: #{admin_url}
       ーーーーーーーーーーーーーーーー
       "
 
