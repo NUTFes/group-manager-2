@@ -88,7 +88,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
       参加形式：#{group_category_name}
 
       申請種類：#{application_type_name}
-      
+
 
       管理者画面にログインして内容を確認し、承認してください
       URL: #{admin_url}
