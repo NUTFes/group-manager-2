@@ -807,6 +807,10 @@ export const useRentItemsFormHooks = (
       delete: t('form.actions.delete'),
       addItem: t('applications.rentItems.buttons.addItem'),
     },
+    deadline: {
+      title: t('applications.rentItems.deadline.title'),
+      description: t('applications.rentItems.deadline.description'),
+    },
   };
 
   return {

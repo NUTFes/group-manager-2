@@ -361,6 +361,10 @@
         "longTableLimit": "You can request at most one long table.",
         "tableOutdoorLimit": "Outdoor groups can request up to 20 tables.",
         "chairOutdoorLimit": "Outdoor groups can request up to 20 chairs."
+      },
+      "deadline": {
+        "title": "Application period has ended",
+        "description": "The deadline for rental item applications has passed. New applications are not accepted."
       }
     },
     "purchaseLists": {

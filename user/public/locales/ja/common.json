@@ -361,6 +361,10 @@
         "longTableLimit": "長机は1個までしか申請できません",
         "tableOutdoorLimit": "屋外団体は机を20個までしか申請できません",
         "chairOutdoorLimit": "屋外団体は椅子を20個までしか申請できません"
+      },
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "物品申請の締切期限が過ぎているため、新規申請はできません。"
       }
     },
     "purchaseLists": {
