@@ -43,6 +43,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     openEditMode,
     isEditMode,
     hasExplicitlyDeclinedItems,
+    isDeclinedStateLoading,
     handleFormSubmit,
     hideLocationTypeSelect, // 会場タイプ選択を非表示にするフラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
@@ -72,10 +73,12 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   }
 
   // 締め切り後で、データがない（未登録）かつ再提出でない場合
+  // isDeclinedStateLoadingがtrueの間は非同期チェック完了前なので、この分岐を保留する
   if (
+    !isDeclinedStateLoading &&
     !isDeadline &&
     !hasExisting &&
-    !hasExplicitlyDeclinedItems &&
+    hasExplicitlyDeclinedItems === false &&
     status !== 'waiting_resubmission'
   ) {
     return (
