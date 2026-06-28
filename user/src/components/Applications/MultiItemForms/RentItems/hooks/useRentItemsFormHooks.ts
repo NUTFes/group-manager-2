@@ -388,8 +388,9 @@ export const useRentItemsFormHooks = (
 
   // 物品申請を行わないことを明示的に記録するフラグ
   // null = 確認中, false = 申請しない記録なし, true = 申請しない記録あり
-  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] =
-    useState<boolean | null>(null);
+  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] = useState<
+    boolean | null
+  >(null);
 
   // 初期化時にUnRegisteredGroupをチェック
   useEffect(() => {
