@@ -66,6 +66,6 @@ class AssignRentalItemsController < ApplicationController
 
   # update用のストロングパラメータ (単数形)
   def assign_rental_item_params
-    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId)
+    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId, :rental_place_id)
   end
 end

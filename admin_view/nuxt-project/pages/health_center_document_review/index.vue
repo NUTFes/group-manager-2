@@ -329,7 +329,7 @@ export default {
         return true;
       } catch (error) {
         if (error?.response?.status === 401) {
-          this.$router.push("/");
+          this.$router.push("/reauthentication_required");
           return false;
         }
         throw error;
@@ -448,7 +448,7 @@ export default {
         alert(`申請ステータスを更新しました（${res.data.synced_count}件）`);
       } catch (error) {
         if (error?.response?.status === 401) {
-          this.$router.push("/");
+          this.$router.push("/reauthentication_required");
           return;
         }
         alert("申請ステータスの更新に失敗しました");

@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
@@ -11,6 +12,7 @@ type VenueMapProps = {
   groupId: number;
   isDeadline?: boolean;
   isRegistered?: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 // Content コンポーネントの props 型定義を修正
@@ -25,6 +27,7 @@ type ContentProps = {
   groupId: number;
   handleFormSubmitted: () => void;
   venueMapTexts: ReturnType<typeof useVenueMapHooks>['venueMapTexts'];
+  isResubmission?: boolean;
 };
 
 const Content: FC<ContentProps> = ({
@@ -38,6 +41,7 @@ const Content: FC<ContentProps> = ({
   groupId,
   handleFormSubmitted,
   venueMapTexts,
+  isResubmission,
 }) => {
   if (isLoading) {
     return <div className="py-10 text-center">{venueMapTexts.loading}</div>;
@@ -48,6 +52,17 @@ const Content: FC<ContentProps> = ({
       <div className="py-10 text-center text-red-500">
         {venueMapTexts.errors.fetch}
       </div>
+    );
+  }
+
+  if (isResubmission) {
+    return (
+      <VenueMapForm
+        groupId={groupId}
+        venueMap={venueMapData}
+        toEdit={toEdit} // フォーム側でキャンセル時に使用
+        onSubmitted={handleFormSubmitted}
+      />
     );
   }
 
@@ -81,10 +96,15 @@ const Content: FC<ContentProps> = ({
   );
 };
 
-const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
+const VenueMap: FC<VenueMapProps> = ({
+  groupId,
+  isDeadline,
+  isRegistered,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const venueMapHooks = useVenueMapHooks(groupId);
+  const venueMapHooks = useVenueMapHooks(groupId, status);
   const {
     venueMap,
     isLoading,
@@ -93,6 +113,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
     toEdit,
     handleFormSubmitted,
     venueMapTexts,
+    isResubmission,
   } = venueMapHooks;
 
   const formItems: FormItem[] = venueMap
@@ -122,6 +143,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
         isEdit={!isDeadline}
         isExist={isRegistered}
         required
+        status={status}
       >
         <Content
           isLoading={isLoading}
@@ -134,6 +156,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
           groupId={groupId}
           handleFormSubmitted={handleFormSubmitted}
           venueMapTexts={venueMapTexts}
+          isResubmission={isResubmission}
         />
       </AccordionMenu>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

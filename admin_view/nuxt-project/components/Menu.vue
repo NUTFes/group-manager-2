@@ -196,11 +196,6 @@ export default {
           click: "/public_relations",
         },
         {
-          title: "会場アナウンス文申請",
-          icon: "campaign",
-          click: "/announcement",
-        },
-        {
           title: "模擬店平面図申請",
           icon: "map",
           click: "/venue_maps",
@@ -231,6 +226,11 @@ export default {
         },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
+        {
+          title: "メールテンプレート",
+          icon: "mail",
+          click: "/message_templates",
+        },
         { title: "書類印刷", icon: "print", click: "/print" },
         {
           title: "ユーザー画面制御",
@@ -246,6 +246,7 @@ export default {
         { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
         { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
         { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
+        { title: "会場アナウンス文申請", icon: "campaign", click: "/announcement" },
       ],
       isOpened: false
     };

@@ -41,6 +41,28 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
+  "/rental_items/translate":
+    post:
+      tags:
+      - rental_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+        '422':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/RentalItem"
   "/rental_items/{id}":
     get:
       tags:

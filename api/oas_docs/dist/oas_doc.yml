@@ -1793,6 +1793,26 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_groups_for_fire_equipment_order":
+    get:
+      tags:
+      - api/v1/groups_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+      deprecated: false
   "/api/v1/get_groups_have_no_announcement":
     get:
       tags:
@@ -1959,6 +1979,36 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+  "/api/v1/create_health_center_submission_status_comment_mail":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '502':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
   "/api/v1/get_health_center_submission_status_counts/{group_id}":
     get:
       tags:
@@ -2037,6 +2087,71 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/resend_health_center_submission_status_comment_mail/{comment_id}":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '502':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+      parameters:
+      - name: comment_id
+        in: path
+        description: comment_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/sync_health_center_submission_statuses":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
   "/api/v1/update_health_center_submission_status/{id}":
     patch:
       tags:
@@ -2057,6 +2172,201 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/upsert_health_center_submission_status":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+  "/api/v1/mail_deliveries":
+    post:
+      tags:
+      - api/v1/mail_delivery
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/mail_delivery description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MailDelivery"
+        '422':
+          description: api/v1/mail_delivery description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MailDelivery"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MailDelivery"
+  "/api/v1/message_templates":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+    post:
+      tags:
+      - api/v1/message_template
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+  "/api/v1/message_templates/{id}":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - api/v1/message_template
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/message_template description
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - api/v1/message_template
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: api/v1/message_template description
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/message_templates/{id}/copy_source":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
       parameters:
       - name: id
         in: path
@@ -2292,6 +2602,38 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '404':
+          description: api/v1/output_csv description
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_fire_equipment_orders_csv/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+            text/csv:
+              schema:
+                type: string
         '404':
           description: api/v1/output_csv description
         '422':
@@ -2627,6 +2969,39 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_project_check_list_pdf/{group_id}":
+    get:
+      tags:
+      - api/v1/output_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OutputPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: api/v1/output_pdf description
+        '422':
+          description: api/v1/output_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OutputPdf"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_place_order_index_for_admin_view":
     get:
       tags:
@@ -2813,6 +3188,54 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrdersApi"
+  "/api/v1/output_pdf/power_orders":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+      deprecated: false
+  "/api/v1/output_pdf/rental_items":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PrintPdf"
+      deprecated: false
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
       tags:
@@ -6320,6 +6743,163 @@ paths:
         required: true
         schema:
           type: integer
+  "/letter_opener":
+    get:
+      tags:
+      - letter_opener_web/engine
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/engine description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Engine"
+        '422':
+          description: letter_opener_web/engine description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Engine"
+      deprecated: false
+  "/":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+  "/clear":
+    post:
+      tags:
+      - letter_opener_web/letter
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
+  "/{id}":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/{id}/attachments/{file}":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+      - name: file
+        in: path
+        description: file
+        required: true
+        schema:
+          type: string
+  "/{id}/delete":
+    post:
+      tags:
+      - letter_opener_web/letter
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/memos":
     get:
       tags:
@@ -8467,6 +9047,28 @@ paths:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
       deprecated: false
+    post:
+      tags:
+      - rental_item
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+        '422':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RentalItem"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/RentalItem"
+  "/rental_items/translate":
     post:
       tags:
       - rental_item
@@ -11140,6 +11742,8 @@ components:
           type: integer
           format: int64
     api.v1.HealthCenterSubmissionStatusesApi: {}
+    api.v1.MailDelivery: {}
+    api.v1.MessageTemplate: {}
     api.v1.OrderInfosApi:
       type: object
       properties:
@@ -11158,6 +11762,7 @@ components:
         id:
           type: integer
           format: int64
+    OutputPdf: {}
     api.v1.PlaceOrdersApi:
       type: object
       properties:
@@ -11170,6 +11775,13 @@ components:
         id:
           type: integer
           format: int64
+    PrintPdf:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    api.v1.PrintPdf: {}
     api.v1.PublicRelationsApi:
       type: object
       properties:
@@ -11260,6 +11872,27 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+        rental_item_id:
+          type: integer
+        num:
+          type: integer
+        stocker_place_id:
+          type: integer
+          nullable: true
+        rental_place_id:
+          type: integer
+          format: int64
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     AssignStage:
       type: object
       properties:
@@ -11341,6 +11974,36 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        project_name:
+          type: string
+        activity:
+          type: string
+        user_id:
+          type: integer
+        group_category_id:
+          type: integer
+        fes_year_id:
+          type: integer
+        committee:
+          type: boolean
+        is_international:
+          type: boolean
+        is_external:
+          type: boolean
+        uses_place_id:
+          type: integer
+          format: int64
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     GroupCategory:
       type: object
       properties:
@@ -11353,6 +12016,8 @@ components:
         id:
           type: integer
           format: int64
+    letteropenerweb.Engine: {}
+    letteropenerweb.Letter: {}
     Memo:
       type: object
       properties:
@@ -11390,12 +12055,6 @@ components:
           type: integer
           format: int64
     PowerOrder:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    PrintPdf:
       type: object
       properties:
         id:
@@ -11625,6 +12284,8 @@ components:
           schema:
             "$ref": "#/components/schemas/api.v1.GroupsApi"
     api.v1.HealthCenterSubmissionStatusesApi: {}
+    api.v1.MailDelivery: {}
+    api.v1.MessageTemplate: {}
     api.v1.OrderInfosApi:
       content:
         application/json:
@@ -11770,6 +12431,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/GroupIdentification"
+    letteropenerweb.Letter: {}
     Memo:
       content:
         application/json:
