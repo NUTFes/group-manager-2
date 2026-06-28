@@ -72,7 +72,12 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   }
 
   // 締め切り後で、データがない（未登録）かつ再提出でない場合
-  if (!isDeadline && !hasExisting && !hasExplicitlyDeclinedItems && status !== 'waiting_resubmission') {
+  if (
+    !isDeadline &&
+    !hasExisting &&
+    !hasExplicitlyDeclinedItems &&
+    status !== 'waiting_resubmission'
+  ) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
         <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
