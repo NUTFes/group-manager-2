@@ -387,8 +387,10 @@ export const useRentItemsFormHooks = (
   ]);
 
   // 物品申請を行わないことを明示的に記録するフラグ
-  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] =
-    useState<boolean>(false);
+  // null = 確認中, false = 申請しない記録なし, true = 申請しない記録あり
+  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] = useState<
+    boolean | null
+  >(null);
 
   // 初期化時にUnRegisteredGroupをチェック
   useEffect(() => {
@@ -397,9 +399,12 @@ export const useRentItemsFormHooks = (
         const result = await checkUnRegisteredGroup(currentGroupId, 0);
         if (result.success && result.exists) {
           setHasExplicitlyDeclinedItems(true);
+        } else {
+          setHasExplicitlyDeclinedItems(false);
         }
       } catch (error) {
         console.error('UnRegisteredGroupの確認エラー:', error);
+        setHasExplicitlyDeclinedItems(false);
       }
     };
 
@@ -412,6 +417,10 @@ export const useRentItemsFormHooks = (
     checkUnRegisteredGroup,
     currentGroupId,
   ]);
+
+  // UnRegisteredGroup確認が完了するまで締切分岐を保留するためのフラグ
+  const isDeclinedStateLoading =
+    hasExplicitlyDeclinedItems === null && rentalOrders.length === 0;
 
   // 互換性チェックと自動会場タイプ変更のための特別なフラグ
   const [ignoreItemChanges, setIgnoreItemChanges] = useState<boolean>(false);
@@ -807,6 +816,10 @@ export const useRentItemsFormHooks = (
       delete: t('form.actions.delete'),
       addItem: t('applications.rentItems.buttons.addItem'),
     },
+    deadline: {
+      title: t('applications.rentItems.deadline.title'),
+      description: t('applications.rentItems.deadline.description'),
+    },
   };
 
   return {
@@ -829,6 +842,7 @@ export const useRentItemsFormHooks = (
     openEditMode,
     isEditMode,
     hasExplicitlyDeclinedItems,
+    isDeclinedStateLoading,
     resetFormToDefault,
     handleFormSubmit,
     hideLocationTypeSelect, // 団体タイプに応じたUI表示制御フラグ
