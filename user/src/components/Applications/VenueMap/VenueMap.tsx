@@ -1,7 +1,10 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import Image from 'next/image';
 import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
+import { FormItem } from '@/components/FormList/type';
+import Modal from '@/components/Modal/Modal';
 import VenueMapForm from './VenueMapForm';
 import { useVenueMapHooks } from './hooks';
 
@@ -20,7 +23,7 @@ type ContentProps = {
   isEditing: boolean;
   toEdit: () => void;
   venueMapData: ReturnType<typeof useVenueMapHooks>['venueMap'];
-  formItems: ReturnType<typeof useVenueMapHooks>['formItems'];
+  formItems: FormItem[];
   groupId: number;
   handleFormSubmitted: () => void;
   venueMapTexts: ReturnType<typeof useVenueMapHooks>['venueMapTexts'];
@@ -99,6 +102,8 @@ const VenueMap: FC<VenueMapProps> = ({
   isRegistered,
   status,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const venueMapHooks = useVenueMapHooks(groupId, status);
   const {
     venueMap,
@@ -106,34 +111,70 @@ const VenueMap: FC<VenueMapProps> = ({
     hasError,
     isEditing,
     toEdit,
-    formItems,
     handleFormSubmitted,
     venueMapTexts,
     isResubmission,
   } = venueMapHooks;
 
+  const formItems: FormItem[] = venueMap
+    ? [
+        {
+          label: venueMapTexts.summary.pictureLabel,
+          content: venueMap.picturePath ? (
+            <Image
+              src={venueMap.picturePath}
+              alt={venueMap.pictureName ?? ''}
+              width={512}
+              height={512}
+              className="h-auto w-full cursor-pointer rounded object-contain"
+              onClick={() => setIsModalOpen(true)}
+            />
+          ) : (
+            venueMapTexts.summary.notSet
+          ),
+        },
+      ]
+    : [];
+
   return (
-    <AccordionMenu
-      title={venueMapTexts.title}
-      isEdit={!isDeadline} // 締め切り前なら編集アイコン表示
-      isExist={isRegistered}
-      required // 必須項目であることを示す
-      status={status} // 申請のステータスを渡す
-    >
-      <Content
-        isLoading={isLoading}
-        hasError={hasError}
-        isDeadline={isDeadline}
-        isEditing={isEditing}
-        toEdit={toEdit}
-        venueMapData={venueMap}
-        formItems={formItems}
-        groupId={groupId}
-        handleFormSubmitted={handleFormSubmitted}
-        venueMapTexts={venueMapTexts}
-        isResubmission={isResubmission}
-      />
-    </AccordionMenu>
+    <>
+      <AccordionMenu
+        title={venueMapTexts.title}
+        isEdit={!isDeadline}
+        isExist={isRegistered}
+        required
+        status={status}
+      >
+        <Content
+          isLoading={isLoading}
+          hasError={hasError}
+          isDeadline={isDeadline}
+          isEditing={isEditing}
+          toEdit={toEdit}
+          venueMapData={venueMap}
+          formItems={formItems}
+          groupId={groupId}
+          handleFormSubmitted={handleFormSubmitted}
+          venueMapTexts={venueMapTexts}
+          isResubmission={isResubmission}
+        />
+      </AccordionMenu>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {venueMap?.picturePath && (
+          <div
+            className="relative h-[80vh] w-[80vw] max-w-[880px]"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <Image
+              src={venueMap.picturePath}
+              alt={venueMap.pictureName ?? ''}
+              fill
+              className="object-contain"
+            />
+          </div>
+        )}
+      </Modal>
+    </>
   );
 };
 

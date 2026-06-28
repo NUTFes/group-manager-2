@@ -6,7 +6,6 @@ import {
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
-import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
 
 export const useVenueMapHooks = (
@@ -65,22 +64,12 @@ export const useVenueMapHooks = (
     },
   };
 
-  const formItems: FormItem[] = venueMap
-    ? [
-        {
-          label: venueMapTexts.summary.pictureLabel,
-          content: venueMap.pictureName || venueMapTexts.summary.notSet,
-        },
-      ]
-    : [];
-
   return {
     venueMap,
     isLoading: isFetching && !hasLoadedOnce,
     hasError: !!fetchError,
     isEditing,
     toEdit,
-    formItems,
     mutate: mutateVenueMap,
     handleFormSubmitted,
     venueMapTexts,
