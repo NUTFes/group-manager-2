@@ -21,7 +21,7 @@ type ContentProps = {
   isEditing: boolean;
   toEdit: () => void;
   venueMapData: ReturnType<typeof useVenueMapHooks>['venueMap'];
-  formItems: ReturnType<typeof useVenueMapHooks>['formItems'];
+  formItems: FormItem[];
   groupId: number;
   handleFormSubmitted: () => void;
   venueMapTexts: ReturnType<typeof useVenueMapHooks>['venueMapTexts'];
