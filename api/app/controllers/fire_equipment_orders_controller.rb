@@ -2,7 +2,6 @@
 
 class FireEquipmentOrdersController < ApplicationController
   before_action :set_fire_equipment_order, only: %i[show update destroy]
-  before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
   # GET /fire_equipment_orders
   def index
@@ -55,11 +54,8 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders/group/:group_id
   def get_by_group_id
-    if @fire_equipment_order
-      render json: fmt(ok, @fire_equipment_order)
-    else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
-    end
+    orders = FireEquipmentOrder.where(group_id: params[:group_id])
+    render json: fmt(ok, orders)
   end
 
   private
@@ -69,14 +65,6 @@ class FireEquipmentOrdersController < ApplicationController
       @fire_equipment_order = FireEquipmentOrder.find(params[:id])
     else
       render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}")
-    end
-  end
-
-  def set_fire_equipment_order_by_group_id
-    if FireEquipmentOrder.exists?(group_id: params[:group_id])
-      @fire_equipment_order = FireEquipmentOrder.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
     end
   end
 

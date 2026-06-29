@@ -69,6 +69,8 @@ export const useFireEquipmentTexts = () => {
       edit: t('form.actions.edit'),
       update: t('form.actions.save'),
       cancel: t('form.actions.cancel'),
+      noApplication: t('applications.fireEquipment.buttons.noApplication'),
+      add: t('form.actions.add'),
     },
     summary: {
       noApplicationLabel: t(

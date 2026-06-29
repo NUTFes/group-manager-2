@@ -924,6 +924,9 @@
           "no": "No"
         }
       },
+      "buttons": {
+        "noApplication": "Don't use fire equipment"
+      },
       "notes": {
         "quantity": "Half-width numbers only",
         "takeaway": "In principle, take fire equipment back with you every day unless you cannot do so.\nLeaving fire equipment inside the tent may cause a fire.",
