@@ -27,7 +27,7 @@ class StageOrder < ApplicationRecord
 
   def to_info_h
     return {
-      stage_order: nil? ? nil : self,
+      stage_order: self,
       is_sunny: is_sunny.nil?,
       year: fes_date.fes_year.year_num,
       date: fes_date.date,
@@ -47,7 +47,7 @@ class StageOrder < ApplicationRecord
 
   def _stage_name(stage_id)
     if Stage.where(id: stage_id).empty?
-      return nil
+      return
     else
       return Stage.find(stage_id).name
     end

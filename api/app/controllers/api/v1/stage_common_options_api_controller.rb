@@ -16,7 +16,7 @@ class Api::V1::StageCommonOptionsApiController < ApplicationController
     stage_common_options.map do |stage_common_option|
       {
         stage_common_option: stage_common_option,
-        group: stage_common_option.group.nil? ? nil : stage_common_option.group
+        group: stage_common_option.group
       }
     end
   end

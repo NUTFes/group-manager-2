@@ -30,7 +30,7 @@ class CookingProcessOrder < ApplicationRecord
   # food_product_id を受け取り、関連する調理工程、団体、販売品情報をハッシュで返す
   def self.with_group_by_food_product_id(food_product_id)
     food_product = FoodProduct.find_by(id: food_product_id)
-    return nil unless food_product
+    return unless food_product
 
     cooking_process_order = food_product.cooking_process_order
     {

@@ -21,9 +21,9 @@ class GroupIdentificationController < ApplicationController
         name: group.name,
         group_category_id: group.group_category.id,
         group_category: group.group_category.name,
-        number: group.number.nil? ? nil : group.number,
-        place: group.place.nil? ? nil : group.place,
-        stage: group.stage.nil? ? nil : group.stage,
+        number: group.number,
+        place: group.place,
+        stage: group.stage,
         created_at: group.group_identification&.created_at,
         updated_at: group.group_identification&.updated_at
 
