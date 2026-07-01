@@ -54,7 +54,7 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders/group/:group_id
   def get_by_group_id
-    orders = FireEquipmentOrder.where(group_id: params[:group_id])
+    orders = FireEquipmentOrder.where(group_id: params[:group_id]).order(:id)
     render json: fmt(ok, orders)
   end
 

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import {
   FireEquipmentFuel,
   FireEquipmentResponse,
@@ -7,6 +6,7 @@ import {
 } from '@/api/fireEquipmentApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
+import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import {
@@ -25,7 +25,7 @@ export const DEFAULT_FIRE_EQUIPMENT_ITEM = (): FireEquipmentItemValues => ({
 });
 
 const createDefaultItems = (
-  orders?: FireEquipmentResponse[]
+    orders?: FireEquipmentResponse[]
 ): FireEquipmentItemValues[] => {
   if (orders && orders.length > 0) {
     return orders.map((o) => ({
@@ -47,18 +47,19 @@ const isItemValid = (item: FireEquipmentItemValues): boolean => {
   if (!item.fuel) return false;
   if (!item.usage || item.usage.trim() === '') return false;
   return !(!item.isTakeaway && (item.remarks ?? '').trim() === '');
+
 };
 
 export const useFireEquipmentFormHooks = (
-  groupId: number,
-  existingOrders?: FireEquipmentResponse[],
-  onComplete?: () => Promise<void>
+    groupId: number,
+    existingOrders?: FireEquipmentResponse[],
+    onComplete?: () => Promise<void>
 ) => {
   const { t } = useTranslation('common');
   const { mutateFireEquipmentOrders } =
-    useGetFireEquipmentOrdersByGroupId(groupId);
+      useGetFireEquipmentOrdersByGroupId(groupId);
   const { postFireEquipmentOrder, patchFireEquipmentOrder } =
-    useFireEquipmentMutations();
+      useFireEquipmentMutations();
 
   const isEditing = !!existingOrders && existingOrders.length > 0;
 
@@ -81,26 +82,24 @@ export const useFireEquipmentFormHooks = (
     name: 'items',
   });
 
-  // watch() の代わりに useWatch で各フィールドを直接監視
   const items = useWatch({
     control,
     name: 'items',
   }) as FireEquipmentItemValues[];
 
-  // existingOrders が変わったらフォームをリセット
   const prevOrdersRef = useRef<string>('__initial__');
   useEffect(() => {
     const nextIds = (existingOrders ?? []).map((o) => o.id).join(',');
     if (prevOrdersRef.current !== nextIds) {
       reset(
-        { items: createDefaultItems(existingOrders) },
-        {
-          keepDirty: false,
-          keepErrors: false,
-          keepDirtyValues: false,
-          keepValues: false,
-          keepDefaultValues: false,
-        }
+          { items: createDefaultItems(existingOrders) },
+          {
+            keepDirty: false,
+            keepErrors: false,
+            keepDirtyValues: false,
+            keepValues: false,
+            keepDefaultValues: false,
+          }
       );
       prevOrdersRef.current = nextIds;
     }
@@ -115,47 +114,54 @@ export const useFireEquipmentFormHooks = (
   };
 
   const onSubmit = async (
-    formData: FireEquipmentFormValues
+      formData: FireEquipmentFormValues
   ): Promise<boolean> => {
     try {
-      await Promise.all(
-        formData.items.map((item, index) => {
-          const payload = {
-            group_id: groupId,
-            name: item.name,
-            quantity: item.quantity,
-            fuel: item.fuel,
-            usage: item.usage,
-            is_takeaway: item.isTakeaway,
-            remark: item.remarks || '',
-          };
-          const existingId = existingOrders?.[index]?.id;
-          if (existingId !== undefined) {
-            return patchFireEquipmentOrder(existingId, payload);
-          }
-          return postFireEquipmentOrder(payload);
-        })
+      // item.id を使って POST/PATCH を判断（index依存を排除）
+      const results = await Promise.allSettled(
+          formData.items.map((item) => {
+            const payload = {
+              group_id: groupId,
+              name: item.name,
+              quantity: item.quantity,
+              fuel: item.fuel,
+              usage: item.usage,
+              is_takeaway: item.isTakeaway,
+              remark: item.remarks || '',
+            };
+            if (item.id !== undefined) {
+              return patchFireEquipmentOrder(item.id, payload);
+            }
+            return postFireEquipmentOrder(payload);
+          })
       );
 
+      const hasFailure = results.some((r) => r.status === 'rejected');
+
+      // 成功・失敗に関わらず再取得して画面を最新状態に同期
+      await mutateFireEquipmentOrders();
+
+      if (hasFailure) {
+        toast.error(t('applications.fireEquipment.messages.submitFailed', { message: '' }));
+        return false;
+      }
+
       toast.success(
-        isEditing
-          ? t('applications.fireEquipment.messages.updateSuccess')
-          : t('applications.fireEquipment.messages.registerSuccess')
+          isEditing
+              ? t('applications.fireEquipment.messages.updateSuccess')
+              : t('applications.fireEquipment.messages.registerSuccess')
       );
 
       if (onComplete) {
         await onComplete();
-      } else {
-        await mutateFireEquipmentOrders();
       }
 
       return true;
     } catch (error) {
       console.error('火気申請送信エラー:', error);
-      const message = error instanceof Error ? error.message : String(error);
-      toast.error(
-        t('applications.fireEquipment.messages.submitFailed', { message })
-      );
+      // 内部エラーは console.error のみ、ユーザーには汎用メッセージを表示
+      toast.error(t('applications.fireEquipment.messages.submitFailed', { message: '' }));
+      await mutateFireEquipmentOrders();
       return false;
     }
   };

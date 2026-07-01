@@ -107,17 +107,19 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
           );
         })}
 
-        <div className="mt-4 flex w-full items-center justify-center gap-4">
-          <Button
-            size="pc"
-            color="main"
-            type="button"
-            icon="pencil"
-            onClick={toEdit}
-          >
-            {fireEquipmentFormTexts.buttons.edit}
-          </Button>
-        </div>
+        {toEdit && (
+            <div className="mt-4 flex w-full items-center justify-center gap-4">
+              <Button
+                  size="pc"
+                  color="main"
+                  type="button"
+                  icon="pencil"
+                  onClick={toEdit}
+              >
+                {fireEquipmentFormTexts.buttons.edit}
+              </Button>
+            </div>
+        )}
       </div>
     );
   }
