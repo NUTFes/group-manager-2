@@ -38,7 +38,9 @@ export type FireEquipmentResponse = {
   updated_at?: string;
 };
 
-const mapApiResponse = (api: FireEquipmentApiResponse): FireEquipmentResponse => ({
+const mapApiResponse = (
+  api: FireEquipmentApiResponse
+): FireEquipmentResponse => ({
   ...api,
   fuel: fuelStringToEnum[api.fuel] ?? FireEquipmentFuel.GAS_BOTTLE,
   is_takeaway: api.isTakeaway,
@@ -54,17 +56,21 @@ const API_ENDPOINTS = {
 };
 
 // グループIDで火気使用申請一覧を取得（配列返却）
-export const useGetFireEquipmentOrdersByGroupId = (groupId: number | undefined) => {
+export const useGetFireEquipmentOrdersByGroupId = (
+  groupId: number | undefined
+) => {
   const endpoint =
-      groupId !== undefined && groupId !== 0
-          ? `${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/group/${groupId}`
-          : null;
+    groupId !== undefined && groupId !== 0
+      ? `${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/group/${groupId}`
+      : null;
 
   const { data, error, isLoading, mutate } =
-      useAuthenticatedGet<ApiStatusResponse<FireEquipmentApiResponse[]>>(endpoint);
+    useAuthenticatedGet<ApiStatusResponse<FireEquipmentApiResponse[]>>(
+      endpoint
+    );
 
   const fireEquipmentOrders: FireEquipmentResponse[] =
-      data?.data?.map(mapApiResponse) ?? [];
+    data?.data?.map(mapApiResponse) ?? [];
 
   return {
     fireEquipmentOrders,
@@ -79,14 +85,20 @@ export const useFireEquipmentMutations = () => {
   const { post, patch, remove } = useApiMutations();
 
   const postFireEquipmentOrder = (
-      data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
+    data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
   ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
 
-  const patchFireEquipmentOrder = (id: number, data: Partial<FireEquipmentResponse>) =>
-      patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
+  const patchFireEquipmentOrder = (
+    id: number,
+    data: Partial<FireEquipmentResponse>
+  ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
 
   const deleteFireEquipmentOrder = (id: number) =>
-      remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
+    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 
-  return { postFireEquipmentOrder, patchFireEquipmentOrder, deleteFireEquipmentOrder };
+  return {
+    postFireEquipmentOrder,
+    patchFireEquipmentOrder,
+    deleteFireEquipmentOrder,
+  };
 };
