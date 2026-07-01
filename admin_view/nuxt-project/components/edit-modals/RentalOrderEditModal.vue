@@ -68,9 +68,8 @@ export default {
   methods: {
     getRentalOrder() {
       return (
-        this.rentalOrder?.rental_item?.rental_item ||
-        this.rentalOrder?.rental_item ||
         this.rentalOrder?.rental_order ||
+        this.rentalOrder?.rental_item?.rental_item ||
         this.rentalOrder ||
         {}
       );
