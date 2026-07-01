@@ -154,11 +154,23 @@ const FireEquipment: FC<FireEquipmentProps> = ({
         case 'form':
         default:
             content = (
-                <FireEquipmentForm
-                    groupId={groupId}
-                    existingOrders={isEditing ? fireEquipmentOrders : undefined}
-                    onComplete={handleFormComplete}
-                />
+                <div className="flex flex-col gap-6">
+                    <Radio
+                        label={t('applications.fireEquipment.radio.question')}
+                        value={getRadioValue(applyFireEquipment)}
+                        onChange={handleRadioChange}
+                        required
+                        options={radioOptions}
+                    />
+                    <p className="max-w-[400px] break-words text-xs text-[#484848]">
+                        {t('applications.fireEquipment.notes.excludedItems')}
+                    </p>
+                    <FireEquipmentForm
+                        groupId={groupId}
+                        existingOrders={isEditing ? fireEquipmentOrders : undefined}
+                        onComplete={handleFormComplete}
+                    />
+                </div>
             );
             break;
     }
