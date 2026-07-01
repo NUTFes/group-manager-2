@@ -141,8 +141,7 @@ const GroupCategoryContent = ({
           status={cookingProcessOrderSubmission?.status}
         />
         <FireEquipment
-          canAdd={userPageSettings?.addFireEquipmentOrder}
-          canEdit={userPageSettings?.isEditFireEquipmentOrder}
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -184,8 +183,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <FireEquipment
-          canAdd={userPageSettings?.addFireEquipmentOrder}
-          canEdit={userPageSettings?.isEditFireEquipmentOrder}
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -254,8 +252,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
-          canAdd={userPageSettings?.addFireEquipmentOrder}
-          canEdit={userPageSettings?.isEditFireEquipmentOrder}
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -292,8 +289,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
-          canAdd={userPageSettings?.addFireEquipmentOrder}
-          canEdit={userPageSettings?.isEditFireEquipmentOrder}
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
