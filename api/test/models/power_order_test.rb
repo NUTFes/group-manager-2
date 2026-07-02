@@ -9,6 +9,7 @@ class PowerOrderTest < ActiveSupport::TestCase
     @group = create_group!
   end
 
+  # 電力申請データ作成時に、対応する申請ステータスが初期作成されることを確認する。
   test 'creates default submission status after create' do
     assert_difference -> { HealthCenterSubmissionStatus.where(group: @group, application_type: :power_order).count }, 1 do
       PowerOrder.create!(

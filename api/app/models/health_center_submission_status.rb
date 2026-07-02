@@ -51,6 +51,8 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     find_or_create_by!(group_id: group_id, application_type: application_type) do |submission_status|
       submission_status.status = status
     end
+  rescue ActiveRecord::RecordNotUnique
+    find_by!(group_id: group_id, application_type: application_type)
   end
 
   def self.default_submissions_for(group)

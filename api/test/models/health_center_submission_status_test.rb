@@ -20,6 +20,7 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     )
   end
 
+  # 必須項目が揃っていればステータスレコードとして有効なことを確認する。
   test 'is valid with required data' do
     status = HealthCenterSubmissionStatus.new(
       group: @group,
@@ -30,6 +31,7 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     assert status.valid?
   end
 
+  # 同じ団体・同じ申請種別のステータスを重複作成できないことを確認する。
   test 'application_type must be unique per group' do
     HealthCenterSubmissionStatus.create!(
       group: @group,
@@ -47,6 +49,7 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     assert_not_empty duplicate.errors[:application_type]
   end
 
+  # ensure系APIが未作成なら作成し、既存なら同じレコードを更新することを確認する。
   test 'ensure_for_group_and_application_type creates or updates status' do
     status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -67,9 +70,26 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     assert_equal 'approved', updated.status
   end
 
+  # 電力申請・火器申請をステータス管理対象として扱えることを確認する。
   test 'application types include power and fire equipment orders' do
     assert_includes HealthCenterSubmissionStatus.application_types.keys, 'power_order'
     assert_includes HealthCenterSubmissionStatus.application_types.keys, 'fire_equipment_order'
+  end
+
+  # after_createなどから同時に初期ステータス作成が走っても、ユニーク制約競合で例外化しないことを確認する。
+  test 'insert_default_for_group_and_application_type returns existing record on duplicate insert' do
+    created = HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order
+    )
+
+    duplicate = HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order
+    )
+
+    assert_equal created.id, duplicate.id
+    assert_equal 1, HealthCenterSubmissionStatus.where(group: @group, application_type: :power_order).count
   end
 
   private
