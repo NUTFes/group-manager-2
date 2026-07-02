@@ -107,16 +107,12 @@ export const useFireEquipmentHooks = (groupId: number) => {
       } else {
         // 登録失敗時は再取得して現状を同期
         await mutateFireEquipmentOrders();
-        toast.error(
-          t('applications.fireEquipment.messages.submitFailed')
-        );
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
       }
     } catch (error) {
       console.error('火気不使用登録エラー:', error);
       await mutateFireEquipmentOrders();
-      toast.error(
-        t('applications.fireEquipment.messages.submitFailed')
-      );
+      toast.error(t('applications.fireEquipment.messages.submitFailed'));
     }
   };
 
@@ -141,18 +137,14 @@ export const useFireEquipmentHooks = (groupId: number) => {
       if (!result.success) {
         console.error('不使用解除エラー:', result.error);
         // 失敗時はエラートーストで通知
-        toast.error(
-          t('applications.fireEquipment.messages.submitFailed')
-        );
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
         return;
       }
       updateState({ applyFireEquipment: 'undecided' });
       await mutateUnregisteredGroup();
     } catch (error) {
       console.error('火気不使用解除エラー:', error);
-      toast.error(
-        t('applications.fireEquipment.messages.submitFailed')
-      );
+      toast.error(t('applications.fireEquipment.messages.submitFailed'));
     }
   };
 

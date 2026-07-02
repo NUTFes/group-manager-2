@@ -141,9 +141,7 @@ export const useFireEquipmentFormHooks = (
       await mutateFireEquipmentOrders();
 
       if (hasFailure) {
-        toast.error(
-          t('applications.fireEquipment.messages.submitFailed')
-        );
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
         return false;
       }
 
@@ -161,9 +159,7 @@ export const useFireEquipmentFormHooks = (
     } catch (error) {
       console.error('火気申請送信エラー:', error);
       // 内部エラーは console.error のみ、ユーザーには汎用メッセージを表示
-      toast.error(
-        t('applications.fireEquipment.messages.submitFailed')
-      );
+      toast.error(t('applications.fireEquipment.messages.submitFailed'));
       await mutateFireEquipmentOrders();
       return false;
     }
