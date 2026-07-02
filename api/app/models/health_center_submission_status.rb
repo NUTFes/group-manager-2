@@ -72,6 +72,8 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   private
 
   def notify_slack_on_unapproved_resubmission
+    return if Current.skip_slack_notification
+
     was_resubmission = status_before_last_save == 'waiting_resubmission'
     is_unapproved = status == 'unapproved'
 

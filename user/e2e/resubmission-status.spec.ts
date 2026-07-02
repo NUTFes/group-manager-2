@@ -32,6 +32,10 @@ type FireEquipmentOrder = {
   id: number;
 };
 
+const skipSlackNotificationHeader = {
+  'X-Skip-Slack-Notification': 'true',
+};
+
 test.describe('power and fire equipment resubmission status', () => {
   let api: APIRequestContext;
   let authHeaders: AuthHeaders;
@@ -230,7 +234,7 @@ const upsertSubmissionStatus = async (
   const response = await api.post(
     '/api/v1/upsert_health_center_submission_status_for_user',
     {
-      headers: authHeaders,
+      headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: {
         group_id: TEST_GROUP_ID,
         application_type: params.application_type,
@@ -257,7 +261,7 @@ const updateSubmissionStatus = async (
   const response = await api.patch(
     `/api/v1/update_health_center_submission_status_for_user/${statusId}`,
     {
-      headers: authHeaders,
+      headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: { status },
     }
   );

@@ -56,8 +56,26 @@ class Api::V1::HealthCenterSubmissionStatusUserTest < ActionDispatch::Integratio
 
     patch "/api/v1/update_health_center_submission_status_for_user/#{submission_status.id}",
           params: { status: 'unapproved' },
-          headers: auth_headers(@user),
+          headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
           as: :json
+
+    assert_response :success
+    assert_equal 'unapproved', submission_status.reload.status
+  end
+
+  test 'skip slack notification header suppresses resubmission notification' do
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :fire_equipment_order,
+      status: :waiting_resubmission
+    )
+
+    with_slack_client_new_raising do
+      patch "/api/v1/update_health_center_submission_status_for_user/#{submission_status.id}",
+            params: { status: 'unapproved' },
+            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+            as: :json
+    end
 
     assert_response :success
     assert_equal 'unapproved', submission_status.reload.status
@@ -79,5 +97,16 @@ class Api::V1::HealthCenterSubmissionStatusUserTest < ActionDispatch::Integratio
 
   def auth_headers(user)
     user.create_new_auth_token
+  end
+
+  def with_slack_client_new_raising
+    original_new = Slack::Web::Client.method(:new)
+    Slack::Web::Client.define_singleton_method(:new) do
+      raise 'Slack notification should be skipped'
+    end
+
+    yield
+  ensure
+    Slack::Web::Client.define_singleton_method(:new, original_new)
   end
 end

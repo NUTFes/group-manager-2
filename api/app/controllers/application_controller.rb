@@ -5,6 +5,8 @@ require 'digest'
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
+  around_action :set_skip_slack_notification
+
   # status
   def ok
     return { code: 200, message: 'Success' }
@@ -39,6 +41,17 @@ class ApplicationController < ActionController::API
   end
 
   private
+
+  def set_skip_slack_notification
+    Current.skip_slack_notification = skip_slack_notification_header?
+    yield
+  ensure
+    Current.reset
+  end
+
+  def skip_slack_notification_header?
+    !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
+  end
 
   def translate_to_ja(text)
     return text if text.blank?
