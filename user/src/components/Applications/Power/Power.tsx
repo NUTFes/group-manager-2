@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
@@ -11,10 +12,18 @@ type PowerProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: HealthCenterSubmissionStatus;
 };
 
-const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
+const Power: FC<PowerProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+  status,
+}) => {
   const powerAccordionHooks = usePowerAccordionHooks();
+  const isResubmission = status === 'waiting_resubmission';
+  const isDeadlineLocked = !!isDeadline && !isResubmission;
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
@@ -30,7 +39,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     prepareFormForEditing,
     completeSubmission,
     getRadioValue,
-  } = usePowerApplication(groupId);
+  } = usePowerApplication(groupId, status);
 
   const { isEditing, applyPower, submitError, isSubmitted } = state;
   const { fields, addDevice, removeDevice, totalPower, isValid, formMethods } =
@@ -41,7 +50,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     hasExisting,
     isEditing,
     hasUnregistered,
-    isDeadline,
+    isDeadline: isDeadlineLocked,
   });
 
   let content;
@@ -110,7 +119,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={false}
-          isDeadline={isDeadline}
+          isDeadline={isDeadlineLocked}
         />
       );
       break;
@@ -120,7 +129,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           devices={devices}
           onEdit={prepareFormForEditing}
           onDeleteDevice={handleDeleteDevice}
-          isDeadline={!isDeadline}
+          isDeadline={!isDeadlineLocked}
         />
       );
       break;
@@ -146,7 +155,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title={powerAccordionHooks.powerAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={!isDeadlineLocked}
       isExist={isRegistered}
       required={true}
     >

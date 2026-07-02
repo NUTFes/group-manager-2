@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
   ORDER_TYPES,
@@ -21,7 +25,10 @@ type PowerApplicationState = {
   isSubmitted: boolean;
 };
 
-export const usePowerApplication = (groupId: number) => {
+export const usePowerApplication = (
+  groupId: number,
+  status?: HealthCenterSubmissionStatus
+) => {
   const { t } = useTranslation('common');
   // 電力申請のステート管理
   const [state, setState] = useState<PowerApplicationState>({
@@ -58,6 +65,7 @@ export const usePowerApplication = (groupId: number) => {
 
   // 電力申請の登録・更新・削除機能
   const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'power_order');
 
   // フォーム管理
   const initialDefaultValues = useMemo(() => {
@@ -80,6 +88,19 @@ export const usePowerApplication = (groupId: number) => {
     if (option === 'yes') return '1';
     if (option === 'no') return '2';
     return '';
+  };
+
+  const updateStatusToUnapproved = async (): Promise<boolean> => {
+    if (status === 'unapproved') return true;
+
+    try {
+      await updateStatus('unapproved');
+      return true;
+    } catch (e) {
+      console.error(e);
+      toast.error(t('applications.power.messages.submitFailed'));
+      return false;
+    }
   };
 
   // 初期状態の設定
@@ -175,6 +196,8 @@ export const usePowerApplication = (groupId: number) => {
       const result = await registerUnregisteredGroup(groupId);
 
       if (result.success) {
+        if (!(await updateStatusToUnapproved())) return;
+
         updateState({ applyPower: 'no' });
         await mutatePowerOrders();
         await mutateUnregisteredGroup();
@@ -240,6 +263,8 @@ export const usePowerApplication = (groupId: number) => {
       const result = await submitPowerOrders(devicesWithId, groupId, devices);
 
       if (result.success) {
+        if (!(await updateStatusToUnapproved())) return;
+
         await mutatePowerOrders(); // 電力申請データを再取得
         await mutateUnregisteredGroup(); // 未登録テーブルデータを再取得
 

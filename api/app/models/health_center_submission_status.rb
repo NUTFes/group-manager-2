@@ -12,7 +12,9 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     cooking_process_order: 2,
     employee: 3,
     venue_map: 4,
-    equipment: 5
+    equipment: 5,
+    power_order: 6,
+    fire_equipment_order: 7
   }
 
   enum status: {
@@ -33,7 +35,9 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     'cooking_process_order' => '調理工程申請',
     'employee' => '従業員申請',
     'venue_map' => '模擬店平面図申請',
-    'equipment' => '物品申請'
+    'equipment' => '物品申請',
+    'power_order' => '電力申請',
+    'fire_equipment_order' => '火器使用申請'
   }.freeze
 
   def self.ensure_for_group_and_application_type!(group_id:, application_type:, status: DEFAULT_STATUS)

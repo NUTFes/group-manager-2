@@ -273,9 +273,12 @@ Rails.application.routes.draw do
       #---保健所提出確認画面
       get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'
       get 'get_health_center_submission_status_show_for_admin_view/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_show_for_admin_view'
+      get 'get_health_center_submission_status_for_user/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_for_user'
       get 'get_health_center_submission_status_counts/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_counts'
       patch 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
+      patch 'update_health_center_submission_status_for_user/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status_for_user'
       post 'upsert_health_center_submission_status' => 'health_center_submission_statuses_api#upsert_health_center_submission_status'
+      post 'upsert_health_center_submission_status_for_user' => 'health_center_submission_statuses_api#upsert_health_center_submission_status_for_user'
       post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
       post 'create_health_center_submission_status_comment_mail' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment_mail'
       post 'resend_health_center_submission_status_comment_mail/:comment_id' => 'health_center_submission_statuses_api#resend_health_center_submission_status_comment_mail'

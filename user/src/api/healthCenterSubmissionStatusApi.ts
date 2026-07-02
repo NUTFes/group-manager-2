@@ -6,11 +6,11 @@ import {
 
 const API_ENDPOINTS = {
   HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/get_health_center_submission_status_show_for_admin_view',
+    '/api/v1/get_health_center_submission_status_for_user',
   UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/update_health_center_submission_status',
+    '/api/v1/update_health_center_submission_status_for_user',
   UPSERT_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/upsert_health_center_submission_status',
+    '/api/v1/upsert_health_center_submission_status_for_user',
 };
 
 type ApiStatus = { code: number; message: string };

@@ -6,8 +6,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   before_action :authenticate_api_user!, only: %i[
     get_health_center_submission_status_index_for_admin_view
     get_health_center_submission_status_show_for_admin_view
+    get_health_center_submission_status_for_user
     update_health_center_submission_status
+    update_health_center_submission_status_for_user
     upsert_health_center_submission_status
+    upsert_health_center_submission_status_for_user
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
     create_health_center_submission_status_comment_mail
@@ -18,6 +21,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
+    get_health_center_submission_status_for_user
   ]
   before_action :require_mail_delivery_role!, only: %i[
     create_health_center_submission_status_comment_mail
@@ -51,6 +55,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :employees,
       :venue_map,
       :rental_orders,
+      :power_orders,
+      :fire_equipment_orders,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order },
       { health_center_submission_statuses: :comments }
@@ -64,6 +70,15 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
                      })
   end
 
+  # user画面用の申請ステータス取得
+  def get_health_center_submission_status_for_user
+    group = Group.preload(health_center_submission_statuses: :comments).find(params[:group_id])
+
+    render json: fmt(ok, {
+                       submissions: HealthCenterSubmissionStatus.default_submissions_for(group)
+                     })
+  end
+
   #---更新（PATCH）
 
   # ステータス変更
@@ -72,8 +87,25 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     save_submission_status(@submission_status)
   end
 
+  # user画面用ステータス変更
+  def update_health_center_submission_status_for_user
+    @submission_status = HealthCenterSubmissionStatus.find(params[:id])
+    save_submission_status(@submission_status)
+  end
+
   # ステータス変更（未作成ならINSERT）
   def upsert_health_center_submission_status
+    return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
+
+    @submission_status = resolve_submission_status
+    return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
+    return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
+
+    save_submission_status(@submission_status)
+  end
+
+  # user画面用ステータス変更（未作成ならINSERT）
+  def upsert_health_center_submission_status_for_user
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status
@@ -175,6 +207,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :employees,
       :venue_map,
       :rental_orders,
+      :power_orders,
+      :fire_equipment_orders,
       :un_registered_groups,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order }
@@ -337,7 +371,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
         cooking_process_order: statuses['cooking_process_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
         employee: statuses['employee']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
         venue_map: statuses['venue_map']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
-        equipment: statuses['equipment']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS
+        equipment: statuses['equipment']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        power_order: statuses['power_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        fire_equipment_order: statuses['fire_equipment_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS
       }
     end
   end
@@ -372,6 +408,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       group.venue_map
     when 'equipment'
       group.rental_orders
+    when 'power_order'
+      group.power_orders
+    when 'fire_equipment_order'
+      group.fire_equipment_orders
     end
   end
 
@@ -394,6 +434,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     when 'equipment'
       # 物品申請：通常の申請データか、「申請しない」回答のどちらかがあれば未確認にする
       group.rental_orders.any? || group.un_registered_groups.rental_item_order.exists?
+    when 'power_order'
+      group.power_orders.any? || group.un_registered_groups.power_order.exists?
+    when 'fire_equipment_order'
+      group.fire_equipment_orders.any? || group.un_registered_groups.fire_equipment_order.exists?
     else
       false
     end

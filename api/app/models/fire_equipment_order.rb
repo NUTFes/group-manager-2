@@ -2,6 +2,8 @@
 
 class FireEquipmentOrder < ApplicationRecord
   belongs_to :group
+
+  after_create :ensure_health_center_submission_status
   # enum gas_bottle: ガスボンベ、lp_gas: LPガス、charcoal: 炭
   enum fuel: { gas_bottle: 1, lp_gas: 2, charcoal: 3 }
 
@@ -31,5 +33,14 @@ class FireEquipmentOrder < ApplicationRecord
       is_takeaway: is_takeaway,
       remark: remark
     }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :fire_equipment_order
+    )
   end
 end
