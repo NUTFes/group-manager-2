@@ -950,7 +950,7 @@
         "noApplicationSuccess": "火気申請を行わない登録が完了しました",
         "registerSuccess": "火気申請が完了しました。",
         "updateSuccess": "火気申請を更新しました。",
-        "submitFailed": "送信に失敗しました: {{message}}"
+        "submitFailed": "送信に失敗しました。もう一度お試しください。"
       },
       "validation": {
         "required": "入力してください",

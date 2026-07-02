@@ -950,7 +950,7 @@
         "noApplicationSuccess": "Saved that no fire use application is needed.",
         "registerSuccess": "Fire use application submitted.",
         "updateSuccess": "Fire use application updated.",
-        "submitFailed": "Submission failed: {{message}}"
+        "submitFailed": "Submission failed. Please try again later."
       },
       "validation": {
         "required": "Enter this field.",
