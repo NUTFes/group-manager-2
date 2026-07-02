@@ -26,7 +26,7 @@ class Api::V1::HealthCenterSubmissionStatusUserTest < ActionDispatch::Integratio
         as: :json
 
     assert_response :success
-    application_types = response.parsed_body.dig('data', 'submissions').map { |submission| submission['application_type'] }
+    application_types = response.parsed_body.dig('data', 'submissions').pluck('application_type')
 
     assert_includes application_types, 'power_order'
     assert_includes application_types, 'fire_equipment_order'
