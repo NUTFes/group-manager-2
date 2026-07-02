@@ -42,7 +42,8 @@ class PurchaseList < ApplicationRecord
       day: fes_date.day,
       year: fes_date.fes_year.year_num,
       purchase_date: purchase_date,
-      url: url
+      url: url,
+      remark: remark
     }
   end
 

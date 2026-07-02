@@ -22,7 +22,11 @@
         <h3>なまものか</h3>
         <select v-model="isFresh">
           <option disabled value="">選択してください</option>
-          <option v-for="list in isFreshList" :key="list.id" :value="list.value">
+          <option
+            v-for="list in isFreshList"
+            :key="list.id"
+            :value="list.value"
+          >
             {{ list.text }}
           </option>
         </select>
@@ -62,8 +66,8 @@ export default {
       ],
       shopList: [],
       items: null,
-      shopID: null,
-      isFresh: null,
+      shopID: "",
+      isFresh: "",
       purchase_date: null,
       url: null,
       remark: null,
@@ -75,8 +79,8 @@ export default {
       handler() {
         const purchaseList = this.getPurchaseList();
         this.items = purchaseList.items || null;
-        this.shopID = purchaseList.shop_id || null;
-        this.isFresh = purchaseList.is_fresh ?? null;
+        this.shopID = purchaseList.shop_id || "";
+        this.isFresh = purchaseList.is_fresh ?? "";
         this.purchase_date = purchaseList.purchase_date || null;
         this.url = purchaseList.url || null;
         this.remark = purchaseList.remark || null;
@@ -104,7 +108,7 @@ export default {
     },
     async edit() {
       const purchaseList = this.getPurchaseList();
-      const query = new URLSearchParams({
+      const data = {
         food_product_id: String(purchaseList.food_product_id ?? ""),
         shop_id: String(this.shopID ?? ""),
         purchase_date: String(this.purchase_date ?? ""),
@@ -112,11 +116,11 @@ export default {
         is_fresh: String(this.isFresh ?? ""),
         url: String(this.url ?? ""),
         remark: String(this.remark ?? ""),
-      }).toString();
-      const url = `/purchase_lists/${purchaseList.id}?${query}`;
+      };
+      const url = `/purchase_lists/${purchaseList.id}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url, data).then(() => {
+        this.$emit("saved", purchaseList.id);
         this.$emit("close");
       });
     },

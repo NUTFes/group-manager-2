@@ -80,10 +80,10 @@
           >
             <td>{{ stageOrder.stage_order.id }}</td>
             <td>{{ stageOrder.group.name }}</td>
-            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ formatWeather(stageOrder.stage_order.is_sunny) }}</td>
             <td>{{ stageOrder.stage_order_info.date }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
           </tr>
         </template>
       </Table>
@@ -232,6 +232,7 @@
 <script>
 import { mapState } from "vuex";
 import { downloadFile } from '~/utils/download-file';
+import { formatWeather } from '~/utils/constants';
 export default {
   watchQuery: ["page"],
   data() {
@@ -405,6 +406,7 @@ export default {
     }),
   },
   methods: {
+    formatWeather,
     changeMode() {
       this.isIntervalMode = !this.isIntervalMode;
     },
