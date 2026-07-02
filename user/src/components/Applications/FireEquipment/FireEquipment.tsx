@@ -18,6 +18,7 @@ type FireEquipmentDisplayMode =
   | 'negativeUndecided'
   | 'negativeRegister'
   | 'negativeDisplay'
+  | 'deadlineNoData'
   | 'summary'
   | 'form';
 
@@ -30,7 +31,8 @@ const getDisplayMode = (
 ): FireEquipmentDisplayMode => {
   if (isDeadline) {
     if (hasUnregistered) return 'negativeDisplay';
-    return hasExisting ? 'summary' : 'negativeDisplay';
+    if (hasExisting) return 'summary';
+    return 'deadlineNoData';
   }
   if (applyFireEquipment === 'undecided') return 'negativeUndecided';
   if (applyFireEquipment === 'no' && !hasUnregistered)
@@ -139,6 +141,37 @@ const FireEquipment: FC<FireEquipmentProps> = ({
           isEdit={!isDeadline}
           onEdit={isDeadline ? undefined : handleCancelUnregistered}
         />
+      );
+      break;
+
+    case 'deadlineNoData':
+      content = (
+          <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+            <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+              <div className="mb-4">
+                <svg
+                    className="mx-auto size-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mb-2 text-lg font-semibold text-gray-800">
+                {t('applications.fireEquipment.deadline.title')}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {t('applications.fireEquipment.deadline.description')}
+              </p>
+            </div>
+          </div>
       );
       break;
 
