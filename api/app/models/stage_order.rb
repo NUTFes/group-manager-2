@@ -4,8 +4,8 @@ class StageOrder < ApplicationRecord
   belongs_to :group
   belongs_to :fes_date
   has_one :assign_stage, dependent: :destroy
-  belongs_to :first_stage_obj, class_name: 'Stage', foreign_key: 'stage_first', optional: true
-  belongs_to :second_stage_obj, class_name: 'Stage', foreign_key: 'stage_second', optional: true
+  belongs_to :first_stage_obj, class_name: 'Stage', foreign_key: 'stage_first', optional: true, inverse_of: false
+  belongs_to :second_stage_obj, class_name: 'Stage', foreign_key: 'stage_second', optional: true, inverse_of: false
 
   def self.with_groups
     @record = StageOrder.preload(:group, :first_stage_obj, :second_stage_obj)
