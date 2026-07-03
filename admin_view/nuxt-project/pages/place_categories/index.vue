@@ -45,9 +45,9 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>親エリア</h3>
+          <h3>所属エリア</h3>
           <select v-model="parentId">
-            <option value="">未指定（親エリアなし）</option>
+            <option value="">未指定（所属エリアなし）</option>
             <option
               v-for="cat in selectableCategories"
               :key="cat.id"
@@ -76,14 +76,14 @@
 
 <script>
 import { mapState } from "vuex";
-import { getFormattedName, getSortKey, getDescendantIds } from "../../utils/place_category_utils";
+import { getDescendantIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   watchQuery: ["page"],
   data() {
     return {
       placeCategories: [],
       stockerPlaces: [],
-      headers: ["ID", "エリア名", "下層エリア数", "紐づく在庫場所数"],
+      headers: ["ID", "エリア名", "サブエリア数", "エリア内の保管場所数"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",

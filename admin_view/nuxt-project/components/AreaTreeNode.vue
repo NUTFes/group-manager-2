@@ -1,18 +1,23 @@
 <template>
   <li>
-    <span class="tree-symbol">├─</span> {{ category.name }}
-    <ul class="tree-ul-inner">
-      <li v-for="sp in directStockerPlaces" :key="'sp-'+sp.id">
-        <span class="tree-symbol">├─</span> {{ sp.name }}
-      </li>
-      <AreaTreeNode 
-        v-for="child in children" 
-        :key="'cat-'+child.id" 
-        :category="child" 
-        :allCategories="allCategories"
-        :allStockerPlaces="allStockerPlaces"
-      />
-    </ul>
+    <details v-if="directStockerPlaces.length > 0 || children.length > 0" open>
+      <summary>{{ category.name }}</summary>
+      <ul class="toggle-ul-inner">
+        <li v-for="sp in directStockerPlaces" :key="'sp-'+sp.id" class="room-item">
+          {{ sp.name }}
+        </li>
+        <AreaTreeNode 
+          v-for="child in children" 
+          :key="'cat-'+child.id" 
+          :category="child" 
+          :allCategories="allCategories"
+          :allStockerPlaces="allStockerPlaces"
+        />
+      </ul>
+    </details>
+    <template v-else>
+      {{ category.name }}
+    </template>
   </li>
 </template>
 
@@ -45,17 +50,20 @@ export default {
 </script>
 
 <style scoped>
-.tree-ul-inner {
-  margin-left: 24px !important;
-  border-left: 1px solid #777;
-  padding-left: 0;
-  list-style-type: none;
-}
-.tree-symbol {
-  margin-right: 4px;
-  font-family: monospace;
+.toggle-ul-inner {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
 }
 li {
   margin: 4px 0;
+}
+.room-item {
+  display: list-item !important;
+  list-style-type: disc !important;
+  list-style-position: inside !important;
+}
+summary {
+  cursor: pointer;
 }
 </style>

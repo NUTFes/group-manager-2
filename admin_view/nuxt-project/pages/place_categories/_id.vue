@@ -283,28 +283,17 @@ export default {
 }
 .in-table-tree {
   margin: 0;
-  padding: 0;
+  padding-left: 20px;
   color: inherit;
-  list-style-type: none;
+  list-style-type: disc;
 }
 .in-table-tree ul {
-  margin-left: 8px;
-  padding-left: 0;
-  list-style-type: none;
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
 }
 .in-table-tree li {
   margin: 4px 0;
-}
-.tree-ul {
-  border-left: 1px solid #777;
-}
-.tree-ul-inner {
-  margin-left: 24px !important;
-  border-left: 1px solid #777;
-}
-.tree-symbol {
-  margin-right: 4px;
-  font-family: monospace;
 }
 .text-left {
   text-align: left !important;
