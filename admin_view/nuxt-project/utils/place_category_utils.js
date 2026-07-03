@@ -1,30 +1,28 @@
-export function getFormattedName(category, allCategories) {
-  let name = category.name;
+function getAncestorChain(category, allCategories) {
+  const chain = [category];
   let currentCategory = category;
   const visitedCategoryIds = new Set([category.id]);
-  
+
   while (currentCategory.parent_id) {
     const parent = allCategories.find((c) => c.id === currentCategory.parent_id);
     if (!parent || visitedCategoryIds.has(parent.id)) break;
-    name = `${parent.name} / ${name}`;
+    chain.unshift(parent);
     currentCategory = parent;
     visitedCategoryIds.add(parent.id);
   }
-  return name;
+  return chain;
+}
+
+export function getFormattedName(category, allCategories) {
+  return getAncestorChain(category, allCategories)
+    .map((c) => c.name)
+    .join(" / ");
 }
 
 export function getSortKey(category, allCategories) {
-  let hierarchyIds = [category.id.toString().padStart(6, "0")];
-  let currentCategory = category;
-  const visitedCategoryIds = new Set([category.id]);
-
-  while (currentCategory.parent_id) {
-    const parent = allCategories.find((c) => c.id === currentCategory.parent_id);
-    if (!parent || visitedCategoryIds.has(parent.id)) break;
-    hierarchyIds.unshift(parent.id.toString().padStart(6, "0"));
-    currentCategory = parent;
-    visitedCategoryIds.add(parent.id);
-  }
+  const hierarchyIds = getAncestorChain(category, allCategories).map((c) =>
+    c.id.toString().padStart(6, "0")
+  );
   return hierarchyIds.join("-");
 }
 
