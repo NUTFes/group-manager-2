@@ -158,6 +158,7 @@ export default {
     },
     parentName() {
       if (!this.placeCategory.parent_id) return "未指定";
+
       const parent = this.placeCategories.find(p => p.id === this.placeCategory.parent_id);
       return parent ? getFormattedName(parent, this.placeCategories) : "未指定";
     },
@@ -180,12 +181,15 @@ export default {
     getStockerPlacesFor(id) {
       return this.stockerPlaces.filter(sp => sp.place_category_id === id);
     },
+
     openEditModal() {
       this.isOpenEditModal = true;
     },
+
     closeEditModal() {
       this.isOpenEditModal = false;
     },
+
     openDeleteModal() {
       if (this.children.length > 0) {
         this.openSnackBar("サブエリアが存在するため削除できません。先にサブエリアを別の所属エリアに移動するか、削除してください。");
@@ -193,17 +197,21 @@ export default {
       }
       this.isOpenDeleteModal = true;
     },
+
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+
     openSnackBar(message) {
       this.message = message;
       this.isOpenSnackBar = true;
       setTimeout(this.closeSnackBar, 3000);
     },
+
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
+
     async reload() {
       const url = "/place_categories/" + this.$route.params.id;
       const res = await this.$axios.$get(url);
@@ -215,6 +223,7 @@ export default {
       const spRes = await this.$axios.$get("/stocker_places");
       this.stockerPlaces = spRes.data;
     },
+
     async edit() {
       const url = "/place_categories/" + this.$route.params.id;
       let params = new URLSearchParams();
@@ -235,6 +244,7 @@ export default {
           this.openSnackBar("編集に失敗しました");
         });
     },
+
     async destroy() {
       const url = "/place_categories/" + this.$route.params.id;
       this.$axios

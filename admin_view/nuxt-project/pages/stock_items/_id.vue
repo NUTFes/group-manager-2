@@ -502,6 +502,7 @@ export default {
     }),
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
+      
       let categories = this.placeCategories.map(cat => {
         return {
           ...cat,
