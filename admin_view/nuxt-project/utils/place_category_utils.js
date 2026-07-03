@@ -6,7 +6,7 @@ export function getFormattedName(category, allCategories) {
   while (currentCategory.parent_id) {
     const parent = allCategories.find((c) => c.id === currentCategory.parent_id);
     if (!parent || visitedCategoryIds.has(parent.id)) break;
-    name = `${parent.name} > ${name}`;
+    name = `${parent.name} / ${name}`;
     currentCategory = parent;
     visitedCategoryIds.add(parent.id);
   }
