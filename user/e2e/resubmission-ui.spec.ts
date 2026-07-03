@@ -107,7 +107,7 @@ test.describe('resubmission UI', () => {
     );
   });
 
-  // 電力申請が締切後でも再提出状態なら、既存カードから修正し、送信後カードが更新値に変わることを確認する。
+  // 電力申請が締切後でも再提出状態なら既存カードから修正でき、送信後はunapprovedに戻って再編集できないことを確認する。
   test('updates a power order from the resubmission card and displays updated values', async ({
     page,
   }) => {
@@ -135,6 +135,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('更新メーカー')).toBeVisible();
     await expect(page.getByText('UPD-900')).toBeVisible();
     await expect(page.getByText('950W')).toBeVisible();
+    // 再提出後はステータスがunapprovedに変わるため、締切後の再編集ボタンが表示されないことを確認する。
     await expect(
       page.getByRole('button', { name: '修正', exact: true })
     ).toHaveCount(0);
@@ -144,7 +145,7 @@ test.describe('resubmission UI', () => {
     );
   });
 
-  // 火器申請が締切後でも再提出状態なら、既存カードから修正し、送信後カードが更新値に変わることを確認する。
+  // 火器申請が締切後でも再提出状態なら既存カードから修正でき、送信後はunapprovedに戻って再編集できないことを確認する。
   test('updates a fire equipment order from the resubmission card and displays updated values', async ({
     page,
   }) => {
@@ -173,6 +174,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('炭')).toBeVisible();
     await expect(page.getByText('E2E 更新調理')).toBeVisible();
     await expect(page.getByText('E2E 更新備考')).toBeVisible();
+    // 再提出後はステータスがunapprovedに変わるため、締切後の再編集ボタンが表示されないことを確認する。
     await expect(
       page.getByRole('button', { name: '修正', exact: true })
     ).toHaveCount(0);
@@ -182,7 +184,7 @@ test.describe('resubmission UI', () => {
     );
   });
 
-  // 締切後かつ再提出状態ではない場合、登録済みの電力・火器申請カードを修正できないことを確認する。
+  // 締切後かつステータスがunapprovedで再提出状態ではない場合、登録済みの電力・火器申請カードを修正できないことを確認する。
   test('does not allow editing existing power or fire equipment orders after deadline without resubmission status', async ({
     page,
   }) => {
