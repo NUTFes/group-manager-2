@@ -156,11 +156,11 @@ export default {
     }),
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
-      let categories = this.placeCategories.map(cat => {
+      let categories = this.placeCategories.map(category => {
         return {
-          ...cat,
-          formattedName: getFormattedName(cat, this.placeCategories),
-          sortKey: getSortKey(cat, this.placeCategories)
+          ...category,
+          formattedName: getFormattedName(category, this.placeCategories),
+          sortKey: getSortKey(category, this.placeCategories)
         };
       });
       categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
@@ -231,28 +231,28 @@ export default {
         this.refPlaceCategory = "未指定";
         this.stockerPlaces = this.allStockerPlaces.filter(p => !p.place_category_id);
       } else {
-        const cat = name_list.find(n => n.id === item_id);
-        this.refPlaceCategory = cat ? cat.formattedName : "ALL";
+        const category = name_list.find(n => n.id === item_id);
+        this.refPlaceCategory = category ? category.formattedName : "ALL";
         
-        const descendantSet = new Set([item_id]);
+        const childrenSet = new Set([item_id]);
         let queue = [item_id];
         while (queue.length > 0) {
           const currentId = queue.shift();
           const children = name_list.filter(n => n.parent_id === currentId);
           children.forEach(child => {
-            if (!descendantSet.has(child.id)) {
-              descendantSet.add(child.id);
+            if (!childrenSet.has(child.id)) {
+              childrenSet.add(child.id);
               queue.push(child.id);
             }
           });
         }
-        this.stockerPlaces = this.allStockerPlaces.filter(p => descendantSet.has(p.place_category_id));
+        this.stockerPlaces = this.allStockerPlaces.filter(p => childrenSet.has(p.place_category_id));
       }
     },
     formattedCategoryName(id) {
       if (!id) return "未指定";
-      const cat = this.formattedPlaceCategories.find(c => c.id === id);
-      return cat ? cat.formattedName : "未指定";
+      const category = this.formattedPlaceCategories.find(c => c.id === id);
+      return category ? category.formattedName : "未指定";
     },
   },
 };

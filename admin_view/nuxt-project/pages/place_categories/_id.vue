@@ -114,7 +114,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaTreeNode from "../../components/AreaTreeNode.vue";
-import { getDescendantIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
+import { getChildrenIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   components: {
     AreaTreeNode
@@ -166,9 +166,9 @@ export default {
       return getFormattedName(this.placeCategory, this.placeCategories);
     },
     selectableCategories() {
-      const descendantIds = getDescendantIds(this.placeCategory.id, this.placeCategories);
+      const childrenIds = getChildrenIds(this.placeCategory.id, this.placeCategories);
       return this.placeCategories
-        .filter(category => category.id !== this.placeCategory.id && !descendantIds.includes(category.id))
+        .filter(category => category.id !== this.placeCategory.id && !childrenIds.includes(category.id))
         .map(category => ({
           ...category,
           formattedName: getFormattedName(category, this.placeCategories),

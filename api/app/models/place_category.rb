@@ -6,11 +6,11 @@ class PlaceCategory < ApplicationRecord
   belongs_to :parent, class_name: 'PlaceCategory', optional: true, inverse_of: :children
   has_many :children, class_name: 'PlaceCategory', foreign_key: 'parent_id', dependent: :restrict_with_error, inverse_of: :parent
 
-  validate :parent_cannot_be_self_or_descendant
+  validate :parent_cannot_be_self_or_children
 
   private
 
-  def parent_cannot_be_self_or_descendant
+  def parent_cannot_be_self_or_children
     return if parent_id.nil?
 
     if parent_id == id
@@ -21,7 +21,7 @@ class PlaceCategory < ApplicationRecord
     current_parent = parent
     while current_parent
       if current_parent.id == id
-        errors.add(:parent_id, "can't be a descendant of itself")
+        errors.add(:parent_id, "can't be a child of itself")
         break
       end
       current_parent = current_parent.parent

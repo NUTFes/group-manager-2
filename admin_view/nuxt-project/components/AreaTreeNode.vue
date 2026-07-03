@@ -8,7 +8,7 @@
         </li>
         <AreaTreeNode 
           v-for="child in children" 
-          :key="'cat-'+child.id" 
+          :key="'category-'+child.id" 
           :category="child" 
           :allCategories="allCategories"
           :allStockerPlaces="allStockerPlaces"

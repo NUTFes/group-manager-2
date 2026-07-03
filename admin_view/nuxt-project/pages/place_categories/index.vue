@@ -49,11 +49,11 @@
           <select v-model="parentId">
             <option value="">未指定（所属エリアなし）</option>
             <option
-              v-for="cat in selectableCategories"
-              :key="cat.id"
-              :value="cat.id"
+              v-for="category in selectableCategories"
+              :key="category.id"
+              :value="category.id"
             >
-              {{ cat.formattedName }}
+              {{ category.formattedName }}
             </option>
           </select>
         </div>
@@ -76,7 +76,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDescendantIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
+import { getChildrenIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   watchQuery: ["page"],
   data() {
@@ -105,14 +105,14 @@ export default {
       roleID: (state) => state.users.role,
     }),
     formattedPlaceCategories() {
-      let categories = this.placeCategories.map((cat) => {
-        const parent = this.placeCategories.find((p) => p.id === cat.parent_id);
-        const childrenCount = getDescendantIds(cat.id, this.placeCategories).length;
-        const stockerPlacesCount = this.stockerPlaces.filter((sp) => sp.place_category_id === cat.id).length;
+      let categories = this.placeCategories.map((category) => {
+        const parent = this.placeCategories.find((p) => p.id === category.parent_id);
+        const childrenCount = getChildrenIds(category.id, this.placeCategories).length;
+        const stockerPlacesCount = this.stockerPlaces.filter((sp) => sp.place_category_id === category.id).length;
         return {
-          ...cat,
-          formattedName: getFormattedName(cat, this.placeCategories),
-          sortKey: getSortKey(cat, this.placeCategories),
+          ...category,
+          formattedName: getFormattedName(category, this.placeCategories),
+          sortKey: getSortKey(category, this.placeCategories),
           parentName: parent ? parent.name : "未指定",
           childrenCount,
           stockerPlacesCount,
@@ -132,10 +132,10 @@ export default {
     },
     selectableCategories() {
       // In AddModal, all categories are selectable as parent (except itself, but it doesn't exist yet)
-      return this.placeCategories.map(cat => ({
-        ...cat,
-        formattedName: getFormattedName(cat, this.placeCategories),
-        sortKey: getSortKey(cat, this.placeCategories)
+      return this.placeCategories.map(category => ({
+        ...category,
+        formattedName: getFormattedName(category, this.placeCategories),
+        sortKey: getSortKey(category, this.placeCategories)
       })).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
     },
   },

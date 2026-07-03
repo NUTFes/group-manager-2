@@ -503,11 +503,11 @@ export default {
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
       
-      let categories = this.placeCategories.map(cat => {
+      let categories = this.placeCategories.map(category => {
         return {
-          ...cat,
-          formattedName: getFormattedName(cat, this.placeCategories),
-          sortKey: getSortKey(cat, this.placeCategories)
+          ...category,
+          formattedName: getFormattedName(category, this.placeCategories),
+          sortKey: getSortKey(category, this.placeCategories)
         };
       });
       categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));

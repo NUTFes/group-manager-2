@@ -1,42 +1,42 @@
-export function getFormattedName(cat, allCategories) {
-  let name = cat.name;
-  let current = cat;
-  const visited = new Set([cat.id]);
+export function getFormattedName(category, allCategories) {
+  let name = category.name;
+  let currentCategory = category;
+  const visitedCategoryIds = new Set([category.id]);
   
-  while (current.parent_id) {
-    const parent = allCategories.find((p) => p.id === current.parent_id);
-    if (!parent || visited.has(parent.id)) break;
-    name = `${parent.name} / ${name}`;
-    current = parent;
-    visited.add(parent.id);
+  while (currentCategory.parent_id) {
+    const parent = allCategories.find((c) => c.id === currentCategory.parent_id);
+    if (!parent || visitedCategoryIds.has(parent.id)) break;
+    name = `${parent.name} > ${name}`;
+    currentCategory = parent;
+    visitedCategoryIds.add(parent.id);
   }
   return name;
 }
 
-export function getSortKey(cat, allCategories) {
-  let keys = [cat.id.toString().padStart(6, "0")];
-  let current = cat;
-  const visited = new Set([cat.id]);
+export function getSortKey(category, allCategories) {
+  let hierarchyIds = [category.id.toString().padStart(6, "0")];
+  let currentCategory = category;
+  const visitedCategoryIds = new Set([category.id]);
 
-  while (current.parent_id) {
-    const parent = allCategories.find((p) => p.id === current.parent_id);
-    if (!parent || visited.has(parent.id)) break;
-    keys.unshift(parent.id.toString().padStart(6, "0"));
-    current = parent;
-    visited.add(parent.id);
+  while (currentCategory.parent_id) {
+    const parent = allCategories.find((c) => c.id === currentCategory.parent_id);
+    if (!parent || visitedCategoryIds.has(parent.id)) break;
+    hierarchyIds.unshift(parent.id.toString().padStart(6, "0"));
+    currentCategory = parent;
+    visitedCategoryIds.add(parent.id);
   }
-  return keys.join("/");
+  return hierarchyIds.join("-");
 }
 
-export function getDescendantIds(catId, allCategories, visited = new Set()) {
-  if (visited.has(catId)) return [];
-  visited.add(catId);
+export function getChildrenIds(categoryId, allCategories, visitedCategoryIds = new Set()) {
+  if (visitedCategoryIds.has(categoryId)) return [];
+  visitedCategoryIds.add(categoryId);
 
   let ids = [];
-  const children = allCategories.filter((c) => c.parent_id === catId);
+  const children = allCategories.filter((c) => c.parent_id === categoryId);
   for (const child of children) {
     ids.push(child.id);
-    ids = ids.concat(getDescendantIds(child.id, allCategories, visited));
+    ids = ids.concat(getChildrenIds(child.id, allCategories, visitedCategoryIds));
   }
   return ids;
 }
