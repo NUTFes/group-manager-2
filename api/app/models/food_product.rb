@@ -9,7 +9,7 @@ class FoodProduct < ApplicationRecord
 
   def self.with_groups
     @record = FoodProduct.preload(:group)
-                         .map do |food_product|
+      .map do |food_product|
       {
         food_product: food_product,
         group: food_product.group

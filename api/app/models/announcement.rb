@@ -5,7 +5,7 @@ class Announcement < ApplicationRecord
 
   def self.with_groups
     @record = Announcement.preload(:group)
-                          .map do |announcement|
+      .map do |announcement|
       {
         announcement: announcement,
         group: announcement.group

@@ -10,7 +10,7 @@ class AssignRentalItem < ApplicationRecord
 
   def self.with_groups_and_rental_item
     @record = AssignRentalItem.preload(:group)
-                              .map do |assign_rental_item|
+      .map do |assign_rental_item|
       {
         assign_rental_item: assign_rental_item,
         rental_item: assign_rental_item.rental_item,

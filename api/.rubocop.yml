@@ -98,6 +98,14 @@ Layout/EmptyLinesAroundAttributeAccessor:
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
 
+# 複数行のメソッドチェーンは、receiverの次行から1段インデントする
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# 複数行のメソッドチェーンは行頭に.を置く
+Layout/DotPosition:
+  EnforcedStyle: leading
+
 # ============================================
 # Lint（バグの温床になりやすいコードの検出）
 # ============================================

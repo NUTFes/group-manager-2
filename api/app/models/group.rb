@@ -50,7 +50,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのgroup_categoryを取得する
   def self.with_group_categories
     @records = Group.preload(:group_category)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         group_category: group.group_category
@@ -61,7 +61,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのgroup_categoryを取得する
   def self.with_group_category(group_id)
     @record = Group.eager_load(:group_category).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         group_category: group.group_category
@@ -74,7 +74,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのgroup_categoryとfes_yearを取得する
   def self.with_group_categories_and_fes_years
     @records = Group.preload(:group_category, :fes_year)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         group_category: group.group_category,
@@ -86,7 +86,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそれが持つorderを取得する
   def self.with_order_infos
     @record = Group.all
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         user: group.user,
@@ -226,7 +226,7 @@ class Group < ApplicationRecord
   # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
     @record = Group.where(groups: { fes_year_id: fes_year_id })
-                   .map do |group|
+      .map do |group|
       {
         group: group,
         user: group.user,
@@ -296,7 +296,7 @@ class Group < ApplicationRecord
   # 検索ワードに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_search_word(word)
     @record = Group.where('name like ?', "%#{word}%")
-                   .map do |group|
+      .map do |group|
       {
         group: group,
         user: group.user,
@@ -366,7 +366,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのgroup_categoryとfes_yearを取得する
   def self.with_group_category_and_fes_year(group_id)
     @record = Group.eager_load(:group_category).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         group_category: group.group_category,
@@ -379,7 +379,7 @@ class Group < ApplicationRecord
 
   def self.with_order_status_checks
     @record = Group.all
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         user: group.user&.id,
@@ -444,7 +444,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのsub_repを取得する
   def self.with_sub_reps
     @records = Group.preload(:sub_rep)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         sub_rep: group.sub_rep,
@@ -456,7 +456,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのsub_repを取得する
   def self.with_sub_rep(group_id)
     @record = Group.eager_load(:sub_rep).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         sub_rep: group.sub_rep,
@@ -470,7 +470,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのplace_orderを取得する
   def self.with_place_orders
     @records = Group.preload(:place_order)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         place_order: group.place_order,
@@ -482,8 +482,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのplace_orderを取得する
   def self.with_place_order(group_id)
     @record = Group.eager_load(:place_order)
-                   .where(groups: { id: group_id })
-                   .map do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         place_order: group.place_order,
@@ -497,7 +497,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのstage_orderを取得する
   def self.with_stage_orders
     @records = Group.preload(:stage_orders)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         stage_orders: if group.stage_orders.none?
@@ -517,8 +517,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのstage_orderを取得する
   def self.with_stage_order(group_id)
     @record = Group.eager_load(:stage_orders)
-                   .where(groups: { id: group_id })
-                   .map do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         stage_orders: if group.stage_orders.none?
@@ -540,7 +540,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのstage_common_optionを取得する
   def self.with_stage_common_options
     @records = Group.preload(:stage_common_option)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         stage_common_option: group.stage_common_option
@@ -551,8 +551,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのstage_common_optionを取得する
   def self.with_stage_common_option(group_id)
     @records = Group.eager_load(:stage_common_option)
-                    .where(groups: { id: group_id })
-                    .map  do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         stage_common_option: group.stage_common_option
@@ -565,7 +565,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのpower_orderを取得する
   def self.with_power_orders
     @records = Group.preload(:power_orders)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         power_orders: group.power_orders.none? ? nil : group.power_orders
@@ -576,8 +576,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのpower_orderを取得する
   def self.with_power_order(group_id)
     @record = Group.eager_load(:power_orders)
-                   .where(groups: { id: group_id })
-                   .map do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         power_orders: group.power_orders.none? ? nil : group.power_orders
@@ -590,7 +590,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのrental_orderを取得する
   def self.with_rental_orders
     @records = Group.preload(:rental_orders)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         rental_orders: if group.rental_orders.none?
@@ -610,8 +610,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのrental_orderを取得する
   def self.with_rental_order(group_id)
     @record = Group.eager_load(:rental_orders)
-                   .where(groups: { id: group_id })
-                   .map do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         rental_orders: if group.rental_orders.none?
@@ -633,7 +633,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのemployeeを取得する
   def self.with_employees
     @records = Group.preload(:employees)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         employees: group.employees.none? ? nil : group.employees
@@ -644,8 +644,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのemployeeを取得する
   def self.with_employee(group_id)
     @record = Group.eager_load(:employees)
-                   .where(groups: { id: group_id })
-                   .map do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         employees: group.employees.none? ? nil : group.employees
@@ -658,7 +658,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのfood_productを取得する
   def self.with_food_products
     @records = Group.preload(:food_products)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         food_products: group.food_products.none? ? nil : group.food_products
@@ -669,8 +669,8 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのfood_productを取得する
   def self.with_food_product(group_id)
     @record = Group.eager_load(:food_products)
-                   .where(groups: { id: group_id })
-                   .map  do |group|
+      .where(groups: { id: group_id })
+      .map do |group|
       {
         group: group,
         food_products: group.food_products.none? ? nil : group.food_products
@@ -683,7 +683,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのpublic_relationを取得する
   def self.with_public_relations
     @records = Group.preload(:public_relation)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         picture_name: group.public_relation&.picture_name,
@@ -699,7 +699,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのpublic_relationを取得する
   def self.with_public_relation(group_id)
     @record = Group.eager_load(:public_relation).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         public_relation_id: group.public_relation&.id,
@@ -721,7 +721,7 @@ class Group < ApplicationRecord
   # 指定したfes_yearに対応するgroupとそのpublic_relationを取得する
   def self.with_public_relation_narrow_down_by_fes_year(fes_year_id)
     @record = Group.eager_load(:public_relation).where(groups: { fes_year_id: fes_year_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         picture_name: group.public_relation&.picture_name,
@@ -737,7 +737,7 @@ class Group < ApplicationRecord
   # 検索ワードに対応するgroupとそのpublic_relationを取得する
   def self.with_public_relation_narrow_down_by_search_word(word)
     @record = Group.eager_load(:public_relation).where('name like ?', "%#{word}%")
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         picture_name: group.public_relation&.picture_name,
@@ -755,7 +755,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのannouncementを取得する
   def self.with_announcements
     @records = Group.preload(:announcement)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         announcement: group.announcement
@@ -766,7 +766,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのannouncementを取得する
   def self.with_announcement(group_id)
     @record = Group.eager_load(:announcement).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         announcement: group.announcement
@@ -782,7 +782,7 @@ class Group < ApplicationRecord
   # 指定したfes_yearに対応するgroupとそのannouncementを取得する
   def self.with_announcement_narrow_down_by_fes_year(fes_year_id)
     @record = Group.eager_load(:announcement).where(groups: { fes_year_id: fes_year_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         announcement: group.announcement
@@ -793,7 +793,7 @@ class Group < ApplicationRecord
   # 検索ワードに対応するgroupとそのannouncementを取得する
   def self.with_announcement_narrow_down_by_search_word(word)
     @record = Group.eager_load(:announcement).where('name like ?', "%#{word}%")
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         announcement: group.announcement
@@ -806,7 +806,7 @@ class Group < ApplicationRecord
   # 全てのgroupとそのvenue_mapを取得する
   def self.with_venue_maps
     @records = Group.preload(:venue_map)
-                    .map  do |group|
+      .map do |group|
       {
         group: group,
         venue_map: group.venue_map
@@ -817,7 +817,7 @@ class Group < ApplicationRecord
   # 指定したIDのgroupとそのvenue_mapを取得する
   def self.with_venue_map(group_id)
     @record = Group.eager_load(:venue_map).where(groups: { id: group_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         venue_map: group.venue_map
@@ -833,7 +833,7 @@ class Group < ApplicationRecord
   # 指定したfes_yearに対応するgroupとそのvenue_mapを取得する
   def self.with_venue_map_narrow_down_by_fes_year(fes_year_id)
     @record = Group.eager_load(:venue_map).where(groups: { fes_year_id: fes_year_id })
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         venue_map: group.venue_map
@@ -844,7 +844,7 @@ class Group < ApplicationRecord
   # 検索ワードに対応するgroupとそのvenue_mapを取得する
   def self.with_venue_map_narrow_down_by_search_word(word)
     @record = Group.eager_load(:venue_map).where('name like ?', "%#{word}%")
-                   .map  do |group|
+      .map  do |group|
       {
         group: group,
         venue_map: group.venue_map

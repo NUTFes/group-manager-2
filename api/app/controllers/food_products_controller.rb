@@ -39,10 +39,10 @@ class FoodProductsController < ApplicationController
 
     upserts = params[:food_products].map do |food_product|
       attrs = ActionController::Parameters
-              .new(food_product.to_unsafe_h)
-              .permit(*keys)
-              .to_h
-              .symbolize_keys
+        .new(food_product.to_unsafe_h)
+        .permit(*keys)
+        .to_h
+        .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
       attrs[:created_at] ||= now
       attrs[:updated_at] = now

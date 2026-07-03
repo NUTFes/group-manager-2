@@ -5,7 +5,7 @@ class FesDatesController < ApplicationController
 
   def index
     @fes_dates = FesDate.preload(:fes_year)
-                        .map do |fes_date|
+      .map do |fes_date|
       {
         fes_date: fes_date,
         fes_year: fes_date.fes_year

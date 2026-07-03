@@ -53,12 +53,12 @@ module Api
         if params[:registration] && params[:registration][:user_details].present?
           # registrationキー内のuser_detailsを取得し、許可する
           params.require(:registration)
-                .require(:user_details)
-                .permit(:student_id, :department_id, :grade_id, :tel)
+            .require(:user_details)
+            .permit(:student_id, :department_id, :grade_id, :tel)
         elsif params[:user_details].present?
           # トップレベルにuser_detailsが存在する場合
           params.require(:user_details)
-                .permit(:student_id, :department_id, :grade_id, :tel)
+            .permit(:student_id, :department_id, :grade_id, :tel)
         else
           # user_detailsが存在しない場合は空のパラメータを返す
           ActionController::Parameters.new

@@ -7,7 +7,7 @@ class MemosController < ApplicationController
   # GET /memos.json
   def index
     @memos = Memo.preload(:user).order(id: 'DESC').limit(100)
-                 .map do |memo|
+      .map do |memo|
       {
         memo: memo,
         user: memo.user

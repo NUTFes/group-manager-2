@@ -8,7 +8,7 @@ class RentalOrder < ApplicationRecord
 
   def self.with_groups_and_rental_item
     @record = RentalOrder.preload(:group)
-                         .map do |rental_order|
+      .map do |rental_order|
       {
         rental_order: rental_order,
         rental_item: rental_order.rental_item,

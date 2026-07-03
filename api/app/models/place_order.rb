@@ -6,7 +6,7 @@ class PlaceOrder < ApplicationRecord
 
   def self.get_with_groups
     @record = PlaceOrder.preload(:group)
-                        .map do |place_order|
+      .map do |place_order|
       {
         place_order: place_order,
         place_order_name: place_order.to_place_name_h,

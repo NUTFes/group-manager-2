@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   def self.with_sub_reps
     @record = Group.preload(:user, :sub_rep)
-                   .map  do |group|
+      .map  do |group|
       {
         user: group.user,
         group: group,
@@ -50,7 +50,7 @@ class User < ApplicationRecord
   # 全てのuserとそのuser_detailを取得する
   def self.with_user_details
     @records = User.preload(:role)
-                   .map  do |user|
+      .map do |user|
       {
         user: user,
         role: user.role

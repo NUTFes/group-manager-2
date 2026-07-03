@@ -9,7 +9,7 @@ class PurchaseList < ApplicationRecord
 
   def self.with_groups_and_info
     @record = PurchaseList.preload(:food_product)
-                          .map do |purchase_list|
+      .map do |purchase_list|
       {
         purchase_list: purchase_list,
         purchase_list_info: purchase_list.to_info_h,

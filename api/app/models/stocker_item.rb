@@ -8,7 +8,7 @@ class StockerItem < ApplicationRecord
 
   def self.with_rental_items
     @record = StockerItem.preload(:rental_item)
-                         .map do |stocker_item|
+      .map do |stocker_item|
       {
         stocker_item: stocker_item,
         rental_item: stocker_item.rental_item

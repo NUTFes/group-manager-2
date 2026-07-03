@@ -10,7 +10,7 @@ class CookingProcessOrder < ApplicationRecord
   # 全ての CookingProcessOrder レコードとそれらの group をプリロードしてハッシュで返すクラスメソッド
   def self.with_groups
     @records = CookingProcessOrder.preload(:group)
-                                  .map do |cooking_process_order|
+      .map do |cooking_process_order|
       {
         cooking_process_order: cooking_process_order,
         group: cooking_process_order.group

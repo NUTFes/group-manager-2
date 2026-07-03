@@ -8,7 +8,7 @@ class Employee < ApplicationRecord
 
   def self.with_groups
     @record = Employee.preload(:group)
-                      .map do |employee|
+      .map do |employee|
       {
         employee: employee,
         group: employee.group,

@@ -95,7 +95,7 @@ class Api::V1::FoodProductsApiController < ApplicationController
 
   def get_food_products_have_no_cooking_process_order
     @food_products = FoodProduct.where.missing(:cooking_process_order)
-                                .where(is_cooking: true)
+      .where(is_cooking: true)
     render json: fmt(ok, @food_products.as_json(include: :group))
   end
 end

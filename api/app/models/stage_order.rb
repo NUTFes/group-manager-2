@@ -7,7 +7,7 @@ class StageOrder < ApplicationRecord
 
   def self.with_groups
     @record = StageOrder.preload(:group)
-                        .map do |stage_order|
+      .map do |stage_order|
       {
         stage_order: stage_order,
         stage_order_info: stage_order.to_info_h,

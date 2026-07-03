@@ -27,8 +27,8 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
   def get_search_cooking_process_orders
     word = params[:word]
     @food_products = FoodProduct.joins(:group).includes(:group, :cooking_process_order)
-                                .where('food_products.name LIKE :word OR groups.name LIKE :word', word: "%#{word}%")
-                                .order('groups.id')
+      .where('food_products.name LIKE :word OR groups.name LIKE :word', word: "%#{word}%")
+      .order('groups.id')
 
     if @food_products.empty?
       render json: fmt(not_found, [], 'Not found food products')

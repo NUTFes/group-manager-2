@@ -5,7 +5,7 @@ class PowerOrder < ApplicationRecord
 
   def self.with_groups
     @record = PowerOrder.preload(:group)
-                        .map do |power_order|
+      .map do |power_order|
       {
         power_order: power_order,
         group: power_order.group

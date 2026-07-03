@@ -5,7 +5,7 @@ class StageCommonOption < ApplicationRecord
 
   def self.with_groups
     @record = StageCommonOption.preload(:group)
-                               .map do |stage_common_option|
+      .map do |stage_common_option|
       {
         stage_common_option: stage_common_option,
         group: stage_common_option.group

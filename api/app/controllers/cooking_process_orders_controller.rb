@@ -64,10 +64,10 @@ class CookingProcessOrdersController < ApplicationController
 
     upserts = raw_orders.map do |order|
       attrs = ActionController::Parameters
-              .new(order)
-              .permit(*keys)
-              .to_h
-              .symbolize_keys
+        .new(order)
+        .permit(*keys)
+        .to_h
+        .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
       attrs = apply_tent_translation(
         attrs,
@@ -166,12 +166,12 @@ class CookingProcessOrdersController < ApplicationController
 
     records_by_id =
       CookingProcessOrder
-      .where(id: ids)
-      .index_by { |order| order.id.to_s }
+        .where(id: ids)
+        .index_by { |order| order.id.to_s }
     records_by_food_product_id =
       CookingProcessOrder
-      .where(food_product_id: food_product_ids)
-      .index_by { |order| order.food_product_id.to_s }
+        .where(food_product_id: food_product_ids)
+        .index_by { |order| order.food_product_id.to_s }
 
     {
       by_id: records_by_id,
