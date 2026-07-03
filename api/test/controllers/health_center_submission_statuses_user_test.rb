@@ -29,8 +29,8 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     )
   end
 
-  # ログインユーザー自身の団体について、電力・火器申請ステータスが取得できることを確認する。
-  test 'gets user submission statuses including power and fire equipment' do
+  # ログインユーザー自身の団体について、再提出対象の各申請ステータスが取得できることを確認する。
+  test 'gets user submission statuses including resubmission application types' do
     get "/health_center_submission_statuses/user/#{@group.id}",
         headers: auth_headers(@user),
         as: :json
@@ -38,8 +38,9 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     assert_response :success
     application_types = response.parsed_body.dig('data', 'submissions').pluck('application_type')
 
-    assert_includes application_types, 'power_order'
-    assert_includes application_types, 'fire_equipment_order'
+    resubmission_application_types.each do |application_type|
+      assert_includes application_types, application_type.to_s
+    end
   end
 
   # 他ユーザーの団体IDを指定しても、申請ステータスを閲覧できないことを確認する。
@@ -114,6 +115,25 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
+  # 電力・火器以外の既存再提出申請も、共通のuser用APIから未承認状態へ戻せることを確認する。
+  test 'updates existing resubmission application statuses through user api' do
+    (resubmission_application_types - %i[power_order fire_equipment_order]).each do |application_type|
+      submission_status = HealthCenterSubmissionStatus.create!(
+        group: @group,
+        application_type: application_type,
+        status: :waiting_resubmission
+      )
+
+      patch "/health_center_submission_statuses/user/#{submission_status.id}",
+            params: { status: 'unapproved' },
+            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+            as: :json
+
+      assert_response :success
+      assert_equal 'unapproved', submission_status.reload.status
+    end
+  end
+
   # user用update APIで他ユーザーの団体ステータスを書き換えられないことを確認する。
   test 'does not update another users submission status' do
     submission_status = HealthCenterSubmissionStatus.create!(
@@ -183,6 +203,19 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   def auth_headers(user)
     user.create_new_auth_token
+  end
+
+  def resubmission_application_types
+    %i[
+      equipment
+      employee
+      food_product
+      purchase_list
+      venue_map
+      cooking_process_order
+      power_order
+      fire_equipment_order
+    ]
   end
 
   def with_slack_client_new_raising

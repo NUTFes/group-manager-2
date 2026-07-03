@@ -44,6 +44,15 @@ const skipSlackNotificationHeader = {
   'X-Skip-Slack-Notification': 'true',
 };
 
+const existingResubmissionApplicationTypes = [
+  'equipment',
+  'employee',
+  'food_product',
+  'purchase_list',
+  'venue_map',
+  'cooking_process_order',
+] as const;
+
 test.describe('power and fire equipment resubmission status', () => {
   let api: APIRequestContext;
   let authContext: AuthContext;
@@ -156,6 +165,62 @@ test.describe('power and fire equipment resubmission status', () => {
     expect(findStatus(finalStatuses, 'fire_equipment_order')?.status).toBe(
       'unapproved'
     );
+  });
+
+  // 電力・火器以外の既存再提出申請も、新しいuser用APIで未承認へ戻せることを実APIで確認する。
+  test('updates existing resubmission application statuses through user APIs', async () => {
+    expect(groupId).toBeDefined();
+
+    const waitingStatuses = await Promise.all(
+      existingResubmissionApplicationTypes.map((applicationType) =>
+        upsertSubmissionStatus(
+          api,
+          authContext.headers,
+          groupId!,
+          {
+            application_type: applicationType,
+            status: 'waiting_resubmission',
+          },
+          { asAdmin: true }
+        )
+      )
+    );
+
+    waitingStatuses.forEach((submissionStatus, index) => {
+      expect(submissionStatus.application_type).toBe(
+        existingResubmissionApplicationTypes[index]
+      );
+      expect(submissionStatus.status).toBe('waiting_resubmission');
+    });
+
+    const updatedStatuses = await Promise.all(
+      waitingStatuses.map((submissionStatus) =>
+        updateSubmissionStatus(
+          api,
+          authContext.headers,
+          submissionStatus.id,
+          'unapproved'
+        )
+      )
+    );
+
+    updatedStatuses.forEach((submissionStatus, index) => {
+      expect(submissionStatus.application_type).toBe(
+        existingResubmissionApplicationTypes[index]
+      );
+      expect(submissionStatus.status).toBe('unapproved');
+    });
+
+    const finalStatuses = await getSubmissionStatuses(
+      api,
+      authContext.headers,
+      groupId!
+    );
+    existingResubmissionApplicationTypes.forEach((applicationType) => {
+      expect(findStatus(finalStatuses, applicationType)?.status).toBe(
+        'unapproved'
+      );
+    });
   });
 });
 
