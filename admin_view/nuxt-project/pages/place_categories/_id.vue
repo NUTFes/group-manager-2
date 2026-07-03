@@ -79,11 +79,11 @@
           <select v-model="parentId">
             <option value="">未指定（所属エリアなし）</option>
             <option
-              v-for="cat in selectableCategories"
-              :key="cat.id"
-              :value="cat.id"
+              v-for="category in selectableCategories"
+              :key="category.id"
+              :value="category.id"
             >
-              {{ cat.formattedName }}
+              {{ category.formattedName }}
             </option>
           </select>
         </div>
@@ -168,11 +168,11 @@ export default {
     selectableCategories() {
       const descendantIds = getDescendantIds(this.placeCategory.id, this.placeCategories);
       return this.placeCategories
-        .filter(cat => cat.id !== this.placeCategory.id && !descendantIds.includes(cat.id))
-        .map(cat => ({
-          ...cat,
-          formattedName: getFormattedName(cat, this.placeCategories),
-          sortKey: getSortKey(cat, this.placeCategories)
+        .filter(category => category.id !== this.placeCategory.id && !descendantIds.includes(category.id))
+        .map(category => ({
+          ...category,
+          formattedName: getFormattedName(category, this.placeCategories),
+          sortKey: getSortKey(category, this.placeCategories)
         }))
         .sort((a, b) => a.sortKey.localeCompare(b.sortKey));
     }
