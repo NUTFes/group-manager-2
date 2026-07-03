@@ -86,9 +86,10 @@ class HealthCenterSubmissionStatusesController < ApplicationController
   end
 
   def current_user_submission_status(id)
-    HealthCenterSubmissionStatus.joins(:group)
-                                .where(groups: { user_id: current_api_user.id })
-                                .find_by(id: id)
+    HealthCenterSubmissionStatus
+      .joins(:group)
+      .where(groups: { user_id: current_api_user.id })
+      .find_by(id: id)
   end
 
   def render_user_not_found
