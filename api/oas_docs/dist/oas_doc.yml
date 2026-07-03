@@ -2038,35 +2038,6 @@ paths:
         required: true
         schema:
           type: integer
-  "/api/v1/get_health_center_submission_status_for_user/{group_id}":
-    get:
-      tags:
-      - api/v1/health_center_submission_statuses_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/health_center_submission_statuses_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
-        '404':
-          description: api/v1/health_center_submission_statuses_api description
-        '422':
-          description: api/v1/health_center_submission_statuses_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
-      deprecated: false
-      parameters:
-      - name: group_id
-        in: path
-        description: group_id
-        required: true
-        schema:
-          type: integer
   "/api/v1/get_health_center_submission_status_index_for_admin_view":
     get:
       tags:
@@ -2208,33 +2179,6 @@ paths:
         required: true
         schema:
           type: integer
-  "/api/v1/update_health_center_submission_status_for_user/{id}":
-    patch:
-      tags:
-      - api/v1/health_center_submission_statuses_api
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: api/v1/health_center_submission_statuses_api description
-        '404':
-          description: api/v1/health_center_submission_statuses_api description
-        '422':
-          description: api/v1/health_center_submission_statuses_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
   "/api/v1/upsert_health_center_submission_status":
     post:
       tags:
@@ -2257,28 +2201,84 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
-  "/api/v1/upsert_health_center_submission_status_for_user":
+  "/health_center_submission_statuses/user/upsert":
     post:
       tags:
-      - api/v1/health_center_submission_statuses_api
+      - health_center_submission_status
       summary: post summary
       description: post description
       responses:
         '201':
-          description: api/v1/health_center_submission_statuses_api description
+          description: health_center_submission_status description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
         '422':
-          description: api/v1/health_center_submission_statuses_api description
+          description: health_center_submission_status description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
       deprecated: false
       requestBody:
-        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+  "/health_center_submission_statuses/user/{group_id}":
+    get:
+      tags:
+      - health_center_submission_status
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/health_center_submission_statuses/user/{id}":
+    patch:
+      tags:
+      - health_center_submission_status
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: health_center_submission_status description
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/mail_deliveries":
     post:
       tags:
@@ -11820,6 +11820,12 @@ components:
           type: integer
           format: int64
     api.v1.HealthCenterSubmissionStatusesApi: {}
+    HealthCenterSubmissionStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
     api.v1.MailDelivery: {}
     api.v1.MessageTemplate: {}
     api.v1.OrderInfosApi:
@@ -12362,6 +12368,11 @@ components:
           schema:
             "$ref": "#/components/schemas/api.v1.GroupsApi"
     api.v1.HealthCenterSubmissionStatusesApi: {}
+    HealthCenterSubmissionStatus:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
     api.v1.MailDelivery: {}
     api.v1.MessageTemplate: {}
     api.v1.OrderInfosApi:

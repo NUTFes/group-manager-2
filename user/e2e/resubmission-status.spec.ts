@@ -277,7 +277,7 @@ const getSubmissionStatuses = async (
   groupId: number
 ): Promise<SubmissionStatus[]> => {
   const response = await api.get(
-    `/api/v1/get_health_center_submission_status_for_user/${groupId}`,
+    `/health_center_submission_statuses/user/${groupId}`,
     {
       headers: authHeaders,
     }
@@ -302,7 +302,7 @@ const upsertSubmissionStatus = async (
   const response = await api.post(
     options.asAdmin
       ? '/api/v1/upsert_health_center_submission_status'
-      : '/api/v1/upsert_health_center_submission_status_for_user',
+      : '/health_center_submission_statuses/user/upsert',
     {
       headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: {
@@ -329,7 +329,7 @@ const updateSubmissionStatus = async (
   expect(statusId).not.toBeNull();
 
   const response = await api.patch(
-    `/api/v1/update_health_center_submission_status_for_user/${statusId}`,
+    `/health_center_submission_statuses/user/${statusId}`,
     {
       headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: { status },

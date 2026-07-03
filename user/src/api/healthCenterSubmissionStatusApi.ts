@@ -5,12 +5,11 @@ import {
 } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
-  HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/get_health_center_submission_status_for_user',
+  HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses/user',
   UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/update_health_center_submission_status_for_user',
+    '/health_center_submission_statuses/user',
   UPSERT_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/upsert_health_center_submission_status_for_user',
+    '/health_center_submission_statuses/user/upsert',
 };
 
 type ApiStatus = { code: number; message: string };

@@ -73,7 +73,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('900W')).toBeVisible();
     expect(state.requestedUrls).toContain('/power_orders');
     expect(state.requestedUrls).toContain(
-      '/api/v1/update_health_center_submission_status_for_user/3001'
+      '/health_center_submission_statuses/user/3001'
     );
   });
 
@@ -103,7 +103,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('E2E 登録備考')).toBeVisible();
     expect(state.requestedUrls).toContain('/fire_equipment_orders');
     expect(state.requestedUrls).toContain(
-      '/api/v1/update_health_center_submission_status_for_user/3002'
+      '/health_center_submission_statuses/user/3002'
     );
   });
 
@@ -141,7 +141,7 @@ test.describe('resubmission UI', () => {
     ).toHaveCount(0);
     expect(state.requestedUrls).toContain('/power_orders/4001');
     expect(state.requestedUrls).toContain(
-      '/api/v1/update_health_center_submission_status_for_user/3001'
+      '/health_center_submission_statuses/user/3001'
     );
   });
 
@@ -180,7 +180,7 @@ test.describe('resubmission UI', () => {
     ).toHaveCount(0);
     expect(state.requestedUrls).toContain('/fire_equipment_orders/5001');
     expect(state.requestedUrls).toContain(
-      '/api/v1/update_health_center_submission_status_for_user/3002'
+      '/health_center_submission_statuses/user/3002'
     );
   });
 
@@ -335,10 +335,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(checkAllRegistered(state)));
     }
 
-    if (
-      path ===
-      `/api/v1/get_health_center_submission_status_for_user/${mockGroupId}`
-    ) {
+    if (path === `/health_center_submission_statuses/user/${mockGroupId}`) {
       return fulfillJson(
         route,
         apiResponse({
@@ -409,9 +406,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
 
     if (
       method === 'PATCH' &&
-      path.startsWith(
-        '/api/v1/update_health_center_submission_status_for_user/'
-      )
+      path.startsWith('/health_center_submission_statuses/user/')
     ) {
       state.requestedUrls.push(path);
       const statusId = Number(path.split('/').pop());

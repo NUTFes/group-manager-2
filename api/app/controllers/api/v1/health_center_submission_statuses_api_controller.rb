@@ -6,11 +6,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   before_action :authenticate_api_user!, only: %i[
     get_health_center_submission_status_index_for_admin_view
     get_health_center_submission_status_show_for_admin_view
-    get_health_center_submission_status_for_user
     update_health_center_submission_status
-    update_health_center_submission_status_for_user
     upsert_health_center_submission_status
-    upsert_health_center_submission_status_for_user
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
     create_health_center_submission_status_comment_mail
@@ -21,7 +18,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
-    get_health_center_submission_status_for_user
   ]
   before_action :require_mail_delivery_role!, only: %i[
     create_health_center_submission_status_comment_mail
@@ -70,16 +66,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
                      })
   end
 
-  # user画面用の申請ステータス取得
-  def get_health_center_submission_status_for_user
-    group = current_user_group(params[:group_id])
-    return render_user_not_found unless group
-
-    render json: fmt(ok, {
-                       submissions: HealthCenterSubmissionStatus.default_submissions_for(group)
-                     })
-  end
-
   #---更新（PATCH）
 
   # ステータス変更
@@ -88,36 +74,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     save_submission_status(@submission_status)
   end
 
-  # user画面用ステータス変更
-  def update_health_center_submission_status_for_user
-    return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
-
-    @submission_status = current_user_submission_status(params[:id])
-    return render_user_not_found unless @submission_status
-
-    save_submission_status(@submission_status)
-  end
-
   # ステータス変更（未作成ならINSERT）
   def upsert_health_center_submission_status
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status
-    return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
-    return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
-
-    save_submission_status(@submission_status)
-  end
-
-  # user画面用ステータス変更（未作成ならINSERT）
-  def upsert_health_center_submission_status_for_user
-    return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
-    return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
-
-    group = current_user_group(params[:group_id])
-    return render_user_not_found unless group
-
-    @submission_status = resolve_submission_status(group_id: group.id)
     return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
@@ -349,13 +310,13 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     }
   end
 
-  def resolve_submission_status(default_status: nil, group_id: nil)
+  def resolve_submission_status(default_status: nil)
     if params[:health_center_submission_status_id].present?
       HealthCenterSubmissionStatus.find_by(id: params[:health_center_submission_status_id])
     elsif params[:group_id].present? && params[:application_type].present?
       status = params[:status].presence || default_status || HealthCenterSubmissionStatus::DEFAULT_STATUS
       HealthCenterSubmissionStatus.find_or_initialize_by(
-        group_id: group_id || params[:group_id],
+        group_id: params[:group_id],
         application_type: params[:application_type]
       ).tap do |submission_status|
         submission_status.status = status if submission_status.new_record? || params[:status].present?
@@ -365,30 +326,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
   def valid_application_type?(application_type)
     HealthCenterSubmissionStatus.application_types.key?(application_type)
-  end
-
-  def valid_user_status?(status)
-    status == 'unapproved'
-  end
-
-  def current_user_group(group_id)
-    return nil if group_id.blank?
-
-    current_api_user.groups.find_by(id: group_id)
-  end
-
-  def current_user_submission_status(id)
-    HealthCenterSubmissionStatus.joins(:group)
-                                .where(groups: { user_id: current_api_user.id })
-                                .find_by(id: id)
-  end
-
-  def render_user_not_found
-    render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
-  end
-
-  def render_invalid_user_status
-    render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity
   end
 
   # 一覧画面用のデータ整形
