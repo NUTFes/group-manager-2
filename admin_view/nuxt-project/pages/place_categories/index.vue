@@ -19,7 +19,7 @@
             :key="index"
             @click="
               () => {
-                if (category.id !== '—') {
+                if (category.id) {
                   $router.push({ path: `/place_categories/` + category.id });
                 }
               }
@@ -121,11 +121,11 @@ export default {
       categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
       const unassignedStockerPlacesCount = this.stockerPlaces.filter(sp => !sp.place_category_id).length;
       categories.push({
-        id: "—",
+        id: null,
         name: "未指定",
         formattedName: "未指定",
-        parentName: "—",
-        childrenCount: "—",
+        parentName: "",
+        childrenCount: null,
         stockerPlacesCount: unassignedStockerPlacesCount,
       });
       return categories;
