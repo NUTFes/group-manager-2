@@ -25,7 +25,7 @@
             <td>{{ formattedName }}</td>
           </tr>
           <tr>
-            <td>親エリア</td>
+            <td>所属エリア</td>
             <td>{{ parentName }}</td>
           </tr>
           <tr>
@@ -37,7 +37,7 @@
             <td>{{ placeCategory.updated_at | formatDate }}</td>
           </tr>
           <tr>
-            <td>下層エリア</td>
+            <td>サブエリア</td>
             <td class="text-left">
               <ul class="in-table-list">
                 <li v-for="child in children" :key="child.id">
@@ -48,7 +48,7 @@
             </td>
           </tr>
           <tr>
-            <td>紐づく在庫場所</td>
+            <td>エリア内の保管場所</td>
             <td class="text-left">
               <ul class="in-table-tree">
                 <AreaTreeNode 
@@ -75,9 +75,9 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>親エリア</h3>
+          <h3>所属エリア</h3>
           <select v-model="parentId">
-            <option value="">未指定（親エリアなし）</option>
+            <option value="">未指定（所属エリアなし）</option>
             <option
               v-for="cat in selectableCategories"
               :key="cat.id"
@@ -114,7 +114,7 @@
 <script>
 import { mapState } from "vuex";
 import AreaTreeNode from "../../components/AreaTreeNode.vue";
-import { getFormattedName, getSortKey, getDescendantIds } from "../../utils/place_category_utils";
+import { getDescendantIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   components: {
     AreaTreeNode
@@ -188,7 +188,7 @@ export default {
     },
     openDeleteModal() {
       if (this.children.length > 0) {
-        this.openSnackBar("下層エリアが存在するため削除できません。先に下層エリアを別の親エリアに移動するか、削除してください。");
+        this.openSnackBar("サブエリアが存在するため削除できません。先にサブエリアを別の所属エリアに移動するか、削除してください。");
         return;
       }
       this.isOpenDeleteModal = true;
@@ -248,7 +248,7 @@ export default {
           if (error.response && error.response.data && error.response.data.status && error.response.data.status.option) {
             msg = error.response.data.status.option;
             if (msg.includes("Cannot delete record because dependent children exist")) {
-              msg = "下層エリアが存在するため削除できません。先に下層エリアを別の親エリアに移動するか、削除してください。";
+              msg = "サブエリアが存在するため削除できません。先にサブエリアを別の所属エリアに移動するか、削除してください。";
             }
           }
           this.openSnackBar(msg);
