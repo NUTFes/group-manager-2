@@ -36,7 +36,7 @@ type FireEquipmentOrder = {
 };
 
 type ScenarioState = {
-  pageMode: 'registration' | 'resubmission';
+  pageMode: 'registration' | 'resubmission' | 'closed';
   statuses: Record<
     'power_order' | 'fire_equipment_order',
     SubmissionStatusValue
@@ -135,6 +135,9 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('更新メーカー')).toBeVisible();
     await expect(page.getByText('UPD-900')).toBeVisible();
     await expect(page.getByText('950W')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
     expect(state.requestedUrls).toContain('/power_orders/4001');
     expect(state.requestedUrls).toContain(
       '/api/v1/update_health_center_submission_status_for_user/3001'
@@ -170,10 +173,36 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('炭')).toBeVisible();
     await expect(page.getByText('E2E 更新調理')).toBeVisible();
     await expect(page.getByText('E2E 更新備考')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
     expect(state.requestedUrls).toContain('/fire_equipment_orders/5001');
     expect(state.requestedUrls).toContain(
       '/api/v1/update_health_center_submission_status_for_user/3002'
     );
+  });
+
+  // 締切後かつ再提出状態ではない場合、登録済みの電力・火器申請カードを修正できないことを確認する。
+  test('does not allow editing existing power or fire equipment orders after deadline without resubmission status', async ({
+    page,
+  }) => {
+    const state = scenarioState('closed');
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+
+    await page.getByRole('button', { name: /電力申請/ }).click();
+    await expect(page.getByText('E2E ホットプレート')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+
+    await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await expect(page.getByText('E2E バーナー')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+    expect(state.requestedUrls).toHaveLength(0);
   });
 });
 
@@ -181,12 +210,20 @@ const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
   pageMode,
   statuses: {
     power_order:
-      pageMode === 'resubmission' ? 'waiting_resubmission' : 'unsubmitted',
+      pageMode === 'resubmission'
+        ? 'waiting_resubmission'
+        : pageMode === 'closed'
+          ? 'unapproved'
+          : 'unsubmitted',
     fire_equipment_order:
-      pageMode === 'resubmission' ? 'waiting_resubmission' : 'unsubmitted',
+      pageMode === 'resubmission'
+        ? 'waiting_resubmission'
+        : pageMode === 'closed'
+          ? 'unapproved'
+          : 'unsubmitted',
   },
   powerOrders:
-    pageMode === 'resubmission'
+    pageMode !== 'registration'
       ? [
           {
             id: 4001,
@@ -200,7 +237,7 @@ const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
         ]
       : [],
   fireEquipmentOrder:
-    pageMode === 'resubmission'
+    pageMode !== 'registration'
       ? {
           id: 5001,
           group_id: mockGroupId,
