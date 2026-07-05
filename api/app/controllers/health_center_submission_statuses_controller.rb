@@ -9,9 +9,12 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     group = current_user_group(params[:group_id])
     return render_user_not_found unless group
 
-    render json: fmt(ok, {
-                       submissions: HealthCenterSubmissionStatus.default_submissions_for(group)
-                     })
+    render json: fmt(
+      ok,
+      {
+        submissions: HealthCenterSubmissionStatus.default_submissions_for(group)
+      }
+    )
   end
 
   # user画面用ステータス変更
@@ -48,12 +51,15 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     submission_status.status = params[:status]
 
     if submission_status.save
-      render json: fmt(ok, {
-                         id: submission_status.id,
-                         group_id: submission_status.group_id,
-                         application_type: submission_status.application_type,
-                         status: submission_status.status
-                       })
+      render json: fmt(
+        ok,
+        {
+          id: submission_status.id,
+          group_id: submission_status.group_id,
+          application_type: submission_status.application_type,
+          status: submission_status.status
+        }
+      )
     else
       render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
     end
