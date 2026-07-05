@@ -147,6 +147,7 @@ const Power: FC<PowerProps> = ({
           isValid={isValid}
           radioOptions={RADIO_OPTIONS}
           showForm={applyPower === 'yes'}
+          submitError={submitError}
           onSubmit={handleFormSubmit}
         />
       );

@@ -118,7 +118,6 @@ export const useMutatePowerOrders = () => {
       await Promise.all(promises);
       return { success: true };
     } catch (error) {
-      console.error('電力申請送信エラー:', error);
       return { success: false, error };
     }
   };
@@ -131,7 +130,6 @@ export const useMutatePowerOrders = () => {
       await remove(`${API_ENDPOINTS.POWER_ORDERS}/${deviceId}`);
       return { success: true };
     } catch (error) {
-      console.error('電力申請削除エラー:', error);
       return { success: false, error };
     }
   };

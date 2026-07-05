@@ -96,9 +96,10 @@ export const usePowerApplication = (
     try {
       await updateStatus('unapproved');
       return true;
-    } catch (e) {
-      console.error(e);
-      toast.error(t('applications.power.messages.submitFailed'));
+    } catch {
+      const message = t('applications.power.messages.submitFailed');
+      updateState({ submitError: message });
+      toast.error(message);
       return false;
     }
   };
@@ -178,7 +179,6 @@ export const usePowerApplication = (
               const result = await deletePowerOrder(device.id);
               return result;
             } catch (error) {
-              console.error(`デバイスID ${device.id} の削除に失敗:`, error);
               return { success: false, error };
             }
           })
@@ -187,7 +187,6 @@ export const usePowerApplication = (
         // いずれかの削除が失敗した場合は警告を表示するが処理は続行
         const hasFailures = deleteResults.some((result) => !result.success);
         if (hasFailures) {
-          console.warn('一部のデバイス削除に失敗しましたが、処理を続行します');
           toast.warning(t('applications.power.messages.partialDeleteWarning'));
         }
       }
@@ -210,8 +209,7 @@ export const usePowerApplication = (
         });
         toast.error(message);
       }
-    } catch (error) {
-      console.error('申請処理中のエラー:', error);
+    } catch {
       const message = t('applications.power.messages.processError');
       updateState({
         submitError: message,
@@ -236,16 +234,11 @@ export const usePowerApplication = (
       try {
         const deleteResult = await deleteUnregisteredGroup(unregisteredData);
         if (!deleteResult.success) {
-          console.warn('未登録テーブル削除エラー:', deleteResult.error);
           toast.warning(
             t('applications.power.messages.unregisteredDeleteWarning')
           );
         }
-      } catch (error) {
-        console.warn(
-          '未登録テーブル削除中にエラーが発生しましたが、処理を続行します:',
-          error
-        );
+      } catch {
         toast.warning(
           t('applications.power.messages.unregisteredDeleteWarning')
         );
@@ -282,8 +275,7 @@ export const usePowerApplication = (
         });
         toast.error(message);
       }
-    } catch (error) {
-      console.error('申請送信中のエラー:', error);
+    } catch {
       const message = t('applications.power.messages.submitUnexpectedError');
       updateState({
         submitError: message,

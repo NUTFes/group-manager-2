@@ -38,6 +38,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     submitHandler,
     isEditing,
     validate,
+    submitError,
   } = useFireEquipmentOrder(
     groupId,
     fireEquipmentData,
@@ -76,6 +77,11 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
       <div style={{ display: isRegister ? 'none' : 'block' }}>
         <form onSubmit={submitUnregisteredHandler}>
           <div className="mt-8 flex flex-col items-center gap-4">
+            {submitError && (
+              <p className="max-w-[400px] break-words text-sm text-red-500">
+                {submitError}
+              </p>
+            )}
             <Button type="submit" size="pc" color="main">
               {fireEquipmentTexts.buttons.register}
             </Button>
@@ -96,6 +102,9 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
               validate={disableValidate ? undefined : validate}
               submitLabel={submitLabel}
             />
+            {submitError && (
+              <p className="text-center text-sm text-red-500">{submitError}</p>
+            )}
           </div>
         </form>
       </div>

@@ -34,6 +34,7 @@ export interface PowerFormViewProps {
   isValid: boolean;
   radioOptions: RadioOption[];
   showForm: boolean;
+  submitError: string | null;
   onSubmit: (data: PowerApplicationFormData) => Promise<void>;
 }
 

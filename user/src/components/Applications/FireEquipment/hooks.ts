@@ -63,8 +63,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
       await deleteFireEquipmentOrder(fireEquipment.id);
       await mutateFireEquipmentOrder();
       toast.success(fireEquipmentTexts.messages.deleteSuccess);
-    } catch (error) {
-      console.error('火気申請削除エラー:', error);
+    } catch {
       toast.error(fireEquipmentTexts.messages.deleteFailed);
     }
   };
