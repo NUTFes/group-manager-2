@@ -116,7 +116,7 @@ test.describe('power and fire equipment resubmission status', () => {
       'unsubmitted'
     );
 
-    const waitingPower = await upsertSubmissionStatus(
+    const waitingPower = await submitSubmissionStatus(
       api,
       authContext.headers,
       groupId!,
@@ -128,7 +128,7 @@ test.describe('power and fire equipment resubmission status', () => {
     );
     expect(waitingPower.status).toBe('waiting_resubmission');
 
-    const waitingFire = await upsertSubmissionStatus(
+    const waitingFire = await submitSubmissionStatus(
       api,
       authContext.headers,
       groupId!,
@@ -173,7 +173,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const waitingStatuses = await Promise.all(
       existingResubmissionApplicationTypes.map((applicationType) =>
-        upsertSubmissionStatus(
+        submitSubmissionStatus(
           api,
           authContext.headers,
           groupId!,
@@ -357,7 +357,7 @@ const getSubmissionStatuses = async (
   return body.data.submissions;
 };
 
-const upsertSubmissionStatus = async (
+const submitSubmissionStatus = async (
   api: APIRequestContext,
   authHeaders: AuthHeaders,
   groupId: number,
@@ -367,7 +367,7 @@ const upsertSubmissionStatus = async (
   const response = await api.post(
     options.asAdmin
       ? '/api/v1/upsert_health_center_submission_status'
-      : '/health_center_submission_statuses/user/upsert',
+      : '/health_center_submission_statuses/user',
     {
       headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: {

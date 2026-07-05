@@ -147,7 +147,7 @@ Rails.application.routes.draw do
     collection do
       get 'user/:group_id', to: 'health_center_submission_statuses#user_index'
       patch 'user/:id', to: 'health_center_submission_statuses#user_update'
-      post 'user/upsert', to: 'health_center_submission_statuses#user_upsert'
+      post 'user', to: 'health_center_submission_statuses#user_create'
     end
   end
 

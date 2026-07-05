@@ -52,9 +52,9 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # ログインユーザー自身の団体について、user用APIから電力申請を未承認状態へ更新できることを確認する。
-  test 'upserts user power order submission status' do
-    post '/health_center_submission_statuses/user/upsert',
+  # ログインユーザー自身の団体について、user用APIから電力申請を未承認状態で新規作成できることを確認する。
+  test 'creates user power order submission status' do
+    post '/health_center_submission_statuses/user',
          params: {
            group_id: @group.id,
            application_type: 'power_order',
@@ -68,9 +68,9 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', status.status
   end
 
-  # user用upsert APIで他ユーザーの団体ステータスを作成・更新できないことを確認する。
-  test 'does not upsert another users submission status' do
-    post '/health_center_submission_statuses/user/upsert',
+  # user用create APIで他ユーザーの団体ステータスを作成できないことを確認する。
+  test 'does not create another users submission status' do
+    post '/health_center_submission_statuses/user',
          params: {
            group_id: @other_group.id,
            application_type: 'power_order',
@@ -85,7 +85,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # user用APIではapprovedへの自己承認ができないことを確認する。
   test 'does not allow user to approve own submission status' do
-    post '/health_center_submission_statuses/user/upsert',
+    post '/health_center_submission_statuses/user',
          params: {
            group_id: @group.id,
            application_type: 'power_order',

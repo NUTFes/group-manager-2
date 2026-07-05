@@ -8,8 +8,8 @@ const API_ENDPOINTS = {
   HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses/user',
   UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
     '/health_center_submission_statuses/user',
-  UPSERT_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/health_center_submission_statuses/user/upsert',
+  CREATE_HEALTH_CENTER_SUBMISSION_STATUS:
+    '/health_center_submission_statuses/user',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -44,9 +44,9 @@ export const useUpdateHealthCenterSubmissionStatus = () => {
   );
 };
 
-export const useUpsertHealthCenterSubmissionStatus = () => {
+export const useCreateHealthCenterSubmissionStatus = () => {
   return useAuthenticatedPost(
-    API_ENDPOINTS.UPSERT_HEALTH_CENTER_SUBMISSION_STATUS
+    API_ENDPOINTS.CREATE_HEALTH_CENTER_SUBMISSION_STATUS
   );
 };
 
@@ -57,7 +57,7 @@ export const useUpdateSubmissionStatusFor = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: updateTrigger } = useUpdateHealthCenterSubmissionStatus()();
-  const { trigger: upsertTrigger } = useUpsertHealthCenterSubmissionStatus();
+  const { trigger: createTrigger } = useCreateHealthCenterSubmissionStatus();
 
   return async (status: HealthCenterSubmissionStatus) => {
     const submission = healthCenterSubmissionStatus.find(
@@ -73,7 +73,7 @@ export const useUpdateSubmissionStatusFor = (
         );
       }
 
-      await upsertTrigger({
+      await createTrigger({
         body: {
           group_id: groupId,
           application_type: applicationType,

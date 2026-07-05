@@ -24,17 +24,18 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     save_submission_status(submission_status)
   end
 
-  # user画面用ステータス変更（未作成ならINSERT）
-  def user_upsert
+  # user画面用ステータス初回作成（未作成分をINSERT）
+  def user_create
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
     return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
 
     group = current_user_group(params[:group_id])
     return render_user_not_found unless group
 
-    submission_status = resolve_submission_status(group.id)
-    return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && submission_status.nil?
-    return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if submission_status.nil?
+    submission_status = HealthCenterSubmissionStatus.find_or_initialize_by(
+      group_id: group.id,
+      application_type: params[:application_type]
+    )
 
     save_submission_status(submission_status)
   end
@@ -55,19 +56,6 @@ class HealthCenterSubmissionStatusesController < ApplicationController
                        })
     else
       render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
-    end
-  end
-
-  def resolve_submission_status(group_id)
-    if params[:health_center_submission_status_id].present?
-      current_user_submission_status(params[:health_center_submission_status_id])
-    elsif params[:group_id].present? && params[:application_type].present?
-      HealthCenterSubmissionStatus.find_or_initialize_by(
-        group_id: group_id,
-        application_type: params[:application_type]
-      ).tap do |submission_status|
-        submission_status.status = params[:status] if submission_status.new_record? || params[:status].present?
-      end
     end
   end
 
