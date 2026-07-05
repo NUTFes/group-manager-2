@@ -12,7 +12,10 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       origins 'https://group-manager.nutfes.net', 'https://group-manager-admin.nutfes.net'
     else
       # 開発環境用のローカルホスト系🔧
-      origins 'http://localhost:8000', 'http://localhost:8003','http://localhost:8004','http://admin_view:8000','http://user:8003','http://swagger-ui:8004', 'http://user:6006', 'http://localhost:6006'
+      origins 'http://localhost:8000', 'http://localhost:8003', 'http://localhost:8004',
+              'http://localhost:3100', 'http://127.0.0.1:3100',
+              'http://admin_view:8000', 'http://user:8003', 'http://swagger-ui:8004',
+              'http://user:6006', 'http://localhost:6006'
     end
 
     resource '*',
