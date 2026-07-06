@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-class Api::V1::MessageTemplatesController < ApplicationController
+class Api::V1::MessageTemplatesController < Api::V1::BaseController
   COPY_SUFFIX = { 'ja' => 'のコピー', 'en' => ' copy' }.freeze
 
-  before_action :authenticate_api_user!
-  before_action :require_admin!
   before_action :set_message_template, only: %i[show update copy_source]
   before_action :validate_locale_param, only: %i[create update]
 
@@ -51,14 +49,6 @@ class Api::V1::MessageTemplatesController < ApplicationController
   end
 
   private
-
-  def require_admin!
-    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
-    return if [1, 2].include?(current_api_user&.role_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
-           status: :forbidden
-  end
 
   def set_message_template
     @message_template = MessageTemplate.find(params[:id])

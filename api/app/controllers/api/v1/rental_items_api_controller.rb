@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::RentalItemsApiController < ApplicationController
+class Api::V1::RentalItemsApiController < Api::V1::BaseController
   def get_rentable_items
     @items = RentalItem.where(is_inside_shop_rentable: true).where(is_outside_shop_rentable: true).where(is_stage_rentable: true)
     render json: fmt(ok, @items)

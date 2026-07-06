@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::FoodProductsApiController < ApplicationController
+class Api::V1::FoodProductsApiController < Api::V1::BaseController
   def get_food_product_index_for_admin_view
     @food_products = FoodProduct.with_groups
     render json: fmt(ok, @food_products)

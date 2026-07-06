@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::StockerItemsApiController < ApplicationController
+class Api::V1::StockerItemsApiController < Api::V1::BaseController
   def get_stocker_items_with_remaining_num
     rental_item_id = params[:rental_item_id].to_i
     stocker_place_id = params[:stocker_place_id].to_i

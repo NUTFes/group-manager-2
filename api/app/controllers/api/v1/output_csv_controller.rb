@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-class Api::V1::OutputCsvController < ApplicationController
+class Api::V1::OutputCsvController < Api::V1::BaseController
   require 'csv'
   require 'set'
-  before_action :authenticate_api_user!
   include ApplicationHelper
 
   def output_groups_csv

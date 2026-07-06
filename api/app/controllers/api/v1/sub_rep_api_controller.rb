@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::SubRepApiController < ApplicationController
-  before_action :authenticate_api_user!
-
+class Api::V1::SubRepApiController < Api::V1::BaseController
   # あいまい検索機能
   def get_search_sub_reps
     word = params[:word]

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::CurrentUserApiController < ApplicationController
-  before_action :authenticate_api_user!
-
+class Api::V1::CurrentUserApiController < Api::V1::BaseController
   # ログインユーザーの登録情報を全て取得する
   def current_regist_info
     @user = current_api_user
