@@ -23,7 +23,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: `rm -rf .next && NEXT_PUBLIC_API_URL=${apiBaseURL} SSR_API_URL=${apiBaseURL} NEXTAUTH_URL=${baseURL} NEXTAUTH_SECRET=${nextAuthSecret} pnpm exec next dev --turbopack --hostname 127.0.0.1 --port ${PORT}`,
+    command: `rm -rf .next && NEXT_PUBLIC_API_URL=${apiBaseURL} NEXT_PUBLIC_SKIP_SLACK_NOTIFICATION=true SSR_API_URL=${apiBaseURL} NEXTAUTH_URL=${baseURL} NEXTAUTH_SECRET=${nextAuthSecret} pnpm exec next dev --turbopack --hostname 127.0.0.1 --port ${PORT}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

@@ -18,6 +18,8 @@ export type ApiError = Error & {
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const SKIP_SLACK_NOTIFICATION =
+  process.env.NEXT_PUBLIC_SKIP_SLACK_NOTIFICATION === 'true';
 
 type FetchOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -31,6 +33,9 @@ type MutationArgs = { body?: any; query?: Record<string, any> };
 /** ヘッダー組み立て */
 function buildHeaders(session?: Session): HeadersInit {
   const haaders: HeadersInit = { 'Content-Type': 'application/json' };
+  if (SKIP_SLACK_NOTIFICATION) {
+    haaders['X-Skip-Slack-Notification'] = 'true';
+  }
   if (session) {
     haaders['access-token'] = session.accessToken!;
     haaders['client'] = session.client!;
