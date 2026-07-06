@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::CurrentUserApiController < Api::V1::BaseController
+  skip_before_action :require_staff_or_above!
+
   # ログインユーザーの登録情報を全て取得する
   def current_regist_info
     @user = current_api_user

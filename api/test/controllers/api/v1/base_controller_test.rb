@@ -42,6 +42,22 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  # 認可の例外系。role_id 3 の user はログインユーザー情報APIを利用できる。
+  test 'general user can access allowed current user api' do
+    get '/api/v1/users/show',
+        headers: auth_headers(@user),
+        as: :json
+
+    assert_response :success
+  end
+
+  # 認証の例外系。公開用の貸出物品APIは未認証でも利用できる。
+  test 'unauthenticated request can access public rental item api' do
+    get '/api/v1/get_stage_rentable_items', as: :json
+
+    assert_response :success
+  end
+
   # 認証の失敗系。未認証リクエストは v1 API を利用できない。
   test 'unauthenticated request cannot access v1 api' do
     get '/api/v1/get_refinement_fes_date_by_fes_year/0', as: :json

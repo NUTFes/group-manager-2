@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::UsersController < Api::V1::BaseController
+  skip_before_action :require_staff_or_above!, only: %i[show]
+
   def get_user_index_for_admin_view
     @users = User.with_user_details
     render json: fmt(ok, @users)

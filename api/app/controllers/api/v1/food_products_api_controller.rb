@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Api::V1::FoodProductsApiController < Api::V1::BaseController
+  skip_before_action :authenticate_api_user!, only: %i[get_food_products_by_group_id]
+  skip_before_action :require_staff_or_above!, only: %i[get_food_products_by_group_id]
+
   def get_food_product_index_for_admin_view
     @food_products = FoodProduct.with_groups
     render json: fmt(ok, @food_products)
