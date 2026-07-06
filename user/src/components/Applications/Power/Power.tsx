@@ -23,7 +23,7 @@ const Power: FC<PowerProps> = ({
 }) => {
   const powerAccordionHooks = usePowerAccordionHooks();
   const isResubmission = status === 'waiting_resubmission';
-  const isDeadlineLocked = !!isDeadline && !isResubmission;
+  const isFormLocked = !!isDeadline && !isResubmission;
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
@@ -50,7 +50,7 @@ const Power: FC<PowerProps> = ({
     hasExisting,
     isEditing,
     hasUnregistered,
-    isDeadline: isDeadlineLocked,
+    isDeadline: isFormLocked,
   });
 
   let content;
@@ -119,7 +119,7 @@ const Power: FC<PowerProps> = ({
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={false}
-          isDeadline={isDeadlineLocked}
+          isDeadline={isFormLocked}
         />
       );
       break;
@@ -129,7 +129,7 @@ const Power: FC<PowerProps> = ({
           devices={devices}
           onEdit={prepareFormForEditing}
           onDeleteDevice={handleDeleteDevice}
-          isDeadline={!isDeadlineLocked}
+          isDeadline={!isFormLocked}
         />
       );
       break;
@@ -156,7 +156,7 @@ const Power: FC<PowerProps> = ({
   return (
     <AccordionMenu
       title={powerAccordionHooks.powerAccordionTexts.title}
-      isEdit={!isDeadlineLocked}
+      isEdit={!isFormLocked}
       isExist={isRegistered}
       required={true}
     >
