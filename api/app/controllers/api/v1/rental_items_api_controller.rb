@@ -2,12 +2,12 @@
 
 class Api::V1::RentalItemsApiController < Api::V1::BaseController
   skip_before_action :authenticate_api_user!, only: %i[
-    get_all_rentable_items get_inside_shop_rentable_items
-    get_outside_shop_rentable_items get_stage_rentable_items
+    get_inside_shop_rentable_items get_outside_shop_rentable_items
+    get_stage_rentable_items
   ]
   skip_before_action :require_staff_or_above!, only: %i[
-    get_all_rentable_items get_inside_shop_rentable_items
-    get_outside_shop_rentable_items get_stage_rentable_items
+    get_inside_shop_rentable_items get_outside_shop_rentable_items
+    get_stage_rentable_items
   ]
 
   def get_rentable_items
