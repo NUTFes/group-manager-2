@@ -134,6 +134,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
         restoreState
       );
 
+      await suppressSlackNotificationForBrowserApi(page);
       await loginThroughUi(page, authContext.userId);
 
       const powerSection = applicationSection(page, /電力申請/);
@@ -256,6 +257,26 @@ const loginThroughUi = async (page: Page, expectedUserId: number) => {
       { timeout: 10_000 }
     )
     .toBe(String(expectedUserId));
+};
+
+const suppressSlackNotificationForBrowserApi = async (page: Page) => {
+  const apiOrigin = new URL(API_BASE_URL).origin;
+  const mutatingMethods = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+  await page.route(`${apiOrigin}/**`, async (route) => {
+    const request = route.request();
+    if (!mutatingMethods.has(request.method())) {
+      await route.continue();
+      return;
+    }
+
+    await route.continue({
+      headers: {
+        ...request.headers(),
+        ...skipSlackNotificationHeader,
+      },
+    });
+  });
 };
 
 const applicationSection = (page: Page, title: RegExp): Locator =>
