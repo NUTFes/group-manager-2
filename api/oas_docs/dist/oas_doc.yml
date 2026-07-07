@@ -2201,20 +2201,20 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
-  "/health_center_submission_statuses/user/upsert":
+  "/health_center_submission_statuses/user":
     post:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: post summary
       description: post description
       responses:
-        '201':
+        "200":
           description: health_center_submission_status description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -2226,19 +2226,19 @@ paths:
   "/health_center_submission_statuses/user/{group_id}":
     get:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: get summary
       description: get description
       responses:
-        '200':
+        "200":
           description: health_center_submission_status description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
-        '404':
+        "404":
           description: health_center_submission_status description
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -2246,24 +2246,28 @@ paths:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
       deprecated: false
       parameters:
-      - name: group_id
-        in: path
-        description: group_id
-        required: true
-        schema:
-          type: integer
+        - name: group_id
+          in: path
+          description: group_id
+          required: true
+          schema:
+            type: integer
   "/health_center_submission_statuses/user/{id}":
     patch:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: patch summary
       description: patch description
       responses:
-        '204':
+        "200":
           description: health_center_submission_status description
-        '404':
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        "404":
           description: health_center_submission_status description
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -2273,12 +2277,12 @@ paths:
       requestBody:
         "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
       parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
   "/api/v1/mail_deliveries":
     post:
       tags:
@@ -11826,6 +11830,30 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+          format: int64
+        application_type:
+          type: string
+          enum:
+            - food_product
+            - purchase_list
+            - cooking_process_order
+            - employee
+            - venue_map
+            - equipment
+            - power_order
+            - fire_equipment_order
+        status:
+          type: string
+          enum:
+            - unapproved
+            - waiting_resubmission
+            - approved
+            - unsubmitted
+      required:
+        - application_type
+        - status
     api.v1.MailDelivery: {}
     api.v1.MessageTemplate: {}
     api.v1.OrderInfosApi:

@@ -3,17 +3,17 @@ paths:
   "/health_center_submission_statuses/user":
     post:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: post summary
       description: post description
       responses:
-        '200':
+        "200":
           description: health_center_submission_status description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -25,19 +25,19 @@ paths:
   "/health_center_submission_statuses/user/{group_id}":
     get:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: get summary
       description: get description
       responses:
-        '200':
+        "200":
           description: health_center_submission_status description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
-        '404':
+        "404":
           description: health_center_submission_status description
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -45,28 +45,28 @@ paths:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
       deprecated: false
       parameters:
-      - name: group_id
-        in: path
-        description: group_id
-        required: true
-        schema:
-          type: integer
+        - name: group_id
+          in: path
+          description: group_id
+          required: true
+          schema:
+            type: integer
   "/health_center_submission_statuses/user/{id}":
     patch:
       tags:
-      - health_center_submission_status
+        - health_center_submission_status
       summary: patch summary
       description: patch description
       responses:
-        '200':
+        "200":
           description: health_center_submission_status description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
-        '404':
+        "404":
           description: health_center_submission_status description
-        '422':
+        "422":
           description: health_center_submission_status description
           content:
             application/json:
@@ -76,9 +76,9 @@ paths:
       requestBody:
         "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
       parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer

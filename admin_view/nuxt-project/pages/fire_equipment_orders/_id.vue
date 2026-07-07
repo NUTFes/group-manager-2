@@ -43,7 +43,7 @@
           </tr>
           <tr>
             <th>持ち帰り</th>
-            <td>{{ fireEquipmentOrder.is_takeaway ? 'はい' : 'いいえ' }}</td>
+            <td>{{ fireEquipmentOrder.is_takeaway ? "はい" : "いいえ" }}</td>
           </tr>
           <tr>
             <th>備考</th>
@@ -73,7 +73,11 @@
         </div>
         <div>
           <h3>火気の台数</h3>
-          <input v-model="quantity" type="number" placeholder="入力してください" />
+          <input
+            v-model="quantity"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>燃料</h3>
@@ -195,7 +199,7 @@ export default {
           usage: this.usage,
           is_takeaway: this.isTakeaway,
           remark: this.remark,
-        }
+        },
       };
       await this.$axios.$put(url, params).then(() => {
         this.openSnackBar("申請を編集しました");
@@ -208,7 +212,6 @@ export default {
       await this.$axios.$delete(url);
       this.$router.push("/fire_equipment_orders");
     },
-
   },
 };
 </script>
