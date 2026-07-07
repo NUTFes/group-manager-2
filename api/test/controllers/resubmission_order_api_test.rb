@@ -7,7 +7,9 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
   setup do
     Role.create!(id: 1, name: 'admin')
+    Role.create!(id: 3, name: 'user')
     @user = create_user!(email: 'resubmission-user@example.com')
+    @general_user = create_user!(email: 'general-resubmission-user@example.com', role_id: 3)
     @other_user = create_user!(email: 'other-resubmission-user@example.com')
     @group = create_group!(user: @user, name: '再提出団体')
     @other_group = create_group!(user: @other_user, name: '別団体')
@@ -36,6 +38,74 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal '変更後', power_order.reload.item
     assert_equal 'waiting_resubmission', submission_status.reload.status
+  end
+
+  test 'admin power order update rejects non admin user' do
+    power_order = create_power_order!(@group, item: '変更前')
+
+    put "/api/v1/admin/power_orders/#{power_order.id}",
+        params: {
+          group_id: @group.id,
+          item: '不正更新',
+          power: 900,
+          manufacturer: '一般ユーザー',
+          model: 'USER-1',
+          item_url: 'https://example.com/user'
+        },
+        headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :forbidden
+    assert_equal '変更前', power_order.reload.item
+  end
+
+  test 'admin health center submission status rejects non admin user' do
+    post '/api/v1/admin/health_center_submission_statuses',
+         params: {
+           group_id: @group.id,
+           application_type: 'power_order',
+           status: 'approved'
+         },
+         headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+         as: :json
+
+    assert_response :forbidden
+    assert_nil HealthCenterSubmissionStatus.find_by(group: @group, application_type: :power_order)
+  end
+
+  test 'admin power order update returns not found for unknown id' do
+    put '/api/v1/admin/power_orders/999999',
+        params: {
+          group_id: @group.id,
+          item: '変更後',
+          power: 900,
+          manufacturer: '管理者',
+          model: 'ADMIN-1',
+          item_url: 'https://example.com/admin'
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :not_found
+  end
+
+  test 'admin power order update returns unprocessable entity for invalid params' do
+    power_order = create_power_order!(@group, item: '変更前')
+
+    put "/api/v1/admin/power_orders/#{power_order.id}",
+        params: {
+          group_id: nil,
+          item: '変更後',
+          power: 900,
+          manufacturer: '管理者',
+          model: 'ADMIN-1',
+          item_url: 'https://example.com/admin'
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal @group.id, power_order.reload.group_id
   end
 
   test 'admin fire equipment order update does not change submission status' do
@@ -97,6 +167,37 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal '変更後', power_order.reload.item
     assert_equal 'unapproved', submission_status.reload.status
     assert_empty UnRegisteredGroup.where(group: @group, order_type: :power_order)
+  end
+
+  test 'user cannot resubmit power order unless status is waiting resubmission' do
+    power_order = create_power_order!(@group, item: '変更前')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order,
+      status: :approved
+    )
+
+    put '/api/v1/user/power_orders/resubmit',
+        params: {
+          group_id: @group.id,
+          use_power: true,
+          power_orders: [
+            {
+              id: power_order.id,
+              item: '変更後',
+              power: 1000,
+              manufacturer: '参加団体',
+              model: 'USER-1',
+              item_url: 'https://example.com/user'
+            }
+          ]
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '変更前', power_order.reload.item
+    assert_equal 'approved', submission_status.reload.status
   end
 
   test 'user resubmits no power application in one request' do
@@ -217,8 +318,43 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
+  test 'user cannot resubmit fire equipment order unless status is waiting resubmission' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :fire_equipment_order,
+      status: :approved
+    )
+
+    put '/api/v1/user/fire_equipment_orders/resubmit',
+        params: {
+          group_id: @group.id,
+          id: fire_equipment_order.id,
+          use_fire_equipment: true,
+          fire_equipment_order: {
+            name: '変更後',
+            quantity: 3,
+            fuel: 'charcoal',
+            usage: '調理',
+            is_takeaway: false,
+            remark: 'user'
+          }
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '変更前', fire_equipment_order.reload.name
+    assert_equal 'approved', submission_status.reload.status
+  end
+
   test 'user cannot resubmit another users fire equipment order' do
     other_fire_equipment_order = create_fire_equipment_order!(@other_group, name: '別団体')
+    HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :fire_equipment_order,
+      status: :waiting_resubmission
+    )
 
     put '/api/v1/user/fire_equipment_orders/resubmit',
         params: {
@@ -243,7 +379,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_user!(email:)
+  def create_user!(email:, role_id: 1)
     User.create!(
       name: email.split('@').first,
       email: email,
@@ -251,7 +387,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role_id: 1
+      role_id: role_id
     )
   end
 

@@ -6,6 +6,7 @@ class Api::V1::User::FireEquipmentOrdersController < ApplicationController
   def resubmit
     group = current_user_group
     return render_not_found unless group
+    return render_invalid_resubmission_status unless waiting_resubmission?(group, :fire_equipment_order)
 
     ActiveRecord::Base.transaction do
       fire_equipment_order = resolve_fire_equipment_order(group)
@@ -65,6 +66,14 @@ class Api::V1::User::FireEquipmentOrdersController < ApplicationController
 
   def use_fire_equipment?
     ActiveModel::Type::Boolean.new.cast(params[:use_fire_equipment])
+  end
+
+  def waiting_resubmission?(group, application_type)
+    group.health_center_submission_statuses.find_by(application_type: application_type)&.waiting_resubmission?
+  end
+
+  def render_invalid_resubmission_status
+    render json: fmt(unprocessable_entity, [], 'Status must be waiting_resubmission'), status: :unprocessable_entity
   end
 
   def render_not_found

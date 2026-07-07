@@ -403,11 +403,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       group.venue_map.present?
     when 'equipment'
       # 物品申請：通常の申請データか、「申請しない」回答のどちらかがあれば未確認にする
-      group.rental_orders.any? || group.un_registered_groups.rental_item_order.exists?
+      group.rental_orders.any? || group.un_registered_groups.any?(&:rental_item_order?)
     when 'power_order'
-      group.power_orders.any? || group.un_registered_groups.power_order.exists?
+      group.power_orders.any? || group.un_registered_groups.any?(&:power_order?)
     when 'fire_equipment_order'
-      group.fire_equipment_orders.any? || group.un_registered_groups.fire_equipment_order.exists?
+      group.fire_equipment_orders.any? || group.un_registered_groups.any?(&:fire_equipment_order?)
     else
       false
     end

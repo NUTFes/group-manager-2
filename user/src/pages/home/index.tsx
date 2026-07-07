@@ -170,6 +170,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={rentalItemsSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -210,6 +211,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={rentalItemsSubmission?.status}
         />
         <Stage
           isDeadline={!userPageSettings?.isEditStageOrder}
@@ -248,6 +250,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={rentalItemsSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -288,6 +291,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={rentalItemsSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -328,6 +332,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={rentalItemsSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}

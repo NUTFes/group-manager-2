@@ -2,6 +2,7 @@
 
 class Api::V1::Admin::PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def update
     power_order = PowerOrder.find_by(id: params[:id])

@@ -53,6 +53,14 @@ class ApplicationController < ActionController::API
     !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
   end
 
+  def require_admin!
+    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
+    return if [1, 2].include?(current_api_user&.role_id)
+
+    render json: fmt({ code: 403, message: 'Forbidden' }, []),
+           status: :forbidden
+  end
+
   def translate_to_ja(text)
     return text if text.blank?
     return text unless translatable_english_text?(text)

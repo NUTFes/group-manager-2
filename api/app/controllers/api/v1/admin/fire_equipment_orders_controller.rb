@@ -2,6 +2,7 @@
 
 class Api::V1::Admin::FireEquipmentOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def update
     fire_equipment_order = FireEquipmentOrder.find_by(id: params[:id])

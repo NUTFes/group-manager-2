@@ -6,6 +6,7 @@ class Api::V1::User::PowerOrdersController < ApplicationController
   def resubmit
     group = current_user_group
     return render_not_found unless group
+    return render_invalid_resubmission_status unless waiting_resubmission?(group, :power_order)
 
     ActiveRecord::Base.transaction do
       if use_power?
@@ -72,6 +73,14 @@ class Api::V1::User::PowerOrdersController < ApplicationController
 
   def delete_unregistered_power_order(group)
     group.un_registered_groups.power_order.destroy_all
+  end
+
+  def waiting_resubmission?(group, application_type)
+    group.health_center_submission_statuses.find_by(application_type: application_type)&.waiting_resubmission?
+  end
+
+  def render_invalid_resubmission_status
+    render json: fmt(unprocessable_entity, [], 'Status must be waiting_resubmission'), status: :unprocessable_entity
   end
 
   def render_not_found
