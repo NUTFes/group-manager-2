@@ -6,9 +6,7 @@ class Api::V1::FireEquipmentOrdersController < ApplicationController
 
   def update
     fire_equipment_order = FireEquipmentOrder.find_by(id: params[:id])
-    if fire_equipment_order.nil?
-      return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}"), status: :not_found
-    end
+    return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}"), status: :not_found if fire_equipment_order.nil?
 
     if fire_equipment_order.update(fire_equipment_order_params)
       render json: fmt(ok, fire_equipment_order)
