@@ -1,10 +1,9 @@
-import { FC, useState } from 'react';
-import Image from 'next/image';
+import { FC } from 'react';
 import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
-import Modal from '@/components/Modal/Modal';
+import ImagePreview from '@/components/ImagePreview';
 import VenueMapForm from './VenueMapForm';
 import { useVenueMapHooks } from './hooks';
 
@@ -102,8 +101,6 @@ const VenueMap: FC<VenueMapProps> = ({
   isRegistered,
   status,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const venueMapHooks = useVenueMapHooks(groupId, status);
   const {
     venueMap,
@@ -120,17 +117,13 @@ const VenueMap: FC<VenueMapProps> = ({
     ? [
         {
           label: venueMapTexts.summary.pictureLabel,
-          content: venueMap.picturePath ? (
-            <Image
+          content: (
+            <ImagePreview
               src={venueMap.picturePath}
               alt={venueMap.pictureName ?? ''}
-              width={512}
-              height={512}
-              className="h-auto w-full cursor-pointer rounded object-contain"
-              onClick={() => setIsModalOpen(true)}
+              emptyFallback={venueMapTexts.summary.notSet}
+              thumbnailClassName="h-48 w-full"
             />
-          ) : (
-            venueMapTexts.summary.notSet
           ),
         },
       ]
@@ -159,21 +152,6 @@ const VenueMap: FC<VenueMapProps> = ({
           isResubmission={isResubmission}
         />
       </AccordionMenu>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {venueMap?.picturePath && (
-          <div
-            className="relative h-[80vh] w-[80vw] max-w-[880px]"
-            onClick={() => setIsModalOpen(false)}
-          >
-            <Image
-              src={venueMap.picturePath}
-              alt={venueMap.pictureName ?? ''}
-              fill
-              className="object-contain"
-            />
-          </div>
-        )}
-      </Modal>
     </>
   );
 };

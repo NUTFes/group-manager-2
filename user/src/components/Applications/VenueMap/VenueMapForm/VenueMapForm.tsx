@@ -1,10 +1,9 @@
-import { FC, useState } from 'react';
-import Image from 'next/image';
+import { FC } from 'react';
 import { VenueMapResponse } from '@/api/venueMapApi';
 import Button from '@/components/Button/Button';
 import Checkbox from '@/components/Form/CheckBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
-import Modal from '@/components/Modal/Modal';
+import ImagePreview from '@/components/ImagePreview';
 import Upload from '@/components/Upload/Upload';
 import { useVenueMapFormHooks } from './hooks';
 
@@ -41,7 +40,6 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     venueMapFormTexts,
   } = venueMapFormHooks;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const displayPreviewUrl = previewUrl ?? venueMap?.picturePath ?? null;
 
   return (
@@ -75,20 +73,11 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
                 {venueMapFormTexts.upload.uploaded(fileName)}
               </div>
             )}
-            {displayPreviewUrl && (
-              <div
-                className="relative mt-2 h-48 w-full cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <Image
-                  src={displayPreviewUrl}
-                  alt={fileName ?? venueMap?.pictureName ?? ''}
-                  fill
-                  unoptimized={displayPreviewUrl.startsWith('blob:')}
-                  className="rounded object-contain"
-                />
-              </div>
-            )}
+            <ImagePreview
+              src={displayPreviewUrl}
+              alt={fileName ?? venueMap?.pictureName ?? ''}
+              thumbnailClassName="mt-2 h-48 w-full"
+            />
           </div>
 
           {/* 平面図確認事項 */}
@@ -132,22 +121,6 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
           </div>
         </form>
       )}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {displayPreviewUrl && (
-          <div
-            className="relative h-[80vh] w-[80vw] max-w-[880px]"
-            onClick={() => setIsModalOpen(false)}
-          >
-            <Image
-              src={displayPreviewUrl}
-              alt={fileName ?? venueMap?.pictureName ?? ''}
-              fill
-              unoptimized={displayPreviewUrl.startsWith('blob:')}
-              className="object-contain"
-            />
-          </div>
-        )}
-      </Modal>
     </FormContainer>
   );
 };
