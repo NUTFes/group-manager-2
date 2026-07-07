@@ -6,7 +6,9 @@ class Api::V1::PowerOrdersController < ApplicationController
 
   def update
     power_order = PowerOrder.find_by(id: params[:id])
-    return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?
+    if power_order.nil?
+      return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found
+    end
 
     if power_order.update(power_order_params)
       render json: fmt(ok, power_order, "Updated power_order id = #{params[:id]}")
