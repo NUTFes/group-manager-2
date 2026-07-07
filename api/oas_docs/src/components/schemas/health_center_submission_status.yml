@@ -7,3 +7,27 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+          format: int64
+        application_type:
+          type: string
+          enum:
+            - food_product
+            - purchase_list
+            - cooking_process_order
+            - employee
+            - venue_map
+            - equipment
+            - power_order
+            - fire_equipment_order
+        status:
+          type: string
+          enum:
+            - unapproved
+            - waiting_resubmission
+            - approved
+            - unsubmitted
+      required:
+        - application_type
+        - status

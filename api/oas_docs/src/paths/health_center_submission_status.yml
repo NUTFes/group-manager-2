@@ -1,13 +1,13 @@
 ---
 paths:
-  "/health_center_submission_statuses/user/upsert":
+  "/health_center_submission_statuses/user":
     post:
       tags:
       - health_center_submission_status
       summary: post summary
       description: post description
       responses:
-        '201':
+        '200':
           description: health_center_submission_status description
           content:
             application/json:
@@ -58,8 +58,12 @@ paths:
       summary: patch summary
       description: patch description
       responses:
-        '204':
+        '200':
           description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
         '404':
           description: health_center_submission_status description
         '422':

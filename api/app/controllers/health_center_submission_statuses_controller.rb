@@ -2,7 +2,7 @@
 
 class HealthCenterSubmissionStatusesController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_group_id, only: %i[user_index]
+  before_action :require_group_id, only: %i[user_index user_create]
 
   # user画面用の申請ステータス取得
   def user_index
