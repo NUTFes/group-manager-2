@@ -71,7 +71,10 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('登録メーカー')).toBeVisible();
     await expect(page.getByText('REG-100')).toBeVisible();
     await expect(page.getByText('900W')).toBeVisible();
-    expect(state.requestedUrls).toContain('/api/v1/user/power_orders/resubmit');
+    expect(state.requestedUrls).toContain('/power_orders');
+    expect(state.requestedUrls).not.toContain(
+      '/api/v1/user/power_orders/resubmit'
+    );
   });
 
   // 締切前の未登録状態から、火器申請フォームを入力・送信し、登録後カードに入力値が表示されることを確認する。
@@ -98,7 +101,8 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('LPガス')).toBeVisible();
     await expect(page.getByText('E2E 登録調理')).toBeVisible();
     await expect(page.getByText('E2E 登録備考')).toBeVisible();
-    expect(state.requestedUrls).toContain(
+    expect(state.requestedUrls).toContain('/fire_equipment_orders');
+    expect(state.requestedUrls).not.toContain(
       '/api/v1/user/fire_equipment_orders/resubmit'
     );
   });
@@ -347,6 +351,27 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(state.powerOrders));
     }
 
+    if (method === 'POST' && path === '/power_orders') {
+      state.requestedUrls.push(path);
+      const body = (await route
+        .request()
+        .postDataJSON()) as Partial<PowerOrder>;
+      const powerOrder = powerOrderFromBody(body, 4101);
+      state.powerOrders = [powerOrder];
+      return fulfillJson(route, apiResponse(powerOrder));
+    }
+
+    if (method === 'PUT' && /^\/power_orders\/\d+$/.test(path)) {
+      state.requestedUrls.push(path);
+      const body = (await route
+        .request()
+        .postDataJSON()) as Partial<PowerOrder>;
+      const id = Number(path.split('/').at(-1));
+      const powerOrder = powerOrderFromBody(body, id);
+      state.powerOrders = [powerOrder];
+      return fulfillJson(route, apiResponse(powerOrder));
+    }
+
     if (method === 'PUT' && path === '/api/v1/user/power_orders/resubmit') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
@@ -379,9 +404,66 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
     }
 
     if (
+      (method === 'DELETE' || method === 'POST') &&
+      path === '/un_registered_groups'
+    ) {
+      state.requestedUrls.push(path);
+      return fulfillJson(route, apiResponse([]));
+    }
+
+    if (
+      method === 'POST' &&
+      path === '/health_center_submission_statuses/user'
+    ) {
+      state.requestedUrls.push(path);
+      const body = (await route.request().postDataJSON()) as {
+        application_type: 'power_order' | 'fire_equipment_order';
+        status: SubmissionStatusValue;
+      };
+      state.statuses[body.application_type] = body.status;
+      return fulfillJson(
+        route,
+        apiResponse(submission(body.application_type, 3001, body.status))
+      );
+    }
+
+    if (
+      method === 'PATCH' &&
+      /^\/health_center_submission_statuses\/user\/\d+$/.test(path)
+    ) {
+      state.requestedUrls.push(path);
+      const id = Number(path.split('/').at(-1));
+      const body = (await route.request().postDataJSON()) as {
+        status: SubmissionStatusValue;
+      };
+      const applicationType =
+        id === 3002 ? 'fire_equipment_order' : 'power_order';
+      state.statuses[applicationType] = body.status;
+      return fulfillJson(
+        route,
+        apiResponse(submission(applicationType, id, body.status))
+      );
+    }
+
+    if (
       method === 'GET' &&
       path === `/fire_equipment_orders/group/${mockGroupId}`
     ) {
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+    }
+
+    if (method === 'POST' && path === '/fire_equipment_orders') {
+      state.requestedUrls.push(path);
+      const body = (await route.request().postDataJSON()) as FireEquipmentBody;
+      state.fireEquipmentOrder = fireEquipmentFromBody(body, 5101);
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+    }
+
+    if (method === 'PATCH' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
+      state.requestedUrls.push(path);
+      const body = (await route.request().postDataJSON()) as FireEquipmentBody;
+      const id = Number(path.split('/').at(-1));
+      state.fireEquipmentOrder = fireEquipmentFromBody(body, id);
       return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
     }
 
@@ -437,6 +519,19 @@ type FireEquipmentBody = {
   is_takeaway?: boolean;
   remark?: string;
 };
+
+const powerOrderFromBody = (
+  body: Partial<PowerOrder>,
+  id: number
+): PowerOrder => ({
+  id,
+  group_id: body.group_id ?? mockGroupId,
+  item: body.item ?? '',
+  power: body.power ?? 0,
+  manufacturer: body.manufacturer ?? '',
+  model: body.model ?? '',
+  item_url: body.item_url ?? '',
+});
 
 const fireEquipmentFromBody = (
   body: FireEquipmentBody,
