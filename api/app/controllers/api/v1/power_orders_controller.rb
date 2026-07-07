@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::Admin::PowerOrdersController < ApplicationController
+class Api::V1::PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
   before_action :require_admin!
 

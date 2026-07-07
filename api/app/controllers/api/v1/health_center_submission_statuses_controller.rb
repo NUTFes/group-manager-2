@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::Admin::HealthCenterSubmissionStatusesController < Api::V1::HealthCenterSubmissionStatusesApiController
+class Api::V1::HealthCenterSubmissionStatusesController < Api::V1::HealthCenterSubmissionStatusesApiController
   before_action :authenticate_api_user!
   before_action :require_admin!
 

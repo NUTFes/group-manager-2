@@ -56,7 +56,7 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
-  RESUBMIT_FIRE_EQUIPMENT_ORDERS: '/api/v1/user/fire_equipment_orders/resubmit',
+  RESUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/resubmit',
 };
 
 // グループIDで火気使用申請を取得

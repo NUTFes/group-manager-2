@@ -679,17 +679,14 @@ const upsertSubmissionStatus = async (
   groupId: number,
   params: Pick<SubmissionStatus, 'application_type' | 'status'>
 ): Promise<SubmissionStatus> => {
-  const response = await api.post(
-    '/api/v1/admin/health_center_submission_statuses',
-    {
-      headers: { ...authHeaders, ...skipSlackNotificationHeader },
-      data: {
-        group_id: groupId,
-        application_type: params.application_type,
-        status: params.status,
-      },
-    }
-  );
+  const response = await api.post('/api/v1/health_center_submission_statuses', {
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
+    data: {
+      group_id: groupId,
+      application_type: params.application_type,
+      status: params.status,
+    },
+  });
   return readApiResponse<SubmissionStatus>(response, 200);
 };
 

@@ -3,7 +3,7 @@ import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
-  RESUBMIT_POWER_ORDERS: '/api/v1/user/power_orders/resubmit',
+  RESUBMIT_POWER_ORDERS: '/power_orders/resubmit',
 };
 
 // APIから返ってくるデータの型定義

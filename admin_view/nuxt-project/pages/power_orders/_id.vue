@@ -189,7 +189,7 @@ export default {
     },
     async edit() {
       const url =
-        "/api/v1/admin/power_orders/" +
+        "/api/v1/power_orders/" +
         this.routeId +
         "?group_id=" +
         this.powerOrder.power_order.group_id +

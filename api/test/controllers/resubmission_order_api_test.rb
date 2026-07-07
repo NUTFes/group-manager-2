@@ -23,7 +23,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put "/api/v1/admin/power_orders/#{power_order.id}",
+    put "/api/v1/power_orders/#{power_order.id}",
         params: {
           group_id: @group.id,
           item: '変更後',
@@ -43,7 +43,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'admin power order update rejects non admin user' do
     power_order = create_power_order!(@group, item: '変更前')
 
-    put "/api/v1/admin/power_orders/#{power_order.id}",
+    put "/api/v1/power_orders/#{power_order.id}",
         params: {
           group_id: @group.id,
           item: '不正更新',
@@ -60,7 +60,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   end
 
   test 'admin health center submission status rejects non admin user' do
-    post '/api/v1/admin/health_center_submission_statuses',
+    post '/api/v1/health_center_submission_statuses',
          params: {
            group_id: @group.id,
            application_type: 'power_order',
@@ -74,7 +74,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   end
 
   test 'admin power order update returns not found for unknown id' do
-    put '/api/v1/admin/power_orders/999999',
+    put '/api/v1/power_orders/999999',
         params: {
           group_id: @group.id,
           item: '変更後',
@@ -92,7 +92,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'admin power order update returns unprocessable entity for invalid params' do
     power_order = create_power_order!(@group, item: '変更前')
 
-    put "/api/v1/admin/power_orders/#{power_order.id}",
+    put "/api/v1/power_orders/#{power_order.id}",
         params: {
           group_id: nil,
           item: '変更後',
@@ -116,7 +116,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put "/api/v1/admin/fire_equipment_orders/#{fire_equipment_order.id}",
+    put "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
         params: {
           fire_equipment_order: {
             group_id: @group.id,
@@ -145,7 +145,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     )
     UnRegisteredGroup.create!(group: @group, order_type: :power_order)
 
-    put '/api/v1/user/power_orders/resubmit',
+    put '/power_orders/resubmit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -177,7 +177,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :approved
     )
 
-    put '/api/v1/user/power_orders/resubmit',
+    put '/power_orders/resubmit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -208,7 +208,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/api/v1/user/power_orders/resubmit',
+    put '/power_orders/resubmit',
         params: {
           group_id: @group.id,
           use_power: false,
@@ -232,7 +232,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/api/v1/user/power_orders/resubmit',
+    put '/power_orders/resubmit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -272,7 +272,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/api/v1/user/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/resubmit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -302,7 +302,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/api/v1/user/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/resubmit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -326,7 +326,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :approved
     )
 
-    put '/api/v1/user/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/resubmit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -356,7 +356,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/api/v1/user/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/resubmit',
         params: {
           group_id: @group.id,
           id: other_fire_equipment_order.id,

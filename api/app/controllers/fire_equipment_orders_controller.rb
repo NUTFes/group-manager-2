@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FireEquipmentOrdersController < ApplicationController
+  before_action :authenticate_api_user!, only: [:resubmit]
   before_action :set_fire_equipment_order, only: %i[show update destroy]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
@@ -62,6 +63,30 @@ class FireEquipmentOrdersController < ApplicationController
     end
   end
 
+  def resubmit
+    group = current_user_group
+    return render_resubmit_not_found unless group
+    return render_invalid_resubmission_status unless waiting_resubmission?(group, :fire_equipment_order)
+
+    ActiveRecord::Base.transaction do
+      fire_equipment_order = resolve_fire_equipment_order(group)
+      fire_equipment_order.assign_attributes(fire_equipment_order_params_for_submit(group))
+      fire_equipment_order.save!
+
+      HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+        group_id: group.id,
+        application_type: :fire_equipment_order,
+        status: :unapproved
+      )
+    end
+
+    render json: fmt(ok, group.fire_equipment_orders.reload.first)
+  rescue ActiveRecord::RecordInvalid => e
+    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
+  rescue ActiveRecord::RecordNotFound
+    render_resubmit_not_found
+  end
+
   private
 
   def set_fire_equipment_order
@@ -82,5 +107,56 @@ class FireEquipmentOrdersController < ApplicationController
 
   def fire_equipment_order_params
     params.require(:fire_equipment_order).permit(:name, :quantity, :fuel, :usage, :is_takeaway, :remark, :group_id)
+  end
+
+  def current_user_group
+    return nil if params[:group_id].blank?
+
+    current_api_user.groups.find_by(id: params[:group_id])
+  end
+
+  def resolve_fire_equipment_order(group)
+    if params[:id].present?
+      group.fire_equipment_orders.find_by(id: params[:id]).tap do |fire_equipment_order|
+        raise ActiveRecord::RecordNotFound if fire_equipment_order.nil?
+      end
+    else
+      group.fire_equipment_orders.first || group.fire_equipment_orders.build
+    end
+  end
+
+  def fire_equipment_order_params_for_submit(group)
+    return unregistered_fire_equipment_order_params(group) unless use_fire_equipment?
+
+    source = params[:fire_equipment_order].presence || params
+    source.permit(:name, :quantity, :fuel, :usage, :is_takeaway, :remark).merge(group_id: group.id)
+  end
+
+  def unregistered_fire_equipment_order_params(group)
+    {
+      group_id: group.id,
+      name: '',
+      quantity: 0,
+      fuel: :gas_bottle,
+      usage: '',
+      is_takeaway: true,
+      remark: ''
+    }
+  end
+
+  def use_fire_equipment?
+    ActiveModel::Type::Boolean.new.cast(params[:use_fire_equipment])
+  end
+
+  def waiting_resubmission?(group, application_type)
+    group.health_center_submission_statuses.find_by(application_type: application_type)&.waiting_resubmission?
+  end
+
+  def render_invalid_resubmission_status
+    render json: fmt(unprocessable_entity, [], 'Status must be waiting_resubmission'), status: :unprocessable_entity
+  end
+
+  def render_resubmit_not_found
+    render json: fmt(not_found, [], 'fire_equipment_order not found'), status: :not_found
   end
 end

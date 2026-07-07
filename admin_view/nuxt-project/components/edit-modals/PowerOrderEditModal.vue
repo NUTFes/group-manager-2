@@ -7,7 +7,11 @@
       </div>
       <div>
         <h3>電力(W)</h3>
-        <input v-model="powerOrderwer" type="number" placeholder="入力してください" />
+        <input
+          v-model="powerOrderwer"
+          type="number"
+          placeholder="入力してください"
+        />
       </div>
       <div>
         <h3>メーカー</h3>
@@ -74,7 +78,7 @@ expowerOrderrt default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/api/v1/admin/powerOrderwer_orders/${powerOrder.id}`;
+      const url = `/api/v1/power_orders/${powerOrder.id}`;
 
       await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", powerOrder.id);

@@ -716,7 +716,7 @@ const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
 const HEALTH_CENTER_SHOW_ENDPOINT =
   "/api/v1/get_health_center_submission_status_show_for_admin_view/";
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
-  "/api/v1/admin/health_center_submission_statuses";
+  "/api/v1/health_center_submission_statuses";
 const HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT =
   "/api/v1/create_health_center_submission_status_comment_mail";
 const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
