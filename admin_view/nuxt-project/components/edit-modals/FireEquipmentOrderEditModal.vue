@@ -67,20 +67,20 @@ export default {
     fireEquipmentOrder: {
       immediate: true,
       handler() {
-        const feo = this.getFireEquipmentOrder();
-        this.groupId = feo.group_id || this.$route.params.id;
-        this.name = feo.name || null;
-        this.quantity = feo.quantity || null;
+        const fire_equipment_order = this.getFireEquipmentOrder();
+        this.groupId = fire_equipment_order.group_id || this.$route.params.id;
+        this.name = fire_equipment_order.name || null;
+        this.quantity = fire_equipment_order.quantity || null;
 
         let fuelVal = 0;
-        if (feo.fuel === "gas_bottle" || feo.fuel === 1) fuelVal = 1;
-        else if (feo.fuel === "lp_gas" || feo.fuel === 2) fuelVal = 2;
-        else if (feo.fuel === "charcoal" || feo.fuel === 3) fuelVal = 3;
+        if  fire_equipment_order.fuel === "gas_bottle" || fire_equipment_order.fuel === 1) fuelVal = 1;
+        else if  fire_equipment_order.fuel === "lp_gas" || fire_equipment_order.fuel === 2) fuelVal = 2;
+        else if  fire_equipment_order.fuel === "charcoal" || fire_equipment_order.fuel === 3) fuelVal = 3;
         this.fuel = fuelVal;
 
-        this.usage = feo.usage || null;
-        this.isTakeaway = feo.is_takeaway ?? false;
-        this.remark = feo.remark || null;
+        this.usage = fire_equipment_order.usage || null;
+        this.isTakeaway = fire_equipment_order.is_takeaway ?? false;
+        this.remark = fire_equipment_order.remark || null;
       },
     },
   },
@@ -93,7 +93,7 @@ export default {
       );
     },
     async edit() {
-      const feo = this.getFireEquipmentOrder();
+      const fire_equipment_order = this.getFireEquipmentOrder();
       const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
@@ -103,10 +103,10 @@ export default {
         is_takeaway: String(this.isTakeaway),
         remark: this.remark ?? "",
       };
-      const url = `/api/v1/admin/fire_equipment_orders/${feo.id}`;
+      const url = `/api/v1/admin/fire_equipment_orders/$ fire_equipment_order.id}`;
 
       await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", feo.id);
+        this.$emit("saved", fire_equipment_order.id);
         this.$emit("close");
       });
     },

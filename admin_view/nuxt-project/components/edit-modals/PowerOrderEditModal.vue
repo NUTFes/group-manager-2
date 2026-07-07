@@ -7,7 +7,7 @@
       </div>
       <div>
         <h3>電力(W)</h3>
-        <input v-model="power" type="number" placeholder="入力してください" />
+        <input v-model="powerOrderwer" type="number" placeholder="入力してください" />
       </div>
       <div>
         <h3>メーカー</h3>
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-export default {
+expowerOrderrt default {
   props: {
-    powerOrder: {
+    powerOrderwerOrder: {
       type: Object,
       required: true,
     },
@@ -40,44 +40,44 @@ export default {
     return {
       groupId: null,
       item: null,
-      power: null,
+      powerOrderwer: null,
       manufacturer: null,
       model: null,
       itemUrl: null,
     };
   },
   watch: {
-    powerOrder: {
+    powerOrderwerOrder: {
       immediate: true,
       handler() {
-        const po = this.getPowerOrder();
-        this.groupId = po.group_id || this.$route.params.id;
-        this.item = po.item || null;
-        this.power = po.power || null;
-        this.manufacturer = po.manufacturer || null;
-        this.model = po.model || null;
-        this.itemUrl = po.item_url || null;
+        const powerOrder = this.getpowerOrder();
+        this.groupId = powerOrder.group_id || this.$route.params.id;
+        this.item = powerOrder.item || null;
+        this.powerOrderwer = powerOrder.powerOrderwer || null;
+        this.manufacturer = powerOrder.manufacturer || null;
+        this.model = powerOrder.model || null;
+        this.itemUrl = powerOrder.item_url || null;
       },
     },
   },
   methods: {
-    getPowerOrder() {
-      return this.powerOrder?.power_order || this.powerOrder || {};
+    getpowerOrder() {
+      return this.powerOrderwerOrder?.powerOrderwer_order || this.powerOrderwerOrder || {};
     },
     async edit() {
-      const po = this.getPowerOrder();
+      const powerOrder = this.getpowerOrder();
       const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         item: this.item ?? "",
-        power: String(this.power ?? ""),
+        powerOrderwer: String(this.powerOrderwer ?? ""),
         manufacturer: this.manufacturer ?? "",
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/api/v1/admin/power_orders/${po.id}`;
+      const url = `/api/v1/admin/powerOrderwer_orders/${powerOrder.id}`;
 
       await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", po.id);
+        this.$emit("saved", powerOrder.id);
         this.$emit("close");
       });
     },
