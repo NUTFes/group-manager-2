@@ -61,6 +61,42 @@ class ApplicationController < ActionController::API
            status: :forbidden
   end
 
+  def save_health_center_submission_status(submission_status, unprocessable_http_status: nil)
+    unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+      return render_health_center_submission_status_unprocessable(
+        'Invalid status',
+        unprocessable_http_status
+      )
+    end
+
+    submission_status.status = params[:status]
+
+    if submission_status.save
+      render json: fmt(ok, health_center_submission_status_payload(submission_status))
+    else
+      render_health_center_submission_status_unprocessable(
+        submission_status.errors.full_messages.join(', '),
+        unprocessable_http_status
+      )
+    end
+  end
+
+  def health_center_submission_status_payload(submission_status)
+    {
+      id: submission_status.id,
+      group_id: submission_status.group_id,
+      application_type: submission_status.application_type,
+      status: submission_status.status
+    }
+  end
+
+  def render_health_center_submission_status_unprocessable(message, http_status)
+    response = { json: fmt(unprocessable_entity, [], message) }
+    response[:status] = http_status if http_status
+
+    render response
+  end
+
   def translate_to_ja(text)
     return text if text.blank?
     return text unless translatable_english_text?(text)

@@ -24,7 +24,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     submission_status = current_user_submission_status(params[:id])
     return render_user_not_found unless submission_status
 
-    save_submission_status(submission_status)
+    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   # user画面用ステータス初回作成（未作成分をINSERT）
@@ -40,30 +40,10 @@ class HealthCenterSubmissionStatusesController < ApplicationController
       application_type: params[:application_type]
     )
 
-    save_submission_status(submission_status)
+    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   private
-
-  def save_submission_status(submission_status)
-    return render_unprocessable_entity('Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
-
-    submission_status.status = params[:status]
-
-    if submission_status.save
-      render json: fmt(
-        ok,
-        {
-          id: submission_status.id,
-          group_id: submission_status.group_id,
-          application_type: submission_status.application_type,
-          status: submission_status.status
-        }
-      )
-    else
-      render_unprocessable_entity(submission_status.errors.full_messages.join(', '))
-    end
-  end
 
   def valid_application_type?(application_type)
     HealthCenterSubmissionStatus.application_types.key?(application_type)

@@ -26,12 +26,11 @@ export type HealthCenterSubmissionStatus =
   | 'unsubmitted';
 
 export type HealthCenterSubmissionStatusResponse = {
-  id: number;
-  groupId: number;
+  id: number | null;
   applicationType: string;
   status: HealthCenterSubmissionStatus;
-  createdAt: string;
-  updatedAt: string;
+  comments: unknown[];
+  detail: unknown;
 };
 
 export type HealthCenterSubmissionStatusApiResponse = ApiResponse<{
