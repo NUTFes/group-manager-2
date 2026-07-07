@@ -4,6 +4,7 @@ import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import FormContainer from '@/components/FormContainer/FormContainer';
+import ImagePreview from '@/components/ImagePreview';
 import Upload from '@/components/Upload/Upload';
 import { usePublicRelationsFormHooks } from './hooks';
 
@@ -24,6 +25,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
     values,
     setValue,
     fileName,
+    previewUrl,
     isFetching,
     isMutating,
     handleImageUpload,
@@ -33,6 +35,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
     validateEdit,
     publicRelationsFormTexts,
   } = usePublicRelationsFormHooks(groupId, publicRelation);
+  const displayPreviewUrl = previewUrl ?? publicRelation?.picturePath ?? null;
 
   return (
     <FormContainer>
@@ -99,6 +102,11 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                   )}
                 </div>
               )}
+              <ImagePreview
+                src={displayPreviewUrl}
+                alt={fileName ?? publicRelation?.pictureName ?? ''}
+                thumbnailClassName="mt-2 h-48 w-full"
+              />
             </div>
 
             {/* ボタン */}
