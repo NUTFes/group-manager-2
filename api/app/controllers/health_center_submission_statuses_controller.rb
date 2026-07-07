@@ -29,7 +29,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
 
   # user画面用ステータス初回作成（未作成分をINSERT）
   def user_create
-    return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
+    return render_unprocessable_entity('Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
     return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
 
     group = current_user_group(params[:group_id])
@@ -46,7 +46,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
   private
 
   def save_submission_status(submission_status)
-    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+    return render_unprocessable_entity('Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
 
     submission_status.status = params[:status]
 
@@ -61,7 +61,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
         }
       )
     else
-      render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
+      render_unprocessable_entity(submission_status.errors.full_messages.join(', '))
     end
   end
 
@@ -91,10 +91,14 @@ class HealthCenterSubmissionStatusesController < ApplicationController
   end
 
   def render_invalid_user_status
-    render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity
+    render_unprocessable_entity('Invalid status')
   end
 
   def require_group_id
-    return render json: fmt(unprocessable_entity, [], 'group_id is required') if params[:group_id].blank?
+    return render_unprocessable_entity('group_id is required') if params[:group_id].blank?
+  end
+
+  def render_unprocessable_entity(message)
+    render json: fmt(unprocessable_entity, [], message), status: :unprocessable_entity
   end
 end

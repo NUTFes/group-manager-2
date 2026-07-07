@@ -680,7 +680,7 @@ const upsertSubmissionStatus = async (
   params: Pick<SubmissionStatus, 'application_type' | 'status'>
 ): Promise<SubmissionStatus> => {
   const response = await api.post(
-    '/api/v1/upsert_health_center_submission_status',
+    '/api/v1/admin/health_center_submission_statuses',
     {
       headers: { ...authHeaders, ...skipSlackNotificationHeader },
       data: {

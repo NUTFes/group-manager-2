@@ -186,7 +186,7 @@ export default {
       this.fireEquipmentOrder = response.data;
     },
     async edit() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/admin/fire_equipment_orders/" + this.routeId;
       const params = {
         fire_equipment_order: {
           name: this.name,

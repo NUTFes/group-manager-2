@@ -155,6 +155,17 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       #---管理者画面用---
+      namespace 'admin' do
+        resources :power_orders, only: [:update]
+        resources :fire_equipment_orders, only: [:update]
+        resources :health_center_submission_statuses, only: [:create]
+      end
+
+      namespace 'user' do
+        put 'power_orders/resubmit' => 'power_orders#resubmit'
+        put 'fire_equipment_orders/resubmit' => 'fire_equipment_orders#resubmit'
+        patch 'fire_equipment_orders/resubmit' => 'fire_equipment_orders#resubmit'
+      end
 
       #---物品割当
       post 'get_refinement_stocker_item' => 'assign_rental_items_api#get_refinement_stocker_item'

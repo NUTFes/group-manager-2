@@ -56,6 +56,7 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
+  RESUBMIT_FIRE_EQUIPMENT_ORDERS: '/api/v1/user/fire_equipment_orders/resubmit',
 };
 
 // グループIDで火気使用申請を取得
@@ -96,9 +97,35 @@ export const useFireEquipmentMutations = () => {
   const deleteFireEquipmentOrder = (id: number) =>
     remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 
+  const resubmitFireEquipmentOrder = async (
+    data: Partial<FireEquipmentResponse>,
+    useFireEquipment: boolean
+  ) => {
+    try {
+      const response = await patch(
+        API_ENDPOINTS.RESUBMIT_FIRE_EQUIPMENT_ORDERS,
+        {
+          group_id: data.group_id,
+          id: data.id,
+          use_fire_equipment: useFireEquipment,
+          fire_equipment_order: data,
+        }
+      );
+
+      if (response && 'success' in response && response.success === false) {
+        return { success: false, error: response.error };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
+
   return {
     postFireEquipmentOrder,
     patchFireEquipmentOrder,
     deleteFireEquipmentOrder,
+    resubmitFireEquipmentOrder,
   };
 };

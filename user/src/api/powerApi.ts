@@ -3,6 +3,7 @@ import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
+  RESUBMIT_POWER_ORDERS: '/api/v1/user/power_orders/resubmit',
 };
 
 // APIから返ってくるデータの型定義
@@ -20,6 +21,7 @@ export type PowerOrderResponse = {
 
 // APIへ送信するデータの型定義
 export type PowerOrderData = {
+  id?: number;
   group_id: number;
   item: string;
   power: number;
@@ -47,6 +49,7 @@ const mapDeviceToRequestData = (
   device: Device,
   groupId: number
 ): PowerOrderData => ({
+  id: device.id,
   group_id: groupId,
   item: device.productName,
   power: device.maxPower,
@@ -134,8 +137,33 @@ export const useMutatePowerOrders = () => {
     }
   };
 
+  const resubmitPowerOrders = async (
+    devices: Device[],
+    groupId: number,
+    usePower: boolean
+  ) => {
+    try {
+      const response = await put(API_ENDPOINTS.RESUBMIT_POWER_ORDERS, {
+        group_id: groupId,
+        use_power: usePower,
+        power_orders: devices.map((device) =>
+          mapDeviceToRequestData(device, groupId)
+        ),
+      });
+
+      if (response && 'success' in response && response.success === false) {
+        return { success: false, error: response.error };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
+
   return {
     submitPowerOrders,
     deletePowerOrder,
+    resubmitPowerOrders,
   };
 };

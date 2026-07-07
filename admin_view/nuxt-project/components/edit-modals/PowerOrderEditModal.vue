@@ -74,7 +74,7 @@ export default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/power_orders/${po.id}`;
+      const url = `/api/v1/admin/power_orders/${po.id}`;
 
       await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", po.id);

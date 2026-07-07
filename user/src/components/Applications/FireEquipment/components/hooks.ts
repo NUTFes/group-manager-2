@@ -5,10 +5,7 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
-import {
-  HealthCenterSubmissionStatus,
-  useUpdateSubmissionStatusFor,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { useGetHealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { NO_ID_STRING, YES_ID_STRING } from '@/utils/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -24,20 +21,16 @@ import {
 export const useFireEquipmentOrder = (
   groupId: number,
   fireEquipmentData?: FireEquipmentResponse,
-  handleEditCancel?: () => void,
-  status?: HealthCenterSubmissionStatus
+  handleEditCancel?: () => void
 ) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
+  const { mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
 
-  const { postFireEquipmentOrder, patchFireEquipmentOrder } =
-    useFireEquipmentMutations();
-  const updateStatus = useUpdateSubmissionStatusFor(
-    groupId,
-    'fire_equipment_order'
-  );
+  const { resubmitFireEquipmentOrder } = useFireEquipmentMutations();
 
   const {
     handleSubmit: handleSubmitUnregistered,
@@ -84,22 +77,6 @@ export const useFireEquipmentOrder = (
     setValueUnregistered('isRegister', value === YES_ID_STRING);
   };
 
-  const updateStatusToUnapproved = async (): Promise<boolean> => {
-    if (status === 'unapproved') return true;
-
-    try {
-      await updateStatus('unapproved');
-      return true;
-    } catch (error) {
-      const message = fireEquipmentTexts.messages.submitFailed(
-        error instanceof Error ? error.message : String(error)
-      );
-      setSubmitError(message);
-      toast.error(message);
-      return false;
-    }
-  };
-
   // 火気不使用として登録
   const onSubmitUnregistered = async (
     formData: UnregisteredFireEquipmentFormValues
@@ -109,32 +86,17 @@ export const useFireEquipmentOrder = (
     }
     setSubmitError(null);
     try {
-      if (fireEquipmentData?.id !== undefined) {
-        // 既存データがある場合はPATCHで不使用に更新
-        await patchFireEquipmentOrder(fireEquipmentData.id, {
+      const result = await resubmitFireEquipmentOrder(
+        {
+          id: fireEquipmentData?.id,
           group_id: groupId,
-          name: '',
-          quantity: 0,
-          fuel: FireEquipmentFuel.GAS_BOTTLE,
-          usage: '',
-          is_takeaway: true,
-          remark: '',
-        });
-      } else {
-        // 新規登録
-        await postFireEquipmentOrder({
-          group_id: groupId,
-          name: '',
-          quantity: 0,
-          fuel: FireEquipmentFuel.GAS_BOTTLE,
-          usage: '',
-          is_takeaway: true,
-          remark: '',
-        });
-      }
-      if (!(await updateStatusToUnapproved())) return;
+        },
+        false
+      );
+      if (!result.success) throw result.error;
 
       await mutateFireEquipmentOrder();
+      await mutateHealthCenterSubmissionStatus();
 
       toast.success(fireEquipmentTexts.messages.noApplicationSuccess);
       handleEditCancel?.();
@@ -179,14 +141,17 @@ export const useFireEquipmentOrder = (
     };
 
     try {
-      if (isEditing && fireEquipmentData?.id !== undefined) {
-        await patchFireEquipmentOrder(fireEquipmentData.id, payload);
-      } else {
-        await postFireEquipmentOrder(payload);
-      }
-      if (!(await updateStatusToUnapproved())) return;
+      const result = await resubmitFireEquipmentOrder(
+        {
+          id: fireEquipmentData?.id,
+          ...payload,
+        },
+        true
+      );
+      if (!result.success) throw result.error;
 
       await mutateFireEquipmentOrder();
+      await mutateHealthCenterSubmissionStatus();
 
       // 成功後に編集モードを終了
       handleEditCancel?.();

@@ -23,7 +23,6 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
   handleEditCancel,
   submitLabel,
   disableValidate = false,
-  status,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const {
@@ -39,12 +38,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     isEditing,
     validate,
     submitError,
-  } = useFireEquipmentOrder(
-    groupId,
-    fireEquipmentData,
-    handleEditCancel,
-    status
-  );
+  } = useFireEquipmentOrder(groupId, fireEquipmentData, handleEditCancel);
 
   return (
     <div className="flex flex-col gap-6">

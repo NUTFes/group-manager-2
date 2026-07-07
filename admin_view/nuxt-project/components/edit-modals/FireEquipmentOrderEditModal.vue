@@ -103,7 +103,7 @@ export default {
         is_takeaway: String(this.isTakeaway),
         remark: this.remark ?? "",
       };
-      const url = `/fire_equipment_orders/${feo.id}`;
+      const url = `/api/v1/admin/fire_equipment_orders/${feo.id}`;
 
       await this.$axios.$put(url, data).then(() => {
         this.$emit("saved", feo.id);

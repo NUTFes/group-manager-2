@@ -39,7 +39,7 @@ const Power: FC<PowerProps> = ({
     prepareFormForEditing,
     completeSubmission,
     getRadioValue,
-  } = usePowerApplication(groupId, status);
+  } = usePowerApplication(groupId);
 
   const { isEditing, applyPower, submitError, isSubmitted } = state;
   const { fields, addDevice, removeDevice, totalPower, isValid, formMethods } =

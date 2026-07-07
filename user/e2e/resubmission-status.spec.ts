@@ -366,7 +366,7 @@ const submitSubmissionStatus = async (
 ): Promise<SubmissionStatus> => {
   const response = await api.post(
     options.asAdmin
-      ? '/api/v1/upsert_health_center_submission_status'
+      ? '/api/v1/admin/health_center_submission_statuses'
       : '/health_center_submission_statuses/user',
     {
       headers: { ...authHeaders, ...skipSlackNotificationHeader },
