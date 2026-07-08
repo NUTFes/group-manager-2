@@ -199,16 +199,15 @@ export default {
       ;
     },
     async submit() {
-      let params = new URLSearchParams();
-      params.append("name", this.roomName);
-      params.append("stock_item_status", "1");
-      params.append("assign_item_status", "1");
-      if (this.placeCategoryId) {
-        params.append("place_category_id", this.placeCategoryId);
-      }
-      const url = "/stocker_places/?" + params.toString();
+      const payload = {
+        name: this.roomName,
+        stock_item_status: 1,
+        assign_item_status: 1,
+        place_category_id: this.placeCategoryId
+      };
+      const url = "/stocker_places/";
 
-      this.$axios.$post(url).then((response) => {
+      this.$axios.$post(url, payload).then((response) => {
         this.roomName = "";
         this.stockItemStatus = "";
         this.assignItemStatus = "";

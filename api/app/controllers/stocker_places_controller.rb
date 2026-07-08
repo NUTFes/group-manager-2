@@ -13,13 +13,20 @@ class StockerPlacesController < ApplicationController
   end
 
   def create
-    @stocker_place = StockerPlace.create(stocker_place_params)
-    render json: fmt(created, @stocker_place)
+    @stocker_place = StockerPlace.new(stocker_place_params)
+    if @stocker_place.save
+      render json: fmt(created, @stocker_place)
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def update
-    @stocker_place.update(stocker_place_params)
-    render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
+    if @stocker_place.update(stocker_place_params)
+      render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def destroy

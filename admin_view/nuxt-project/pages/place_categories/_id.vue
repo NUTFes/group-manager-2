@@ -77,7 +77,7 @@
         <div>
           <h3>所属エリア</h3>
           <select v-model="parentId">
-            <option value="">未指定（所属エリアなし）</option>
+            <option :value="null">未指定（所属エリアなし）</option>
             <option
               v-for="category in selectableCategories"
               :key="category.id"
@@ -128,7 +128,7 @@ export default {
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
       name: "",
-      parentId: "",
+      parentId: null,
       message: "",
     };
   },
@@ -142,7 +142,7 @@ export default {
       placeCategories: catsRes.data,
       stockerPlaces: spRes.data,
       name: res.data.name,
-      parentId: res.data.parent_id || "",
+      parentId: res.data.parent_id || null,
     };
   },
   computed: {
@@ -214,7 +214,7 @@ export default {
       const res = await this.$axios.$get(url);
       this.placeCategory = res.data;
       this.name = res.data.name;
-      this.parentId = res.data.parent_id || "";
+      this.parentId = res.data.parent_id || null;
       const catsRes = await this.$axios.$get("/place_categories");
       this.placeCategories = catsRes.data;
       const spRes = await this.$axios.$get("/stocker_places");
@@ -223,15 +223,12 @@ export default {
 
     async edit() {
       const url = "/place_categories/" + this.$route.params.id;
-      let params = new URLSearchParams();
-      params.append("name", this.name);
-      if (this.parentId !== "") {
-        params.append("parent_id", this.parentId);
-      } else {
-        params.append("parent_id", ""); // clear parent_id
-      }
+      const payload = {
+        name: this.name,
+        parent_id: this.parentId,
+      };
       this.$axios
-        .$put(url, params)
+        .$put(url, payload)
         .then((response) => {
           this.openSnackBar(this.name + "を編集しました");
           this.reload();

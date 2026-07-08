@@ -86,7 +86,7 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",
-      parentId: "",
+      parentId: null,
       message: "",
     };
   },
@@ -170,13 +170,12 @@ export default {
     },
     async submit() {
       const url = "/place_categories";
-      let params = new URLSearchParams();
-      params.append("name", this.name);
-      if (this.parentId !== "") {
-        params.append("parent_id", this.parentId);
-      }
+      const payload = {
+        name: this.name,
+        parent_id: this.parentId,
+      };
 
-      this.$axios.$post(url, params).then((response) => {
+      this.$axios.$post(url, payload).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
         this.parentId = "";

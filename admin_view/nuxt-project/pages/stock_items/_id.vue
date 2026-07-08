@@ -234,7 +234,7 @@
         <div>
           <h3>エリア</h3>
           <select v-model="placeCategoryId">
-            <option value="">未指定</option>
+            <option :value="null">未指定</option>
             <option
               v-for="placeCategory in formattedPlaceCategories"
               :key="placeCategory.id"
@@ -529,16 +529,15 @@ export default {
       },
 
     async editPlace() {
-      let params = new URLSearchParams();
-      params.append("name", this.roomName);
-      params.append("stock_item_status", this.stockItemStatus);
-      params.append("assign_item_status", this.assignItemStatus);
-      if (this.placeCategoryId) {
-        params.append("place_category_id", this.placeCategoryId);
-      }
-      const placeUrl = "/stocker_places/" + this.id + "?" + params.toString();
+      const payload = {
+        name: this.roomName,
+        stock_item_status: this.stockItemStatus,
+        assign_item_status: this.assignItemStatus,
+        place_category_id: this.placeCategoryId
+      };
+      const placeUrl = "/stocker_places/" + this.id;
 
-      await this.$axios.$put(placeUrl).then((response) => {
+      await this.$axios.$put(placeUrl, payload).then((response) => {
         this.closePlaceEditModal();
         this.$router.push("/stock_items")
       })
@@ -691,7 +690,7 @@ export default {
       this.roomName = this.placeName.name
       this.stockItemStatus = this.placeName.stock_item_status
       this.assignItemStatus = this.placeName.assign_item_status
-      this.placeCategoryId = this.placeName.place_category_id || ""
+      this.placeCategoryId = this.placeName.place_category_id || null
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },

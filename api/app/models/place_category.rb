@@ -7,6 +7,7 @@ class PlaceCategory < ApplicationRecord
   has_many :children, class_name: 'PlaceCategory', foreign_key: 'parent_id', dependent: :restrict_with_error, inverse_of: :parent
 
   validate :parent_cannot_be_self_or_children
+  validate :parent_id_must_be_nil_or_integer
 
   def self.hierarchy_ordered
     categories = order(:id).to_a
@@ -58,6 +59,12 @@ class PlaceCategory < ApplicationRecord
       end
       current_parent = current_parent.parent
     end
+  end
+
+  def parent_id_must_be_nil_or_integer
+    return unless parent_id_before_type_cast == ""
+
+    errors.add(:parent_id, "must be nil or integer")
   end
 
   def ancestor_chain
