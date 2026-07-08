@@ -14,3 +14,38 @@ export const convertImageToDataUrl = (file) => {
     reader.readAsDataURL(file);
   });
 };
+
+export const uploadImageToImgur = async (
+  dataUrl,
+  imgurClientId,
+  options = {}
+) => {
+  if (!imgurClientId) {
+    throw new Error(
+      options.missingClientIdMessage || "Imgur Client ID is not configured"
+    );
+  }
+
+  const base64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
+
+  try {
+    const response = await fetch("https://api.imgur.com/3/image", {
+      method: "POST",
+      headers: {
+        Authorization: `Client-ID ${imgurClientId}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ image: base64 }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.data.link;
+  } catch (error) {
+    console.error("Imgur upload error:", error);
+    throw new Error(options.uploadFailedMessage || "Failed to upload image");
+  }
+};
