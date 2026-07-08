@@ -4,8 +4,13 @@ import {
   useGetFoodProducts,
   useUpsertFoodProducts,
 } from '@/api/foodProductApi';
+import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import {
   ProductInput,
   RegisteredProduct,
@@ -19,12 +24,15 @@ const API_ENDPOINTS = {
 
 export const useFoodProductHooks = (
   groupId: number,
-  isRegistered?: boolean
+  isRegistered?: boolean,
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  const isResubmission = status === 'waiting_resubmission';
 
   // API呼び出し
   const {
@@ -34,13 +42,9 @@ export const useFoodProductHooks = (
     mutateFoodProducts,
   } = useGetFoodProducts(groupId || 0);
 
-  // upsert用のhook
   const { trigger: upsertFoodProducts, isMutating } = useUpsertFoodProducts();
-
-  // 認証付きAPI呼び出し用（既存の独自実装を使用）
   const { remove } = useApiMutations();
 
-  // APIレスポンスをコンポーネント用の型に変換
   const foodProducts: RegisteredProduct[] | null =
     apiFoodProducts?.length > 0
       ? apiFoodProducts.map((product: FoodProductResponse) => ({
@@ -82,34 +86,36 @@ export const useFoodProductHooks = (
     setIsEditing((prev) => !prev);
   };
 
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'food_product');
+
   // 販売品データを完全に置き換える関数（更新時に使用）
+  const mutateCookingProcessOrders = async () => {
+    await mutate(
+      (key) =>
+        Array.isArray(key) &&
+        key[0] === `/cooking_process_orders/group/${groupId}`
+    );
+  };
+
   const setFoodProductsData = async (products: ProductInput[]) => {
     try {
-      // 現在の登録済み商品のIDを取得
       const currentProductIds = foodProducts?.map((p) => parseInt(p.id)) || [];
-
-      // 新しいフォームデータのIDを取得（既存の商品のID）
       const newProductIds = products
         .map((p) => (p.id ? parseInt(p.id) : null))
         .filter((id): id is number => id !== null);
-
-      // 削除すべき商品ID（現在の商品から新しいフォームに含まれないもの）
       const toDeleteIds = currentProductIds.filter(
         (id) => !newProductIds.includes(id)
       );
 
-      // まず削除を実行
       for (const deleteId of toDeleteIds) {
         try {
           const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${deleteId}`;
           await remove(deleteEndpoint);
         } catch (deleteError) {
           console.error(`Failed to delete product ${deleteId}:`, deleteError);
-          // 削除エラーがあっても処理を続行
         }
       }
 
-      // APIリクエスト用のデータに変換（削除されない商品のみ）
       const apiProducts = products.map((product) => ({
         id: product.id ? parseInt(product.id) : undefined,
         group_id: groupId,
@@ -120,20 +126,41 @@ export const useFoodProductHooks = (
         is_alcohol: product.isAlcohol,
       }));
 
-      // upsert処理を実行
       await upsertFoodProducts({
         body: { food_products: apiProducts },
       });
 
-      // データを強制的に再取得（optimistic updateではなく確実な更新）
       await mutateFoodProducts();
+      await mutateCookingProcessOrders();
 
-      // 少し待ってからもう一度再取得（サーバーへの反映を確実にする）
       setTimeout(async () => {
-        await mutateFoodProducts();
+        try {
+          await mutateFoodProducts();
+          await mutateCookingProcessOrders();
+        } catch (e) {
+          console.error('再取得エラー:', e);
+        }
       }, 500);
 
-      // 成功時のみビューモードに戻す
+      const updateStatusToUnapproved = async (): Promise<boolean> => {
+        if (status === 'unapproved') return true;
+
+        try {
+          await updateStatus('unapproved');
+          return true;
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.foodProduct.messages.statusUpdateFailed')
+          );
+          return false;
+        }
+      };
+
+      const statusUpdated = await updateStatusToUnapproved();
+      if (!statusUpdated) return;
+
+      // ステータス更新まで成功した時だけビューモードへ戻す
       setIsEditing(false);
 
       toast.success(t('applications.foodProduct.messages.updateSuccess'), {
@@ -154,9 +181,7 @@ export const useFoodProductHooks = (
         } else {
           errorMessage = t(
             'applications.foodProduct.messages.updateFailedDetail',
-            {
-              message: error.message,
-            }
+            { message: error.message }
           );
         }
       }
@@ -168,10 +193,8 @@ export const useFoodProductHooks = (
     }
   };
 
-  // 新しい販売品データを追加する関数（初回登録時に使用）
   const addFoodProducts = async (products: ProductInput[]) => {
     try {
-      // APIリクエスト用のデータに変換
       const apiProducts = products.map((product) => ({
         group_id: groupId,
         name: product.name,
@@ -181,18 +204,38 @@ export const useFoodProductHooks = (
         is_alcohol: product.isAlcohol,
       }));
 
-      // SWR Mutationを使用してAPI呼び出し
       await upsertFoodProducts({
         body: { food_products: apiProducts },
       });
 
-      // データを強制的に再取得
       await mutateFoodProducts();
+      await mutate(
+        (key) =>
+          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
+      );
 
       // 少し待ってからもう一度再取得
       setTimeout(async () => {
         await mutateFoodProducts();
       }, 500);
+
+      const updateStatusToUnapproved = async (): Promise<boolean> => {
+        if (status === 'unapproved') return true;
+
+        try {
+          await updateStatus('unapproved');
+          return true;
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.foodProduct.messages.statusUpdateFailed')
+          );
+          return false;
+        }
+      };
+
+      const statusUpdated = await updateStatusToUnapproved();
+      if (!statusUpdated) return;
 
       // 成功時のみビューモードに戻す
       setIsEditing(false);
@@ -227,7 +270,6 @@ export const useFoodProductHooks = (
     }
   };
 
-  // 個別削除機能（ビューモードでの削除ボタン用）
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
@@ -241,10 +283,8 @@ export const useFoodProductHooks = (
       const productId = parseInt(id);
       const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${productId}`;
 
-      // 個別削除を実行
       const result = await remove(deleteEndpoint);
 
-      // 結果が {success: false} の場合はエラーを投げる
       if (
         result &&
         typeof result === 'object' &&
@@ -257,13 +297,12 @@ export const useFoodProductHooks = (
         );
       }
 
-      // データを強制的に再取得
       await mutateFoodProducts();
-
-      // 少し待ってからもう一度再取得
-      setTimeout(async () => {
-        await mutateFoodProducts();
-      }, 500);
+      await mutate(
+        (key) =>
+          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
+      );
+      await mutateCookingProcessOrders();
 
       toast.success(
         t('applications.foodProduct.messages.deleteSuccess', {
@@ -277,7 +316,6 @@ export const useFoodProductHooks = (
     } catch (error) {
       console.error('販売品削除エラー:', error);
 
-      // エラーの詳細を分析
       if (error instanceof Error) {
         if (
           error.message.includes('User is not authenticated') ||
@@ -327,10 +365,8 @@ export const useFoodProductHooks = (
     hasInitializedEditing.current = true;
   }, [isRegistered]);
 
-  // ローディング状態はAPIとMutationを考慮
   const isLoadingWithMutation = (isLoading && !hasLoadedOnce) || isMutating;
 
-  // フォーム送信後にデータを再取得するための関数
   const refetchData = async () => {
     await mutateFoodProducts();
   };
@@ -348,5 +384,6 @@ export const useFoodProductHooks = (
     mutate: refetchData,
     refetchData,
     foodProductViewTexts,
+    isResubmission,
   };
 };

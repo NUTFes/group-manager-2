@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
 import {
@@ -13,8 +15,8 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
+  status?: HealthCenterSubmissionStatus;
 };
-
 type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
@@ -24,6 +26,7 @@ type ContentProps = {
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
   groupId: number;
+  isResubmission: boolean;
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
   removeFoodProduct: (id: string) => Promise<void>;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
@@ -45,6 +48,7 @@ const Content: FC<ContentProps> = ({
   removeFoodProduct,
   setFoodProductsData,
   foodProductViewTexts,
+  isResubmission,
 }) => {
   if (isLoading) {
     return (
@@ -72,26 +76,26 @@ const Content: FC<ContentProps> = ({
     );
   }
 
+  if (isResubmission) {
+    return (
+      <FoodProductForm
+        groupId={groupId}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+      />
+    );
+  }
+
   // 締め切り後で、かつデータがない（未登録）場合
   if (isDeadline && (!foodProducts || foodProducts.length === 0)) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
         <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
           <div className="mb-4">
-            <svg
-              className="mx-auto size-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <MdOutlineAccessTime className="mx-auto size-12 text-gray-400" />
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
             {foodProductViewTexts.deadline.title}
@@ -138,6 +142,7 @@ const FoodProduct: FC<FoodProductProps> = ({
   groupId,
   isDeadline,
   isRegistered,
+  status,
 }) => {
   const {
     formItem,
@@ -150,14 +155,16 @@ const FoodProduct: FC<FoodProductProps> = ({
     removeFoodProduct,
     setFoodProductsData,
     foodProductViewTexts,
-  } = useFoodProductHooks(groupId, isRegistered);
+    isResubmission,
+  } = useFoodProductHooks(groupId, isRegistered, status);
 
   return (
     <AccordionMenu
       title={foodProductViewTexts.title}
       isEdit={!isDeadline}
-      isExist={isRegistered}
+      isExist={!!foodProducts && foodProducts.length > 0}
       required
+      status={status}
     >
       <Content
         isLoading={isLoading}
@@ -165,6 +172,7 @@ const FoodProduct: FC<FoodProductProps> = ({
         isDeadline={isDeadline}
         isEditing={isEditing}
         toEdit={toEdit}
+        isResubmission={isResubmission}
         foodProducts={foodProducts}
         formItem={formItem}
         groupId={groupId}

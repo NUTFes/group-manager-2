@@ -28,6 +28,7 @@ class FoodProduct < ApplicationRecord
   def to_info_h
     return {
       id: id,
+      group_id: group_id,
       name: name,
       is_cooking: is_cooking,
       first_day_num: first_day_num,
@@ -43,7 +44,7 @@ class FoodProduct < ApplicationRecord
     HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
       group_id: group_id,
       application_type: :food_product,
-      status: :unsubmitted
+      status: :unapproved
     )
   end
 end

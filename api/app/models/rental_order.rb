@@ -4,6 +4,8 @@ class RentalOrder < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item
 
+  after_create :ensure_health_center_submission_status
+
   def self.with_groups_and_rental_item
     @record = RentalOrder.preload(:group)
                          .map do |rental_order|
@@ -33,5 +35,17 @@ class RentalOrder < ApplicationRecord
       is_stage_rentable: rental_item.is_stage_rentable,
       num: num
     }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    return unless Group.exists?(group_id)
+
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :equipment,
+      status: :unapproved
+    )
   end
 end

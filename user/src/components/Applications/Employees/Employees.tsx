@@ -1,6 +1,8 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
 import { FormProvider } from 'react-hook-form';
+import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -13,6 +15,7 @@ type EmployeesProps = {
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
   mutateCheckAllRegisteredGroups: () => void;
+  status?: HealthCenterSubmissionStatus; // 申請のステータス
 };
 
 /**
@@ -23,22 +26,26 @@ export const Employees: FC<EmployeesProps> = ({
   isRegistered,
   groupId,
   mutateCheckAllRegisteredGroups,
+  status,
 }) => {
   const employeesApplicationHook = useEmployeesApplicationHooks(
     groupId,
     isDeadline,
-    mutateCheckAllRegisteredGroups
+    mutateCheckAllRegisteredGroups,
+    status
   );
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
+      isEdit={!isDeadline} // 期限内の場合に編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
+      status={status} // 申請のステータスを渡す
     >
       <Content
         employeesApplicationHook={employeesApplicationHook}
         isDeadline={isDeadline}
+        status={status}
       />
     </AccordionMenu>
   );
@@ -47,6 +54,7 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
+  status?: HealthCenterSubmissionStatus; // 申請のステータス
 };
 /**
  * 従業員申請のコンテンツ部分
@@ -54,8 +62,10 @@ type ContentProps = {
 const Content: FC<ContentProps> = ({
   employeesApplicationHook,
   isDeadline,
+  status,
 }) => {
   const { texts } = employeesApplicationHook;
+  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
   if (employeesApplicationHook.isDeadlineMode) {
@@ -63,20 +73,7 @@ const Content: FC<ContentProps> = ({
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
         <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
           <div className="mb-4">
-            <svg
-              className="mx-auto size-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <MdOutlineAccessTime className="mx-auto size-12 text-gray-400" />
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
             {texts.deadline.title}
@@ -98,9 +95,11 @@ const Content: FC<ContentProps> = ({
           },
         ]}
         onEdit={
-          !isDeadline ? employeesApplicationHook.handleEditClick : undefined
-        } // 期限内の場合のみ編集可能
-        isEdit={!isDeadline} // 期限内の場合のみ編集可能
+          !isDeadline || isResubmission
+            ? employeesApplicationHook.handleEditClick
+            : undefined
+        }
+        isEdit={!isDeadline || isResubmission}
       />
     );
   }
@@ -113,8 +112,12 @@ const Content: FC<ContentProps> = ({
         headers={[texts.summary.headers.name, texts.summary.headers.studentId]}
         keys={['name', 'studentId']}
         tableMode
-        onEdit={!isDeadline ? employeesApplicationHook.handleEdit : undefined} // 期限内の場合のみ編集可能
-        isEdit={!isDeadline} // 期限内の場合のみ編集可能
+        onEdit={
+          !isDeadline || isResubmission
+            ? employeesApplicationHook.handleEdit
+            : undefined
+        }
+        isEdit={!isDeadline || isResubmission}
       />
     );
   }

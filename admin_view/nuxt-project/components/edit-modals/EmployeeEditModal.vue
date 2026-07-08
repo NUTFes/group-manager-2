@@ -38,7 +38,7 @@ export default {
       groupId: null,
       name: null,
       studentId: null,
-      stoolTestID: null,
+      stoolTestID: "",
       stoolTestList: [
         { id: 1, value: "検便準備中" },
         { id: 2, value: "検便無" },
@@ -51,10 +51,10 @@ export default {
       immediate: true,
       handler() {
         const employee = this.getEmployee();
-        this.groupId = employee.group_id || null;
+        this.groupId = employee.group_id || this.$route.params.id;
         this.name = employee.name || null;
         this.studentId = employee.student_id || null;
-        this.stoolTestID = this.resolveStoolTestId(employee);
+        this.stoolTestID = this.resolveStoolTestId(employee) || "";
       },
     },
   },
@@ -70,21 +70,24 @@ export default {
         検便無: 2,
         検便有: 3,
       };
-      const status = this.employee?.stool_test?.status || this.employee?.stool_test_status;
+      const status =
+        employee.stool_test ||
+        this.employee?.stool_test?.status ||
+        this.employee?.stool_test_status;
       return statusToId[status] || null;
     },
     async edit() {
       const employee = this.getEmployee();
-      const params = new URLSearchParams({
-        group_id: String(this.groupId ?? ""),
+      const data = {
+        group_id: String(this.groupId ?? this.$route.params.id),
         name: this.name ?? "",
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),
-      });
-      const url = `/employees/${employee.id}?${params.toString()}`;
+      };
+      const url = `/employees/${employee.id}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      await this.$axios.$put(url, data).then(() => {
+        this.$emit("saved", employee.id);
         this.$emit("close");
       });
     },

@@ -111,6 +111,9 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+            text/csv:
+              schema:
+                type: string
         '404':
           description: api/v1/output_csv description
         '422':

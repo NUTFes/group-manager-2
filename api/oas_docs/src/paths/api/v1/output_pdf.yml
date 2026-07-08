@@ -13,6 +13,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '404':
           description: api/v1/output_pdf description
         '422':

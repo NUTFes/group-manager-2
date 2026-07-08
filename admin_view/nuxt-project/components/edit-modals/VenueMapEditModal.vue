@@ -13,13 +13,21 @@
             ファイル形式は[.pngか.jpeg又は.jpg]にしてください
           </div>
           <div v-else-if="isFileCheck === true" style="color: red">
-            ファイル名は「参加形式_団体名」の形式で入力してください
+            ファイル名には、日本語・英数字・ハイフン（-）・アンダースコア（_）・スペース「」が使用できます。
+          </div>
+          <div v-else-if="isFileSizeCheck === true" style="color: red">
+            ファイルサイズは20MB以下にしてください
           </div>
         </label>
       </div>
     </template>
     <template v-slot:method>
-      <CommonButton iconName="edit" :disabled="isPush.disabled || !isFile" :on_click="edit">{{ buttonState }}</CommonButton>
+      <CommonButton
+        iconName="edit"
+        :disabled="isPush.disabled || !isFile"
+        :on_click="edit"
+        >{{ buttonState }}</CommonButton
+      >
     </template>
   </EditModal>
 </template>
@@ -41,6 +49,7 @@ export default {
       isInvalidFile: false,
       isFile: false,
       isFileCheck: false,
+      isFileSizeCheck: false,
       groupName: "",
       files: null,
       progress: 0,
@@ -72,9 +81,16 @@ export default {
         const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
+        const fILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20MB
+        this.isFileSizeCheck = file.size > fILE_SIZE_LIMIT;
 
-        if (this.isInvalidFile) {
+        // ファイルサイズのバリデーション
+        if(this.isFileSizeCheck){
+          this.isFileSizeCheck = true;
+          this.isFile = false;
+          // ファイル形式のバリデーション
+        } else if (this.isInvalidFile) {
           this.isInvalidFile = true;
           this.isFile = false;
           return;
@@ -122,13 +138,19 @@ export default {
           console.error(error);
           this.isPush.disabled = false;
           this.buttonState = "登録";
-          this.$emit("error", error?.message || "ファイルのアップロードに失敗しました");
+          this.$emit(
+            "error",
+            error?.message || "ファイルのアップロードに失敗しました"
+          );
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref)
             .then((downloadURL) => {
               const venueMap = this.getVenueMap();
-              const groupId = venueMap.group_id || venueMap.group?.id;
+              const groupId =
+                venueMap.group_id ||
+                venueMap.group?.id ||
+                this.$route.params.id;
               const data = {
                 group_id: groupId,
                 picture_name: uploadTask.snapshot.ref.name,
@@ -139,7 +161,12 @@ export default {
                 console.error(err);
                 this.isPush.disabled = false;
                 this.buttonState = "登録";
-                this.$emit("error", err?.response?.data?.message || err?.message || "保存に失敗しました");
+                this.$emit(
+                  "error",
+                  err?.response?.data?.message ||
+                    err?.message ||
+                    "保存に失敗しました"
+                );
               };
 
               if (this.venueMap?.venue_map || venueMap.id) {
@@ -170,7 +197,10 @@ export default {
               console.error(err);
               this.isPush.disabled = false;
               this.buttonState = "登録";
-              this.$emit("error", err?.message || "ダウンロードURLの取得に失敗しました");
+              this.$emit(
+                "error",
+                err?.message || "ダウンロードURLの取得に失敗しました"
+              );
             });
         }
       );

@@ -1,8 +1,10 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import Image from 'next/image';
 import { VenueMapResponse } from '@/api/venueMapApi';
 import Button from '@/components/Button/Button';
 import Checkbox from '@/components/Form/CheckBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
+import Modal from '@/components/Modal/Modal';
 import Upload from '@/components/Upload/Upload';
 import { useVenueMapFormHooks } from './hooks';
 
@@ -30,6 +32,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     values,
     setValue,
     fileName,
+    previewUrl,
     isFetching,
     isMutating,
     handleImageUpload,
@@ -37,6 +40,9 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     isDirty,
     venueMapFormTexts,
   } = venueMapFormHooks;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const displayPreviewUrl = previewUrl ?? venueMap?.picturePath ?? null;
 
   return (
     <FormContainer>
@@ -69,13 +75,18 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
                 {venueMapFormTexts.upload.uploaded(fileName)}
               </div>
             )}
-            {venueMap?.picturePath && !values.image && (
-              <div className="mt-1 text-xs text-gray-500">
-                {venueMapFormTexts.notes.existing}
-                <br />
-                {venueMapFormTexts.notes.currentImage(
-                  venueMap.pictureName || venueMapFormTexts.notes.unknownFile
-                )}
+            {displayPreviewUrl && (
+              <div
+                className="relative mt-2 h-48 w-full cursor-pointer"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Image
+                  src={displayPreviewUrl}
+                  alt={fileName ?? venueMap?.pictureName ?? ''}
+                  fill
+                  unoptimized={displayPreviewUrl.startsWith('blob:')}
+                  className="rounded object-contain"
+                />
               </div>
             )}
           </div>
@@ -121,6 +132,22 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
           </div>
         </form>
       )}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {displayPreviewUrl && (
+          <div
+            className="relative h-[80vh] w-[80vw] max-w-[880px]"
+            onClick={() => setIsModalOpen(false)}
+          >
+            <Image
+              src={displayPreviewUrl}
+              alt={fileName ?? venueMap?.pictureName ?? ''}
+              fill
+              unoptimized={displayPreviewUrl.startsWith('blob:')}
+              className="object-contain"
+            />
+          </div>
+        )}
+      </Modal>
     </FormContainer>
   );
 };

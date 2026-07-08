@@ -1,6 +1,10 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   ORDER_TYPES,
   useAllRentableItems,
   useCheckUnRegisteredGroup,
@@ -66,6 +70,7 @@ const TABLE_CHAIR_MAX_COUNT = {
 
 export const useRentItemsFormHooks = (
   groupId: number,
+  status?: HealthCenterSubmissionStatus,
   groupCategoryId?: number // 団体カテゴリID
 ) => {
   const { t } = useTranslation('common');
@@ -143,6 +148,11 @@ export const useRentItemsFormHooks = (
     // その他の物品は20個まで
     return DEFAULT_MAX_COUNT;
   };
+
+  // 再提出判定
+  const isResubmission = status === 'waiting_resubmission';
+
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
   const isStageGroup = groupCategoryId === GROUP_CATEGORY.STAGE;
@@ -377,8 +387,10 @@ export const useRentItemsFormHooks = (
   ]);
 
   // 物品申請を行わないことを明示的に記録するフラグ
-  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] =
-    useState<boolean>(false);
+  // null = 確認中, false = 申請しない記録なし, true = 申請しない記録あり
+  const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] = useState<
+    boolean | null
+  >(null);
 
   // 初期化時にUnRegisteredGroupをチェック
   useEffect(() => {
@@ -387,9 +399,12 @@ export const useRentItemsFormHooks = (
         const result = await checkUnRegisteredGroup(currentGroupId, 0);
         if (result.success && result.exists) {
           setHasExplicitlyDeclinedItems(true);
+        } else {
+          setHasExplicitlyDeclinedItems(false);
         }
       } catch (error) {
         console.error('UnRegisteredGroupの確認エラー:', error);
+        setHasExplicitlyDeclinedItems(false);
       }
     };
 
@@ -402,6 +417,10 @@ export const useRentItemsFormHooks = (
     checkUnRegisteredGroup,
     currentGroupId,
   ]);
+
+  // UnRegisteredGroup確認が完了するまで締切分岐を保留するためのフラグ
+  const isDeclinedStateLoading =
+    hasExplicitlyDeclinedItems === null && rentalOrders.length === 0;
 
   // 互換性チェックと自動会場タイプ変更のための特別なフラグ
   const [ignoreItemChanges, setIgnoreItemChanges] = useState<boolean>(false);
@@ -512,6 +531,18 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
+  const updateStatusToUnapproved = async (): Promise<boolean> => {
+    if (status === 'unapproved') return true;
+    try {
+      await updateStatus('unapproved');
+      return true;
+    } catch (e) {
+      console.error(e);
+      toast.error(t('applications.rentItems.messages.statusUpdateFailed'));
+      return false;
+    }
+  };
+
   // 物品申請を行わない場合の登録処理
   const registerNoItems = async () => {
     try {
@@ -551,11 +582,13 @@ export const useRentItemsFormHooks = (
 
       // 状態を更新
       setValue('hasItems', false);
-      setIsEditMode(false);
       setHasExplicitlyDeclinedItems(true);
 
       // API更新の通知
       await mutateRentalOrders();
+      const statusUpdated = await updateStatusToUnapproved();
+      if (!statusUpdated) return false;
+      setIsEditMode(false);
       // 成功時のトースト通知
       toast.success(
         t('applications.rentItems.messages.registerNoItemsSuccess')
@@ -612,6 +645,8 @@ export const useRentItemsFormHooks = (
         );
 
         await mutateRentalOrders();
+        const statusUpdated = await updateStatusToUnapproved();
+        if (!statusUpdated) return;
         setIsEditMode(false);
         userChangedLocationType.current = false;
       } else {
@@ -781,6 +816,10 @@ export const useRentItemsFormHooks = (
       delete: t('form.actions.delete'),
       addItem: t('applications.rentItems.buttons.addItem'),
     },
+    deadline: {
+      title: t('applications.rentItems.deadline.title'),
+      description: t('applications.rentItems.deadline.description'),
+    },
   };
 
   return {
@@ -803,11 +842,14 @@ export const useRentItemsFormHooks = (
     openEditMode,
     isEditMode,
     hasExplicitlyDeclinedItems,
+    isDeclinedStateLoading,
     resetFormToDefault,
     handleFormSubmit,
     hideLocationTypeSelect, // 団体タイプに応じたUI表示制御フラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
+    updateStatus,
+    isResubmission,
   };
 };

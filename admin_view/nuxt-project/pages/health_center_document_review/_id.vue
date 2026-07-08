@@ -416,12 +416,45 @@
             <h3>メッセージ</h3>
           </div>
           <div class="comment-form">
+            <div class="message-template-panel">
+              <label class="message-template-label" for="message-template-select">
+                テンプレート
+              </label>
+              <select
+                id="message-template-select"
+                class="message-template-select"
+                v-model="selectedMessageTemplateId"
+              >
+                <option value="">テンプレートを選択</option>
+                <option
+                  v-for="template in messageTemplates"
+                  :key="template.id"
+                  :value="String(template.id)"
+                >
+                  {{ template.name }}（{{ template.locale }}）
+                </option>
+              </select>
+              <p
+                v-if="messageSendResult"
+                class="message-send-result"
+                role="status"
+              >
+                {{ messageSendResult }}
+              </p>
+            </div>
             <textarea
               class="comment-textarea"
               placeholder="メールで送信するコメント"
               v-model="commentBody"
+              :disabled="!selectedMessageTemplate || isSendingMessage"
             ></textarea>
-            <CommonButton iconName="send" :on_click="onSubmitComment">送信</CommonButton>
+            <CommonButton
+              iconName="send"
+              :on_click="openMessagePreview"
+              :disabled="isSendingMessage || !canSendMessage"
+            >
+              送信
+            </CommonButton>
           </div>
 
           <div class="comment-history">
@@ -433,8 +466,22 @@
             >
               <summary>
                 {{ formatCommentTimestamp(comment.created_at) }}
+                <span
+                  class="mail-delivery-status"
+                  :class="mailDeliveryStatusClass(comment.mail_delivery_status)"
+                >
+                  {{ mailDeliveryStatusLabel(comment.mail_delivery_status) }}
+                </span>
               </summary>
               <p class="comment-body">{{ comment.body }}</p>
+              <CommonButton
+                v-if="comment.mail_delivery_status === 'failed'"
+                iconName="send"
+                :on_click="() => resendCommentMail(comment)"
+                :disabled="isSendingMessage || resendingCommentId === comment.id"
+              >
+                {{ resendingCommentId === comment.id ? "再送信中" : "再送信" }}
+              </CommonButton>
             </details>
             <p v-if="sortedComments.length === 0">送信履歴はまだありません</p>
           </div>
@@ -487,6 +534,45 @@
       @error="openEditError"
     />
 
+    <EditModal
+      v-if="isPreviewModalOpen"
+      title="送信内容の確認"
+      @close="closeMessagePreview"
+    >
+      <template v-slot:form>
+        <div class="mail-preview-field">
+          <h3>宛先</h3>
+          <p>{{ group.user.email }}</p>
+        </div>
+        <div class="mail-preview-field">
+          <h3>件名</h3>
+          <p>{{ renderedMessageSubject }}</p>
+        </div>
+        <div class="mail-preview-field">
+          <h3>本文</h3>
+          <pre>{{ renderedMessageBody }}</pre>
+        </div>
+      </template>
+      <template v-slot:method>
+        <div class="mail-preview-actions">
+          <CommonButton
+            iconName="close"
+            :on_click="closeMessagePreview"
+            :disabled="isSendingMessage"
+          >
+            キャンセル
+          </CommonButton>
+          <CommonButton
+            iconName="send"
+            :on_click="confirmMessageSend"
+            :disabled="isSendingMessage"
+          >
+            {{ isSendingMessage ? "送信中" : "送信する" }}
+          </CommonButton>
+        </div>
+      </template>
+    </EditModal>
+
   </div>
 </template>
 
@@ -498,8 +584,11 @@ const HEALTH_CENTER_SHOW_ENDPOINT =
   "/api/v1/get_health_center_submission_status_show_for_admin_view/";
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/upsert_health_center_submission_status";
-const HEALTH_CENTER_COMMENT_CREATE_ENDPOINT =
-  "/api/v1/create_health_center_submission_status_comment";
+const HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT =
+  "/api/v1/create_health_center_submission_status_comment_mail";
+const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
+  "/api/v1/resend_health_center_submission_status_comment_mail";
+const MESSAGE_TEMPLATES_ENDPOINT = "/api/v1/message_templates";
 const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
@@ -647,6 +736,12 @@ export default {
         { value: "unsubmitted", label: "未提出" },
       ],
       commentBody: "",
+      messageTemplates: [],
+      selectedMessageTemplateId: "",
+      isSendingMessage: false,
+      resendingCommentId: null,
+      messageSendResult: "",
+      isPreviewModalOpen: false,
     };
   },
   watch: {
@@ -654,6 +749,9 @@ export default {
       async handler() {
         await this.reloadPageData();
       },
+    },
+    selectedMessageTemplateId() {
+      this.applySelectedMessageTemplate();
     },
   },
   computed: {
@@ -718,9 +816,38 @@ export default {
     approvedCount() {
       return this.submissions.filter((submission) => submission.status === "approved").length;
     },
+    selectedMessageTemplate() {
+      return this.messageTemplates.find(
+        (template) => String(template.id) === String(this.selectedMessageTemplateId)
+      );
+    },
+    canSendMessage() {
+      return Boolean(
+        this.group.user.email &&
+          this.selectedMessageTemplate &&
+          this.commentBody.trim()
+      );
+    },
+    messageTemplateValues() {
+      return {
+        group_name: this.group.group.name,
+        user_name: this.group.user.name,
+      };
+    },
+    renderedMessageSubject() {
+      if (!this.selectedMessageTemplate) return "";
+      return this.renderTemplateText(
+        this.selectedMessageTemplate.subject,
+        this.messageTemplateValues
+      );
+    },
+    renderedMessageBody() {
+      return this.commentBody.trim();
+    },
   },
   async mounted() {
     await this.reloadPageData();
+    await this.loadMessageTemplates();
     window.scrollTo(0, 0);
   },
   methods: {
@@ -733,10 +860,20 @@ export default {
         Object.assign(this, freshData);
       } catch (error) {
         if (error?.response?.status === 401) {
-          this.$router.push("/");
+          this.$router.push("/reauthentication_required");
           return;
         }
         throw error;
+      }
+    },
+    async loadMessageTemplates() {
+      try {
+        const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
+        this.messageTemplates = response.data || [];
+        this.selectedMessageTemplateId = "";
+      } catch (error) {
+        this.messageTemplates = [];
+        this.selectedMessageTemplateId = "";
       }
     },
     onPrevGroup() {
@@ -796,6 +933,18 @@ export default {
 
       return classMap[value] || classMap.unapproved;
     },
+    mailDeliveryStatusLabel(status) {
+      if (status === "sent") return "送信済み";
+      if (status === "not_send") return "送信しない";
+
+      return "未送信または送信失敗";
+    },
+    mailDeliveryStatusClass(status) {
+      if (status === "sent") return "mail-delivery-status--sent";
+      if (status === "not_send") return "mail-delivery-status--not-send";
+
+      return "mail-delivery-status--failed";
+    },
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
       const payload = {
@@ -819,35 +968,127 @@ export default {
         savedSubmission.status = response.data.status;
       }
     },
+    renderTemplateText(text, values) {
+      return String(text || "").replace(
+        /\{(group_name|user_name)\}/g,
+        (_, key) => String(values[key] || "")
+      );
+    },
+    applySelectedMessageTemplate() {
+      if (!this.selectedMessageTemplate) {
+        this.commentBody = "";
+        return;
+      }
+
+      this.commentBody = this.renderTemplateText(
+        this.selectedMessageTemplate.body,
+        this.messageTemplateValues
+      );
+      this.messageSendResult = "";
+    },
+    openMessagePreview() {
+      if (!this.canSendMessage || this.isSendingMessage) return;
+      this.messageSendResult = "";
+      this.isPreviewModalOpen = true;
+    },
+    closeMessagePreview() {
+      if (this.isSendingMessage) return;
+      this.isPreviewModalOpen = false;
+    },
+    async confirmMessageSend() {
+      const succeeded = await this.onSubmitComment();
+      if (succeeded) {
+        this.isPreviewModalOpen = false;
+      }
+    },
     async onSubmitComment() {
       const submission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
       const body = this.commentBody.trim();
 
-      if (!body) return;
+      if (!this.canSendMessage || this.isSendingMessage) return false;
 
-      const commentRes = await this.$axios.$post(
-        HEALTH_CENTER_COMMENT_CREATE_ENDPOINT,
-        {
-          group_id: this.group.group.id,
-          application_type: BULK_MESSAGE_APPLICATION_TYPE,
-          body,
-        }
-      );
+      this.isSendingMessage = true;
+      this.messageSendResult = "";
 
-      if (submission && !submission.id && commentRes.data?.commentable_id) {
-        submission.id = commentRes.data.commentable_id;
-      }
-
-      const targetSubmission = submission || this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
-      if (targetSubmission) {
-        targetSubmission.comments = [
-          ...(targetSubmission.comments || []),
+      try {
+        const commentRes = await this.$axios.$post(
+          HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT,
           {
-            ...commentRes.data,
-          },
-        ];
+            group_id: this.group.group.id,
+            application_type: BULK_MESSAGE_APPLICATION_TYPE,
+            message_template_id: this.selectedMessageTemplate.id,
+            body,
+          }
+        );
+
+        if (submission && !submission.id && commentRes.data?.commentable_id) {
+          submission.id = commentRes.data.commentable_id;
+        }
+
+        this.upsertCommentInSubmission(commentRes.data);
+        this.commentBody = "";
+        this.selectedMessageTemplateId = "";
+        this.messageSendResult = "メッセージを送信しました";
+        return true;
+      } catch (error) {
+        const savedComment = error?.response?.data?.data;
+        if (savedComment?.id) {
+          this.upsertCommentInSubmission(savedComment);
+          this.commentBody = "";
+          this.selectedMessageTemplateId = "";
+          this.isPreviewModalOpen = false;
+        }
+        this.messageSendResult = "メッセージの送信に失敗しました";
+        return false;
+      } finally {
+        this.isSendingMessage = false;
       }
-      this.commentBody = "";
+    },
+    async resendCommentMail(comment) {
+      if (!comment?.id || this.isSendingMessage || this.resendingCommentId) {
+        return;
+      }
+
+      this.resendingCommentId = comment.id;
+      this.messageSendResult = "";
+      try {
+        const response = await this.$axios.$post(
+          `${HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT}/${comment.id}`
+        );
+        this.upsertCommentInSubmission(response.data);
+        this.messageSendResult = "メッセージを再送信しました";
+      } catch (error) {
+        const savedComment = error?.response?.data?.data;
+        if (savedComment?.id) {
+          this.upsertCommentInSubmission(savedComment);
+        }
+        this.messageSendResult = "メッセージの再送信に失敗しました";
+      } finally {
+        this.resendingCommentId = null;
+      }
+    },
+    upsertCommentInSubmission(comment) {
+      if (!comment?.id) return;
+
+      let targetSubmission = this.submissions.find(
+        (submission) => submission.id === comment.commentable_id
+      );
+      if (!targetSubmission) {
+        targetSubmission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
+      }
+      if (!targetSubmission) return;
+      if (!targetSubmission.id && comment.commentable_id) {
+        targetSubmission.id = comment.commentable_id;
+      }
+
+      const comments = targetSubmission.comments || [];
+      const commentIndex = comments.findIndex((item) => item.id === comment.id);
+      if (commentIndex >= 0) {
+        comments.splice(commentIndex, 1, { ...comments[commentIndex], ...comment });
+      } else {
+        comments.push(comment);
+      }
+      targetSubmission.comments = [...comments];
     },
     openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
@@ -1016,6 +1257,42 @@ export default {
   margin-top: 16px;
 }
 
+.message-template-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.message-template-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-8);
+}
+
+.message-template-select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.message-template-select:focus {
+  outline: none;
+  border-color: var(--button-primary);
+}
+
+.message-send-result {
+  margin: 0;
+  font-size: 13px;
+  color: var(--accent-8);
+}
+
 .comment-accordion {
   width: 100%;
   border: 1px solid var(--accent-2);
@@ -1050,6 +1327,48 @@ export default {
 .comment-textarea:focus {
   outline: none;
   border-color: var(--button-primary);
+}
+
+.comment-textarea:disabled {
+  background: #f5f5f5;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.mail-preview-field {
+  width: 100%;
+}
+
+.mail-preview-field p,
+.mail-preview-field pre {
+  width: 500px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  background: #fafafa;
+  color: #222;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mail-preview-field p {
+  min-height: 20px;
+}
+
+.mail-preview-field pre {
+  min-height: 220px;
+  max-height: 380px;
+}
+
+.mail-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .textarea-container {
@@ -1313,6 +1632,33 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+}
+
+.mail-delivery-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.mail-delivery-status--sent {
+  background: #e7f5ec;
+  color: #1f7a3f;
+}
+
+.mail-delivery-status--failed {
+  background: #fff3dc;
+  color: #9a5b00;
+}
+
+.mail-delivery-status--not-send {
+  background: #eeeeee;
+  color: #555;
 }
 
 @media (max-width: 900px) {

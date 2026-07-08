@@ -13,6 +13,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '422':
           description: api/v1/print_pdf description
           content:
@@ -33,6 +37,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         '422':
           description: api/v1/print_pdf description
           content:

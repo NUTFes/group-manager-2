@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
+
   # 識別番号割り当て
   get 'group_identification' => 'group_identification#index'
   post 'group_identification' => 'group_identification#create'
@@ -276,6 +278,8 @@ Rails.application.routes.draw do
       patch 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
       post 'upsert_health_center_submission_status' => 'health_center_submission_statuses_api#upsert_health_center_submission_status'
       post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
+      post 'create_health_center_submission_status_comment_mail' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment_mail'
+      post 'resend_health_center_submission_status_comment_mail/:comment_id' => 'health_center_submission_statuses_api#resend_health_center_submission_status_comment_mail'
       post 'sync_health_center_submission_statuses' => 'health_center_submission_statuses_api#sync_health_center_submission_statuses'
 
       #---開催日
@@ -291,6 +295,13 @@ Rails.application.routes.draw do
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
       #---CSV出力
+      resources :message_templates, only: %i[index show create update] do
+        member do
+          get :copy_source
+        end
+      end
+      resources :mail_deliveries, only: [:create]
+
       get 'get_groups_csv/:fes_year_id' => 'output_csv#output_groups_csv'
       get 'get_sub_reps_csv/:fes_year_id' => 'output_csv#output_sub_reps_csv'
       get 'get_rental_orders_csv/:fes_year_id' => 'output_csv#output_rental_orders_csv'

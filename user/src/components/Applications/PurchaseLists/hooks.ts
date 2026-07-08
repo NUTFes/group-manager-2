@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
+  HealthCenterSubmissionStatus,
+  useUpdateSubmissionStatusFor,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   useCreatePurchaseList,
   useDeletePurchaseList,
   useGetPurchaseListsByFoodProduct,
@@ -278,13 +282,16 @@ export const usePurchaseListsViewTexts = () => {
 export const usePurchaseListsForm = (
   groupId: number,
   initialData: PurchaseItem[] | undefined,
-  onSuccess: () => void
+  onSuccess: () => void,
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
   const { trigger: createPurchaseList } = useCreatePurchaseList();
   const { trigger: updatePurchaseList } = useUpdatePurchaseList()();
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
+
+  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'purchase_list');
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -377,6 +384,18 @@ export const usePurchaseListsForm = (
           // 新規作成
           await createPurchaseList({ body: itemWithFesDateId });
           toast.success(t('applications.purchaseLists.messages.createSuccess'));
+        }
+      }
+
+      if (status !== 'unapproved') {
+        try {
+          await updateStatus('unapproved');
+        } catch (e) {
+          console.error(e);
+          toast.error(
+            t('applications.purchaseLists.messages.statusUpdateFailed')
+          );
+          return;
         }
       }
       onSuccess();

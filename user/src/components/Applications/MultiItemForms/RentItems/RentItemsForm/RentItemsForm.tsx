@@ -1,5 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { useRentItemsFormHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
@@ -14,12 +15,14 @@ type RentItemsFormProps = {
   groupId: number;
   groupCategoryId?: number; // 団体カテゴリID
   isDeadline: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const RentItemsForm: FC<RentItemsFormProps> = ({
   groupId,
   groupCategoryId,
   isDeadline,
+  status,
 }) => {
   const {
     form,
@@ -40,12 +43,13 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     openEditMode,
     isEditMode,
     hasExplicitlyDeclinedItems,
+    isDeclinedStateLoading,
     handleFormSubmit,
     hideLocationTypeSelect, // 会場タイプ選択を非表示にするフラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品ID別の最大個数を取得する関数
     rentItemsFormTexts,
-  } = useRentItemsFormHooks(groupId, groupCategoryId);
+  } = useRentItemsFormHooks(groupId, status, groupCategoryId);
 
   if (isLoading) {
     return (
@@ -68,6 +72,45 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     );
   }
 
+  // 締め切り後で、データがない（未登録）かつ再提出でない場合
+  // isDeclinedStateLoadingがtrueの間は非同期チェック完了前なので、この分岐を保留する
+  if (
+    !isDeclinedStateLoading &&
+    !isDeadline &&
+    !hasExisting &&
+    hasExplicitlyDeclinedItems === false &&
+    status !== 'waiting_resubmission'
+  ) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+        <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+          <div className="mb-4">
+            <svg
+              className="mx-auto size-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h3 className="mb-2 text-lg font-semibold text-gray-800">
+            {rentItemsFormTexts.deadline.title}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {rentItemsFormTexts.deadline.description}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // 「物品申請を行わない」場合の表示（UnRegisteredGroupが登録されている場合）
   if (!isEditMode && hasExplicitlyDeclinedItems && !hasExisting) {
     return (
@@ -79,7 +122,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </p>
             <p>{rentItemsFormTexts.summary.noApplication.description}</p>
           </div>
-          {isDeadline && (
+          {(isDeadline || status === 'waiting_resubmission') && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
               <Button
                 size="pc"
@@ -145,7 +188,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           ))}
         </div>
 
-        {isDeadline && (
+        {(isDeadline || status === 'waiting_resubmission') && (
           <div className="mt-4 flex w-full items-center justify-center gap-4">
             <Button
               size="pc"

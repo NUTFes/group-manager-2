@@ -109,6 +109,7 @@ export default {
       isInvalidFile: false,
       isFile: false,
       isFileCheck: false,
+      isFileSizeCheck: false,
     };
   },
   computed: {
@@ -159,25 +160,34 @@ export default {
         const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
-
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
+        const FILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20MB
+        this.isFileSizeCheck = file.size > FILE_SIZE_LIMIT;
+        
+        // ファイルサイズのバリデーション
+        if(this.isFileSizeCheck){
+          this.openSnackBar(
+            "ファイルサイズは20MB以下にしてください。"
+          );
+          this.isFileSizeCheck = true;
         // ファイル形式のバリデーション
-        if (this.isInvalidFile) {
+        } else if (this.isInvalidFile) {
           this.openSnackBar(
             "ファイル形式は[.pngか.jpeg又は.jpg]にしてください。"
           );
           this.isInvalidFile = true;
           return;
-          // ファイル名のチェック。"_"で区切られているかどうかのチェック
+          // ファイル名のバリデーション。「^\/:*?"<>|\r\n」が含まれているかどうかのチェック
         } else if (!fileNameRegex.test(file.name)) {
           this.openSnackBar(
-            "ファイル名は「参加形式_団体名」の形式で入力してください"
+            "ファイル名には、日本語・英数字・ハイフン（-）・アンダースコア（_）・スペース「」が使用できます。"
           );
           this.isFileCheck = true;
           return;
         } else {
           this.isInvalidFile = false;
           this.isFileCheck = false;
+          this.isFileSizeCheck = false;
           this.isFile = true;
         }
       }

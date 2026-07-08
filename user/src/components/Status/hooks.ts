@@ -9,6 +9,7 @@ const STATUS_TRANSLATION_KEY = {
   not_required: 'status.progress.notRequired',
   completed: 'status.progress.completed',
   pending: 'status.progress.pending',
+  resubmission: 'status.registration.resubmission',
 } as const;
 
 export type StatusTranslationKey = keyof typeof STATUS_TRANSLATION_KEY;
