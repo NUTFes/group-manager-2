@@ -5,11 +5,9 @@ import {
 } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
-  HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses/user',
-  UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/health_center_submission_statuses/user',
-  CREATE_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/health_center_submission_statuses/user',
+  HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
+  UPDATE_HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
+  CREATE_HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -91,7 +89,7 @@ export const useGetHealthCenterSubmissionStatus = (
 ) => {
   const endpoint =
     groupId != null
-      ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}/${groupId}`
+      ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}?group_id=${groupId}`
       : null;
 
   const {

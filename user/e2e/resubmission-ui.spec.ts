@@ -327,7 +327,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(checkAllRegistered(state)));
     }
 
-    if (path === `/health_center_submission_statuses/user/${mockGroupId}`) {
+    if (path === `/health_center_submission_statuses?group_id=${mockGroupId}`) {
       return fulfillJson(
         route,
         apiResponse({
@@ -415,10 +415,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse([]));
     }
 
-    if (
-      method === 'POST' &&
-      path === '/health_center_submission_statuses/user'
-    ) {
+    if (method === 'POST' && path === '/health_center_submission_statuses') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
         application_type: 'power_order' | 'fire_equipment_order';
@@ -433,7 +430,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
 
     if (
       method === 'PATCH' &&
-      /^\/health_center_submission_statuses\/user\/\d+$/.test(path)
+      /^\/health_center_submission_statuses\/\d+$/.test(path)
     ) {
       state.requestedUrls.push(path);
       const id = Number(path.split('/').at(-1));

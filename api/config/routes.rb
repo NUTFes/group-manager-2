@@ -146,13 +146,7 @@ Rails.application.routes.draw do
       patch 'resubmit', to: 'fire_equipment_orders#resubmit'
     end
   end
-  resources :health_center_submission_statuses, only: [] do
-    collection do
-      get 'user/:group_id', to: 'health_center_submission_statuses#user_index'
-      patch 'user/:id', to: 'health_center_submission_statuses#user_update'
-      post 'user', to: 'health_center_submission_statuses#user_create'
-    end
-  end
+  resources :health_center_submission_statuses, only: %i[index create update]
 
   # /api/v1/...
   namespace 'api' do

@@ -697,7 +697,7 @@ const getSubmissionStatuses = async (
   groupId: number
 ): Promise<SubmissionStatus[]> => {
   const response = await api.get(
-    `/health_center_submission_statuses/user/${groupId}`,
+    `/health_center_submission_statuses?group_id=${groupId}`,
     {
       headers: authHeaders,
     }

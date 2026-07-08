@@ -70,6 +70,24 @@ paths:
         required: true
         schema:
           type: integer
+  "/power_orders/resubmit":
+    put:
+      tags:
+      - power_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: power_order description
+        '422':
+          description: power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PowerOrder"
   "/power_orders/{id}":
     get:
       tags:

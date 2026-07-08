@@ -31,7 +31,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # ログインユーザー自身の団体について、再提出対象の各申請ステータスが取得できることを確認する。
   test 'gets user submission statuses including resubmission application types' do
-    get "/health_center_submission_statuses/user/#{@group.id}",
+    get "/health_center_submission_statuses?group_id=#{@group.id}",
         headers: auth_headers(@user),
         as: :json
 
@@ -45,7 +45,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # 他ユーザーの団体IDを指定しても、申請ステータスを閲覧できないことを確認する。
   test 'does not get another users submission statuses' do
-    get "/health_center_submission_statuses/user/#{@other_group.id}",
+    get "/health_center_submission_statuses?group_id=#{@other_group.id}",
         headers: auth_headers(@user),
         as: :json
 
@@ -54,7 +54,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # ログインユーザー自身の団体について、user用APIから電力申請を未承認状態で新規作成できることを確認する。
   test 'creates user power order submission status' do
-    post '/health_center_submission_statuses/user',
+    post '/health_center_submission_statuses',
          params: {
            group_id: @group.id,
            application_type: 'power_order',
@@ -70,7 +70,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # user用create APIで他ユーザーの団体ステータスを作成できないことを確認する。
   test 'does not create another users submission status' do
-    post '/health_center_submission_statuses/user',
+    post '/health_center_submission_statuses',
          params: {
            group_id: @other_group.id,
            application_type: 'power_order',
@@ -85,7 +85,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
 
   # user用APIではapprovedへの自己承認ができないことを確認する。
   test 'does not allow user to approve own submission status' do
-    post '/health_center_submission_statuses/user',
+    post '/health_center_submission_statuses',
          params: {
            group_id: @group.id,
            application_type: 'power_order',
@@ -106,7 +106,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    patch "/health_center_submission_statuses/user/#{submission_status.id}",
+    patch "/health_center_submission_statuses/#{submission_status.id}",
           params: { status: 'unapproved' },
           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
           as: :json
@@ -124,7 +124,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
         status: :waiting_resubmission
       )
 
-      patch "/health_center_submission_statuses/user/#{submission_status.id}",
+      patch "/health_center_submission_statuses/#{submission_status.id}",
             params: { status: 'unapproved' },
             headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
             as: :json
@@ -142,7 +142,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    patch "/health_center_submission_statuses/user/#{submission_status.id}",
+    patch "/health_center_submission_statuses/#{submission_status.id}",
           params: { status: 'unapproved' },
           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
           as: :json
@@ -159,7 +159,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    patch "/health_center_submission_statuses/user/#{submission_status.id}",
+    patch "/health_center_submission_statuses/#{submission_status.id}",
           params: { status: 'approved' },
           headers: auth_headers(@user),
           as: :json
@@ -177,7 +177,7 @@ class HealthCenterSubmissionStatusesUserTest < ActionDispatch::IntegrationTest
     )
 
     with_slack_client_new_raising do
-      patch "/health_center_submission_statuses/user/#{submission_status.id}",
+      patch "/health_center_submission_statuses/#{submission_status.id}",
             params: { status: 'unapproved' },
             headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
             as: :json

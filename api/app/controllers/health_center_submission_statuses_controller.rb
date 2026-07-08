@@ -2,12 +2,11 @@
 
 class HealthCenterSubmissionStatusesController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_group_id, only: %i[user_index user_create]
+  before_action :require_group_id, only: %i[index create]
 
-  # user画面用の申請ステータス取得
-  def user_index
+  def index
     group = current_user_group(params[:group_id])
-    return render_user_not_found unless group
+    return render_not_found unless group
 
     render json: fmt(
       ok,
@@ -17,28 +16,26 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     )
   end
 
-  # user画面用ステータス変更
-  def user_update
-    return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
-
-    submission_status = current_user_submission_status(params[:id])
-    return render_user_not_found unless submission_status
-
-    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
-  end
-
-  # user画面用ステータス初回作成（未作成分をINSERT）
-  def user_create
+  def create
     return render_unprocessable_entity('Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
-    return render_invalid_user_status unless valid_user_status?(params[:status].to_s)
+    return render_invalid_status unless valid_status?(params[:status].to_s)
 
     group = current_user_group(params[:group_id])
-    return render_user_not_found unless group
+    return render_not_found unless group
 
     submission_status = HealthCenterSubmissionStatus.find_or_initialize_by(
       group_id: group.id,
       application_type: params[:application_type]
     )
+
+    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
+  end
+
+  def update
+    return render_invalid_status unless valid_status?(params[:status].to_s)
+
+    submission_status = current_user_submission_status(params[:id])
+    return render_not_found unless submission_status
 
     save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
   end
@@ -49,7 +46,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
     HealthCenterSubmissionStatus.application_types.key?(application_type)
   end
 
-  def valid_user_status?(status)
+  def valid_status?(status)
     status == 'unapproved'
   end
 
@@ -66,11 +63,11 @@ class HealthCenterSubmissionStatusesController < ApplicationController
       .find_by(id: id)
   end
 
-  def render_user_not_found
+  def render_not_found
     render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
   end
 
-  def render_invalid_user_status
+  def render_invalid_status
     render_unprocessable_entity('Invalid status')
   end
 
