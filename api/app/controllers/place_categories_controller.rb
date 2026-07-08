@@ -5,27 +5,17 @@ class PlaceCategoriesController < ApplicationController
 
   def index
     @place_categories = PlaceCategory.hierarchy_ordered
-    render json: fmt(
-      ok,
-      @place_categories.as_json(
-        methods: %i[
-          formatted_name
-          children_count
-          descendant_ids
-          stocker_places_count
-        ]
-      )
-    )
+    render json: fmt(ok, @place_categories.as_json(methods: place_category_methods))
   end
 
   def show
-    render json: fmt(ok, @place_category)
+    render json: fmt(ok, @place_category.as_json(methods: place_category_methods))
   end
 
   def create
     @place_category = PlaceCategory.new(place_category_params)
     if @place_category.save
-      render json: fmt(ok, @place_category), status: :created
+      render json: fmt(ok, @place_category.as_json(methods: place_category_methods)), status: :created
     else
       render json: fmt(unprocessable_entity, @place_category.errors.full_messages), status: :unprocessable_entity
     end
@@ -33,7 +23,7 @@ class PlaceCategoriesController < ApplicationController
 
   def update
     if @place_category.update(place_category_params)
-      render json: fmt(ok, @place_category, "Updated place_category id = #{params[:id]}"), status: :ok
+      render json: fmt(ok, @place_category.as_json(methods: place_category_methods), "Updated place_category id = #{params[:id]}"), status: :ok
     else
       render json: fmt(unprocessable_entity, @place_category.errors.full_messages), status: :unprocessable_entity
     end
@@ -48,6 +38,16 @@ class PlaceCategoriesController < ApplicationController
   end
 
   private
+
+  def place_category_methods
+    %i[
+      formatted_name
+      parent_name
+      children_count
+      descendant_ids
+      stocker_places_count
+    ]
+  end
 
   def set_place_category
     if PlaceCategory.exists?(params[:id])

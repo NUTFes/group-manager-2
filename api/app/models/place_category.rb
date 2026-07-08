@@ -29,6 +29,10 @@ class PlaceCategory < ApplicationRecord
     ancestor_chain.map(&:name).join(' / ')
   end
 
+  def parent_name
+    parent ? parent.name : "未指定"
+  end
+
   def children_count
     descendant_ids.size
   end

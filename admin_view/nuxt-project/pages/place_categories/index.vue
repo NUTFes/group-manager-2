@@ -104,26 +104,23 @@ export default {
       roleID: (state) => state.users.role,
     }),
     formattedPlaceCategories() {
-      let categories = this.placeCategories.map((category) => {
-        const parent = this.placeCategories.find((p) => p.id === category.parent_id);
-        return {
+      return [
+        ...this.placeCategories.map((category) => ({
           ...category,
           formattedName: category.formatted_name,
-          parentName: parent ? parent.name : "未指定",
+          parentName: category.parent_name,
           childrenCount: category.children_count,
           stockerPlacesCount: category.stocker_places_count,
-        };
-      });
-      const unassignedStockerPlacesCount = this.stockerPlaces.filter(sp => !sp.place_category_id).length;
-      categories.push({
-        id: null,
-        name: "未指定",
-        formattedName: "未指定",
-        parentName: "",
-        childrenCount: null,
-        stockerPlacesCount: unassignedStockerPlacesCount,
-      });
-      return categories;
+        })),
+        {
+          id: null,
+          name: "未指定",
+          formattedName: "未指定",
+          parentName: "",
+          childrenCount: null,
+          stockerPlacesCount: this.stockerPlaces.filter((sp) => sp.place_category_id === null).length,
+        },
+      ];
     },
     selectableCategories() {
       // In AddModal, all categories are selectable as parent (except itself, but it doesn't exist yet)

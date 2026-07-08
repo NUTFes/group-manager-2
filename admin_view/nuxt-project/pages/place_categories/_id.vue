@@ -156,10 +156,7 @@ export default {
       return this.stockerPlaces.filter(sp => sp.place_category_id === this.placeCategory.id);
     },
     parentName() {
-      if (!this.placeCategory.parent_id) return "未指定";
-
-      const parent = this.placeCategories.find(p => p.id === this.placeCategory.parent_id);
-      return parent ? parent.formatted_name : "未指定";
+      return this.placeCategory.parent_name;
     },
     formattedName() {
       return this.placeCategory.formatted_name;

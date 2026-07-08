@@ -20,6 +20,8 @@ components:
           format: date-time
         formatted_name:
           type: string
+        parent_name:
+          type: string
         children_count:
           type: integer
         descendant_ids:
