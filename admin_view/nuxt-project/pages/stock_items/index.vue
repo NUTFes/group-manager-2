@@ -103,7 +103,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   watchQuery: ["page"],
   data() {
@@ -156,15 +155,10 @@ export default {
     }),
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
-      let categories = this.placeCategories.map(category => {
-        return {
-          ...category,
-          formattedName: getFormattedName(category, this.placeCategories),
-          sortKey: getSortKey(category, this.placeCategories)
-        };
-      });
-      categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-      return categories;
+      return this.placeCategories.map(category => ({
+        ...category,
+        formattedName: category.formatted_name,
+      }));
     },
     filterPlaceCategories() {
       return [
@@ -234,18 +228,8 @@ export default {
         const category = name_list.find(n => n.id === item_id);
         this.refPlaceCategory = category ? category.formattedName : "ALL";
         
-        const childrenSet = new Set([item_id]);
-        let queue = [item_id];
-        while (queue.length > 0) {
-          const currentId = queue.shift();
-          const children = name_list.filter(n => n.parent_id === currentId);
-          children.forEach(child => {
-            if (!childrenSet.has(child.id)) {
-              childrenSet.add(child.id);
-              queue.push(child.id);
-            }
-          });
-        }
+        const descendantIds = category ? category.descendant_ids : [];
+        const childrenSet = new Set([item_id, ...descendantIds]);
         this.stockerPlaces = this.allStockerPlaces.filter(p => childrenSet.has(p.place_category_id));
       }
     },

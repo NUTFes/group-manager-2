@@ -352,7 +352,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { getFormattedName, getSortKey } from "../../utils/place_category_utils";
 
 export default {
   watchQuery: ["page"],
@@ -503,15 +502,10 @@ export default {
     formattedPlaceCategories() {
       if (!this.placeCategories) return [];
       
-      let categories = this.placeCategories.map(category => {
-        return {
-          ...category,
-          formattedName: getFormattedName(category, this.placeCategories),
-          sortKey: getSortKey(category, this.placeCategories)
-        };
-      });
-      categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-      return categories;
+      return this.placeCategories.map(category => ({
+        ...category,
+        formattedName: category.formatted_name,
+      }));
     }
   },
   mounted() {

@@ -76,7 +76,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { getChildrenIds, getFormattedName, getSortKey } from "../../utils/place_category_utils";
 export default {
   watchQuery: ["page"],
   data() {
@@ -107,18 +106,14 @@ export default {
     formattedPlaceCategories() {
       let categories = this.placeCategories.map((category) => {
         const parent = this.placeCategories.find((p) => p.id === category.parent_id);
-        const childrenCount = getChildrenIds(category.id, this.placeCategories).length;
-        const stockerPlacesCount = this.stockerPlaces.filter((sp) => sp.place_category_id === category.id).length;
         return {
           ...category,
-          formattedName: getFormattedName(category, this.placeCategories),
-          sortKey: getSortKey(category, this.placeCategories),
+          formattedName: category.formatted_name,
           parentName: parent ? parent.name : "未指定",
-          childrenCount,
-          stockerPlacesCount,
+          childrenCount: category.children_count,
+          stockerPlacesCount: category.stocker_places_count,
         };
       });
-      categories.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
       const unassignedStockerPlacesCount = this.stockerPlaces.filter(sp => !sp.place_category_id).length;
       categories.push({
         id: null,
@@ -134,9 +129,8 @@ export default {
       // In AddModal, all categories are selectable as parent (except itself, but it doesn't exist yet)
       return this.placeCategories.map(category => ({
         ...category,
-        formattedName: getFormattedName(category, this.placeCategories),
-        sortKey: getSortKey(category, this.placeCategories)
-      })).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+        formattedName: category.formatted_name,
+      }));
     },
   },
   mounted() {
