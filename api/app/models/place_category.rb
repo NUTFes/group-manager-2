@@ -62,9 +62,9 @@ class PlaceCategory < ApplicationRecord
   end
 
   def parent_id_must_be_nil_or_integer
-    return unless parent_id_before_type_cast == ""
+    return unless parent_id_before_type_cast == ''
 
-    errors.add(:parent_id, "must be nil or integer")
+    errors.add(:parent_id, 'must be nil or integer')
   end
 
   def ancestor_chain

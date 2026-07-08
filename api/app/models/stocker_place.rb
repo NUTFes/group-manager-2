@@ -11,8 +11,8 @@ class StockerPlace < ApplicationRecord
   private
 
   def place_category_id_must_be_nil_or_integer
-    return unless place_category_id_before_type_cast == ""
+    return unless place_category_id_before_type_cast == ''
 
-    errors.add(:place_category_id, "must be nil or integer")
+    errors.add(:place_category_id, 'must be nil or integer')
   end
 end
