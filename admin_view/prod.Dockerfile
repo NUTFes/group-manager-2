@@ -5,10 +5,12 @@ WORKDIR /app
 # Accept API URL as a build-time environment variable
 ARG VUE_APP_URL
 ARG VUE_APP_API_URL
+ARG NEXT_PUBLIC_IMGUR_CLIENT_ID
 
 # Set the environment variable
 ENV VUE_APP_URL=${VUE_APP_URL}
 ENV VUE_APP_API_URL=${VUE_APP_API_URL}
+ENV NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
 
 # Copy package.json and package-lock.json (or npm-shrinkwrap.json)
 COPY ./nuxt-project/package*.json ./
