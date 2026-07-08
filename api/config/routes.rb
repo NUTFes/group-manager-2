@@ -87,10 +87,11 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'sub_reps#get_by_group_id'
     end
   end
-  resources :power_orders do
+  resources :power_orders, except: [:destroy] do
     collection do
       get 'group/:group_id', to: 'power_orders#get_by_group_id'
       put 'resubmit', to: 'power_orders#resubmit'
+      delete 'user/:id', to: 'power_orders#user_destroy'
     end
   end
   resources :place_allow_lists
@@ -139,11 +140,12 @@ Rails.application.routes.draw do
       get 'group', to: 'un_registered_groups#group'
     end
   end
-  resources :fire_equipment_orders do
+  resources :fire_equipment_orders, except: [:destroy] do
     collection do
       get 'group/:group_id', to: 'fire_equipment_orders#get_by_group_id'
       put 'resubmit', to: 'fire_equipment_orders#resubmit'
       patch 'resubmit', to: 'fire_equipment_orders#resubmit'
+      delete 'user/:id', to: 'fire_equipment_orders#user_destroy'
     end
   end
   resources :health_center_submission_statuses, only: [] do

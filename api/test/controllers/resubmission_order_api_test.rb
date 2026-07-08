@@ -192,6 +192,50 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert FireEquipmentOrder.exists?(fire_equipment_order.id)
   end
 
+  test 'user power order destroy deletes owned order' do
+    power_order = create_power_order!(@group, item: 'ユーザー削除対象')
+
+    delete "/power_orders/user/#{power_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :success
+    assert_nil PowerOrder.find_by(id: power_order.id)
+  end
+
+  test 'user power order destroy does not delete other group order' do
+    power_order = create_power_order!(@other_group, item: '他団体削除対象')
+
+    delete "/power_orders/user/#{power_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :not_found
+    assert PowerOrder.exists?(power_order.id)
+  end
+
+  test 'user fire equipment order destroy deletes owned order' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: 'ユーザー削除対象')
+
+    delete "/fire_equipment_orders/user/#{fire_equipment_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :success
+    assert_nil FireEquipmentOrder.find_by(id: fire_equipment_order.id)
+  end
+
+  test 'user fire equipment order destroy does not delete other group order' do
+    fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体削除対象')
+
+    delete "/fire_equipment_orders/user/#{fire_equipment_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :not_found
+    assert FireEquipmentOrder.exists?(fire_equipment_order.id)
+  end
+
   test 'user resubmits power orders and updates status in one request' do
     power_order = create_power_order!(@group, item: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(

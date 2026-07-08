@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PowerOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: [:resubmit]
-  before_action :set_power_order, only: %i[show update destroy]
+  before_action :authenticate_api_user!, only: %i[resubmit user_destroy]
+  before_action :set_power_order, only: %i[show update]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /power_orders
@@ -32,16 +32,17 @@ class PowerOrdersController < ApplicationController
     render json: fmt(created, @power_order, "Updated power_order id = #{params[:id]}")
   end
 
-  # DELETE /power_orders/1
-  # DELETE /power_orders/1.json
-  def destroy
-    @power_order.destroy
-    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
-  end
-
   # GET /power_orders/group_id/1
   def get_by_group_id
     render json: fmt(ok, @power_orders)
+  end
+
+  def user_destroy
+    power_order = user_power_order
+    return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?
+
+    power_order.destroy
+    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
   end
 
   def resubmit
@@ -102,6 +103,15 @@ class PowerOrdersController < ApplicationController
     return nil if params[:group_id].blank?
 
     current_api_user.groups.find_by(id: params[:group_id])
+  end
+
+  def user_power_order
+    current_api_user
+      .groups
+      .joins(:power_orders)
+      .find_by(power_orders: { id: params[:id] })
+      &.power_orders
+      &.find_by(id: params[:id])
   end
 
   def use_power?

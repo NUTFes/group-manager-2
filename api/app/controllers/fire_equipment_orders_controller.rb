@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class FireEquipmentOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: [:resubmit]
-  before_action :set_fire_equipment_order, only: %i[show update destroy]
+  before_action :authenticate_api_user!, only: %i[resubmit user_destroy]
+  before_action :set_fire_equipment_order, only: %i[show update]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
   # GET /fire_equipment_orders
@@ -49,11 +49,6 @@ class FireEquipmentOrdersController < ApplicationController
     end
   end
 
-  # DELETE /fire_equipment_orders/:id
-  def destroy
-    @fire_equipment_order.destroy
-  end
-
   # GET /fire_equipment_orders/group/:group_id
   def get_by_group_id
     if @fire_equipment_order
@@ -61,6 +56,14 @@ class FireEquipmentOrdersController < ApplicationController
     else
       render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
     end
+  end
+
+  def user_destroy
+    fire_equipment_order = user_fire_equipment_order
+    return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}"), status: :not_found if fire_equipment_order.nil?
+
+    fire_equipment_order.destroy
+    render json: fmt(ok, [], "Deleted fire_equipment_order = #{params[:id]}")
   end
 
   def resubmit
@@ -113,6 +116,15 @@ class FireEquipmentOrdersController < ApplicationController
     return nil if params[:group_id].blank?
 
     current_api_user.groups.find_by(id: params[:group_id])
+  end
+
+  def user_fire_equipment_order
+    current_api_user
+      .groups
+      .joins(:fire_equipment_orders)
+      .find_by(fire_equipment_orders: { id: params[:id] })
+      &.fire_equipment_orders
+      &.find_by(id: params[:id])
   end
 
   def resolve_fire_equipment_order(group)

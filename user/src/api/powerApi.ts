@@ -3,6 +3,7 @@ import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
+  USER_POWER_ORDERS: '/power_orders/user',
   RESUBMIT_POWER_ORDERS: '/power_orders/resubmit',
 };
 
@@ -130,7 +131,7 @@ export const useMutatePowerOrders = () => {
    */
   const deletePowerOrder = async (deviceId: number) => {
     try {
-      await remove(`${API_ENDPOINTS.POWER_ORDERS}/${deviceId}`);
+      await remove(`${API_ENDPOINTS.USER_POWER_ORDERS}/${deviceId}`);
       return { success: true };
     } catch (error) {
       return { success: false, error };

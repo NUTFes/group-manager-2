@@ -3,8 +3,13 @@
 require 'test_helper'
 
 class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
+  self.fixture_table_names = []
+
   setup do
-    @power_order = power_orders(:one)
+    Role.create!(id: 1, name: 'admin')
+    @user = create_user!
+    @group = create_group!(@user)
+    @power_order = create_power_order!(@group)
   end
 
   test 'should get index' do
@@ -14,10 +19,12 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create power_order' do
     assert_difference('PowerOrder.count') do
-      post power_orders_url, params: { power_order: { group_id: @power_order.group_id, item: @power_order.item, manufacture: @power_order.manufacture, model: @power_order.model, power: @power_order.power } }, as: :json
+      post power_orders_url,
+           params: power_order_params(item: '新規'),
+           as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show power_order' do
@@ -26,15 +33,59 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update power_order' do
-    patch power_order_url(@power_order), params: { power_order: { group_id: @power_order.group_id, item: @power_order.item, manufacture: @power_order.manufacture, model: @power_order.model, power: @power_order.power } }, as: :json
+    patch power_order_url(@power_order),
+          params: power_order_params(item: '更新後'),
+          as: :json
+
     assert_response :ok
+    assert_equal '更新後', @power_order.reload.item
   end
 
-  test 'should destroy power_order' do
-    assert_difference('PowerOrder.count', -1) do
-      delete power_order_url(@power_order), as: :json
+  test 'legacy destroy route is removed' do
+    assert_raises(ActionController::RoutingError) do
+      delete "/power_orders/#{@power_order.id}", as: :json
     end
+  end
 
-    assert_response :no_content
+  private
+
+  def create_user!
+    User.create!(
+      name: 'power-order-user',
+      email: 'power-order-user@example.com',
+      uid: 'power-order-user@example.com',
+      provider: 'email',
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: 1
+    )
+  end
+
+  def create_group!(user)
+    group_category = GroupCategory.create!(name: '電力カテゴリ')
+    fes_year = FesYear.create!(year_num: 2026)
+    Group.create!(
+      name: '電力団体',
+      project_name: '電力企画',
+      activity: '食品販売',
+      user: user,
+      group_category: group_category,
+      fes_year: fes_year
+    )
+  end
+
+  def create_power_order!(group)
+    PowerOrder.create!(power_order_params(group: group))
+  end
+
+  def power_order_params(group: @group, item: '既存')
+    {
+      group_id: group.id,
+      item: item,
+      power: 100,
+      manufacturer: 'メーカー',
+      model: 'MODEL-1',
+      item_url: 'https://example.com'
+    }
   end
 end

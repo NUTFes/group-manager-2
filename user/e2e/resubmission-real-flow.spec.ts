@@ -440,7 +440,9 @@ const restorePreparedState = async (
       item_url: state.originalPowerOrder.item_url,
     });
   } else if (state.createdPowerOrderId) {
-    await api.delete(`/power_orders/${state.createdPowerOrderId}`);
+    await api.delete(`/power_orders/user/${state.createdPowerOrderId}`, {
+      headers: state.auth?.headers,
+    });
   }
 
   if (state.originalFireEquipmentOrder) {
@@ -455,7 +457,10 @@ const restorePreparedState = async (
     });
   } else if (state.createdFireEquipmentOrderId) {
     await api.delete(
-      `/fire_equipment_orders/${state.createdFireEquipmentOrderId}`
+      `/fire_equipment_orders/user/${state.createdFireEquipmentOrderId}`,
+      {
+        headers: state.auth?.headers,
+      }
     );
   }
 
