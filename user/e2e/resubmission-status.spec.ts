@@ -76,18 +76,15 @@ test.describe('power and fire equipment resubmission status', () => {
   test.afterEach(async () => {
     try {
       if (powerOrderId !== undefined) {
-        await api.delete(`/power_orders/user/${powerOrderId}`, {
+        await api.delete(`/power_orders/${powerOrderId}`, {
           headers: authContext.headers,
         });
         powerOrderId = undefined;
       }
       if (fireEquipmentOrderId !== undefined) {
-        await api.delete(
-          `/fire_equipment_orders/user/${fireEquipmentOrderId}`,
-          {
-            headers: authContext.headers,
-          }
-        );
+        await api.delete(`/fire_equipment_orders/${fireEquipmentOrderId}`, {
+          headers: authContext.headers,
+        });
         fireEquipmentOrderId = undefined;
       }
       if (groupId !== undefined) {

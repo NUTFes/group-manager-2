@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FireEquipmentOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[resubmit user_destroy]
+  before_action :authenticate_api_user!, only: %i[resubmit destroy]
   before_action :set_fire_equipment_order, only: %i[show update]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
@@ -58,7 +58,7 @@ class FireEquipmentOrdersController < ApplicationController
     end
   end
 
-  def user_destroy
+  def destroy
     fire_equipment_order = user_fire_equipment_order
     return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}"), status: :not_found if fire_equipment_order.nil?
 

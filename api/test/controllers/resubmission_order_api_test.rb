@@ -195,7 +195,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user power order destroy deletes owned order' do
     power_order = create_power_order!(@group, item: 'ユーザー削除対象')
 
-    delete "/power_orders/user/#{power_order.id}",
+    delete "/power_orders/#{power_order.id}",
            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
            as: :json
 
@@ -206,7 +206,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user power order destroy does not delete other group order' do
     power_order = create_power_order!(@other_group, item: '他団体削除対象')
 
-    delete "/power_orders/user/#{power_order.id}",
+    delete "/power_orders/#{power_order.id}",
            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
            as: :json
 
@@ -217,7 +217,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user fire equipment order destroy deletes owned order' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: 'ユーザー削除対象')
 
-    delete "/fire_equipment_orders/user/#{fire_equipment_order.id}",
+    delete "/fire_equipment_orders/#{fire_equipment_order.id}",
            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
            as: :json
 
@@ -228,7 +228,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user fire equipment order destroy does not delete other group order' do
     fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体削除対象')
 
-    delete "/fire_equipment_orders/user/#{fire_equipment_order.id}",
+    delete "/fire_equipment_orders/#{fire_equipment_order.id}",
            headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
            as: :json
 

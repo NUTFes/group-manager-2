@@ -41,10 +41,10 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal '更新後', @power_order.reload.item
   end
 
-  test 'legacy destroy route is removed' do
-    assert_raises(ActionController::RoutingError) do
-      delete "/power_orders/#{@power_order.id}", as: :json
-    end
+  test 'destroy requires authentication' do
+    delete power_order_url(@power_order), as: :json
+
+    assert_response :unauthorized
   end
 
   private

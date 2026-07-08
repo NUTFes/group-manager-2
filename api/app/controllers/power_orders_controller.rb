@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PowerOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[resubmit user_destroy]
+  before_action :authenticate_api_user!, only: %i[resubmit destroy]
   before_action :set_power_order, only: %i[show update]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
@@ -37,7 +37,7 @@ class PowerOrdersController < ApplicationController
     render json: fmt(ok, @power_orders)
   end
 
-  def user_destroy
+  def destroy
     power_order = user_power_order
     return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?
 

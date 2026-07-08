@@ -391,7 +391,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(state.powerOrders[0]));
     }
 
-    if (method === 'DELETE' && /^\/power_orders\/user\/\d+$/.test(path)) {
+    if (method === 'DELETE' && /^\/power_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
       state.powerOrders = state.powerOrders.filter(
         (powerOrder) => powerOrder.id !== Number(path.split('/').at(-1))
@@ -499,10 +499,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
     }
 
-    if (
-      method === 'DELETE' &&
-      /^\/fire_equipment_orders\/user\/\d+$/.test(path)
-    ) {
+    if (method === 'DELETE' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
       state.fireEquipmentOrder = null;
       return fulfillJson(route, apiResponse([]));

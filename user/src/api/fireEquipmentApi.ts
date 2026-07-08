@@ -56,7 +56,6 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
-  USER_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/user',
   RESUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/resubmit',
 };
 
@@ -96,7 +95,7 @@ export const useFireEquipmentMutations = () => {
   ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
 
   const deleteFireEquipmentOrder = (id: number) =>
-    remove(`${API_ENDPOINTS.USER_FIRE_EQUIPMENT_ORDERS}/${id}`);
+    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 
   const resubmitFireEquipmentOrder = async (
     data: Partial<FireEquipmentResponse>,
