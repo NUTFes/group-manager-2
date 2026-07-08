@@ -73,9 +73,22 @@ export default {
         this.quantity = fire_equipment_order.quantity || null;
 
         let fuelVal = 0;
-        if  fire_equipment_order.fuel === "gas_bottle" || fire_equipment_order.fuel === 1) fuelVal = 1;
-        else if  fire_equipment_order.fuel === "lp_gas" || fire_equipment_order.fuel === 2) fuelVal = 2;
-        else if  fire_equipment_order.fuel === "charcoal" || fire_equipment_order.fuel === 3) fuelVal = 3;
+        if (
+          fire_equipment_order.fuel === "gas_bottle" ||
+          fire_equipment_order.fuel === 1
+        ) {
+          fuelVal = 1;
+        } else if (
+          fire_equipment_order.fuel === "lp_gas" ||
+          fire_equipment_order.fuel === 2
+        ) {
+          fuelVal = 2;
+        } else if (
+          fire_equipment_order.fuel === "charcoal" ||
+          fire_equipment_order.fuel === 3
+        ) {
+          fuelVal = 3;
+        }
         this.fuel = fuelVal;
 
         this.usage = fire_equipment_order.usage || null;

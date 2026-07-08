@@ -212,7 +212,7 @@ export default {
       });
     },
     async destroy() {
-      const delUrl = "/power_orders/" + this.routeId;
+      const delUrl = "/api/v1/power_orders/" + this.routeId;
       await this.$axios.$delete(delUrl);
       this.$router.push("/power_orders");
     },

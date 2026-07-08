@@ -208,7 +208,7 @@ export default {
       });
     },
     async destroy() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/fire_equipment_orders/" + this.routeId;
       await this.$axios.$delete(url);
       this.$router.push("/fire_equipment_orders");
     },

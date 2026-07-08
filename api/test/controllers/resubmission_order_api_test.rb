@@ -108,6 +108,34 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal @group.id, power_order.reload.group_id
   end
 
+  test 'admin power order destroy deletes order without changing submission status' do
+    power_order = create_power_order!(@group, item: '削除対象')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order,
+      status: :waiting_resubmission
+    )
+
+    delete "/api/v1/power_orders/#{power_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :success
+    assert_nil PowerOrder.find_by(id: power_order.id)
+    assert_equal 'waiting_resubmission', submission_status.reload.status
+  end
+
+  test 'admin power order destroy rejects non admin user' do
+    power_order = create_power_order!(@group, item: '削除対象')
+
+    delete "/api/v1/power_orders/#{power_order.id}",
+           headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :forbidden
+    assert PowerOrder.exists?(power_order.id)
+  end
+
   test 'admin fire equipment order update does not change submission status' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
@@ -134,6 +162,34 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal '変更後', fire_equipment_order.reload.name
     assert_equal 'waiting_resubmission', submission_status.reload.status
+  end
+
+  test 'admin fire equipment order destroy deletes order without changing submission status' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '削除対象')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :fire_equipment_order,
+      status: :waiting_resubmission
+    )
+
+    delete "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :success
+    assert_nil FireEquipmentOrder.find_by(id: fire_equipment_order.id)
+    assert_equal 'waiting_resubmission', submission_status.reload.status
+  end
+
+  test 'admin fire equipment order destroy rejects non admin user' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '削除対象')
+
+    delete "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
+           headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+
+    assert_response :forbidden
+    assert FireEquipmentOrder.exists?(fire_equipment_order.id)
   end
 
   test 'user resubmits power orders and updates status in one request' do

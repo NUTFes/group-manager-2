@@ -7,11 +7,7 @@
       </div>
       <div>
         <h3>電力(W)</h3>
-        <input
-          v-model="powerOrderwer"
-          type="number"
-          placeholder="入力してください"
-        />
+        <input v-model="power" type="number" placeholder="入力してください" />
       </div>
       <div>
         <h3>メーカー</h3>
@@ -33,9 +29,9 @@
 </template>
 
 <script>
-expowerOrderrt default {
+export default {
   props: {
-    powerOrderwerOrder: {
+    powerOrder: {
       type: Object,
       required: true,
     },
@@ -44,20 +40,20 @@ expowerOrderrt default {
     return {
       groupId: null,
       item: null,
-      powerOrderwer: null,
+      power: null,
       manufacturer: null,
       model: null,
       itemUrl: null,
     };
   },
   watch: {
-    powerOrderwerOrder: {
+    powerOrder: {
       immediate: true,
       handler() {
-        const powerOrder = this.getpowerOrder();
+        const powerOrder = this.getPowerOrder();
         this.groupId = powerOrder.group_id || this.$route.params.id;
         this.item = powerOrder.item || null;
-        this.powerOrderwer = powerOrder.powerOrderwer || null;
+        this.power = powerOrder.power || null;
         this.manufacturer = powerOrder.manufacturer || null;
         this.model = powerOrder.model || null;
         this.itemUrl = powerOrder.item_url || null;
@@ -65,15 +61,15 @@ expowerOrderrt default {
     },
   },
   methods: {
-    getpowerOrder() {
-      return this.powerOrderwerOrder?.powerOrderwer_order || this.powerOrderwerOrder || {};
+    getPowerOrder() {
+      return this.powerOrder?.power_order || this.powerOrder || {};
     },
     async edit() {
-      const powerOrder = this.getpowerOrder();
+      const powerOrder = this.getPowerOrder();
       const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         item: this.item ?? "",
-        powerOrderwer: String(this.powerOrderwer ?? ""),
+        power: String(this.power ?? ""),
         manufacturer: this.manufacturer ?? "",
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",

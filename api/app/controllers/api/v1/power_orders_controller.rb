@@ -15,6 +15,14 @@ class Api::V1::PowerOrdersController < ApplicationController
     end
   end
 
+  def destroy
+    power_order = PowerOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?
+
+    power_order.destroy
+    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
+  end
+
   private
 
   def power_order_params
