@@ -30,7 +30,7 @@ class PlaceCategory < ApplicationRecord
   end
 
   def parent_name
-    parent ? parent.name : "未指定"
+    parent ? parent.name : '未指定'
   end
 
   def children_count
