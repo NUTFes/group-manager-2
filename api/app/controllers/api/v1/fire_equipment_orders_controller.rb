@@ -6,11 +6,12 @@ class Api::V1::FireEquipmentOrdersController < ApplicationController
 
   def index
     fes_year_id = params[:fes_year_id]
-    fire_equipment_orders = if fes_year_id.present? && fes_year_id.to_i != 0
-                              FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year_id })
-                            else
-                              FireEquipmentOrder.includes(:group).all
-                            end
+    fire_equipment_orders =
+      if fes_year_id.present? && fes_year_id.to_i != 0
+        FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year_id })
+      else
+        FireEquipmentOrder.includes(:group).all
+      end
 
     render json: fmt(ok, fire_equipment_orders.map { |order| order_for_admin(order) })
   end
