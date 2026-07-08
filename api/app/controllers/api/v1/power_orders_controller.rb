@@ -4,6 +4,16 @@ class Api::V1::PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
   before_action :require_admin!
 
+  def create
+    power_order = PowerOrder.new(power_order_params)
+
+    if power_order.save
+      render json: fmt(created, power_order)
+    else
+      render json: fmt(unprocessable_entity, [], power_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
+  end
+
   def update
     power_order = PowerOrder.find_by(id: params[:id])
     return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?

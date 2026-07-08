@@ -145,7 +145,7 @@ export default {
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/fire_equipment_orders/", "");
-    const url = "/fire_equipment_orders/" + routeId;
+    const url = "/api/v1/fire_equipment_orders/" + routeId;
     const response = await $axios.$get(url);
     return {
       fireEquipmentOrder: response.data,
@@ -185,7 +185,7 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/fire_equipment_orders/" + this.routeId;
       const response = await this.$axios.$get(url);
       this.fireEquipmentOrder = response.data;
     },

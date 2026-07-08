@@ -40,6 +40,25 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'waiting_resubmission', submission_status.reload.status
   end
 
+  test 'admin power order create creates order through api v1' do
+    assert_difference('PowerOrder.count', 1) do
+      post '/api/v1/power_orders',
+           params: {
+             group_id: @group.id,
+             item: '管理者追加',
+             power: 700,
+             manufacturer: '管理者',
+             model: 'ADMIN-CREATE',
+             item_url: 'https://example.com/admin-create'
+           },
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+    end
+
+    assert_response :success
+    assert_equal '管理者追加', PowerOrder.order(:created_at).last.item
+  end
+
   test 'admin power order update rejects non admin user' do
     power_order = create_power_order!(@group, item: '変更前')
 
@@ -164,6 +183,46 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'waiting_resubmission', submission_status.reload.status
   end
 
+  test 'admin fire equipment order index and show return admin data' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '一覧対象')
+
+    get '/api/v1/fire_equipment_orders',
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :success
+    assert_includes response.parsed_body['data'].pluck('id'), fire_equipment_order.id
+
+    get "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :success
+    assert_equal fire_equipment_order.id, response.parsed_body['data']['id']
+  end
+
+  test 'admin fire equipment order create creates order through api v1' do
+    assert_difference('FireEquipmentOrder.count', 1) do
+      post '/api/v1/fire_equipment_orders',
+           params: {
+             fire_equipment_order: {
+               group_id: @group.id,
+               name: '管理者追加',
+               quantity: 2,
+               fuel: 'gas_bottle',
+               usage: 'admin',
+               is_takeaway: false,
+               remark: 'create'
+             }
+           },
+           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+    end
+
+    assert_response :success
+    assert_equal '管理者追加', FireEquipmentOrder.order(:created_at).last.name
+  end
+
   test 'admin fire equipment order destroy deletes order without changing submission status' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: '削除対象')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
@@ -214,6 +273,25 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert PowerOrder.exists?(power_order.id)
   end
 
+  test 'user power order update does not update other group order' do
+    power_order = create_power_order!(@other_group, item: '他団体更新対象')
+
+    put "/power_orders/#{power_order.id}",
+        params: {
+          group_id: @other_group.id,
+          item: '不正更新',
+          power: 100,
+          manufacturer: 'user',
+          model: 'USER',
+          item_url: 'https://example.com/user'
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :not_found
+    assert_equal '他団体更新対象', power_order.reload.item
+  end
+
   test 'user fire equipment order destroy deletes owned order' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: 'ユーザー削除対象')
 
@@ -234,6 +312,28 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
     assert FireEquipmentOrder.exists?(fire_equipment_order.id)
+  end
+
+  test 'user fire equipment order update does not update other group order' do
+    fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体更新対象')
+
+    put "/fire_equipment_orders/#{fire_equipment_order.id}",
+        params: {
+          fire_equipment_order: {
+            group_id: @other_group.id,
+            name: '不正更新',
+            quantity: 2,
+            fuel: 'lp_gas',
+            usage: 'user',
+            is_takeaway: false,
+            remark: 'user'
+          }
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :not_found
+    assert_equal '他団体更新対象', fire_equipment_order.reload.name
   end
 
   test 'user resubmits power orders and updates status in one request' do

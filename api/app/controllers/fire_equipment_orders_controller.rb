@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class FireEquipmentOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[resubmit destroy]
-  before_action :set_fire_equipment_order, only: %i[show update]
+  before_action :authenticate_api_user!, only: %i[create update destroy get_by_group_id resubmit]
+  before_action :set_fire_equipment_order, only: [:show]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
   # GET /fire_equipment_orders
@@ -31,7 +31,10 @@ class FireEquipmentOrdersController < ApplicationController
 
   # POST /fire_equipment_orders
   def create
-    @fire_equipment_order = FireEquipmentOrder.new(fire_equipment_order_params)
+    group = current_user_group
+    return render_resubmit_not_found unless group
+
+    @fire_equipment_order = group.fire_equipment_orders.new(fire_equipment_order_params.except(:group_id))
 
     if @fire_equipment_order.save
       render json: fmt(created, @fire_equipment_order)
@@ -42,10 +45,13 @@ class FireEquipmentOrdersController < ApplicationController
 
   # PATCH/PUT /fire_equipment_orders/:id
   def update
-    if @fire_equipment_order.update(fire_equipment_order_params)
-      render json: fmt(created, @fire_equipment_order)
+    fire_equipment_order = user_fire_equipment_order
+    return render_resubmit_not_found if fire_equipment_order.nil?
+
+    if fire_equipment_order.update(fire_equipment_order_params.except(:group_id))
+      render json: fmt(created, fire_equipment_order)
     else
-      render json: fmt(bad_request, @fire_equipment_order.errors)
+      render json: fmt(bad_request, fire_equipment_order.errors)
     end
   end
 
@@ -101,8 +107,10 @@ class FireEquipmentOrdersController < ApplicationController
   end
 
   def set_fire_equipment_order_by_group_id
-    if FireEquipmentOrder.exists?(group_id: params[:group_id])
-      @fire_equipment_order = FireEquipmentOrder.find_by(group_id: params[:group_id])
+    group = current_user_group
+
+    if group&.fire_equipment_orders&.exists?
+      @fire_equipment_order = group.fire_equipment_orders.first
     else
       render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
     end
@@ -113,9 +121,10 @@ class FireEquipmentOrdersController < ApplicationController
   end
 
   def current_user_group
-    return nil if params[:group_id].blank?
+    group_id = params[:group_id].presence || params.dig(:fire_equipment_order, :group_id)
+    return nil if group_id.blank?
 
-    current_api_user.groups.find_by(id: params[:group_id])
+    current_api_user.groups.find_by(id: group_id)
   end
 
   def user_fire_equipment_order

@@ -102,10 +102,18 @@ test.describe('power and fire equipment resubmission status', () => {
   test('creates and updates power and fire equipment resubmission statuses through user APIs', async () => {
     expect(groupId).toBeDefined();
 
-    const powerOrder = await createPowerOrder(api, groupId!);
+    const powerOrder = await createPowerOrder(
+      api,
+      authContext.headers,
+      groupId!
+    );
     powerOrderId = powerOrder.id;
 
-    const fireEquipmentOrder = await createFireEquipmentOrder(api, groupId!);
+    const fireEquipmentOrder = await createFireEquipmentOrder(
+      api,
+      authContext.headers,
+      groupId!
+    );
     fireEquipmentOrderId = fireEquipmentOrder.id;
 
     const initialStatuses = await getSubmissionStatuses(
@@ -293,9 +301,11 @@ const createGroup = async (
 
 const createPowerOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number
 ): Promise<PowerOrder> => {
   const response = await api.post('/power_orders', {
+    headers: authHeaders,
     data: {
       group_id: groupId,
       item: `e2e-hot-plate-${Date.now()}`,
@@ -316,9 +326,11 @@ const createPowerOrder = async (
 
 const createFireEquipmentOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number
 ): Promise<FireEquipmentOrder> => {
   const response = await api.post('/fire_equipment_orders', {
+    headers: authHeaders,
     data: {
       fire_equipment_order: {
         group_id: groupId,

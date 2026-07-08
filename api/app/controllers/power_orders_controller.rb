@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PowerOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[resubmit destroy]
-  before_action :set_power_order, only: %i[show update]
+  before_action :authenticate_api_user!, only: %i[create update destroy get_by_group_id resubmit]
+  before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /power_orders
@@ -21,15 +21,21 @@ class PowerOrdersController < ApplicationController
   # POST /power_orders
   # POST /power_orders.json
   def create
-    @power_order = PowerOrder.create(power_order_params)
-    render json: fmt(created, @power_order)
+    group = current_user_group
+    return render_user_power_order_not_found unless group
+
+    power_order = group.power_orders.create(power_order_params.except(:group_id))
+    render json: fmt(created, power_order)
   end
 
   # PATCH/PUT /power_orders/1
   # PATCH/PUT /power_orders/1.json
   def update
-    @power_order.update(power_order_params)
-    render json: fmt(created, @power_order, "Updated power_order id = #{params[:id]}")
+    power_order = user_power_order
+    return render_user_power_order_not_found if power_order.nil?
+
+    power_order.update(power_order_params.except(:group_id))
+    render json: fmt(created, power_order, "Updated power_order id = #{params[:id]}")
   end
 
   # GET /power_orders/group_id/1
@@ -86,8 +92,10 @@ class PowerOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_power_orders_by_group_id
-    if PowerOrder.exists?(group_id: params[:group_id])
-      @power_orders = PowerOrder.where(group_id: params[:group_id])
+    group = current_user_group
+
+    if group&.power_orders&.exists?
+      @power_orders = group.power_orders
     else
       Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
       render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
@@ -159,6 +167,10 @@ class PowerOrdersController < ApplicationController
   end
 
   def render_resubmit_not_found
+    render json: fmt(not_found, [], 'power_order not found'), status: :not_found
+  end
+
+  def render_user_power_order_not_found
     render json: fmt(not_found, [], 'power_order not found'), status: :not_found
   end
 end

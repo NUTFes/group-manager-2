@@ -21,6 +21,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_difference('PowerOrder.count') do
       post power_orders_url,
            params: power_order_params(item: '新規'),
+           headers: auth_headers(@user),
            as: :json
     end
 
@@ -35,6 +36,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   test 'should update power_order' do
     patch power_order_url(@power_order),
           params: power_order_params(item: '更新後'),
+          headers: auth_headers(@user),
           as: :json
 
     assert_response :ok
@@ -87,5 +89,9 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
       model: 'MODEL-1',
       item_url: 'https://example.com'
     }
+  end
+
+  def auth_headers(user)
+    user.create_new_auth_token.merge('Content-Type' => 'application/json')
   end
 end

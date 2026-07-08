@@ -173,6 +173,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
 
       const persistedPower = await getPowerOrderById(
         api,
+        authContext.headers,
         prepared.groupId,
         prepared.powerOrderId
       );
@@ -223,6 +224,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
 
       const persistedFireEquipment = await getFireEquipmentOrderByGroup(
         api,
+        authContext.headers,
         prepared.groupId
       );
       expect(persistedFireEquipment).toMatchObject(
@@ -333,12 +335,18 @@ const prepareResubmissionState = async (
 
   const initialPower = powerPayload(group.id, `初期-${stamp}`, 820);
   const updatedPower = powerPayload(group.id, `更新-${stamp}`, 930);
-  const powerOrders = await getPowerOrders(api, group.id);
+  const powerOrders = await getPowerOrders(api, authContext.headers, group.id);
   const powerOrder =
-    powerOrders[0] ?? (await createPowerOrder(api, initialPower));
+    powerOrders[0] ??
+    (await createPowerOrder(api, authContext.headers, initialPower));
   if (powerOrders[0]) {
     restoreState.originalPowerOrder = powerOrders[0];
-    await updatePowerOrder(api, powerOrder.id, initialPower);
+    await updatePowerOrder(
+      api,
+      authContext.headers,
+      powerOrder.id,
+      initialPower
+    );
   } else {
     restoreState.createdPowerOrderId = powerOrder.id;
   }
@@ -353,14 +361,23 @@ const prepareResubmissionState = async (
     `更新-${stamp}`,
     'charcoal'
   );
-  const fireEquipmentOrder = await getFireEquipmentOrderByGroup(api, group.id);
+  const fireEquipmentOrder = await getFireEquipmentOrderByGroup(
+    api,
+    authContext.headers,
+    group.id
+  );
   const preparedFireEquipment =
     fireEquipmentOrder ??
-    (await createFireEquipmentOrder(api, initialFireEquipment));
+    (await createFireEquipmentOrder(
+      api,
+      authContext.headers,
+      initialFireEquipment
+    ));
   if (fireEquipmentOrder) {
     restoreState.originalFireEquipmentOrder = fireEquipmentOrder;
     await updateFireEquipmentOrder(
       api,
+      authContext.headers,
       preparedFireEquipment.id,
       initialFireEquipment
     );
@@ -416,14 +433,14 @@ const restorePreparedState = async (
   if (state.auth) {
     await restoreSubmissionStatus(
       api,
-      state.auth.headers,
+      state.auth!.headers,
       state.groupId,
       'power_order',
       state.originalPowerStatus
     );
     await restoreSubmissionStatus(
       api,
-      state.auth.headers,
+      state.auth!.headers,
       state.groupId,
       'fire_equipment_order',
       state.originalFireEquipmentStatus
@@ -431,14 +448,19 @@ const restorePreparedState = async (
   }
 
   if (state.originalPowerOrder) {
-    await updatePowerOrder(api, state.originalPowerOrder.id, {
-      group_id: state.originalPowerOrder.group_id,
-      item: state.originalPowerOrder.item,
-      power: state.originalPowerOrder.power,
-      manufacturer: state.originalPowerOrder.manufacturer,
-      model: state.originalPowerOrder.model,
-      item_url: state.originalPowerOrder.item_url,
-    });
+    await updatePowerOrder(
+      api,
+      state.auth!.headers,
+      state.originalPowerOrder.id,
+      {
+        group_id: state.originalPowerOrder.group_id,
+        item: state.originalPowerOrder.item,
+        power: state.originalPowerOrder.power,
+        manufacturer: state.originalPowerOrder.manufacturer,
+        model: state.originalPowerOrder.model,
+        item_url: state.originalPowerOrder.item_url,
+      }
+    );
   } else if (state.createdPowerOrderId) {
     await api.delete(`/power_orders/${state.createdPowerOrderId}`, {
       headers: state.auth?.headers,
@@ -446,15 +468,20 @@ const restorePreparedState = async (
   }
 
   if (state.originalFireEquipmentOrder) {
-    await updateFireEquipmentOrder(api, state.originalFireEquipmentOrder.id, {
-      group_id: state.originalFireEquipmentOrder.group_id,
-      name: state.originalFireEquipmentOrder.name,
-      quantity: state.originalFireEquipmentOrder.quantity,
-      fuel: state.originalFireEquipmentOrder.fuel,
-      usage: state.originalFireEquipmentOrder.usage,
-      is_takeaway: state.originalFireEquipmentOrder.is_takeaway,
-      remark: state.originalFireEquipmentOrder.remark,
-    });
+    await updateFireEquipmentOrder(
+      api,
+      state.auth!.headers,
+      state.originalFireEquipmentOrder.id,
+      {
+        group_id: state.originalFireEquipmentOrder.group_id,
+        name: state.originalFireEquipmentOrder.name,
+        quantity: state.originalFireEquipmentOrder.quantity,
+        fuel: state.originalFireEquipmentOrder.fuel,
+        usage: state.originalFireEquipmentOrder.usage,
+        is_takeaway: state.originalFireEquipmentOrder.is_takeaway,
+        remark: state.originalFireEquipmentOrder.remark,
+      }
+    );
   } else if (state.createdFireEquipmentOrderId) {
     await api.delete(
       `/fire_equipment_orders/${state.createdFireEquipmentOrderId}`,
@@ -569,9 +596,12 @@ const updateGroupCategory = async (
 
 const getPowerOrders = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number
 ): Promise<PowerOrder[]> => {
-  const response = await api.get(`/power_orders/group/${groupId}`);
+  const response = await api.get(`/power_orders/group/${groupId}`, {
+    headers: authHeaders,
+  });
   const body = (await response.json()) as ApiResponse<PowerOrder[]>;
   if (body.status.code === 404) return [];
   expect(body.status.code).toBe(200);
@@ -580,10 +610,11 @@ const getPowerOrders = async (
 
 const getPowerOrderById = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number,
   powerOrderId: number
 ): Promise<PowerOrder> => {
-  const powerOrders = await getPowerOrders(api, groupId);
+  const powerOrders = await getPowerOrders(api, authHeaders, groupId);
   const powerOrder = powerOrders.find((order) => order.id === powerOrderId);
   expect(powerOrder).toBeDefined();
   return powerOrder as PowerOrder;
@@ -591,9 +622,11 @@ const getPowerOrderById = async (
 
 const createPowerOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   payload: PowerOrderPayload
 ): Promise<PowerOrder> => {
   const response = await api.post('/power_orders', {
+    headers: authHeaders,
     data: payload,
   });
   return readApiResponse<PowerOrder>(response, 201);
@@ -601,10 +634,12 @@ const createPowerOrder = async (
 
 const updatePowerOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   powerOrderId: number,
   payload: PowerOrderPayload
 ): Promise<PowerOrder> => {
   const response = await api.put(`/power_orders/${powerOrderId}`, {
+    headers: authHeaders,
     data: payload,
   });
   return readApiResponse<PowerOrder>(response, 201);
@@ -612,9 +647,12 @@ const updatePowerOrder = async (
 
 const getFireEquipmentOrderByGroup = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number
 ): Promise<FireEquipmentOrder | undefined> => {
-  const response = await api.get(`/fire_equipment_orders/group/${groupId}`);
+  const response = await api.get(`/fire_equipment_orders/group/${groupId}`, {
+    headers: authHeaders,
+  });
   const body = (await response.json()) as ApiResponse<FireEquipmentOrder | []>;
   if (body.status.code === 404 || Array.isArray(body.data)) return undefined;
   expect(body.status.code).toBe(200);
@@ -623,9 +661,11 @@ const getFireEquipmentOrderByGroup = async (
 
 const createFireEquipmentOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   payload: FireEquipmentPayload
 ): Promise<FireEquipmentOrder> => {
   const response = await api.post('/fire_equipment_orders', {
+    headers: authHeaders,
     data: {
       fire_equipment_order: payload,
     },
@@ -635,12 +675,14 @@ const createFireEquipmentOrder = async (
 
 const updateFireEquipmentOrder = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   fireEquipmentOrderId: number,
   payload: FireEquipmentPayload
 ): Promise<FireEquipmentOrder> => {
   const response = await api.patch(
     `/fire_equipment_orders/${fireEquipmentOrderId}`,
     {
+      headers: authHeaders,
       data: {
         fire_equipment_order: payload,
       },
