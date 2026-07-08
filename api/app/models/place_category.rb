@@ -15,7 +15,8 @@ class PlaceCategory < ApplicationRecord
     ordered_categories = []
 
     append_children = lambda do |parent_id|
-      children_by_parent_id[parent_id].to_a.each do |category|
+      children = children_by_parent_id[parent_id].to_a.sort_by(&:name)
+      children.each do |category|
         ordered_categories << category
         append_children.call(category.id)
       end
