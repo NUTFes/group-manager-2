@@ -4,8 +4,7 @@ class PlaceCategoriesController < ApplicationController
   before_action :set_place_category, only: %i[show update destroy]
 
   def index
-    @place_categories = PlaceCategory.hierarchy_ordered
-    render json: fmt(ok, @place_categories.as_json(methods: place_category_methods))
+    render json: fmt(ok, PlaceCategory.hierarchy_for_index)
   end
 
   def show
