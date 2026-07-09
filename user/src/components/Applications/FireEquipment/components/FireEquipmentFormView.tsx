@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { FireEquipmentResponse } from '@/api/fireEquipmentApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { NO_ID_STRING, RADIO_OPTIONS, YES_ID_STRING } from '@/utils/constant';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
@@ -13,6 +14,7 @@ type FireEquipmentFormViewProps = {
   handleEditCancel?: () => void;
   submitLabel?: string;
   disableValidate?: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
@@ -21,6 +23,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
   handleEditCancel,
   submitLabel,
   disableValidate = false,
+  status,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const {
@@ -35,7 +38,13 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     submitHandler,
     isEditing,
     validate,
-  } = useFireEquipmentOrder(groupId, fireEquipmentData, handleEditCancel);
+    submitError,
+  } = useFireEquipmentOrder(
+    groupId,
+    fireEquipmentData,
+    handleEditCancel,
+    status
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,6 +77,11 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
       <div style={{ display: isRegister ? 'none' : 'block' }}>
         <form onSubmit={submitUnregisteredHandler}>
           <div className="mt-8 flex flex-col items-center gap-4">
+            {submitError && (
+              <p className="max-w-[400px] break-words text-sm text-red-500">
+                {submitError}
+              </p>
+            )}
             <Button type="submit" size="pc" color="main">
               {fireEquipmentTexts.buttons.register}
             </Button>
@@ -88,6 +102,9 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
               validate={disableValidate ? undefined : validate}
               submitLabel={submitLabel}
             />
+            {submitError && (
+              <p className="text-center text-sm text-red-500">{submitError}</p>
+            )}
           </div>
         </form>
       </div>

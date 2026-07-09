@@ -87,9 +87,10 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'sub_reps#get_by_group_id'
     end
   end
-  resources :power_orders do
+  resources :power_orders, only: %i[index show] do
     collection do
       get 'group/:group_id', to: 'power_orders#get_by_group_id'
+      put 'submit', to: 'power_orders#submit'
     end
   end
   resources :place_allow_lists
@@ -138,16 +139,22 @@ Rails.application.routes.draw do
       get 'group', to: 'un_registered_groups#group'
     end
   end
-  resources :fire_equipment_orders do
+  resources :fire_equipment_orders, only: %i[index show] do
     collection do
       get 'group/:group_id', to: 'fire_equipment_orders#get_by_group_id'
+      put 'submit', to: 'fire_equipment_orders#submit'
+      patch 'submit', to: 'fire_equipment_orders#submit'
     end
   end
+  resources :health_center_submission_statuses, only: %i[index create update]
 
   # /api/v1/...
   namespace 'api' do
     namespace 'v1' do
       #---管理者画面用---
+      resources :power_orders, only: %i[create update destroy]
+      resources :fire_equipment_orders, only: %i[index show create update destroy]
+      resources :health_center_submission_statuses, only: [:create]
 
       #---物品割当
       post 'get_refinement_stocker_item' => 'assign_rental_items_api#get_refinement_stocker_item'

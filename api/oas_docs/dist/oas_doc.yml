@@ -1573,6 +1573,156 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/fire_equipment_orders":
+    get:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+    post:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
+  "/api/v1/fire_equipment_orders/{id}":
+    get:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '404':
+          description: api/v1/fire_equipment_order description
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/fire_equipment_order description
+        '404':
+          description: api/v1/fire_equipment_order description
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: api/v1/fire_equipment_order description
+        '404':
+          description: api/v1/fire_equipment_order description
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - api/v1/fire_equipment_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '404':
+          description: api/v1/fire_equipment_order description
+        '422':
+          description: api/v1/fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_food_product_index_for_admin_view":
     get:
       tags:
@@ -1957,6 +2107,28 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+  "/api/v1/health_center_submission_statuses":
+    post:
+      tags:
+      - api/v1/health_center_submission_status
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatus"
+        '422':
+          description: api/v1/health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatus"
   "/api/v1/create_health_center_submission_status_comment":
     post:
       tags:
@@ -3095,6 +3267,109 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+  "/api/v1/power_orders":
+    post:
+      tags:
+      - api/v1/power_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '422':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PowerOrder"
+  "/api/v1/power_orders/{id}":
+    patch:
+      tags:
+      - api/v1/power_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/power_order description
+        '404':
+          description: api/v1/power_order description
+        '422':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PowerOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - api/v1/power_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: api/v1/power_order description
+        '404':
+          description: api/v1/power_order description
+        '422':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PowerOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - api/v1/power_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '404':
+          description: api/v1/power_order description
+        '422':
+          description: api/v1/power_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PowerOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_power_order_index_for_admin_view":
     get:
       tags:
@@ -5919,27 +6194,6 @@ paths:
               schema:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
       deprecated: false
-    post:
-      tags:
-      - fire_equipment_order
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: fire_equipment_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FireEquipmentOrder"
-        '422':
-          description: fire_equipment_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FireEquipmentOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/FireEquipmentOrder"
   "/fire_equipment_orders/group/{group_id}":
     get:
       tags:
@@ -5969,92 +6223,47 @@ paths:
         required: true
         schema:
           type: integer
-  "/fire_equipment_orders/{id}":
-    get:
-      tags:
-      - fire_equipment_order
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: fire_equipment_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FireEquipmentOrder"
-        '404':
-          description: fire_equipment_order description
-        '422':
-          description: fire_equipment_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FireEquipmentOrder"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - fire_equipment_order
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: fire_equipment_order description
-        '404':
-          description: fire_equipment_order description
-        '422':
-          description: fire_equipment_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FireEquipmentOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/FireEquipmentOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
+  "/fire_equipment_orders/submit":
     put:
       tags:
       - fire_equipment_order
       summary: put summary
       description: put description
       responses:
-        '204':
-          description: fire_equipment_order description
-        '404':
-          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
+        '200':
+          description: fire_equipment_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FireEquipmentOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    delete:
+    patch:
       tags:
       - fire_equipment_order
-      summary: delete summary
-      description: delete description
+      summary: patch summary
+      description: patch description
+      responses:
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '200':
+          description: fire_equipment_order description
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FireEquipmentOrder"
+  "/fire_equipment_orders/{id}":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
       responses:
         '200':
           description: fire_equipment_order description
@@ -6736,6 +6945,121 @@ paths:
               schema:
                 "$ref": "#/components/schemas/GroupIdentification"
       deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/health_center_submission_statuses":
+    get:
+      tags:
+      - health_center_submission_status
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '404':
+          description: health_center_submission_status description
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: query
+        description: group_id
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+      - health_center_submission_status
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+  "/health_center_submission_statuses/{id}":
+    patch:
+      tags:
+      - health_center_submission_status
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: health_center_submission_status description
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - health_center_submission_status
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: health_center_submission_status description
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
       parameters:
       - name: id
         in: path
@@ -7795,27 +8119,6 @@ paths:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
       deprecated: false
-    post:
-      tags:
-      - power_order
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/PowerOrder"
   "/power_orders/group/{group_id}":
     get:
       tags:
@@ -7845,92 +8148,30 @@ paths:
         required: true
         schema:
           type: integer
-  "/power_orders/{id}":
-    get:
-      tags:
-      - power_order
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-        '404':
-          description: power_order description
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - power_order
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: power_order description
-        '404':
-          description: power_order description
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/PowerOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
+  "/power_orders/submit":
     put:
       tags:
       - power_order
       summary: put summary
       description: put description
       responses:
-        '204':
-          description: power_order description
-        '404':
-          description: power_order description
         '422':
           description: power_order description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '200':
+          description: power_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    delete:
+  "/power_orders/{id}":
+    get:
       tags:
       - power_order
-      summary: delete summary
-      description: delete description
+      summary: get summary
+      description: get description
       responses:
         '200':
           description: power_order description
@@ -11729,6 +11970,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.FireEquipmentOrder: {}
     api.v1.FoodProductsApi:
       type: object
       properties:
@@ -11741,6 +11983,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.HealthCenterSubmissionStatus: {}
     api.v1.HealthCenterSubmissionStatusesApi: {}
     api.v1.MailDelivery: {}
     api.v1.MessageTemplate: {}
@@ -11769,6 +12012,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.PowerOrder: {}
     api.v1.PowerOrdersApi:
       type: object
       properties:
@@ -12016,6 +12260,36 @@ components:
         id:
           type: integer
           format: int64
+    HealthCenterSubmissionStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        group_id:
+          type: integer
+          format: int64
+        application_type:
+          type: string
+          enum:
+          - food_product
+          - purchase_list
+          - cooking_process_order
+          - employee
+          - venue_map
+          - equipment
+          - power_order
+          - fire_equipment_order
+        status:
+          type: string
+          enum:
+          - unapproved
+          - waiting_resubmission
+          - approved
+          - unsubmitted
+      required:
+      - application_type
+      - status
     letteropenerweb.Engine: {}
     letteropenerweb.Letter: {}
     Memo:
@@ -12273,6 +12547,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.EmployeesApi"
+    api.v1.FireEquipmentOrder: {}
     api.v1.FoodProductsApi:
       content:
         application/json:
@@ -12283,6 +12558,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.GroupsApi"
+    api.v1.HealthCenterSubmissionStatus: {}
     api.v1.HealthCenterSubmissionStatusesApi: {}
     api.v1.MailDelivery: {}
     api.v1.MessageTemplate: {}
@@ -12301,6 +12577,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+    api.v1.PowerOrder: {}
     api.v1.PowerOrdersApi:
       content:
         application/json:
@@ -12431,6 +12708,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/GroupIdentification"
+    HealthCenterSubmissionStatus:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
     letteropenerweb.Letter: {}
     Memo:
       content:
