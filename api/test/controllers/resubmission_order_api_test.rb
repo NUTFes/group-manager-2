@@ -61,6 +61,26 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', status.status
   end
 
+  # 認可の失敗系。role_id 3 の user は管理画面用の電力申請作成APIを利用できない。
+  test 'admin power order create rejects non admin user' do
+    assert_no_difference('PowerOrder.count') do
+      post '/api/v1/power_orders',
+           params: {
+             group_id: @group.id,
+             item: '不正追加',
+             power: 700,
+             manufacturer: '一般ユーザー',
+             model: 'USER-CREATE',
+             item_url: 'https://example.com/user-create'
+           },
+           headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+    end
+
+    assert_response :forbidden
+  end
+
+  # 認可の失敗系。role_id 3 の user は管理画面用の電力申請更新APIを利用できない。
   test 'admin power order update rejects non admin user' do
     power_order = create_power_order!(@group, item: '変更前')
 
@@ -255,6 +275,73 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal '管理者追加', FireEquipmentOrder.order(:created_at).last.name
     status = HealthCenterSubmissionStatus.find_by!(group: @group, application_type: :fire_equipment_order)
     assert_equal 'unapproved', status.status
+  end
+
+  # 認可の失敗系。role_id 3 の user は管理画面用の火器申請一覧APIを利用できない。
+  test 'admin fire equipment order index rejects non admin user' do
+    create_fire_equipment_order!(@group, name: '一覧対象')
+
+    get '/api/v1/fire_equipment_orders',
+        headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :forbidden
+  end
+
+  # 認可の失敗系。role_id 3 の user は管理画面用の火器申請詳細APIを利用できない。
+  test 'admin fire equipment order show rejects non admin user' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '詳細対象')
+
+    get "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
+        headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :forbidden
+  end
+
+  # 認可の失敗系。role_id 3 の user は管理画面用の火器申請作成APIを利用できない。
+  test 'admin fire equipment order create rejects non admin user' do
+    assert_no_difference('FireEquipmentOrder.count') do
+      post '/api/v1/fire_equipment_orders',
+           params: {
+             fire_equipment_order: {
+               group_id: @group.id,
+               name: '不正追加',
+               quantity: 2,
+               fuel: 'gas_bottle',
+               usage: 'user',
+               is_takeaway: false,
+               remark: 'create'
+             }
+           },
+           headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+           as: :json
+    end
+
+    assert_response :forbidden
+  end
+
+  # 認可の失敗系。role_id 3 の user は管理画面用の火器申請更新APIを利用できない。
+  test 'admin fire equipment order update rejects non admin user' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
+
+    put "/api/v1/fire_equipment_orders/#{fire_equipment_order.id}",
+        params: {
+          fire_equipment_order: {
+            group_id: @group.id,
+            name: '不正更新',
+            quantity: 2,
+            fuel: 'lp_gas',
+            usage: '一般ユーザー',
+            is_takeaway: true,
+            remark: 'user'
+          }
+        },
+        headers: auth_headers(@general_user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :forbidden
+    assert_equal '変更前', fire_equipment_order.reload.name
   end
 
   test 'admin fire equipment order destroy deletes order without changing submission status' do
