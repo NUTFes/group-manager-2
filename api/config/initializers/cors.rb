@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Be sure to restart your server when you modify this file.
 
 # Avoid CORS issues when API is called from the frontend app.
@@ -12,13 +14,16 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       origins 'https://group-manager.nutfes.net', 'https://group-manager-admin.nutfes.net'
     else
       # 開発環境用のローカルホスト系🔧
-      origins 'http://localhost:8000', 'http://localhost:8003','http://localhost:8004','http://admin_view:8000','http://user:8003','http://swagger-ui:8004', 'http://user:6006', 'http://localhost:6006'
+      origins 'http://localhost:8000', 'http://localhost:8003', 'http://localhost:8004',
+              'http://localhost:3100', 'http://127.0.0.1:3100',
+              'http://admin_view:8000', 'http://user:8003', 'http://swagger-ui:8004',
+              'http://user:6006', 'http://localhost:6006'
     end
 
     resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      credentials: true, # ←認証情報使うなら必須！
-      expose: ['access-token', 'client', 'uid']
+             headers: :any,
+             methods: %i[get post put patch delete options head],
+             credentials: true, # ←認証情報使うなら必須！
+             expose: %w[access-token client uid]
   end
 end

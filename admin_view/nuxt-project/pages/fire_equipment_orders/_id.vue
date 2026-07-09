@@ -43,7 +43,7 @@
           </tr>
           <tr>
             <th>持ち帰り</th>
-            <td>{{ fireEquipmentOrder.is_takeaway ? 'はい' : 'いいえ' }}</td>
+            <td>{{ fireEquipmentOrder.is_takeaway ? "はい" : "いいえ" }}</td>
           </tr>
           <tr>
             <th>備考</th>
@@ -73,7 +73,11 @@
         </div>
         <div>
           <h3>火気の台数</h3>
-          <input v-model="quantity" type="number" placeholder="入力してください" />
+          <input
+            v-model="quantity"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>燃料</h3>
@@ -141,7 +145,7 @@ export default {
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/fire_equipment_orders/", "");
-    const url = "/fire_equipment_orders/" + routeId;
+    const url = "/api/v1/fire_equipment_orders/" + routeId;
     const response = await $axios.$get(url);
     return {
       fireEquipmentOrder: response.data,
@@ -181,12 +185,12 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/fire_equipment_orders/" + this.routeId;
       const response = await this.$axios.$get(url);
       this.fireEquipmentOrder = response.data;
     },
     async edit() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/fire_equipment_orders/" + this.routeId;
       const params = {
         fire_equipment_order: {
           name: this.name,
@@ -195,7 +199,7 @@ export default {
           usage: this.usage,
           is_takeaway: this.isTakeaway,
           remark: this.remark,
-        }
+        },
       };
       await this.$axios.$put(url, params).then(() => {
         this.openSnackBar("申請を編集しました");
@@ -204,11 +208,10 @@ export default {
       });
     },
     async destroy() {
-      const url = "/fire_equipment_orders/" + this.routeId;
+      const url = "/api/v1/fire_equipment_orders/" + this.routeId;
       await this.$axios.$delete(url);
       this.$router.push("/fire_equipment_orders");
     },
-
   },
 };
 </script>

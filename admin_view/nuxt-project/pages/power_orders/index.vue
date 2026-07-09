@@ -134,7 +134,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { downloadFile } from '~/utils/download-file';
+import { downloadFile } from "~/utils/download-file";
 
 export default {
   watchQuery: ["page"],
@@ -175,7 +175,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-    const groupCategoryRes = await $axios.$get('group_categories');
+    const groupCategoryRes = await $axios.$get("group_categories");
     // const url = "/api/v1/get_power_order_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -339,7 +339,7 @@ export default {
     },
     async submit() {
       const url =
-        "/power_orders?group_id=" +
+        "/api/v1/power_orders?group_id=" +
         this.groupID +
         "&item=" +
         this.item +
@@ -366,7 +366,7 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      await downloadFile(this.$axios,url, "電力申請_CSV", "text/csv");
+      await downloadFile(this.$axios, url, "電力申請_CSV", "text/csv");
       this.openSnackBar("電力申請のCSVをダウンロードしました");
     },
   },

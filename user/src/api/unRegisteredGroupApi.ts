@@ -72,7 +72,6 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
       await post(API_ENDPOINT, requestData);
       return { success: true };
     } catch (error) {
-      console.error('未登録テーブル登録エラー:', error);
       return { success: false, error };
     }
   };
@@ -111,12 +110,11 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
             errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
           }
         }
-      } catch (parseError) {
-        console.error('エラーレスポンスの解析に失敗:', parseError);
+      } catch {
+        // エラーレスポンスの詳細解析に失敗しても、既定メッセージで処理を続ける。
       }
       return { success: false, error: errorDetail };
     } catch (fetchError) {
-      console.error('未登録テーブル削除通信エラー:', fetchError);
       return {
         success: false,
         error: `通信エラー: ${fetchError instanceof Error ? fetchError.message : '不明なエラー'}`,
