@@ -58,8 +58,8 @@ class PowerOrdersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_power_order
     @power_order = PowerOrder
-                   .where(group_id: current_api_user.groups.select(:id))
-                   .find_by(id: params[:id])
+      .where(group_id: current_api_user.groups.select(:id))
+      .find_by(id: params[:id])
 
     @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
   end
@@ -87,11 +87,11 @@ class PowerOrdersController < ApplicationController
 
   def upsert_power_orders(group)
     power_order_params_list.map do |power_order_params|
-      power_order = if power_order_params[:id].present?
-                      group.power_orders.find_by(id: power_order_params[:id])
-                    else
-                      group.power_orders.build
-                    end
+      if power_order_params[:id].present?
+        power_order = group.power_orders.find_by(id: power_order_params[:id])
+      else
+        power_order = group.power_orders.build
+      end
 
       raise ActiveRecord::RecordNotFound if power_order.nil?
 
