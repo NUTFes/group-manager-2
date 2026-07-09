@@ -61,11 +61,7 @@ class PowerOrdersController < ApplicationController
                    .where(group_id: current_api_user.groups.select(:id))
                    .find_by(id: params[:id])
 
-    if @power_order
-      @power_order
-    else
-      render json: fmt(not_found, [], "Not found power_order = #{params[:id]}")
-    end
+    @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
   end
 
   # Use callbacks to share common setup or constraints between actions.

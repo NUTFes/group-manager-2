@@ -79,11 +79,7 @@ class FireEquipmentOrdersController < ApplicationController
                             .where(group_id: current_api_user.groups.select(:id))
                             .find_by(id: params[:id])
 
-    if @fire_equipment_order
-      @fire_equipment_order
-    else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}")
-    end
+    @fire_equipment_order || render(json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}"))
   end
 
   def set_fire_equipment_order_by_group_id

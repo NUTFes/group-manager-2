@@ -78,9 +78,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   def upsert_health_center_submission_status
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
-    unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
-      return render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity
-    end
+    return render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
 
     @submission_status = resolve_submission_status
     return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
