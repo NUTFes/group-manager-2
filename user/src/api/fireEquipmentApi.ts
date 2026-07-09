@@ -56,7 +56,7 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
-  RESUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/resubmit',
+  SUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/submit',
 };
 
 // グループIDで火気使用申請を取得
@@ -83,34 +83,19 @@ export const useGetFireEquipmentOrderByGroupId = (
 
 // 火気申請の登録・更新・削除
 export const useFireEquipmentMutations = () => {
-  const { post, patch, remove } = useApiMutations();
+  const { patch } = useApiMutations();
 
-  const postFireEquipmentOrder = (
-    data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
-  ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
-
-  const patchFireEquipmentOrder = (
-    id: number,
-    data: Partial<FireEquipmentResponse>
-  ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
-
-  const deleteFireEquipmentOrder = (id: number) =>
-    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
-
-  const resubmitFireEquipmentOrder = async (
+  const submitFireEquipmentOrder = async (
     data: Partial<FireEquipmentResponse>,
     useFireEquipment: boolean
   ) => {
     try {
-      const response = await patch(
-        API_ENDPOINTS.RESUBMIT_FIRE_EQUIPMENT_ORDERS,
-        {
-          group_id: data.group_id,
-          id: data.id,
-          use_fire_equipment: useFireEquipment,
-          fire_equipment_order: data,
-        }
-      );
+      const response = await patch(API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS, {
+        group_id: data.group_id,
+        id: data.id,
+        use_fire_equipment: useFireEquipment,
+        fire_equipment_order: data,
+      });
 
       if (response && 'success' in response && response.success === false) {
         return { success: false, error: response.error };
@@ -123,9 +108,6 @@ export const useFireEquipmentMutations = () => {
   };
 
   return {
-    postFireEquipmentOrder,
-    patchFireEquipmentOrder,
-    deleteFireEquipmentOrder,
-    resubmitFireEquipmentOrder,
+    submitFireEquipmentOrder,
   };
 };

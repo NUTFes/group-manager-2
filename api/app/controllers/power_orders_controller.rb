@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PowerOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[create update destroy get_by_group_id resubmit]
+  before_action :authenticate_api_user!, only: %i[get_by_group_id submit]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
@@ -18,43 +18,14 @@ class PowerOrdersController < ApplicationController
     render json: fmt(ok, @power_order)
   end
 
-  # POST /power_orders
-  # POST /power_orders.json
-  def create
-    group = current_user_group
-    return render_user_power_order_not_found unless group
-
-    power_order = group.power_orders.create(power_order_params.except(:group_id))
-    render json: fmt(created, power_order)
-  end
-
-  # PATCH/PUT /power_orders/1
-  # PATCH/PUT /power_orders/1.json
-  def update
-    power_order = user_power_order
-    return render_user_power_order_not_found if power_order.nil?
-
-    power_order.update(power_order_params.except(:group_id))
-    render json: fmt(created, power_order, "Updated power_order id = #{params[:id]}")
-  end
-
   # GET /power_orders/group_id/1
   def get_by_group_id
     render json: fmt(ok, @power_orders)
   end
 
-  def destroy
-    power_order = user_power_order
-    return render json: fmt(not_found, [], "Not found power_order = #{params[:id]}"), status: :not_found if power_order.nil?
-
-    power_order.destroy
-    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
-  end
-
-  def resubmit
+  def submit
     group = current_user_group
-    return render_resubmit_not_found unless group
-    return render_invalid_resubmission_status unless waiting_resubmission?(group, :power_order)
+    return render_submit_not_found unless group
 
     ActiveRecord::Base.transaction do
       if use_power?
@@ -77,7 +48,7 @@ class PowerOrdersController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound
-    render_resubmit_not_found
+    render_submit_not_found
   end
 
   private
@@ -104,23 +75,10 @@ class PowerOrdersController < ApplicationController
   end
 
   # Only allow a list of trusted parameters through.
-  def power_order_params
-    params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
-  end
-
   def current_user_group
     return nil if params[:group_id].blank?
 
     current_api_user.groups.find_by(id: params[:group_id])
-  end
-
-  def user_power_order
-    current_api_user
-      .groups
-      .joins(:power_orders)
-      .find_by(power_orders: { id: params[:id] })
-      &.power_orders
-      &.find_by(id: params[:id])
   end
 
   def use_power?
@@ -165,19 +123,7 @@ class PowerOrdersController < ApplicationController
     group.un_registered_groups.power_order.destroy_all
   end
 
-  def waiting_resubmission?(group, application_type)
-    group.health_center_submission_statuses.find_by(application_type: application_type)&.waiting_resubmission?
-  end
-
-  def render_invalid_resubmission_status
-    render json: fmt(unprocessable_entity, [], 'Status must be waiting_resubmission'), status: :unprocessable_entity
-  end
-
-  def render_resubmit_not_found
-    render json: fmt(not_found, [], 'power_order not found'), status: :not_found
-  end
-
-  def render_user_power_order_not_found
+  def render_submit_not_found
     render json: fmt(not_found, [], 'power_order not found'), status: :not_found
   end
 end

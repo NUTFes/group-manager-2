@@ -112,7 +112,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
   test.setTimeout(120_000);
 
   // 指定ログインユーザーの団体を実DBで再提出状態にし、user画面から再提出完了まで確認する。
-  test('resubmits power and fire equipment orders through login, real API, and real DB', async ({
+  test('submits power and fire equipment orders through login, real API, and real DB', async ({
     page,
   }) => {
     const api = await request.newContext({
@@ -462,7 +462,7 @@ const restorePreparedState = async (
       }
     );
   } else if (state.createdPowerOrderId) {
-    await api.delete(`/power_orders/${state.createdPowerOrderId}`, {
+    await api.delete(`/api/v1/power_orders/${state.createdPowerOrderId}`, {
       headers: state.auth?.headers,
     });
   }
@@ -484,7 +484,7 @@ const restorePreparedState = async (
     );
   } else if (state.createdFireEquipmentOrderId) {
     await api.delete(
-      `/fire_equipment_orders/${state.createdFireEquipmentOrderId}`,
+      `/api/v1/fire_equipment_orders/${state.createdFireEquipmentOrderId}`,
       {
         headers: state.auth?.headers,
       }
@@ -625,7 +625,7 @@ const createPowerOrder = async (
   authHeaders: AuthHeaders,
   payload: PowerOrderPayload
 ): Promise<PowerOrder> => {
-  const response = await api.post('/power_orders', {
+  const response = await api.post('/api/v1/power_orders', {
     headers: authHeaders,
     data: payload,
   });
@@ -638,7 +638,7 @@ const updatePowerOrder = async (
   powerOrderId: number,
   payload: PowerOrderPayload
 ): Promise<PowerOrder> => {
-  const response = await api.put(`/power_orders/${powerOrderId}`, {
+  const response = await api.put(`/api/v1/power_orders/${powerOrderId}`, {
     headers: authHeaders,
     data: payload,
   });
@@ -664,7 +664,7 @@ const createFireEquipmentOrder = async (
   authHeaders: AuthHeaders,
   payload: FireEquipmentPayload
 ): Promise<FireEquipmentOrder> => {
-  const response = await api.post('/fire_equipment_orders', {
+  const response = await api.post('/api/v1/fire_equipment_orders', {
     headers: authHeaders,
     data: {
       fire_equipment_order: payload,
@@ -680,7 +680,7 @@ const updateFireEquipmentOrder = async (
   payload: FireEquipmentPayload
 ): Promise<FireEquipmentOrder> => {
   const response = await api.patch(
-    `/fire_equipment_orders/${fireEquipmentOrderId}`,
+    `/api/v1/fire_equipment_orders/${fireEquipmentOrderId}`,
     {
       headers: authHeaders,
       data: {

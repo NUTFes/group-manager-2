@@ -57,8 +57,6 @@ test.describe('power and fire equipment resubmission status', () => {
   let api: APIRequestContext;
   let authContext: AuthContext;
   let groupId: number | undefined;
-  let powerOrderId: number | undefined;
-  let fireEquipmentOrderId: number | undefined;
 
   // E2E用ユーザーを作り、そのユーザーが所有する団体だけを操作対象にする。
   test.beforeEach(async () => {
@@ -75,18 +73,6 @@ test.describe('power and fire equipment resubmission status', () => {
 
   test.afterEach(async () => {
     try {
-      if (powerOrderId !== undefined) {
-        await api.delete(`/power_orders/${powerOrderId}`, {
-          headers: authContext.headers,
-        });
-        powerOrderId = undefined;
-      }
-      if (fireEquipmentOrderId !== undefined) {
-        await api.delete(`/fire_equipment_orders/${fireEquipmentOrderId}`, {
-          headers: authContext.headers,
-        });
-        fireEquipmentOrderId = undefined;
-      }
       if (groupId !== undefined) {
         await api.delete(`/groups/${groupId}`, {
           headers: skipSlackNotificationHeader,
@@ -102,19 +88,9 @@ test.describe('power and fire equipment resubmission status', () => {
   test('creates and updates power and fire equipment resubmission statuses through user APIs', async () => {
     expect(groupId).toBeDefined();
 
-    const powerOrder = await createPowerOrder(
-      api,
-      authContext.headers,
-      groupId!
-    );
-    powerOrderId = powerOrder.id;
+    await createPowerOrder(api, authContext.headers, groupId!);
 
-    const fireEquipmentOrder = await createFireEquipmentOrder(
-      api,
-      authContext.headers,
-      groupId!
-    );
-    fireEquipmentOrderId = fireEquipmentOrder.id;
+    await createFireEquipmentOrder(api, authContext.headers, groupId!);
 
     const initialStatuses = await getSubmissionStatuses(
       api,
@@ -304,7 +280,7 @@ const createPowerOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<PowerOrder> => {
-  const response = await api.post('/power_orders', {
+  const response = await api.post('/api/v1/power_orders', {
     headers: authHeaders,
     data: {
       group_id: groupId,
@@ -329,7 +305,7 @@ const createFireEquipmentOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<FireEquipmentOrder> => {
-  const response = await api.post('/fire_equipment_orders', {
+  const response = await api.post('/api/v1/fire_equipment_orders', {
     headers: authHeaders,
     data: {
       fire_equipment_order: {

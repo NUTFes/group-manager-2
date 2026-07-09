@@ -251,92 +251,50 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert FireEquipmentOrder.exists?(fire_equipment_order.id)
   end
 
-  test 'user power order destroy deletes owned order' do
-    power_order = create_power_order!(@group, item: 'ユーザー削除対象')
-
-    delete "/power_orders/#{power_order.id}",
-           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-           as: :json
-
-    assert_response :success
-    assert_nil PowerOrder.find_by(id: power_order.id)
-  end
-
-  test 'user power order destroy does not delete other group order' do
-    power_order = create_power_order!(@other_group, item: '他団体削除対象')
-
-    delete "/power_orders/#{power_order.id}",
-           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-           as: :json
-
-    assert_response :not_found
-    assert PowerOrder.exists?(power_order.id)
-  end
-
-  test 'user power order update does not update other group order' do
+  test 'user power order update route is not available' do
     power_order = create_power_order!(@other_group, item: '他団体更新対象')
 
-    put "/power_orders/#{power_order.id}",
-        params: {
-          group_id: @other_group.id,
-          item: '不正更新',
-          power: 100,
-          manufacturer: 'user',
-          model: 'USER',
-          item_url: 'https://example.com/user'
-        },
-        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-        as: :json
+    assert_raises(ActionController::RoutingError) do
+      put "/power_orders/#{power_order.id}",
+          params: {
+            group_id: @other_group.id,
+            item: '不正更新',
+            power: 100,
+            manufacturer: 'user',
+            model: 'USER',
+            item_url: 'https://example.com/user'
+          },
+          headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+          as: :json
+    end
 
-    assert_response :not_found
     assert_equal '他団体更新対象', power_order.reload.item
   end
 
-  test 'user fire equipment order destroy deletes owned order' do
-    fire_equipment_order = create_fire_equipment_order!(@group, name: 'ユーザー削除対象')
-
-    delete "/fire_equipment_orders/#{fire_equipment_order.id}",
-           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-           as: :json
-
-    assert_response :success
-    assert_nil FireEquipmentOrder.find_by(id: fire_equipment_order.id)
-  end
-
-  test 'user fire equipment order destroy does not delete other group order' do
-    fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体削除対象')
-
-    delete "/fire_equipment_orders/#{fire_equipment_order.id}",
-           headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-           as: :json
-
-    assert_response :not_found
-    assert FireEquipmentOrder.exists?(fire_equipment_order.id)
-  end
-
-  test 'user fire equipment order update does not update other group order' do
+  test 'user fire equipment order update route is not available' do
     fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体更新対象')
 
-    put "/fire_equipment_orders/#{fire_equipment_order.id}",
-        params: {
-          fire_equipment_order: {
-            group_id: @other_group.id,
-            name: '不正更新',
-            quantity: 2,
-            fuel: 'lp_gas',
-            usage: 'user',
-            is_takeaway: false,
-            remark: 'user'
-          }
-        },
-        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
-        as: :json
+    assert_raises(ActionController::RoutingError) do
+      put "/fire_equipment_orders/#{fire_equipment_order.id}",
+          params: {
+            fire_equipment_order: {
+              group_id: @other_group.id,
+              name: '不正更新',
+              quantity: 2,
+              fuel: 'lp_gas',
+              usage: 'user',
+              is_takeaway: false,
+              remark: 'user'
+            }
+          },
+          headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+          as: :json
+    end
 
-    assert_response :not_found
     assert_equal '他団体更新対象', fire_equipment_order.reload.name
   end
 
-  test 'user resubmits power orders and updates status in one request' do
+  test 'user submits power orders and updates status in one request' do
     power_order = create_power_order!(@group, item: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -345,7 +303,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     )
     UnRegisteredGroup.create!(group: @group, order_type: :power_order)
 
-    put '/power_orders/resubmit',
+    put '/power_orders/submit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -369,7 +327,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_empty UnRegisteredGroup.where(group: @group, order_type: :power_order)
   end
 
-  test 'user resubmit power orders deletes omitted orders and updates status' do
+  test 'user submit power orders deletes omitted orders and updates status' do
     remaining_power_order = create_power_order!(@group, item: '残す申請')
     deleted_power_order = create_power_order!(@group, item: '削除する申請')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
@@ -378,7 +336,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/power_orders/resubmit',
+    put '/power_orders/submit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -402,7 +360,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user cannot resubmit power order unless status is waiting resubmission' do
+  test 'user submits power order and updates approved status to unapproved' do
     power_order = create_power_order!(@group, item: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -410,7 +368,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :approved
     )
 
-    put '/power_orders/resubmit',
+    put '/power_orders/submit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -428,12 +386,12 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
         headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
         as: :json
 
-    assert_response :unprocessable_entity
-    assert_equal '変更前', power_order.reload.item
-    assert_equal 'approved', submission_status.reload.status
+    assert_response :success
+    assert_equal '変更後', power_order.reload.item
+    assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user resubmits no power application in one request' do
+  test 'user submits no power application in one request' do
     create_power_order!(@group)
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -441,7 +399,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/power_orders/resubmit',
+    put '/power_orders/submit',
         params: {
           group_id: @group.id,
           use_power: false,
@@ -456,7 +414,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user power resubmit rolls back order update when another users order is included' do
+  test 'user power submit rolls back order update when another users order is included' do
     power_order = create_power_order!(@group, item: '変更前')
     other_power_order = create_power_order!(@other_group, item: '別団体')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
@@ -465,7 +423,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/power_orders/resubmit',
+    put '/power_orders/submit',
         params: {
           group_id: @group.id,
           use_power: true,
@@ -497,7 +455,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'waiting_resubmission', submission_status.reload.status
   end
 
-  test 'user resubmits fire equipment order and updates status in one request' do
+  test 'user submits fire equipment order and updates status in one request' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -505,7 +463,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/submit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -527,7 +485,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user resubmits no fire equipment application in one request' do
+  test 'user submits no fire equipment application in one request' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -535,7 +493,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/submit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -551,7 +509,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user cannot resubmit fire equipment order unless status is waiting resubmission' do
+  test 'user submits fire equipment order and updates approved status to unapproved' do
     fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -559,7 +517,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :approved
     )
 
-    put '/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/submit',
         params: {
           group_id: @group.id,
           id: fire_equipment_order.id,
@@ -576,12 +534,12 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
         headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
         as: :json
 
-    assert_response :unprocessable_entity
-    assert_equal '変更前', fire_equipment_order.reload.name
-    assert_equal 'approved', submission_status.reload.status
+    assert_response :success
+    assert_equal '変更後', fire_equipment_order.reload.name
+    assert_equal 'unapproved', submission_status.reload.status
   end
 
-  test 'user cannot resubmit another users fire equipment order' do
+  test 'user cannot submit another users fire equipment order' do
     other_fire_equipment_order = create_fire_equipment_order!(@other_group, name: '別団体')
     HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
       group_id: @group.id,
@@ -589,7 +547,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
       status: :waiting_resubmission
     )
 
-    put '/fire_equipment_orders/resubmit',
+    put '/fire_equipment_orders/submit',
         params: {
           group_id: @group.id,
           id: other_fire_equipment_order.id,

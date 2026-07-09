@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import {
-  useFireEquipmentMutations,
-  useGetFireEquipmentOrderByGroupId,
-} from '@/api/fireEquipmentApi';
-import { toast } from 'react-toastify';
+import { useGetFireEquipmentOrderByGroupId } from '@/api/fireEquipmentApi';
 import { FormItem } from '@/components/FormList/type';
 import { useFireEquipmentTexts } from './constant';
 
@@ -11,8 +7,6 @@ export const useFireEquipmentHooks = (groupId: number) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
-
-  const { deleteFireEquipmentOrder } = useFireEquipmentMutations();
 
   const fireEquipment = fireEquipmentOrder ?? undefined;
 
@@ -57,17 +51,6 @@ export const useFireEquipmentHooks = (groupId: number) => {
     setIsEditing((prev) => !prev);
   };
 
-  const handleDeleteClick = async () => {
-    if (!fireEquipment?.id) return;
-    try {
-      await deleteFireEquipmentOrder(fireEquipment.id);
-      await mutateFireEquipmentOrder();
-      toast.success(fireEquipmentTexts.messages.deleteSuccess);
-    } catch {
-      toast.error(fireEquipmentTexts.messages.deleteFailed);
-    }
-  };
-
   const noApplicationItems: FormItem[] = [
     {
       label: fireEquipmentTexts.summary.noApplicationLabel,
@@ -81,7 +64,6 @@ export const useFireEquipmentHooks = (groupId: number) => {
     isEditing,
     formItem,
     handleEditClick,
-    handleDeleteClick,
     fireEquipment,
     isLoading,
     mutateFireEquipmentOrder,

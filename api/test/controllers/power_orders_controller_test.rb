@@ -17,36 +17,33 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test 'should create power_order' do
-    assert_difference('PowerOrder.count') do
-      post power_orders_url,
-           params: power_order_params(item: '新規'),
-           headers: auth_headers(@user),
-           as: :json
-    end
-
-    assert_response :success
-  end
-
   test 'should show power_order' do
     get power_order_url(@power_order), as: :json
     assert_response :success
   end
 
-  test 'should update power_order' do
-    patch power_order_url(@power_order),
-          params: power_order_params(item: '更新後'),
-          headers: auth_headers(@user),
-          as: :json
-
-    assert_response :ok
-    assert_equal '更新後', @power_order.reload.item
+  test 'create route is not available for user root api' do
+    assert_raises(ActionController::RoutingError) do
+      post power_orders_url,
+           params: power_order_params(item: '新規'),
+           headers: auth_headers(@user),
+           as: :json
+    end
   end
 
-  test 'destroy requires authentication' do
-    delete power_order_url(@power_order), as: :json
+  test 'update route is not available for user root api' do
+    assert_raises(ActionController::RoutingError) do
+      patch power_order_url(@power_order),
+            params: power_order_params(item: '更新後'),
+            headers: auth_headers(@user),
+            as: :json
+    end
+  end
 
-    assert_response :unauthorized
+  test 'destroy route is not available for user root api' do
+    assert_raises(ActionController::RoutingError) do
+      delete power_order_url(@power_order), as: :json
+    end
   end
 
   private

@@ -72,7 +72,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('REG-100')).toBeVisible();
     await expect(page.getByText('900W')).toBeVisible();
     expect(state.requestedUrls).toContain('/power_orders');
-    expect(state.requestedUrls).not.toContain('/power_orders/resubmit');
+    expect(state.requestedUrls).not.toContain('/power_orders/submit');
   });
 
   // 締切前の未登録状態から、火器申請フォームを入力・送信し、登録後カードに入力値が表示されることを確認する。
@@ -100,9 +100,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('E2E 登録調理')).toBeVisible();
     await expect(page.getByText('E2E 登録備考')).toBeVisible();
     expect(state.requestedUrls).toContain('/fire_equipment_orders');
-    expect(state.requestedUrls).not.toContain(
-      '/fire_equipment_orders/resubmit'
-    );
+    expect(state.requestedUrls).not.toContain('/fire_equipment_orders/submit');
   });
 
   // 電力申請が締切後でも再提出状態なら既存カードから修正でき、送信後はunapprovedに戻って再編集できないことを確認する。
@@ -137,7 +135,7 @@ test.describe('resubmission UI', () => {
     await expect(
       page.getByRole('button', { name: '修正', exact: true })
     ).toHaveCount(0);
-    expect(state.requestedUrls).toContain('/power_orders/resubmit');
+    expect(state.requestedUrls).toContain('/power_orders/submit');
   });
 
   // 火器申請が締切後でも再提出状態なら既存カードから修正でき、送信後はunapprovedに戻って再編集できないことを確認する。
@@ -173,7 +171,7 @@ test.describe('resubmission UI', () => {
     await expect(
       page.getByRole('button', { name: '修正', exact: true })
     ).toHaveCount(0);
-    expect(state.requestedUrls).toContain('/fire_equipment_orders/resubmit');
+    expect(state.requestedUrls).toContain('/fire_equipment_orders/submit');
   });
 
   // 締切後かつステータスがunapprovedで再提出状態ではない場合、登録済みの電力・火器申請カードを修正できないことを確認する。
@@ -368,7 +366,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(powerOrder));
     }
 
-    if (method === 'PUT' && path === '/power_orders/resubmit') {
+    if (method === 'PUT' && path === '/power_orders/submit') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
         use_power: boolean;
@@ -468,7 +466,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
     }
 
-    if (method === 'PATCH' && path === '/fire_equipment_orders/resubmit') {
+    if (method === 'PATCH' && path === '/fire_equipment_orders/submit') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
         id?: number;
