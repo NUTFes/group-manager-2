@@ -369,6 +369,39 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert_empty UnRegisteredGroup.where(group: @group, order_type: :power_order)
   end
 
+  test 'user resubmit power orders deletes omitted orders and updates status' do
+    remaining_power_order = create_power_order!(@group, item: '残す申請')
+    deleted_power_order = create_power_order!(@group, item: '削除する申請')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order,
+      status: :waiting_resubmission
+    )
+
+    put '/power_orders/resubmit',
+        params: {
+          group_id: @group.id,
+          use_power: true,
+          power_orders: [
+            {
+              id: remaining_power_order.id,
+              item: '残す申請',
+              power: 1000,
+              manufacturer: '参加団体',
+              model: 'USER-1',
+              item_url: 'https://example.com/user'
+            }
+          ]
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :success
+    assert PowerOrder.exists?(remaining_power_order.id)
+    assert_not PowerOrder.exists?(deleted_power_order.id)
+    assert_equal 'unapproved', submission_status.reload.status
+  end
+
   test 'user cannot resubmit power order unless status is waiting resubmission' do
     power_order = create_power_order!(@group, item: '変更前')
     submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(

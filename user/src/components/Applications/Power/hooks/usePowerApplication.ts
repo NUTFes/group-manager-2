@@ -314,6 +314,38 @@ export const usePowerApplication = (
       const remainingDevices = devices.filter((d) => d.id !== deviceId);
       const willBeEmpty = remainingDevices.length === 0;
 
+      if (isResubmission) {
+        const result = await resubmitPowerOrders(
+          remainingDevices,
+          groupId,
+          !willBeEmpty
+        );
+
+        if (result.success) {
+          await mutatePowerOrders();
+          await mutateUnregisteredGroup();
+          await mutateHealthCenterSubmissionStatus();
+          mutate(`/check_all_registered/${groupId}`);
+          toast.success(t('applications.power.messages.deviceDeleteSuccess'));
+
+          if (willBeEmpty) {
+            updateState({
+              isEditing: false,
+              applyPower: 'no',
+            });
+            formMethods.reset({ devices: [{ ...DEFAULT_DEVICE }] });
+          }
+          return;
+        }
+
+        const message = t('applications.power.messages.deviceDeleteFailed');
+        updateState({
+          submitError: message,
+        });
+        toast.error(message);
+        return;
+      }
+
       const result = await deletePowerOrder(deviceId);
       if (result.success) {
         await mutatePowerOrders();

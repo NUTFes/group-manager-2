@@ -59,6 +59,7 @@ class PowerOrdersController < ApplicationController
     ActiveRecord::Base.transaction do
       if use_power?
         delete_unregistered_power_order(group)
+        delete_missing_power_orders(group)
         upsert_power_orders(group)
       else
         group.power_orders.destroy_all
@@ -139,6 +140,12 @@ class PowerOrdersController < ApplicationController
       power_order.assign_attributes(power_order_params.except(:id))
       power_order.save!
     end
+  end
+
+  def delete_missing_power_orders(group)
+    submitted_ids = power_order_params_list.filter_map { |power_order| power_order[:id].presence }
+
+    group.power_orders.where.not(id: submitted_ids).destroy_all
   end
 
   def power_order_params_list
