@@ -642,7 +642,7 @@ const updatePowerOrder = async (
     headers: authHeaders,
     data: payload,
   });
-  return readApiResponse<PowerOrder>(response, 201);
+  return readApiResponse<PowerOrder>(response, 200);
 };
 
 const getFireEquipmentOrderByGroup = async (
@@ -688,7 +688,7 @@ const updateFireEquipmentOrder = async (
       },
     }
   );
-  return readApiResponse<FireEquipmentOrder>(response, 201);
+  return readApiResponse<FireEquipmentOrder>(response, 200);
 };
 
 const getSubmissionStatuses = async (

@@ -71,8 +71,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('登録メーカー')).toBeVisible();
     await expect(page.getByText('REG-100')).toBeVisible();
     await expect(page.getByText('900W')).toBeVisible();
-    expect(state.requestedUrls).toContain('/power_orders');
-    expect(state.requestedUrls).not.toContain('/power_orders/submit');
+    expect(state.requestedUrls).toContain('/power_orders/submit');
   });
 
   // 締切前の未登録状態から、火器申請フォームを入力・送信し、登録後カードに入力値が表示されることを確認する。
@@ -99,8 +98,7 @@ test.describe('resubmission UI', () => {
     await expect(page.getByText('LPガス')).toBeVisible();
     await expect(page.getByText('E2E 登録調理')).toBeVisible();
     await expect(page.getByText('E2E 登録備考')).toBeVisible();
-    expect(state.requestedUrls).toContain('/fire_equipment_orders');
-    expect(state.requestedUrls).not.toContain('/fire_equipment_orders/submit');
+    expect(state.requestedUrls).toContain('/fire_equipment_orders/submit');
   });
 
   // 電力申請が締切後でも再提出状態なら既存カードから修正でき、送信後はunapprovedに戻って再編集できないことを確認する。
