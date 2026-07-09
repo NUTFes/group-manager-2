@@ -51,9 +51,7 @@ class HealthCenterSubmissionStatusesController < ApplicationController
   end
 
   def current_user_group(group_id)
-    return nil if group_id.blank?
-
-    current_api_user.groups.find_by(id: group_id)
+    current_api_user_group(group_id)
   end
 
   def current_user_submission_status(id)

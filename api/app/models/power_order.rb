@@ -39,7 +39,8 @@ class PowerOrder < ApplicationRecord
   def ensure_health_center_submission_status
     HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
       group_id: group_id,
-      application_type: :power_order
+      application_type: :power_order,
+      status: :unapproved
     )
   end
 end

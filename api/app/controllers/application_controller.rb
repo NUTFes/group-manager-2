@@ -61,6 +61,12 @@ class ApplicationController < ActionController::API
            status: :forbidden
   end
 
+  def current_api_user_group(group_id)
+    return nil if group_id.blank?
+
+    current_api_user.groups.find_by(id: group_id)
+  end
+
   def save_health_center_submission_status(submission_status, unprocessable_http_status: nil)
     unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
       return render_health_center_submission_status_unprocessable(

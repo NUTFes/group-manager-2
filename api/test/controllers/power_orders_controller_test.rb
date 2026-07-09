@@ -13,13 +13,28 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get power_orders_url, as: :json
+    get power_orders_url, headers: auth_headers(@user), as: :json
     assert_response :success
   end
 
   test 'should show power_order' do
-    get power_order_url(@power_order), as: :json
+    get power_order_url(@power_order), headers: auth_headers(@user), as: :json
     assert_response :success
+  end
+
+  test 'index requires authentication' do
+    get power_orders_url, as: :json
+    assert_response :unauthorized
+  end
+
+  test 'show does not expose another users power order' do
+    other_user = create_user!(email: 'other-power-order-user@example.com')
+    other_group = create_group!(other_user, name: '他団体')
+    other_power_order = create_power_order!(other_group)
+
+    get power_order_url(other_power_order), headers: auth_headers(@user), as: :json
+    assert_response :success
+    assert_equal 404, response.parsed_body['status']['code']
   end
 
   test 'create route is not available for user root api' do
@@ -48,11 +63,11 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_user!
+  def create_user!(email: 'power-order-user@example.com')
     User.create!(
-      name: 'power-order-user',
-      email: 'power-order-user@example.com',
-      uid: 'power-order-user@example.com',
+      name: email.split('@').first,
+      email: email,
+      uid: email,
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
@@ -60,11 +75,11 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     )
   end
 
-  def create_group!(user)
-    group_category = GroupCategory.create!(name: '電力カテゴリ')
+  def create_group!(user, name: '電力団体')
+    group_category = GroupCategory.create!(name: "#{name}カテゴリ")
     fes_year = FesYear.create!(year_num: 2026)
     Group.create!(
-      name: '電力団体',
+      name: name,
       project_name: '電力企画',
       activity: '食品販売',
       user: user,

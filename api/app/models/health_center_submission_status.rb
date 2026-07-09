@@ -45,6 +45,10 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     submission_status.status = status
     submission_status.save!
     submission_status
+  rescue ActiveRecord::RecordNotUnique
+    submission_status = find_by!(group_id: group_id, application_type: application_type)
+    submission_status.update!(status: status)
+    submission_status
   end
 
   def self.insert_default_for_group_and_application_type!(group_id:, application_type:, status: DEFAULT_STATUS)

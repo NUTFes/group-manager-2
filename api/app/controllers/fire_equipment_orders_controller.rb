@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FireEquipmentOrdersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[get_by_group_id submit]
+  before_action :authenticate_api_user!
   before_action :set_fire_equipment_order, only: [:show]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
 
@@ -10,9 +10,11 @@ class FireEquipmentOrdersController < ApplicationController
     fes_year_id = params[:fes_year_id]
     @fire_equipment_orders =
       if fes_year_id.present? && fes_year_id.to_i != 0
-        FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year_id })
+        FireEquipmentOrder.joins(:group).where(
+          groups: { id: current_api_user.groups.select(:id), fes_year_id: fes_year_id }
+        )
       else
-        FireEquipmentOrder.includes(:group).all
+        FireEquipmentOrder.includes(:group).where(group_id: current_api_user.groups.select(:id))
       end
 
     orders_with_fuel_japanese = @fire_equipment_orders.map do |order|
@@ -43,11 +45,18 @@ class FireEquipmentOrdersController < ApplicationController
   def submit
     group = current_user_group
     return render_submit_not_found unless group
+    return render_submit_unprocessable_entity('use_fire_equipment is required') unless params.key?(:use_fire_equipment)
 
     ActiveRecord::Base.transaction do
       fire_equipment_order = resolve_fire_equipment_order(group)
       fire_equipment_order.assign_attributes(fire_equipment_order_params_for_submit(group))
       fire_equipment_order.save!
+
+      if use_fire_equipment?
+        delete_unregistered_fire_equipment_order(group)
+      else
+        ensure_unregistered_fire_equipment_order(group)
+      end
 
       HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
         group_id: group.id,
@@ -66,8 +75,12 @@ class FireEquipmentOrdersController < ApplicationController
   private
 
   def set_fire_equipment_order
-    if FireEquipmentOrder.exists?(params[:id])
-      @fire_equipment_order = FireEquipmentOrder.find(params[:id])
+    @fire_equipment_order = FireEquipmentOrder
+                            .where(group_id: current_api_user.groups.select(:id))
+                            .find_by(id: params[:id])
+
+    if @fire_equipment_order
+      @fire_equipment_order
     else
       render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}")
     end
@@ -89,9 +102,8 @@ class FireEquipmentOrdersController < ApplicationController
 
   def current_user_group
     group_id = params[:group_id].presence || params.dig(:fire_equipment_order, :group_id)
-    return nil if group_id.blank?
 
-    current_api_user.groups.find_by(id: group_id)
+    current_api_user_group(group_id)
   end
 
   def resolve_fire_equipment_order(group)
@@ -127,7 +139,22 @@ class FireEquipmentOrdersController < ApplicationController
     ActiveModel::Type::Boolean.new.cast(params[:use_fire_equipment])
   end
 
+  def ensure_unregistered_fire_equipment_order(group)
+    UnRegisteredGroup.find_or_create_by!(
+      group_id: group.id,
+      order_type: :fire_equipment_order
+    )
+  end
+
+  def delete_unregistered_fire_equipment_order(group)
+    group.un_registered_groups.fire_equipment_order.destroy_all
+  end
+
   def render_submit_not_found
     render json: fmt(not_found, [], 'fire_equipment_order not found'), status: :not_found
+  end
+
+  def render_submit_unprocessable_entity(message)
+    render json: fmt(unprocessable_entity, [], message), status: :unprocessable_entity
   end
 end

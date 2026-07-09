@@ -24,7 +24,7 @@ class FireEquipmentOrderTest < ActiveSupport::TestCase
     end
 
     status = HealthCenterSubmissionStatus.find_by(group: @group, application_type: :fire_equipment_order)
-    assert_equal 'unsubmitted', status.status
+    assert_equal 'unapproved', status.status
   end
 
   private

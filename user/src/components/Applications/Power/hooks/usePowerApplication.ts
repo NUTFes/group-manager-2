@@ -186,20 +186,7 @@ export const usePowerApplication = (
     }
 
     try {
-      // IDが保持されているか確認
-      const devicesWithId = data.devices.map((device, index) => {
-        if (device.id) {
-          return device;
-        }
-
-        // 既存のデバイスと対応するIDをマッピング
-        if (devices && devices[index] && devices[index].id) {
-          return { ...device, id: devices[index].id };
-        }
-        return device;
-      });
-
-      const result = await submitPowerOrders(devicesWithId, groupId, true);
+      const result = await submitPowerOrders(data.devices, groupId, true);
 
       if (result.success) {
         await mutatePowerOrders(); // 電力申請データを再取得

@@ -71,18 +71,22 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   # ステータス変更
   def update_health_center_submission_status
     @submission_status = HealthCenterSubmissionStatus.find(params[:id])
-    save_health_center_submission_status(@submission_status)
+    save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   # ステータス変更（未作成ならINSERT）
   def upsert_health_center_submission_status
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
+    unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+      return render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity
+    end
+
     @submission_status = resolve_submission_status
     return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
-    save_health_center_submission_status(@submission_status)
+    save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   #---作成（POST）

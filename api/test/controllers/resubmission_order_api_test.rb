@@ -57,6 +57,8 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal '管理者追加', PowerOrder.order(:created_at).last.item
+    status = HealthCenterSubmissionStatus.find_by!(group: @group, application_type: :power_order)
+    assert_equal 'unapproved', status.status
   end
 
   test 'admin power order update rejects non admin user' do
@@ -90,6 +92,36 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
     assert_response :forbidden
     assert_nil HealthCenterSubmissionStatus.find_by(group: @group, application_type: :power_order)
+  end
+
+  test 'admin health center submission status update returns http unprocessable entity for invalid status' do
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :power_order,
+      status: :unapproved
+    )
+
+    patch "/api/v1/update_health_center_submission_status/#{submission_status.id}",
+          params: { status: 'invalid' },
+          headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal 422, response.parsed_body['status']['code']
+  end
+
+  test 'admin health center submission status upsert returns http unprocessable entity for invalid status' do
+    post '/api/v1/upsert_health_center_submission_status',
+         params: {
+           group_id: @group.id,
+           application_type: 'power_order',
+           status: 'invalid'
+         },
+         headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+         as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal 422, response.parsed_body['status']['code']
   end
 
   test 'admin power order update returns not found for unknown id' do
@@ -221,6 +253,8 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal '管理者追加', FireEquipmentOrder.order(:created_at).last.name
+    status = HealthCenterSubmissionStatus.find_by!(group: @group, application_type: :fire_equipment_order)
+    assert_equal 'unapproved', status.status
   end
 
   test 'admin fire equipment order destroy deletes order without changing submission status' do
@@ -358,6 +392,52 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     assert PowerOrder.exists?(remaining_power_order.id)
     assert_not PowerOrder.exists?(deleted_power_order.id)
     assert_equal 'unapproved', submission_status.reload.status
+  end
+
+  test 'user power submit rejects empty orders when use power is true without deleting existing orders' do
+    power_order = create_power_order!(@group, item: '残す申請')
+    submission_status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: @group.id,
+      application_type: :power_order,
+      status: :waiting_resubmission
+    )
+
+    put '/power_orders/submit',
+        params: {
+          group_id: @group.id,
+          use_power: true,
+          power_orders: []
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert PowerOrder.exists?(power_order.id)
+    assert_equal 'waiting_resubmission', submission_status.reload.status
+  end
+
+  test 'user power submit rejects missing use power flag without deleting existing orders' do
+    power_order = create_power_order!(@group, item: '残す申請')
+
+    put '/power_orders/submit',
+        params: {
+          group_id: @group.id,
+          power_orders: [
+            {
+              id: power_order.id,
+              item: '変更後',
+              power: 1000,
+              manufacturer: '参加団体',
+              model: 'USER-1',
+              item_url: 'https://example.com/user'
+            }
+          ]
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '残す申請', power_order.reload.item
   end
 
   test 'user submits power order and updates approved status to unapproved' do
@@ -506,7 +586,56 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
     fire_equipment_order.reload
     assert_equal '', fire_equipment_order.name
     assert_equal 0, fire_equipment_order.quantity
+    assert UnRegisteredGroup.exists?(group: @group, order_type: :fire_equipment_order)
     assert_equal 'unapproved', submission_status.reload.status
+  end
+
+  test 'user fire equipment submit deletes unregistered row when using equipment' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
+    UnRegisteredGroup.create!(group: @group, order_type: :fire_equipment_order)
+
+    put '/fire_equipment_orders/submit',
+        params: {
+          group_id: @group.id,
+          id: fire_equipment_order.id,
+          use_fire_equipment: true,
+          fire_equipment_order: {
+            name: '変更後',
+            quantity: 3,
+            fuel: 'charcoal',
+            usage: '調理',
+            is_takeaway: false,
+            remark: 'user'
+          }
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :success
+    assert_empty UnRegisteredGroup.where(group: @group, order_type: :fire_equipment_order)
+  end
+
+  test 'user fire equipment submit rejects missing use fire equipment flag without overwriting data' do
+    fire_equipment_order = create_fire_equipment_order!(@group, name: '変更前')
+
+    put '/fire_equipment_orders/submit',
+        params: {
+          group_id: @group.id,
+          id: fire_equipment_order.id,
+          fire_equipment_order: {
+            name: '変更後',
+            quantity: 3,
+            fuel: 'charcoal',
+            usage: '調理',
+            is_takeaway: false,
+            remark: 'user'
+          }
+        },
+        headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+        as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal '変更前', fire_equipment_order.reload.name
   end
 
   test 'user submits fire equipment order and updates approved status to unapproved' do

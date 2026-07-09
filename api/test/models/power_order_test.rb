@@ -23,7 +23,7 @@ class PowerOrderTest < ActiveSupport::TestCase
     end
 
     status = HealthCenterSubmissionStatus.find_by(group: @group, application_type: :power_order)
-    assert_equal 'unsubmitted', status.status
+    assert_equal 'unapproved', status.status
   end
 
   private

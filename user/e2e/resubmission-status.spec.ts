@@ -98,10 +98,10 @@ test.describe('power and fire equipment resubmission status', () => {
       groupId!
     );
     expect(findStatus(initialStatuses, 'power_order')?.status).toBe(
-      'unsubmitted'
+      'unapproved'
     );
     expect(findStatus(initialStatuses, 'fire_equipment_order')?.status).toBe(
-      'unsubmitted'
+      'unapproved'
     );
 
     const waitingPower = await submitSubmissionStatus(
