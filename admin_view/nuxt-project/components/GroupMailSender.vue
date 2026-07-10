@@ -2,8 +2,8 @@
   <div class="group-mail-sender">
     <Card
       width="100%"
-      height="800px"
-      style="overflow-y: auto; align-items: flex-start;"
+      height="100%"
+      style="align-items: flex-start; min-height: 0;"
     >
       <div class="comment-header">
         <h3>メッセージ</h3>

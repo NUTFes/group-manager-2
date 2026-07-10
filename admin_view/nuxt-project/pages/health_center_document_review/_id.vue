@@ -1489,6 +1489,8 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 .mail-delivery-status {

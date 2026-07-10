@@ -57,6 +57,7 @@
                 <h2>基本情報</h2>
               </div>
               <VerticalTable>
+                <!-- 団体名〜代表者: クリックで参加団体モーダルを開く -->
                 <tbody
                   class="selectable-row"
                   @click="openModal('group', group.group)"
@@ -97,6 +98,10 @@
                     <th>代表者</th>
                     <td>{{ group.user ? group.user.name : "未登録" }}</td>
                   </tr>
+                </tbody>
+
+                <!-- 代表者メール: クリックでメーラーを開くのみ（行ホバーなし） -->
+                <tbody>
                   <tr>
                     <th>代表者メール</th>
                     <td>
@@ -104,20 +109,20 @@
                         v-if="group.user"
                         class="mail-link"
                         :href="'mailto:' + group.user.email"
-                        @click.stop
                       >
                         {{ group.user.email }}
                       </a>
                       <span v-else>未登録</span>
                     </td>
                   </tr>
+                </tbody>
 
-                  <tr
-                    :class="{ 'selectable-row': !!group.sub_rep }"
-                    @click.stop="
-                      group.sub_rep ? openModal('sub_rep', group.sub_rep) : null
-                    "
-                  >
+                <!-- 副代表: 副代表がいる場合のみクリックでモーダルを開く -->
+                <tbody
+                  :class="{ 'selectable-row': !!group.sub_rep }"
+                  @click="group.sub_rep ? openModal('sub_rep', group.sub_rep) : null"
+                >
+                  <tr>
                     <th>副代表</th>
                     <td>
                       <template v-if="isUnregistered('sub_rep')">
@@ -1376,8 +1381,15 @@ export default {
   cursor: pointer;
   transition: background-color 0.2s;
 }
-.selectable-row:hover {
-  background-color: #f9fafb;
+.selectable-row tr {
+  border-bottom: 1px solid var(--accent-2);
+}
+.selectable-row tr:last-child {
+  border-bottom: none;
+}
+.selectable-row:hover,
+.selectable-row:hover tr {
+  background-color: #f0f4ff;
 }
 .selectable-card {
   cursor: pointer;
@@ -1493,6 +1505,8 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 @media (max-width: 900px) {
