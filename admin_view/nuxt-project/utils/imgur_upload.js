@@ -16,7 +16,7 @@ export const convertImageToDataUrl = (file) => {
 };
 
 export const uploadImageToImgur = async (
-  dataUrl,
+  file,
   imgurClientId,
   options = {}
 ) => {
@@ -26,7 +26,9 @@ export const uploadImageToImgur = async (
     );
   }
 
-  const base64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("type", "file");
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -36,12 +38,10 @@ export const uploadImageToImgur = async (
       method: "POST",
       headers: {
         Authorization: `Client-ID ${imgurClientId}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ image: base64 }),
+      body: formData,
       signal: controller.signal,
     });
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -52,5 +52,7 @@ export const uploadImageToImgur = async (
   } catch (error) {
     console.error("Imgur upload error:", error);
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 };

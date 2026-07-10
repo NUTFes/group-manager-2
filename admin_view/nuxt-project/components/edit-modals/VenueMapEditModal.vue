@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { convertImageToDataUrl, uploadImageToImgur } from "~/utils/imgur_upload";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 
 export default {
   props: {
@@ -121,9 +121,8 @@ export default {
         if (this.files && this.files.length > 0) {
           const file = this.files[0];
           this.state = "Uploading ...";
-          const dataUrl = await convertImageToDataUrl(file);
           picturePath = await uploadImageToImgur(
-            dataUrl,
+            file,
             this.$config.imgurClientId
           );
           pictureName = file.name;

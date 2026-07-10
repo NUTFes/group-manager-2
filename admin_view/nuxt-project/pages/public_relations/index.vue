@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { convertImageToDataUrl, uploadImageToImgur } from "~/utils/imgur_upload";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 import { mapState } from "vuex";
 import { downloadFile } from '~/utils/download-file';
 export default {
@@ -215,9 +215,8 @@ export default {
 
       try {
         for (const file of this.files) {
-          const dataUrl = await convertImageToDataUrl(file);
           const downloadURL = await uploadImageToImgur(
-            dataUrl,
+            file,
             this.$config.imgurClientId
           );
           const data = {

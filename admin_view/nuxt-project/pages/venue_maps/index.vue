@@ -115,7 +115,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { convertImageToDataUrl, uploadImageToImgur } from "~/utils/imgur_upload";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 export default {
   watchQuery: ["page"],
   data() {
@@ -254,9 +254,8 @@ export default {
       this.state = "Uploading ...";
 
       try {
-        const dataUrl = await convertImageToDataUrl(file);
         const downloadURL = await uploadImageToImgur(
-          dataUrl,
+          file,
           this.$config.imgurClientId
         );
         const data = {
