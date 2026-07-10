@@ -233,7 +233,7 @@ export default {
         this.reload();
         this.closeAddModal();
         this.openSnackBar("PR画像・文申請を追加しました");
-        this.groupID = null;
+        this.appGroup = "";
         this.blurb = null;
       } catch (error) {
         console.log(error);
