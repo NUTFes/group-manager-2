@@ -276,6 +276,9 @@ Rails.application.routes.draw do
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
       post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
+      post 'create_order_status_check_comment_mail' => 'order_status_check_api#create_order_status_check_comment_mail'
+      post 'resend_order_status_check_comment_mail/:comment_id' => 'order_status_check_api#resend_order_status_check_comment_mail'
+      get 'group_mail_comments/:group_id' => 'group_mail_comments_api#index'
 
       #---保健所提出確認画面
       get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'

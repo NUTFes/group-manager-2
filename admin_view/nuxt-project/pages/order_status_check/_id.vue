@@ -34,27 +34,6 @@
           <span class="side-nav-icon">&gt;</span>
         </button>
       </div>
-
-      <div class="status-guide-container">
-        <div class="status-icon-guide">
-          <span class="status-icon-guide__title">【ステータス凡例】</span>
-          <span class="status-icon-guide__item">
-            <span class="material-icons status-icon-small">check</span>: 承認済み
-          </span>
-          <span class="status-icon-guide__item">
-            <span class="status-guide-cell bg-unapproved"><span class="material-icons status-icon-small">notification_important</span></span>: 未確認
-          </span>
-          <span class="status-icon-guide__item">
-            <span class="status-guide-cell bg-resubmission"><span class="material-icons status-icon-small">autorenew</span></span>: 再提出待ち
-          </span>
-          <span class="status-icon-guide__item">
-            <span class="status-guide-cell unregistered"><span class="material-icons status-icon-small">close</span></span>: 未申請
-          </span>
-          <span class="status-icon-guide__item">
-            <span>ー</span>: 対象外
-          </span>
-        </div>
-      </div>
       <Row
         wrap="nowrap"
         align="start"
@@ -1020,34 +999,14 @@
           justify="start"
           class="sticky-right-column"
         >
-          <Card
-            width="100%"
-            height="800px"
-            style="overflow-y: auto; align-items: flex-start"
-          >
-            <div class="comment-header">
-              <h3>メッセージ</h3>
-            </div>
-            <div class="comment-form">
-              <textarea
-                class="comment-textarea"
-                placeholder="メールで送信するコメント"
-                disabled
-              ></textarea>
-              <CommonButton
-                iconName="send"
-                :disabled="true"
-                :on_click="() => {}"
-              >
-                送信
-              </CommonButton>
-            </div>
-
-            <div class="comment-history">
-              <h4>送信履歴</h4>
-              <p>送信機能は準備中です</p>
-            </div>
-          </Card>
+          <GroupMailSender
+            v-if="group.group.id"
+            :group-id="group.group.id"
+            :user-email="group.user ? group.user.email : ''"
+            source-page="order_status"
+            :group-name="group.group.name"
+            :user-name="group.user ? group.user.name : ''"
+          />
         </Column>
       </Row>
     </template>
@@ -1109,6 +1068,7 @@ import StageCommonOptionEditModal from "~/components/edit-modals/StageCommonOpti
 import StageOrderEditModal from "~/components/edit-modals/StageOrderEditModal.vue";
 import SubRepEditModal from "~/components/edit-modals/SubRepEditModal.vue";
 import VenueMapEditModal from "~/components/edit-modals/VenueMapEditModal.vue";
+import GroupMailSender from "~/components/GroupMailSender.vue";
 import { formatWeather } from "~/utils/constants";
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
@@ -1130,6 +1090,7 @@ export default {
     FireEquipmentOrderEditModal,
     PublicRelationEditModal,
     VenueMapEditModal,
+    GroupMailSender,
   },
   data() {
     return {

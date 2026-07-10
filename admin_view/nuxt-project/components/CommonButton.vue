@@ -32,6 +32,11 @@ export default {
       default: false,
     },
   },
+  computed: {
+    CommonButtonOption() {
+      return {};
+    },
+  },
 };
 </script>
 <style scoped>
