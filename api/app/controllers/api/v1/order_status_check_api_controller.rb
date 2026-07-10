@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Api::V1::OrderStatusCheckApiController < ApplicationController
+  before_action :require_mail_delivery_role!, only: %i[
+    create_order_status_check_comment_mail
+    resend_order_status_check_comment_mail
+  ]
+
   def get_order_status_check_for_admin_view
     @groups = Group.with_order_status_check(params[:id])
     render json: fmt(ok, @groups)
@@ -71,7 +76,6 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
 
   # メモを保存し、保存済みメモの本文をメール送信する
   def create_order_status_check_comment_mail
-    require_mail_delivery_role!
     errors = validate_comment_mail_params
     return render json: fmt(unprocessable_entity, errors), status: :unprocessable_entity if errors.present?
 
@@ -103,7 +107,6 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
 
   # failed の保存済みメモを再送信する
   def resend_order_status_check_comment_mail
-    require_mail_delivery_role!
     comment = Comment.includes(commentable: :user).find_by(id: params[:comment_id])
     return render json: fmt(not_found, [], 'comment not found'), status: :not_found if comment.nil?
     return render json: fmt(unprocessable_entity, [], 'comment is not failed'), status: :unprocessable_entity unless comment.failed?
