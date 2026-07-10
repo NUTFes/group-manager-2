@@ -240,7 +240,8 @@ export default {
         this.appGroup = "";
         this.blurb = null;
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        this.openSnackBar("PR画像・文申請の追加に失敗しました");
       } finally {
         this.buttonState = "登録";
         this.isPush.disabled = false;
