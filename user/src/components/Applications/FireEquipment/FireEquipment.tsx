@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FireEquipmentFormView } from './components';
@@ -10,16 +11,19 @@ type FireEquipmentProps = {
   canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: HealthCenterSubmissionStatus;
 };
 
 type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
   groupId: number;
   canSubmit: boolean;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const Content: FC<ContentProps> = ({
   groupId,
   canSubmit,
+  status,
   isEditing,
   handleEditClick,
   formItem,
@@ -51,6 +55,7 @@ const Content: FC<ContentProps> = ({
         handleEditCancel={handleEditClick}
         submitLabel={fireEquipmentTexts.buttons.update}
         disableValidate
+        status={status}
       />
     );
   }
@@ -68,7 +73,7 @@ const Content: FC<ContentProps> = ({
 
   // 未登録の場合は、フォームを表示
   if (!fireEquipment && !hasUnregistered) {
-    return <FireEquipmentFormView groupId={groupId} />;
+    return <FireEquipmentFormView groupId={groupId} status={status} />;
   }
 
   // 編集モードの場合はフォームを表示
@@ -78,6 +83,7 @@ const Content: FC<ContentProps> = ({
         groupId={groupId}
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
+        status={status}
       />
     );
   }
@@ -91,13 +97,16 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canAdd,
   canEdit,
   isRegistered,
+  status,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
   const fireEquipmentHooks = useFireEquipmentHooks(groupId);
   const hasFireEquipmentOrder =
     fireEquipmentHooks.fireEquipment !== undefined ||
     fireEquipmentHooks.hasUnregistered;
-  const canSubmit = hasFireEquipmentOrder ? !!canEdit : !!canAdd;
+  const isResubmission = status === 'waiting_resubmission';
+  const canSubmit =
+    isResubmission || (hasFireEquipmentOrder ? !!canEdit : !!canAdd);
   const isExist = fireEquipmentHooks.isLoading
     ? isRegistered
     : hasFireEquipmentOrder;
@@ -112,6 +121,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       <Content
         groupId={groupId}
         canSubmit={canSubmit}
+        status={status}
         {...fireEquipmentHooks}
       />
     </AccordionMenu>

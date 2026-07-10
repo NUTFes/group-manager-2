@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
+import {
+  HealthCenterSubmissionStatus,
+  useGetHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
-  useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
-import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
 import { Device, PowerApplicationOption } from '../types';
 import { usePowerForm } from './usePowerForm';
@@ -21,7 +23,12 @@ type PowerApplicationState = {
   isSubmitted: boolean;
 };
 
-export const usePowerApplication = (groupId: number) => {
+export const usePowerApplication = (
+  groupId: number,
+  status?: HealthCenterSubmissionStatus
+) => {
+  void status;
+
   const { t } = useTranslation('common');
   // 電力申請のステート管理
   const [state, setState] = useState<PowerApplicationState>({
@@ -49,15 +56,12 @@ export const usePowerApplication = (groupId: number) => {
     isLoading: isLoadingUnregistered,
     hasError: hasErrorUnregistered,
     mutateUnregisteredGroup,
-    unregisteredData,
   } = useGetUnregisteredGroup(groupId, ORDER_TYPES.POWER_ORDER);
-
-  // 未登録グループの登録・削除
-  const { registerUnregisteredGroup, deleteUnregisteredGroup } =
-    useMutateUnregisteredGroup(ORDER_TYPES.POWER_ORDER);
+  const { mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
 
   // 電力申請の登録・更新・削除機能
-  const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
+  const { submitPowerOrders } = useMutatePowerOrders();
 
   // フォーム管理
   const initialDefaultValues = useMemo(() => {
@@ -147,48 +151,21 @@ export const usePowerApplication = (groupId: number) => {
   // 申請しないを選択した場合の処理
   const handleApplyNegative = async () => {
     try {
-      // 既存の申請があれば削除
-      if (hasExisting && devices.length > 0) {
-        const deleteResults = await Promise.all(
-          devices.map(async (device) => {
-            if (!device.id) return { success: true };
-
-            try {
-              const result = await deletePowerOrder(device.id);
-              return result;
-            } catch (error) {
-              console.error(`デバイスID ${device.id} の削除に失敗:`, error);
-              return { success: false, error };
-            }
-          })
-        );
-
-        // いずれかの削除が失敗した場合は警告を表示するが処理は続行
-        const hasFailures = deleteResults.some((result) => !result.success);
-        if (hasFailures) {
-          console.warn('一部のデバイス削除に失敗しましたが、処理を続行します');
-          toast.warning(t('applications.power.messages.partialDeleteWarning'));
-        }
-      }
-
-      // 未登録グループとして登録する
-      const result = await registerUnregisteredGroup(groupId);
-
-      if (result.success) {
-        updateState({ applyPower: 'no' });
-        await mutatePowerOrders();
-        await mutateUnregisteredGroup();
-        mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
-        toast.success(t('applications.power.messages.registerNegativeSuccess'));
-      } else {
+      const result = await submitPowerOrders([], groupId, false);
+      if (!result.success) {
         const message = t('applications.power.messages.registerNegativeFailed');
-        updateState({
-          submitError: message,
-        });
+        updateState({ submitError: message });
         toast.error(message);
+        return;
       }
-    } catch (error) {
-      console.error('申請処理中のエラー:', error);
+
+      updateState({ applyPower: 'no', isEditing: false });
+      await mutatePowerOrders();
+      await mutateUnregisteredGroup();
+      await mutateHealthCenterSubmissionStatus();
+      mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
+      toast.success(t('applications.power.messages.registerNegativeSuccess'));
+    } catch {
       const message = t('applications.power.messages.processError');
       updateState({
         submitError: message,
@@ -209,39 +186,12 @@ export const usePowerApplication = (groupId: number) => {
     }
 
     try {
-      // 申請なしから申請ありに変更した場合、未登録テーブルの情報を削除
-      try {
-        const deleteResult = await deleteUnregisteredGroup(unregisteredData);
-        if (!deleteResult.success) {
-          console.warn('未登録テーブル削除エラー:', deleteResult.error);
-          toast.warning(
-            t('applications.power.messages.unregisteredDeleteWarning')
-          );
-        }
-      } catch (error) {
-        console.warn(
-          '未登録テーブル削除中にエラーが発生しましたが、処理を続行します:',
-          error
-        );
-        toast.warning(
-          t('applications.power.messages.unregisteredDeleteWarning')
-        );
-      }
-
-      // IDが保持されているか確認
-      const devicesWithId = data.devices.map((device, index) => {
-        // 既存のデバイスと対応するIDをマッピング
-        if (devices && devices[index] && devices[index].id) {
-          return { ...device, id: devices[index].id };
-        }
-        return device;
-      });
-
-      const result = await submitPowerOrders(devicesWithId, groupId, devices);
+      const result = await submitPowerOrders(data.devices, groupId, true);
 
       if (result.success) {
         await mutatePowerOrders(); // 電力申請データを再取得
         await mutateUnregisteredGroup(); // 未登録テーブルデータを再取得
+        await mutateHealthCenterSubmissionStatus();
 
         updateState({ isEditing: false });
         // 編集か新規登録かによって通知メッセージを変える
@@ -257,8 +207,7 @@ export const usePowerApplication = (groupId: number) => {
         });
         toast.error(message);
       }
-    } catch (error) {
-      console.error('申請送信中のエラー:', error);
+    } catch {
       const message = t('applications.power.messages.submitUnexpectedError');
       updateState({
         submitError: message,
@@ -268,41 +217,35 @@ export const usePowerApplication = (groupId: number) => {
   };
 
   // デバイス削除の処理
-  const handleDeleteDevice = async (deviceId: number) => {
-    try {
-      // 削除前に残りのデバイス数を計算する
-      const remainingDevices = devices.filter((d) => d.id !== deviceId);
-      const willBeEmpty = remainingDevices.length === 0;
+  const handleDeleteDevice = (deviceId: number) => {
+    const remainingDevices = devices.filter((d) => d.id !== deviceId);
 
-      const result = await deletePowerOrder(deviceId);
-      if (result.success) {
-        await mutatePowerOrders();
-        toast.success(t('applications.power.messages.deviceDeleteSuccess'));
-
-        // すべてのデバイスが削除された場合、編集モードに切り替える
-        if (willBeEmpty) {
-          updateState({
-            isEditing: true,
-            applyPower: 'yes',
-          });
-
-          // フォームを初期化
-          formMethods.reset({ devices: [{ ...DEFAULT_DEVICE }] });
-        }
-      } else {
-        const message = t('applications.power.messages.deviceDeleteFailed');
-        updateState({
-          submitError: message,
-        });
-        toast.error(message);
-      }
-    } catch {
-      const message = t('applications.power.messages.deviceDeleteError');
+    if (remainingDevices.length === 0) {
+      setPendingDevices(devices.map((device) => ({ ...device })));
       updateState({
-        submitError: message,
+        applyPower: 'no',
+        isEditing: false,
+        isSubmitted: false,
+        submitError: null,
       });
-      toast.error(message);
+      return;
     }
+
+    formMethods.reset(
+      { devices: remainingDevices.map((device) => ({ ...device })) },
+      {
+        keepDirty: false,
+        keepErrors: false,
+        keepDirtyValues: false,
+        keepValues: false,
+      }
+    );
+    updateState({
+      applyPower: 'yes',
+      isEditing: true,
+      isSubmitted: false,
+      submitError: null,
+    });
   };
 
   // ラジオボタンの値変更ハンドラー

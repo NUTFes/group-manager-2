@@ -50,13 +50,13 @@ export default {
     powerOrder: {
       immediate: true,
       handler() {
-        const po = this.getPowerOrder();
-        this.groupId = po.group_id || this.$route.params.id;
-        this.item = po.item || null;
-        this.power = po.power || null;
-        this.manufacturer = po.manufacturer || null;
-        this.model = po.model || null;
-        this.itemUrl = po.item_url || null;
+        const powerOrder = this.getPowerOrder();
+        this.groupId = powerOrder.group_id || this.$route.params.id;
+        this.item = powerOrder.item || null;
+        this.power = powerOrder.power || null;
+        this.manufacturer = powerOrder.manufacturer || null;
+        this.model = powerOrder.model || null;
+        this.itemUrl = powerOrder.item_url || null;
       },
     },
   },
@@ -65,7 +65,7 @@ export default {
       return this.powerOrder?.power_order || this.powerOrder || {};
     },
     async edit() {
-      const po = this.getPowerOrder();
+      const powerOrder = this.getPowerOrder();
       const data = {
         group_id: String(this.groupId ?? this.$route.params.id),
         item: this.item ?? "",
@@ -74,10 +74,10 @@ export default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/power_orders/${po.id}`;
+      const url = `/api/v1/power_orders/${powerOrder.id}`;
 
       await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", po.id);
+        this.$emit("saved", powerOrder.id);
         this.$emit("close");
       });
     },

@@ -3,6 +3,8 @@
 class PowerOrder < ApplicationRecord
   belongs_to :group
 
+  after_create :ensure_health_center_submission_status
+
   def self.with_groups
     @record = PowerOrder.preload(:group)
                         .map do |power_order|
@@ -30,5 +32,15 @@ class PowerOrder < ApplicationRecord
       model: model,
       item_url: item_url
     }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :power_order,
+      status: :unapproved
+    )
   end
 end

@@ -12,7 +12,9 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     cooking_process_order: 2,
     employee: 3,
     venue_map: 4,
-    equipment: 5
+    equipment: 5,
+    power_order: 6,
+    fire_equipment_order: 7
   }
 
   enum status: {
@@ -33,7 +35,9 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     'cooking_process_order' => '調理工程申請',
     'employee' => '従業員申請',
     'venue_map' => '模擬店平面図申請',
-    'equipment' => '物品申請'
+    'equipment' => '物品申請',
+    'power_order' => '電力申請',
+    'fire_equipment_order' => '火器使用申請'
   }.freeze
 
   def self.ensure_for_group_and_application_type!(group_id:, application_type:, status: DEFAULT_STATUS)
@@ -41,12 +45,18 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     submission_status.status = status
     submission_status.save!
     submission_status
+  rescue ActiveRecord::RecordNotUnique
+    submission_status = find_by!(group_id: group_id, application_type: application_type)
+    submission_status.update!(status: status)
+    submission_status
   end
 
   def self.insert_default_for_group_and_application_type!(group_id:, application_type:, status: DEFAULT_STATUS)
     find_or_create_by!(group_id: group_id, application_type: application_type) do |submission_status|
       submission_status.status = status
     end
+  rescue ActiveRecord::RecordNotUnique
+    find_by!(group_id: group_id, application_type: application_type)
   end
 
   def self.default_submissions_for(group)
@@ -68,6 +78,8 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   private
 
   def notify_slack_on_unapproved_resubmission
+    return if Current.skip_slack_notification
+
     was_resubmission = status_before_last_save == 'waiting_resubmission'
     is_unapproved = status == 'unapproved'
 

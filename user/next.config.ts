@@ -27,8 +27,10 @@ const apiConfig: {
 
 const APP_ENV = process.env.APP_ENV || 'development';
 
-const { SSR_API_URL, NEXT_PUBLIC_API_URL } =
-  apiConfig[APP_ENV] || apiConfig.development;
+const configuredApi = apiConfig[APP_ENV] || apiConfig.development;
+const SSR_API_URL = process.env.SSR_API_URL ?? configuredApi.SSR_API_URL;
+const NEXT_PUBLIC_API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? configuredApi.NEXT_PUBLIC_API_URL;
 
 const nextConfig: NextConfig = {
   output: 'standalone',

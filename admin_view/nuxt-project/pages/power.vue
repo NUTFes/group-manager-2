@@ -1,60 +1,65 @@
 <template>
   <div>
-    <Header/>
-      <v-container>
-        <v-card>
-          <v-container>
-            <v-row>
-              <v-col>
-                <v-card-title><v-icon>mdi-account-multiple</v-icon>電力一覧</v-card-title>
-              </v-col>
-            </v-row>
-            <v-divider></v-divider>
-            <br>
-            <v-row>
-              <v-col>
-                <template>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th v-for="(header, i) in headers" :key="i" class="text-center">
-                            {{ header.text }}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
+    <Header />
+    <v-container>
+      <v-card>
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-card-title
+                ><v-icon>mdi-account-multiple</v-icon>電力一覧</v-card-title
+              >
+            </v-col>
+          </v-row>
+          <v-divider></v-divider>
+          <br />
+          <v-row>
+            <v-col>
+              <template>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th
+                          v-for="(header, i) in headers"
+                          :key="i"
                           class="text-center"
-                          v-for="power in powers"
-                          :key="power.id"
-                          >
-                          <td>{{ power.id }}</td>
-                          <td>{{ power.group_id }}</td>
-                          <td>{{ power.item }}</td>
-                          <td>{{ power.power }}</td>
-                          <td>{{ power.manufacturer }}</td>
-                          <td>{{ power.model }}</td>
-                          <td>{{ power.item_id }}</td>
-                          <td>{{ power.created_at | formatDate }}</td>
-                          <td>{{ power.updated_at | formatDate}}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </template>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-        </v-col>
-      </v-container>
+                        >
+                          {{ header.text }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        class="text-center"
+                        v-for="power in powers"
+                        :key="power.id"
+                      >
+                        <td>{{ power.id }}</td>
+                        <td>{{ power.group_id }}</td>
+                        <td>{{ power.item }}</td>
+                        <td>{{ power.power }}</td>
+                        <td>{{ power.manufacturer }}</td>
+                        <td>{{ power.model }}</td>
+                        <td>{{ power.item_id }}</td>
+                        <td>{{ power.created_at | formatDate }}</td>
+                        <td>{{ power.updated_at | formatDate }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </template>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-container>
   </div>
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import axios from 'axios'
+import Header from "~/components/Header.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -65,48 +70,50 @@ export default {
       powers: [],
       headers: [
         {
-          text: 'ID'
+          text: "ID",
         },
         {
-          text: 'group_id'
+          text: "group_id",
         },
         {
-          text: '製品'
+          text: "製品",
         },
         {
-          text: '消費電力'
+          text: "消費電力",
         },
         {
-          text: 'メーカー'
+          text: "メーカー",
         },
         {
-          text: '型番'
+          text: "型番",
         },
         {
-          text: '製品URL'
+          text: "製品URL",
         },
         {
-          text: '作成日時'
+          text: "作成日時",
         },
         {
-          text: '編集日時'
+          text: "編集日時",
         },
       ],
-    }
+    };
   },
   mounted() {
-    this.$axios.get('power_orders', {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }
-    )
-      .then(response => {
-        this.powers = response.data
+    this.$axios
+      .get("/api/v1/get_power_order_index_for_admin_view", {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
       })
-  }
-}
+      .then((response) => {
+        this.powers = (response.data.data || []).map(
+          (order) => order.power_order || order
+        );
+      });
+  },
+};
 </script>

@@ -161,12 +161,10 @@ export default {
     const groupsUrl = `/groups?fes_year_id=${initialYearId}`;
     const groupsRes = await $axios.$get(groupsUrl);
 
-    const ordersUrl = `/fire_equipment_orders?fes_year_id=${initialYearId}`;
+    const ordersUrl = `/api/v1/fire_equipment_orders?fes_year_id=${initialYearId}`;
     const ordersRes = await $axios.$get(ordersUrl);
 
-    const currentYear = yearsRes.data.find(
-      (y) => y.id === initialYearId
-    );
+    const currentYear = yearsRes.data.find((y) => y.id === initialYearId);
 
     return {
       fireEquipmentOrders: ordersRes.data,
@@ -208,7 +206,7 @@ export default {
         this.refYears = year ? year.year_num : "Year";
       }
 
-      const ordersUrl = `/fire_equipment_orders?fes_year_id=${this.refYearID}`;
+      const ordersUrl = `/api/v1/fire_equipment_orders?fes_year_id=${this.refYearID}`;
       const ordersRes = await this.$axios.$get(ordersUrl);
       this.fireEquipmentOrders = ordersRes.data;
 
@@ -217,9 +215,8 @@ export default {
       this.groups = groupsRes.data;
     },
 
-
     async submit() {
-      const url = `/fire_equipment_orders`;
+      const url = `/api/v1/fire_equipment_orders`;
       const params = {
         fire_equipment_order: {
           group_id: this.groupId,
