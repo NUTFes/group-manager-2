@@ -266,6 +266,7 @@ export default {
         };
 
         if (this.sourcePage === "health_center") {
+          // TODO: 将来的にはapplication_typeを動的に選択できるようにする（現在は food_product に固定）
           payload.application_type = "food_product";
           await this.$axios.post(
             "/api/v1/create_health_center_submission_status_comment_mail",
@@ -273,7 +274,7 @@ export default {
           );
         } else {
           await this.$axios.post(
-            "/api/v1/create_order_status_check_comment_mail",
+            "/api/v1/order_status_check_comment_mails",
             payload
           );
         }
@@ -305,7 +306,7 @@ export default {
           );
         } else {
           await this.$axios.post(
-            `/api/v1/resend_order_status_check_comment_mail/${comment.id}`
+            `/api/v1/order_status_check_comment_mails/${comment.id}/resend`
           );
         }
         this.messageSendResult = "再送信しました";
