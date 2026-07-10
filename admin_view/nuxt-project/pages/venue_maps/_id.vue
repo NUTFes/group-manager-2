@@ -39,6 +39,7 @@
                 <div v-else>
                   <img
                     :src="venue_map.venue_map.picture_path"
+                    referrerpolicy="no-referrer"
                     style="width: 40%; height: 40%"
                   />
                 </div>

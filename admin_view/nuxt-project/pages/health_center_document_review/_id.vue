@@ -350,7 +350,7 @@
               </div>
             </div>
           </div>
-          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
+          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" referrerpolicy="no-referrer" />
           <p v-else>未登録</p>
           <HorizontalRule />
 

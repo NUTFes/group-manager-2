@@ -33,7 +33,7 @@
               <td>
                 <div v-if='publicRelation.picture_path === null'>未登録</div>
                 <div v-else @click="DownloadPic(publicRelation.picture_path)">
-                  <img :src="publicRelation.picture_path" />
+                  <img :src="publicRelation.picture_path" referrerpolicy="no-referrer" />
                 </div>
               </td>
             </tr>
