@@ -1865,6 +1865,26 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FoodProductsApi"
+  "/api/v1/group_mail_comments":
+    get:
+      tags:
+      - api/v1/group_mail_comment
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/group_mail_comment description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+        '422':
+          description: api/v1/group_mail_comment description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+      deprecated: false
   "/api/v1/get_group_for_admin_view/{id}":
     get:
       tags:
@@ -2692,6 +2712,59 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
+  "/api/v1/order_status_check_comment_mails":
+    post:
+      tags:
+      - api/v1/order_status_check_comment_mail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '422':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
+  "/api/v1/order_status_check_comment_mails/{id}/resend":
+    post:
+      tags:
+      - api/v1/order_status_check_comment_mail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '404':
+          description: api/v1/order_status_check_comment_mail description
+        '422':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_announcements_csv":
     get:
       tags:
@@ -6230,6 +6303,8 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
@@ -6247,6 +6322,8 @@ paths:
       summary: patch summary
       description: patch description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
@@ -8155,6 +8232,8 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: power_order description
         '422':
           description: power_order description
           content:
@@ -11977,6 +12056,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.GroupMailComment: {}
     api.v1.GroupsApi:
       type: object
       properties:
@@ -11999,6 +12079,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.OrderStatusCheckCommentMail: {}
     api.v1.OutputCsv:
       type: object
       properties:
@@ -12572,6 +12653,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+    api.v1.OrderStatusCheckCommentMail: {}
     api.v1.PlaceOrdersApi:
       content:
         application/json:

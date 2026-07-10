@@ -235,7 +235,7 @@ export default {
     async fetchComments() {
       try {
         const response = await this.$axios.get(
-          `/api/v1/group_mail_comments/${this.groupId}`
+          `/api/v1/group_mail_comments`, { params: { group_id: this.groupId } }
         );
         this.comments = response.data.data || response.data || [];
       } catch (error) {

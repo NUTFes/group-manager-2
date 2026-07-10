@@ -281,7 +281,7 @@ Rails.application.routes.draw do
           post :resend
         end
       end
-      resources :group_mail_comments, only: [:index]
+      resources :group_mail_comments, only: [:index], controller: 'group_mail_comments_api'
 
       #---保健所提出確認画面
       get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'

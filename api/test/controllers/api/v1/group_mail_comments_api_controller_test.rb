@@ -38,7 +38,7 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
   end
 
   test 'index returns comments for order status and health center ordered by created_at' do
-    get "/api/v1/group_mail_comments/#{@group.id}",
+    get "/api/v1/group_mail_comments?group_id=#{@group.id}",
         headers: auth_headers(@admin),
         as: :json
 
@@ -63,11 +63,7 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
       uid: email,
       password: 'password',
       password_confirmation: 'password',
-      role_id: role_id,
-      student_id: 11_111_111,
-      department_id: 1,
-      grade_id: 1,
-      tel: '09011112222'
+      role_id: role_id
     )
   end
 
