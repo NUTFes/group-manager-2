@@ -8,9 +8,36 @@
     </div>
     
     <template v-else-if="group">
-      <Row align="start" justify="start">
-        <Column width="100%" align="start" justify="start" gap="8px">
-          <Card width="100%">
+      <div class="side-nav side-nav-left">
+        <button
+          type="button"
+          class="side-nav-button"
+          :disabled="!prevGroupId"
+          aria-label="前の団体へ移動"
+          @click="onPrevGroup"
+        >
+          <span class="side-nav-icon">&lt;</span>
+        </button>
+      </div>
+      <div class="side-nav side-nav-right">
+        <button
+          type="button"
+          class="side-nav-button"
+          :disabled="!nextGroupId"
+          aria-label="次の団体へ移動"
+          @click="onNextGroup"
+        >
+          <span class="side-nav-icon">&gt;</span>
+        </button>
+      </div>
+
+      <Row wrap="nowrap" align="start" justify="space-between" style="margin-top: 20px;">
+        <Column width="70%" align="start" justify="start">
+          
+          <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start; gap: 24px; padding: 40px;">
+
+          <!-- 基本情報 -->
+          <div style="width: 100%;">
             <div class="section-header">
               <h2>基本情報</h2>
             </div>
@@ -70,39 +97,9 @@
               </tr>
               </tbody>
             </VerticalTable>
-          </Card>
-        </Column>
-      </Row>
+            <HorizontalRule style="margin-top: 24px;" />
+          </div>
 
-      <div class="side-nav side-nav-left">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!prevGroupId"
-          aria-label="前の団体へ移動"
-          @click="onPrevGroup"
-        >
-          <span class="side-nav-icon">&lt;</span>
-        </button>
-      </div>
-      <div class="side-nav side-nav-right">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!nextGroupId"
-          aria-label="次の団体へ移動"
-          @click="onNextGroup"
-        >
-          <span class="side-nav-icon">&gt;</span>
-        </button>
-      </div>
-
-      <Row wrap="nowrap" align="start" justify="space-between" style="margin-top: 20px;">
-        <Column width="100%" align="start" justify="start">
-          
-          <Card width="100%" style="align-items: flex-start; gap: 24px; padding: 40px;">
-
-          
           <!-- 会場申請 -->
           <div v-if="shouldShow('place_order')" style="width: 100%;">
             <div class="section-header">
@@ -439,17 +436,53 @@
 
           </Card>
         </Column>
+
+        <Column
+          width="30%"
+          align="start"
+          justify="start"
+          class="sticky-right-column"
+        >
+          <Card
+            width="100%"
+            height="800px"
+            style="overflow-y: auto; align-items: flex-start"
+          >
+            <div class="comment-header">
+              <h3>メッセージ</h3>
+            </div>
+            <div class="comment-form">
+              <textarea
+                class="comment-textarea"
+                placeholder="メールで送信するコメント"
+                disabled
+              ></textarea>
+              <CommonButton
+                iconName="send"
+                :disabled="true"
+                :on_click="() => {}"
+              >
+                送信
+              </CommonButton>
+            </div>
+
+            <div class="comment-history">
+              <h4>送信履歴</h4>
+              <p>送信機能は準備中です</p>
+            </div>
+          </Card>
+        </Column>
       </Row>
 
-      <component
-        v-if="isOpenEditModal"
-        :is="activeModalComponent"
-        v-bind="dynamicProps"
-        @saved="onEditorSaved"
-        @close="closeModal"
-      />
-
     </template>
+
+    <component
+      v-if="isOpenEditModal"
+      :is="activeModalComponent"
+      v-bind="dynamicProps"
+      @saved="onEditorSaved"
+      @close="closeModal"
+    />
   </div>
 </template>
 
@@ -721,7 +754,60 @@ export default {
   cursor: not-allowed;
 }
 
+.comment-form {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.comment-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-history {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.comment-textarea {
+  width: 100%;
+  height: 300px;
+  padding: 12px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: var(--button-primary);
+}
+
+.comment-textarea:disabled {
+  background: #f5f5f5;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.sticky-right-column {
+  position: sticky;
+  top: 16px;
+}
+
 @media (max-width: 900px) {
+  .sticky-right-column {
+    position: static;
+    top: auto;
+  }
+
   .side-nav-left {
     left: 8px;
   }
