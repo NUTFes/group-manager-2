@@ -265,8 +265,7 @@ export default {
           picture_path: downloadURL,
         };
 
-        const url = `/venue_maps?group_id=${this.group_id}`;
-        const response = await this.$axios.$post(url, data);
+        const response = await this.$axios.$post("/venue_maps", data);
         this.reload(response.data.group_id);
         this.closeAddModal();
         this.openSnackBar("模擬店平面図を登録しました");
