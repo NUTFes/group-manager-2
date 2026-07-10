@@ -269,7 +269,7 @@ export default {
         this.reload(response.data.group_id);
         this.closeAddModal();
         this.openSnackBar("模擬店平面図を登録しました");
-        this.files = null;
+        this.files = [{ name: "選択してください" }];
         this.isFile = false;
       } catch (error) {
         console.log(error);
