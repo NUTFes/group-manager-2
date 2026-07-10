@@ -9,7 +9,6 @@ class PlaceCategory < ApplicationRecord
   validate :parent_cannot_be_self_or_children
   validate :parent_id_must_be_nil_or_integer
 
-
   def self.hierarchy_for_index
     categories = order(:id).to_a
     categories_by_id = categories.index_by(&:id)
@@ -23,9 +22,9 @@ class PlaceCategory < ApplicationRecord
 
     build_descendant_ids = lambda do |category|
       descendant_ids_by_id[category.id] ||=
-      children_by_parent_id[category.id].to_a.flat_map do |child|
-        [child.id] + build_descendant_ids.call(child)
-      end
+        children_by_parent_id[category.id].to_a.flat_map do |child|
+          [child.id] + build_descendant_ids.call(child)
+        end
     end
 
     build_formatted_name = lambda do |category|
