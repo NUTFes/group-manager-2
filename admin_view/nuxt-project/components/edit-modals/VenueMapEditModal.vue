@@ -24,7 +24,7 @@
     <template v-slot:method>
       <CommonButton
         iconName="edit"
-        :disabled="isPush.disabled || !isFile"
+        :disabled="isPush.disabled || (!isFile && !getVenueMap().id)"
         :on_click="edit"
         >{{ buttonState }}</CommonButton
       >
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { convertImageToDataUrl, uploadImageToImgur } from "~/utils/imgur_upload";
 
 export default {
   props: {
@@ -105,105 +105,55 @@ export default {
         }
       }
     },
-    edit() {
-      if (!this.files || this.files.length === 0) return;
+    async edit() {
+      const venueMap = this.getVenueMap();
+      if ((!this.files || this.files.length === 0) && !venueMap.id) return;
+
       this.isPush.disabled = true;
       this.buttonState = "待機";
-      for (const file of this.files) {
-        const storageRef = ref(this.$storage, file.name);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        this.run(uploadTask);
-      }
-    },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.error(error);
-          this.isPush.disabled = false;
-          this.buttonState = "登録";
-          this.$emit(
-            "error",
-            error?.message || "ファイルのアップロードに失敗しました"
+
+      try {
+        const groupId =
+          venueMap.group_id || venueMap.group?.id || this.$route.params.id;
+        let pictureName = venueMap.picture_name || "";
+        let picturePath = venueMap.picture_path || "";
+
+        if (this.files && this.files.length > 0) {
+          const file = this.files[0];
+          this.state = "Uploading ...";
+          const dataUrl = await convertImageToDataUrl(file);
+          picturePath = await uploadImageToImgur(
+            dataUrl,
+            this.$config.imgurClientId
           );
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref)
-            .then((downloadURL) => {
-              const venueMap = this.getVenueMap();
-              const groupId =
-                venueMap.group_id ||
-                venueMap.group?.id ||
-                this.$route.params.id;
-              const data = {
-                group_id: groupId,
-                picture_name: uploadTask.snapshot.ref.name,
-                picture_path: downloadURL,
-              };
-
-              const handleAxiosError = (err) => {
-                console.error(err);
-                this.isPush.disabled = false;
-                this.buttonState = "登録";
-                this.$emit(
-                  "error",
-                  err?.response?.data?.message ||
-                    err?.message ||
-                    "保存に失敗しました"
-                );
-              };
-
-              if (this.venueMap?.venue_map || venueMap.id) {
-                const editUrl = `/venue_maps/${venueMap.id}`;
-                this.$axios
-                  .$put(editUrl, data)
-                  .then((response) => {
-                    this.$emit("saved", response.data.group_id);
-                    this.$emit("close");
-                    this.isPush.disabled = false;
-                    this.files = null;
-                  })
-                  .catch(handleAxiosError);
-              } else {
-                const postUrl = `/venue_maps?group_id=${groupId}`;
-                this.$axios
-                  .$post(postUrl, data)
-                  .then((response) => {
-                    this.$emit("saved", response.data.group_id);
-                    this.$emit("close");
-                    this.isPush.disabled = false;
-                    this.files = null;
-                  })
-                  .catch(handleAxiosError);
-              }
-            })
-            .catch((err) => {
-              console.error(err);
-              this.isPush.disabled = false;
-              this.buttonState = "登録";
-              this.$emit(
-                "error",
-                err?.message || "ダウンロードURLの取得に失敗しました"
-              );
-            });
+          pictureName = file.name;
         }
-      );
+
+        const data = {
+          group_id: groupId,
+          picture_name: pictureName,
+          picture_path: picturePath,
+        };
+
+        const response =
+          this.venueMap?.venue_map || venueMap.id
+            ? await this.$axios.$put(`/venue_maps/${venueMap.id}`, data)
+            : await this.$axios.$post(`/venue_maps?group_id=${groupId}`, data);
+
+        this.$emit("saved", response.data.group_id);
+        this.$emit("close");
+        this.files = null;
+      } catch (error) {
+        console.error(error);
+        this.$emit(
+          "error",
+          error?.response?.data?.message || error?.message || "保存に失敗しました"
+        );
+      } finally {
+        this.isPush.disabled = false;
+        this.buttonState = "登録";
+        this.state = "";
+      }
     },
   },
 };
