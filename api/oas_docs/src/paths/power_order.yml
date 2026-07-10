@@ -20,27 +20,6 @@ paths:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
       deprecated: false
-    post:
-      tags:
-      - power_order
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/PowerOrder"
   "/power_orders/group/{group_id}":
     get:
       tags:
@@ -70,61 +49,7 @@ paths:
         required: true
         schema:
           type: integer
-  "/power_orders/{id}":
-    get:
-      tags:
-      - power_order
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-        '404':
-          description: power_order description
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - power_order
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: power_order description
-        '404':
-          description: power_order description
-        '422':
-          description: power_order description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PowerOrder"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/PowerOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
+  "/power_orders/submit":
     put:
       tags:
       - power_order
@@ -133,29 +58,23 @@ paths:
       responses:
         '204':
           description: power_order description
-        '404':
-          description: power_order description
         '422':
           description: power_order description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '200':
+          description: power_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    delete:
+  "/power_orders/{id}":
+    get:
       tags:
       - power_order
-      summary: delete summary
-      description: delete description
+      summary: get summary
+      description: get description
       responses:
         '200':
           description: power_order description

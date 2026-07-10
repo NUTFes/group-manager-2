@@ -4,10 +4,18 @@
       v-bind:pageTitle="powerOrder.power_order.item"
       pageSubTitle="電力申請一覧"
     >
-      <CommonButton v-if="this.$role(this.roleID).power_orders.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).power_orders.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).power_orders.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).power_orders.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -181,7 +189,7 @@ export default {
     },
     async edit() {
       const url =
-        "/power_orders/" +
+        "/api/v1/power_orders/" +
         this.routeId +
         "?group_id=" +
         this.powerOrder.power_order.group_id +
@@ -204,7 +212,7 @@ export default {
       });
     },
     async destroy() {
-      const delUrl = "/power_orders/" + this.routeId;
+      const delUrl = "/api/v1/power_orders/" + this.routeId;
       await this.$axios.$delete(delUrl);
       this.$router.push("/power_orders");
     },

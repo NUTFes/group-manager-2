@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import {
   FireEquipmentFuel,
   FireEquipmentResponse,
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
+import {
+  HealthCenterSubmissionStatus,
+  useGetHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { NO_ID_STRING, YES_ID_STRING } from '@/utils/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -19,14 +24,19 @@ import {
 export const useFireEquipmentOrder = (
   groupId: number,
   fireEquipmentData?: FireEquipmentResponse,
-  handleEditCancel?: () => void
+  handleEditCancel?: () => void,
+  status?: HealthCenterSubmissionStatus
 ) => {
+  void status;
+
   const fireEquipmentTexts = useFireEquipmentTexts();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
+  const { mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
 
-  const { postFireEquipmentOrder, patchFireEquipmentOrder } =
-    useFireEquipmentMutations();
+  const { submitFireEquipmentOrder } = useFireEquipmentMutations();
 
   const {
     handleSubmit: handleSubmitUnregistered,
@@ -80,38 +90,27 @@ export const useFireEquipmentOrder = (
     if (formData.isRegister) {
       return;
     }
+    setSubmitError(null);
     try {
-      if (fireEquipmentData?.id !== undefined) {
-        // 既存データがある場合はPATCHで不使用に更新
-        await patchFireEquipmentOrder(fireEquipmentData.id, {
+      const result = await submitFireEquipmentOrder(
+        {
+          id: fireEquipmentData?.id,
           group_id: groupId,
-          name: '',
-          quantity: 0,
-          fuel: FireEquipmentFuel.GAS_BOTTLE,
-          usage: '',
-          is_takeaway: true,
-          remark: '',
-        });
-      } else {
-        // 新規登録
-        await postFireEquipmentOrder({
-          group_id: groupId,
-          name: '',
-          quantity: 0,
-          fuel: FireEquipmentFuel.GAS_BOTTLE,
-          usage: '',
-          is_takeaway: true,
-          remark: '',
-        });
-      }
+        },
+        false
+      );
+      if (!result.success) throw result.error;
+
       await mutateFireEquipmentOrder();
+      await mutateHealthCenterSubmissionStatus();
 
       toast.success(fireEquipmentTexts.messages.noApplicationSuccess);
       handleEditCancel?.();
     } catch (error) {
-      console.error('火気不使用登録エラー:', error);
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(fireEquipmentTexts.messages.submitFailed(message));
+      const submitMessage = fireEquipmentTexts.messages.submitFailed(message);
+      setSubmitError(submitMessage);
+      toast.error(submitMessage);
     }
   };
   const submitUnregisteredHandler =
@@ -136,6 +135,7 @@ export const useFireEquipmentOrder = (
 
   // 火気申請の登録・更新
   const onSubmitFireEquipment = async (formData: FireEquipmentFormValues) => {
+    setSubmitError(null);
     const payload = {
       group_id: groupId,
       name: formData.name,
@@ -147,21 +147,30 @@ export const useFireEquipmentOrder = (
     };
 
     try {
-      if (isEditing && fireEquipmentData?.id !== undefined) {
-        await patchFireEquipmentOrder(fireEquipmentData.id, payload);
-        toast.success(fireEquipmentTexts.messages.updateSuccess);
-      } else {
-        await postFireEquipmentOrder(payload);
-        toast.success(fireEquipmentTexts.messages.registerSuccess);
-      }
+      const result = await submitFireEquipmentOrder(
+        {
+          id: fireEquipmentData?.id,
+          ...payload,
+        },
+        true
+      );
+      if (!result.success) throw result.error;
+
       await mutateFireEquipmentOrder();
+      await mutateHealthCenterSubmissionStatus();
 
       // 成功後に編集モードを終了
       handleEditCancel?.();
+      toast.success(
+        isEditing
+          ? fireEquipmentTexts.messages.updateSuccess
+          : fireEquipmentTexts.messages.registerSuccess
+      );
     } catch (error) {
-      console.error('火気申請送信エラー:', error);
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(fireEquipmentTexts.messages.submitFailed(message));
+      const submitMessage = fireEquipmentTexts.messages.submitFailed(message);
+      setSubmitError(submitMessage);
+      toast.error(submitMessage);
     }
   };
 
@@ -179,6 +188,7 @@ export const useFireEquipmentOrder = (
     submitHandler,
     isEditing,
     validate,
+    submitError,
   };
 };
 
