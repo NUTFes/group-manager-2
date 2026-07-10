@@ -8,7 +8,7 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
   setup do
     Role.find_or_create_by!(id: 1, name: 'admin')
     @admin = create_user!(email: 'admin-comments-mail@example.com', role_id: 1)
-    
+
     group_category = GroupCategory.find_or_create_by!(name: '食品販売')
     fes_year = FesYear.find_or_create_by!(year_num: 2026)
     @group = Group.create!(
@@ -45,10 +45,10 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
     assert_response :ok
     data = response.parsed_body['data']
     assert_equal 2, data.size
-    
+
     # 降順で返されるので、health_centerが先に作成されていれば順序が変わる可能性があるが
     # 両方取得できていることを確認
-    sources = data.map { |c| c['source'] }
+    sources = data.pluck('source')
     assert_includes sources, 'order_status'
     assert_includes sources, 'health_center'
   end

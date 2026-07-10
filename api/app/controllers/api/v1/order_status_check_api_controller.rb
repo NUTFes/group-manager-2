@@ -69,4 +69,3 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     end
   end
 end
-
