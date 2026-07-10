@@ -1,0 +1,22 @@
+---
+paths:
+  "/api/v1/group_mail_comments":
+    get:
+      tags:
+      - api/v1/group_mail_comment
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/group_mail_comment description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+        '422':
+          description: api/v1/group_mail_comment description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+      deprecated: false
