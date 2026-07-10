@@ -208,7 +208,12 @@ export default {
       console.log(this.files[0])
     },
     async upload() {
-      if (!this.files || this.files.length === 0) return;
+      if (
+        !this.files ||
+        this.files.length === 0 ||
+        !(this.files[0] instanceof File)
+      )
+        return;
       this.buttonState = "待機";
       this.isPush.disabled = true;
       this.state = "Uploading ...";
