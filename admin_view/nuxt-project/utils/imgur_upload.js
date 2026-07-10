@@ -46,6 +46,6 @@ export const uploadImageToImgur = async (
     return data.data.link;
   } catch (error) {
     console.error("Imgur upload error:", error);
-    throw new Error(options.uploadFailedMessage || "Failed to upload image");
+    throw error;
   }
 };
