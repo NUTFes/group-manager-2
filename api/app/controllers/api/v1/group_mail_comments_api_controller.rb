@@ -2,7 +2,8 @@
 
 class Api::V1::GroupMailCommentsApiController < ApplicationController
   def index
-    group = Group.find_by(id: params[:group_id])
+    group = Group.includes(:comments, health_center_submission_statuses: :comments)
+                 .find_by(id: params[:group_id])
     return render json: fmt(not_found, [], 'group not found'), status: :not_found if group.nil?
 
     # 申請状況から送られたコメント (commentable: Group)
