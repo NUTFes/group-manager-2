@@ -16,6 +16,8 @@ class Group < ApplicationRecord
     :venue_map,
     :announcement,
     :cooking_process_order,
+    :fire_equipment_orders,
+    :health_center_submission_statuses,
     { food_products: :purchase_lists }
   ].freeze
 

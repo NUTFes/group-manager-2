@@ -35,6 +35,26 @@
         </button>
       </div>
 
+      <div class="status-guide-container">
+        <div class="status-icon-guide">
+          <span class="status-icon-guide__title">【ステータス凡例】</span>
+          <span class="status-icon-guide__item">
+            <span class="material-icons status-icon-small">check</span>: 承認済み
+          </span>
+          <span class="status-icon-guide__item">
+            <span class="status-guide-cell bg-unapproved"><span class="material-icons status-icon-small">notification_important</span></span>: 未確認
+          </span>
+          <span class="status-icon-guide__item">
+            <span class="status-guide-cell bg-resubmission"><span class="material-icons status-icon-small">autorenew</span></span>: 再提出待ち
+          </span>
+          <span class="status-icon-guide__item">
+            <span class="status-guide-cell unregistered"><span class="material-icons status-icon-small">close</span></span>: 未申請
+          </span>
+          <span class="status-icon-guide__item">
+            <span>ー</span>: 対象外
+          </span>
+        </div>
+      </div>
       <Row
         wrap="nowrap"
         align="start"
@@ -121,11 +141,11 @@
                   >
                     <th>副代表</th>
                     <td>
-                      <template v-if="group.sub_rep">
-                        {{ group.sub_rep.name }}
-                      </template>
-                      <template v-else-if="isUnregistered('sub_rep')">
+                      <template v-if="isUnregistered('sub_rep')">
                         申請しない
+                      </template>
+                      <template v-else-if="group.sub_rep">
+                        {{ group.sub_rep.name }}
                       </template>
                       <template v-else>未登録</template>
                     </td>
@@ -140,7 +160,8 @@
               <div class="section-header">
                 <h2>会場申請</h2>
               </div>
-              <VerticalTable v-if="group.place_order">
+              <p v-if="isUnregistered('place_order')">申請しない</p>
+              <VerticalTable v-else-if="group.place_order">
                 <tbody
                   class="selectable-row"
                   @click="openModal('place_order', group.place_order)"
@@ -163,7 +184,7 @@
                   </tr>
                 </tbody>
               </VerticalTable>
-              <p v-else-if="isUnregistered('place_order')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -174,6 +195,7 @@
                 <h2>物品申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('rental_item_order')"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('equipment'))
                   "
@@ -209,8 +231,9 @@
                   </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('rental_item_order')">申請しない</p>
               <VerticalTable
-                v-if="group.rental_orders && group.rental_orders.length > 0"
+                v-else-if="group.rental_orders && group.rental_orders.length > 0"
               >
                 <tr>
                   <th>物品名</th>
@@ -232,7 +255,7 @@
                   </td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('rental_item_order')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -242,8 +265,9 @@
               <div class="section-header">
                 <h2>ステージ申請</h2>
               </div>
+              <p v-if="isUnregistered('stage_order')">申請しない</p>
               <VerticalTable
-                v-if="group.stage_orders && group.stage_orders.length > 0"
+                v-else-if="group.stage_orders && group.stage_orders.length > 0"
               >
                 <tr>
                   <th>天気</th>
@@ -280,7 +304,7 @@
                   </td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('stage_order')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -290,7 +314,8 @@
               <div class="section-header">
                 <h2>ステージオプション</h2>
               </div>
-              <VerticalTable v-if="group.stage_common_option">
+              <p v-if="isUnregistered('stage_common_option')">申請しない</p>
+              <VerticalTable v-else-if="group.stage_common_option">
                 <tbody
                   class="selectable-row"
                   @click="
@@ -323,9 +348,7 @@
                   </tr>
                 </tbody>
               </VerticalTable>
-              <p v-else-if="isUnregistered('stage_common_option')">
-                申請しない
-              </p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -336,6 +359,7 @@
                 <h2>電力申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('power_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('power_order')
@@ -376,8 +400,9 @@
                   </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('power_order')">申請しない</p>
               <VerticalTable
-                v-if="group.power_orders && group.power_orders.length > 0"
+                v-else-if="group.power_orders && group.power_orders.length > 0"
               >
                 <tr>
                   <th>製品名</th>
@@ -409,7 +434,7 @@
                   </td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('power_order')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -419,7 +444,8 @@
               <div class="section-header">
                 <h2>PR情報</h2>
               </div>
-              <VerticalTable v-if="group.public_relation">
+              <p v-if="isUnregistered('public_relation')">申請しない</p>
+              <VerticalTable v-else-if="group.public_relation">
                 <tbody
                   class="selectable-row"
                   @click="openModal('public_relation', group.public_relation)"
@@ -451,7 +477,7 @@
                   </tr>
                 </tbody>
               </VerticalTable>
-              <p v-else-if="isUnregistered('public_relation')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -462,6 +488,7 @@
                 <h2>従業員申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('employee')"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('employee'))
                   "
@@ -497,8 +524,9 @@
                   </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('employee')">申請しない</p>
               <VerticalTable
-                v-if="group.employees && group.employees.length > 0"
+                v-else-if="group.employees && group.employees.length > 0"
               >
                 <tr>
                   <th>氏名</th>
@@ -516,7 +544,7 @@
                   <td>{{ empWrapper.employee.stool_test || "未登録" }}</td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('employee')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -529,6 +557,7 @@
                   <CommonButton iconName="edit" :on_click="() => openModal('venue_map', { ...group.venue_map, group_name: group.group.name })">編集</CommonButton>
                   <div
                     class="status-select-with-icon"
+                  v-if="!isUnregistered('venue_map')"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('venue_map'))
                   "
@@ -565,8 +594,9 @@
                 </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('venue_map')">申請しない</p>
               <div
-                v-if="group.venue_map"
+                v-else-if="group.venue_map"
                 class="selectable-row"
                 @click="openPreviewModal"
                 style="width: 100%"
@@ -579,7 +609,7 @@
                   style="width: 100%; height: auto; display: block"
                 />
               </div>
-              <p v-else-if="isUnregistered('venue_map')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -590,6 +620,7 @@
                 <h2>販売品申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('food_product')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('food_product')
@@ -630,8 +661,9 @@
                   </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('food_product')">申請しない</p>
               <VerticalTable
-                v-if="group.food_products && group.food_products.length > 0"
+                v-else-if="group.food_products && group.food_products.length > 0"
               >
                 <tr>
                   <th>販売品名</th>
@@ -651,7 +683,7 @@
                   <td>{{ fpWrapper.food_product.second_day_num }}個</td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('food_product')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -662,6 +694,7 @@
                 <h2>購入品申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('purchase_list')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('purchase_list')
@@ -702,7 +735,8 @@
                   </div>
                 </div>
               </div>
-              <div v-if="group.food_products && group.food_products.length > 0">
+              <p v-if="isUnregistered('purchase_list')">申請しない</p>
+              <div v-else-if="group.food_products && group.food_products.length > 0">
                 <div
                   v-for="(fpWrapper, index) in group.food_products"
                   :key="index"
@@ -762,7 +796,7 @@
                   </p>
                 </div>
               </div>
-              <p v-else-if="isUnregistered('purchase_list')">申請しない</p>
+
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -773,6 +807,7 @@
                 <h2>調理工程申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('cooking_process_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('cooking_process_order')
@@ -817,7 +852,8 @@
                   </div>
                 </div>
               </div>
-              <div v-if="group.food_products && group.food_products.length > 0">
+              <p v-if="isUnregistered('cooking_process_order')">申請しない</p>
+              <div v-else-if="group.food_products && group.food_products.length > 0">
                 <div
                   v-for="(fpWrapper, index) in group.food_products"
                   :key="index"
@@ -884,9 +920,6 @@
                   <p v-else>調理工程未登録</p>
                 </div>
               </div>
-              <p v-else-if="isUnregistered('cooking_process_order')">
-                申請しない
-              </p>
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -897,6 +930,7 @@
                 <h2>火気使用申請</h2>
                 <div
                   class="status-select-with-icon"
+                  v-if="!isUnregistered('fire_equipment_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('fire_equipment_order')
@@ -941,8 +975,9 @@
                   </div>
                 </div>
               </div>
+              <p v-if="isUnregistered('fire_equipment_order')">申請しない</p>
               <VerticalTable
-                v-if="
+                v-else-if="
                   group.fire_equipment_orders &&
                   group.fire_equipment_orders.length > 0
                 "
@@ -973,9 +1008,6 @@
                   <td>{{ orderWrapper.fire_equipment_order.remark }}</td>
                 </tr>
               </VerticalTable>
-              <p v-else-if="isUnregistered('fire_equipment_order')">
-                申請しない
-              </p>
               <p v-else>未登録</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
@@ -1713,4 +1745,5 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
 </style>
