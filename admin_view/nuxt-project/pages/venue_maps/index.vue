@@ -115,7 +115,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { convertImageToDataUrl, uploadImageToImgur } from "~/utils/imgur_upload";
 export default {
   watchQuery: ["page"],
   data() {
