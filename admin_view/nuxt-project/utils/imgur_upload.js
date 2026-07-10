@@ -29,6 +29,10 @@ export const uploadImageToImgur = async (
   const base64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
 
   try {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  try {
     const response = await fetch("https://api.imgur.com/3/image", {
       method: "POST",
       headers: {
@@ -36,7 +40,9 @@ export const uploadImageToImgur = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ image: base64 }),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
