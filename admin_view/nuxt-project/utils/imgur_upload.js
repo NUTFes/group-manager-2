@@ -28,7 +28,6 @@ export const uploadImageToImgur = async (
 
   const base64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
 
-  try {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
