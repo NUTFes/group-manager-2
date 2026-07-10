@@ -525,8 +525,10 @@
             <div v-if="shouldShow('venue_map')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>模擬店平面図</h2>
-                <div
-                  class="status-select-with-icon"
+                <div class="section-actions">
+                  <CommonButton iconName="edit" :on_click="() => openModal('venue_map', { ...group.venue_map, group_name: group.group.name })">編集</CommonButton>
+                  <div
+                    class="status-select-with-icon"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('venue_map'))
                   "
@@ -561,16 +563,12 @@
                     >
                   </div>
                 </div>
+                </div>
               </div>
               <div
                 v-if="group.venue_map"
                 class="selectable-row"
-                @click="
-                  openModal('venue_map', {
-                    ...group.venue_map,
-                    group_name: group.group.name,
-                  })
-                "
+                @click="openPreviewModal"
                 style="width: 100%"
               >
                 <img
@@ -1029,6 +1027,38 @@
       @saved="onEditorSaved"
       @close="closeModal"
     />
+    <!-- プレビューモーダル (平面図 & 物品申請) -->
+    <transition name="fade" appear>
+      <div v-if="isPreviewModalOpen" class="preview-modal" @click.self="closePreviewModal">
+        <div class="preview-modal__container">
+          <div class="preview-modal__box">
+            <div class="preview-modal__header">
+              <h2>模擬店平面図 & 物品申請</h2>
+              <CommonButton iconName="close" :on_click="closePreviewModal">閉じる</CommonButton>
+            </div>
+            <div class="preview-modal__content">
+              <div class="preview-modal__left">
+                <img v-if="group.venue_map && group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="preview-modal__image" />
+                <p v-else>画像がありません</p>
+              </div>
+              <div class="preview-modal__right">
+                <VerticalTable v-if="group.rental_orders && group.rental_orders.length > 0">
+                  <tr>
+                    <th>貸出物品</th>
+                    <th>数量</th>
+                  </tr>
+                  <tr v-for="(orderWrapper, index) in group.rental_orders" :key="index">
+                    <td>{{ orderWrapper.rental_item.name }}</td>
+                    <td>{{ orderWrapper.rental_item.num !== undefined ? orderWrapper.rental_item.num : "不明" }}</td>
+                  </tr>
+                </VerticalTable>
+                <p v-else>物品申請はありません</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -1079,6 +1109,7 @@ export default {
       selectedItem: null,
       isOpenEditModal: false,
       submissions: [],
+      isPreviewModalOpen: false,
       statusOptions: [
         { value: "unapproved", label: "未確認" },
         { value: "waiting_resubmission", label: "再提出待ち" },
@@ -1239,6 +1270,12 @@ export default {
       this.isOpenEditModal = false;
       this.activeEditType = null;
       this.selectedItem = null;
+    },
+    openPreviewModal() {
+      this.isPreviewModalOpen = true;
+    },
+    closePreviewModal() {
+      this.isPreviewModalOpen = false;
     },
     getSubmission(applicationType) {
       return this.submissions.find(
@@ -1597,5 +1634,83 @@ export default {
 .status-select-with-icon.status-select--approved .status-icon {
   background: transparent !important;
   color: #111827 !important;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* プレビューモーダル */
+.preview-modal {
+  top: 0;
+  left: 0;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-modal__container {
+  width: 95vw;
+  max-width: 1600px;
+  height: 95vh;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.preview-modal__box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.preview-modal__header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.preview-modal__header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.preview-modal__content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.preview-modal__left {
+  flex: 1;
+  padding: 16px;
+  overflow: hidden;
+  border-right: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-modal__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.preview-modal__right {
+  width: 400px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
