@@ -263,7 +263,6 @@ export default {
           //put
           const editUrl = `/public_relations/${this.publicRelation.public_relation_id}`;
           const response = await this.$axios.$put(editUrl, data);
-          console.log(response);
           this.reload(response.data.group_id);
           this.closeEditModal();
           this.openSnackBar("参加団体PR申請を編集しました");
