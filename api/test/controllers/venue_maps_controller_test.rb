@@ -56,14 +56,16 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update venue_map with new imgur_deletehash' do
-    patch venue_map_url(@venue_map),
-          params: {
-            group_id: @venue_map.group_id,
-            picture_name: 'updated_venue_map.png',
-            picture_path: 'https://i.imgur.com/updated-venue-map.png',
-            imgur_deletehash: 'updated-venue-map-deletehash'
-          },
-          as: :json
+    ImgurImageDeleter.stub(:call, ->(_deletehash) { true }) do
+      patch venue_map_url(@venue_map),
+            params: {
+              group_id: @venue_map.group_id,
+              picture_name: 'updated_venue_map.png',
+              picture_path: 'https://i.imgur.com/updated-venue-map.png',
+              imgur_deletehash: 'updated-venue-map-deletehash'
+            },
+            as: :json
+    end
 
     assert_response :success
     assert_equal 201, response.parsed_body['status']['code']
