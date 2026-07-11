@@ -140,11 +140,12 @@ const GroupCategoryContent = ({
           groupId={groupId}
           status={cookingProcessOrderSubmission?.status}
         />
-        <FireEquipment
-          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
-          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
-          groupId={groupId}
-        />
+          <FireEquipment
+              canAdd={userPageSettings?.addFireEquipmentOrder}
+              canEdit={userPageSettings?.isEditFireEquipmentOrder}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+              groupId={groupId}
+          />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.GOODS_SALES) {
@@ -182,11 +183,12 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
-        <FireEquipment
-          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
-          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
-          groupId={groupId}
-        />
+          <FireEquipment
+              canAdd={userPageSettings?.addFireEquipmentOrder}
+              canEdit={userPageSettings?.isEditFireEquipmentOrder}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+              groupId={groupId}
+          />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.STAGE) {
@@ -251,11 +253,12 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
         />
-        <FireEquipment
-          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
-          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
-          groupId={groupId}
-        />
+          <FireEquipment
+              canAdd={userPageSettings?.addFireEquipmentOrder}
+              canEdit={userPageSettings?.isEditFireEquipmentOrder}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+              groupId={groupId}
+          />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.EXHIBITION) {
@@ -288,11 +291,12 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
         />
-        <FireEquipment
-          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
-          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
-          groupId={groupId}
-        />
+          <FireEquipment
+              canAdd={userPageSettings?.addFireEquipmentOrder}
+              canEdit={userPageSettings?.isEditFireEquipmentOrder}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+              groupId={groupId}
+          />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {

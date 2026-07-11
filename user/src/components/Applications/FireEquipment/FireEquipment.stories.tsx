@@ -20,7 +20,8 @@ type Story = StoryObj<typeof FireEquipment>;
 export const Default: Story = {
   args: {
     groupId: 0,
-    isDeadline: false,
+    canAdd: true,
+    canEdit: true,
     isRegistered: false,
   },
 };
