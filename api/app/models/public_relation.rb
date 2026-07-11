@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 class PublicRelation < ApplicationRecord
-  belongs_to :group
+  include HidesImgurDeletehash
 
-  def as_json(options = {})
-    options = (options || {}).dup
-    options[:except] = Array(options[:except]) + [:imgur_deletehash]
-    super
-  end
+  belongs_to :group
 
   def to_info_h
     {

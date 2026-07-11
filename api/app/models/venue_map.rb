@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
 class VenueMap < ApplicationRecord
+  include HidesImgurDeletehash
+
   belongs_to :group
 
   after_create :ensure_health_center_submission_status
-
-  def as_json(options = {})
-    options = (options || {}).dup
-    options[:except] = Array(options[:except]) + [:imgur_deletehash]
-    super
-  end
 
   def to_info_h
     {
