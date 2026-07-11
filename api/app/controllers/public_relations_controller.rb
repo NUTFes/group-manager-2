@@ -19,12 +19,21 @@ class PublicRelationsController < ApplicationController
   end
 
   def update
-    @public_relation.update(public_relation_params)
+    old_picture_path = @public_relation.picture_path
+    old_imgur_deletehash = @public_relation.imgur_deletehash
+
+    updated = @public_relation.update(public_relation_params)
+    delete_replaced_imgur_image(old_picture_path, old_imgur_deletehash, @public_relation.picture_path) if updated
+
     render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy
+    imgur_deletehash = @public_relation.imgur_deletehash
+
     @public_relation.destroy
+    ImgurImageDeleter.call(imgur_deletehash) if @public_relation.destroyed?
+
     render json: fmt(ok, [], "Deleted public_relation = #{params[:id]}")
   end
 
@@ -63,5 +72,11 @@ class PublicRelationsController < ApplicationController
       :blurb,
       :is_announcement_requested
     )
+  end
+
+  def delete_replaced_imgur_image(old_picture_path, old_imgur_deletehash, new_picture_path)
+    return if old_picture_path == new_picture_path
+
+    ImgurImageDeleter.call(old_imgur_deletehash)
   end
 end

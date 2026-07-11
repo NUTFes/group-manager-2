@@ -26,14 +26,23 @@ class VenueMapsController < ApplicationController
   # PATCH/PUT /venue_maps/1
   # PATCH/PUT /venue_maps/1.json
   def update
-    @venue_map.update(venue_map_params)
+    old_picture_path = @venue_map.picture_path
+    old_imgur_deletehash = @venue_map.imgur_deletehash
+
+    updated = @venue_map.update(venue_map_params)
+    delete_replaced_imgur_image(old_picture_path, old_imgur_deletehash, @venue_map.picture_path) if updated
+
     render json: fmt(created, @venue_map, "Updated venue_map id = #{params[:id]}")
   end
 
   # DELETE /venue_maps/1
   # DELETE /venue_maps/1.json
   def destroy
+    imgur_deletehash = @venue_map.imgur_deletehash
+
     @venue_map.destroy
+    ImgurImageDeleter.call(imgur_deletehash) if @venue_map.destroyed?
+
     render json: fmt(ok, [], "Deleted venue_map = #{params[:id]}")
   end
 
@@ -61,5 +70,11 @@ class VenueMapsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def venue_map_params
     params.permit(:group_id, :picture_name, :picture_path, :imgur_deletehash)
+  end
+
+  def delete_replaced_imgur_image(old_picture_path, old_imgur_deletehash, new_picture_path)
+    return if old_picture_path == new_picture_path
+
+    ImgurImageDeleter.call(old_imgur_deletehash)
   end
 end
