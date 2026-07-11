@@ -276,7 +276,7 @@ export default {
         }
         this.files = null;
       } catch (error) {
-        console.log(error);
+        this.openSnackBar("参加団体PR申請の保存に失敗しました");
       } finally {
         this.buttonState = "登録";
         this.isPush.disabled = false;
