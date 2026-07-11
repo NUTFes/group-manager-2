@@ -41,13 +41,13 @@ export const useFireEquipmentHooks = (groupId: number) => {
 
   const { deleteFireEquipmentOrder } = useFireEquipmentMutations();
   const { registerUnregisteredGroup, deleteUnregisteredGroup } =
-      useMutateUnregisteredGroup(ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
+    useMutateUnregisteredGroup(ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
   const isLoading = isOrdersLoading || isUnRegisteredLoading;
   const hasExisting = fireEquipmentOrders.length > 0;
 
   const updateState = (newState: Partial<FireEquipmentState>) =>
-      setState((prev) => ({ ...prev, ...newState }));
+    setState((prev) => ({ ...prev, ...newState }));
 
   const getRadioValue = (option: FireEquipmentApplyOption): string => {
     if (option === 'yes') return '1';
@@ -73,8 +73,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
   ]);
 
   const handleRadioChange = (value: string) => {
-    const option =
-        value === '1' ? 'yes' : value === '2' ? 'no' : 'undecided';
+    const option = value === '1' ? 'yes' : value === '2' ? 'no' : 'undecided';
     if (option === 'yes') {
       updateState({ applyFireEquipment: 'yes', isEditing: true });
     } else if (option === 'no') {
@@ -92,15 +91,18 @@ export const useFireEquipmentHooks = (groupId: number) => {
     try {
       if (hasExisting) {
         await Promise.allSettled(
-            fireEquipmentOrders.map((o) => deleteFireEquipmentOrder(o.id))
+          fireEquipmentOrders.map((o) => deleteFireEquipmentOrder(o.id))
         );
       }
       const result = await registerUnregisteredGroup(groupId);
       if (result.success) {
         updateState({ applyFireEquipment: 'no' });
-        await Promise.all([mutateFireEquipmentOrders(), mutateUnregisteredGroup()]);
+        await Promise.all([
+          mutateFireEquipmentOrders(),
+          mutateUnregisteredGroup(),
+        ]);
         toast.success(
-            t('applications.fireEquipment.messages.noApplicationSuccess')
+          t('applications.fireEquipment.messages.noApplicationSuccess')
         );
       } else {
         await mutateFireEquipmentOrders();
