@@ -91,14 +91,20 @@ export const useFireEquipmentMutations = () => {
   const { post, patch, remove } = useApiMutations();
 
   const postFireEquipmentOrder = (
-      data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
+    data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
   ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
 
-  const patchFireEquipmentOrder = (id: number, data: Partial<FireEquipmentResponse>) =>
-      patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
+  const patchFireEquipmentOrder = (
+    id: number,
+    data: Partial<FireEquipmentResponse>
+  ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
 
   const deleteFireEquipmentOrder = (id: number) =>
-      remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
+    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 
-  return { postFireEquipmentOrder, patchFireEquipmentOrder, deleteFireEquipmentOrder };
+  return {
+    postFireEquipmentOrder,
+    patchFireEquipmentOrder,
+    deleteFireEquipmentOrder,
+  };
 };
