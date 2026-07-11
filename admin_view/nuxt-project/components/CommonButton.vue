@@ -1,5 +1,5 @@
 <template>
-  <button class="common-button" @click="on_click" :disabled='disabled'>
+  <button class="common-button" @click="on_click" :disabled="disabled">
     <nuxt-link v-if="to !== ''" :to="to">
       <span class="material-icons">{{ iconName }}</span>
       <slot></slot>
