@@ -60,7 +60,6 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
-  SUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/submit',
 };
 
 export const useGetFireEquipmentOrdersByGroupId = (
