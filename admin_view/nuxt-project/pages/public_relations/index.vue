@@ -220,14 +220,14 @@ export default {
 
       try {
         for (const file of this.files) {
-          const downloadURL = await uploadImageToImgur(
+          const uploadedImage = await uploadImageToImgur(
             file,
             this.$config.imgurClientId
           );
           const data = {
             group_id: this.appGroup,
             picture_name: file.name,
-            picture_path: downloadURL,
+            picture_path: uploadedImage.link,
             blurb: this.blurb,
           };
 

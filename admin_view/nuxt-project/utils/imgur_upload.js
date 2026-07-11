@@ -48,7 +48,10 @@ export const uploadImageToImgur = async (
     }
 
     const data = await response.json();
-    return data.data.link;
+    return {
+      link: data.data.link,
+      deletehash: data.data.deletehash,
+    };
   } catch (error) {
     console.error("Imgur upload error:", error);
     throw error;

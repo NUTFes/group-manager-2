@@ -254,14 +254,14 @@ export default {
       this.state = "Uploading ...";
 
       try {
-        const downloadURL = await uploadImageToImgur(
+        const uploadedImage = await uploadImageToImgur(
           file,
           this.$config.imgurClientId
         );
         const data = {
           group_id: this.group_id,
           picture_name: file.name,
-          picture_path: downloadURL,
+          picture_path: uploadedImage.link,
         };
 
         const response = await this.$axios.$post("/venue_maps", data);

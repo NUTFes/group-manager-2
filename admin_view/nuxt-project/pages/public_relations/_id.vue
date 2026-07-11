@@ -239,10 +239,11 @@ export default {
 
         if (this.files && this.files.length > 0) {
           const file = this.files[0];
-          picturePath = await uploadImageToImgur(
+          const uploadedImage = await uploadImageToImgur(
             file,
             this.$config.imgurClientId
           );
+          picturePath = uploadedImage.link;
           pictureName = file.name;
         }
 
