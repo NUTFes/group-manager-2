@@ -224,6 +224,11 @@ export default {
           icon: "assignment_return", 
           click: "/assign_items" 
         },
+        {
+          title: "物品貸出場所調整",
+          icon: "assignment_ind",
+          click: "/rental_item_location"
+        },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         {
