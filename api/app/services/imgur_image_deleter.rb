@@ -55,6 +55,6 @@ class ImgurImageDeleter
   end
 
   def imgur_client_id
-    ENV['IMGUR_CLIENT_ID']
+    ENV.fetch('IMGUR_CLIENT_ID', nil)
   end
 end

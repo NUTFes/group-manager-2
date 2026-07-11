@@ -84,7 +84,10 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
     )
     deletehashes = []
 
-    ImgurImageDeleter.stub(:call, ->(deletehash) { deletehashes << deletehash; true }) do
+    ImgurImageDeleter.stub(:call, lambda { |deletehash|
+      deletehashes << deletehash
+      true
+    }) do
       patch public_relation_url(@public_relation),
             params: {
               group_id: @public_relation.group_id,
@@ -106,7 +109,10 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
     deletehashes = []
 
     assert_difference('PublicRelation.count', -1) do
-      ImgurImageDeleter.stub(:call, ->(deletehash) { deletehashes << deletehash; true }) do
+      ImgurImageDeleter.stub(:call, lambda { |deletehash|
+        deletehashes << deletehash
+        true
+      }) do
         delete public_relation_url(@public_relation), as: :json
       end
     end

@@ -8,7 +8,7 @@ class VenueMap < ApplicationRecord
   def as_json(options = {})
     options = (options || {}).dup
     options[:except] = Array(options[:except]) + [:imgur_deletehash]
-    super(options)
+    super
   end
 
   def to_info_h

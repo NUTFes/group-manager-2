@@ -79,7 +79,10 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
     )
     deletehashes = []
 
-    ImgurImageDeleter.stub(:call, ->(deletehash) { deletehashes << deletehash; true }) do
+    ImgurImageDeleter.stub(:call, lambda { |deletehash|
+      deletehashes << deletehash
+      true
+    }) do
       patch venue_map_url(@venue_map),
             params: {
               group_id: @venue_map.group_id,
@@ -99,7 +102,10 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
     deletehashes = []
 
     assert_difference('VenueMap.count', -1) do
-      ImgurImageDeleter.stub(:call, ->(deletehash) { deletehashes << deletehash; true }) do
+      ImgurImageDeleter.stub(:call, lambda { |deletehash|
+        deletehashes << deletehash
+        true
+      }) do
         delete venue_map_url(@venue_map), as: :json
       end
     end
