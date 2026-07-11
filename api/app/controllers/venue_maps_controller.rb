@@ -60,6 +60,6 @@ class VenueMapsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def venue_map_params
-    params.permit(:group_id, :picture_name, :picture_path)
+    params.permit(:group_id, :picture_name, :picture_path, :imgur_deletehash)
   end
 end

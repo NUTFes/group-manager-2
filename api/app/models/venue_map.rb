@@ -5,6 +5,12 @@ class VenueMap < ApplicationRecord
 
   after_create :ensure_health_center_submission_status
 
+  def as_json(options = {})
+    options = (options || {}).dup
+    options[:except] = Array(options[:except]) + [:imgur_deletehash]
+    super(options)
+  end
+
   def to_info_h
     {
       id: id,

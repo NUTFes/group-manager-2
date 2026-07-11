@@ -3,6 +3,12 @@
 class PublicRelation < ApplicationRecord
   belongs_to :group
 
+  def as_json(options = {})
+    options = (options || {}).dup
+    options[:except] = Array(options[:except]) + [:imgur_deletehash]
+    super(options)
+  end
+
   def to_info_h
     {
       id: id,
