@@ -228,6 +228,7 @@ export default {
             group_id: this.appGroup,
             picture_name: file.name,
             picture_path: uploadedImage.link,
+            imgur_deletehash: uploadedImage.deletehash,
             blurb: this.blurb,
           };
 

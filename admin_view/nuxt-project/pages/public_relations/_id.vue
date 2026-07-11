@@ -236,6 +236,7 @@ export default {
       try {
         let pictureName = this.publicRelation.picture_name;
         let picturePath = this.publicRelation.picture_path;
+        let imgurDeletehash = null;
 
         if (this.files && this.files.length > 0) {
           const file = this.files[0];
@@ -244,6 +245,7 @@ export default {
             this.$config.imgurClientId
           );
           picturePath = uploadedImage.link;
+          imgurDeletehash = uploadedImage.deletehash;
           pictureName = file.name;
         }
 
@@ -253,6 +255,9 @@ export default {
           picture_path: picturePath,
           blurb: this.publicRelation.blurb,
         };
+        if (imgurDeletehash) {
+          data.imgur_deletehash = imgurDeletehash;
+        }
 
         if (this.publicRelation.public_relation_id) {
           //put
