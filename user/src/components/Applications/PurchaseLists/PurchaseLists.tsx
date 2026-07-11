@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
@@ -13,16 +14,24 @@ import {
 import { PurchaseItem } from './schema';
 
 export type PurchaseListsProps = {
-  isDeadline: boolean;
+  canAdd: boolean | undefined;
+  canEdit: boolean | undefined;
   isRegistered?: boolean | undefined;
   groupId: number;
 };
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
   groupId,
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered: initialIsRegistered,
 }) => {
+  const { canSubmit } = resolveApplicationAccess({
+    isRegistered: initialIsRegistered,
+    canAdd,
+    canEdit,
+  });
+  const isDeadline = !canSubmit;
   const purchaseListsViewTexts = usePurchaseListsViewTexts();
   const title = purchaseListsViewTexts.title;
 
@@ -155,6 +164,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          canAdd={canAdd}
         />
       </AccordionMenu>
     );

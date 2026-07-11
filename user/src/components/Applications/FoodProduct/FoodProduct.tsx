@@ -6,12 +6,14 @@ import {
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
 
 type FoodProductProps = {
   groupId: number;
-  isDeadline: boolean | undefined;
+  canAdd: boolean | undefined;
+  canEdit: boolean | undefined;
   isRegistered: boolean | undefined;
 };
 
@@ -19,6 +21,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
+  canAdd: boolean;
   isEditing: boolean | null;
   toEdit: () => void;
   foodProducts: RegisteredProduct[] | null;
@@ -36,6 +39,7 @@ const Content: FC<ContentProps> = ({
   isLoading,
   hasError,
   isDeadline,
+  canAdd,
   isEditing,
   toEdit,
   foodProducts,
@@ -117,6 +121,7 @@ const Content: FC<ContentProps> = ({
         addFoodProducts={addFoodProducts}
         removeFoodProduct={removeFoodProduct}
         setFoodProductsData={setFoodProductsData}
+        canAdd={canAdd}
       />
     );
   }
@@ -130,15 +135,23 @@ const Content: FC<ContentProps> = ({
       removeFoodProduct={removeFoodProduct}
       setFoodProductsData={setFoodProductsData}
       isViewMode={true}
+      canAdd={canAdd}
     />
   );
 };
 
 const FoodProduct: FC<FoodProductProps> = ({
   groupId,
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered,
 }) => {
+  const { canSubmit } = resolveApplicationAccess({
+    isRegistered,
+    canAdd,
+    canEdit,
+  });
+  const isDeadline = !canSubmit;
   const {
     formItem,
     isEditing,
@@ -155,7 +168,7 @@ const FoodProduct: FC<FoodProductProps> = ({
   return (
     <AccordionMenu
       title={foodProductViewTexts.title}
-      isEdit={!isDeadline}
+      isEdit={canSubmit}
       isExist={isRegistered}
       required
     >
@@ -163,6 +176,7 @@ const FoodProduct: FC<FoodProductProps> = ({
         isLoading={isLoading}
         hasError={hasError}
         isDeadline={isDeadline}
+        canAdd={!!canAdd}
         isEditing={isEditing}
         toEdit={toEdit}
         foodProducts={foodProducts}

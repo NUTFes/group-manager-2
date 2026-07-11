@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
 import { RADIO_OPTIONS } from './constants';
@@ -8,13 +9,20 @@ import { usePowerApplication } from './hooks/usePowerApplication';
 import { usePowerDisplay } from './hooks/usePowerDisplay';
 
 type PowerProps = {
-  isDeadline?: boolean;
+  canAdd?: boolean;
+  canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
 };
 
-const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
+const Power: FC<PowerProps> = ({ canAdd, canEdit, isRegistered, groupId }) => {
   const powerAccordionHooks = usePowerAccordionHooks();
+  const { canSubmit } = resolveApplicationAccess({
+    isRegistered,
+    canAdd,
+    canEdit,
+  });
+  const isDeadline = !canSubmit;
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
@@ -120,7 +128,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           devices={devices}
           onEdit={prepareFormForEditing}
           onDeleteDevice={handleDeleteDevice}
-          isDeadline={!isDeadline}
+          canEdit={!!canEdit}
         />
       );
       break;
@@ -139,6 +147,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           showForm={applyPower === 'yes'}
           onSubmit={handleFormSubmit}
+          canAdd={!!canAdd}
         />
       );
   }
@@ -146,7 +155,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title={powerAccordionHooks.powerAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={canSubmit}
       isExist={isRegistered}
       required={true}
     >

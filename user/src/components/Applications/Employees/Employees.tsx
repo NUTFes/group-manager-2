@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
@@ -9,7 +10,8 @@ import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
 import { useEmployeesApplicationHooks } from './hooks';
 
 type EmployeesProps = {
-  isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
+  canAdd?: boolean; // 新規追加可否
+  canEdit?: boolean; // 編集可否
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
   mutateCheckAllRegisteredGroups: () => void;
@@ -19,11 +21,18 @@ type EmployeesProps = {
  * 従業員申請のメインコンポーネント
  */
 export const Employees: FC<EmployeesProps> = ({
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered,
   groupId,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { canSubmit } = resolveApplicationAccess({
+    isRegistered,
+    canAdd,
+    canEdit,
+  });
+  const isDeadline = !canSubmit;
   const employeesApplicationHook = useEmployeesApplicationHooks(
     groupId,
     isDeadline,
@@ -32,13 +41,14 @@ export const Employees: FC<EmployeesProps> = ({
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
+      isEdit={canSubmit} // 申請可能な場合のみ編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
     >
       <Content
         employeesApplicationHook={employeesApplicationHook}
         isDeadline={isDeadline}
+        canAdd={!!canAdd}
       />
     </AccordionMenu>
   );
@@ -47,6 +57,7 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
+  canAdd: boolean; // 新規追加可否
 };
 /**
  * 従業員申請のコンテンツ部分
@@ -54,6 +65,7 @@ type ContentProps = {
 const Content: FC<ContentProps> = ({
   employeesApplicationHook,
   isDeadline,
+  canAdd,
 }) => {
   const { texts } = employeesApplicationHook;
 
@@ -166,16 +178,18 @@ const Content: FC<ContentProps> = ({
                 )
               )}
               <div className="flex justify-center gap-4">
-                <Button
-                  type="button"
-                  size="pc"
-                  color="main"
-                  icon="plus"
-                  variant
-                  onClick={employeesApplicationHook.form.appendEmpty}
-                >
-                  {texts.buttons.addEmployee}
-                </Button>
+                {canAdd && (
+                  <Button
+                    type="button"
+                    size="pc"
+                    color="main"
+                    icon="plus"
+                    variant
+                    onClick={employeesApplicationHook.form.appendEmpty}
+                  >
+                    {texts.buttons.addEmployee}
+                  </Button>
+                )}
                 <Button
                   size="pc"
                   color="main"

@@ -8,7 +8,7 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
   devices,
   onEdit,
   onDeleteDevice,
-  isDeadline,
+  canEdit,
 }) => {
   const { createSummaryItemsForDevice, powerSummaryViewTexts } =
     usePowerSummaryViewHooks();
@@ -19,14 +19,14 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
         <div key={`device-${index}`} className="mb-4">
           <FormList
             items={createSummaryItemsForDevice(device)}
-            onEdit={isDeadline ? undefined : onEdit}
-            isDelete={isDeadline}
+            onEdit={canEdit ? undefined : onEdit}
+            isDelete={canEdit}
             onDelete={device.id ? () => onDeleteDevice(device.id!) : undefined}
           />
         </div>
       ))}
 
-      {isDeadline && (
+      {canEdit && (
         <div className="flex w-full items-center justify-center gap-4">
           <Button
             size="pc"

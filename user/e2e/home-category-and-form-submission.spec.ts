@@ -605,6 +605,80 @@ test.describe('home application action availability', () => {
   });
 });
 
+// 複数項目申請（1団体が複数件保持できる申請）は、登録済みでも
+// add設定とedit設定を独立に判定できなければならない。
+// isEdit=true, add=false のとき、既存項目の編集は可能だが
+// 新規追加はできないことを回帰的に確認する。
+const multiItemAddButtonTexts: Record<string, string> = {
+  物品申請: '物品の追加',
+  電力申請: '物品の追加',
+  従業員申請: '従業員の追加',
+  販売品申請: '販売品の追加',
+  購入品申請: '購入品を追加',
+};
+
+test.describe('home multi-item application add vs edit gating', () => {
+  const multiItemRows = applicationsUsingAddAndEditSettings.filter(
+    (row) => row.title in multiItemAddButtonTexts
+  );
+
+  for (const row of multiItemRows) {
+    const addButtonText = multiItemAddButtonTexts[row.title];
+
+    test(`hides ${row.title} add-new-item control when add is closed even though edit is open and items already exist`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: true,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: false,
+          [row.editSettingKey]: true,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+      await editButton(page).first().click();
+
+      await expect(
+        page.getByRole('button', { name: addButtonText })
+      ).toHaveCount(0);
+    });
+
+    test(`shows ${row.title} add-new-item control when both add and edit settings are open`, async ({
+      page,
+    }) => {
+      await setupHomeApiMocks({
+        page,
+        groupCategoryId: row.groupCategoryId,
+        registrationStatus: {
+          ...registeredStatus,
+          [row.registrationStatusKey]: true,
+        },
+        userPageSettings: {
+          ...baseSettings,
+          [row.addSettingKey]: true,
+          [row.editSettingKey]: true,
+        },
+      });
+
+      await page.goto('/home');
+      await applicationButton(page, row.title).click();
+      await editButton(page).first().click();
+
+      await expect(
+        page.getByRole('button', { name: addButtonText }).first()
+      ).toBeVisible();
+    });
+  }
+});
+
 const routeMutation = async (
   page: Page,
   method: string,

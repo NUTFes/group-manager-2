@@ -35,6 +35,7 @@ export interface PowerFormViewProps {
   radioOptions: RadioOption[];
   showForm: boolean;
   onSubmit: (data: PowerApplicationFormData) => Promise<void>;
+  canAdd?: boolean;
 }
 
 export interface PowerFormProps {
@@ -72,5 +73,5 @@ export interface PowerSummaryViewProps {
   devices: Device[];
   onEdit: () => void;
   onDeleteDevice: (id: number) => void;
-  isDeadline: boolean;
+  canEdit: boolean;
 }

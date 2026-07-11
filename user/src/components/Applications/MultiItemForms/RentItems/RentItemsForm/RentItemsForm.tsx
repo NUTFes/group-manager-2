@@ -14,12 +14,14 @@ type RentItemsFormProps = {
   groupId: number;
   groupCategoryId?: number; // 団体カテゴリID
   isDeadline: boolean;
+  canAdd: boolean;
 };
 
 const RentItemsForm: FC<RentItemsFormProps> = ({
   groupId,
   groupCategoryId,
   isDeadline,
+  canAdd,
 }) => {
   const {
     form,
@@ -428,19 +430,21 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           )}
 
           <div className="mb-2 mt-4 flex justify-center gap-4">
-            <MultiItemFormButton
-              type="button"
-              size="pc"
-              color="add"
-              onClick={() => {
-                addItem();
-              }}
-            >
-              <div className="flex items-center">
-                <span className="mr-1 text-lg">+</span>{' '}
-                {rentItemsFormTexts.buttons.addItem}
-              </div>
-            </MultiItemFormButton>
+            {canAdd && (
+              <MultiItemFormButton
+                type="button"
+                size="pc"
+                color="add"
+                onClick={() => {
+                  addItem();
+                }}
+              >
+                <div className="flex items-center">
+                  <span className="mr-1 text-lg">+</span>{' '}
+                  {rentItemsFormTexts.buttons.addItem}
+                </div>
+              </MultiItemFormButton>
+            )}
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
               {hasExisting
                 ? rentItemsFormTexts.buttons.edit

@@ -87,7 +87,8 @@ const EmployeesWrapper: React.FC<EmployeesWrapperProps> = ({
 
       <Employees
         groupId={groupId}
-        isDeadline={isDeadline}
+        canAdd={!isDeadline}
+        canEdit={!isDeadline}
         isRegistered={isRegistered}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
       />

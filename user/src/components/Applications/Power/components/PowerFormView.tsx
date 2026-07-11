@@ -18,6 +18,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   radioOptions,
   showForm,
   onSubmit,
+  canAdd = false,
 }) => {
   const { handleSubmit } = formMethods;
   const { powerFormViewTexts } = usePowerFormViewHooks(radioOptions);
@@ -61,16 +62,18 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
             )}
             {/* 操作ボタン */}
             <div className="flex justify-center gap-4">
-              <Button
-                type="button"
-                size="pc"
-                color="main"
-                icon="plus"
-                variant
-                onClick={onAddDevice}
-              >
-                {powerFormViewTexts.actions.addDevice}
-              </Button>
+              {canAdd && (
+                <Button
+                  type="button"
+                  size="pc"
+                  color="main"
+                  icon="plus"
+                  variant
+                  onClick={onAddDevice}
+                >
+                  {powerFormViewTexts.actions.addDevice}
+                </Button>
+              )}
               <Button
                 type="submit"
                 size="pc"

@@ -31,6 +31,7 @@ type FoodProductFormProps = {
   removeFoodProduct?: (id: string) => Promise<void>;
   setFoodProductsData?: (products: ProductInput[]) => Promise<void>;
   isViewMode?: boolean;
+  canAdd?: boolean;
   mutateCheckAllRegisteredGroups?: KeyedMutator<
     ApiResponse<RegistrationStatus>
   >;
@@ -44,6 +45,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
   removeFoodProduct,
   setFoodProductsData,
   isViewMode = false,
+  canAdd = false,
   mutateCheckAllRegisteredGroups,
 }) => {
   const {
@@ -74,15 +76,17 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
       return (
         <div className="flex flex-col items-center gap-4">
           <p className="text-gray-500">{foodProductFormTexts.view.empty}</p>
-          <Button
-            type="button"
-            size="pc"
-            color="main"
-            onClick={toEdit}
-            icon="plus"
-          >
-            {foodProductFormTexts.view.addButton}
-          </Button>
+          {canAdd && (
+            <Button
+              type="button"
+              size="pc"
+              color="main"
+              onClick={toEdit}
+              icon="plus"
+            >
+              {foodProductFormTexts.view.addButton}
+            </Button>
+          )}
         </div>
       );
     }
@@ -258,18 +262,20 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
               </FormContainer>
             ))}
             <div className="mx-auto flex justify-center gap-4">
-              <div className="flex w-full justify-center">
-                <Button
-                  size="pc"
-                  color="main"
-                  variant
-                  type="button"
-                  onClick={addProduct}
-                  icon="plus"
-                >
-                  {foodProductFormTexts.buttons.add}
-                </Button>
-              </div>
+              {canAdd && (
+                <div className="flex w-full justify-center">
+                  <Button
+                    size="pc"
+                    color="main"
+                    variant
+                    type="button"
+                    onClick={addProduct}
+                    icon="plus"
+                  >
+                    {foodProductFormTexts.buttons.add}
+                  </Button>
+                </div>
+              )}
               <div className="flex w-full items-center justify-center">
                 <Button
                   size="pc"

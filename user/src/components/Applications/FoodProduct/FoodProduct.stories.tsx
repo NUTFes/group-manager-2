@@ -22,7 +22,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     groupId: 1,
-    isDeadline: false,
+    canAdd: true,
+    canEdit: true,
     isRegistered: false,
   },
 };

@@ -42,12 +42,18 @@ export default {
         defaultValue: { summary: '1' },
       },
     },
-    isDeadline: {
+    canAdd: {
       control: 'boolean',
-      description:
-        '申請期限が過ぎているかどうかのフラグ。trueの場合、編集や新規作成が制限されます。',
+      description: '新規追加が可能かどうかのフラグ。',
       table: {
-        defaultValue: { summary: 'false' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    canEdit: {
+      control: 'boolean',
+      description: '編集・削除が可能かどうかのフラグ。',
+      table: {
+        defaultValue: { summary: 'true' },
       },
     },
     isRegistered: {
@@ -72,7 +78,8 @@ type Story = StoryObj<typeof PurchaseLists>;
 export const NewApplication: Story = {
   args: {
     groupId: 100,
-    isDeadline: false,
+    canAdd: true,
+    canEdit: true,
     isRegistered: false,
   },
   decorators: [
@@ -91,7 +98,8 @@ export const NewApplication: Story = {
 export const WithExistingData: Story = {
   args: {
     groupId: 202,
-    isDeadline: false,
+    canAdd: true,
+    canEdit: true,
     isRegistered: true,
   },
   decorators: [
@@ -137,7 +145,8 @@ export const WithExistingData: Story = {
 export const AfterDeadlineWithData: Story = {
   args: {
     groupId: 203,
-    isDeadline: true,
+    canAdd: false,
+    canEdit: false,
     isRegistered: true,
   },
   decorators: [
@@ -171,7 +180,8 @@ export const AfterDeadlineWithData: Story = {
 export const AfterDeadlineNoData: Story = {
   args: {
     groupId: 204,
-    isDeadline: true,
+    canAdd: false,
+    canEdit: false,
     isRegistered: false,
   },
   decorators: [
@@ -190,7 +200,8 @@ export const AfterDeadlineNoData: Story = {
 export const ForOtherShopValidation: Story = {
   args: {
     groupId: 205,
-    isDeadline: false,
+    canAdd: true,
+    canEdit: true,
     isRegistered: false,
   },
   decorators: [

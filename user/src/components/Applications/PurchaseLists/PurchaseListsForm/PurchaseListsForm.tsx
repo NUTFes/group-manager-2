@@ -33,6 +33,7 @@ export type PurchaseListsFormProps = {
   foodProductOptions: FoodProductOption[];
   shopOptions: { id: number; name: string }[];
   onFoodProductChange?: (foodProductId: number, index: number) => void;
+  canAdd?: boolean;
 };
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
@@ -45,6 +46,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   foodProductOptions,
   shopOptions,
   onFoodProductChange,
+  canAdd = false,
 }) => {
   const purchaseListsFormTexts = usePurchaseListsFormTexts();
   // フォーム全体の値を監視
@@ -222,16 +224,18 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           );
         })}
         <div className="flex justify-center gap-3">
-          <Button
-            type="button"
-            size="pc"
-            color="main"
-            variant
-            icon="plus"
-            onClick={() => append(DEFAULT_PURCHASE_ITEM as PurchaseItem)}
-          >
-            {purchaseListsFormTexts.buttons.addItem}
-          </Button>
+          {canAdd && (
+            <Button
+              type="button"
+              size="pc"
+              color="main"
+              variant
+              icon="plus"
+              onClick={() => append(DEFAULT_PURCHASE_ITEM as PurchaseItem)}
+            >
+              {purchaseListsFormTexts.buttons.addItem}
+            </Button>
+          )}
           <Button size="pc" color="main" type="submit">
             {purchaseListsFormTexts.buttons.register}
           </Button>

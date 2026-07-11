@@ -2,32 +2,41 @@ import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 import { useRentItemsAccordionHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
+import { resolveApplicationAccess } from '@/components/Applications/accessControl';
 
 type RentItemsProps = {
-  isDeadline: boolean | undefined;
+  canAdd?: boolean;
+  canEdit?: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
   groupCategoryId?: number; // 追加：団体カテゴリID
 };
 
 const RentItems: FC<RentItemsProps> = ({
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered,
   groupId,
   groupCategoryId,
 }) => {
   const { rentItemsAccordionTexts } = useRentItemsAccordionHooks();
+  const { canSubmit } = resolveApplicationAccess({
+    isRegistered,
+    canAdd,
+    canEdit,
+  });
   return (
     <AccordionMenu
       title={rentItemsAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={canSubmit}
       isExist={isRegistered}
       required={true}
     >
       <RentItemsForm
         groupId={groupId}
         groupCategoryId={groupCategoryId}
-        isDeadline={!!isDeadline}
+        isDeadline={!canSubmit}
+        canAdd={!!canAdd}
       />
     </AccordionMenu>
   );
