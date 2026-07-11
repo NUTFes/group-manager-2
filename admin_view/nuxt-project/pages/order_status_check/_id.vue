@@ -1330,6 +1330,8 @@ export default {
     },
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
+      const previousStatus = submission ? submission.status : null;
+
       const payload = {
         group_id: this.group.group.id,
         application_type: applicationType,
@@ -1340,21 +1342,30 @@ export default {
         payload.health_center_submission_status_id = submission.id;
       }
 
-      const response = await this.$axios.$post(
-        HEALTH_CENTER_STATUS_UPDATE_ENDPOINT,
-        payload
-      );
+      try {
+        const response = await this.$axios.$post(
+          HEALTH_CENTER_STATUS_UPDATE_ENDPOINT,
+          payload
+        );
 
-      const savedSubmission = this.getSubmission(applicationType);
-      if (savedSubmission) {
-        savedSubmission.id = response.data.id;
-        savedSubmission.status = response.data.status;
-      } else {
-        this.submissions.push({
-          application_type: applicationType,
-          id: response.data.id,
-          status: response.data.status,
-        });
+        const savedSubmission = this.getSubmission(applicationType);
+        if (savedSubmission) {
+          savedSubmission.id = response.data.id;
+          savedSubmission.status = response.data.status;
+        } else {
+          this.submissions.push({
+            application_type: applicationType,
+            id: response.data.id,
+            status: response.data.status,
+          });
+        }
+      } catch (error) {
+        console.error("ステータスの更新に失敗しました", error);
+        alert("ステータスの更新に失敗しました。");
+        if (submission && previousStatus) {
+          submission.status = previousStatus;
+        }
+        await this.fetchData(true);
       }
     },
     openImage(url) {
