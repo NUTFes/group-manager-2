@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import type { Page, Request, Route } from '@playwright/test';
+import type { Locator, Page, Request, Route } from '@playwright/test';
 import {
   GROUP_CATEGORY,
   apiResponse,
@@ -128,6 +128,11 @@ const applicationsUsingAddAndEditSettings = [
     registrationStatusKey: 'rentalItem',
     addSettingKey: 'addRentalOrder',
     editSettingKey: 'isEditRentalOrder',
+    addButtonText: '物品の追加',
+    // RentItemsForm は1行ごとに <h3>物品 N</h3> を描画する。level指定のみだと
+    // 将来他の見出しが増えた際に壊れやすいため、名前を正規表現で絞り込む。
+    repeatingFieldLocator: (page: Page) =>
+      page.getByRole('heading', { name: /^物品 \d+$/ }),
   },
   {
     title: '電力申請',
@@ -135,6 +140,8 @@ const applicationsUsingAddAndEditSettings = [
     registrationStatusKey: 'powerOrder',
     addSettingKey: 'addPowerOrder',
     editSettingKey: 'isEditPowerOrder',
+    addButtonText: '物品の追加',
+    repeatingFieldLocator: (page: Page) => page.getByLabel('機器の名称'),
   },
   {
     title: '従業員申請',
@@ -144,6 +151,8 @@ const applicationsUsingAddAndEditSettings = [
     editSettingKey: 'isEditEmployee',
     registrationControlText:
       '「代表」と「副代表」以外の従業員申請を行いますか？',
+    addButtonText: '従業員の追加',
+    repeatingFieldLocator: (page: Page) => page.getByLabel('従業員名'),
   },
   {
     title: '販売品申請',
@@ -152,6 +161,8 @@ const applicationsUsingAddAndEditSettings = [
     addSettingKey: 'addFoodProduct',
     editSettingKey: 'isEditFoodProduct',
     registrationControlText: '販売品名',
+    addButtonText: '販売品の追加',
+    repeatingFieldLocator: (page: Page) => page.getByLabel('販売品名'),
   },
   {
     title: '購入品申請',
@@ -159,6 +170,10 @@ const applicationsUsingAddAndEditSettings = [
     registrationStatusKey: 'purchaseList',
     addSettingKey: 'addPurchaseList',
     editSettingKey: 'isEditPurchaseList',
+    addButtonText: '購入品を追加',
+    // PurchaseListsFormには行見出しが無いため、Selectorのラベル
+    // (FoodProductと同じ文言だが別画面なので衝突しない)で判定する。
+    repeatingFieldLocator: (page: Page) => page.getByLabel('販売品名'),
   },
   {
     title: 'ステージ申請',
@@ -176,6 +191,15 @@ const applicationsUsingAddAndEditSettings = [
     editSettingKey: 'isEditFireEquipmentOrder',
   },
 ] as const;
+
+type ApplicationRow = (typeof applicationsUsingAddAndEditSettings)[number];
+type MultiItemApplicationRow = Extract<
+  ApplicationRow,
+  { addButtonText: string }
+>;
+
+const isMultiItemRow = (row: ApplicationRow): row is MultiItemApplicationRow =>
+  'addButtonText' in row;
 
 const registrationButton = (page: Page) =>
   page.getByRole('button', { name: '登録', exact: true });
@@ -609,22 +633,12 @@ test.describe('home application action availability', () => {
 // add設定とedit設定を独立に判定できなければならない。
 // isEdit=true, add=false のとき、既存項目の編集は可能だが
 // 新規追加はできないことを回帰的に確認する。
-const multiItemAddButtonTexts: Record<string, string> = {
-  物品申請: '物品の追加',
-  電力申請: '物品の追加',
-  従業員申請: '従業員の追加',
-  販売品申請: '販売品の追加',
-  購入品申請: '購入品を追加',
-};
 
 test.describe('home multi-item application add vs edit gating', () => {
-  const multiItemRows = applicationsUsingAddAndEditSettings.filter(
-    (row) => row.title in multiItemAddButtonTexts
-  );
+  const multiItemRows =
+    applicationsUsingAddAndEditSettings.filter(isMultiItemRow);
 
   for (const row of multiItemRows) {
-    const addButtonText = multiItemAddButtonTexts[row.title];
-
     test(`hides ${row.title} add-new-item control when add is closed even though edit is open and items already exist`, async ({
       page,
     }) => {
@@ -647,11 +661,11 @@ test.describe('home multi-item application add vs edit gating', () => {
       await editButton(page).first().click();
 
       await expect(
-        page.getByRole('button', { name: addButtonText })
+        page.getByRole('button', { name: row.addButtonText })
       ).toHaveCount(0);
     });
 
-    test(`shows ${row.title} add-new-item control when both add and edit settings are open`, async ({
+    test(`shows ${row.title} add-new-item control when both add and edit settings are open, and clicking it adds a new item row`, async ({
       page,
     }) => {
       await setupHomeApiMocks({
@@ -672,9 +686,17 @@ test.describe('home multi-item application add vs edit gating', () => {
       await applicationButton(page, row.title).click();
       await editButton(page).first().click();
 
-      await expect(
-        page.getByRole('button', { name: addButtonText }).first()
-      ).toBeVisible();
+      const addButton = page
+        .getByRole('button', { name: row.addButtonText })
+        .first();
+      await expect(addButton).toBeVisible();
+
+      const repeatingField: Locator = row.repeatingFieldLocator(page);
+      const priorCount = await repeatingField.count();
+
+      await addButton.click();
+
+      await expect(repeatingField).toHaveCount(priorCount + 1);
     });
   }
 });
