@@ -110,7 +110,7 @@
                   </tr>
                   <tr class="total-row">
                     <td><strong>合計</strong></td>
-                    <td v-for="itemId in activeItemIds">
+                    <td v-for="itemId in activeItemIds" :key="itemId">
                       <strong>{{ getItemName(itemId) }}: {{ getGroupTotalItem(group.id, itemId) }}</strong>
                     </td>
                   </tr>
