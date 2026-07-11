@@ -262,6 +262,7 @@ export default {
           group_id: this.group_id,
           picture_name: file.name,
           picture_path: uploadedImage.link,
+          imgur_deletehash: uploadedImage.deletehash,
         };
 
         const response = await this.$axios.$post("/venue_maps", data);

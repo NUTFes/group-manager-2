@@ -117,6 +117,7 @@ export default {
           venueMap.group_id || venueMap.group?.id || this.$route.params.id;
         let pictureName = venueMap.picture_name || "";
         let picturePath = venueMap.picture_path || "";
+        let imgurDeletehash = null;
 
         if (this.files && this.files.length > 0) {
           const file = this.files[0];
@@ -126,6 +127,7 @@ export default {
             this.$config.imgurClientId
           );
           picturePath = uploadedImage.link;
+          imgurDeletehash = uploadedImage.deletehash;
           pictureName = file.name;
         }
 
@@ -134,6 +136,9 @@ export default {
           picture_name: pictureName,
           picture_path: picturePath,
         };
+        if (imgurDeletehash) {
+          data.imgur_deletehash = imgurDeletehash;
+        }
 
         const response =
           this.venueMap?.venue_map || venueMap.id
