@@ -5,6 +5,8 @@ require 'uri'
 
 class ImgurImageDeleter
   ENDPOINT = 'https://api.imgur.com/3/image/'
+  OPEN_TIMEOUT = 2
+  READ_TIMEOUT = 5
 
   def self.call(deletehash)
     new(deletehash).call
@@ -41,7 +43,13 @@ class ImgurImageDeleter
     request = Net::HTTP::Delete.new(uri)
     request['Authorization'] = "Client-ID #{imgur_client_id}"
 
-    Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
+    Net::HTTP.start(
+      uri.hostname,
+      uri.port,
+      use_ssl: uri.scheme == 'https',
+      open_timeout: OPEN_TIMEOUT,
+      read_timeout: READ_TIMEOUT
+    ) do |http|
       http.request(request)
     end
   end
