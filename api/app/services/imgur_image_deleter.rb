@@ -12,6 +12,12 @@ class ImgurImageDeleter
     new(deletehash).call
   end
 
+  def self.call_if_replaced(old_picture_path, old_deletehash, new_picture_path)
+    return true if old_picture_path == new_picture_path
+
+    call(old_deletehash)
+  end
+
   def initialize(deletehash)
     @deletehash = deletehash
   end
