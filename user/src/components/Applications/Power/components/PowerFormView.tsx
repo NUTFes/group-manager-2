@@ -17,6 +17,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   isValid,
   radioOptions,
   showForm,
+  submitError,
   onSubmit,
 }) => {
   const { handleSubmit } = formMethods;
@@ -49,6 +50,11 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
           </div>
           {/* 電力超過警告 */}
           <div className="mt-6 flex flex-col items-center gap-4">
+            {submitError && (
+              <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+                <span className="block sm:inline">{submitError}</span>
+              </div>
+            )}
             {totalPower > POWER_LIMIT && (
               <div className="mb-4 w-full text-center text-sm text-red-600">
                 <p>

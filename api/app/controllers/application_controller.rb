@@ -5,6 +5,8 @@ require 'digest'
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
+  around_action :set_skip_slack_notification
+
   # status
   def ok
     return { code: 200, message: 'Success' }
@@ -39,6 +41,67 @@ class ApplicationController < ActionController::API
   end
 
   private
+
+  def set_skip_slack_notification
+    Current.skip_slack_notification = skip_slack_notification_header?
+    yield
+  ensure
+    Current.reset
+  end
+
+  def skip_slack_notification_header?
+    !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
+  end
+
+  def require_admin!
+    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
+    return if [1, 2].include?(current_api_user&.role_id)
+
+    render json: fmt({ code: 403, message: 'Forbidden' }, []),
+           status: :forbidden
+  end
+
+  def current_api_user_group(group_id)
+    return nil if group_id.blank?
+
+    current_api_user.groups.find_by(id: group_id)
+  end
+
+  def save_health_center_submission_status(submission_status, unprocessable_http_status: nil)
+    unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+      return render_health_center_submission_status_unprocessable(
+        'Invalid status',
+        unprocessable_http_status
+      )
+    end
+
+    submission_status.status = params[:status]
+
+    if submission_status.save
+      render json: fmt(ok, health_center_submission_status_payload(submission_status))
+    else
+      render_health_center_submission_status_unprocessable(
+        submission_status.errors.full_messages.join(', '),
+        unprocessable_http_status
+      )
+    end
+  end
+
+  def health_center_submission_status_payload(submission_status)
+    {
+      id: submission_status.id,
+      group_id: submission_status.group_id,
+      application_type: submission_status.application_type,
+      status: submission_status.status
+    }
+  end
+
+  def render_health_center_submission_status_unprocessable(message, http_status)
+    response = { json: fmt(unprocessable_entity, [], message) }
+    response[:status] = http_status if http_status
+
+    render response
+  end
 
   def translate_to_ja(text)
     return text if text.blank?

@@ -3,6 +3,7 @@ import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
+  SUBMIT_POWER_ORDERS: '/power_orders/submit',
 };
 
 // APIから返ってくるデータの型定義
@@ -20,6 +21,7 @@ export type PowerOrderResponse = {
 
 // APIへ送信するデータの型定義
 export type PowerOrderData = {
+  id?: number;
   group_id: number;
   item: string;
   power: number;
@@ -47,6 +49,7 @@ const mapDeviceToRequestData = (
   device: Device,
   groupId: number
 ): PowerOrderData => ({
+  id: device.id,
   group_id: groupId,
   item: device.productName,
   power: device.maxPower,
@@ -86,58 +89,36 @@ export const useGetPowerOrders = (groupId: number | null) => {
  * 電力申請データを操作するフック
  */
 export const useMutatePowerOrders = () => {
-  const { post, put, remove } = useApiMutations();
+  const { put } = useApiMutations();
 
   /**
-   * 複数デバイスの登録・更新を行う
-   * 新規作成と更新を自動的に判別して処理する
+   * 複数デバイスの登録・更新・削除と申請ステータス更新を行う
    */
   const submitPowerOrders = async (
     devices: Device[],
     groupId: number,
-    existingDevices?: Device[]
+    usePower: boolean
   ) => {
     try {
-      // 既存デバイスをIDでマップ化
-      const existingDeviceMap = new Map(
-        (existingDevices || []).map((d) => [d.id, d])
-      );
-
-      const promises = devices.map((device) => {
-        const requestData = mapDeviceToRequestData(device, groupId);
-
-        if (device.id && existingDeviceMap.has(device.id)) {
-          // 既存デバイスの更新
-          return put(`${API_ENDPOINTS.POWER_ORDERS}/${device.id}`, requestData);
-        } else {
-          // 新規デバイスの作成
-          return post(API_ENDPOINTS.POWER_ORDERS, requestData);
-        }
+      const response = await put(API_ENDPOINTS.SUBMIT_POWER_ORDERS, {
+        group_id: groupId,
+        use_power: usePower,
+        power_orders: devices.map((device) =>
+          mapDeviceToRequestData(device, groupId)
+        ),
       });
 
-      await Promise.all(promises);
-      return { success: true };
-    } catch (error) {
-      console.error('電力申請送信エラー:', error);
-      return { success: false, error };
-    }
-  };
+      if (response && 'success' in response && response.success === false) {
+        return { success: false, error: response.error };
+      }
 
-  /**
-   * 単一デバイスの削除
-   */
-  const deletePowerOrder = async (deviceId: number) => {
-    try {
-      await remove(`${API_ENDPOINTS.POWER_ORDERS}/${deviceId}`);
       return { success: true };
     } catch (error) {
-      console.error('電力申請削除エラー:', error);
       return { success: false, error };
     }
   };
 
   return {
     submitPowerOrders,
-    deletePowerOrder,
   };
 };

@@ -5,7 +5,7 @@
         <div class="edit-modal__box">
           <h2>{{ title }}</h2>
           <div class="edit-modal_content">
-            <form>
+            <form @submit.prevent>
               <slot name="form"></slot>
             </form>
           </div>

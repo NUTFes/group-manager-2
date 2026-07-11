@@ -60,6 +60,7 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
+  SUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/submit',
 };
 
 export const useGetFireEquipmentOrdersByGroupId = (
@@ -87,23 +88,31 @@ export const useGetFireEquipmentOrdersByGroupId = (
 };
 
 export const useFireEquipmentMutations = () => {
-  const { post, patch, remove } = useApiMutations();
+  const { patch } = useApiMutations();
 
-  const postFireEquipmentOrder = (
-    data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
-  ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
+  const submitFireEquipmentOrder = async (
+    data: Partial<FireEquipmentResponse>,
+    useFireEquipment: boolean
+  ) => {
+    try {
+      const response = await patch(API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS, {
+        group_id: data.group_id,
+        id: data.id,
+        use_fire_equipment: useFireEquipment,
+        fire_equipment_order: data,
+      });
 
-  const patchFireEquipmentOrder = (
-    id: number,
-    data: Partial<FireEquipmentResponse>
-  ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
+      if (response && 'success' in response && response.success === false) {
+        return { success: false, error: response.error };
+      }
 
-  const deleteFireEquipmentOrder = (id: number) =>
-    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
 
   return {
-    postFireEquipmentOrder,
-    patchFireEquipmentOrder,
-    deleteFireEquipmentOrder,
+    submitFireEquipmentOrder,
   };
 };

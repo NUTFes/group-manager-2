@@ -24,7 +24,9 @@ class Announcement < ApplicationRecord
   def to_info_h
     return {
       id: id,
-      group_id: group_id
+      group_id: group_id,
+      message: message,
+      status: status
     }
   end
 end

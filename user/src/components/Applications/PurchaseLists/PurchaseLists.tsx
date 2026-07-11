@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
@@ -111,20 +112,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
           <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
             <div className="mb-4">
-              <svg
-                className="mx-auto size-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <MdOutlineAccessTime className="mx-auto size-12 text-gray-400" />
             </div>
             <h3 className="mb-2 text-lg font-semibold text-gray-800">
               {purchaseListsViewTexts.deadline.title}
