@@ -59,16 +59,18 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update public_relation with new imgur_deletehash' do
-    patch public_relation_url(@public_relation),
-          params: {
-            group_id: @public_relation.group_id,
-            picture_name: 'updated_public_relation.png',
-            picture_path: 'https://i.imgur.com/updated-public-relation.png',
-            imgur_deletehash: 'updated-public-relation-deletehash',
-            blurb: 'updated blurb',
-            is_announcement_requested: false
-          },
-          as: :json
+    ImgurImageDeleter.stub(:call, ->(_deletehash) { true }) do
+      patch public_relation_url(@public_relation),
+            params: {
+              group_id: @public_relation.group_id,
+              picture_name: 'updated_public_relation.png',
+              picture_path: 'https://i.imgur.com/updated-public-relation.png',
+              imgur_deletehash: 'updated-public-relation-deletehash',
+              blurb: 'updated blurb',
+              is_announcement_requested: false
+            },
+            as: :json
+    end
 
     assert_response :success
     assert_equal 201, response.parsed_body['status']['code']
