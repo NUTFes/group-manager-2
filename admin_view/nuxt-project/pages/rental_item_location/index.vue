@@ -594,11 +594,11 @@ export default {
 }
 .modal-content {
   background-color: white;
-    padding: 24px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 20px 24px -4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 20px 24px -4px rgba(0, 0, 0, 0.1);
 }
 .modal-content h2 {
   color: #000000;
