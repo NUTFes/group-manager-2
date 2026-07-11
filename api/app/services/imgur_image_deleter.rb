@@ -18,7 +18,7 @@ class ImgurImageDeleter
     return true if deletehash.blank?
 
     if imgur_client_id.blank?
-      Rails.logger.warn('[Imgur] delete skipped: IMGUR_CLIENT_ID is not configured')
+      Rails.logger.warn('[Imgur] delete skipped: IMGUR_CLIENT_ID or NEXT_PUBLIC_IMGUR_CLIENT_ID is not configured')
       return false
     end
 
@@ -47,6 +47,6 @@ class ImgurImageDeleter
   end
 
   def imgur_client_id
-    ENV['IMGUR_CLIENT_ID']
+    ENV['IMGUR_CLIENT_ID'].presence || ENV['NEXT_PUBLIC_IMGUR_CLIENT_ID']
   end
 end
