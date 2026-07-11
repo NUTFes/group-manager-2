@@ -88,31 +88,17 @@ export const useGetFireEquipmentOrdersByGroupId = (
 };
 
 export const useFireEquipmentMutations = () => {
-  const { patch } = useApiMutations();
+  const { post, patch, remove } = useApiMutations();
 
-  const submitFireEquipmentOrder = async (
-    data: Partial<FireEquipmentResponse>,
-    useFireEquipment: boolean
-  ) => {
-    try {
-      const response = await patch(API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS, {
-        group_id: data.group_id,
-        id: data.id,
-        use_fire_equipment: useFireEquipment,
-        fire_equipment_order: data,
-      });
+  const postFireEquipmentOrder = (
+      data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
+  ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
 
-      if (response && 'success' in response && response.success === false) {
-        return { success: false, error: response.error };
-      }
+  const patchFireEquipmentOrder = (id: number, data: Partial<FireEquipmentResponse>) =>
+      patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
 
-      return { success: true };
-    } catch (error) {
-      return { success: false, error };
-    }
-  };
+  const deleteFireEquipmentOrder = (id: number) =>
+      remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 
-  return {
-    submitFireEquipmentOrder,
-  };
+  return { postFireEquipmentOrder, patchFireEquipmentOrder, deleteFireEquipmentOrder };
 };
