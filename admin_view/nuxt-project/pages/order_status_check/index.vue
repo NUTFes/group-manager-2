@@ -438,9 +438,10 @@ export default {
     },
     getSubmissionStatusIcon(groupWrapper, typeKey) {
       const status = this.getSubmissionStatus(groupWrapper, typeKey);
-      if (status === 'unapproved') return 'notification_important';
+      if (status === 'approved') return 'check';
       if (status === 'waiting_resubmission') return 'autorenew';
-      return 'check';
+      if (status === 'unsubmitted') return 'close';
+      return 'notification_important';
     },
     getSubmissionStatusClass(groupWrapper, typeKey) {
       const status = this.getSubmissionStatus(groupWrapper, typeKey);
