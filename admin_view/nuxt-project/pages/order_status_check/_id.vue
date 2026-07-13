@@ -453,6 +453,7 @@
                         <img
                           :src="group.public_relation.picture_path"
                           alt="PR画像"
+                          referrerpolicy="no-referrer"
                           style="width: 100%; height: auto; display: block"
                         />
                       </div>
@@ -590,6 +591,7 @@
                   :src="group.venue_map.picture_path"
                   alt="平面図"
                   class="venue-map-image"
+                  referrerpolicy="no-referrer"
                   style="width: 100%; height: auto; display: block"
                 />
               </div>
@@ -1034,7 +1036,7 @@
             </div>
             <div class="preview-modal__content">
               <div class="preview-modal__left">
-                <img v-if="group.venue_map && group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="preview-modal__image" />
+                <img v-if="group.venue_map && group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="preview-modal__image" referrerpolicy="no-referrer" />
                 <p v-else>画像がありません</p>
               </div>
               <div class="preview-modal__right">

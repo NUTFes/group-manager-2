@@ -12835,7 +12835,13 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/PublicRelation"
+            allOf:
+            - "$ref": "#/components/schemas/PublicRelation"
+            - type: object
+              properties:
+                imgur_deletehash:
+                  type: string
+                  nullable: true
     PurchaseList:
       content:
         application/json:
@@ -12940,7 +12946,13 @@ components:
       content:
         application/json:
           schema:
-            "$ref": "#/components/schemas/VenueMap"
+            allOf:
+            - "$ref": "#/components/schemas/VenueMap"
+            - type: object
+              properties:
+                imgur_deletehash:
+                  type: string
+                  nullable: true
   securitySchemes:
     ClientAuth:
       type: apiKey

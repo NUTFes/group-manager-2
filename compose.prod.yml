@@ -46,6 +46,7 @@ services:
       args:
         - VUE_APP_URL=${VUE_APP_URL}
         - VUE_APP_API_URL=${VUE_APP_API_URL}
+        - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
     container_name: prod-admin
     env_file: [.env]
     ports:

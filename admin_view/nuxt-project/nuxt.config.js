@@ -27,7 +27,8 @@ export default {
   },
 
   publicRuntimeConfig: {
-    apiURL: process.env.VUE_APP_URL
+    apiURL: process.env.VUE_APP_URL,
+    imgurClientId: process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID,
   },
 
   router: {

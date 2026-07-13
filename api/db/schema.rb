@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_25_000001) do
+ActiveRecord::Schema.define(version: 2026_07_11_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -276,6 +276,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_000001) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "is_announcement_requested", default: false, null: false
+    t.string "imgur_deletehash"
   end
 
   create_table "purchase_lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -503,6 +504,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_000001) do
     t.string "picture_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "imgur_deletehash"
   end
 
   add_foreign_key "assign_rental_items", "stocker_places", column: "rental_place_id"
