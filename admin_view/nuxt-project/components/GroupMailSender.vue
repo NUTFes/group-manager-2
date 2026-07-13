@@ -3,17 +3,14 @@
     <Card
       width="100%"
       height="100%"
-      style="align-items: flex-start; min-height: 0;"
+      style="align-items: flex-start; min-height: 0"
     >
       <div class="comment-header">
         <h3>メッセージ</h3>
       </div>
       <div class="comment-form">
         <div class="message-template-panel">
-          <label
-            class="message-template-label"
-            for="message-template-select"
-          >
+          <label class="message-template-label" for="message-template-select">
             テンプレート
           </label>
           <select
@@ -30,11 +27,7 @@
               {{ template.name }}（{{ template.locale }}）
             </option>
           </select>
-          <p
-            v-if="messageSendResult"
-            class="message-send-result"
-            role="status"
-          >
+          <p v-if="messageSendResult" class="message-send-result" role="status">
             {{ messageSendResult }}
           </p>
         </div>
@@ -234,9 +227,9 @@ export default {
     },
     async fetchComments() {
       try {
-        const response = await this.$axios.get(
-          `/api/v1/group_mail_comments`, { params: { group_id: this.groupId } }
-        );
+        const response = await this.$axios.get(`/api/v1/group_mail_comments`, {
+          params: { group_id: this.groupId },
+        });
         this.comments = response.data.data || response.data || [];
       } catch (error) {
         console.error("送信履歴の取得に失敗しました:", error);
@@ -278,7 +271,7 @@ export default {
             payload
           );
         }
-        
+
         this.commentBody = "";
         this.selectedMessageTemplateId = "";
         this.messageSendResult = "送信しました";

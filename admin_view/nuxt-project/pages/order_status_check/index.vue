@@ -53,17 +53,25 @@
           <span class="material-icons status-icon-small">check</span>: 承認済み
         </span>
         <span class="status-icon-guide__item">
-          <span class="status-guide-cell bg-unapproved"><span class="material-icons status-icon-small">notification_important</span></span>: 未確認
+          <span class="status-guide-cell bg-unapproved"
+            ><span class="material-icons status-icon-small"
+              >notification_important</span
+            ></span
+          >: 未確認
         </span>
         <span class="status-icon-guide__item">
-          <span class="status-guide-cell bg-resubmission"><span class="material-icons status-icon-small">autorenew</span></span>: 再提出待ち
+          <span class="status-guide-cell bg-resubmission"
+            ><span class="material-icons status-icon-small"
+              >autorenew</span
+            ></span
+          >: 再提出待ち
         </span>
         <span class="status-icon-guide__item">
-          <span class="status-guide-cell unregistered"><span class="material-icons status-icon-small">close</span></span>: 未申請
+          <span class="status-guide-cell unregistered"
+            ><span class="material-icons status-icon-small">close</span></span
+          >: 未申請
         </span>
-        <span class="status-icon-guide__item">
-          <span>ー</span>: 対象外
-        </span>
+        <span class="status-icon-guide__item"> <span>ー</span>: 対象外 </span>
       </div>
     </div>
 
@@ -75,108 +83,302 @@
           </th>
         </template>
         <template v-slot:table-body>
-
-          <tr v-for="(group, index) in groups" :key="index"
+          <tr
+            v-for="(group, index) in groups"
+            :key="index"
             @click="$router.push(`/order_status_check/${group.group.id}`)"
-            class="clickable-row">
-
+            class="clickable-row"
+          >
             <!-- ID -->
             <td>{{ group.group.id }}</td>
             <!-- 参加団体 -->
             <td>{{ group.group.name }}</td>
             <!-- 副代表 -->
-            <td :class="{ unregistered: !group.sub_rep && !isUnregistered(group.group.id, 'sub_rep') }">
-              <div v-if="group.sub_rep || isUnregistered(group.group.id, 'sub_rep')">◯</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+            <td
+              :class="{
+                unregistered:
+                  !group.sub_rep && !isUnregistered(group.group.id, 'sub_rep'),
+              }"
+            >
+              <div
+                v-if="
+                  group.sub_rep || isUnregistered(group.group.id, 'sub_rep')
+                "
+              >
+                ◯
+              </div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 会場 -->
-            <td :class="{ unregistered: !group.place_order && !group.group.is_international && group.group_category !== 3 }">
+            <td
+              :class="{
+                unregistered:
+                  !group.place_order &&
+                  !group.group.is_international &&
+                  group.group_category !== 3,
+              }"
+            >
               <div v-if="group.place_order">◯</div>
-              <div v-else-if="group.group.is_international || group.group_category === 3">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div
+                v-else-if="
+                  group.group.is_international || group.group_category === 3
+                "
+              >
+                ー
+              </div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 消費電力 -->
-            <td :class="[{ unregistered: !group.power_orders && !isUnregistered(group.group.id, 'power_order') }, isUnregistered(group.group.id, 'power_order') ? '' : getSubmissionStatusClass(group, 'power_order')]">
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.power_orders &&
+                    !isUnregistered(group.group.id, 'power_order'),
+                },
+                isUnregistered(group.group.id, 'power_order')
+                  ? ''
+                  : getSubmissionStatusClass(group, 'power_order'),
+              ]"
+            >
               <div v-if="isUnregistered(group.group.id, 'power_order')">◯</div>
               <div v-else-if="group.power_orders" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'power_order')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'power_order') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'power_order')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "power_order") }}</span
+                >
               </div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 物品 -->
-            <td :class="[{ unregistered: !group.rental_orders && !isUnregistered(group.group.id, 'rental_item_order') }, isUnregistered(group.group.id, 'rental_item_order') ? '' : getSubmissionStatusClass(group, 'equipment')]">
-              <div v-if="isUnregistered(group.group.id, 'rental_item_order')">◯</div>
-              <div v-else-if="group.rental_orders" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'equipment')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'equipment') }}</span>
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.rental_orders &&
+                    !isUnregistered(group.group.id, 'rental_item_order'),
+                },
+                isUnregistered(group.group.id, 'rental_item_order')
+                  ? ''
+                  : getSubmissionStatusClass(group, 'equipment'),
+              ]"
+            >
+              <div v-if="isUnregistered(group.group.id, 'rental_item_order')">
+                ◯
               </div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else-if="group.rental_orders" class="status-cell-inner">
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'equipment')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "equipment") }}</span
+                >
+              </div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- ステージ -->
-            <td :class="{ unregistered: !group.stage_orders && group.group_category === 3 }">
+            <td
+              :class="{
+                unregistered: !group.stage_orders && group.group_category === 3,
+              }"
+            >
               <div v-if="group.stage_orders">◯</div>
               <div v-else-if="group.group_category !== 3">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- ステージオプション -->
-            <td :class="{ unregistered: !group.stage_common_option && group.group_category === 3 }">
+            <td
+              :class="{
+                unregistered:
+                  !group.stage_common_option && group.group_category === 3,
+              }"
+            >
               <div v-if="group.stage_common_option">◯</div>
               <div v-else-if="group.group_category !== 3">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 従業員 -->
-            <td :class="[{ unregistered: !group.employees && !isUnregistered(group.group.id, 'employee') && group.group_category === 1 }, isUnregistered(group.group.id, 'employee') ? '' : getSubmissionStatusClass(group, 'employee')]">
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.employees &&
+                    !isUnregistered(group.group.id, 'employee') &&
+                    group.group_category === 1,
+                },
+                isUnregistered(group.group.id, 'employee')
+                  ? ''
+                  : getSubmissionStatusClass(group, 'employee'),
+              ]"
+            >
               <div v-if="isUnregistered(group.group.id, 'employee')">◯</div>
               <div v-else-if="group.employees" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'employee')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'employee') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'employee')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "employee") }}</span
+                >
               </div>
               <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 販売品 -->
-            <td :class="[{ unregistered: !group.food_product && (group.group_category === 1 || group.group_category === 2) }, getSubmissionStatusClass(group, 'food_product')]">
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.food_product &&
+                    (group.group_category === 1 || group.group_category === 2),
+                },
+                getSubmissionStatusClass(group, 'food_product'),
+              ]"
+            >
               <div v-if="group.food_product" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'food_product')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'food_product') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'food_product')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "food_product") }}</span
+                >
               </div>
-              <div v-else-if="group.group_category !== 1 && group.group_category !== 2">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div
+                v-else-if="
+                  group.group_category !== 1 && group.group_category !== 2
+                "
+              >
+                ー
+              </div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 購入品 -->
-            <td :class="[{ unregistered: !group.purchase_list && group.group_category === 1 }, getSubmissionStatusClass(group, 'purchase_list')]">
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.purchase_list && group.group_category === 1,
+                },
+                getSubmissionStatusClass(group, 'purchase_list'),
+              ]"
+            >
               <div v-if="group.purchase_list" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'purchase_list')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'purchase_list') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'purchase_list')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "purchase_list") }}</span
+                >
               </div>
               <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- PR -->
             <td :class="{ unregistered: !group.public_relation }">
               <div v-if="group.public_relation">◯</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 模擬店平面図 -->
-            <td :class="[{ unregistered: !group.venue_map && group.group_category === 1 }, getSubmissionStatusClass(group, 'venue_map')]">
+            <td
+              :class="[
+                {
+                  unregistered: !group.venue_map && group.group_category === 1,
+                },
+                getSubmissionStatusClass(group, 'venue_map'),
+              ]"
+            >
               <div v-if="group.venue_map" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'venue_map')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'venue_map') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'venue_map')"
+                  class="material-icons status-icon-small"
+                  >{{ getSubmissionStatusIcon(group, "venue_map") }}</span
+                >
               </div>
               <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 調理工程 -->
-            <td :class="[{ unregistered: !group.cooking_process_order && group.group_category === 1 }, getSubmissionStatusClass(group, 'cooking_process_order')]">
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.cooking_process_order && group.group_category === 1,
+                },
+                getSubmissionStatusClass(group, 'cooking_process_order'),
+              ]"
+            >
               <div v-if="group.cooking_process_order" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'cooking_process_order')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'cooking_process_order') }}</span>
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'cooking_process_order')"
+                  class="material-icons status-icon-small"
+                  >{{
+                    getSubmissionStatusIcon(group, "cooking_process_order")
+                  }}</span
+                >
               </div>
               <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
             <!-- 火気使用申請 -->
-            <td :class="[{ unregistered: !group.fire_equipment_order && !isUnregistered(group.group.id, 'fire_equipment_order') && [1, 2, 4, 5].includes(group.group_category) }, isUnregistered(group.group.id, 'fire_equipment_order') ? '' : getSubmissionStatusClass(group, 'fire_equipment_order')]">
-              <div v-if="isUnregistered(group.group.id, 'fire_equipment_order')">◯</div>
-              <div v-else-if="group.fire_equipment_order && [1, 2, 4, 5].includes(group.group_category)" class="status-cell-inner">
-                <span v-if="getSubmissionStatusIcon(group, 'fire_equipment_order')" class="material-icons status-icon-small">{{ getSubmissionStatusIcon(group, 'fire_equipment_order') }}</span>
+            <td
+              :class="[
+                {
+                  unregistered:
+                    !group.fire_equipment_order &&
+                    !isUnregistered(group.group.id, 'fire_equipment_order') &&
+                    [1, 2, 4, 5].includes(group.group_category),
+                },
+                isUnregistered(group.group.id, 'fire_equipment_order')
+                  ? ''
+                  : getSubmissionStatusClass(group, 'fire_equipment_order'),
+              ]"
+            >
+              <div
+                v-if="isUnregistered(group.group.id, 'fire_equipment_order')"
+              >
+                ◯
               </div>
-              <div v-else-if="![1, 2, 4, 5].includes(group.group_category)">ー</div>
-              <div v-else class="status-cell-inner"><span class="material-icons status-icon-small">close</span></div>
+              <div
+                v-else-if="
+                  group.fire_equipment_order &&
+                  [1, 2, 4, 5].includes(group.group_category)
+                "
+                class="status-cell-inner"
+              >
+                <span
+                  v-if="getSubmissionStatusIcon(group, 'fire_equipment_order')"
+                  class="material-icons status-icon-small"
+                  >{{
+                    getSubmissionStatusIcon(group, "fire_equipment_order")
+                  }}</span
+                >
+              </div>
+              <div v-else-if="![1, 2, 4, 5].includes(group.group_category)">
+                ー
+              </div>
+              <div v-else class="status-cell-inner">
+                <span class="material-icons status-icon-small">close</span>
+              </div>
             </td>
           </tr>
         </template>
@@ -188,6 +390,10 @@
 
 <script>
 import { mapState } from "vuex";
+import {
+  normalizeSubmissionStatus,
+  getSubmissionStatusMeta,
+} from "~/utils/health_center_submission_status";
 export default {
   watchQuery: ["page"],
   data() {
@@ -269,7 +475,7 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.groups)
+    console.log(this.groups);
     const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
 
     if (storedYearID) {
@@ -428,26 +634,45 @@ export default {
     },
     // 申請しないデータかどうかを判定するメソッド
     isUnregistered(groupId, orderType) {
-      return this.unregisteredGroups.some(item =>
-        item.group_id === groupId && item.order_type === orderType
+      return this.unregisteredGroups.some(
+        (item) => item.group_id === groupId && item.order_type === orderType
       );
     },
     getSubmissionStatus(groupWrapper, typeKey) {
-      if (!groupWrapper || !groupWrapper.health_center_submission_statuses) return null;
+      if (!groupWrapper || !groupWrapper.health_center_submission_statuses)
+        return null;
       return groupWrapper.health_center_submission_statuses[typeKey];
+    },
+    // typeKeyに対応する申請物自体がgroupWrapperに存在するかどうか
+    hasApplicationRecord(groupWrapper, typeKey) {
+      if (!groupWrapper) return false;
+      const fieldByType = {
+        power_order: "power_orders",
+        equipment: "rental_orders",
+        employee: "employees",
+        food_product: "food_product",
+        purchase_list: "purchase_list",
+        venue_map: "venue_map",
+        cooking_process_order: "cooking_process_order",
+        fire_equipment_order: "fire_equipment_order",
+      };
+      const field = fieldByType[typeKey];
+      return !!(field && groupWrapper[field]);
     },
     getSubmissionStatusIcon(groupWrapper, typeKey) {
       const status = this.getSubmissionStatus(groupWrapper, typeKey);
-      if (status === 'approved') return 'check';
-      if (status === 'waiting_resubmission') return 'autorenew';
-      if (status === 'unsubmitted') return 'close';
-      return 'notification_important';
+      const hasApplication = this.hasApplicationRecord(groupWrapper, typeKey);
+      return getSubmissionStatusMeta(
+        normalizeSubmissionStatus(status, hasApplication)
+      ).icon;
     },
     getSubmissionStatusClass(groupWrapper, typeKey) {
       const status = this.getSubmissionStatus(groupWrapper, typeKey);
-      if (status === 'unapproved') return 'bg-unapproved';
-      if (status === 'waiting_resubmission') return 'bg-resubmission';
-      return '';
+      const hasApplication = this.hasApplicationRecord(groupWrapper, typeKey);
+      const resolvedStatus = normalizeSubmissionStatus(status, hasApplication);
+      if (resolvedStatus === "unapproved") return "bg-unapproved";
+      if (resolvedStatus === "waiting_resubmission") return "bg-resubmission";
+      return "";
     },
   },
 };

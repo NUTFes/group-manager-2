@@ -1,9 +1,7 @@
 <template>
   <div class="sub-header-container" :style="SubHeaderOption">
     <div v-if="pageSubTitle !== ''" class="sub-header-link">
-      <button
-        @click="onSubHeaderBack"
-      >
+      <button @click="onSubHeaderBack">
         <span class="material-icons">arrow_back</span>
         {{ pageSubTitle }}
       </button>

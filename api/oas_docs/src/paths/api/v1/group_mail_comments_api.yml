@@ -3,20 +3,20 @@ paths:
   "/api/v1/group_mail_comments":
     get:
       tags:
-      - api/v1/group_mail_comment
+      - api/v1/group_mail_comments_api
       summary: get summary
       description: get description
       responses:
         '200':
-          description: api/v1/group_mail_comment description
+          description: api/v1/group_mail_comments_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
         '422':
-          description: api/v1/group_mail_comment description
+          description: api/v1/group_mail_comments_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
       deprecated: false

@@ -1868,22 +1868,22 @@ paths:
   "/api/v1/group_mail_comments":
     get:
       tags:
-      - api/v1/group_mail_comment
+      - api/v1/group_mail_comments_api
       summary: get summary
       description: get description
       responses:
         '200':
-          description: api/v1/group_mail_comment description
+          description: api/v1/group_mail_comments_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
         '422':
-          description: api/v1/group_mail_comment description
+          description: api/v1/group_mail_comments_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.GroupMailComment"
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
       deprecated: false
   "/api/v1/get_group_for_admin_view/{id}":
     get:
@@ -2741,7 +2741,7 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '201':
+        '200':
           description: api/v1/order_status_check_comment_mail description
           content:
             application/json:
@@ -2755,9 +2755,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '502':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
       deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
       parameters:
       - name: id
         in: path
@@ -8232,7 +8236,7 @@ paths:
       summary: put summary
       description: put description
       responses:
-        '204':
+        '200':
           description: power_order description
         '422':
           description: power_order description
@@ -8240,8 +8244,6 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
-        '200':
-          description: power_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"
@@ -12056,7 +12058,7 @@ components:
         id:
           type: integer
           format: int64
-    api.v1.GroupMailComment: {}
+    api.v1.GroupMailCommentsApi: {}
     api.v1.GroupsApi:
       type: object
       properties:

@@ -120,7 +120,9 @@
                 <!-- 副代表: 副代表がいる場合のみクリックでモーダルを開く -->
                 <tbody
                   :class="{ 'selectable-row': !!group.sub_rep }"
-                  @click="group.sub_rep ? openModal('sub_rep', group.sub_rep) : null"
+                  @click="
+                    group.sub_rep ? openModal('sub_rep', group.sub_rep) : null
+                  "
                 >
                   <tr>
                     <th>副代表</th>
@@ -217,7 +219,9 @@
               </div>
               <p v-if="isUnregistered('rental_item_order')">申請しない</p>
               <VerticalTable
-                v-else-if="group.rental_orders && group.rental_orders.length > 0"
+                v-else-if="
+                  group.rental_orders && group.rental_orders.length > 0
+                "
               >
                 <tr>
                   <th>物品名</th>
@@ -278,9 +282,7 @@
                       orderWrapper.stage_order.prepare_time_interval || "未設定"
                     }}
                     / 演奏:
-                    {{
-                      orderWrapper.stage_order.use_time_interval || "未設定"
-                    }}
+                    {{ orderWrapper.stage_order.use_time_interval || "未設定" }}
                     / 片付け:
                     {{
                       orderWrapper.stage_order.cleanup_time_interval || "未設定"
@@ -539,44 +541,59 @@
               <div class="section-header-with-button">
                 <h2>模擬店平面図</h2>
                 <div class="section-actions">
-                  <CommonButton iconName="edit" :on_click="() => openModal('venue_map', { ...group.venue_map, group_name: group.group.name })">編集</CommonButton>
+                  <CommonButton
+                    iconName="edit"
+                    :on_click="
+                      () =>
+                        openModal('venue_map', {
+                          ...group.venue_map,
+                          group_name: group.group.name,
+                        })
+                    "
+                    >編集</CommonButton
+                  >
                   <div
                     class="status-select-with-icon"
-                  v-if="!isUnregistered('venue_map')"
-                  :class="
-                    getStatusSelectClass(getSubmissionStatusValue('venue_map'))
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(getSubmissionStatusValue("venue_map")).icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
-                          getSubmissionStatusValue('venue_map')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('venue_map')"
-                      @change="onStatusChange('venue_map', $event.target.value)"
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                    v-if="!isUnregistered('venue_map')"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('venue_map')
+                      )
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(getSubmissionStatusValue("venue_map"))
+                          .icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('venue_map')
+                          )
+                        "
+                        :value="getSubmissionStatusValue('venue_map')"
+                        @change="
+                          onStatusChange('venue_map', $event.target.value)
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
               <p v-if="isUnregistered('venue_map')">申請しない</p>
@@ -649,7 +666,9 @@
               </div>
               <p v-if="isUnregistered('food_product')">申請しない</p>
               <VerticalTable
-                v-else-if="group.food_products && group.food_products.length > 0"
+                v-else-if="
+                  group.food_products && group.food_products.length > 0
+                "
               >
                 <tr>
                   <th>販売品名</th>
@@ -722,7 +741,11 @@
                 </div>
               </div>
               <p v-if="isUnregistered('purchase_list')">申請しない</p>
-              <div v-else-if="group.food_products && group.food_products.length > 0">
+              <div
+                v-else-if="
+                  group.food_products && group.food_products.length > 0
+                "
+              >
                 <div
                   v-for="(fpWrapper, index) in group.food_products"
                   :key="index"
@@ -839,7 +862,11 @@
                 </div>
               </div>
               <p v-if="isUnregistered('cooking_process_order')">申請しない</p>
-              <div v-else-if="group.food_products && group.food_products.length > 0">
+              <div
+                v-else-if="
+                  group.food_products && group.food_products.length > 0
+                "
+              >
                 <div
                   v-for="(fpWrapper, index) in group.food_products"
                   :key="index"
@@ -1027,27 +1054,50 @@
     />
     <!-- プレビューモーダル (平面図 & 物品申請) -->
     <transition name="fade" appear>
-      <div v-if="isPreviewModalOpen" class="preview-modal" @click.self="closePreviewModal">
+      <div
+        v-if="isPreviewModalOpen"
+        class="preview-modal"
+        @click.self="closePreviewModal"
+      >
         <div class="preview-modal__container">
           <div class="preview-modal__box">
             <div class="preview-modal__header">
               <h2>模擬店平面図 & 物品申請</h2>
-              <CommonButton iconName="close" :on_click="closePreviewModal">閉じる</CommonButton>
+              <CommonButton iconName="close" :on_click="closePreviewModal"
+                >閉じる</CommonButton
+              >
             </div>
             <div class="preview-modal__content">
               <div class="preview-modal__left">
-                <img v-if="group.venue_map && group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="preview-modal__image" referrerpolicy="no-referrer" />
+                <img
+                  v-if="group.venue_map && group.venue_map.picture_path"
+                  :src="group.venue_map.picture_path"
+                  alt="平面図"
+                  class="preview-modal__image"
+                  referrerpolicy="no-referrer"
+                />
                 <p v-else>画像がありません</p>
               </div>
               <div class="preview-modal__right">
-                <VerticalTable v-if="group.rental_orders && group.rental_orders.length > 0">
+                <VerticalTable
+                  v-if="group.rental_orders && group.rental_orders.length > 0"
+                >
                   <tr>
                     <th>貸出物品</th>
                     <th>数量</th>
                   </tr>
-                  <tr v-for="(orderWrapper, index) in group.rental_orders" :key="index">
+                  <tr
+                    v-for="(orderWrapper, index) in group.rental_orders"
+                    :key="index"
+                  >
                     <td>{{ orderWrapper.rental_item.name }}</td>
-                    <td>{{ orderWrapper.rental_item.num !== undefined ? orderWrapper.rental_item.num : "不明" }}</td>
+                    <td>
+                      {{
+                        orderWrapper.rental_item.num !== undefined
+                          ? orderWrapper.rental_item.num
+                          : "不明"
+                      }}
+                    </td>
                   </tr>
                 </VerticalTable>
                 <p v-else>物品申請はありません</p>
@@ -1077,6 +1127,11 @@ import SubRepEditModal from "~/components/edit-modals/SubRepEditModal.vue";
 import VenueMapEditModal from "~/components/edit-modals/VenueMapEditModal.vue";
 import GroupMailSender from "~/components/GroupMailSender.vue";
 import { formatWeather } from "~/utils/constants";
+import {
+  normalizeSubmissionStatus,
+  getSubmissionStatusMeta,
+  getSubmissionStatusSelectClass,
+} from "~/utils/health_center_submission_status";
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/health_center_submission_statuses";
@@ -1282,54 +1337,46 @@ export default {
         (submission) => submission.application_type === applicationType
       );
     },
+    // applicationTypeに対応する申請物自体がgroupに存在するかどうか
+    hasApplicationRecord(applicationType) {
+      const foodProducts = this.group?.food_products || [];
+      switch (applicationType) {
+        case "power_order":
+          return !!(
+            this.group.power_orders && this.group.power_orders.length > 0
+          );
+        case "equipment":
+          return !!(
+            this.group.rental_orders && this.group.rental_orders.length > 0
+          );
+        case "employee":
+          return !!(this.group.employees && this.group.employees.length > 0);
+        case "venue_map":
+          return !!this.group.venue_map;
+        case "food_product":
+          return foodProducts.length > 0;
+        case "purchase_list":
+          return foodProducts.some(
+            (fp) => fp.purchase_lists && fp.purchase_lists.length > 0
+          );
+        case "cooking_process_order":
+          return foodProducts.some((fp) => !!fp.cooking_process_order);
+        case "fire_equipment_order":
+          return !!(
+            this.group.fire_equipment_orders &&
+            this.group.fire_equipment_orders.length > 0
+          );
+        default:
+          return false;
+      }
+    },
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
-      const status = submission?.status;
-      return this.normalizeStatus(status);
+      const hasApplication = this.hasApplicationRecord(applicationType);
+      return normalizeSubmissionStatus(submission?.status, hasApplication);
     },
-    normalizeStatus(value) {
-      if (
-        value === false ||
-        value === null ||
-        value === undefined ||
-        value === ""
-      ) {
-        return "unsubmitted";
-      }
-      return value;
-    },
-    getStatusMeta(status) {
-      const statusMap = {
-        unapproved: {
-          icon: "notification_important",
-          label: "未確認",
-        },
-        waiting_resubmission: {
-          icon: "autorenew",
-          label: "再提出待ち",
-        },
-        approved: {
-          icon: "check",
-          label: "承認済み",
-        },
-        unsubmitted: {
-          icon: "close",
-          label: "未提出",
-        },
-      };
-
-      return statusMap[status] || statusMap.unapproved;
-    },
-    getStatusSelectClass(value) {
-      const classMap = {
-        unapproved: "status-select--unapproved",
-        waiting_resubmission: "status-select--waiting-resubmission",
-        approved: "status-select--approved",
-        unsubmitted: "status-select--unsubmitted",
-      };
-
-      return classMap[value] || classMap.unapproved;
-    },
+    getStatusMeta: getSubmissionStatusMeta,
+    getStatusSelectClass: getSubmissionStatusSelectClass,
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
       const previousStatus = submission ? submission.status : null;
@@ -1730,8 +1777,8 @@ export default {
 .fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
-
 </style>

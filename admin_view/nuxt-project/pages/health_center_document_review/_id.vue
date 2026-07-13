@@ -592,12 +592,16 @@
       @saved="onEditorSaved"
       @error="openEditError"
     />
-
-    
   </div>
 </template>
 
 <script>
+import {
+  normalizeSubmissionStatus,
+  getSubmissionStatusMeta,
+  getSubmissionStatusSelectClass,
+} from "~/utils/health_center_submission_status";
+
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
   "/api/v1/get_health_center_submission_status_index_for_admin_view";
 const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
@@ -863,55 +867,34 @@ export default {
         (submission) => submission.application_type === applicationType
       );
     },
+    // applicationTypeに対応する申請物自体が存在するかどうか
+    hasApplicationRecord(applicationType) {
+      switch (applicationType) {
+        case "equipment":
+          return this.rentalOrders.length > 0;
+        case "employee":
+          return this.employees.length > 0;
+        case "venue_map":
+          return !!this.venueMap;
+        case "food_product":
+          return this.foodProducts.length > 0;
+        case "purchase_list":
+          return this.purchaseLists.length > 0;
+        case "cooking_process_order":
+          return this.cookingProcessOrders.length > 0;
+        default:
+          return false;
+      }
+    },
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
-      const status = submission?.status;
-      // statusが null, undefined, または空文字列の場合は「未提出」を返す
-      return this.normalizeStatus(status);
+      const hasApplication = this.hasApplicationRecord(applicationType);
+      // statusが null, undefined, または空文字列の場合は
+      // 申請物の有無に応じて「未確認」または「未提出」を返す
+      return normalizeSubmissionStatus(submission?.status, hasApplication);
     },
-    normalizeStatus(value) {
-      if (
-        value === false ||
-        value === null ||
-        value === undefined ||
-        value === ""
-      ) {
-        return "unsubmitted";
-      }
-      return value;
-    },
-    getStatusMeta(status) {
-      const statusMap = {
-        unapproved: {
-          icon: "notification_important",
-          label: "未確認",
-        },
-        waiting_resubmission: {
-          icon: "autorenew",
-          label: "再提出待ち",
-        },
-        approved: {
-          icon: "check",
-          label: "承認済み",
-        },
-        unsubmitted: {
-          icon: "close",
-          label: "未提出",
-        },
-      };
-
-      return statusMap[status] || statusMap.unapproved;
-    },
-    getStatusSelectClass(value) {
-      const classMap = {
-        unapproved: "status-select--unapproved",
-        waiting_resubmission: "status-select--waiting-resubmission",
-        approved: "status-select--approved",
-        unsubmitted: "status-select--unsubmitted",
-      };
-
-      return classMap[value] || classMap.unapproved;
-    },
+    getStatusMeta: getSubmissionStatusMeta,
+    getStatusSelectClass: getSubmissionStatusSelectClass,
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済み";
       if (status === "not_send") return "送信しない";
