@@ -43,6 +43,7 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
 
     subject, body = parse_mail_comment_body(comment.body)
     group = comment.commentable
+    return render json: fmt(unprocessable_entity, [], 'representative email is required'), status: :unprocessable_entity if group.user&.email.blank?
 
     begin
       deliver_comment_mail!(comment, to: group.user.email, subject: "【申請状況について】#{subject}", body: body)

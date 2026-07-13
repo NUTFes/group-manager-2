@@ -7,7 +7,9 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
 
   setup do
     Role.find_or_create_by!(id: 1, name: 'admin')
+    Role.find_or_create_by!(id: 3, name: 'user')
     @admin = create_user!(email: 'admin-comments-mail@example.com', role_id: 1)
+    @user = create_user!(email: 'user-comments-mail@example.com', role_id: 3)
 
     group_category = GroupCategory.find_or_create_by!(name: '食品販売')
     fes_year = FesYear.find_or_create_by!(year_num: 2026)
@@ -51,6 +53,20 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
     sources = data.pluck('source')
     assert_includes sources, 'order_status'
     assert_includes sources, 'health_center'
+  end
+
+  test 'index requires authentication' do
+    get "/api/v1/group_mail_comments?group_id=#{@group.id}", as: :json
+
+    assert_response :unauthorized
+  end
+
+  test 'index forbids non-admin users' do
+    get "/api/v1/group_mail_comments?group_id=#{@group.id}",
+        headers: auth_headers(@user),
+        as: :json
+
+    assert_response :forbidden
   end
 
   private

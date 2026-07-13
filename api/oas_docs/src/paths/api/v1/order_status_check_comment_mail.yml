@@ -29,7 +29,7 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '201':
+        '200':
           description: api/v1/order_status_check_comment_mail description
           content:
             application/json:
@@ -43,9 +43,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '502':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
       deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
       parameters:
       - name: id
         in: path

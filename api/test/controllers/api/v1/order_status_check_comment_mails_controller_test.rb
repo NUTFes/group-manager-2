@@ -115,6 +115,24 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     assert comment.reload.sent?
   end
 
+  # 異常系: 代表者のメールアドレスが未設定の場合は再送信できない。
+  test 'fails to resend when representative email is blank' do
+    @representative.update!(email: '')
+    comment = @group.comments.create!(
+      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      mail_delivery_status: :failed
+    )
+
+    assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+      post "/api/v1/order_status_check_comment_mails/#{comment.id}/resend",
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_not comment.reload.sent?
+  end
+
   private
 
   def valid_params
