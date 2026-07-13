@@ -1865,6 +1865,26 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FoodProductsApi"
+  "/api/v1/group_mail_comments":
+    get:
+      tags:
+      - api/v1/group_mail_comments_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/group_mail_comments_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
+        '422':
+          description: api/v1/group_mail_comments_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
+      deprecated: false
   "/api/v1/get_group_for_admin_view/{id}":
     get:
       tags:
@@ -2692,6 +2712,71 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
+  "/api/v1/order_status_check_comment_mails":
+    post:
+      tags:
+      - api/v1/order_status_check_comment_mail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '422':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
+  "/api/v1/order_status_check_comment_mails/{id}/resend":
+    post:
+      tags:
+      - api/v1/order_status_check_comment_mail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '404':
+          description: api/v1/order_status_check_comment_mail description
+        '422':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '200':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '502':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_announcements_csv":
     get:
       tags:
@@ -12310,6 +12395,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.GroupMailCommentsApi: {}
     api.v1.GroupsApi:
       type: object
       properties:
@@ -12332,6 +12418,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.OrderStatusCheckCommentMail: {}
     api.v1.OutputCsv:
       type: object
       properties:
@@ -12956,6 +13043,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+    api.v1.OrderStatusCheckCommentMail: {}
     api.v1.PlaceOrdersApi:
       content:
         application/json:
@@ -13142,6 +13230,7 @@ components:
       content:
         application/json:
           schema:
+            "$ref": "#/components/schemas/PublicRelation"
             allOf:
             - "$ref": "#/components/schemas/PublicRelation"
             - type: object
@@ -13253,6 +13342,7 @@ components:
       content:
         application/json:
           schema:
+            "$ref": "#/components/schemas/VenueMap"
             allOf:
             - "$ref": "#/components/schemas/VenueMap"
             - type: object

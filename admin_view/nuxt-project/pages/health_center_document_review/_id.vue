@@ -519,90 +519,14 @@
         justify="start"
         class="sticky-right-column"
       >
-        <Card
-          width="100%"
-          height="800px"
-          style="overflow-y: auto; align-items: flex-start"
-        >
-          <div class="comment-header">
-            <h3>メッセージ</h3>
-          </div>
-          <div class="comment-form">
-            <div class="message-template-panel">
-              <label
-                class="message-template-label"
-                for="message-template-select"
-              >
-                テンプレート
-              </label>
-              <select
-                id="message-template-select"
-                class="message-template-select"
-                v-model="selectedMessageTemplateId"
-              >
-                <option value="">テンプレートを選択</option>
-                <option
-                  v-for="template in messageTemplates"
-                  :key="template.id"
-                  :value="String(template.id)"
-                >
-                  {{ template.name }}（{{ template.locale }}）
-                </option>
-              </select>
-              <p
-                v-if="messageSendResult"
-                class="message-send-result"
-                role="status"
-              >
-                {{ messageSendResult }}
-              </p>
-            </div>
-            <textarea
-              class="comment-textarea"
-              placeholder="メールで送信するコメント"
-              v-model="commentBody"
-              :disabled="!selectedMessageTemplate || isSendingMessage"
-            ></textarea>
-            <CommonButton
-              iconName="send"
-              :on_click="openMessagePreview"
-              :disabled="isSendingMessage || !canSendMessage"
-            >
-              送信
-            </CommonButton>
-          </div>
-
-          <div class="comment-history">
-            <h4>送信履歴</h4>
-            <details
-              v-for="comment in sortedComments"
-              :key="comment.id"
-              class="comment-accordion"
-            >
-              <summary>
-                {{ formatCommentTimestamp(comment.created_at) }}
-                <span
-                  class="mail-delivery-status"
-                  :class="mailDeliveryStatusClass(comment.mail_delivery_status)"
-                >
-                  {{ mailDeliveryStatusLabel(comment.mail_delivery_status) }}
-                </span>
-              </summary>
-              <p class="comment-body">{{ comment.body }}</p>
-              <CommonButton
-                v-if="comment.mail_delivery_status === 'failed'"
-                iconName="send"
-                :on_click="() => resendCommentMail(comment)"
-                :disabled="
-                  isSendingMessage || resendingCommentId === comment.id
-                "
-              >
-                {{ resendingCommentId === comment.id ? "再送信中" : "再送信" }}
-              </CommonButton>
-            </details>
-            <p v-if="sortedComments.length === 0">送信履歴はまだありません</p>
-          </div>
-        </Card>
+        <GroupMailSender
+          v-if="group.group.id"
+          :group-id="group.group.id"
+          :user-email="group.user ? group.user.email : ''"
+          source-page="health_center"
+          :group-name="group.group.name"
+          :user-name="group.user ? group.user.name : ''"
+        />
       </Column>
     </Row>
 
@@ -668,49 +592,16 @@
       @saved="onEditorSaved"
       @error="openEditError"
     />
-
-    <EditModal
-      v-if="isPreviewModalOpen"
-      title="送信内容の確認"
-      @close="closeMessagePreview"
-    >
-      <template v-slot:form>
-        <div class="mail-preview-field">
-          <h3>宛先</h3>
-          <p>{{ group.user.email }}</p>
-        </div>
-        <div class="mail-preview-field">
-          <h3>件名</h3>
-          <p>{{ renderedMessageSubject }}</p>
-        </div>
-        <div class="mail-preview-field">
-          <h3>本文</h3>
-          <pre>{{ renderedMessageBody }}</pre>
-        </div>
-      </template>
-      <template v-slot:method>
-        <div class="mail-preview-actions">
-          <CommonButton
-            iconName="close"
-            :on_click="closeMessagePreview"
-            :disabled="isSendingMessage"
-          >
-            キャンセル
-          </CommonButton>
-          <CommonButton
-            iconName="send"
-            :on_click="confirmMessageSend"
-            :disabled="isSendingMessage"
-          >
-            {{ isSendingMessage ? "送信中" : "送信する" }}
-          </CommonButton>
-        </div>
-      </template>
-    </EditModal>
   </div>
 </template>
 
 <script>
+import {
+  normalizeSubmissionRecordStatus,
+  getSubmissionStatusMeta,
+  getSubmissionStatusSelectClass,
+} from "~/utils/health_center_submission_status";
+
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
   "/api/v1/get_health_center_submission_status_index_for_admin_view";
 const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
@@ -872,13 +763,6 @@ export default {
         { value: "approved", label: "承認済み" },
         { value: "unsubmitted", label: "未提出" },
       ],
-      commentBody: "",
-      messageTemplates: [],
-      selectedMessageTemplateId: "",
-      isSendingMessage: false,
-      resendingCommentId: null,
-      messageSendResult: "",
-      isPreviewModalOpen: false,
     };
   },
   watch: {
@@ -886,9 +770,6 @@ export default {
       async handler() {
         await this.reloadPageData();
       },
-    },
-    selectedMessageTemplateId() {
-      this.applySelectedMessageTemplate();
     },
   },
   computed: {
@@ -924,16 +805,6 @@ export default {
         items: groups[foodProductID],
       }));
     },
-    sortedComments() {
-      return this.submissions
-        .flatMap((submission) =>
-          (submission.comments || []).map((comment) => ({
-            ...comment,
-            application_type: submission.application_type,
-          }))
-        )
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    },
     unapprovedSubmissionCount() {
       return this.submissions.filter(
         (submission) => submission.status !== "approved"
@@ -962,39 +833,9 @@ export default {
         (submission) => submission.status === "approved"
       ).length;
     },
-    selectedMessageTemplate() {
-      return this.messageTemplates.find(
-        (template) =>
-          String(template.id) === String(this.selectedMessageTemplateId)
-      );
-    },
-    canSendMessage() {
-      return Boolean(
-        this.group.user.email &&
-          this.selectedMessageTemplate &&
-          this.commentBody.trim()
-      );
-    },
-    messageTemplateValues() {
-      return {
-        group_name: this.group.group.name,
-        user_name: this.group.user.name,
-      };
-    },
-    renderedMessageSubject() {
-      if (!this.selectedMessageTemplate) return "";
-      return this.renderTemplateText(
-        this.selectedMessageTemplate.subject,
-        this.messageTemplateValues
-      );
-    },
-    renderedMessageBody() {
-      return this.commentBody.trim();
-    },
   },
   async mounted() {
     await this.reloadPageData();
-    await this.loadMessageTemplates();
     window.scrollTo(0, 0);
   },
   methods: {
@@ -1013,16 +854,6 @@ export default {
         throw error;
       }
     },
-    async loadMessageTemplates() {
-      try {
-        const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
-        this.messageTemplates = response.data || [];
-        this.selectedMessageTemplateId = "";
-      } catch (error) {
-        this.messageTemplates = [];
-        this.selectedMessageTemplateId = "";
-      }
-    },
     onPrevGroup() {
       if (!this.prevGroupId) return;
       this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
@@ -1036,55 +867,32 @@ export default {
         (submission) => submission.application_type === applicationType
       );
     },
+    // applicationTypeに対応する申請物自体が存在するかどうか
+    hasApplicationRecord(applicationType) {
+      switch (applicationType) {
+        case "equipment":
+          return this.rentalOrders.length > 0;
+        case "employee":
+          return this.employees.length > 0;
+        case "venue_map":
+          return !!this.venueMap;
+        case "food_product":
+          return this.foodProducts.length > 0;
+        case "purchase_list":
+          return this.purchaseLists.length > 0;
+        case "cooking_process_order":
+          return this.cookingProcessOrders.length > 0;
+        default:
+          return false;
+      }
+    },
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
-      const status = submission?.status;
-      // statusが null, undefined, または空文字列の場合は「未提出」を返す
-      return this.normalizeStatus(status);
+      const hasApplication = this.hasApplicationRecord(applicationType);
+      return normalizeSubmissionRecordStatus(submission, hasApplication);
     },
-    normalizeStatus(value) {
-      if (
-        value === false ||
-        value === null ||
-        value === undefined ||
-        value === ""
-      ) {
-        return "unsubmitted";
-      }
-      return value;
-    },
-    getStatusMeta(status) {
-      const statusMap = {
-        unapproved: {
-          icon: "notification_important",
-          label: "未確認",
-        },
-        waiting_resubmission: {
-          icon: "autorenew",
-          label: "再提出待ち",
-        },
-        approved: {
-          icon: "check",
-          label: "承認済み",
-        },
-        unsubmitted: {
-          icon: "close",
-          label: "未提出",
-        },
-      };
-
-      return statusMap[status] || statusMap.unapproved;
-    },
-    getStatusSelectClass(value) {
-      const classMap = {
-        unapproved: "status-select--unapproved",
-        waiting_resubmission: "status-select--waiting-resubmission",
-        approved: "status-select--approved",
-        unsubmitted: "status-select--unsubmitted",
-      };
-
-      return classMap[value] || classMap.unapproved;
-    },
+    getStatusMeta: getSubmissionStatusMeta,
+    getStatusSelectClass: getSubmissionStatusSelectClass,
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済み";
       if (status === "not_send") return "送信しない";
@@ -1402,134 +1210,6 @@ export default {
   margin: 0;
 }
 
-.comment-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.comment-history {
-  width: 100%;
-  margin-top: 16px;
-}
-
-.message-template-panel {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.message-template-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent-8);
-}
-
-.message-template-select {
-  width: 100%;
-  min-height: 40px;
-  padding: 8px 10px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 14px;
-}
-
-.message-template-select:focus {
-  outline: none;
-  border-color: var(--button-primary);
-}
-
-.message-send-result {
-  margin: 0;
-  font-size: 13px;
-  color: var(--accent-8);
-}
-
-.comment-accordion {
-  width: 100%;
-  border: 1px solid var(--accent-2);
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-top: 8px;
-  background: #fff;
-}
-
-.comment-accordion summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.comment-body {
-  white-space: pre-wrap;
-  margin: 10px 0 4px;
-}
-
-.comment-textarea {
-  width: 100%;
-  height: 300px;
-  padding: 12px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-.comment-textarea:focus {
-  outline: none;
-  border-color: var(--button-primary);
-}
-
-.comment-textarea:disabled {
-  background: #f5f5f5;
-  color: #777;
-  cursor: not-allowed;
-}
-
-.mail-preview-field {
-  width: 100%;
-}
-
-.mail-preview-field p,
-.mail-preview-field pre {
-  width: 500px;
-  overflow-y: auto;
-  margin: 0;
-  padding: 12px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  background: #fafafa;
-  color: #222;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.65;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.mail-preview-field p {
-  min-height: 20px;
-}
-
-.mail-preview-field pre {
-  min-height: 220px;
-  max-height: 380px;
-}
-
-.mail-preview-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
 .textarea-container {
   width: 100%;
 }
@@ -1791,6 +1471,8 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 .mail-delivery-status {

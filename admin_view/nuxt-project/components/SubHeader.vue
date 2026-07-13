@@ -1,15 +1,13 @@
 <template>
-  <div class="sub-header-container" :style="SubHeader">
+  <div class="sub-header-container" :style="SubHeaderOption">
     <div v-if="pageSubTitle !== ''" class="sub-header-link">
-      <button
-        @click="onSubHeaderBack"
-      >
+      <button @click="onSubHeaderBack">
         <span class="material-icons">arrow_back</span>
         {{ pageSubTitle }}
       </button>
     </div>
     <div v-else class="" />
-    <div class="sub-header-main" :style="SubHeader">
+    <div class="sub-header-main" :style="SubHeaderOption">
       <div class="sub-header-title">
         <h2>{{ pageTitle }}</h2>
       </div>

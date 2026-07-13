@@ -16,6 +16,8 @@ class Group < ApplicationRecord
     :venue_map,
     :announcement,
     :cooking_process_order,
+    :fire_equipment_orders,
+    :health_center_submission_statuses,
     { food_products: :purchase_lists }
   ].freeze
 
@@ -42,6 +44,7 @@ class Group < ApplicationRecord
   has_many :un_registered_groups, dependent: :destroy
   has_many :fire_equipment_orders, dependent: :destroy
   has_many :health_center_submission_statuses, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 
