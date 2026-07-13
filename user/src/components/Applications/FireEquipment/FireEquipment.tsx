@@ -34,9 +34,9 @@ const getDisplayMode = (
   hasExisting: boolean,
   isEditing: boolean,
   hasUnregistered: boolean,
-  canOpenApplication: boolean
+  canSubmit: boolean
 ): FireEquipmentDisplayMode => {
-  if (!canOpenApplication) {
+  if (!canSubmit) {
     if (hasUnregistered) return 'negativeDisplay';
     if (hasExisting) return 'summary';
     return 'deadlineNoData';
@@ -77,16 +77,16 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   const { isEditing, applyFireEquipment } = state;
 
   const hasAnyRegistration = hasExisting || hasUnregistered;
-  const canCreate = canAdd || isResubmission;
-  const canModifyExisting = canEdit || isResubmission;
-  const canOpenApplication = canCreate || canModifyExisting;
+  const canRegisterApplication = canAdd || isResubmission;
+  const canEditApplication = canEdit || isResubmission;
+  const canSubmit = canRegisterApplication || canEditApplication;
 
   const mode = getDisplayMode(
     applyFireEquipment,
     hasExisting,
     isEditing,
     hasUnregistered,
-    canOpenApplication
+    canSubmit
   );
 
   const radioOptions = [
@@ -153,8 +153,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       content = (
         <FormList
           items={noApplicationItems}
-          isEdit={canModifyExisting}
-          onEdit={canModifyExisting ? handleCancelUnregistered : undefined}
+          isEdit={canEditApplication}
+          onEdit={canEditApplication ? handleCancelUnregistered : undefined}
         />
       );
       break;
@@ -182,8 +182,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
         <FireEquipmentForm
           groupId={groupId}
           existingOrders={fireEquipmentOrders}
-          onDeleteOrder={canModifyExisting ? handleDeleteOrder : undefined}
-          toEdit={canModifyExisting ? prepareFormForEditing : undefined}
+          onDeleteOrder={canEditApplication ? handleDeleteOrder : undefined}
+          toEdit={canEditApplication ? prepareFormForEditing : undefined}
           isViewMode
         />
       );
@@ -207,8 +207,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
             groupId={groupId}
             existingOrders={isEditing ? fireEquipmentOrders : undefined}
             onComplete={handleFormComplete}
-            canAdd={canCreate}
-            canEdit={canModifyExisting}
+            canAdd={canRegisterApplication}
+            canEdit={canEditApplication}
           />
         </div>
       );
@@ -220,7 +220,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   return (
     <AccordionMenu
       title={t('applications.fireEquipment.title')}
-      isEdit={canOpenApplication}
+      isEdit={canSubmit}
       isExist={isExist}
       required={true}
       status={status}
