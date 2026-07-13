@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 import { mapState } from "vuex";
 import { downloadFile } from '~/utils/download-file';
 export default {
@@ -207,67 +207,47 @@ export default {
       this.files = event.target.files;
       console.log(this.files[0])
     },
-    upload() {
-      for (let f of this.files) {
-        let storageRef = ref(this.$storage, f.name);
-        let uploadTask = uploadBytesResumable(storageRef, f);
-        this.run(uploadTask);
-      }
-    },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "待機"
-              this.isPush.disabled = true
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "待機"
-              this.isPush.disabled = true
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-         () => {
-           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-             const url =
-               "/public_relations?group_id=" +
-               this.appGroup +
-               "&picture_name=" +
-               uploadTask.snapshot.ref.name +
-               "&picture_path=" +
-               downloadURL +
-               "&blurb=" +
-               this.blurb;
-             console.log(url)
+    async upload() {
+      if (
+        !this.files ||
+        this.files.length === 0 ||
+        !(this.files[0] instanceof File)
+      )
+        return;
+      this.buttonState = "待機";
+      this.isPush.disabled = true;
+      this.state = "Uploading ...";
 
-             this.$axios.$post(url).then((response) => {
-               this.reload();
-               this.closeAddModal();
-               this.openSnackBar("PR画像・文申請を追加しました");
-               this.buttonState = "登録"
-               this.isPush.disabled = false
-               this.groupID = null;
-               this.blurb = null;
-             })
-             /*
-             const url = "/api/videos?name=" + uploadTask.snapshot.ref.name + "&path=" + downloadURL
-             axios.post(url).then(
-               console.log("Uploading Success!")
-             )
-              */
-           }
-          )
+      try {
+        for (const file of this.files) {
+          const uploadedImage = await uploadImageToImgur(
+            file,
+            this.$config.imgurClientId
+          );
+          const data = {
+            group_id: this.appGroup,
+            picture_name: file.name,
+            picture_path: uploadedImage.link,
+            imgur_deletehash: uploadedImage.deletehash,
+            blurb: this.blurb,
+          };
+
+          await this.$axios.$post("/public_relations", data);
         }
-      );
+
+        this.reload();
+        this.closeAddModal();
+        this.openSnackBar("PR画像・文申請を追加しました");
+        this.appGroup = "";
+        this.blurb = null;
+      } catch (error) {
+        console.error(error);
+        this.openSnackBar("PR画像・文申請の追加に失敗しました");
+      } finally {
+        this.buttonState = "登録";
+        this.isPush.disabled = false;
+        this.state = "";
+      }
     },
     async refinementPurchaseLists(item_id, name_list) {
       this.updateFilters(item_id, name_list);

@@ -33,7 +33,7 @@
               <td>
                 <div v-if='publicRelation.picture_path === null'>未登録</div>
                 <div v-else @click="DownloadPic(publicRelation.picture_path)">
-                  <img :src="publicRelation.picture_path" />
+                  <img :src="publicRelation.picture_path" referrerpolicy="no-referrer" />
                 </div>
               </td>
             </tr>
@@ -132,7 +132,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 export default {
   watchQuery: ["page"],
   data() {
@@ -228,71 +228,60 @@ export default {
         }
       }
     },
-    edit() {
-      for (let f of this.files) {
-        let storageRef = ref(this.$storage, f.name);
-        let uploadTask = uploadBytesResumable(storageRef, f);
-        this.run(uploadTask);
-      }
-    },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "登録中";
-              this.isPush.disabled = true;
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "登録中";
-              this.isPush.disabled = true;
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const data = {
-              group_id: this.publicRelation.group.id,
-              picture_name: uploadTask.snapshot.ref.name,
-              picture_path: downloadURL,
-              blurb: this.publicRelation.blurb,
-            };
+    async edit() {
+      this.buttonState = "登録中";
+      this.isPush.disabled = true;
+      this.state = "Uploading ...";
 
-            if (this.publicRelation.public_relation_id) {
-              //put
-              const editUrl = `/public_relations/${this.publicRelation.public_relation_id}`;
-              this.$axios.$put(editUrl, data).then((response) => {
-                console.log(response);
-                this.reload(response.data.group_id);
-                this.closeEditModal();
-                this.openSnackBar("参加団体PR申請を編集しました");
-                this.buttonState = "登録"
-                this.isPush.disabled = false;
-                this.files = null;
-              });
-            } else {
-              //post
-              const postUrl = `/public_relations?group_id=${this.publicRelation.group.id}`;
-              this.$axios.$post(postUrl, data).then((response) => {
-                this.reload(response.data.group_id);
-                this.closeEditModal();
-                this.openSnackBar("参加団体PR申請を登録しました");
-                this.buttonState = "登録"
-                this.isPush.disabled = false;
-                this.files = null;
-              });
-            }
-          });
+      try {
+        let pictureName = this.publicRelation.picture_name;
+        let picturePath = this.publicRelation.picture_path;
+        let imgurDeletehash = null;
+
+        if (this.files && this.files.length > 0) {
+          const file = this.files[0];
+          const uploadedImage = await uploadImageToImgur(
+            file,
+            this.$config.imgurClientId
+          );
+          picturePath = uploadedImage.link;
+          imgurDeletehash = uploadedImage.deletehash;
+          pictureName = file.name;
         }
-      );
+
+        const data = {
+          group_id: this.publicRelation.group.id,
+          picture_name: pictureName,
+          picture_path: picturePath,
+          blurb: this.publicRelation.blurb,
+        };
+        if (imgurDeletehash) {
+          data.imgur_deletehash = imgurDeletehash;
+        }
+
+        if (this.publicRelation.public_relation_id) {
+          //put
+          const editUrl = `/public_relations/${this.publicRelation.public_relation_id}`;
+          const response = await this.$axios.$put(editUrl, data);
+          this.reload(response.data.group_id);
+          this.closeEditModal();
+          this.openSnackBar("参加団体PR申請を編集しました");
+        } else {
+          //post
+          const postUrl = `/public_relations?group_id=${this.publicRelation.group.id}`;
+          const response = await this.$axios.$post(postUrl, data);
+          this.reload(response.data.group_id);
+          this.closeEditModal();
+          this.openSnackBar("参加団体PR申請を登録しました");
+        }
+        this.files = null;
+      } catch (error) {
+        this.openSnackBar("参加団体PR申請の保存に失敗しました");
+      } finally {
+        this.buttonState = "登録";
+        this.isPush.disabled = false;
+        this.state = "";
+      }
     },
     async destroy() {
       const delUrl = "/public_relations/" + this.publicRelation.public_relation_id;

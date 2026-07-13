@@ -115,7 +115,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 export default {
   watchQuery: ["page"],
   data() {
@@ -245,55 +245,39 @@ export default {
         }
       }
     },
-    submit() {
-      for (let f of this.files) {
-        let storageRef = ref(this.$storage, f.name);
-        let uploadTask = uploadBytesResumable(storageRef, f);
-        this.run(uploadTask);
-        this.isFile = false;
-      }
-    },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const data = {
-              group_id: this.group_id,
-              picture_name: uploadTask.snapshot.ref.name,
-              picture_path: downloadURL,
-            };
+    async submit() {
+      if (!this.files || this.files.length === 0) return;
 
-            const url = `/venue_maps?group_id=${this.group_id}`;
-            this.$axios.$post(url, data).then((response) => {
-              this.reload(response.data.group_id);
-              this.closeAddModal();
-              this.openSnackBar("模擬店平面図を登録しました");
-              this.isPush.disabled = false;
-              this.files = null;
-            });
-          });
-        }
-      );
+      const file = this.files[0];
+      this.buttonState = "待機";
+      this.isPush.disabled = true;
+      this.state = "Uploading ...";
+
+      try {
+        const uploadedImage = await uploadImageToImgur(
+          file,
+          this.$config.imgurClientId
+        );
+        const data = {
+          group_id: this.group_id,
+          picture_name: file.name,
+          picture_path: uploadedImage.link,
+          imgur_deletehash: uploadedImage.deletehash,
+        };
+
+        const response = await this.$axios.$post("/venue_maps", data);
+        this.reload(response.data.group_id);
+        this.closeAddModal();
+        this.openSnackBar("模擬店平面図を登録しました");
+        this.files = [{ name: "選択してください" }];
+        this.isFile = false;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.buttonState = "登録";
+        this.isPush.disabled = false;
+        this.state = "";
+      }
     },
     async refinementVenueMaps(item_id, name_list) {
       this.updateFilters(item_id, name_list);

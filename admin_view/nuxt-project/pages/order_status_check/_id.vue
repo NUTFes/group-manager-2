@@ -257,7 +257,7 @@
                   <th>PR画像</th>
                   <td>
                     <div v-if="group.public_relation.picture_path" @click.stop="openImage(group.public_relation.picture_path)" style="cursor: pointer; width: 100%;">
-                      <img :src="group.public_relation.picture_path" alt="PR画像" style="width: 100%; height: auto; display: block;" />
+                      <img :src="group.public_relation.picture_path" alt="PR画像" referrerpolicy="no-referrer" style="width: 100%; height: auto; display: block;" />
                     </div>
                     <span v-else>未登録</span>
                   </td>
@@ -297,7 +297,7 @@
               <h2>模擬店平面図</h2>
             </div>
             <div v-if="group.venue_map" class="selectable-row" @click="openModal('venue_map', { ...group.venue_map, group_name: group.group.name })" style="width: 100%;">
-              <img v-if="group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="venue-map-image" style="width: 100%; height: auto; display: block;" />
+              <img v-if="group.venue_map.picture_path" :src="group.venue_map.picture_path" alt="平面図" class="venue-map-image" referrerpolicy="no-referrer" style="width: 100%; height: auto; display: block;" />
             </div>
             <p v-else-if="isUnregistered('venue_map')">申請しない</p>
             <p v-else>未登録</p>
