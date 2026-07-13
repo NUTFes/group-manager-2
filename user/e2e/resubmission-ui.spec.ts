@@ -14,6 +14,19 @@ type SubmissionStatusValue =
   | 'approved'
   | 'unsubmitted';
 
+const submissionApplicationTypes = [
+  'equipment',
+  'employee',
+  'food_product',
+  'purchase_list',
+  'venue_map',
+  'cooking_process_order',
+  'power_order',
+  'fire_equipment_order',
+] as const;
+
+type SubmissionApplicationType = (typeof submissionApplicationTypes)[number];
+
 type PowerOrder = {
   id: number;
   group_id: number;
@@ -37,16 +50,99 @@ type FireEquipmentOrder = {
 
 type ScenarioState = {
   pageMode: 'registration' | 'resubmission' | 'closed';
-  statuses: Record<
-    'power_order' | 'fire_equipment_order',
-    SubmissionStatusValue
-  >;
+  groupCategoryId: number;
+  statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
   fireEquipmentOrders: FireEquipmentOrder[];
   requestedUrls: string[];
 };
 
 test.describe('resubmission UI', () => {
+  // 保健所関連の全申請について、再提出ステータスと受付中表示がユーザー画面へ反映されることを確認する。
+  test('shows resubmission status for all applications', async ({ page }) => {
+    const state = scenarioState('closed');
+    submissionApplicationTypes.forEach((applicationType) => {
+      state.statuses[applicationType] = 'waiting_resubmission';
+    });
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+
+    for (const title of [
+      '物品申請',
+      '電力申請',
+      '従業員申請',
+      '模擬店平面図',
+      '販売品申請',
+      '購入品申請',
+      '調理工程申請',
+      '火気使用申請',
+    ]) {
+      const accordion = page.getByRole('button', {
+        name: new RegExp(title),
+      });
+      await expect(
+        accordion.getByText('再提出', { exact: true })
+      ).toBeVisible();
+      await expect(
+        accordion.getByText('受付中', { exact: true })
+      ).toBeVisible();
+    }
+  });
+
+  for (const { categoryName, groupCategoryId, applications } of [
+    {
+      categoryName: 'goods sales',
+      groupCategoryId: 2,
+      applications: ['物品申請', '模擬店平面図', '販売品申請'],
+    },
+    {
+      categoryName: 'stage',
+      groupCategoryId: 3,
+      applications: ['物品申請'],
+    },
+    {
+      categoryName: 'exhibition',
+      groupCategoryId: 4,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+    {
+      categoryName: 'research lab',
+      groupCategoryId: 5,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+    {
+      categoryName: 'committee',
+      groupCategoryId: 6,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+  ]) {
+    test(`passes resubmission statuses to ${categoryName} applications`, async ({
+      page,
+    }) => {
+      const state = scenarioState('closed');
+      state.groupCategoryId = groupCategoryId;
+      state.statuses.equipment = 'waiting_resubmission';
+      state.statuses.venue_map = 'waiting_resubmission';
+      state.statuses.food_product = 'waiting_resubmission';
+      await mockHomePageApis(page, state);
+
+      await page.goto('/home');
+
+      for (const title of applications) {
+        const accordion = page.getByRole('button', {
+          name: new RegExp(title),
+        });
+        await expect(
+          accordion.getByText('再提出', { exact: true })
+        ).toBeVisible();
+        await expect(
+          accordion.getByText('受付中', { exact: true })
+        ).toBeVisible();
+      }
+    });
+  }
+
   // 締切前の未登録状態から、電力申請フォームを入力・送信し、登録後カードに入力値が表示されることを確認する。
   test('registers a power order and displays the submitted card values', async ({
     page,
@@ -199,7 +295,14 @@ test.describe('resubmission UI', () => {
 
 const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
   pageMode,
+  groupCategoryId: 1,
   statuses: {
+    equipment: 'unsubmitted',
+    employee: 'unsubmitted',
+    food_product: 'unsubmitted',
+    purchase_list: 'unsubmitted',
+    venue_map: 'unsubmitted',
+    cooking_process_order: 'unsubmitted',
     power_order:
       pageMode === 'resubmission'
         ? 'waiting_resubmission'
@@ -313,7 +416,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
         apiResponse({
           id: mockGroupId,
           user_id: mockUser.id,
-          group_category_id: 1,
+          group_category_id: state.groupCategoryId,
         })
       );
     }
@@ -331,11 +434,12 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
         route,
         apiResponse({
           submissions: [
-            submission('power_order', 3001, state.statuses.power_order),
-            submission(
-              'fire_equipment_order',
-              3002,
-              state.statuses.fire_equipment_order
+            ...submissionApplicationTypes.map((applicationType, index) =>
+              submission(
+                applicationType,
+                3001 + index,
+                state.statuses[applicationType]
+              )
             ),
           ],
         })
@@ -417,7 +521,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
     if (method === 'POST' && path === '/health_center_submission_statuses') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
-        application_type: 'power_order' | 'fire_equipment_order';
+        application_type: SubmissionApplicationType;
         status: SubmissionStatusValue;
       };
       state.statuses[body.application_type] = body.status;
@@ -436,8 +540,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       const body = (await route.request().postDataJSON()) as {
         status: SubmissionStatusValue;
       };
-      const applicationType =
-        id === 3002 ? 'fire_equipment_order' : 'power_order';
+      const applicationType = submissionApplicationTypes[id - 3001];
       state.statuses[applicationType] = body.status;
       return fulfillJson(
         route,
@@ -567,7 +670,7 @@ const apiResponse = <T>(data: T) => ({
 });
 
 const submission = (
-  applicationType: 'power_order' | 'fire_equipment_order',
+  applicationType: SubmissionApplicationType,
   id: number,
   status: SubmissionStatusValue
 ) => ({

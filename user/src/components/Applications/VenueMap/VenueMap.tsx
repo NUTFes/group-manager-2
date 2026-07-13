@@ -140,7 +140,7 @@ const VenueMap: FC<VenueMapProps> = ({
     <>
       <AccordionMenu
         title={venueMapTexts.title}
-        isEdit={!isDeadline}
+        isEdit={!isDeadline || isResubmission}
         isExist={isRegistered}
         required
         status={status}

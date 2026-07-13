@@ -28,6 +28,7 @@ export const Employees: FC<EmployeesProps> = ({
   mutateCheckAllRegisteredGroups,
   status,
 }) => {
+  const isResubmission = status === 'waiting_resubmission';
   const employeesApplicationHook = useEmployeesApplicationHooks(
     groupId,
     isDeadline,
@@ -37,7 +38,7 @@ export const Employees: FC<EmployeesProps> = ({
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline} // 期限内の場合に編集可能
+      isEdit={!isDeadline || isResubmission}
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
       status={status} // 申請のステータスを渡す

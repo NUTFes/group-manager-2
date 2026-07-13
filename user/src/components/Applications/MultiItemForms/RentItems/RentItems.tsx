@@ -19,6 +19,8 @@ const RentItems: FC<RentItemsProps> = ({
   groupCategoryId,
   status,
 }) => {
+  const isResubmission = status === 'waiting_resubmission';
+  const isEditable = !isDeadline || isResubmission;
   const { rentItemsAccordionTexts } = useRentItemsAccordionHooks(
     groupId,
     groupCategoryId,
@@ -27,7 +29,7 @@ const RentItems: FC<RentItemsProps> = ({
   return (
     <AccordionMenu
       title={rentItemsAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={isEditable}
       isExist={isRegistered}
       required={true}
       status={status}
@@ -35,7 +37,7 @@ const RentItems: FC<RentItemsProps> = ({
       <RentItemsForm
         groupId={groupId}
         groupCategoryId={groupCategoryId}
-        isDeadline={!isDeadline}
+        isEditable={isEditable}
         status={status}
       />
     </AccordionMenu>

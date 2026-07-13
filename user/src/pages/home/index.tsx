@@ -64,6 +64,24 @@ const GroupCategoryContent = ({
   mutateCheckAllRegisteredGroups,
   healthCenterSubmissionStatus,
 }: GroupCategoryContentProps) => {
+  const equipmentSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'equipment'
+  );
+  const employeeSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'employee'
+  );
+  const foodProductSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'food_product'
+  );
+  const purchaseListSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'purchase_list'
+  );
+  const venueMapSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'venue_map'
+  );
+  const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'cooking_process_order'
+  );
   const powerOrderSubmission = healthCenterSubmissionStatus?.find(
     (s) => s.applicationType === 'power_order'
   );
@@ -73,25 +91,6 @@ const GroupCategoryContent = ({
 
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
-    const employeeSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'employee'
-    );
-    const foodProductsSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'food_product'
-    );
-    const purchaseListsSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'purchase_list'
-    );
-    const venueMapSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'venue_map'
-    );
-    const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'cooking_process_order'
-    );
-    const RentalItemsSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'equipment'
-    );
-
     return (
       <>
         <VenueApplications
@@ -104,7 +103,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={RentalItemsSubmission?.status}
+          status={equipmentSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -134,13 +133,13 @@ const GroupCategoryContent = ({
           groupId={groupId}
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
-          status={foodProductsSubmission?.status}
+          status={foodProductSubmission?.status}
         />
         <PurchaseLists
           isDeadline={!userPageSettings?.isEditPurchaseList}
           isRegistered={checkAllRegisteredGroups?.purchaseList}
           groupId={groupId}
-          status={purchaseListsSubmission?.status}
+          status={purchaseListSubmission?.status}
         />
         <CookingProcessOrder
           isDeadline={!userPageSettings?.isEditCookingProcess}
@@ -171,6 +170,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={equipmentSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -187,11 +187,13 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={venueMapSubmission?.status}
         />
         <FoodProduct
           groupId={groupId}
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
+          status={foodProductSubmission?.status}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
@@ -211,6 +213,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={equipmentSubmission?.status}
         />
         <Stage
           isDeadline={!userPageSettings?.isEditStageOrder}
@@ -249,6 +252,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={equipmentSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -265,6 +269,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={venueMapSubmission?.status}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
@@ -289,6 +294,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={equipmentSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -305,6 +311,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={venueMapSubmission?.status}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
@@ -329,6 +336,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
+          status={equipmentSubmission?.status}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -345,6 +353,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={venueMapSubmission?.status}
         />
       </>
     );

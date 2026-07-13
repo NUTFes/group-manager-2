@@ -20,6 +20,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isDeadline,
   status,
 }) => {
+  const isResubmission = status === 'waiting_resubmission';
   const {
     methods,
     fields,
@@ -37,7 +38,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   return (
     <AccordionMenu
       title={cookingProcessOrderTexts.title}
-      isEdit={!isDeadline}
+      isEdit={!isDeadline || isResubmission}
       isExist={!!isExist}
       isRegistered={!!isExist}
       required

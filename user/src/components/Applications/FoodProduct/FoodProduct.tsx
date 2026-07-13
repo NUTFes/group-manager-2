@@ -157,11 +157,12 @@ const FoodProduct: FC<FoodProductProps> = ({
     foodProductViewTexts,
     isResubmission,
   } = useFoodProductHooks(groupId, isRegistered, status);
+  const canEditApplication = !isDeadline || isResubmission;
 
   return (
     <AccordionMenu
       title={foodProductViewTexts.title}
-      isEdit={!isDeadline}
+      isEdit={canEditApplication}
       isExist={!!foodProducts && foodProducts.length > 0}
       required
       status={status}

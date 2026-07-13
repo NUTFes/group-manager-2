@@ -92,6 +92,48 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     assert_equal 1, HealthCenterSubmissionStatus.where(group: @group, application_type: :power_order).count
   end
 
+  test 'notifies Slack with the application name for every resubmission type' do
+    posted_messages = []
+    slack_client = Object.new
+    slack_client.define_singleton_method(:chat_postMessage) do |**args|
+      posted_messages << args[:text]
+    end
+
+    with_slack_client(slack_client) do
+      HealthCenterSubmissionStatus::APPLICATION_TYPE_JA.each do |application_type, application_name|
+        submission_status = HealthCenterSubmissionStatus.create!(
+          group: @group,
+          application_type: application_type,
+          status: :waiting_resubmission
+        )
+
+        assert_difference -> { posted_messages.length }, 1 do
+          submission_status.update!(status: :unapproved)
+        end
+        assert_includes posted_messages.last, "申請種類：#{application_name}"
+      end
+    end
+  end
+
+  test 'does not notify Slack for a status change other than resubmission completion' do
+    posted_messages = []
+    slack_client = Object.new
+    slack_client.define_singleton_method(:chat_postMessage) do |**args|
+      posted_messages << args[:text]
+    end
+    submission_status = HealthCenterSubmissionStatus.create!(
+      group: @group,
+      application_type: :food_product,
+      status: :unapproved
+    )
+
+    with_slack_client(slack_client) do
+      assert_no_difference -> { posted_messages.length } do
+        submission_status.update!(status: :approved)
+      end
+    end
+  end
+
   private
 
   def create_user!(email:)
@@ -104,5 +146,14 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
       password_confirmation: 'password',
       role_id: 1
     )
+  end
+
+  def with_slack_client(slack_client)
+    original_new = Slack::Web::Client.method(:new)
+    Slack::Web::Client.define_singleton_method(:new) { slack_client }
+
+    yield
+  ensure
+    Slack::Web::Client.define_singleton_method(:new, original_new)
   end
 end

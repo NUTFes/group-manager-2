@@ -27,7 +27,8 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   status,
 }) => {
   const { labels } = useAccordionMenuTexts();
-  const receptionStatus = isEdit ? 'open' : 'closed';
+  const receptionStatus =
+    isEdit || status === 'waiting_resubmission' ? 'open' : 'closed';
 
   const registerStatus =
     status === 'waiting_resubmission'

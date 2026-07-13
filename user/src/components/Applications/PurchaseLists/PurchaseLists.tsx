@@ -29,6 +29,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
 }) => {
   const purchaseListsViewTexts = usePurchaseListsViewTexts();
   const title = purchaseListsViewTexts.title;
+  const isResubmission = status === 'waiting_resubmission';
+  const canEditApplication = !isDeadline || isResubmission;
 
   const {
     foodProducts,
@@ -70,7 +72,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={canEditApplication}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -84,7 +86,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={canEditApplication}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -105,7 +107,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={false}
+        isEdit={canEditApplication}
         isExist={false}
         status={status}
       >
@@ -127,12 +129,12 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   }
 
   //締め切り後で再提出の場合
-  if (isDeadline && purchaseLists && status === 'waiting_resubmission') {
+  if (isDeadline && purchaseLists && isResubmission) {
     return (
       <AccordionMenu
         title={title}
         required
-        isEdit={false}
+        isEdit={canEditApplication}
         isExist={true}
         status={status}
       >
@@ -154,7 +156,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 締め切り後で、データがある場合 (表示のみ)
   if (isDeadline && purchaseLists && purchaseLists.length > 0) {
     return (
-      <AccordionMenu title={title} required isEdit={false} isExist={true}>
+      <AccordionMenu
+        title={title}
+        required
+        isEdit={false}
+        isExist={true}
+        status={status}
+      >
         {formItems.map((items, index) => (
           <div key={`purchase-list-${index}`} className="mb-4">
             <FormList items={items} />
@@ -170,8 +178,9 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={canEditApplication}
         isExist={initialIsRegistered}
+        status={status}
       >
         <PurchaseListsForm
           control={control}
@@ -193,7 +202,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     <AccordionMenu
       title={title}
       required
-      isEdit={!isDeadline}
+      isEdit={canEditApplication}
       isExist={initialIsRegistered}
       status={status}
     >
