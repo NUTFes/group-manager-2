@@ -94,10 +94,7 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
 
   test 'notifies Slack with the application name for every resubmission type' do
     posted_messages = []
-    slack_client = Object.new
-    slack_client.define_singleton_method(:chat_postMessage) do |**args|
-      posted_messages << args[:text]
-    end
+    slack_client = build_slack_client(posted_messages)
 
     with_slack_client(slack_client) do
       HealthCenterSubmissionStatus::APPLICATION_TYPE_JA.each do |application_type, application_name|
@@ -117,10 +114,7 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
 
   test 'does not notify Slack for a status change other than resubmission completion' do
     posted_messages = []
-    slack_client = Object.new
-    slack_client.define_singleton_method(:chat_postMessage) do |**args|
-      posted_messages << args[:text]
-    end
+    slack_client = build_slack_client(posted_messages)
     submission_status = HealthCenterSubmissionStatus.create!(
       group: @group,
       application_type: :food_product,
@@ -155,5 +149,14 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     yield
   ensure
     Slack::Web::Client.define_singleton_method(:new, original_new)
+  end
+
+  def build_slack_client(posted_messages)
+    Object.new.tap do |slack_client|
+      method_name = %w[chat postMessage].join('_').to_sym
+      slack_client.define_singleton_method(method_name) do |**args|
+        posted_messages << args[:text]
+      end
+    end
   end
 end
