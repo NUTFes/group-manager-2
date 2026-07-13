@@ -3153,7 +3153,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/OutputPdf"
+                "$ref": "#/components/schemas/api.v1.OutputPdf"
             application/pdf:
               schema:
                 type: string
@@ -3165,7 +3165,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/OutputPdf"
+                "$ref": "#/components/schemas/api.v1.OutputPdf"
       deprecated: false
       parameters:
       - name: group_id
@@ -3509,7 +3509,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
@@ -6230,6 +6230,8 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
@@ -6247,6 +6249,8 @@ paths:
       summary: patch summary
       description: patch description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
@@ -7824,6 +7828,313 @@ paths:
         required: true
         schema:
           type: integer
+  "/place_categories":
+    get:
+      tags:
+      - place_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/PlaceCategory"
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+    post:
+      tags:
+      - place_category
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+  "/place_categories/{id}":
+    get:
+      tags:
+      - place_category
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - place_category
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - place_category
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: place_category description
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    "$ref": "#/components/schemas/PlaceCategory"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PlaceCategory"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - place_category
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: place_category description
+        '422':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlaceCategory"
+        '500':
+          description: place_category description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                      option:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/place_numbers":
     get:
       tags:
@@ -8155,6 +8466,8 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: power_order description
         '422':
           description: power_order description
           content:
@@ -9328,9 +9641,29 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+                type: object
+                properties:
+                  name_en:
+                    type: string
+        '200':
+          description: rental_item description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name_en:
+                    type: string
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
   "/rental_items/{id}":
     get:
       tags:
@@ -12005,7 +12338,7 @@ components:
         id:
           type: integer
           format: int64
-    OutputPdf: {}
+    api.v1.OutputPdf: {}
     api.v1.PlaceOrdersApi:
       type: object
       properties:
@@ -12025,7 +12358,6 @@ components:
         id:
           type: integer
           format: int64
-    api.v1.PrintPdf: {}
     api.v1.PublicRelationsApi:
       type: object
       properties:
@@ -12316,6 +12648,45 @@ components:
         id:
           type: integer
           format: int64
+    PlaceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        parent_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        formatted_name:
+          type: string
+        parent_name:
+          type: string
+        children_count:
+          type: integer
+        descendant_ids:
+          type: array
+          items:
+            type: integer
+        stocker_places_count:
+          type: integer
+    PlaceCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        parent_id:
+          type: integer
+          nullable: true
+      required:
+      - name
     PlaceNumber:
       type: object
       properties:
@@ -12430,6 +12801,19 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        name_en:
+          type: string
+        stock_item_status:
+          type: integer
+        assign_item_status:
+          type: integer
+        place_category_id:
+          type: integer
+          nullable: true
+        place_category:
+          "$ref": "#/components/schemas/PlaceCategory"
     SubRep:
       type: object
       properties:
@@ -12734,6 +13118,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/PlaceAllowList"
+    PlaceCategory:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/PlaceCategoryRequest"
     PlaceNumber:
       content:
         application/json:

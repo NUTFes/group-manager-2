@@ -46,5 +46,5 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.PrintPdf"
+                "$ref": "#/components/schemas/PrintPdf"
       deprecated: false

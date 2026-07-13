@@ -1,6 +1,6 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).places.read">
-    <SubHeader pageTitle="会場一覧">
+    <SubHeader pageTitle="会場選択肢一覧">
       <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>

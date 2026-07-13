@@ -56,6 +56,8 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
@@ -73,6 +75,8 @@ paths:
       summary: patch summary
       description: patch description
       responses:
+        '204':
+          description: fire_equipment_order description
         '422':
           description: fire_equipment_order description
           content:
