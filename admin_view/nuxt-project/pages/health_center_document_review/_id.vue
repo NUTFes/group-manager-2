@@ -597,7 +597,7 @@
 
 <script>
 import {
-  normalizeSubmissionStatus,
+  normalizeSubmissionRecordStatus,
   getSubmissionStatusMeta,
   getSubmissionStatusSelectClass,
 } from "~/utils/health_center_submission_status";
@@ -889,9 +889,7 @@ export default {
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
       const hasApplication = this.hasApplicationRecord(applicationType);
-      // statusが null, undefined, または空文字列の場合は
-      // 申請物の有無に応じて「未確認」または「未提出」を返す
-      return normalizeSubmissionStatus(submission?.status, hasApplication);
+      return normalizeSubmissionRecordStatus(submission, hasApplication);
     },
     getStatusMeta: getSubmissionStatusMeta,
     getStatusSelectClass: getSubmissionStatusSelectClass,

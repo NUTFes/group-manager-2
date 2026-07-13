@@ -13,6 +13,18 @@ export const normalizeSubmissionStatus = (value, hasApplication = false) => {
   return value;
 };
 
+// 詳細APIはステータスレコード未作成時にも既定のstatusを返すため、
+// idの有無で永続化済みのステータスかどうかを判定する。
+export const normalizeSubmissionRecordStatus = (
+  submission,
+  hasApplication = false
+) => {
+  const hasStatusRecord =
+    submission?.id !== null && submission?.id !== undefined;
+  const status = hasStatusRecord ? submission.status : undefined;
+  return normalizeSubmissionStatus(status, hasApplication);
+};
+
 const STATUS_META = {
   unapproved: {
     icon: "notification_important",

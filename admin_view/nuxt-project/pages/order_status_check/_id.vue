@@ -1128,7 +1128,7 @@ import VenueMapEditModal from "~/components/edit-modals/VenueMapEditModal.vue";
 import GroupMailSender from "~/components/GroupMailSender.vue";
 import { formatWeather } from "~/utils/constants";
 import {
-  normalizeSubmissionStatus,
+  normalizeSubmissionRecordStatus,
   getSubmissionStatusMeta,
   getSubmissionStatusSelectClass,
 } from "~/utils/health_center_submission_status";
@@ -1373,7 +1373,7 @@ export default {
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
       const hasApplication = this.hasApplicationRecord(applicationType);
-      return normalizeSubmissionStatus(submission?.status, hasApplication);
+      return normalizeSubmissionRecordStatus(submission, hasApplication);
     },
     getStatusMeta: getSubmissionStatusMeta,
     getStatusSelectClass: getSubmissionStatusSelectClass,

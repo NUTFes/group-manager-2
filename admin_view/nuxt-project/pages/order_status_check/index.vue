@@ -100,12 +100,9 @@
                   !group.sub_rep && !isUnregistered(group.group.id, 'sub_rep'),
               }"
             >
-              <div
-                v-if="
-                  group.sub_rep || isUnregistered(group.group.id, 'sub_rep')
-                "
-              >
-                ◯
+              <div v-if="group.sub_rep">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'sub_rep')">
+                ー
               </div>
               <div v-else class="status-cell-inner">
                 <span class="material-icons status-icon-small">close</span>
@@ -145,7 +142,7 @@
                   : getSubmissionStatusClass(group, 'power_order'),
               ]"
             >
-              <div v-if="isUnregistered(group.group.id, 'power_order')">◯</div>
+              <div v-if="isUnregistered(group.group.id, 'power_order')">ー</div>
               <div v-else-if="group.power_orders" class="status-cell-inner">
                 <span
                   v-if="getSubmissionStatusIcon(group, 'power_order')"
@@ -171,7 +168,7 @@
               ]"
             >
               <div v-if="isUnregistered(group.group.id, 'rental_item_order')">
-                ◯
+                ー
               </div>
               <div v-else-if="group.rental_orders" class="status-cell-inner">
                 <span
@@ -223,7 +220,7 @@
                   : getSubmissionStatusClass(group, 'employee'),
               ]"
             >
-              <div v-if="isUnregistered(group.group.id, 'employee')">◯</div>
+              <div v-if="isUnregistered(group.group.id, 'employee')">ー</div>
               <div v-else-if="group.employees" class="status-cell-inner">
                 <span
                   v-if="getSubmissionStatusIcon(group, 'employee')"
@@ -356,7 +353,7 @@
               <div
                 v-if="isUnregistered(group.group.id, 'fire_equipment_order')"
               >
-                ◯
+                ー
               </div>
               <div
                 v-else-if="
