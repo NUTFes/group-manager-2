@@ -159,6 +159,7 @@ const Power: FC<PowerProps> = ({
       isEdit={!isFormLocked}
       isExist={isRegistered}
       required={true}
+      status={status}
     >
       {content}
     </AccordionMenu>

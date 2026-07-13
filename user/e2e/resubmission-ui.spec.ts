@@ -42,7 +42,7 @@ type ScenarioState = {
     SubmissionStatusValue
   >;
   powerOrders: PowerOrder[];
-  fireEquipmentOrder: FireEquipmentOrder | null;
+  fireEquipmentOrders: FireEquipmentOrder[];
   requestedUrls: string[];
 };
 
@@ -83,6 +83,7 @@ test.describe('resubmission UI', () => {
 
     await page.goto('/home');
     await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await page.getByRole('radio', { name: 'はい' }).check();
 
     await fillFireEquipmentForm(page, {
       name: 'E2E 登録バーナー',
@@ -158,7 +159,7 @@ test.describe('resubmission UI', () => {
       usage: 'E2E 更新調理',
       remark: 'E2E 更新備考',
     });
-    await page.getByRole('button', { name: '修正', exact: true }).click();
+    await page.getByRole('button', { name: '保存', exact: true }).click();
 
     await expect(page.getByText('E2E 更新バーナー')).toBeVisible();
     await expect(page.getByText('3', { exact: true })).toBeVisible();
@@ -226,19 +227,21 @@ const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
           },
         ]
       : [],
-  fireEquipmentOrder:
+  fireEquipmentOrders:
     pageMode !== 'registration'
-      ? {
-          id: 5001,
-          group_id: mockGroupId,
-          name: 'E2E バーナー',
-          quantity: 1,
-          fuel: 'gas_bottle',
-          usage: 'E2E 調理',
-          is_takeaway: true,
-          remark: 'E2E 備考',
-        }
-      : null,
+      ? [
+          {
+            id: 5001,
+            group_id: mockGroupId,
+            name: 'E2E バーナー',
+            quantity: 1,
+            fuel: 'gas_bottle',
+            usage: 'E2E 調理',
+            is_takeaway: true,
+            remark: 'E2E 備考',
+          },
+        ]
+      : [],
   requestedUrls: [],
 });
 
@@ -446,55 +449,39 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       method === 'GET' &&
       path === `/fire_equipment_orders/group/${mockGroupId}`
     ) {
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders));
     }
 
     if (method === 'POST' && path === '/fire_equipment_orders') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as FireEquipmentBody;
-      state.fireEquipmentOrder = fireEquipmentFromBody(body, 5101);
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      state.fireEquipmentOrders = [fireEquipmentFromBody(body, 5101)];
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders[0]));
     }
 
     if (method === 'PATCH' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as FireEquipmentBody;
       const id = Number(path.split('/').at(-1));
-      state.fireEquipmentOrder = fireEquipmentFromBody(body, id);
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      state.fireEquipmentOrders = [fireEquipmentFromBody(body, id)];
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders[0]));
     }
 
-    if (method === 'PATCH' && path === '/fire_equipment_orders/submit') {
+    if (method === 'PUT' && path === '/fire_equipment_orders/submit') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
-        id?: number;
-        use_fire_equipment: boolean;
-        fire_equipment_order?: FireEquipmentBody;
+        fire_equipment_orders: FireEquipmentBody[];
       };
-      state.fireEquipmentOrder = body.use_fire_equipment
-        ? fireEquipmentFromBody(
-            body.fire_equipment_order ?? {},
-            body.id ?? 5101
-          )
-        : fireEquipmentFromBody(
-            {
-              group_id: mockGroupId,
-              name: '',
-              quantity: 0,
-              fuel: 'gas_bottle',
-              usage: '',
-              is_takeaway: true,
-              remark: '',
-            },
-            body.id ?? 5101
-          );
+      state.fireEquipmentOrders = body.fire_equipment_orders.map(
+        (order, index) => fireEquipmentFromBody(order, order.id ?? 5101 + index)
+      );
       state.statuses.fire_equipment_order = 'unapproved';
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders));
     }
 
     if (method === 'DELETE' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
-      state.fireEquipmentOrder = null;
+      state.fireEquipmentOrders = [];
       return fulfillJson(route, apiResponse([]));
     }
 
@@ -511,6 +498,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
 };
 
 type FireEquipmentBody = {
+  id?: number;
   group_id?: number;
   name?: string;
   quantity?: number;
@@ -569,7 +557,7 @@ const checkAllRegistered = (state: ScenarioState) => ({
   food_product: false,
   purchase_list: false,
   cooking_process_order: false,
-  fire_equipment_order: state.fireEquipmentOrder !== null,
+  fire_equipment_order: state.fireEquipmentOrders.length > 0,
   public_relation: false,
 });
 

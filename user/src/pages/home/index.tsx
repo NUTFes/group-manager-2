@@ -64,6 +64,13 @@ const GroupCategoryContent = ({
   mutateCheckAllRegisteredGroups,
   healthCenterSubmissionStatus,
 }: GroupCategoryContentProps) => {
+  const powerOrderSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'power_order'
+  );
+  const fireEquipmentOrderSubmission = healthCenterSubmissionStatus?.find(
+    (s) => s.applicationType === 'fire_equipment_order'
+  );
+
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
     const employeeSubmission = healthCenterSubmissionStatus?.find(
@@ -103,6 +110,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -145,6 +153,7 @@ const GroupCategoryContent = ({
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={fireEquipmentOrderSubmission?.status}
         />
       </>
     );
@@ -167,6 +176,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -188,6 +198,7 @@ const GroupCategoryContent = ({
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={fireEquipmentOrderSubmission?.status}
         />
       </>
     );
@@ -215,6 +226,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -242,6 +254,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -258,6 +271,7 @@ const GroupCategoryContent = ({
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={fireEquipmentOrderSubmission?.status}
         />
       </>
     );
@@ -280,6 +294,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -296,6 +311,7 @@ const GroupCategoryContent = ({
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={fireEquipmentOrderSubmission?.status}
         />
       </>
     );
@@ -318,6 +334,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
+          status={powerOrderSubmission?.status}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}

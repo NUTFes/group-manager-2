@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -14,6 +15,7 @@ type FireEquipmentProps = {
   canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: HealthCenterSubmissionStatus;
 };
 
 type FireEquipmentDisplayMode =
@@ -49,8 +51,10 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canAdd = false,
   canEdit = false,
   isRegistered,
+  status,
 }) => {
   const { t } = useTranslation('common');
+  const isResubmission = status === 'waiting_resubmission';
 
   const {
     state,
@@ -70,7 +74,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   const { isEditing, applyFireEquipment } = state;
 
   const hasAnyRegistration = hasExisting || hasUnregistered;
-  const canSubmit = canAdd || canEdit;
+  const canSubmit = canAdd || canEdit || isResubmission;
 
   const mode = getDisplayMode(
     applyFireEquipment,
@@ -144,8 +148,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       content = (
         <FormList
           items={noApplicationItems}
-          isEdit={canEdit}
-          onEdit={canEdit ? handleCancelUnregistered : undefined}
+          isEdit={canSubmit}
+          onEdit={canSubmit ? handleCancelUnregistered : undefined}
         />
       );
       break;
@@ -173,8 +177,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
         <FireEquipmentForm
           groupId={groupId}
           existingOrders={fireEquipmentOrders}
-          onDeleteOrder={canEdit ? handleDeleteOrder : undefined}
-          toEdit={canEdit ? prepareFormForEditing : undefined}
+          onDeleteOrder={canSubmit ? handleDeleteOrder : undefined}
+          toEdit={canSubmit ? prepareFormForEditing : undefined}
           isViewMode
         />
       );
@@ -198,8 +202,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
             groupId={groupId}
             existingOrders={isEditing ? fireEquipmentOrders : undefined}
             onComplete={handleFormComplete}
-            canAdd={canAdd}
-            canEdit={canEdit}
+            canAdd={canAdd || isResubmission}
+            canEdit={canEdit || isResubmission}
           />
         </div>
       );
@@ -214,6 +218,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       isEdit={canSubmit}
       isExist={isExist}
       required={true}
+      status={status}
     >
       {isLoading ? (
         <p className="text-sm text-gray-400">{t('general.loading')}</p>
