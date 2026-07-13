@@ -7,3 +7,16 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        name_en:
+          type: string
+        stock_item_status:
+          type: integer
+        assign_item_status:
+          type: integer
+        place_category_id:
+          type: integer
+          nullable: true
+        place_category:
+          "$ref": "#/components/schemas/PlaceCategory"
