@@ -56,7 +56,7 @@ paths:
       summary: put summary
       description: put description
       responses:
-        '200':
+        '204':
           description: power_order description
         '422':
           description: power_order description
@@ -64,6 +64,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '200':
+          description: power_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"

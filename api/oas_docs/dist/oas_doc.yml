@@ -2741,7 +2741,7 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '200':
+        '201':
           description: api/v1/order_status_check_comment_mail description
           content:
             application/json:
@@ -2755,6 +2755,12 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '200':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
         '502':
           description: api/v1/order_status_check_comment_mail description
           content:
@@ -2762,6 +2768,8 @@ paths:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
       deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
       parameters:
       - name: id
         in: path
@@ -8236,7 +8244,7 @@ paths:
       summary: put summary
       description: put description
       responses:
-        '200':
+        '204':
           description: power_order description
         '422':
           description: power_order description
@@ -8244,6 +8252,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '200':
+          description: power_order description
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"
@@ -12837,6 +12847,7 @@ components:
       content:
         application/json:
           schema:
+            "$ref": "#/components/schemas/PublicRelation"
             allOf:
             - "$ref": "#/components/schemas/PublicRelation"
             - type: object
@@ -12948,6 +12959,7 @@ components:
       content:
         application/json:
           schema:
+            "$ref": "#/components/schemas/VenueMap"
             allOf:
             - "$ref": "#/components/schemas/VenueMap"
             - type: object
