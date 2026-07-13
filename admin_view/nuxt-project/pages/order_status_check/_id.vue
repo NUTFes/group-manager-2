@@ -181,7 +181,6 @@
                 <h2>物品申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('rental_item_order')"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('equipment'))
                   "
@@ -345,7 +344,6 @@
                 <h2>電力申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('power_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('power_order')
@@ -475,7 +473,6 @@
                 <h2>従業員申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('employee')"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('employee'))
                   "
@@ -554,7 +551,6 @@
                   >
                   <div
                     class="status-select-with-icon"
-                    v-if="!isUnregistered('venue_map')"
                     :class="
                       getStatusSelectClass(
                         getSubmissionStatusValue('venue_map')
@@ -623,7 +619,6 @@
                 <h2>販売品申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('food_product')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('food_product')
@@ -699,7 +694,6 @@
                 <h2>購入品申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('purchase_list')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('purchase_list')
@@ -816,7 +810,6 @@
                 <h2>調理工程申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('cooking_process_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('cooking_process_order')
@@ -943,7 +936,6 @@
                 <h2>火気使用申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('fire_equipment_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('fire_equipment_order')
