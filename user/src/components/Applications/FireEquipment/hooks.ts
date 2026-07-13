@@ -121,10 +121,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
   const handleDeleteOrder = async (id: number) => {
     try {
       const remainingOrders = fireEquipmentOrders.filter((o) => o.id !== id);
-      const result = await submitFireEquipmentOrders(
-        remainingOrders,
-        groupId
-      );
+      const result = await submitFireEquipmentOrders(remainingOrders, groupId);
       await mutateFireEquipmentOrders();
 
       if (!result.success) {
