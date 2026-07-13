@@ -57,8 +57,7 @@ export const useFireEquipmentFormHooks = (
   const { t } = useTranslation('common');
   const { mutateFireEquipmentOrders } =
     useGetFireEquipmentOrdersByGroupId(groupId);
-  const { postFireEquipmentOrder, patchFireEquipmentOrder } =
-    useFireEquipmentMutations();
+  const { submitFireEquipmentOrders } = useFireEquipmentMutations();
 
   const isEditing = !!existingOrders && existingOrders.length > 0;
 
@@ -116,31 +115,22 @@ export const useFireEquipmentFormHooks = (
     formData: FireEquipmentFormValues
   ): Promise<boolean> => {
     try {
-      // item.id を使って POST/PATCH を判断（index依存を排除）
-      const results = await Promise.allSettled(
-        formData.items.map((item) => {
-          const payload = {
-            group_id: groupId,
-            name: item.name,
-            quantity: item.quantity,
-            fuel: item.fuel,
-            usage: item.usage,
-            is_takeaway: item.isTakeaway,
-            remark: item.remarks || '',
-          };
-          if (item.id !== undefined) {
-            return patchFireEquipmentOrder(item.id, payload);
-          }
-          return postFireEquipmentOrder(payload);
-        })
-      );
+      const payloadItems = formData.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        fuel: item.fuel,
+        usage: item.usage,
+        is_takeaway: item.isTakeaway,
+        remark: item.remarks || '',
+      }));
 
-      const hasFailure = results.some((r) => r.status === 'rejected');
+      const result = await submitFireEquipmentOrders(payloadItems, groupId);
 
       // 成功・失敗に関わらず再取得して画面を最新状態に同期
       await mutateFireEquipmentOrders();
 
-      if (hasFailure) {
+      if (!result.success) {
         toast.error(t('applications.fireEquipment.messages.submitFailed'));
         return false;
       }

@@ -39,7 +39,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
     unregisteredData,
   } = useGetUnregisteredGroup(groupId, ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
-  const { deleteFireEquipmentOrder } = useFireEquipmentMutations();
+  const { submitFireEquipmentOrders } = useFireEquipmentMutations();
   const { registerUnregisteredGroup, deleteUnregisteredGroup } =
     useMutateUnregisteredGroup(ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
@@ -90,9 +90,12 @@ export const useFireEquipmentHooks = (groupId: number) => {
   const handleApplyNegative = async () => {
     try {
       if (hasExisting) {
-        await Promise.allSettled(
-          fireEquipmentOrders.map((o) => deleteFireEquipmentOrder(o.id))
-        );
+        const deleteResult = await submitFireEquipmentOrders([], groupId);
+        if (!deleteResult.success) {
+          await mutateFireEquipmentOrders();
+          toast.error(t('applications.fireEquipment.messages.submitFailed'));
+          return;
+        }
       }
       const result = await registerUnregisteredGroup(groupId);
       if (result.success) {
@@ -117,11 +120,21 @@ export const useFireEquipmentHooks = (groupId: number) => {
 
   const handleDeleteOrder = async (id: number) => {
     try {
-      await deleteFireEquipmentOrder(id);
+      const remainingOrders = fireEquipmentOrders.filter((o) => o.id !== id);
+      const result = await submitFireEquipmentOrders(
+        remainingOrders,
+        groupId
+      );
       await mutateFireEquipmentOrders();
+
+      if (!result.success) {
+        toast.error(t('applications.fireEquipment.messages.deleteFailed'));
+        return;
+      }
+
       toast.success(t('applications.fireEquipment.messages.deleteSuccess'));
 
-      if (fireEquipmentOrders.length === 1) {
+      if (remainingOrders.length === 0) {
         updateState({ applyFireEquipment: 'yes', isEditing: false });
       }
     } catch (error) {
