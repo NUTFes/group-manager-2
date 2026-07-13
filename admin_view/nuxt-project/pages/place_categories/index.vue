@@ -47,7 +47,7 @@
         <div>
           <h3>所属エリア</h3>
           <select v-model="parentId">
-            <option value="">未指定（所属エリアなし）</option>
+            <option :value="null">未指定（所属エリアなし）</option>
             <option
               v-for="category in selectableCategories"
               :key="category.id"
@@ -175,7 +175,7 @@ export default {
       this.$axios.$post(url, payload).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
-        this.parentId = "";
+        this.parentId = null;
         this.reload(response.data.id);
         this.closeAddModal();
       }).catch((error) => {

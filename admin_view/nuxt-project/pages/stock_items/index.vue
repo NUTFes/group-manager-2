@@ -54,7 +54,7 @@
         <div>
           <h3>エリア</h3>
           <select v-model="placeCategoryId">
-            <option value="">未指定</option>
+            <option :value="null">未指定</option>
             <option
               v-for="placeCategory in formattedPlaceCategories"
               :key="placeCategory.id"
