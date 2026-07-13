@@ -83,12 +83,12 @@ export default {
         camera_permission: String(this.cameraPermission),
         loud_sound: String(this.loudSound),
       };
-      const url = `/stage_common_options/${sco.id}`;
+      const response = sco.id
+        ? await this.$axios.$put(`/stage_common_options/${sco.id}`, data)
+        : await this.$axios.$post(`/stage_common_options`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", sco.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

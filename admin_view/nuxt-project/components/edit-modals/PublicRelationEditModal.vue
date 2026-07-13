@@ -53,12 +53,12 @@ export default {
         blurb: this.blurb ?? "",
         picture_path: this.picturePath ?? "",
       };
-      const url = `/public_relations/${pr.id}`;
+      const response = pr.id
+        ? await this.$axios.$put(`/public_relations/${pr.id}`, data)
+        : await this.$axios.$post(`/public_relations`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", pr.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

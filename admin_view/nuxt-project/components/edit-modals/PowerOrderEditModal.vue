@@ -74,12 +74,12 @@ export default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/api/v1/power_orders/${powerOrder.id}`;
+      const response = powerOrder.id
+        ? await this.$axios.$put(`/api/v1/power_orders/${powerOrder.id}`, data)
+        : await this.$axios.$post(`/api/v1/power_orders`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", powerOrder.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

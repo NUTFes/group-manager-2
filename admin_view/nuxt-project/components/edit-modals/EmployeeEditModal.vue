@@ -84,12 +84,12 @@ export default {
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),
       };
-      const url = `/employees/${employee.id}`;
+      const response = employee.id
+        ? await this.$axios.$put(`/employees/${employee.id}`, data)
+        : await this.$axios.$post(`/employees`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", employee.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

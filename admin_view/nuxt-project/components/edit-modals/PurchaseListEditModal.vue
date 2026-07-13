@@ -117,12 +117,12 @@ export default {
         url: String(this.url ?? ""),
         remark: String(this.remark ?? ""),
       };
-      const url = `/purchase_lists/${purchaseList.id}`;
+      const response = purchaseList.id
+        ? await this.$axios.$put(`/purchase_lists/${purchaseList.id}`, data)
+        : await this.$axios.$post(`/purchase_lists`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", purchaseList.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

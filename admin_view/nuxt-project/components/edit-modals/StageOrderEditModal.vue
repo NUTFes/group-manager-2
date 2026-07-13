@@ -134,12 +134,12 @@ export default {
         prepare_time_interval: this.prepareTimeInterval ?? "",
         cleanup_time_interval: this.cleanupTimeInterval ?? "",
       };
-      const url = `/stage_orders/${so.id}`;
+      const response = so.id
+        ? await this.$axios.$put(`/stage_orders/${so.id}`, data)
+        : await this.$axios.$post(`/stage_orders`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", so.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

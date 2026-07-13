@@ -88,11 +88,11 @@ export default {
         rental_item_id: this.rentalItemID,
         num: this.num,
       };
-      const url = `/rental_orders/${rentalOrder.id}`;
-
       try {
-        await this.$axios.$put(url, data);
-        this.$emit("saved", rentalOrder.id);
+        const response = rentalOrder.id
+          ? await this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
+          : await this.$axios.$post(`/rental_orders`, data);
+        this.$emit("saved", response.data.id);
         this.$emit("close");
       } catch (e) {
         // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)

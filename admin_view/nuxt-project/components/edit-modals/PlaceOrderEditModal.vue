@@ -92,12 +92,12 @@ export default {
         third: String(this.third ?? ""),
         remark: this.remark ?? "",
       };
-      const url = `/place_orders/${po.id}`;
+      const response = po.id
+        ? await this.$axios.$put(`/place_orders/${po.id}`, data)
+        : await this.$axios.$post(`/place_orders`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", po.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

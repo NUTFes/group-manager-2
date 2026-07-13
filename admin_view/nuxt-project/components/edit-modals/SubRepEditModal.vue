@@ -95,12 +95,12 @@ export default {
         tel: this.tel ?? "",
         email: this.email ?? "",
       };
-      const url = `/sub_reps/${sr.id}`;
+      const response = sr.id
+        ? await this.$axios.$put(`/sub_reps/${sr.id}`, data)
+        : await this.$axios.$post(`/sub_reps`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", sr.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

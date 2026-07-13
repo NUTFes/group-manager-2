@@ -116,12 +116,15 @@ export default {
         is_takeaway: String(this.isTakeaway),
         remark: this.remark ?? "",
       };
-      const url = `/api/v1/fire_equipment_orders/${fire_equipment_order.id}`;
+      const response = fire_equipment_order.id
+        ? await this.$axios.$put(
+            `/api/v1/fire_equipment_orders/${fire_equipment_order.id}`,
+            data
+          )
+        : await this.$axios.$post(`/api/v1/fire_equipment_orders`, data);
 
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", fire_equipment_order.id);
-        this.$emit("close");
-      });
+      this.$emit("saved", response.data.id);
+      this.$emit("close");
     },
   },
 };

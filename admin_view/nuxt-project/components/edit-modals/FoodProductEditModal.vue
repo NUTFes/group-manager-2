@@ -92,10 +92,10 @@ export default {
         first_day_num: String(this.first ?? ""),
         second_day_num: String(this.second ?? ""),
       };
-      const url = `/food_products/${foodProduct.id}`;
-
       try {
-        const response = await this.$axios.$put(url, data);
+        const response = foodProduct.id
+          ? await this.$axios.$put(`/food_products/${foodProduct.id}`, data)
+          : await this.$axios.$post(`/food_products`, data);
         const savedId = response?.data?.id;
 
         if (typeof savedId === "undefined") {
