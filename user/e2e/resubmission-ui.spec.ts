@@ -51,6 +51,11 @@ type FireEquipmentOrder = {
 type ScenarioState = {
   pageMode: 'registration' | 'resubmission' | 'closed';
   groupCategoryId: number;
+  fireEquipmentPermissions: {
+    canAdd: boolean;
+    canEdit: boolean;
+  };
+  hasUnregisteredFireEquipment: boolean;
   statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
   fireEquipmentOrders: FireEquipmentOrder[];
@@ -291,11 +296,45 @@ test.describe('resubmission UI', () => {
     ).toHaveCount(0);
     expect(state.requestedUrls).toHaveLength(0);
   });
+
+  // 火気申請の新規登録だけが受付中の場合でも、既存申請の編集・削除や「申請なし」の解除は許可しない。
+  test('does not allow modifying existing fire equipment applications when only registration is open', async ({
+    page,
+  }) => {
+    const state = scenarioState('closed');
+    state.fireEquipmentPermissions = { canAdd: true, canEdit: false };
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await expect(page.getByText('E2E バーナー')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: '削除', exact: true })
+    ).toHaveCount(0);
+
+    state.fireEquipmentOrders = [];
+    state.hasUnregisteredFireEquipment = true;
+    await page.reload();
+    await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await expect(page.getByText('火気申請は不要（登録済み）')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+    expect(state.requestedUrls).toHaveLength(0);
+  });
 });
 
 const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
   pageMode,
   groupCategoryId: 1,
+  fireEquipmentPermissions: {
+    canAdd: pageMode === 'registration',
+    canEdit: pageMode === 'registration',
+  },
+  hasUnregisteredFireEquipment: false,
   statuses: {
     equipment: 'unsubmitted',
     employee: 'unsubmitted',
@@ -422,7 +461,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
     }
 
     if (path === '/user_page_settings') {
-      return fulfillJson(route, apiResponse(userPageSettings(state.pageMode)));
+      return fulfillJson(route, apiResponse(userPageSettings(state)));
     }
 
     if (path === `/check_all_registered/${mockGroupId}`) {
@@ -508,6 +547,29 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
         `/un_registered_groups/group?group_id=${mockGroupId}&order_type=1`
     ) {
       return fulfillJson(route, apiResponse([]));
+    }
+
+    if (
+      method === 'GET' &&
+      path ===
+        `/un_registered_groups/group?group_id=${mockGroupId}&order_type=4`
+    ) {
+      return fulfillJson(
+        route,
+        apiResponse(
+          state.hasUnregisteredFireEquipment
+            ? [
+                {
+                  id: 6001,
+                  group_id: mockGroupId,
+                  order_type: 'fire_equipment_order',
+                  created_at: '2026-01-01T00:00:00.000Z',
+                  updated_at: '2026-01-01T00:00:00.000Z',
+                },
+              ]
+            : []
+        )
+      );
     }
 
     if (
@@ -681,8 +743,8 @@ const submission = (
   detail: null,
 });
 
-const userPageSettings = (pageMode: ScenarioState['pageMode']) => {
-  const canEdit = pageMode === 'registration';
+const userPageSettings = (state: ScenarioState) => {
+  const canEdit = state.pageMode === 'registration';
 
   return {
     id: 1,
@@ -710,8 +772,8 @@ const userPageSettings = (pageMode: ScenarioState['pageMode']) => {
     is_edit_public_relation: canEdit,
     is_edit_venue_map: canEdit,
     is_edit_cooking_process: canEdit,
-    add_fire_equipment_order: canEdit,
-    is_edit_fire_equipment_order: canEdit,
+    add_fire_equipment_order: state.fireEquipmentPermissions.canAdd,
+    is_edit_fire_equipment_order: state.fireEquipmentPermissions.canEdit,
     add_stage_order: canEdit,
   };
 };
