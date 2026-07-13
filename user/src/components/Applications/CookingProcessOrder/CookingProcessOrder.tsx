@@ -1,5 +1,9 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
@@ -20,7 +24,8 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isDeadline,
   status,
 }) => {
-  const isResubmission = status === 'waiting_resubmission';
+  const isResubmission = isResubmissionStatus(status);
+  const isApplicationEditable = canEditApplication(isDeadline, status);
   const {
     methods,
     fields,
@@ -38,7 +43,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   return (
     <AccordionMenu
       title={cookingProcessOrderTexts.title}
-      isEdit={!isDeadline || isResubmission}
+      isEdit={isApplicationEditable}
       isExist={!!isExist}
       isRegistered={!!isExist}
       required
@@ -72,7 +77,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
                       isMutating ||
-                      (status !== 'waiting_resubmission' && isDeadline)
+                      (!isResubmission && isDeadline)
                     }
                     icon={isExist ? 'save' : 'send'}
                   >
@@ -167,7 +172,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                 </Button>
               </div>
             )}
-            {status === 'waiting_resubmission' && !isEditing && isDeadline && (
+            {isResubmission && !isEditing && isDeadline && (
               <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <Button
                   size="pc"

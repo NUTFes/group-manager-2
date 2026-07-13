@@ -1,5 +1,9 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
@@ -29,8 +33,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
 }) => {
   const purchaseListsViewTexts = usePurchaseListsViewTexts();
   const title = purchaseListsViewTexts.title;
-  const isResubmission = status === 'waiting_resubmission';
-  const canEditApplication = !isDeadline || isResubmission;
+  const isResubmission = isResubmissionStatus(status);
+  const isApplicationEditable = canEditApplication(isDeadline, status);
 
   const {
     foodProducts,
@@ -72,7 +76,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={canEditApplication}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -86,7 +90,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={canEditApplication}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -101,13 +105,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   if (
     isDeadline &&
     (!purchaseLists || purchaseLists.length === 0) &&
-    status !== 'waiting_resubmission'
+    !isResubmission
   ) {
     return (
       <AccordionMenu
         title={title}
         required
-        isEdit={canEditApplication}
+        isEdit={isApplicationEditable}
         isExist={false}
         status={status}
       >
@@ -134,7 +138,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={canEditApplication}
+        isEdit={isApplicationEditable}
         isExist={true}
         status={status}
       >
@@ -178,7 +182,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={canEditApplication}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -202,7 +206,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     <AccordionMenu
       title={title}
       required
-      isEdit={canEditApplication}
+      isEdit={isApplicationEditable}
       isExist={initialIsRegistered}
       status={status}
     >

@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 import { useRentItemsAccordionHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
@@ -19,8 +22,7 @@ const RentItems: FC<RentItemsProps> = ({
   groupCategoryId,
   status,
 }) => {
-  const isResubmission = status === 'waiting_resubmission';
-  const isEditable = !isDeadline || isResubmission;
+  const isEditable = canEditApplication(isDeadline, status);
   const { rentItemsAccordionTexts } = useRentItemsAccordionHooks(
     groupId,
     groupCategoryId,

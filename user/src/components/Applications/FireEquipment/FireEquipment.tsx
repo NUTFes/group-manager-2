@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -54,7 +57,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   status,
 }) => {
   const { t } = useTranslation('common');
-  const isResubmission = status === 'waiting_resubmission';
+  const isResubmission = isResubmissionStatus(status);
 
   const {
     state,

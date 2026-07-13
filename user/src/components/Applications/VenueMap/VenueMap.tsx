@@ -1,6 +1,9 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
@@ -140,7 +143,7 @@ const VenueMap: FC<VenueMapProps> = ({
     <>
       <AccordionMenu
         title={venueMapTexts.title}
-        isEdit={!isDeadline || isResubmission}
+        isEdit={canEditApplication(isDeadline, status)}
         isExist={isRegistered}
         required
         status={status}

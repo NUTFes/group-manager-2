@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
 import { FormProvider } from 'react-hook-form';
 import { MdOutlineAccessTime } from 'react-icons/md';
@@ -28,7 +31,7 @@ export const Employees: FC<EmployeesProps> = ({
   mutateCheckAllRegisteredGroups,
   status,
 }) => {
-  const isResubmission = status === 'waiting_resubmission';
+  const isApplicationEditable = canEditApplication(isDeadline, status);
   const employeesApplicationHook = useEmployeesApplicationHooks(
     groupId,
     isDeadline,
@@ -38,7 +41,7 @@ export const Employees: FC<EmployeesProps> = ({
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline || isResubmission}
+      isEdit={isApplicationEditable}
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
       status={status} // 申請のステータスを渡す
@@ -66,7 +69,7 @@ const Content: FC<ContentProps> = ({
   status,
 }) => {
   const { texts } = employeesApplicationHook;
-  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
+  const isApplicationEditable = canEditApplication(isDeadline, status);
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
   if (employeesApplicationHook.isDeadlineMode) {
@@ -96,11 +99,11 @@ const Content: FC<ContentProps> = ({
           },
         ]}
         onEdit={
-          !isDeadline || isResubmission
+          isApplicationEditable
             ? employeesApplicationHook.handleEditClick
             : undefined
         }
-        isEdit={!isDeadline || isResubmission}
+        isEdit={isApplicationEditable}
       />
     );
   }
@@ -114,11 +117,11 @@ const Content: FC<ContentProps> = ({
         keys={['name', 'studentId']}
         tableMode
         onEdit={
-          !isDeadline || isResubmission
+          isApplicationEditable
             ? employeesApplicationHook.handleEdit
             : undefined
         }
-        isEdit={!isDeadline || isResubmission}
+        isEdit={isApplicationEditable}
       />
     );
   }

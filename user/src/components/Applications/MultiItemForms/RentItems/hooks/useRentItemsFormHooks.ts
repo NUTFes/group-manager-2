@@ -2,6 +2,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
+  isResubmissionStatus,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
@@ -150,7 +151,7 @@ export const useRentItemsFormHooks = (
   };
 
   // 再提出判定
-  const isResubmission = status === 'waiting_resubmission';
+  const isResubmission = isResubmissionStatus(status);
 
   const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
 

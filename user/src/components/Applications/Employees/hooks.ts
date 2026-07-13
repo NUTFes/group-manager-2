@@ -21,6 +21,7 @@ import {
 } from '@/api/employeesApi';
 import {
   HealthCenterSubmissionStatus,
+  isResubmissionStatus,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
@@ -380,7 +381,7 @@ export const useEmployeesApplicationHooks = (
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
-  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
+  const isResubmission = isResubmissionStatus(status); // 再提出待ちの状態かどうか
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
