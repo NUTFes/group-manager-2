@@ -6,6 +6,7 @@ class PlaceCategory < ApplicationRecord
   belongs_to :parent, class_name: 'PlaceCategory', optional: true, inverse_of: :children
   has_many :children, class_name: 'PlaceCategory', foreign_key: 'parent_id', dependent: :restrict_with_error, inverse_of: :parent
 
+  validates :name, presence: true
   validate :parent_cannot_be_self_or_children
   validate :parent_id_must_be_nil_or_integer
 
