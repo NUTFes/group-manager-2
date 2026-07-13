@@ -22,8 +22,8 @@ class FireEquipmentOrdersController < ApplicationController
   # GET /fire_equipment_orders/:id
   def show
     fire_equipment_order = FireEquipmentOrder
-                            .where(group_id: current_api_user.groups.select(:id))
-                            .find_by(id: params[:id])
+                           .where(group_id: current_api_user.groups.select(:id))
+                           .find_by(id: params[:id])
     return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}") if fire_equipment_order.nil?
 
     order_with_fuel_japanese = fire_equipment_order.as_json(include: { group: { only: %i[id name] } }).merge(
@@ -73,10 +73,10 @@ class FireEquipmentOrdersController < ApplicationController
   def upsert_fire_equipment_orders(group)
     fire_equipment_order_params_list.map do |item_params|
       fire_equipment_order = if item_params[:id].present?
-                                group.fire_equipment_orders.find_by(id: item_params[:id])
-                              else
-                                group.fire_equipment_orders.build
-                              end
+                               group.fire_equipment_orders.find_by(id: item_params[:id])
+                             else
+                               group.fire_equipment_orders.build
+                             end
 
       raise ActiveRecord::RecordNotFound if fire_equipment_order.nil?
 
