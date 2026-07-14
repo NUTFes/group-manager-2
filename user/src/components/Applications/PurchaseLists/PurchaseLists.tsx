@@ -103,9 +103,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
 
   // 締め切り後で、データがない（未登録）かつ再提出でない場合
   if (
-    isDeadline &&
-    (!purchaseLists || purchaseLists.length === 0) &&
-    !isResubmission
+    !isApplicationEditable &&
+    (!purchaseLists || purchaseLists.length === 0)
   ) {
     return (
       <AccordionMenu

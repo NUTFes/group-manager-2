@@ -6,7 +6,7 @@ import {
 import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
-  isResubmissionStatus,
+  canEditApplication,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -201,7 +201,7 @@ export const useCookingProcessOrder = (
       return;
     }
 
-    if (isDeadline && !isResubmissionStatus(status)) {
+    if (!canEditApplication(isDeadline, status)) {
       setIsEditing(false);
       return;
     }

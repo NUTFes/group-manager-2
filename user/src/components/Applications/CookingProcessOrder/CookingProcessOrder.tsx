@@ -77,7 +77,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
                       isMutating ||
-                      (!isResubmission && isDeadline)
+                      !isApplicationEditable
                     }
                     icon={isExist ? 'save' : 'send'}
                   >

@@ -1,9 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
-import {
-  HealthCenterSubmissionStatus,
-  isResubmissionStatus,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { useRentItemsFormHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
@@ -81,8 +78,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     !isDeclinedStateLoading &&
     !isEditable &&
     !hasExisting &&
-    hasExplicitlyDeclinedItems === false &&
-    !isResubmissionStatus(status)
+    hasExplicitlyDeclinedItems === false
   ) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">

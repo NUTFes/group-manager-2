@@ -2,7 +2,6 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
-  isResubmissionStatus,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
@@ -149,9 +148,6 @@ export const useRentItemsFormHooks = (
     // その他の物品は20個まで
     return DEFAULT_MAX_COUNT;
   };
-
-  // 再提出判定
-  const isResubmission = isResubmissionStatus(status);
 
   const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
 
@@ -851,6 +847,5 @@ export const useRentItemsFormHooks = (
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
     updateStatus,
-    isResubmission,
   };
 };
