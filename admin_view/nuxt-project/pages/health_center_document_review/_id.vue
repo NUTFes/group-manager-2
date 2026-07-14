@@ -53,7 +53,7 @@
       <button
         type="button"
         class="side-nav-button"
-        :disabled="!prevGroupId"
+        :disabled="!prevGroupId || isNavigatingGroup"
         aria-label="前の食販団体へ移動"
         @click="onPrevGroup"
       >
@@ -64,7 +64,7 @@
       <button
         type="button"
         class="side-nav-button"
-        :disabled="!nextGroupId"
+        :disabled="!nextGroupId || isNavigatingGroup"
         aria-label="次の食販団体へ移動"
         @click="onNextGroup"
       >
@@ -632,16 +632,16 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     HEALTH_CENTER_SHOW_ENDPOINT + routeId
   );
 
-  const currentYearRes = await $axios.$get("/user_page_settings/1");
+  // 管理者が設定している「現在の年度」ではなく、閲覧中の団体自身の年度で絞り込む。
+  // ここがズレていると、閲覧中の団体が一覧に含まれず前後移動ボタンが機能しない原因になる。
+  const fesYearId = groupRes.data.group.fes_year_id;
   let foodSalesGroupsRes;
   try {
     foodSalesGroupsRes = await $axios.$get(HEALTH_CENTER_REFINEMENT_ENDPOINT);
   } catch (error) {
     if (error?.response?.status === 404) {
       const legacyUrl =
-        LEGACY_REFINEMENT_ENDPOINT +
-        "?fes_year_id=" +
-        currentYearRes.data.fes_year_id;
+        LEGACY_REFINEMENT_ENDPOINT + "?fes_year_id=" + fesYearId;
       foodSalesGroupsRes = await $axios.$post(legacyUrl);
     } else {
       throw error;
@@ -655,7 +655,7 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
           : item.group_category?.id;
       const yearId = item.group?.fes_year_id || item.fes_year?.id;
 
-      return categoryId === 1 && yearId === currentYearRes.data.fes_year_id;
+      return categoryId === 1 && yearId === fesYearId;
     })
     .map((item) => item.group.id)
     .sort((a, b) => a - b);
@@ -749,6 +749,7 @@ export default {
       selectedEmployeeId: null,
       selectedRentalOrderId: null,
       foodSalesGroupIds: [],
+      isNavigatingGroup: false,
       selectedFoodProduct: null,
       selectedPurchaseList: null,
       selectedEmployee: null,
@@ -855,12 +856,25 @@ export default {
       }
     },
     onPrevGroup() {
-      if (!this.prevGroupId) return;
-      this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
+      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
+      if (this.isNavigatingGroup || !this.prevGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/health_center_document_review/${this.prevGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     onNextGroup() {
-      if (!this.nextGroupId) return;
-      this.$router.push(`/health_center_document_review/${this.nextGroupId}`);
+      if (this.isNavigatingGroup || !this.nextGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/health_center_document_review/${this.nextGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     getSubmission(applicationType) {
       return this.submissions.find(

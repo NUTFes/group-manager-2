@@ -16,7 +16,7 @@
         <button
           type="button"
           class="side-nav-button"
-          :disabled="!prevGroupId"
+          :disabled="!prevGroupId || isNavigatingGroup"
           aria-label="前の団体へ移動"
           @click="onPrevGroup"
         >
@@ -27,7 +27,7 @@
         <button
           type="button"
           class="side-nav-button"
-          :disabled="!nextGroupId"
+          :disabled="!nextGroupId || isNavigatingGroup"
           aria-label="次の団体へ移動"
           @click="onNextGroup"
         >
@@ -1359,6 +1359,7 @@ export default {
       loading: true,
       unregisteredGroups: [],
       allGroupIds: [],
+      isNavigatingGroup: false,
       activeEditType: null,
       selectedItem: null,
       isOpenEditModal: false,
@@ -1416,7 +1417,11 @@ export default {
   watch: {
     "$route.params.id": {
       async handler() {
+        const previousFesYearId = this.group?.group?.fes_year_id;
         await this.fetchData();
+        if (this.group?.group?.fes_year_id !== previousFesYearId) {
+          await this.fetchAllGroupIds();
+        }
       },
     },
   },
@@ -1459,11 +1464,15 @@ export default {
       }
     },
     async fetchAllGroupIds() {
+      // 管理者が設定している「現在の年度」ではなく、閲覧中の団体自身の年度で絞り込む。
+      // ここがズレていると、閲覧中の団体が一覧に含まれず前後移動ボタンが機能しない
+      // （＝一致していても別年度の団体が紛れ込み、移動が飛んで見える）原因になる。
+      const fesYearId = this.group?.group?.fes_year_id;
+      if (!fesYearId) return;
+
       try {
-        const currentYearRes = await this.$axios.$get("/user_page_settings/1");
         const url =
-          "/api/v1/get_refinement_order_status_check?fes_year_id=" +
-          currentYearRes.data.fes_year_id;
+          "/api/v1/get_refinement_order_status_check?fes_year_id=" + fesYearId;
         const refRes = await this.$axios.$post(url);
 
         if (refRes && refRes.data) {
@@ -1506,14 +1515,25 @@ export default {
       }
     },
     onPrevGroup() {
-      if (this.prevGroupId) {
-        this.$router.push(`/order_status_check/${this.prevGroupId}`);
-      }
+      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
+      if (this.isNavigatingGroup || !this.prevGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/order_status_check/${this.prevGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     onNextGroup() {
-      if (this.nextGroupId) {
-        this.$router.push(`/order_status_check/${this.nextGroupId}`);
-      }
+      if (this.isNavigatingGroup || !this.nextGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/order_status_check/${this.nextGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     openModal(type, item) {
       this.activeEditType = type;
