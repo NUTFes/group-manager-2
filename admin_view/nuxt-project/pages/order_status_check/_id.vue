@@ -1481,15 +1481,21 @@ export default {
         isInternational: storedFilters.isInternational ?? 0,
         isExternal: storedFilters.isExternal ?? 0,
       });
+      // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
+      // それまでのallGroupIdsを保持したまま何もしない。
+      if (filteredIds === null) return;
 
       // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
       // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
       // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
       if (filteredIds.includes(this.currentGroupId)) {
         this.allGroupIds = filteredIds;
-      } else {
-        this.allGroupIds = await this.fetchGroupIdsByFilter({ fesYearId });
+        return;
       }
+
+      const fallbackIds = await this.fetchGroupIdsByFilter({ fesYearId });
+      if (fallbackIds === null) return;
+      this.allGroupIds = fallbackIds;
     },
     getStoredIndexFilters() {
       if (typeof localStorage === "undefined") return {};
@@ -1535,7 +1541,7 @@ export default {
         return [];
       } catch (e) {
         console.error("Failed to fetch all group ids", e);
-        return [];
+        return null;
       }
     },
     isUnregistered(orderType) {
