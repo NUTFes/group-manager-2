@@ -7,7 +7,7 @@ class Api::V1::BaseController < ApplicationController
   private
 
   def require_staff_or_above!
-    return if current_api_user&.role_id.in?([1, 2])
+    return if current_api_user&.role_id.in?(Role::STAFF_OR_ABOVE_IDS)
 
     render json: fmt({ code: 403, message: 'Forbidden' }),
            status: :forbidden

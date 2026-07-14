@@ -51,6 +51,29 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'general user can access own current user api' do
+    get '/api/v1/current_user/is_login',
+        headers: auth_headers(@user),
+        as: :json
+
+    assert_response :success
+    assert_equal true, response.parsed_body
+  end
+
+  test 'general user can access authenticated rental item api' do
+    get '/api/v1/get_all_rentable_items',
+        headers: auth_headers(@user),
+        as: :json
+
+    assert_response :success
+  end
+
+  test 'authenticated rental item api rejects unauthenticated requests' do
+    get '/api/v1/get_all_rentable_items', as: :json
+
+    assert_response :unauthorized
+  end
+
   # 認証の例外系。公開用の貸出物品APIは未認証でも利用できる。
   test 'unauthenticated request can access public rental item api' do
     get '/api/v1/get_stage_rentable_items', as: :json

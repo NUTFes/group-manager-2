@@ -232,6 +232,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < Api::V1::BaseContro
     comment
   rescue ActiveRecord::RecordNotUnique
     submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    raise ActiveRecord::RecordInvalid, HealthCenterSubmissionStatus.new if submission_status.nil?
+
     submission_status.comments.create!(
       body: body,
       mail_delivery_status: :failed

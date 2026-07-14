@@ -87,6 +87,18 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     assert_response :forbidden
   end
 
+  test 'unauthenticated user cannot create comment with mail delivery' do
+    assert_no_difference('Comment.count') do
+      assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+        post '/api/v1/order_status_check_comment_mails',
+             params: valid_params,
+             as: :json
+      end
+    end
+
+    assert_response :unauthorized
+  end
+
   # 異常系: バリデーションエラー
   test 'fails when group_id is missing' do
     post '/api/v1/order_status_check_comment_mails',

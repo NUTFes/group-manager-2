@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::GroupMailCommentsApiController < ApplicationController
-  before_action :authenticate_api_user!
-  before_action :require_admin!
-
+class Api::V1::GroupMailCommentsApiController < Api::V1::BaseController
   def index
     group = Group.includes(:comments, health_center_submission_statuses: :comments)
                  .find_by(id: params[:group_id])
