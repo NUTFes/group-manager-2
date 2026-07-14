@@ -53,12 +53,24 @@ export default {
         blurb: this.blurb ?? "",
         picture_path: this.picturePath ?? "",
       };
-      const response = pr.id
-        ? await this.$axios.$put(`/public_relations/${pr.id}`, data)
-        : await this.$axios.$post(`/public_relations`, data);
+      try {
+        const response = pr.id
+          ? await this.$axios.$put(`/public_relations/${pr.id}`, data)
+          : await this.$axios.$post(`/public_relations`, data);
+        const savedId = response?.data?.id;
 
-      this.$emit("saved", response.data.id);
-      this.$emit("close");
+        if (typeof savedId === "undefined") {
+          console.error("PR申請の保存レスポンスに id がありませんでした", response);
+          this.$emit("error", "保存に失敗しました");
+          return;
+        }
+
+        this.$emit("saved", savedId);
+        this.$emit("close");
+      } catch (error) {
+        console.error("PR申請の編集に失敗しました", error);
+        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+      }
     },
   },
 };

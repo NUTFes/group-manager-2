@@ -539,6 +539,7 @@
       :food-product="selectedFoodProduct"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsPurchaseListEditModal
@@ -551,6 +552,7 @@
       :shops="shops"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsEmployeeEditModal
@@ -560,6 +562,7 @@
       :employee="selectedEmployee"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsVenueMapEditModal
@@ -579,6 +582,7 @@
       :rental-items="rentalItems"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsCookingProcessOrderEditModal

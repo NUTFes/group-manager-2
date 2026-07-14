@@ -92,12 +92,24 @@ export default {
         third: String(this.third ?? ""),
         remark: this.remark ?? "",
       };
-      const response = po.id
-        ? await this.$axios.$put(`/place_orders/${po.id}`, data)
-        : await this.$axios.$post(`/place_orders`, data);
+      try {
+        const response = po.id
+          ? await this.$axios.$put(`/place_orders/${po.id}`, data)
+          : await this.$axios.$post(`/place_orders`, data);
+        const savedId = response?.data?.id;
 
-      this.$emit("saved", response.data.id);
-      this.$emit("close");
+        if (typeof savedId === "undefined") {
+          console.error("会場申請の保存レスポンスに id がありませんでした", response);
+          this.$emit("error", "保存に失敗しました");
+          return;
+        }
+
+        this.$emit("saved", savedId);
+        this.$emit("close");
+      } catch (error) {
+        console.error("会場申請の編集に失敗しました", error);
+        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+      }
     },
   },
 };

@@ -83,12 +83,24 @@ export default {
         camera_permission: String(this.cameraPermission),
         loud_sound: String(this.loudSound),
       };
-      const response = sco.id
-        ? await this.$axios.$put(`/stage_common_options/${sco.id}`, data)
-        : await this.$axios.$post(`/stage_common_options`, data);
+      try {
+        const response = sco.id
+          ? await this.$axios.$put(`/stage_common_options/${sco.id}`, data)
+          : await this.$axios.$post(`/stage_common_options`, data);
+        const savedId = response?.data?.id;
 
-      this.$emit("saved", response.data.id);
-      this.$emit("close");
+        if (typeof savedId === "undefined") {
+          console.error("ステージオプションの保存レスポンスに id がありませんでした", response);
+          this.$emit("error", "保存に失敗しました");
+          return;
+        }
+
+        this.$emit("saved", savedId);
+        this.$emit("close");
+      } catch (error) {
+        console.error("ステージオプションの編集に失敗しました", error);
+        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+      }
     },
   },
 };

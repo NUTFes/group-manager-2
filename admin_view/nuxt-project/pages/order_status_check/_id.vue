@@ -1250,6 +1250,7 @@
       v-bind="dynamicProps"
       @saved="onEditorSaved"
       @close="closeModal"
+      @error="onEditorError"
     />
     <!-- プレビューモーダル (平面図 & 物品申請) -->
     <transition name="fade" appear>
@@ -1695,6 +1696,11 @@ export default {
     async onEditorSaved() {
       await this.clearUnregisteredFlagIfNeeded();
       await this.fetchData(true);
+    },
+    onEditorError(message) {
+      if (message) {
+        window.alert(message);
+      }
     },
     // 「申請しない」だった項目にデータを登録した場合、
     // un_registered_groups の記録が残っていると表示が「申請しない」のままになるため削除する

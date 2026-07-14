@@ -92,11 +92,19 @@ export default {
         const response = rentalOrder.id
           ? await this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
           : await this.$axios.$post(`/rental_orders`, data);
-        this.$emit("saved", response.data.id);
+        const savedId = response?.data?.id;
+
+        if (typeof savedId === "undefined") {
+          console.error("物品申請の保存レスポンスに id がありませんでした", response);
+          this.$emit("error", "保存に失敗しました");
+          return;
+        }
+
+        this.$emit("saved", savedId);
         this.$emit("close");
       } catch (e) {
-        // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)
         console.error("物品申請の編集に失敗しました", e);
+        this.$emit("error", e?.response?.data?.message || e?.message || "保存に失敗しました");
       }
     },
   },
