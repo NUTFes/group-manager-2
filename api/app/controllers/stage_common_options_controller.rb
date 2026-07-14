@@ -20,15 +20,22 @@ class StageCommonOptionsController < ApplicationController
   # POST /stage_common_options
   # POST /stage_common_options.json
   def create
-    @stage_common_option = StageCommonOption.create(stage_common_option_params)
-    render json: fmt(created, @stage_common_option)
+    @stage_common_option = StageCommonOption.new(stage_common_option_params)
+    if @stage_common_option.save
+      render json: fmt(created, @stage_common_option)
+    else
+      render json: fmt(unprocessable_entity, [], @stage_common_option.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /stage_common_options/1
   # PATCH/PUT /stage_common_options/1.json
   def update
-    @stage_common_option.update(stage_common_option_params)
-    render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
+    if @stage_common_option.update(stage_common_option_params)
+      render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @stage_common_option.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # DELETE /stage_common_options/1

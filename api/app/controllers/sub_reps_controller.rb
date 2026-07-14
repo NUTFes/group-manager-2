@@ -23,15 +23,22 @@ class SubRepsController < ApplicationController
   # POST /sub_reps
   # POST /sub_reps.json
   def create
-    @sub_rep = SubRep.create(sub_rep_params)
-    render json: fmt(created, @sub_rep)
+    @sub_rep = SubRep.new(sub_rep_params)
+    if @sub_rep.save
+      render json: fmt(created, @sub_rep)
+    else
+      render json: fmt(unprocessable_entity, [], @sub_rep.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /sub_reps/1
   # PATCH/PUT /sub_reps/1.json
   def update
-    @sub_rep.update(sub_rep_params)
-    render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
+    if @sub_rep.update(sub_rep_params)
+      render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @sub_rep.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # DELETE /sub_reps/1
