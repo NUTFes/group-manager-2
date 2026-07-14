@@ -62,6 +62,7 @@ Rails.application.routes.draw do
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
+  resources :place_categories
   resources :rental_orders do
     collection do
       get 'group/:group_id', to: 'rental_orders#get_by_group_id'
@@ -276,6 +277,12 @@ Rails.application.routes.draw do
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
       post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
+      resources :order_status_check_comment_mails, only: [:create] do
+        member do
+          post :resend
+        end
+      end
+      resources :group_mail_comments, only: [:index], controller: 'group_mail_comments_api'
 
       #---保健所提出確認画面
       get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'

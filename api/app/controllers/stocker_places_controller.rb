@@ -4,22 +4,29 @@ class StockerPlacesController < ApplicationController
   before_action :set_stocker_place, only: %i[show update destroy]
 
   def index
-    @stocker_places = StockerPlace.all
-    render json: fmt(ok, @stocker_places)
+    @stocker_places = StockerPlace.includes(:place_category).all
+    render json: fmt(ok, @stocker_places.as_json(include: :place_category))
   end
 
   def show
-    render json: fmt(ok, @stocker_place)
+    render json: fmt(ok, @stocker_place.as_json(include: :place_category))
   end
 
   def create
-    @stocker_place = StockerPlace.create(stocker_place_params)
-    render json: fmt(created, @stocker_place)
+    @stocker_place = StockerPlace.new(stocker_place_params)
+    if @stocker_place.save
+      render json: fmt(created, @stocker_place)
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def update
-    @stocker_place.update(stocker_place_params)
-    render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
+    if @stocker_place.update(stocker_place_params)
+      render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -40,6 +47,6 @@ class StockerPlacesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def stocker_place_params
-    params.permit(:name, :name_en, :stock_item_status, :assign_item_status)
+    params.permit(:name, :name_en, :stock_item_status, :assign_item_status, :place_category_id)
   end
 end

@@ -912,6 +912,10 @@
         "isTakeaway": "Can you take the fire equipment out of the tent every day?",
         "remark": "Remarks"
       },
+      "deadline": {
+        "title": "Application period has ended",
+        "description": "The deadline for fire equipment applications has passed. New applications are not accepted."
+      },
       "fuel": {
         "gasBottle": "Cassette gas",
         "lpGas": "LP gas",
@@ -923,6 +927,9 @@
           "yes": "Yes",
           "no": "No"
         }
+      },
+      "buttons": {
+        "noApplication": "Don't use fire equipment"
       },
       "notes": {
         "quantity": "Half-width numbers only",
@@ -943,7 +950,7 @@
         "noApplicationSuccess": "Saved that no fire use application is needed.",
         "registerSuccess": "Fire use application submitted.",
         "updateSuccess": "Fire use application updated.",
-        "submitFailed": "Submission failed: {{message}}"
+        "submitFailed": "Submission failed. Please try again later."
       },
       "validation": {
         "required": "Enter this field.",

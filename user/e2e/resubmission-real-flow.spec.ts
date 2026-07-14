@@ -199,7 +199,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
         remark: prepared.updatedFireEquipment.remark ?? '',
       });
       await fireEquipmentSection
-        .getByRole('button', { name: '修正', exact: true })
+        .getByRole('button', { name: '保存', exact: true })
         .last()
         .click();
 

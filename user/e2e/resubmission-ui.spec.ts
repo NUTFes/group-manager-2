@@ -14,6 +14,19 @@ type SubmissionStatusValue =
   | 'approved'
   | 'unsubmitted';
 
+const submissionApplicationTypes = [
+  'equipment',
+  'employee',
+  'food_product',
+  'purchase_list',
+  'venue_map',
+  'cooking_process_order',
+  'power_order',
+  'fire_equipment_order',
+] as const;
+
+type SubmissionApplicationType = (typeof submissionApplicationTypes)[number];
+
 type PowerOrder = {
   id: number;
   group_id: number;
@@ -37,16 +50,104 @@ type FireEquipmentOrder = {
 
 type ScenarioState = {
   pageMode: 'registration' | 'resubmission' | 'closed';
-  statuses: Record<
-    'power_order' | 'fire_equipment_order',
-    SubmissionStatusValue
-  >;
+  groupCategoryId: number;
+  fireEquipmentPermissions: {
+    canAdd: boolean;
+    canEdit: boolean;
+  };
+  hasUnregisteredFireEquipment: boolean;
+  statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
-  fireEquipmentOrder: FireEquipmentOrder | null;
+  fireEquipmentOrders: FireEquipmentOrder[];
   requestedUrls: string[];
 };
 
 test.describe('resubmission UI', () => {
+  // 保健所関連の全申請について、再提出ステータスと受付中表示がユーザー画面へ反映されることを確認する。
+  test('shows resubmission status for all applications', async ({ page }) => {
+    const state = scenarioState('closed');
+    submissionApplicationTypes.forEach((applicationType) => {
+      state.statuses[applicationType] = 'waiting_resubmission';
+    });
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+
+    for (const title of [
+      '物品申請',
+      '電力申請',
+      '従業員申請',
+      '模擬店平面図',
+      '販売品申請',
+      '購入品申請',
+      '調理工程申請',
+      '火気使用申請',
+    ]) {
+      const accordion = page.getByRole('button', {
+        name: new RegExp(title),
+      });
+      await expect(
+        accordion.getByText('再提出', { exact: true })
+      ).toBeVisible();
+      await expect(
+        accordion.getByText('受付中', { exact: true })
+      ).toBeVisible();
+    }
+  });
+
+  for (const { categoryName, groupCategoryId, applications } of [
+    {
+      categoryName: 'goods sales',
+      groupCategoryId: 2,
+      applications: ['物品申請', '模擬店平面図', '販売品申請'],
+    },
+    {
+      categoryName: 'stage',
+      groupCategoryId: 3,
+      applications: ['物品申請'],
+    },
+    {
+      categoryName: 'exhibition',
+      groupCategoryId: 4,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+    {
+      categoryName: 'research lab',
+      groupCategoryId: 5,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+    {
+      categoryName: 'committee',
+      groupCategoryId: 6,
+      applications: ['物品申請', '模擬店平面図'],
+    },
+  ]) {
+    test(`passes resubmission statuses to ${categoryName} applications`, async ({
+      page,
+    }) => {
+      const state = scenarioState('closed');
+      state.groupCategoryId = groupCategoryId;
+      state.statuses.equipment = 'waiting_resubmission';
+      state.statuses.venue_map = 'waiting_resubmission';
+      state.statuses.food_product = 'waiting_resubmission';
+      await mockHomePageApis(page, state);
+
+      await page.goto('/home');
+
+      for (const title of applications) {
+        const accordion = page.getByRole('button', {
+          name: new RegExp(title),
+        });
+        await expect(
+          accordion.getByText('再提出', { exact: true })
+        ).toBeVisible();
+        await expect(
+          accordion.getByText('受付中', { exact: true })
+        ).toBeVisible();
+      }
+    });
+  }
+
   // 締切前の未登録状態から、電力申請フォームを入力・送信し、登録後カードに入力値が表示されることを確認する。
   test('registers a power order and displays the submitted card values', async ({
     page,
@@ -83,6 +184,7 @@ test.describe('resubmission UI', () => {
 
     await page.goto('/home');
     await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await page.getByRole('radio', { name: 'はい' }).check();
 
     await fillFireEquipmentForm(page, {
       name: 'E2E 登録バーナー',
@@ -158,7 +260,7 @@ test.describe('resubmission UI', () => {
       usage: 'E2E 更新調理',
       remark: 'E2E 更新備考',
     });
-    await page.getByRole('button', { name: '修正', exact: true }).click();
+    await page.getByRole('button', { name: '保存', exact: true }).click();
 
     await expect(page.getByText('E2E 更新バーナー')).toBeVisible();
     await expect(page.getByText('3', { exact: true })).toBeVisible();
@@ -194,11 +296,52 @@ test.describe('resubmission UI', () => {
     ).toHaveCount(0);
     expect(state.requestedUrls).toHaveLength(0);
   });
+
+  // 火気申請の新規登録だけが受付中の場合でも、既存申請の編集・削除や「申請なし」の解除は許可しない。
+  test('does not allow modifying existing fire equipment applications when only registration is open', async ({
+    page,
+  }) => {
+    const state = scenarioState('closed');
+    state.fireEquipmentPermissions = { canAdd: true, canEdit: false };
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await expect(page.getByText('E2E バーナー')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: '削除', exact: true })
+    ).toHaveCount(0);
+
+    state.fireEquipmentOrders = [];
+    state.hasUnregisteredFireEquipment = true;
+    await page.reload();
+    await page.getByRole('button', { name: /火気使用申請/ }).click();
+    await expect(page.getByText('火気申請は不要（登録済み）')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '修正', exact: true })
+    ).toHaveCount(0);
+    expect(state.requestedUrls).toHaveLength(0);
+  });
 });
 
 const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
   pageMode,
+  groupCategoryId: 1,
+  fireEquipmentPermissions: {
+    canAdd: pageMode === 'registration',
+    canEdit: pageMode === 'registration',
+  },
+  hasUnregisteredFireEquipment: false,
   statuses: {
+    equipment: 'unsubmitted',
+    employee: 'unsubmitted',
+    food_product: 'unsubmitted',
+    purchase_list: 'unsubmitted',
+    venue_map: 'unsubmitted',
+    cooking_process_order: 'unsubmitted',
     power_order:
       pageMode === 'resubmission'
         ? 'waiting_resubmission'
@@ -226,19 +369,21 @@ const scenarioState = (pageMode: ScenarioState['pageMode']): ScenarioState => ({
           },
         ]
       : [],
-  fireEquipmentOrder:
+  fireEquipmentOrders:
     pageMode !== 'registration'
-      ? {
-          id: 5001,
-          group_id: mockGroupId,
-          name: 'E2E バーナー',
-          quantity: 1,
-          fuel: 'gas_bottle',
-          usage: 'E2E 調理',
-          is_takeaway: true,
-          remark: 'E2E 備考',
-        }
-      : null,
+      ? [
+          {
+            id: 5001,
+            group_id: mockGroupId,
+            name: 'E2E バーナー',
+            quantity: 1,
+            fuel: 'gas_bottle',
+            usage: 'E2E 調理',
+            is_takeaway: true,
+            remark: 'E2E 備考',
+          },
+        ]
+      : [],
   requestedUrls: [],
 });
 
@@ -310,13 +455,13 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
         apiResponse({
           id: mockGroupId,
           user_id: mockUser.id,
-          group_category_id: 1,
+          group_category_id: state.groupCategoryId,
         })
       );
     }
 
     if (path === '/user_page_settings') {
-      return fulfillJson(route, apiResponse(userPageSettings(state.pageMode)));
+      return fulfillJson(route, apiResponse(userPageSettings(state)));
     }
 
     if (path === `/check_all_registered/${mockGroupId}`) {
@@ -328,11 +473,12 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
         route,
         apiResponse({
           submissions: [
-            submission('power_order', 3001, state.statuses.power_order),
-            submission(
-              'fire_equipment_order',
-              3002,
-              state.statuses.fire_equipment_order
+            ...submissionApplicationTypes.map((applicationType, index) =>
+              submission(
+                applicationType,
+                3001 + index,
+                state.statuses[applicationType]
+              )
             ),
           ],
         })
@@ -404,6 +550,29 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
     }
 
     if (
+      method === 'GET' &&
+      path ===
+        `/un_registered_groups/group?group_id=${mockGroupId}&order_type=4`
+    ) {
+      return fulfillJson(
+        route,
+        apiResponse(
+          state.hasUnregisteredFireEquipment
+            ? [
+                {
+                  id: 6001,
+                  group_id: mockGroupId,
+                  order_type: 'fire_equipment_order',
+                  created_at: '2026-01-01T00:00:00.000Z',
+                  updated_at: '2026-01-01T00:00:00.000Z',
+                },
+              ]
+            : []
+        )
+      );
+    }
+
+    if (
       (method === 'DELETE' || method === 'POST') &&
       path === '/un_registered_groups'
     ) {
@@ -414,7 +583,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
     if (method === 'POST' && path === '/health_center_submission_statuses') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
-        application_type: 'power_order' | 'fire_equipment_order';
+        application_type: SubmissionApplicationType;
         status: SubmissionStatusValue;
       };
       state.statuses[body.application_type] = body.status;
@@ -433,8 +602,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       const body = (await route.request().postDataJSON()) as {
         status: SubmissionStatusValue;
       };
-      const applicationType =
-        id === 3002 ? 'fire_equipment_order' : 'power_order';
+      const applicationType = submissionApplicationTypes[id - 3001];
       state.statuses[applicationType] = body.status;
       return fulfillJson(
         route,
@@ -446,55 +614,39 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       method === 'GET' &&
       path === `/fire_equipment_orders/group/${mockGroupId}`
     ) {
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders));
     }
 
     if (method === 'POST' && path === '/fire_equipment_orders') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as FireEquipmentBody;
-      state.fireEquipmentOrder = fireEquipmentFromBody(body, 5101);
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      state.fireEquipmentOrders = [fireEquipmentFromBody(body, 5101)];
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders[0]));
     }
 
     if (method === 'PATCH' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as FireEquipmentBody;
       const id = Number(path.split('/').at(-1));
-      state.fireEquipmentOrder = fireEquipmentFromBody(body, id);
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      state.fireEquipmentOrders = [fireEquipmentFromBody(body, id)];
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders[0]));
     }
 
-    if (method === 'PATCH' && path === '/fire_equipment_orders/submit') {
+    if (method === 'PUT' && path === '/fire_equipment_orders/submit') {
       state.requestedUrls.push(path);
       const body = (await route.request().postDataJSON()) as {
-        id?: number;
-        use_fire_equipment: boolean;
-        fire_equipment_order?: FireEquipmentBody;
+        fire_equipment_orders: FireEquipmentBody[];
       };
-      state.fireEquipmentOrder = body.use_fire_equipment
-        ? fireEquipmentFromBody(
-            body.fire_equipment_order ?? {},
-            body.id ?? 5101
-          )
-        : fireEquipmentFromBody(
-            {
-              group_id: mockGroupId,
-              name: '',
-              quantity: 0,
-              fuel: 'gas_bottle',
-              usage: '',
-              is_takeaway: true,
-              remark: '',
-            },
-            body.id ?? 5101
-          );
+      state.fireEquipmentOrders = body.fire_equipment_orders.map(
+        (order, index) => fireEquipmentFromBody(order, order.id ?? 5101 + index)
+      );
       state.statuses.fire_equipment_order = 'unapproved';
-      return fulfillJson(route, apiResponse(state.fireEquipmentOrder));
+      return fulfillJson(route, apiResponse(state.fireEquipmentOrders));
     }
 
     if (method === 'DELETE' && /^\/fire_equipment_orders\/\d+$/.test(path)) {
       state.requestedUrls.push(path);
-      state.fireEquipmentOrder = null;
+      state.fireEquipmentOrders = [];
       return fulfillJson(route, apiResponse([]));
     }
 
@@ -511,6 +663,7 @@ const mockHomePageApis = async (page: Page, state: ScenarioState) => {
 };
 
 type FireEquipmentBody = {
+  id?: number;
   group_id?: number;
   name?: string;
   quantity?: number;
@@ -569,7 +722,7 @@ const checkAllRegistered = (state: ScenarioState) => ({
   food_product: false,
   purchase_list: false,
   cooking_process_order: false,
-  fire_equipment_order: state.fireEquipmentOrder !== null,
+  fire_equipment_order: state.fireEquipmentOrders.length > 0,
   public_relation: false,
 });
 
@@ -579,7 +732,7 @@ const apiResponse = <T>(data: T) => ({
 });
 
 const submission = (
-  applicationType: 'power_order' | 'fire_equipment_order',
+  applicationType: SubmissionApplicationType,
   id: number,
   status: SubmissionStatusValue
 ) => ({
@@ -590,8 +743,8 @@ const submission = (
   detail: null,
 });
 
-const userPageSettings = (pageMode: ScenarioState['pageMode']) => {
-  const canEdit = pageMode === 'registration';
+const userPageSettings = (state: ScenarioState) => {
+  const canEdit = state.pageMode === 'registration';
 
   return {
     id: 1,
@@ -619,8 +772,8 @@ const userPageSettings = (pageMode: ScenarioState['pageMode']) => {
     is_edit_public_relation: canEdit,
     is_edit_venue_map: canEdit,
     is_edit_cooking_process: canEdit,
-    add_fire_equipment_order: canEdit,
-    is_edit_fire_equipment_order: canEdit,
+    add_fire_equipment_order: state.fireEquipmentPermissions.canAdd,
+    is_edit_fire_equipment_order: state.fireEquipmentPermissions.canEdit,
     add_stage_order: canEdit,
   };
 };

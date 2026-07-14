@@ -64,30 +64,10 @@ const GroupCategoryContent = ({
   mutateCheckAllRegisteredGroups,
   healthCenterSubmissionStatus,
 }: GroupCategoryContentProps) => {
-  const employeeSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'employee'
-  );
-  const foodProductsSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'food_product'
-  );
-  const purchaseListsSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'purchase_list'
-  );
-  const venueMapSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'venue_map'
-  );
-  const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'cooking_process_order'
-  );
-  const rentalItemsSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'equipment'
-  );
-  const powerOrderSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'power_order'
-  );
-  const fireEquipmentOrderSubmission = healthCenterSubmissionStatus?.find(
-    (s) => s.applicationType === 'fire_equipment_order'
-  );
+  const getStatus = (applicationType: string) =>
+    healthCenterSubmissionStatus?.find(
+      (submission) => submission.applicationType === applicationType
+    )?.status;
 
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
@@ -103,13 +83,13 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -121,38 +101,38 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.employee}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           groupId={groupId}
-          status={employeeSubmission?.status}
+          status={getStatus('employee')}
         />
         <VenueMap
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
-          status={venueMapSubmission?.status}
+          status={getStatus('venue_map')}
         />
         <FoodProduct
           groupId={groupId}
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
-          status={foodProductsSubmission?.status}
+          status={getStatus('food_product')}
         />
         <PurchaseLists
           isDeadline={!userPageSettings?.isEditPurchaseList}
           isRegistered={checkAllRegisteredGroups?.purchaseList}
           groupId={groupId}
-          status={purchaseListsSubmission?.status}
+          status={getStatus('purchase_list')}
         />
         <CookingProcessOrder
           isDeadline={!userPageSettings?.isEditCookingProcess}
           isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
           groupId={groupId}
-          status={cookingProcessOrderSubmission?.status}
+          status={getStatus('cooking_process_order')}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={fireEquipmentOrderSubmission?.status}
+          status={getStatus('fire_equipment_order')}
         />
       </>
     );
@@ -170,13 +150,13 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -187,18 +167,20 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={getStatus('venue_map')}
         />
         <FoodProduct
           groupId={groupId}
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
+          status={getStatus('food_product')}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={fireEquipmentOrderSubmission?.status}
+          status={getStatus('fire_equipment_order')}
         />
       </>
     );
@@ -211,7 +193,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Stage
           isDeadline={!userPageSettings?.isEditStageOrder}
@@ -227,7 +209,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -250,13 +232,13 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -267,13 +249,14 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={getStatus('venue_map')}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={fireEquipmentOrderSubmission?.status}
+          status={getStatus('fire_equipment_order')}
         />
       </>
     );
@@ -291,13 +274,13 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -308,13 +291,14 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={getStatus('venue_map')}
         />
         <FireEquipment
           canAdd={userPageSettings?.addFireEquipmentOrder}
           canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={fireEquipmentOrderSubmission?.status}
+          status={getStatus('fire_equipment_order')}
         />
       </>
     );
@@ -332,13 +316,13 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
           groupCategoryId={groupCategoryId}
-          status={rentalItemsSubmission?.status}
+          status={getStatus('equipment')}
         />
         <Power
           isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
-          status={powerOrderSubmission?.status}
+          status={getStatus('power_order')}
         />
         <PublicRelations
           isDeadline={!userPageSettings?.isEditPublicRelation}
@@ -349,6 +333,7 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={getStatus('venue_map')}
         />
       </>
     );

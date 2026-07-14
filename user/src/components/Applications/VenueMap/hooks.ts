@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
+  isResubmissionStatus,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useGetVenueMap } from '@/api/venueMapApi';
@@ -23,7 +24,7 @@ export const useVenueMapHooks = (
   const [isEditing, setIsEditing] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
-  const isResubmission = status === 'waiting_resubmission';
+  const isResubmission = isResubmissionStatus(status);
 
   const toEdit = () => {
     setIsEditing(!isEditing);

@@ -46,6 +46,7 @@ services:
     environment:
       - VUE_APP_URL=http://localhost:3000
       - VUE_APP_API_URL=http://api:3000
+      - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
 
   user_front:
     build: ./user_front

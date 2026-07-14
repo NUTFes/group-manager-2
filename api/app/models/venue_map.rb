@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class VenueMap < ApplicationRecord
+  include HidesImgurDeletehash
+
   belongs_to :group
 
   after_create :ensure_health_center_submission_status

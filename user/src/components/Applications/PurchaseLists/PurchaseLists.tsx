@@ -1,5 +1,9 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
@@ -29,6 +33,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
 }) => {
   const purchaseListsViewTexts = usePurchaseListsViewTexts();
   const title = purchaseListsViewTexts.title;
+  const isResubmission = isResubmissionStatus(status);
+  const isApplicationEditable = canEditApplication(isDeadline, status);
 
   const {
     foodProducts,
@@ -70,7 +76,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -84,7 +90,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
         status={status}
       >
@@ -97,15 +103,14 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
 
   // 締め切り後で、データがない（未登録）かつ再提出でない場合
   if (
-    isDeadline &&
-    (!purchaseLists || purchaseLists.length === 0) &&
-    status !== 'waiting_resubmission'
+    !isApplicationEditable &&
+    (!purchaseLists || purchaseLists.length === 0)
   ) {
     return (
       <AccordionMenu
         title={title}
         required
-        isEdit={false}
+        isEdit={isApplicationEditable}
         isExist={false}
         status={status}
       >
@@ -127,12 +132,12 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   }
 
   //締め切り後で再提出の場合
-  if (isDeadline && purchaseLists && status === 'waiting_resubmission') {
+  if (isDeadline && purchaseLists && isResubmission) {
     return (
       <AccordionMenu
         title={title}
         required
-        isEdit={false}
+        isEdit={isApplicationEditable}
         isExist={true}
         status={status}
       >
@@ -154,7 +159,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 締め切り後で、データがある場合 (表示のみ)
   if (isDeadline && purchaseLists && purchaseLists.length > 0) {
     return (
-      <AccordionMenu title={title} required isEdit={false} isExist={true}>
+      <AccordionMenu
+        title={title}
+        required
+        isEdit={false}
+        isExist={true}
+        status={status}
+      >
         {formItems.map((items, index) => (
           <div key={`purchase-list-${index}`} className="mb-4">
             <FormList items={items} />
@@ -170,8 +181,9 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       <AccordionMenu
         title={title}
         required
-        isEdit={!isDeadline}
+        isEdit={isApplicationEditable}
         isExist={initialIsRegistered}
+        status={status}
       >
         <PurchaseListsForm
           control={control}
@@ -193,7 +205,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     <AccordionMenu
       title={title}
       required
-      isEdit={!isDeadline}
+      isEdit={isApplicationEditable}
       isExist={initialIsRegistered}
       status={status}
     >

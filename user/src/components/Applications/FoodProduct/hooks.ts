@@ -6,6 +6,7 @@ import {
 } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
+  isResubmissionStatus,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
@@ -32,7 +33,7 @@ export const useFoodProductHooks = (
   const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
-  const isResubmission = status === 'waiting_resubmission';
+  const isResubmission = isResubmissionStatus(status);
 
   // API呼び出し
   const {

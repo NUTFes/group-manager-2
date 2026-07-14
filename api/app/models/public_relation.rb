@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicRelation < ApplicationRecord
+  include HidesImgurDeletehash
+
   belongs_to :group
 
   def to_info_h

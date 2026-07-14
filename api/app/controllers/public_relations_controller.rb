@@ -19,12 +19,21 @@ class PublicRelationsController < ApplicationController
   end
 
   def update
-    @public_relation.update(public_relation_params)
+    old_picture_path = @public_relation.picture_path
+    old_imgur_deletehash = @public_relation.imgur_deletehash
+
+    updated = @public_relation.update(public_relation_params)
+    ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path) if updated
+
     render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy
+    imgur_deletehash = @public_relation.imgur_deletehash
+
     @public_relation.destroy
+    ImgurImageDeleter.call(imgur_deletehash) if @public_relation.destroyed?
+
     render json: fmt(ok, [], "Deleted public_relation = #{params[:id]}")
   end
 
@@ -55,6 +64,13 @@ class PublicRelationsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def public_relation_params
-    params.permit(:group_id, :picture_name, :picture_path, :blurb, :is_announcement_requested)
+    params.permit(
+      :group_id,
+      :picture_name,
+      :picture_path,
+      :imgur_deletehash,
+      :blurb,
+      :is_announcement_requested
+    )
   end
 end
