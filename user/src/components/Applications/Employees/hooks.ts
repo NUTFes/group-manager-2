@@ -21,6 +21,7 @@ import {
 } from '@/api/employeesApi';
 import {
   HealthCenterSubmissionStatus,
+  canEditApplication,
   useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
@@ -380,7 +381,6 @@ export const useEmployeesApplicationHooks = (
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
-  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
@@ -535,7 +535,9 @@ export const useEmployeesApplicationHooks = (
    * 再提出待ちの場合は編集可能なので、deadline モードにしない
    */
   const isDeadlineMode =
-    isDeadline && !isResubmission && !isUnregisteredGroup && !isEmployeesData;
+    !canEditApplication(isDeadline, status) &&
+    !isUnregisteredGroup &&
+    !isEmployeesData;
 
   /**
    * フォームリスト表示状態かどうか
@@ -612,6 +614,5 @@ export const useEmployeesApplicationHooks = (
 
     // UI用プロパティ
     isDeadline,
-    isResubmission,
   };
 };

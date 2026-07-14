@@ -23,6 +23,15 @@ export type HealthCenterSubmissionStatus =
   | 'approved'
   | 'unsubmitted';
 
+export const isResubmissionStatus = (
+  status?: HealthCenterSubmissionStatus
+): boolean => status === 'waiting_resubmission';
+
+export const canEditApplication = (
+  isDeadline: boolean | undefined,
+  status?: HealthCenterSubmissionStatus
+): boolean => !isDeadline || isResubmissionStatus(status);
+
 export type HealthCenterSubmissionStatusResponse = {
   id: number | null;
   applicationType: string;

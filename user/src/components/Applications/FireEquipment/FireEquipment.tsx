@@ -1,4 +1,8 @@
 import { FC } from 'react';
+import {
+  HealthCenterSubmissionStatus,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -14,6 +18,7 @@ type FireEquipmentProps = {
   canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: HealthCenterSubmissionStatus;
 };
 
 type FireEquipmentDisplayMode =
@@ -49,8 +54,10 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canAdd = false,
   canEdit = false,
   isRegistered,
+  status,
 }) => {
   const { t } = useTranslation('common');
+  const isResubmission = isResubmissionStatus(status);
 
   const {
     state,
@@ -70,7 +77,12 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   const { isEditing, applyFireEquipment } = state;
 
   const hasAnyRegistration = hasExisting || hasUnregistered;
-  const canSubmit = canAdd || canEdit;
+  // 他申請の複数登録対応が実装され次第、この権限判定を共通化する。
+  const canRegisterNewFireEquipmentApplication = canAdd || isResubmission;
+  const canEditExistingFireEquipmentApplication = canEdit || isResubmission;
+  const canSubmit =
+    canRegisterNewFireEquipmentApplication ||
+    canEditExistingFireEquipmentApplication;
 
   const mode = getDisplayMode(
     applyFireEquipment,
@@ -144,8 +156,12 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       content = (
         <FormList
           items={noApplicationItems}
-          isEdit={canEdit}
-          onEdit={canEdit ? handleCancelUnregistered : undefined}
+          isEdit={canEditExistingFireEquipmentApplication}
+          onEdit={
+            canEditExistingFireEquipmentApplication
+              ? handleCancelUnregistered
+              : undefined
+          }
         />
       );
       break;
@@ -173,8 +189,16 @@ const FireEquipment: FC<FireEquipmentProps> = ({
         <FireEquipmentForm
           groupId={groupId}
           existingOrders={fireEquipmentOrders}
-          onDeleteOrder={canEdit ? handleDeleteOrder : undefined}
-          toEdit={canEdit ? prepareFormForEditing : undefined}
+          onDeleteOrder={
+            canEditExistingFireEquipmentApplication
+              ? handleDeleteOrder
+              : undefined
+          }
+          toEdit={
+            canEditExistingFireEquipmentApplication
+              ? prepareFormForEditing
+              : undefined
+          }
           isViewMode
         />
       );
@@ -198,8 +222,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
             groupId={groupId}
             existingOrders={isEditing ? fireEquipmentOrders : undefined}
             onComplete={handleFormComplete}
-            canAdd={canAdd}
-            canEdit={canEdit}
+            canAdd={canRegisterNewFireEquipmentApplication}
+            canEdit={canEditExistingFireEquipmentApplication}
           />
         </div>
       );
@@ -214,6 +238,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       isEdit={canSubmit}
       isExist={isExist}
       required={true}
+      status={status}
     >
       {isLoading ? (
         <p className="text-sm text-gray-400">{t('general.loading')}</p>

@@ -3,6 +3,7 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrdersByGroupId,
 } from '@/api/fireEquipmentApi';
+import { useGetHealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -40,6 +41,8 @@ export const useFireEquipmentHooks = (groupId: number) => {
   } = useGetUnregisteredGroup(groupId, ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
   const { submitFireEquipmentOrders } = useFireEquipmentMutations();
+  const { mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
   const { registerUnregisteredGroup, deleteUnregisteredGroup } =
     useMutateUnregisteredGroup(ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
@@ -89,20 +92,20 @@ export const useFireEquipmentHooks = (groupId: number) => {
 
   const handleApplyNegative = async () => {
     try {
-      if (hasExisting) {
-        const deleteResult = await submitFireEquipmentOrders([], groupId);
-        if (!deleteResult.success) {
-          await mutateFireEquipmentOrders();
-          toast.error(t('applications.fireEquipment.messages.submitFailed'));
-          return;
-        }
+      const deleteResult = await submitFireEquipmentOrders([], groupId);
+      if (!deleteResult.success) {
+        await mutateFireEquipmentOrders();
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
+        return;
       }
+
       const result = await registerUnregisteredGroup(groupId);
       if (result.success) {
         updateState({ applyFireEquipment: 'no' });
         await Promise.all([
           mutateFireEquipmentOrders(),
           mutateUnregisteredGroup(),
+          mutateHealthCenterSubmissionStatus(),
         ]);
         toast.success(
           t('applications.fireEquipment.messages.noApplicationSuccess')
@@ -122,7 +125,10 @@ export const useFireEquipmentHooks = (groupId: number) => {
     try {
       const remainingOrders = fireEquipmentOrders.filter((o) => o.id !== id);
       const result = await submitFireEquipmentOrders(remainingOrders, groupId);
-      await mutateFireEquipmentOrders();
+      await Promise.all([
+        mutateFireEquipmentOrders(),
+        mutateHealthCenterSubmissionStatus(),
+      ]);
 
       if (!result.success) {
         toast.error(t('applications.fireEquipment.messages.deleteFailed'));
@@ -157,7 +163,10 @@ export const useFireEquipmentHooks = (groupId: number) => {
   };
 
   const handleFormComplete = async () => {
-    await mutateFireEquipmentOrders();
+    await Promise.all([
+      mutateFireEquipmentOrders(),
+      mutateHealthCenterSubmissionStatus(),
+    ]);
     updateState({ applyFireEquipment: 'yes', isEditing: false });
   };
 

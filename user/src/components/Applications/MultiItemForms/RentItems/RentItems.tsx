@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 import { useRentItemsAccordionHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
@@ -19,6 +22,7 @@ const RentItems: FC<RentItemsProps> = ({
   groupCategoryId,
   status,
 }) => {
+  const isEditable = canEditApplication(isDeadline, status);
   const { rentItemsAccordionTexts } = useRentItemsAccordionHooks(
     groupId,
     groupCategoryId,
@@ -27,7 +31,7 @@ const RentItems: FC<RentItemsProps> = ({
   return (
     <AccordionMenu
       title={rentItemsAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={isEditable}
       isExist={isRegistered}
       required={true}
       status={status}
@@ -35,7 +39,7 @@ const RentItems: FC<RentItemsProps> = ({
       <RentItemsForm
         groupId={groupId}
         groupCategoryId={groupCategoryId}
-        isDeadline={!isDeadline}
+        isEditable={isEditable}
         status={status}
       />
     </AccordionMenu>
