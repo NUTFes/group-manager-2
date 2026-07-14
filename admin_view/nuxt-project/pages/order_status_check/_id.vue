@@ -1334,6 +1334,9 @@ import {
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/health_center_submission_statuses";
+// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
+// 前後移動ボタンでも維持するために参照するキーのprefix。
+const ORDER_STATUS_CHECK_INDEX_PATH = "/order_status_check";
 
 export default {
   components: {
@@ -1464,24 +1467,74 @@ export default {
       }
     },
     async fetchAllGroupIds() {
-      // 管理者が設定している「現在の年度」ではなく、閲覧中の団体自身の年度で絞り込む。
-      // ここがズレていると、閲覧中の団体が一覧に含まれず前後移動ボタンが機能しない
-      // （＝一致していても別年度の団体が紛れ込み、移動が飛んで見える）原因になる。
+      // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
+      // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・参加形式・国際・学外)が
+      // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
       const fesYearId = this.group?.group?.fes_year_id;
       if (!fesYearId) return;
 
+      const storedFilters = this.getStoredIndexFilters();
+      const filteredIds = await this.fetchGroupIdsByFilter({
+        fesYearId: storedFilters.fesYearId ?? fesYearId,
+        groupCategoryId: storedFilters.groupCategoryId ?? 0,
+        isInternational: storedFilters.isInternational ?? 0,
+        isExternal: storedFilters.isExternal ?? 0,
+      });
+
+      // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
+      // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
+      // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
+      if (filteredIds.includes(this.currentGroupId)) {
+        this.allGroupIds = filteredIds;
+      } else {
+        this.allGroupIds = await this.fetchGroupIdsByFilter({ fesYearId });
+      }
+    },
+    getStoredIndexFilters() {
+      if (typeof localStorage === "undefined") return {};
+
+      const toNumberOrNull = (value) =>
+        value === null || value === undefined ? null : Number(value);
+      const prefix = ORDER_STATUS_CHECK_INDEX_PATH;
+
+      return {
+        fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
+        groupCategoryId: toNumberOrNull(
+          localStorage.getItem(prefix + "RefCategory")
+        ),
+        isInternational: toNumberOrNull(
+          localStorage.getItem(prefix + "RefInternational")
+        ),
+        isExternal: toNumberOrNull(
+          localStorage.getItem(prefix + "RefExternal")
+        ),
+      };
+    },
+    async fetchGroupIdsByFilter({
+      fesYearId,
+      groupCategoryId = 0,
+      isInternational = 0,
+      isExternal = 0,
+    }) {
       try {
         const url =
-          "/api/v1/get_refinement_order_status_check?fes_year_id=" + fesYearId;
+          "/api/v1/get_refinement_order_status_check?fes_year_id=" +
+          fesYearId +
+          "&group_category_id=" +
+          groupCategoryId +
+          "&is_international=" +
+          isInternational +
+          "&is_external=" +
+          isExternal;
         const refRes = await this.$axios.$post(url);
 
         if (refRes && refRes.data) {
-          this.allGroupIds = refRes.data
-            .map((g) => g.group.id)
-            .sort((a, b) => a - b);
+          return refRes.data.map((g) => g.group.id).sort((a, b) => a - b);
         }
+        return [];
       } catch (e) {
         console.error("Failed to fetch all group ids", e);
+        return [];
       }
     },
     isUnregistered(orderType) {

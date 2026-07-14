@@ -615,6 +615,56 @@ const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
   "/api/v1/resend_health_center_submission_status_comment_mail";
 const MESSAGE_TEMPLATES_ENDPOINT = "/api/v1/message_templates";
 const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
+// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
+// 前後移動ボタンでも維持するために参照するキーのprefix。
+const HEALTH_CENTER_DOCUMENT_REVIEW_INDEX_PATH =
+  "/health_center_document_review";
+
+function getStoredIndexFilters(prefix) {
+  if (typeof localStorage === "undefined") return {};
+
+  const toNumberOrNull = (value) =>
+    value === null || value === undefined ? null : Number(value);
+
+  return {
+    fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
+    isInternational: toNumberOrNull(
+      localStorage.getItem(prefix + "RefInternational")
+    ),
+    isExternal: toNumberOrNull(localStorage.getItem(prefix + "RefExternal")),
+  };
+}
+
+// 食販団体一覧画面(index.vue)のfilterGroupsと同じ条件で絞り込む。
+// カテゴリは常に「食品販売」(1)固定（index.vue側も同様）。
+function filterFoodSalesGroupIds(
+  items,
+  { fesYearId, isInternational = 0, isExternal = 0 }
+) {
+  return items
+    .filter((item) => {
+      const categoryId =
+        typeof item.group_category === "number"
+          ? item.group_category
+          : item.group_category?.id;
+      const yearId = item.group?.fes_year_id || item.fes_year?.id;
+      const groupIsInternational = item.group?.is_international;
+      const groupIsExternal = item.group?.is_external;
+
+      return (
+        categoryId === 1 &&
+        (fesYearId === 0 || yearId === fesYearId) &&
+        (isInternational === 0 ||
+          (isInternational === 1 && groupIsInternational === true) ||
+          (isInternational === 2 && !groupIsInternational)) &&
+        (isExternal === 0 ||
+          (isExternal === 1 && groupIsExternal === true) ||
+          (isExternal === 2 && !groupIsExternal))
+      );
+    })
+    .map((item) => item.group.id)
+    .sort((a, b) => a - b);
+}
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
   const getOrEmpty = async (url, fallbackValue) => {
@@ -632,33 +682,42 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     HEALTH_CENTER_SHOW_ENDPOINT + routeId
   );
 
-  // 管理者が設定している「現在の年度」ではなく、閲覧中の団体自身の年度で絞り込む。
-  // ここがズレていると、閲覧中の団体が一覧に含まれず前後移動ボタンが機能しない原因になる。
-  const fesYearId = groupRes.data.group.fes_year_id;
+  // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
+  // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・国際・学外)が
+  // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
+  const viewedGroupFesYearId = groupRes.data.group.fes_year_id;
+  const storedFilters = getStoredIndexFilters(
+    HEALTH_CENTER_DOCUMENT_REVIEW_INDEX_PATH
+  );
+  const effectiveFesYearId = storedFilters.fesYearId ?? viewedGroupFesYearId;
+
   let foodSalesGroupsRes;
   try {
     foodSalesGroupsRes = await $axios.$get(HEALTH_CENTER_REFINEMENT_ENDPOINT);
   } catch (error) {
     if (error?.response?.status === 404) {
       const legacyUrl =
-        LEGACY_REFINEMENT_ENDPOINT + "?fes_year_id=" + fesYearId;
+        LEGACY_REFINEMENT_ENDPOINT + "?fes_year_id=" + effectiveFesYearId;
       foodSalesGroupsRes = await $axios.$post(legacyUrl);
     } else {
       throw error;
     }
   }
-  const foodSalesGroupIds = foodSalesGroupsRes.data
-    .filter((item) => {
-      const categoryId =
-        typeof item.group_category === "number"
-          ? item.group_category
-          : item.group_category?.id;
-      const yearId = item.group?.fes_year_id || item.fes_year?.id;
 
-      return categoryId === 1 && yearId === fesYearId;
-    })
-    .map((item) => item.group.id)
-    .sort((a, b) => a - b);
+  let foodSalesGroupIds = filterFoodSalesGroupIds(foodSalesGroupsRes.data, {
+    fesYearId: effectiveFesYearId,
+    isInternational: storedFilters.isInternational ?? 0,
+    isExternal: storedFilters.isExternal ?? 0,
+  });
+
+  // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
+  // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
+  // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
+  if (!foodSalesGroupIds.includes(Number(routeId))) {
+    foodSalesGroupIds = filterFoodSalesGroupIds(foodSalesGroupsRes.data, {
+      fesYearId: viewedGroupFesYearId,
+    });
+  }
 
   const [
     foodProducts,
