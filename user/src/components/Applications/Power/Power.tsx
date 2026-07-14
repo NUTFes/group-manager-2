@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import {
   HealthCenterSubmissionStatus,
-  isResubmissionStatus,
+  canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
@@ -25,8 +25,7 @@ const Power: FC<PowerProps> = ({
   status,
 }) => {
   const powerAccordionHooks = usePowerAccordionHooks();
-  const isResubmission = isResubmissionStatus(status);
-  const isFormLocked = !!isDeadline && !isResubmission;
+  const isFormLocked = !canEditApplication(isDeadline, status);
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
