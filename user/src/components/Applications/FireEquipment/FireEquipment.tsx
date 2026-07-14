@@ -77,9 +77,12 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   const { isEditing, applyFireEquipment } = state;
 
   const hasAnyRegistration = hasExisting || hasUnregistered;
-  const canRegisterApplication = canAdd || isResubmission;
-  const canEditApplication = canEdit || isResubmission;
-  const canSubmit = canRegisterApplication || canEditApplication;
+  // 他申請の複数登録対応が実装され次第、この権限判定を共通化する。
+  const canRegisterNewFireEquipmentApplication = canAdd || isResubmission;
+  const canEditExistingFireEquipmentApplication = canEdit || isResubmission;
+  const canSubmit =
+    canRegisterNewFireEquipmentApplication ||
+    canEditExistingFireEquipmentApplication;
 
   const mode = getDisplayMode(
     applyFireEquipment,
@@ -153,8 +156,12 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       content = (
         <FormList
           items={noApplicationItems}
-          isEdit={canEditApplication}
-          onEdit={canEditApplication ? handleCancelUnregistered : undefined}
+          isEdit={canEditExistingFireEquipmentApplication}
+          onEdit={
+            canEditExistingFireEquipmentApplication
+              ? handleCancelUnregistered
+              : undefined
+          }
         />
       );
       break;
@@ -182,8 +189,16 @@ const FireEquipment: FC<FireEquipmentProps> = ({
         <FireEquipmentForm
           groupId={groupId}
           existingOrders={fireEquipmentOrders}
-          onDeleteOrder={canEditApplication ? handleDeleteOrder : undefined}
-          toEdit={canEditApplication ? prepareFormForEditing : undefined}
+          onDeleteOrder={
+            canEditExistingFireEquipmentApplication
+              ? handleDeleteOrder
+              : undefined
+          }
+          toEdit={
+            canEditExistingFireEquipmentApplication
+              ? prepareFormForEditing
+              : undefined
+          }
           isViewMode
         />
       );
@@ -207,8 +222,8 @@ const FireEquipment: FC<FireEquipmentProps> = ({
             groupId={groupId}
             existingOrders={isEditing ? fireEquipmentOrders : undefined}
             onComplete={handleFormComplete}
-            canAdd={canRegisterApplication}
-            canEdit={canEditApplication}
+            canAdd={canRegisterNewFireEquipmentApplication}
+            canEdit={canEditExistingFireEquipmentApplication}
           />
         </div>
       );
