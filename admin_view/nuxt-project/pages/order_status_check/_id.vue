@@ -1721,20 +1721,22 @@ export default {
       const orderType = orderTypeByEditType[this.activeEditType];
       if (!orderType || !this.isUnregistered(orderType)) return;
 
+      // fetchDataで取得済みのunregisteredGroupsに削除対象があるので、
+      // 同じ内容を取りに行くGETリクエストを重ねて発行しない。
+      const records = this.unregisteredGroups.filter(
+        (record) => record.order_type === orderType
+      );
+      if (records.length === 0) return;
+
       try {
-        const res = await this.$axios.$get(
-          `/un_registered_groups/group?group_id=${this.group.group.id}&order_type=${orderType}`
-        );
-        const records = res.data || [];
         await Promise.all(
           records.map((record) =>
             this.$axios.$delete(`/un_registered_groups/${record.id}`)
           )
         );
       } catch (error) {
-        // 該当レコードが無い場合はここには来ない(HTTPステータス200で空配列が返る)ため、
-        // ここに入るのはネットワークエラーなど「申請しない」フラグの解除に本当に
-        // 失敗したケース。表示が「申請しない」のまま残ることを利用者に伝える。
+        // ここに入るのはネットワークエラーなど「申請しない」フラグの解除に
+        // 本当に失敗したケース。表示が「申請しない」のまま残ることを利用者に伝える。
         console.error("un_registered_groups の解除に失敗しました", error);
         window.alert(
           "「申請しない」の解除に失敗しました。画面を再読み込みしても解消しない場合は再度お試しください。"
