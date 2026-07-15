@@ -91,7 +91,10 @@ export default {
         const savedId = response?.data?.id;
 
         if (typeof savedId === "undefined") {
-          console.error("従業員申請の保存レスポンスに id がありませんでした", response);
+          console.error(
+            "従業員申請の保存レスポンスに id がありませんでした",
+            response
+          );
           this.$emit("error", "保存に失敗しました");
           return;
         }
@@ -100,7 +103,12 @@ export default {
         this.$emit("close");
       } catch (error) {
         console.error("従業員申請の編集に失敗しました", error);
-        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+        this.$emit(
+          "error",
+          error?.response?.data?.message ||
+            error?.message ||
+            "保存に失敗しました"
+        );
       }
     },
   },
