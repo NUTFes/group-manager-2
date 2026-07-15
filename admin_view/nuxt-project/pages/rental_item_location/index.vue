@@ -335,7 +335,6 @@ export default {
         }
 
       } catch (error) {
-        console.error("データの取得に失敗", error);
       } finally {
         this.isLoading = false;
       }
@@ -379,7 +378,6 @@ export default {
         
         this.assignments = [...this.assignments];
       } catch (error) {
-        console.error("貸出場所の更新に失敗しました", error);
         alert("貸出場所の割り当てに失敗しました。");
         await this.fetchDataFromDB();
       }
@@ -425,7 +423,6 @@ export default {
         
         this.assignments = [...this.assignments];
       } catch (error) {
-        console.error("貸出場所の解除に失敗しました", error);
         alert("割り当ての解除に失敗しました。");
       }
     },
