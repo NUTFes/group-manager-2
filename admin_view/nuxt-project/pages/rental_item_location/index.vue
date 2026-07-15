@@ -137,7 +137,6 @@
             <!-- 貸出場所情報（テーブルによる合計・内訳の常時表示） -->
             <div class="stock-info">
               <h3>{{ place.name }}</h3>
-              
               <div class="stock-info-tables">
                 <!-- 貸出合計テーブル -->
                 <div class="assign-result-container">
@@ -475,15 +474,15 @@ export default {
 
     getGroupSourceBreakdown(groupId) {
       const assigns = this.assignments.filter(a => Number(a.group_id) === Number(groupId));
-      return this._calculateSourceBreakdown(assigns);
+      return this.calculateSourceBreakdown(assigns);
     },
 
     getPlaceSourceBreakdown(placeId) {
       const assigns = this.assignments.filter(a => Number(a.rental_place_id) === Number(placeId));
-      return this._calculateSourceBreakdown(assigns);
+      return this.calculateSourceBreakdown(assigns);
     },
 
-    _calculateSourceBreakdown(assignRecords) {
+    calculateSourceBreakdown(assignRecords) {
       const sourcesMap = {};
 
       assignRecords.forEach(a => {
