@@ -104,7 +104,13 @@ export default {
         this.$emit("close");
       } catch (e) {
         console.error("物品申請の編集に失敗しました", e);
-        this.$emit("error", e?.response?.data?.message || e?.message || "保存に失敗しました");
+        this.$emit(
+          "error",
+          e?.response?.data?.status?.option ||
+            e?.response?.data?.status?.message ||
+            e?.message ||
+            "保存に失敗しました"
+        );
       }
     },
   },
