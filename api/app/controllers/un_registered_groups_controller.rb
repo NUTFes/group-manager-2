@@ -6,11 +6,7 @@ class UnRegisteredGroupsController < ApplicationController
   # GET /un_registered_groups
   # GET /un_registered_groups?group_id=1
   def index
-    @un_registered_groups = if params[:group_id].present?
-                              UnRegisteredGroup.where(group_id: params[:group_id])
-                            else
-                              UnRegisteredGroup.all
-                            end
+    @un_registered_groups = params[:group_id].present? ? UnRegisteredGroup.where(group_id: params[:group_id]) : UnRegisteredGroup.all
     render json: fmt(:ok, @un_registered_groups)
   end
 
