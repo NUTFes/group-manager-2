@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     employee: {
@@ -84,33 +86,14 @@ export default {
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),
       };
-      try {
-        const response = employee.id
-          ? await this.$axios.$put(`/employees/${employee.id}`, data)
-          : await this.$axios.$post(`/employees`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error(
-            "従業員申請の保存レスポンスに id がありませんでした",
-            response
-          );
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("従業員申請の編集に失敗しました", error);
-        this.$emit(
-          "error",
-          error?.response?.data?.status?.option ||
-            error?.response?.data?.status?.message ||
-            error?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "従業員申請",
+        request: () =>
+          employee.id
+            ? this.$axios.$put(`/employees/${employee.id}`, data)
+            : this.$axios.$post(`/employees`, data),
+      });
     },
   },
 };

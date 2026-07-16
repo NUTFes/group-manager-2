@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     purchaseList: {
@@ -117,32 +119,14 @@ export default {
         url: String(this.url ?? ""),
         remark: String(this.remark ?? ""),
       };
-      try {
-        const response = purchaseList.id
-          ? await this.$axios.$put(`/purchase_lists/${purchaseList.id}`, data)
-          : await this.$axios.$post(`/purchase_lists`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error(
-            "購入品申請の保存レスポンスに id がありませんでした",
-            response
-          );
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("購入品申請の編集に失敗しました", error);
-        this.$emit(
-          "error",
-          error?.response?.data?.message ||
-            error?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "購入品申請",
+        request: () =>
+          purchaseList.id
+            ? this.$axios.$put(`/purchase_lists/${purchaseList.id}`, data)
+            : this.$axios.$post(`/purchase_lists`, data),
+      });
     },
   },
 };

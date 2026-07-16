@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     powerOrder: {
@@ -74,36 +76,14 @@ export default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      try {
-        const response = powerOrder.id
-          ? await this.$axios.$put(
-              `/api/v1/power_orders/${powerOrder.id}`,
-              data
-            )
-          : await this.$axios.$post(`/api/v1/power_orders`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error(
-            "電力申請の保存レスポンスに id がありませんでした",
-            response
-          );
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("電力申請の編集に失敗しました", error);
-        this.$emit(
-          "error",
-          error?.response?.data?.status?.option ||
-            error?.response?.data?.status?.message ||
-            error?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "電力申請",
+        request: () =>
+          powerOrder.id
+            ? this.$axios.$put(`/api/v1/power_orders/${powerOrder.id}`, data)
+            : this.$axios.$post(`/api/v1/power_orders`, data),
+      });
     },
   },
 };

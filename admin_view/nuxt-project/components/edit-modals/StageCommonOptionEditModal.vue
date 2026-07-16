@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     stageCommonOption: {
@@ -83,33 +85,14 @@ export default {
         camera_permission: String(this.cameraPermission),
         loud_sound: String(this.loudSound),
       };
-      try {
-        const response = sco.id
-          ? await this.$axios.$put(`/stage_common_options/${sco.id}`, data)
-          : await this.$axios.$post(`/stage_common_options`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error(
-            "ステージオプションの保存レスポンスに id がありませんでした",
-            response
-          );
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("ステージオプションの編集に失敗しました", error);
-        this.$emit(
-          "error",
-          error?.response?.data?.status?.option ||
-            error?.response?.data?.status?.message ||
-            error?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "ステージオプション",
+        request: () =>
+          sco.id
+            ? this.$axios.$put(`/stage_common_options/${sco.id}`, data)
+            : this.$axios.$post(`/stage_common_options`, data),
+      });
     },
   },
 };

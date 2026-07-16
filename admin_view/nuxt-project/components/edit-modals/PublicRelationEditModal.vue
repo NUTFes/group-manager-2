@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     publicRelation: {
@@ -53,32 +55,14 @@ export default {
         blurb: this.blurb ?? "",
         picture_path: this.picturePath ?? "",
       };
-      try {
-        const response = pr.id
-          ? await this.$axios.$put(`/public_relations/${pr.id}`, data)
-          : await this.$axios.$post(`/public_relations`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error(
-            "PR申請の保存レスポンスに id がありませんでした",
-            response
-          );
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("PR申請の編集に失敗しました", error);
-        this.$emit(
-          "error",
-          error?.response?.data?.message ||
-            error?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "PR申請",
+        request: () =>
+          pr.id
+            ? this.$axios.$put(`/public_relations/${pr.id}`, data)
+            : this.$axios.$post(`/public_relations`, data),
+      });
     },
   },
 };

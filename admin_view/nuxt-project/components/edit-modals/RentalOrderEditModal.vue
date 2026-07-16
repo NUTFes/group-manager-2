@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     rentalOrder: {
@@ -88,30 +90,14 @@ export default {
         rental_item_id: this.rentalItemID,
         num: this.num,
       };
-      try {
-        const response = rentalOrder.id
-          ? await this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
-          : await this.$axios.$post(`/rental_orders`, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error("物品申請の保存レスポンスに id がありませんでした", response);
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (e) {
-        console.error("物品申請の編集に失敗しました", e);
-        this.$emit(
-          "error",
-          e?.response?.data?.status?.option ||
-            e?.response?.data?.status?.message ||
-            e?.message ||
-            "保存に失敗しました"
-        );
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "物品申請",
+        request: () =>
+          rentalOrder.id
+            ? this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
+            : this.$axios.$post(`/rental_orders`, data),
+      });
     },
   },
 };
