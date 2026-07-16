@@ -77,6 +77,16 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
     assert_includes ids, @un_registered_group.id
   end
 
+  test 'group action returns not found body when no records match' do
+    get group_un_registered_groups_url,
+        params: { group_id: @un_registered_group.group_id, order_type: 'nonexistent_order_type' }
+    assert_response :success
+
+    body = response.parsed_body
+    assert_equal 404, body['status']['code']
+    assert_equal [], body['data']
+  end
+
   test 'should destroy un_registered_group' do
     assert_difference('UnRegisteredGroup.count', -1) do
       delete un_registered_group_url(@un_registered_group), as: :json
