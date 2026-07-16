@@ -150,7 +150,13 @@ export default {
         this.$emit("close");
       } catch (error) {
         console.error("ステージ申請の編集に失敗しました", error);
-        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+        this.$emit(
+          "error",
+          error?.response?.data?.status?.option ||
+            error?.response?.data?.status?.message ||
+            error?.message ||
+            "保存に失敗しました"
+        );
       }
     },
   },
