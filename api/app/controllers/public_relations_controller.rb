@@ -33,7 +33,7 @@ class PublicRelationsController < ApplicationController
     end
 
     ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path)
-    render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
+    render json: fmt(ok, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy

@@ -32,7 +32,7 @@ class PlaceOrdersController < ApplicationController
   # PATCH/PUT /place_orders/1.json
   def update
     if @place_order.update(place_order_params)
-      render json: fmt(created, @place_order, "Updated place_order id = #{params[:id]}")
+      render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
     else
       render json: fmt(unprocessable_entity, [], @place_order.errors.full_messages.join(', ')), status: :unprocessable_entity
     end
