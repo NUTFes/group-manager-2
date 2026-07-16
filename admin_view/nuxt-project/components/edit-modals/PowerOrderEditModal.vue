@@ -98,7 +98,8 @@ export default {
         console.error("電力申請の編集に失敗しました", error);
         this.$emit(
           "error",
-          error?.response?.data?.message ||
+          error?.response?.data?.status?.option ||
+            error?.response?.data?.status?.message ||
             error?.message ||
             "保存に失敗しました"
         );
