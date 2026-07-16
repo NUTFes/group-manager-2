@@ -127,34 +127,23 @@
                   <tr>
                     <th>副代表</th>
                     <td>
-                      <span
+                      <EditPlaceholderLine
                         v-if="isUnregistered('sub_rep')"
-                        class="placeholder-line"
-                      >
-                        申請しない
-                        <CommonButton
-                          iconName="edit"
-                          :on_click="
-                            () =>
-                              openModal('sub_rep', { group_id: currentGroupId })
-                          "
-                          >編集</CommonButton
-                        >
-                      </span>
+                        text="申請しない"
+                        :on-edit="
+                          () => openModal('sub_rep', { group_id: currentGroupId })
+                        "
+                      />
                       <template v-else-if="group.sub_rep">
                         {{ group.sub_rep.name }}
                       </template>
-                      <span v-else class="placeholder-line">
-                        未登録
-                        <CommonButton
-                          iconName="edit"
-                          :on_click="
-                            () =>
-                              openModal('sub_rep', { group_id: currentGroupId })
-                          "
-                          >編集</CommonButton
-                        >
-                      </span>
+                      <EditPlaceholderLine
+                        v-else
+                        text="未登録"
+                        :on-edit="
+                          () => openModal('sub_rep', { group_id: currentGroupId })
+                        "
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -167,16 +156,13 @@
               <div class="section-header">
                 <h2>会場申請</h2>
               </div>
-              <p v-if="isUnregistered('place_order')" class="placeholder-line">
-                申請しない
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () => openModal('place_order', { group_id: currentGroupId })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('place_order')"
+                text="申請しない"
+                :on-edit="
+                  () => openModal('place_order', { group_id: currentGroupId })
+                "
+              />
               <VerticalTable v-else-if="group.place_order">
                 <tbody
                   class="selectable-row"
@@ -201,16 +187,13 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else class="placeholder-line">
-                未登録
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () => openModal('place_order', { group_id: currentGroupId })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () => openModal('place_order', { group_id: currentGroupId })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -306,16 +289,13 @@
               <div class="section-header">
                 <h2>ステージ申請</h2>
               </div>
-              <p v-if="isUnregistered('stage_order')" class="placeholder-line">
-                申請しない
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () => openModal('stage_order', { group_id: currentGroupId })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('stage_order')"
+                text="申請しない"
+                :on-edit="
+                  () => openModal('stage_order', { group_id: currentGroupId })
+                "
+              />
               <VerticalTable
                 v-else-if="group.stage_orders && group.stage_orders.length > 0"
               >
@@ -353,16 +333,13 @@
                 </tr>
               </VerticalTable>
 
-              <p v-else class="placeholder-line">
-                未登録
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () => openModal('stage_order', { group_id: currentGroupId })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () => openModal('stage_order', { group_id: currentGroupId })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -371,22 +348,16 @@
               <div class="section-header">
                 <h2>ステージオプション</h2>
               </div>
-              <p
+              <EditPlaceholderLine
                 v-if="isUnregistered('stage_common_option')"
-                class="placeholder-line"
-              >
-                申請しない
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () =>
-                      openModal('stage_common_option', {
-                        group_id: currentGroupId,
-                      })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+                text="申請しない"
+                :on-edit="
+                  () =>
+                    openModal('stage_common_option', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <VerticalTable v-else-if="group.stage_common_option">
                 <tbody
                   class="selectable-row"
@@ -421,19 +392,16 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else class="placeholder-line">
-                未登録
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () =>
-                      openModal('stage_common_option', {
-                        group_id: currentGroupId,
-                      })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () =>
+                    openModal('stage_common_option', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -537,22 +505,16 @@
               <div class="section-header">
                 <h2>PR情報</h2>
               </div>
-              <p
+              <EditPlaceholderLine
                 v-if="isUnregistered('public_relation')"
-                class="placeholder-line"
-              >
-                申請しない
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () =>
-                      openModal('public_relation', {
-                        group_id: currentGroupId,
-                      })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+                text="申請しない"
+                :on-edit="
+                  () =>
+                    openModal('public_relation', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <VerticalTable v-else-if="group.public_relation">
                 <tbody
                   class="selectable-row"
@@ -587,19 +549,16 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else class="placeholder-line">
-                未登録
-                <CommonButton
-                  iconName="edit"
-                  :on_click="
-                    () =>
-                      openModal('public_relation', {
-                        group_id: currentGroupId,
-                      })
-                  "
-                  >編集</CommonButton
-                >
-              </p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () =>
+                    openModal('public_relation', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -1088,35 +1047,26 @@
                       </tr>
                     </tbody>
                   </VerticalTable>
-                  <p
+                  <EditPlaceholderLine
                     v-else-if="isUnregistered('cooking_process_order')"
-                    class="placeholder-line"
-                  >
-                    申請しない
-                    <CommonButton
-                      iconName="edit"
-                      :on_click="
-                        () =>
-                          openModal('cooking_process_order', {
-                            food_product_id: fpWrapper.food_product.id,
-                          })
-                      "
-                      >編集</CommonButton
-                    >
-                  </p>
-                  <p v-else class="placeholder-line">
-                    調理工程未登録
-                    <CommonButton
-                      iconName="edit"
-                      :on_click="
-                        () =>
-                          openModal('cooking_process_order', {
-                            food_product_id: fpWrapper.food_product.id,
-                          })
-                      "
-                      >編集</CommonButton
-                    >
-                  </p>
+                    text="申請しない"
+                    :on-edit="
+                      () =>
+                        openModal('cooking_process_order', {
+                          food_product_id: fpWrapper.food_product.id,
+                        })
+                    "
+                  />
+                  <EditPlaceholderLine
+                    v-else
+                    text="調理工程未登録"
+                    :on-edit="
+                      () =>
+                        openModal('cooking_process_order', {
+                          food_product_id: fpWrapper.food_product.id,
+                        })
+                    "
+                  />
                 </div>
               </div>
               <p v-else>未登録</p>
@@ -1770,11 +1720,6 @@ export default {
 .selectable-row:hover,
 .selectable-row:hover tr {
   background-color: #f0f4ff;
-}
-.placeholder-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .subsection-header-with-button {
   display: flex;
