@@ -24,7 +24,7 @@ class StageOrdersController < ApplicationController
     if @stage_order.save
       render json: fmt(created, @stage_order)
     else
-      render json: fmt(unprocessable_entity, [], @stage_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@stage_order)
     end
   end
 
@@ -34,7 +34,7 @@ class StageOrdersController < ApplicationController
     if @stage_order.update(stage_order_params)
       render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @stage_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@stage_order)
     end
   end
 

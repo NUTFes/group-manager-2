@@ -21,7 +21,7 @@ class PurchaseListsController < ApplicationController
     if @purchase_list.save
       render json: fmt(created, @purchase_list)
     else
-      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@purchase_list)
     end
   end
 
@@ -30,7 +30,7 @@ class PurchaseListsController < ApplicationController
     if @purchase_list.update(purchase_list_params)
       render json: fmt(ok, @purchase_list, "Updated purchase_list id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@purchase_list)
     end
   end
 

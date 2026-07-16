@@ -18,7 +18,7 @@ class PublicRelationsController < ApplicationController
     if @public_relation.save
       render json: fmt(created, @public_relation)
     else
-      render json: fmt(unprocessable_entity, [], @public_relation.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@public_relation)
     end
   end
 
@@ -28,7 +28,7 @@ class PublicRelationsController < ApplicationController
 
     updated = @public_relation.update(public_relation_params)
     unless updated
-      render json: fmt(unprocessable_entity, [], @public_relation.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@public_relation)
       return
     end
 

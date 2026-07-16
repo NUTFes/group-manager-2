@@ -10,7 +10,7 @@ class Api::V1::PowerOrdersController < ApplicationController
     if power_order.save
       render json: fmt(created, power_order)
     else
-      render json: fmt(unprocessable_entity, [], power_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(power_order)
     end
   end
 
@@ -21,7 +21,7 @@ class Api::V1::PowerOrdersController < ApplicationController
     if power_order.update(power_order_params)
       render json: fmt(ok, power_order, "Updated power_order id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], power_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(power_order)
     end
   end
 

@@ -24,7 +24,7 @@ class PlaceOrdersController < ApplicationController
     if @place_order.save
       render json: fmt(created, @place_order)
     else
-      render json: fmt(unprocessable_entity, [], @place_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@place_order)
     end
   end
 
@@ -34,7 +34,7 @@ class PlaceOrdersController < ApplicationController
     if @place_order.update(place_order_params)
       render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @place_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@place_order)
     end
   end
 

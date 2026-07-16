@@ -30,7 +30,7 @@ class EmployeesController < ApplicationController
     if @employee.save
       render json: fmt(created, @employee)
     else
-      render json: fmt(unprocessable_entity, [], @employee.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@employee)
     end
   end
 
@@ -73,7 +73,7 @@ class EmployeesController < ApplicationController
     if @employee.update(employee_params)
       render json: fmt(ok, @employee, "Updated employee id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @employee.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@employee)
     end
   end
 

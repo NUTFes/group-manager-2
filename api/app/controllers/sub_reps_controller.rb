@@ -25,7 +25,7 @@ class SubRepsController < ApplicationController
     if @sub_rep.save
       render json: fmt(created, @sub_rep)
     else
-      render json: fmt(unprocessable_entity, [], @sub_rep.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@sub_rep)
     end
   end
 
@@ -35,7 +35,7 @@ class SubRepsController < ApplicationController
     if @sub_rep.update(sub_rep_params)
       render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @sub_rep.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@sub_rep)
     end
   end
 

@@ -24,7 +24,7 @@ class StageCommonOptionsController < ApplicationController
     if @stage_common_option.save
       render json: fmt(created, @stage_common_option)
     else
-      render json: fmt(unprocessable_entity, [], @stage_common_option.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@stage_common_option)
     end
   end
 
@@ -34,7 +34,7 @@ class StageCommonOptionsController < ApplicationController
     if @stage_common_option.update(stage_common_option_params)
       render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @stage_common_option.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@stage_common_option)
     end
   end
 

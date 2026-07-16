@@ -24,7 +24,7 @@ class RentalOrdersController < ApplicationController
     if @rental_order.save
       render json: fmt(created, @rental_order)
     else
-      render json: fmt(unprocessable_entity, [], @rental_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@rental_order)
     end
   end
 
@@ -34,7 +34,7 @@ class RentalOrdersController < ApplicationController
     if @rental_order.update(rental_order_params)
       render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @rental_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@rental_order)
     end
   end
 
