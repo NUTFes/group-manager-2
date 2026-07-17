@@ -321,7 +321,7 @@ export default {
         if (Object.keys(this.modalSettings).length === 0) {
           const settings = {};
           this.items.forEach(item => {
-            const isDefault = item.id === 1 || item.id === 3; // 机と椅子
+            const isDefault = item.name === '机' || item.name === '椅子';
             settings[item.id] = { selected: isDefault, rule: 'requested', fixedValue: 0 };
           });
           this.modalSettings = JSON.parse(JSON.stringify(settings));
