@@ -347,6 +347,30 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
+     async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
+      if (groupAssignments.length === 0) return;
+
+      const promises = groupAssignments.map(assign => {
+        const payload = {
+          group_id: assign.groupId,
+          rentalItemId: assign.rentalItemId,
+          num: assign.num,
+          stockerPlaceId: assign.stockerPlaceId,
+          rental_place_id: rentalPlaceId
+        };
+        return this.$axios.$put(`/assign_rental_items/${assign.id}`,
+  payload);
+      });
+
+      await Promise.all(promises);
+
+      groupAssignments.forEach(a => {
+        a.rental_place_id = rentalPlaceId;
+      });
+
+      this.assignments = [...this.assignments];
+    },
+
     async handleDropOnPlace(e, rentalPlace) {
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP_LOCATION') return;
@@ -358,24 +382,7 @@ export default {
       if (groupAssignments.length === 0) return;
 
       try {
-        const promises = groupAssignments.map(assign => {
-          const payload = {
-            group_id: assign.groupId,
-            rentalItemId: assign.rentalItemId,
-            num: assign.num,
-            stockerPlaceId: assign.stockerPlaceId,
-            rental_place_id: rentalPlace.id
-          };
-          return this.$axios.$put(`/assign_rental_items/${assign.id}`, payload);
-        });
-
-        await Promise.all(promises);
-
-        groupAssignments.forEach(a => {
-          a.rental_place_id = rentalPlace.id;
-        });
-        
-        this.assignments = [...this.assignments];
+        await this.updateAssignmentsPlace(groupAssignments, rentalPlace.id);
       } catch (error) {
         alert("貸出場所の割り当てに失敗しました。");
         await this.fetchDataFromDB();
@@ -403,24 +410,7 @@ export default {
       const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
       
       try {
-        const promises = groupAssignments.map(assign => {
-          const payload = {
-            group_id: assign.groupId,
-            rentalItemId: assign.rentalItemId,
-            num: assign.num,
-            stockerPlaceId: assign.stockerPlaceId,
-            rental_place_id: null
-          };
-          return this.$axios.$put(`/assign_rental_items/${assign.id}`, payload);
-        });
-
-        await Promise.all(promises);
-
-        groupAssignments.forEach(a => {
-          a.rental_place_id = null;
-        });
-        
-        this.assignments = [...this.assignments];
+        await this.updateAssignmentsPlace(groupAssignments, null);
       } catch (error) {
         alert("割り当ての解除に失敗しました。");
       }
