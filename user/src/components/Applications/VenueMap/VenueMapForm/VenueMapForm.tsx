@@ -41,6 +41,8 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
   } = venueMapFormHooks;
 
   const displayPreviewUrl = previewUrl ?? venueMap?.picturePath ?? null;
+  const displayPreviewAlt =
+    fileName ?? venueMap?.pictureName ?? venueMapFormTexts.fields.picture;
 
   return (
     <FormContainer>
@@ -75,7 +77,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
             )}
             <ImagePreview
               src={displayPreviewUrl}
-              alt={fileName ?? venueMap?.pictureName ?? ''}
+              alt={displayPreviewAlt}
               thumbnailClassName="mt-2 h-48 w-full"
             />
           </div>

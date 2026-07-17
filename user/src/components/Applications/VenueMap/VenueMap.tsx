@@ -120,9 +120,8 @@ const VenueMap: FC<VenueMapProps> = ({
           content: (
             <ImagePreview
               src={venueMap.picturePath}
-              alt={venueMap.pictureName ?? ''}
+              alt={venueMap.pictureName ?? venueMapTexts.summary.pictureLabel}
               emptyFallback={venueMapTexts.summary.notSet}
-              thumbnailClassName="h-48 w-full"
             />
           ),
         },
@@ -130,29 +129,27 @@ const VenueMap: FC<VenueMapProps> = ({
     : [];
 
   return (
-    <>
-      <AccordionMenu
-        title={venueMapTexts.title}
-        isEdit={!isDeadline}
-        isExist={isRegistered}
-        required
-        status={status}
-      >
-        <Content
-          isLoading={isLoading}
-          hasError={hasError}
-          isDeadline={isDeadline}
-          isEditing={isEditing}
-          toEdit={toEdit}
-          venueMapData={venueMap}
-          formItems={formItems}
-          groupId={groupId}
-          handleFormSubmitted={handleFormSubmitted}
-          venueMapTexts={venueMapTexts}
-          isResubmission={isResubmission}
-        />
-      </AccordionMenu>
-    </>
+    <AccordionMenu
+      title={venueMapTexts.title}
+      isEdit={!isDeadline}
+      isExist={isRegistered}
+      required
+      status={status}
+    >
+      <Content
+        isLoading={isLoading}
+        hasError={hasError}
+        isDeadline={isDeadline}
+        isEditing={isEditing}
+        toEdit={toEdit}
+        venueMapData={venueMap}
+        formItems={formItems}
+        groupId={groupId}
+        handleFormSubmitted={handleFormSubmitted}
+        venueMapTexts={venueMapTexts}
+        isResubmission={isResubmission}
+      />
+    </AccordionMenu>
   );
 };
 

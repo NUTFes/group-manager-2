@@ -156,7 +156,7 @@ export const useVenueMapFormHooks = (
   const [fileName, setFileName] = useState<string | null>(
     venueMap?.pictureName || null
   );
-  const { previewUrl, setPreviewFile } = useImageObjectUrl();
+  const { previewUrl, setPreviewUrlFromFile } = useImageObjectUrl();
 
   const values = watch();
 
@@ -170,7 +170,7 @@ export const useVenueMapFormHooks = (
         const file = target.files[0];
         setValue('image', file, { shouldDirty: true });
         setFileName(file.name);
-        setPreviewFile(file);
+        setPreviewUrlFromFile(file);
       }
     };
     input.click();

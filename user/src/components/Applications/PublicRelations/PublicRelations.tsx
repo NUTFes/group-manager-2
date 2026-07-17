@@ -100,9 +100,10 @@ const PublicRelations: FC<PublicRelationsProps> = ({
       content: (
         <ImagePreview
           src={publicRelation?.picturePath}
-          alt={publicRelation?.pictureName ?? ''}
+          alt={
+            publicRelation?.pictureName ?? publicRelationsTexts.summaryLabels[2]
+          }
           emptyFallback={publicRelationsTexts.states.notSet}
-          thumbnailClassName="h-48 w-full"
         />
       ),
     },

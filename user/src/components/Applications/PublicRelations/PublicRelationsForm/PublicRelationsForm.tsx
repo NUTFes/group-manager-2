@@ -36,6 +36,10 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
     publicRelationsFormTexts,
   } = usePublicRelationsFormHooks(groupId, publicRelation);
   const displayPreviewUrl = previewUrl ?? publicRelation?.picturePath ?? null;
+  const displayPreviewAlt =
+    fileName ??
+    publicRelation?.pictureName ??
+    publicRelationsFormTexts.fields.image;
 
   return (
     <FormContainer>
@@ -104,7 +108,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
               )}
               <ImagePreview
                 src={displayPreviewUrl}
-                alt={fileName ?? publicRelation?.pictureName ?? ''}
+                alt={displayPreviewAlt}
                 thumbnailClassName="mt-2 h-48 w-full"
               />
             </div>

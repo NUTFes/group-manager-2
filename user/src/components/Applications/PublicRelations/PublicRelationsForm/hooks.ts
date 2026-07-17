@@ -185,7 +185,7 @@ export const usePublicRelationsFormHooks = (
   const [fileName, setFileName] = useState<string | null>(
     publicRelation?.pictureName || null
   );
-  const { previewUrl, setPreviewFile } = useImageObjectUrl();
+  const { previewUrl, setPreviewUrlFromFile } = useImageObjectUrl();
 
   const values = watch();
 
@@ -246,7 +246,7 @@ export const usePublicRelationsFormHooks = (
         if (isValid) {
           setValue('image', file);
           setFileName(file.name);
-          setPreviewFile(file);
+          setPreviewUrlFromFile(file);
         }
       }
     };
