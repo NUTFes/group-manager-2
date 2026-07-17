@@ -93,7 +93,7 @@ const FormList: FC<FormListProps> = ({
   return (
     <FormContainer>
       {items.map((item, index) => (
-        <div key={index} className="flex w-auto flex-col md:w-[400px]">
+        <div key={index} className="flex w-full flex-col md:w-[400px]">
           <div className="flex">
             <div className="text-xs text-font">{(item as FormItem).label}</div>
             {(item as FormItem).isEditable && (
