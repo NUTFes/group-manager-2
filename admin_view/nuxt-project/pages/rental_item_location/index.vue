@@ -84,40 +84,43 @@
         </SearchDropDown>
         </div>
         <div class="order-group-content">
-          <div 
-            v-for="group in activeAssignedGroups" 
-            :key="group.id" 
-            draggable="true" 
-            @dragstart="handleDragStartGroup($event, group)" 
-            class="group-card"
-            :class="{ 'is-fulfilled': getGroupRentalPlace(group.id) }"
-          >
-            <div class="group-name">
-              {{ group.name }}
-              <span class="assigned" v-if="getGroupRentalPlace(group.id)">
-                {{ getPlaceName(getGroupRentalPlace(group.id)) }}へ
-              </span>
-            </div>
-            <!-- 左側にも搬入元内訳を簡易表示 -->
-            <div class="assign-result-container">
-              <table>
-                <tbody>
-                  <tr v-for="source in getGroupSourceBreakdown(group.id)" :key="source.id">
-                    <td>{{ source.name }}より</td>
-                    <td v-for="itemId in activeItemIds" :key="itemId">
-                      {{ getItemName(itemId) }}: {{ source.items[itemId] || 0 }}
-                    </td>
-                  </tr>
-                  <tr class="total-row">
-                    <td><strong>合計</strong></td>
-                    <td v-for="itemId in activeItemIds" :key="itemId">
-                      <strong>{{ getItemName(itemId) }}: {{ getGroupTotalItem(group.id, itemId) }}</strong>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <template v-for="group in activeAssignedGroups">
+            <template v-for="[rentalPlaceId, sourceBreakdown] in [[getGroupRentalPlace(group.id), getGroupSourceBreakdown(group.id)]]">
+              <div 
+                :key="group.id" 
+                draggable="true" 
+                @dragstart="handleDragStartGroup($event, group)" 
+                class="group-card"
+                :class="{ 'is-fulfilled': rentalPlaceId }"
+              >
+                <div class="group-name">
+                  {{ group.name }}
+                  <span class="assigned" v-if="rentalPlaceId">
+                    {{ getPlaceName(rentalPlaceId) }}へ
+                  </span>
+                </div>
+                <!-- 左側にも搬入元内訳を簡易表示 -->
+                <div class="assign-result-container">
+                  <table>
+                    <tbody>
+                      <tr v-for="source in sourceBreakdown" :key="source.id">
+                        <td>{{ source.name }}より</td>
+                        <td v-for="itemId in activeItemIds" :key="itemId">
+                          {{ getItemName(itemId) }}: {{ source.items[itemId] || 0 }}
+                        </td>
+                      </tr>
+                      <tr class="total-row">
+                        <td><strong>合計</strong></td>
+                        <td v-for="itemId in activeItemIds" :key="itemId">
+                          <strong>{{ getItemName(itemId) }}: {{ getGroupTotalItem(group.id, itemId) }}</strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </template>
+          </template>
         </div>
       </aside>
 
@@ -127,101 +130,107 @@
           <h2>貸出場所</h2>
         </div>
         <div class="cards">
-          <div 
-            v-for="place in places" 
-            :key="place.id" 
-            @dragover.prevent 
-            @drop="handleDropOnPlace($event, place)" 
-            class="stock-card"
-          >
-            <!-- 貸出場所情報（テーブルによる合計・内訳の常時表示） -->
-            <div class="stock-info">
-              <h3>{{ place.name }}</h3>
-              <div class="stock-info-tables">
-                <!-- 貸出合計テーブル -->
-                <div class="assign-result-container">
-                  <div class="assign-result">貸出合計</div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th v-for="itemId in activeItemIds" :key="itemId">{{ getItemName(itemId) }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="text-center" v-for="itemId in activeItemIds" :key="itemId">
-                          <span class="badge-value">
-                            {{ getPlaceTotalItem(place.id, itemId) }}
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- 搬入元内訳テーブル -->
-                <div class="assign-result-container">
-                  <div class="assign-result">搬入元内訳</div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>搬入元</th>
-                        <th v-for="itemId in activeItemIds" :key="itemId">{{ getItemName(itemId) }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="source in getPlaceSourceBreakdown(place.id)" :key="source.id">
-                        <td>{{ source.name }}</td>
-                        <td class="text-center" v-for="itemId in activeItemIds" :key="itemId">
-                          {{ source.items[itemId] || 0 }}
-                        </td>
-                      </tr>
-                      <tr v-if="getPlaceSourceBreakdown(place.id).length === 0">
-                        <td :colspan="activeItemIds.length + 1" class="text-center">
-                          割り当てがありません
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- ドロップされた団体のリスト -->
-            <div class="assignment-list">
-              <div v-if="getGroupsInPlace(place.id).length === 0" class="empty-state">
-                割り当て済み団体をここにドロップ
-              </div>
+          <template v-for="place in places">
+            <template v-for="[placeSourceBreakdown, groupsInPlace] in [[getPlaceSourceBreakdown(place.id), getGroupsInPlace(place.id)]]">
               <div 
-                v-else 
-                v-for="group in getGroupsInPlace(place.id)"
-                :key="group.id" 
-                class="assignment-item"
+                :key="place.id" 
+                @dragover.prevent 
+                @drop="handleDropOnPlace($event, place)" 
+                class="stock-card"
               >
-                <div class="assign-group-name">
-                  {{ group.name }}
-                  <div class="import-source">
-                    <span v-for="source in getGroupSourceBreakdown(group.id)" :key="source.id">
-                      {{ source.name }}より: 
-                      <template v-for="itemId in activeItemIds">
-                        <span v-if="source.items[itemId] > 0" :key="itemId" style="margin-right: 8px;">
-                          {{ getItemName(itemId) }}{{ source.items[itemId] }}
-                        </span>
+                <!-- 貸出場所情報（テーブルによる合計・内訳の常時表示） -->
+                <div class="stock-info">
+                  <h3>{{ place.name }}</h3>
+                  <div class="stock-info-tables">
+                    <!-- 貸出合計テーブル -->
+                    <div class="assign-result-container">
+                      <div class="assign-result">貸出合計</div>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th v-for="itemId in activeItemIds" :key="itemId">{{ getItemName(itemId) }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="text-center" v-for="itemId in activeItemIds" :key="itemId">
+                              <span class="badge-value">
+                                {{ getPlaceTotalItem(place.id, itemId) }}
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- 搬入元内訳テーブル -->
+                    <div class="assign-result-container">
+                      <div class="assign-result">搬入元内訳</div>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>搬入元</th>
+                            <th v-for="itemId in activeItemIds" :key="itemId">{{ getItemName(itemId) }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="source in placeSourceBreakdown" :key="source.id">
+                            <td>{{ source.name }}</td>
+                            <td class="text-center" v-for="itemId in activeItemIds" :key="itemId">
+                              {{ source.items[itemId] || 0 }}
+                            </td>
+                          </tr>
+                          <tr v-if="placeSourceBreakdown.length === 0">
+                            <td :colspan="activeItemIds.length + 1" class="text-center">
+                              割り当てがありません
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ドロップされた団体のリスト -->
+                <div class="assignment-list">
+                  <div v-if="groupsInPlace.length === 0" class="empty-state">
+                    割り当て済み団体をここにドロップ
+                  </div>
+                  <template v-else>
+                    <div 
+                      v-for="group in groupsInPlace"
+                      :key="group.id" 
+                      class="assignment-item"
+                    >
+                      <template v-for="[groupSourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
+                        <div class="assign-group-name">
+                          {{ group.name }}
+                          <div class="import-source">
+                            <span v-for="source in groupSourceBreakdown" :key="source.id">
+                              {{ source.name }}より: 
+                              <template v-for="itemId in activeItemIds">
+                                <span v-if="source.items[itemId] > 0" :key="itemId" style="margin-right: 8px;">
+                                  {{ getItemName(itemId) }}{{ source.items[itemId] }}
+                                </span>
+                              </template>
+                            </span>
+                          </div>
+                        </div>
                       </template>
-                    </span>
-                  </div>
+                      <div class="assign-inputs">
+                        <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
+                          <span class="input-label">
+                            {{ getItemName(itemId) }} {{ getGroupTotalItem(group.id, itemId) }}
+                          </span>
+                        </div>
+                      </div>
+                      <button class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
+                    </div>
+                  </template>
                 </div>
-                <div class="assign-inputs">
-                  <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
-                    <span class="input-label">
-                      {{ getItemName(itemId) }} {{ getGroupTotalItem(group.id, itemId) }}
-                    </span>
-                  </div>
-                </div>
-                <button class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
               </div>
-            </div>
-          </div>
+            </template>
+          </template>
         </div>
       </section>
     </main>
@@ -332,7 +341,6 @@ export default {
           this.modalSettings = JSON.parse(JSON.stringify(settings));
           this.activeSettings = JSON.parse(JSON.stringify(settings));
         }
-
       } catch (error) {
       } finally {
         this.isLoading = false;
@@ -347,7 +355,7 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
-     async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
+    async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
       if (groupAssignments.length === 0) return;
 
       const promises = groupAssignments.map(assign => {
@@ -358,8 +366,7 @@ export default {
           stockerPlaceId: assign.stockerPlaceId,
           rental_place_id: rentalPlaceId
         };
-        return this.$axios.$put(`/assign_rental_items/${assign.id}`,
-  payload);
+        return this.$axios.$put(`/assign_rental_items/${assign.id}`, payload);
       });
 
       await Promise.all(promises);
@@ -378,7 +385,7 @@ export default {
       const groupId = e.dataTransfer.getData('groupId');
       if (!groupId) return;
 
-      const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId));
+      const groupAssignments = this.getAssignmentsBy('group_id', groupId);
       if (groupAssignments.length === 0) return;
 
       try {
@@ -408,7 +415,6 @@ export default {
 
     async removeGroupFromPlace(groupId) {
       const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
-      
       try {
         await this.updateAssignmentsPlace(groupAssignments, null);
       } catch (error) {
@@ -417,59 +423,64 @@ export default {
     },
 
     // ----------------------------
+    // ベースメソッド
+    // ----------------------------
+    getNameById(list, id) {
+      const record = list.find(item => Number(item.id) === Number(id));
+      return record ? record.name : '不明';
+    },
+
+    getAssignmentsBy(key, value) {
+      return this.assignments.filter(a => Number(a[key]) === Number(value));
+    },
+
+    getTotalItem(assignRecords, itemId) {
+      return assignRecords
+        .filter(a => Number(a.rental_item_id) === Number(itemId))
+        .reduce((sum, a) => sum + Number(a.num || 0), 0);
+    },
+
+    // ----------------------------
     // 計算・表示用メソッド
     // ----------------------------
     getItemName(itemId) {
-      const item = this.items.find(i => Number(i.id) === Number(itemId));
-      return item ? item.name : '不明';
+      return this.getNameById(this.items, itemId);
     },
 
     getPlaceName(placeId) {
-      const place = this.places.find(p => Number(p.id) === Number(placeId));
-      return place ? place.name : '不明';
+      return this.getNameById(this.places, placeId);
     },
 
     getGroupRentalPlace(groupId) {
-      const assign = this.assignments.find(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
+      const assign = this.getAssignmentsBy('group_id', groupId).find(a => a.rental_place_id);
       return assign ? assign.rental_place_id : null;
     },
 
     getGroupsInPlace(placeId) {
       const groupIdsInPlace = [...new Set(
-        this.assignments
-          .filter(a => Number(a.rental_place_id) === Number(placeId))
-          .map(a => Number(a.group_id))
+        this.getAssignmentsBy('rental_place_id', placeId).map(a => Number(a.group_id))
       )];
       
       return this.groups.filter(g => {
         if (!groupIdsInPlace.includes(Number(g.id))) return false;
-
-        return this.activeItemIds.some(itemId => {
-          return this.getGroupTotalItem(g.id, itemId) > 0;
-        });
+        return this.activeItemIds.some(itemId => this.getGroupTotalItem(g.id, itemId) > 0);
       });
     },
 
     getGroupTotalItem(groupId, itemId) {
-      return this.assignments
-        .filter(a => Number(a.group_id) === Number(groupId) && Number(a.rental_item_id) === Number(itemId))
-        .reduce((sum, a) => sum + Number(a.num || 0), 0);
+      return this.getTotalItem(this.getAssignmentsBy('group_id', groupId), itemId);
     },
 
     getPlaceTotalItem(placeId, itemId) {
-      return this.assignments
-        .filter(a => Number(a.rental_place_id) === Number(placeId) && Number(a.rental_item_id) === Number(itemId))
-        .reduce((sum, a) => sum + Number(a.num || 0), 0);
+      return this.getTotalItem(this.getAssignmentsBy('rental_place_id', placeId), itemId);
     },
 
     getGroupSourceBreakdown(groupId) {
-      const assigns = this.assignments.filter(a => Number(a.group_id) === Number(groupId));
-      return this.calculateSourceBreakdown(assigns);
+      return this.calculateSourceBreakdown(this.getAssignmentsBy('group_id', groupId));
     },
 
     getPlaceSourceBreakdown(placeId) {
-      const assigns = this.assignments.filter(a => Number(a.rental_place_id) === Number(placeId));
-      return this.calculateSourceBreakdown(assigns);
+      return this.calculateSourceBreakdown(this.getAssignmentsBy('rental_place_id', placeId));
     },
 
     calculateSourceBreakdown(assignRecords) {
