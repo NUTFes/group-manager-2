@@ -1474,16 +1474,18 @@ export default {
       isExternal = 0,
     }) {
       try {
-        const url =
-          "/api/v1/get_refinement_order_status_check?fes_year_id=" +
-          fesYearId +
-          "&group_category_id=" +
-          groupCategoryId +
-          "&is_international=" +
-          isInternational +
-          "&is_external=" +
-          isExternal;
-        const refRes = await this.$axios.$post(url);
+        const refRes = await this.$axios.$post(
+          "/api/v1/get_refinement_order_status_check",
+          null,
+          {
+            params: {
+              fes_year_id: fesYearId,
+              group_category_id: groupCategoryId,
+              is_international: isInternational,
+              is_external: isExternal,
+            },
+          }
+        );
 
         if (refRes && refRes.data) {
           return refRes.data.map((g) => g.group.id).sort((a, b) => a - b);
