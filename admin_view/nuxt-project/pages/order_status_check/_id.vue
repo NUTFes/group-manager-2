@@ -1686,10 +1686,9 @@ export default {
             this.$axios.$delete(`/un_registered_groups/${record.id}`)
           )
         );
-      } catch (error) {
+      } catch {
         // ここに入るのはネットワークエラーなど「申請しない」フラグの解除に
         // 本当に失敗したケース。表示が「申請しない」のまま残ることを利用者に伝える。
-        console.error("un_registered_groups の解除に失敗しました", error);
         window.alert(
           "「申請しない」の解除に失敗しました。画面を再読み込みしても解消しない場合は再度お試しください。"
         );
