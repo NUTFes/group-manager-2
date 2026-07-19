@@ -1200,7 +1200,7 @@
       v-bind="dynamicProps"
       @saved="onEditorSaved"
       @close="closeModal"
-      @error="onEditorError"
+      @error="openEditError"
     />
     <!-- プレビューモーダル (平面図 & 物品申請) -->
     <transition name="fade" appear>
@@ -1653,7 +1653,7 @@ export default {
       await this.clearUnregisteredFlagIfNeeded();
       await this.fetchData(true);
     },
-    onEditorError(message) {
+    openEditError(message) {
       if (message) {
         window.alert(message);
       }
