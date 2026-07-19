@@ -639,6 +639,16 @@ function getStoredIndexFilters(prefix) {
   };
 }
 
+// index.vue側の絞り込みUIと合わせた3値フィルタの意味:
+// 0=絞り込みなし / 1=該当するものだけ / 2=該当しないものだけ
+function matchesTriStateFilter(filterValue, actualValue) {
+  return (
+    filterValue === 0 ||
+    (filterValue === 1 && actualValue === true) ||
+    (filterValue === 2 && !actualValue)
+  );
+}
+
 // 食販団体一覧画面(index.vue)のfilterGroupsと同じ条件で絞り込む。
 // カテゴリは常に「食品販売」(1)固定（index.vue側も同様）。
 function filterFoodSalesGroupIds(
@@ -658,12 +668,8 @@ function filterFoodSalesGroupIds(
       return (
         categoryId === 1 &&
         (fesYearId === 0 || yearId === fesYearId) &&
-        (isInternational === 0 ||
-          (isInternational === 1 && groupIsInternational === true) ||
-          (isInternational === 2 && !groupIsInternational)) &&
-        (isExternal === 0 ||
-          (isExternal === 1 && groupIsExternal === true) ||
-          (isExternal === 2 && !groupIsExternal))
+        matchesTriStateFilter(isInternational, groupIsInternational) &&
+        matchesTriStateFilter(isExternal, groupIsExternal)
       );
     })
     .map((item) => item.group.id)
