@@ -921,7 +921,6 @@ export default {
           this.$router.push("/reauthentication_required");
           return;
         }
-        console.error("保健所提出項目確認画面のデータ再取得に失敗しました", error);
         this.openEditError("データの再取得に失敗しました。再読み込みしてください。");
       }
     },
