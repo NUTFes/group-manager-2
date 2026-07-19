@@ -8,7 +8,6 @@ export async function saveEditModal({ emit, request, label }) {
     const savedId = response?.data?.id;
 
     if (typeof savedId === 'undefined') {
-      console.error(`${label}の保存レスポンスに id がありませんでした`, response);
       emit('error', '保存に失敗しました');
       return;
     }
@@ -16,7 +15,6 @@ export async function saveEditModal({ emit, request, label }) {
     emit('saved', savedId);
     emit('close');
   } catch (error) {
-    console.error(`${label}の編集に失敗しました`, error);
     emit(
       'error',
       error?.response?.data?.status?.option ||
