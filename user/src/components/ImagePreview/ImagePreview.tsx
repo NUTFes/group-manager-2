@@ -42,7 +42,7 @@ const ImagePreview: FC<ImagePreviewProps> = ({
     <>
       <button
         type="button"
-        aria-label={alt || '画像プレビューを開く'}
+        aria-label={alt ? `${alt}のプレビューを開く` : '画像プレビューを開く'}
         className={`relative block cursor-pointer rounded border-0 bg-transparent p-0 ${thumbnailClassName}`}
         onClick={() => setIsModalOpen(true)}
       >
@@ -58,7 +58,9 @@ const ImagePreview: FC<ImagePreviewProps> = ({
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <button
           type="button"
-          aria-label={alt || '画像プレビューを閉じる'}
+          aria-label={
+            alt ? `${alt}のプレビューを閉じる` : '画像プレビューを閉じる'
+          }
           className="relative h-[80vh] w-[80vw] max-w-[880px] cursor-pointer border-0 bg-transparent p-0"
           onClick={() => setIsModalOpen(false)}
         >
