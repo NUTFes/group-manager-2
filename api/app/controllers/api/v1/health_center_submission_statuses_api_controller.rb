@@ -51,6 +51,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :employees,
       :venue_map,
       :rental_orders,
+      :power_orders,
+      :fire_equipment_orders,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order },
       { health_center_submission_statuses: :comments }
@@ -69,18 +71,20 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   # ステータス変更
   def update_health_center_submission_status
     @submission_status = HealthCenterSubmissionStatus.find(params[:id])
-    save_submission_status(@submission_status)
+    save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   # ステータス変更（未作成ならINSERT）
   def upsert_health_center_submission_status
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
+    return render json: fmt(unprocessable_entity, [], 'Invalid status'), status: :unprocessable_entity unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+
     @submission_status = resolve_submission_status
     return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
-    save_submission_status(@submission_status)
+    save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
   #---作成（POST）
@@ -175,6 +179,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :employees,
       :venue_map,
       :rental_orders,
+      :power_orders,
+      :fire_equipment_orders,
       :un_registered_groups,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order }
@@ -214,23 +220,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   end
 
   private
-
-  def save_submission_status(submission_status)
-    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
-
-    submission_status.status = params[:status]
-
-    if submission_status.save
-      render json: fmt(ok, {
-                         id: submission_status.id,
-                         group_id: submission_status.group_id,
-                         application_type: submission_status.application_type,
-                         status: submission_status.status
-                       })
-    else
-      render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
-    end
-  end
 
   def validate_comment_mail_params
     errors = []
@@ -337,7 +326,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
         cooking_process_order: statuses['cooking_process_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
         employee: statuses['employee']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
         venue_map: statuses['venue_map']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
-        equipment: statuses['equipment']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS
+        equipment: statuses['equipment']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        power_order: statuses['power_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        fire_equipment_order: statuses['fire_equipment_order']&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS
       }
     end
   end
@@ -372,6 +363,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       group.venue_map
     when 'equipment'
       group.rental_orders
+    when 'power_order'
+      group.power_orders
+    when 'fire_equipment_order'
+      group.fire_equipment_orders
     end
   end
 
@@ -393,7 +388,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       group.venue_map.present?
     when 'equipment'
       # 物品申請：通常の申請データか、「申請しない」回答のどちらかがあれば未確認にする
-      group.rental_orders.any? || group.un_registered_groups.rental_item_order.exists?
+      group.rental_orders.any? || group.un_registered_groups.any?(&:rental_item_order?)
+    when 'power_order'
+      group.power_orders.any? || group.un_registered_groups.any?(&:power_order?)
+    when 'fire_equipment_order'
+      group.fire_equipment_orders.any? || group.un_registered_groups.any?(&:fire_equipment_order?)
     else
       false
     end

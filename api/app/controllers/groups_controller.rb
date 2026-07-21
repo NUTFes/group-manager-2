@@ -33,11 +33,12 @@ class GroupsController < ApplicationController
     @group = Group.create(group_params)
     render json: fmt(created, @group)
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
-      channel: "##{ENV.fetch('CHANNEL', nil)}",
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が追加されました
       ーーーーーーーーーーーーーーーー
@@ -51,7 +52,8 @@ class GroupsController < ApplicationController
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   # PATCH/PUT /groups/1
@@ -60,11 +62,12 @@ class GroupsController < ApplicationController
     @group.update(group_params)
     render json: fmt(created, @group, "Updated group id = #{params[:id]}")
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
-      channel: "##{ENV.fetch('CHANNEL', nil)}",
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が編集されました
       ーーーーーーーーーーーーーーーー
@@ -78,7 +81,8 @@ class GroupsController < ApplicationController
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   # DELETE /groups/1
@@ -87,11 +91,12 @@ class GroupsController < ApplicationController
     @group.destroy
     render json: fmt(ok, [], "Deleted group id = #{params[:id]}")
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
-      channel: "##{ENV.fetch('CHANNEL', nil)}",
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が削除されました
       ーーーーーーーーーーーーーーーー
@@ -105,7 +110,8 @@ class GroupsController < ApplicationController
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   private

@@ -1,5 +1,8 @@
 import React, { FC, useState } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  isResubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
@@ -27,18 +30,18 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   status,
 }) => {
   const { labels } = useAccordionMenuTexts();
-  const receptionStatus = isEdit ? 'open' : 'closed';
+  const isResubmission = isResubmissionStatus(status);
+  const receptionStatus = isEdit || isResubmission ? 'open' : 'closed';
 
-  const registerStatus =
-    status === 'waiting_resubmission'
-      ? 'resubmission'
-      : isRegistered === undefined
-        ? isExist
-          ? 'registered'
-          : 'unregistered'
-        : isRegistered
-          ? 'registered'
-          : 'unregistered';
+  const registerStatus = isResubmission
+    ? 'resubmission'
+    : isRegistered === undefined
+      ? isExist
+        ? 'registered'
+        : 'unregistered'
+      : isRegistered
+        ? 'registered'
+        : 'unregistered';
 
   const [isOpen, setIsOpen] = useState(false);
 

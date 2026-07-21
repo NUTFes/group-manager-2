@@ -5,7 +5,11 @@
         <h3>物品</h3>
         <select v-model="rentalItemID">
           <option disabled value="">選択してください</option>
-          <option v-for="item in rentableItemList" :key="item.id" :value="item.id">
+          <option
+            v-for="item in rentableItemList"
+            :key="item.id"
+            :value="item.id"
+          >
             {{ item.name }}
           </option>
         </select>
@@ -35,7 +39,7 @@ export default {
   },
   data() {
     return {
-      rentalItemID: null,
+      rentalItemID: "",
       num: null,
       rentableItemList: [],
     };
@@ -45,7 +49,7 @@ export default {
       immediate: true,
       handler() {
         const rentalOrder = this.getRentalOrder();
-        this.rentalItemID = rentalOrder.rental_item_id ?? null;
+        this.rentalItemID = rentalOrder.rental_item_id ?? "";
         this.num = rentalOrder.num ?? null;
       },
     },
@@ -63,27 +67,32 @@ export default {
   },
   methods: {
     getRentalOrder() {
-      return this.rentalOrder?.rental_order || this.rentalOrder || {};
+      return (
+        this.rentalOrder?.rental_order ||
+        this.rentalOrder?.rental_item?.rental_item ||
+        this.rentalOrder ||
+        {}
+      );
     },
     async fetchRentableItems() {
-      const resRentableItems = await this.$axios.$get("/api/v1/get_all_rentable_items");
+      const resRentableItems = await this.$axios.$get(
+        "/api/v1/get_all_rentable_items"
+      );
       this.rentableItemList = resRentableItems.data || [];
     },
     async edit() {
       const rentalOrder = this.getRentalOrder();
-      const url =
-        "/rental_orders/" +
-        rentalOrder.id +
-        "?group_id=" +
-        rentalOrder.group_id +
-        "&rental_item_id=" +
-        this.rentalItemID +
-        "&num=" +
-        this.num;
+      const groupId = rentalOrder.group_id || this.$route.params.id;
+      const data = {
+        group_id: groupId,
+        rental_item_id: this.rentalItemID,
+        num: this.num,
+      };
+      const url = `/rental_orders/${rentalOrder.id}`;
 
       try {
-        const response = await this.$axios.$put(url);
-        this.$emit("saved", response.data.id);
+        await this.$axios.$put(url, data);
+        this.$emit("saved", rentalOrder.id);
         this.$emit("close");
       } catch (e) {
         // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)

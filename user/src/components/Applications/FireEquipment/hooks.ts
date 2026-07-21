@@ -1,90 +1,188 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useFireEquipmentMutations,
-  useGetFireEquipmentOrderByGroupId,
+  useGetFireEquipmentOrdersByGroupId,
 } from '@/api/fireEquipmentApi';
+import { useGetHealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  ORDER_TYPES,
+  useGetUnregisteredGroup,
+  useMutateUnregisteredGroup,
+} from '@/api/unRegisteredGroupApi';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
-import { FormItem } from '@/components/FormList/type';
-import { useFireEquipmentTexts } from './constant';
+
+export type FireEquipmentApplyOption = 'yes' | 'no' | 'undecided';
+
+type FireEquipmentState = {
+  isEditing: boolean;
+  applyFireEquipment: FireEquipmentApplyOption;
+};
 
 export const useFireEquipmentHooks = (groupId: number) => {
-  const fireEquipmentTexts = useFireEquipmentTexts();
-  const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
-    useGetFireEquipmentOrderByGroupId(groupId);
+  const { t } = useTranslation('common');
 
-  const { deleteFireEquipmentOrder } = useFireEquipmentMutations();
+  const [state, setState] = useState<FireEquipmentState>({
+    isEditing: false,
+    applyFireEquipment: 'undecided',
+  });
 
-  const fireEquipment = fireEquipmentOrder ?? undefined;
+  const {
+    fireEquipmentOrders,
+    isLoading: isOrdersLoading,
+    mutateFireEquipmentOrders,
+  } = useGetFireEquipmentOrdersByGroupId(groupId);
 
-  // 火気不使用として登録済みの判定（nameが空の場合）
-  const hasUnregistered = fireEquipment !== undefined && !fireEquipment.name;
+  const {
+    hasUnregistered,
+    isLoading: isUnRegisteredLoading,
+    mutateUnregisteredGroup,
+    unregisteredData,
+  } = useGetUnregisteredGroup(groupId, ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
-  const formItem: FormItem[] =
-    fireEquipment && !hasUnregistered
-      ? [
-          {
-            label: fireEquipmentTexts.fields.name,
-            content: fireEquipment.name,
-          },
-          {
-            label: fireEquipmentTexts.fields.quantity,
-            content: String(fireEquipment.quantity),
-          },
-          {
-            label: fireEquipmentTexts.fields.fuel,
-            content: fireEquipmentTexts.fuelLabel(fireEquipment.fuel),
-          },
-          {
-            label: fireEquipmentTexts.fields.usage,
-            content: fireEquipment.usage,
-          },
-          {
-            label: fireEquipmentTexts.fields.isTakeaway,
-            content: fireEquipment.is_takeaway
-              ? fireEquipmentTexts.radio.options.yes
-              : fireEquipmentTexts.radio.options.no,
-          },
-          {
-            label: fireEquipmentTexts.fields.remark,
-            content: fireEquipment.remark || '',
-          },
-        ]
-      : [];
+  const { submitFireEquipmentOrders } = useFireEquipmentMutations();
+  const { mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { registerUnregisteredGroup, deleteUnregisteredGroup } =
+    useMutateUnregisteredGroup(ORDER_TYPES.FIRE_EQUIPMENT_ORDER);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const isLoading = isOrdersLoading || isUnRegisteredLoading;
+  const hasExisting = fireEquipmentOrders.length > 0;
 
-  const handleEditClick = () => {
-    setIsEditing((prev) => !prev);
+  const updateState = (newState: Partial<FireEquipmentState>) =>
+    setState((prev) => ({ ...prev, ...newState }));
+
+  const getRadioValue = (option: FireEquipmentApplyOption): string => {
+    if (option === 'yes') return '1';
+    if (option === 'no') return '2';
+    return '';
   };
 
-  const handleDeleteClick = async () => {
-    if (!fireEquipment?.id) return;
-    try {
-      await deleteFireEquipmentOrder(fireEquipment.id);
-      await mutateFireEquipmentOrder();
-      toast.success(fireEquipmentTexts.messages.deleteSuccess);
-    } catch (error) {
-      console.error('火気申請削除エラー:', error);
-      toast.error(fireEquipmentTexts.messages.deleteFailed);
+  useEffect(() => {
+    if (isOrdersLoading || isUnRegisteredLoading) return;
+    if (state.applyFireEquipment !== 'undecided') return;
+
+    if (hasExisting) {
+      updateState({ applyFireEquipment: 'yes' });
+    } else if (hasUnregistered) {
+      updateState({ applyFireEquipment: 'no' });
+    }
+  }, [
+    isOrdersLoading,
+    isUnRegisteredLoading,
+    hasExisting,
+    hasUnregistered,
+    state.applyFireEquipment,
+  ]);
+
+  const handleRadioChange = (value: string) => {
+    const option = value === '1' ? 'yes' : value === '2' ? 'no' : 'undecided';
+    if (option === 'yes') {
+      updateState({ applyFireEquipment: 'yes', isEditing: true });
+    } else if (option === 'no') {
+      updateState({ applyFireEquipment: 'no', isEditing: false });
+    } else {
+      updateState({ applyFireEquipment: 'undecided' });
     }
   };
 
-  const noApplicationItems: FormItem[] = [
-    {
-      label: fireEquipmentTexts.summary.noApplicationLabel,
-      content: fireEquipmentTexts.summary.noApplicationDescription,
-    },
-  ];
+  const prepareFormForEditing = () => {
+    updateState({ isEditing: true });
+  };
+
+  const handleApplyNegative = async () => {
+    try {
+      const deleteResult = await submitFireEquipmentOrders([], groupId);
+      if (!deleteResult.success) {
+        await mutateFireEquipmentOrders();
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
+        return;
+      }
+
+      const result = await registerUnregisteredGroup(groupId);
+      if (result.success) {
+        updateState({ applyFireEquipment: 'no' });
+        await Promise.all([
+          mutateFireEquipmentOrders(),
+          mutateUnregisteredGroup(),
+          mutateHealthCenterSubmissionStatus(),
+        ]);
+        toast.success(
+          t('applications.fireEquipment.messages.noApplicationSuccess')
+        );
+      } else {
+        await mutateFireEquipmentOrders();
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
+      }
+    } catch (error) {
+      console.error('火気不使用登録エラー:', error);
+      await mutateFireEquipmentOrders();
+      toast.error(t('applications.fireEquipment.messages.submitFailed'));
+    }
+  };
+
+  const handleDeleteOrder = async (id: number) => {
+    try {
+      const remainingOrders = fireEquipmentOrders.filter((o) => o.id !== id);
+      const result = await submitFireEquipmentOrders(remainingOrders, groupId);
+      await Promise.all([
+        mutateFireEquipmentOrders(),
+        mutateHealthCenterSubmissionStatus(),
+      ]);
+
+      if (!result.success) {
+        toast.error(t('applications.fireEquipment.messages.deleteFailed'));
+        return;
+      }
+
+      toast.success(t('applications.fireEquipment.messages.deleteSuccess'));
+
+      if (remainingOrders.length === 0) {
+        updateState({ applyFireEquipment: 'yes', isEditing: false });
+      }
+    } catch (error) {
+      console.error('火気申請削除エラー:', error);
+      toast.error(t('applications.fireEquipment.messages.deleteFailed'));
+    }
+  };
+
+  const handleCancelUnregistered = async () => {
+    try {
+      const result = await deleteUnregisteredGroup(unregisteredData);
+      if (!result.success) {
+        console.error('不使用解除エラー:', result.error);
+        toast.error(t('applications.fireEquipment.messages.submitFailed'));
+        return;
+      }
+      updateState({ applyFireEquipment: 'undecided' });
+      await mutateUnregisteredGroup();
+    } catch (error) {
+      console.error('火気不使用解除エラー:', error);
+      toast.error(t('applications.fireEquipment.messages.submitFailed'));
+    }
+  };
+
+  const handleFormComplete = async () => {
+    await Promise.all([
+      mutateFireEquipmentOrders(),
+      mutateHealthCenterSubmissionStatus(),
+    ]);
+    updateState({ applyFireEquipment: 'yes', isEditing: false });
+  };
 
   return {
-    hasUnregistered,
-    noApplicationItems,
-    isEditing,
-    formItem,
-    handleEditClick,
-    handleDeleteClick,
-    fireEquipment,
+    state,
     isLoading,
-    mutateFireEquipmentOrder,
+    hasExisting,
+    hasUnregistered,
+    fireEquipmentOrders,
+    handleRadioChange,
+    handleApplyNegative,
+    handleDeleteOrder,
+    handleCancelUnregistered,
+    prepareFormForEditing,
+    handleFormComplete,
+    getRadioValue,
+    mutateFireEquipmentOrders,
   };
 };

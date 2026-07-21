@@ -6,3 +6,10 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/PublicRelation"
+            allOf:
+            - "$ref": "#/components/schemas/PublicRelation"
+            - type: object
+              properties:
+                imgur_deletehash:
+                  type: string
+                  nullable: true

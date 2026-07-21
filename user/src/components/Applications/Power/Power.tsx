@@ -1,4 +1,8 @@
 import { FC } from 'react';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
@@ -11,10 +15,17 @@ type PowerProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: HealthCenterSubmissionStatus;
 };
 
-const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
+const Power: FC<PowerProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+  status,
+}) => {
   const powerAccordionHooks = usePowerAccordionHooks();
+  const isFormLocked = !canEditApplication(isDeadline, status);
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
@@ -30,7 +41,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     prepareFormForEditing,
     completeSubmission,
     getRadioValue,
-  } = usePowerApplication(groupId);
+  } = usePowerApplication(groupId, status);
 
   const { isEditing, applyPower, submitError, isSubmitted } = state;
   const { fields, addDevice, removeDevice, totalPower, isValid, formMethods } =
@@ -41,7 +52,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     hasExisting,
     isEditing,
     hasUnregistered,
-    isDeadline,
+    isDeadline: isFormLocked,
   });
 
   let content;
@@ -110,7 +121,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={false}
-          isDeadline={isDeadline}
+          isDeadline={isFormLocked}
         />
       );
       break;
@@ -120,7 +131,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           devices={devices}
           onEdit={prepareFormForEditing}
           onDeleteDevice={handleDeleteDevice}
-          isDeadline={!isDeadline}
+          isDeadline={!isFormLocked}
         />
       );
       break;
@@ -138,6 +149,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           isValid={isValid}
           radioOptions={RADIO_OPTIONS}
           showForm={applyPower === 'yes'}
+          submitError={submitError}
           onSubmit={handleFormSubmit}
         />
       );
@@ -146,9 +158,10 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title={powerAccordionHooks.powerAccordionTexts.title}
-      isEdit={!isDeadline}
+      isEdit={!isFormLocked}
       isExist={isRegistered}
       required={true}
+      status={status}
     >
       {content}
     </AccordionMenu>

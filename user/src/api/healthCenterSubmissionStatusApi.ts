@@ -5,12 +5,9 @@ import {
 } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
-  HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/get_health_center_submission_status_show_for_admin_view',
-  UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/update_health_center_submission_status',
-  UPSERT_HEALTH_CENTER_SUBMISSION_STATUS:
-    '/api/v1/upsert_health_center_submission_status',
+  HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
+  UPDATE_HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
+  CREATE_HEALTH_CENTER_SUBMISSION_STATUS: '/health_center_submission_statuses',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -26,13 +23,21 @@ export type HealthCenterSubmissionStatus =
   | 'approved'
   | 'unsubmitted';
 
+export const isResubmissionStatus = (
+  status?: HealthCenterSubmissionStatus
+): boolean => status === 'waiting_resubmission';
+
+export const canEditApplication = (
+  isDeadline: boolean | undefined,
+  status?: HealthCenterSubmissionStatus
+): boolean => !isDeadline || isResubmissionStatus(status);
+
 export type HealthCenterSubmissionStatusResponse = {
-  id: number;
-  groupId: number;
+  id: number | null;
   applicationType: string;
   status: HealthCenterSubmissionStatus;
-  createdAt: string;
-  updatedAt: string;
+  comments: unknown[];
+  detail: unknown;
 };
 
 export type HealthCenterSubmissionStatusApiResponse = ApiResponse<{
@@ -45,9 +50,9 @@ export const useUpdateHealthCenterSubmissionStatus = () => {
   );
 };
 
-export const useUpsertHealthCenterSubmissionStatus = () => {
+export const useCreateHealthCenterSubmissionStatus = () => {
   return useAuthenticatedPost(
-    API_ENDPOINTS.UPSERT_HEALTH_CENTER_SUBMISSION_STATUS
+    API_ENDPOINTS.CREATE_HEALTH_CENTER_SUBMISSION_STATUS
   );
 };
 
@@ -58,7 +63,7 @@ export const useUpdateSubmissionStatusFor = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: updateTrigger } = useUpdateHealthCenterSubmissionStatus()();
-  const { trigger: upsertTrigger } = useUpsertHealthCenterSubmissionStatus();
+  const { trigger: createTrigger } = useCreateHealthCenterSubmissionStatus();
 
   return async (status: HealthCenterSubmissionStatus) => {
     const submission = healthCenterSubmissionStatus.find(
@@ -74,7 +79,7 @@ export const useUpdateSubmissionStatusFor = (
         );
       }
 
-      await upsertTrigger({
+      await createTrigger({
         body: {
           group_id: groupId,
           application_type: applicationType,
@@ -93,7 +98,7 @@ export const useGetHealthCenterSubmissionStatus = (
 ) => {
   const endpoint =
     groupId != null
-      ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}/${groupId}`
+      ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}?group_id=${groupId}`
       : null;
 
   const {

@@ -16,6 +16,8 @@ class Group < ApplicationRecord
     :venue_map,
     :announcement,
     :cooking_process_order,
+    :fire_equipment_orders,
+    :health_center_submission_statuses,
     { food_products: :purchase_lists }
   ].freeze
 
@@ -42,6 +44,7 @@ class Group < ApplicationRecord
   has_many :un_registered_groups, dependent: :destroy
   has_many :fire_equipment_orders, dependent: :destroy
   has_many :health_center_submission_statuses, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 
@@ -85,7 +88,13 @@ class Group < ApplicationRecord
 
   # 全てのgroupとそれが持つorderを取得する
   def self.with_order_infos
-    @record = Group.all
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).all
                    .map  do |group|
       {
         group: group,
@@ -141,21 +150,29 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end
 
   # 指定したIDのgroupとそれが持つorderを取得する
   def self.with_order_info(group_id)
-    group = Group.find(group_id)
+    group = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).find(group_id)
     @record =
       {
         group: group,
@@ -211,21 +228,29 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     return @record
   end
 
   # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
-    @record = Group.where(groups: { fes_year_id: fes_year_id })
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).where(groups: { fes_year_id: fes_year_id })
                    .map do |group|
       {
         group: group,
@@ -281,21 +306,29 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
         public_relation: group.public_relation&.to_info_h,
         venue_map: group.venue_map&.to_info_h,
         announcement: group.announcement&.to_info_h,
-        cooking_process_order: group.cooking_process_order&.to_info_h
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end
 
   # 検索ワードに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_search_word(word)
-    @record = Group.where('name like ?', "%#{word}%")
+    @record = Group.includes(
+      :user, :group_category, :fes_year, :sub_rep, :place_order,
+      :stage_orders, :stage_common_option, :power_orders, :rental_orders,
+      :employees, { food_products: %i[purchase_lists cooking_process_order] },
+      :public_relation, :venue_map, :announcement, :cooking_process_order,
+      :fire_equipment_orders
+    ).where('name like ?', "%#{word}%")
                    .map do |group|
       {
         group: group,
@@ -351,14 +384,16 @@ class Group < ApplicationRecord
                                {
                                  purchase_list: purchase_list.to_info_h
                                }
-                             end
+                             end,
+                             cooking_process_order: food_product.cooking_process_order&.to_info_h
                            }
                          end
                        end,
-        public_relation: group.public_relation&.id,
-        venue_map: group.venue_map&.id,
-        announcement: group.announcement&.id,
-        cooking_process_order: group.cooking_process_order&.id
+        public_relation: group.public_relation&.to_info_h,
+        venue_map: group.venue_map&.to_info_h,
+        announcement: group.announcement&.to_info_h,
+        cooking_process_order: group.cooking_process_order&.to_info_h,
+        fire_equipment_orders: group.fire_equipment_orders.map { |o| { fire_equipment_order: o.to_info_h } }.presence
       }
     end
   end

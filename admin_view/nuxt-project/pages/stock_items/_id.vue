@@ -232,6 +232,19 @@
           <input v-model="roomName" placeholder="入力してください" />
         </div>
         <div>
+          <h3>エリア</h3>
+          <select v-model="placeCategoryId">
+            <option :value="null">未指定</option>
+            <option
+              v-for="placeCategory in formattedPlaceCategories"
+              :key="placeCategory.id"
+              :value="placeCategory.id"
+            >
+              {{ placeCategory.formattedName }}
+            </option>
+          </select>
+        </div>
+        <div>
           <h3>在庫登録</h3>
           <select v-model="stockItemStatus">
             <option disabled value="">選択してください</option>
@@ -372,6 +385,8 @@ export default {
         "個数",
         "残数",
       ],
+      placeCategories: [],
+      placeCategoryId: null,
       stocker_headers: [
         "団体名",
         "物品",
@@ -455,6 +470,9 @@ export default {
     const outsideRentableItemsUrl = "/api/v1/get_outside_shop_rentable_items";
     const outsideRentableItemsRes = await $axios.$get(outsideRentableItemsUrl);
 
+    const placeCategoriesUrl = "/place_categories";
+    const placeCategoriesRes = await $axios.$get(placeCategoriesUrl);
+
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     const yearsUrl = "/fes_years";
@@ -471,6 +489,7 @@ export default {
       allRentableItems: allRentableItemsRes.data,
       insideRentableItems: insideRentableItemsRes.data,
       outsideRentableItems: outsideRentableItemsRes.data,
+      placeCategories: placeCategoriesRes.data,
       itemYear: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
@@ -480,6 +499,14 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    formattedPlaceCategories() {
+      if (!this.placeCategories) return [];
+      
+      return this.placeCategories.map(category => ({
+        ...category,
+        formattedName: category.formatted_name,
+      }));
+    }
   },
   mounted() {
     window.scrollTo(0, 0);
@@ -502,17 +529,15 @@ export default {
       },
 
     async editPlace() {
-      const placeUrl =
-        "/stocker_places/" +
-        this.id +
-        "?name=" +
-        this.roomName +
-        "&stock_item_status=" +
-        this.stockItemStatus +
-        "&assign_item_status=" +
-        this.assignItemStatus;
+      const payload = {
+        name: this.roomName,
+        stock_item_status: this.stockItemStatus,
+        assign_item_status: this.assignItemStatus,
+        place_category_id: this.placeCategoryId
+      };
+      const placeUrl = "/stocker_places/" + this.id;
 
-      await this.$axios.$put(placeUrl).then((response) => {
+      await this.$axios.$put(placeUrl, payload).then((response) => {
         this.closePlaceEditModal();
         this.$router.push("/stock_items")
       })
@@ -665,6 +690,7 @@ export default {
       this.roomName = this.placeName.name
       this.stockItemStatus = this.placeName.stock_item_status
       this.assignItemStatus = this.placeName.assign_item_status
+      this.placeCategoryId = this.placeName.place_category_id || null
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },

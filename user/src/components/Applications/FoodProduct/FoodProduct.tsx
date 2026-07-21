@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
@@ -157,11 +160,12 @@ const FoodProduct: FC<FoodProductProps> = ({
     foodProductViewTexts,
     isResubmission,
   } = useFoodProductHooks(groupId, isRegistered, status);
+  const isApplicationEditable = canEditApplication(isDeadline, status);
 
   return (
     <AccordionMenu
       title={foodProductViewTexts.title}
-      isEdit={!isDeadline}
+      isEdit={isApplicationEditable}
       isExist={!!foodProducts && foodProducts.length > 0}
       required
       status={status}

@@ -6,28 +6,25 @@ export enum FireEquipmentFuel {
   CHARCOAL = 3,
 }
 
-// fuelの文字列→数値変換マップ
 const fuelStringToEnum: Record<string, FireEquipmentFuel> = {
   gas_bottle: FireEquipmentFuel.GAS_BOTTLE,
   lp_gas: FireEquipmentFuel.LP_GAS,
   charcoal: FireEquipmentFuel.CHARCOAL,
 };
 
-// APIから実際に返ってくるレスポンスの型
 type FireEquipmentApiResponse = {
   id: number;
   name: string;
   quantity: number;
-  fuel: string; // APIは "gas_bottle" などの文字列で返す
+  fuel: string;
   usage: string;
-  is_takeaway: boolean;
+  isTakeaway: boolean;
   remark?: string;
-  group_id: number;
-  created_at?: string;
-  updated_at?: string;
+  groupId: number;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
-// フロント内部で使う型（fuelは数値enum）
 export type FireEquipmentResponse = {
   id: number;
   name: string;
@@ -41,12 +38,19 @@ export type FireEquipmentResponse = {
   updated_at?: string;
 };
 
-// APIレスポンスをフロント型に変換
 const mapApiResponse = (
   api: FireEquipmentApiResponse
 ): FireEquipmentResponse => ({
-  ...api,
+  id: api.id,
+  name: api.name,
+  quantity: api.quantity,
   fuel: fuelStringToEnum[api.fuel] ?? FireEquipmentFuel.GAS_BOTTLE,
+  usage: api.usage,
+  is_takeaway: api.isTakeaway,
+  remark: api.remark,
+  group_id: api.groupId,
+  created_at: api.createdAt,
+  updated_at: api.updatedAt,
 });
 
 type ApiStatusResponse<T> = {
@@ -56,10 +60,10 @@ type ApiStatusResponse<T> = {
 
 const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
+  SUBMIT_FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders/submit',
 };
 
-// グループIDで火気使用申請を取得
-export const useGetFireEquipmentOrderByGroupId = (
+export const useGetFireEquipmentOrdersByGroupId = (
   groupId: number | undefined
 ) => {
   const endpoint =
@@ -68,37 +72,53 @@ export const useGetFireEquipmentOrderByGroupId = (
       : null;
 
   const { data, error, isLoading, mutate } =
-    useAuthenticatedGet<ApiStatusResponse<FireEquipmentApiResponse>>(endpoint);
+    useAuthenticatedGet<ApiStatusResponse<FireEquipmentApiResponse[]>>(
+      endpoint
+    );
 
-  const fireEquipmentOrder = data?.data ? mapApiResponse(data.data) : undefined;
+  const fireEquipmentOrders: FireEquipmentResponse[] =
+    data?.data?.map(mapApiResponse) ?? [];
 
   return {
-    fireEquipmentOrder,
+    fireEquipmentOrders,
     isLoading,
     error,
-    mutateFireEquipmentOrder: mutate,
+    mutateFireEquipmentOrders: mutate,
   };
 };
 
-// 火気申請の登録・更新・削除
 export const useFireEquipmentMutations = () => {
-  const { post, patch, remove } = useApiMutations();
+  const { put } = useApiMutations();
 
-  const postFireEquipmentOrder = (
-    data: Omit<FireEquipmentResponse, 'id' | 'created_at' | 'updated_at'>
-  ) => post(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS, data);
+  const submitFireEquipmentOrders = async (
+    items: Partial<FireEquipmentResponse>[],
+    groupId: number
+  ) => {
+    try {
+      const response = await put(API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS, {
+        group_id: groupId,
+        fire_equipment_orders: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          fuel: item.fuel,
+          usage: item.usage,
+          is_takeaway: item.is_takeaway,
+          remark: item.remark,
+        })),
+      });
 
-  const patchFireEquipmentOrder = (
-    id: number,
-    data: Partial<FireEquipmentResponse>
-  ) => patch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`, data);
+      if (response && 'success' in response && response.success === false) {
+        return { success: false, error: response.error };
+      }
 
-  const deleteFireEquipmentOrder = (id: number) =>
-    remove(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
 
   return {
-    postFireEquipmentOrder,
-    patchFireEquipmentOrder,
-    deleteFireEquipmentOrder,
+    submitFireEquipmentOrders,
   };
 };

@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatus,
+  canEditApplication,
+} from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
@@ -131,7 +134,7 @@ const VenueMap: FC<VenueMapProps> = ({
   return (
     <AccordionMenu
       title={venueMapTexts.title}
-      isEdit={!isDeadline}
+      isEdit={canEditApplication(isDeadline, status)}
       isExist={isRegistered}
       required
       status={status}

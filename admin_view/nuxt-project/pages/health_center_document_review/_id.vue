@@ -1,15 +1,29 @@
 <template>
   <div class="main-content">
-    <SubHeader v-bind:pageTitle="group.group.name" pageSubTitle="保健所提出団体一覧">
+    <SubHeader
+      v-bind:pageTitle="group.group.name"
+      pageSubTitle="保健所提出団体一覧"
+    >
     </SubHeader>
     <Row align="start" justify="start">
       <Column width="100%" align="start" justify="start" gap="8px">
         <p>企画名: {{ group.group.project_name }}</p>
         <p>代表者: {{ group.user.name }}</p>
-        <p>メール: <a class="mail-link" :href="'mailto:' + group.user.email">{{ group.user.email }}</a></p>
+        <p>
+          メール:
+          <a class="mail-link" :href="'mailto:' + group.user.email">{{
+            group.user.email
+          }}</a>
+        </p>
         <div class="submission-summary" role="status" aria-live="polite">
           <template v-if="unapprovedSubmissionCount > 0">
-            <div class="submission-summary-main">未承認 <span class="submission-count">{{ unapprovedSubmissionCount }}</span> 件</div>
+            <div class="submission-summary-main">
+              未承認
+              <span class="submission-count">{{
+                unapprovedSubmissionCount
+              }}</span>
+              件
+            </div>
             <div class="submission-breakdown">
               <div class="submission-summary-item">
                 <span class="submission-label">再提出</span>
@@ -60,22 +74,40 @@
 
     <Row wrap="nowrap" align="start" justify="space-between">
       <Column width="70%" align="start" justify="start">
-        <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
+        <Card
+          width="100%"
+          height="800px"
+          style="overflow-y: auto; align-items: flex-start"
+        >
           <div class="section-header-with-button">
             <h2>調理工程申請</h2>
             <div
               class="status-select-with-icon"
-              :class="getStatusSelectClass(getSubmissionStatusValue('cooking_process_order'))"
+              :class="
+                getStatusSelectClass(
+                  getSubmissionStatusValue('cooking_process_order')
+                )
+              "
             >
               <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('cooking_process_order')).icon }}
+                {{
+                  getStatusMeta(
+                    getSubmissionStatusValue("cooking_process_order")
+                  ).icon
+                }}
               </span>
               <div class="select-wrapper">
                 <select
                   class="status-select"
-                  :class="getStatusSelectClass(getSubmissionStatusValue('cooking_process_order'))"
+                  :class="
+                    getStatusSelectClass(
+                      getSubmissionStatusValue('cooking_process_order')
+                    )
+                  "
                   :value="getSubmissionStatusValue('cooking_process_order')"
-                  @change="onStatusChange('cooking_process_order', $event.target.value)"
+                  @change="
+                    onStatusChange('cooking_process_order', $event.target.value)
+                  "
                   aria-label="調理工程申請のステータス"
                 >
                   <option
@@ -87,41 +119,56 @@
                     {{ option.label }}
                   </option>
                 </select>
-                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                <span class="material-icons select-caret" aria-hidden="true"
+                  >expand_more</span
+                >
               </div>
             </div>
           </div>
           <Card
             width="100%"
-            style="align-items: flex-start;"
+            style="align-items: flex-start"
             v-for="order in cookingProcessOrders"
             :key="order.id"
             class="selectable-card"
             :class="{ 'row-interactive-card--on': enableInteractiveRows }"
           >
-            <div class="selectable-card-body" @click="openCookingProcessOrderModal(order)">
+            <div
+              class="selectable-card-body"
+              @click="openCookingProcessOrderModal(order)"
+            >
               <VerticalTable>
                 <tr>
                   <th colspan="3">
                     <div class="section-title-with-button">
                       <h2>
-                        <span>{{ getFoodProductName(order.food_product_id) }}</span>
+                        <span>{{
+                          getFoodProductName(order.food_product_id)
+                        }}</span>
                       </h2>
                     </div>
                   </th>
                 </tr>
                 <tr>
                   <th>調理場</th>
-                  <td>営業前：{{ order.pre_open_kitchen ? "使用する" : "使用しない" }}</td>
-                  <td>営業中：{{ order.during_open_kitchen ? "使用する" : "使用しない" }}</td>
+                  <td>
+                    営業前：{{
+                      order.pre_open_kitchen ? "使用する" : "使用しない"
+                    }}
+                  </td>
+                  <td>
+                    営業中：{{
+                      order.during_open_kitchen ? "使用する" : "使用しない"
+                    }}
+                  </td>
                 </tr>
                 <tr>
                   <th>調理工程</th>
                   <td colspan="2">
                     <div style="white-space: pre-line">
                       <template v-if="order.tent_ja">
-                        {{ order.tent_ja }}<br><br>
-                        {{ '<翻訳前の原文>' }}
+                        {{ order.tent_ja }}<br /><br />
+                        {{ "<翻訳前の原文>" }}
                         {{ order.tent || "未入力" }}
                       </template>
                       <template v-else>
@@ -140,15 +187,23 @@
             <h2>販売品申請</h2>
             <div
               class="status-select-with-icon"
-              :class="getStatusSelectClass(getSubmissionStatusValue('food_product'))"
+              :class="
+                getStatusSelectClass(getSubmissionStatusValue('food_product'))
+              "
             >
               <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('food_product')).icon }}
+                {{
+                  getStatusMeta(getSubmissionStatusValue("food_product")).icon
+                }}
               </span>
               <div class="select-wrapper">
                 <select
                   class="status-select"
-                  :class="getStatusSelectClass(getSubmissionStatusValue('food_product'))"
+                  :class="
+                    getStatusSelectClass(
+                      getSubmissionStatusValue('food_product')
+                    )
+                  "
                   :value="getSubmissionStatusValue('food_product')"
                   @change="onStatusChange('food_product', $event.target.value)"
                   aria-label="販売品申請のステータス"
@@ -162,7 +217,9 @@
                     {{ option.label }}
                   </option>
                 </select>
-                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                <span class="material-icons select-caret" aria-hidden="true"
+                  >expand_more</span
+                >
               </div>
             </div>
           </div>
@@ -180,7 +237,9 @@
               v-for="foodProduct in foodProducts"
               :key="foodProduct.id"
               class="selectable-row"
-              :class="{ 'selected-row': selectedFoodProductId === foodProduct.id }"
+              :class="{
+                'selected-row': selectedFoodProductId === foodProduct.id,
+              }"
               @click="openFoodProductModal(foodProduct)"
             >
               <td>{{ foodProduct.name }}</td>
@@ -196,33 +255,43 @@
 
           <div class="section-header-with-button">
             <h2>購入品申請</h2>
-              <div
-                class="status-select-with-icon"
-                :class="getStatusSelectClass(getSubmissionStatusValue('purchase_list'))"
-              >
-                <span class="material-icons status-icon">
-                  {{ getStatusMeta(getSubmissionStatusValue('purchase_list')).icon }}
-                </span>
-                <div class="select-wrapper">
-                  <select
-                    class="status-select"
-                    :class="getStatusSelectClass(getSubmissionStatusValue('purchase_list'))"
-                    :value="getSubmissionStatusValue('purchase_list')"
-                    @change="onStatusChange('purchase_list', $event.target.value)"
-                    aria-label="購入品申請のステータス"
+            <div
+              class="status-select-with-icon"
+              :class="
+                getStatusSelectClass(getSubmissionStatusValue('purchase_list'))
+              "
+            >
+              <span class="material-icons status-icon">
+                {{
+                  getStatusMeta(getSubmissionStatusValue("purchase_list")).icon
+                }}
+              </span>
+              <div class="select-wrapper">
+                <select
+                  class="status-select"
+                  :class="
+                    getStatusSelectClass(
+                      getSubmissionStatusValue('purchase_list')
+                    )
+                  "
+                  :value="getSubmissionStatusValue('purchase_list')"
+                  @change="onStatusChange('purchase_list', $event.target.value)"
+                  aria-label="購入品申請のステータス"
+                >
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="option.value === 'unsubmitted'"
                   >
-                    <option
-                      v-for="option in statusOptions"
-                      :key="option.value"
-                      :value="option.value"
-                      :disabled="option.value === 'unsubmitted'"
-                    >
-                      {{ option.label }}
-                    </option>
-                  </select>
-                  <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
-                </div>
+                    {{ option.label }}
+                  </option>
+                </select>
+                <span class="material-icons select-caret" aria-hidden="true"
+                  >expand_more</span
+                >
               </div>
+            </div>
           </div>
           <VerticalTable
             v-for="purchaseGroup in purchaseListsByFoodProduct"
@@ -231,7 +300,9 @@
             :class="{ 'row-interactive-table--on': enableInteractiveRows }"
           >
             <tr>
-              <th colspan="5"><h2>{{ purchaseGroup.foodProductName }}</h2></th>
+              <th colspan="5">
+                <h2>{{ purchaseGroup.foodProductName }}</h2>
+              </th>
             </tr>
             <tr>
               <th>品目</th>
@@ -244,7 +315,9 @@
               v-for="purchaseList in purchaseGroup.items"
               :key="purchaseList.id"
               class="selectable-row"
-              :class="{ 'selected-row': selectedPurchaseListId === purchaseList.id }"
+              :class="{
+                'selected-row': selectedPurchaseListId === purchaseList.id,
+              }"
               @click="openPurchaseListModal(purchaseList)"
             >
               <td>{{ purchaseList.items }}</td>
@@ -261,15 +334,19 @@
             <h2>従業員申請</h2>
             <div
               class="status-select-with-icon"
-              :class="getStatusSelectClass(getSubmissionStatusValue('employee'))"
+              :class="
+                getStatusSelectClass(getSubmissionStatusValue('employee'))
+              "
             >
               <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('employee')).icon }}
+                {{ getStatusMeta(getSubmissionStatusValue("employee")).icon }}
               </span>
               <div class="select-wrapper">
                 <select
                   class="status-select"
-                  :class="getStatusSelectClass(getSubmissionStatusValue('employee'))"
+                  :class="
+                    getStatusSelectClass(getSubmissionStatusValue('employee'))
+                  "
                   :value="getSubmissionStatusValue('employee')"
                   @change="onStatusChange('employee', $event.target.value)"
                   aria-label="従業員申請のステータス"
@@ -283,7 +360,9 @@
                     {{ option.label }}
                   </option>
                 </select>
-                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                <span class="material-icons select-caret" aria-hidden="true"
+                  >expand_more</span
+                >
               </div>
             </div>
           </div>
@@ -317,21 +396,29 @@
 
           <div class="section-header-with-button">
             <h2>平面図申請</h2>
-              <div class="section-actions">
+            <div class="section-actions">
               <CommonButton iconName="edit" :on_click="openVenueMapModal">
                 編集
               </CommonButton>
               <div
                 class="status-select-with-icon"
-                :class="getStatusSelectClass(getSubmissionStatusValue('venue_map'))"
+                :class="
+                  getStatusSelectClass(getSubmissionStatusValue('venue_map'))
+                "
               >
                 <span class="material-icons status-icon">
-                  {{ getStatusMeta(getSubmissionStatusValue('venue_map')).icon }}
+                  {{
+                    getStatusMeta(getSubmissionStatusValue("venue_map")).icon
+                  }}
                 </span>
                 <div class="select-wrapper">
                   <select
                     class="status-select"
-                    :class="getStatusSelectClass(getSubmissionStatusValue('venue_map'))"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('venue_map')
+                      )
+                    "
                     :value="getSubmissionStatusValue('venue_map')"
                     @change="onStatusChange('venue_map', $event.target.value)"
                     aria-label="平面図申請のステータス"
@@ -345,12 +432,20 @@
                       {{ option.label }}
                     </option>
                   </select>
-                  <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                  <span class="material-icons select-caret" aria-hidden="true"
+                    >expand_more</span
+                  >
                 </div>
               </div>
             </div>
           </div>
-          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
+          <img
+            v-if="venueMap && venueMap.picture_path"
+            :src="venueMap.picture_path"
+            alt="平面図"
+            class="venue-map-image"
+            referrerpolicy="no-referrer"
+          />
           <p v-else>未登録</p>
           <HorizontalRule />
 
@@ -358,15 +453,19 @@
             <h2>物品申請</h2>
             <div
               class="status-select-with-icon"
-              :class="getStatusSelectClass(getSubmissionStatusValue('equipment'))"
+              :class="
+                getStatusSelectClass(getSubmissionStatusValue('equipment'))
+              "
             >
               <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('equipment')).icon }}
+                {{ getStatusMeta(getSubmissionStatusValue("equipment")).icon }}
               </span>
               <div class="select-wrapper">
                 <select
                   class="status-select"
-                  :class="getStatusSelectClass(getSubmissionStatusValue('equipment'))"
+                  :class="
+                    getStatusSelectClass(getSubmissionStatusValue('equipment'))
+                  "
                   :value="getSubmissionStatusValue('equipment')"
                   @change="onStatusChange('equipment', $event.target.value)"
                   aria-label="物品申請のステータス"
@@ -380,7 +479,9 @@
                     {{ option.label }}
                   </option>
                 </select>
-                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                <span class="material-icons select-caret" aria-hidden="true"
+                  >expand_more</span
+                >
               </div>
             </div>
           </div>
@@ -397,7 +498,9 @@
               v-for="rentalOrder in rentalOrders"
               :key="rentalOrder.id"
               class="selectable-row"
-              :class="{ 'selected-row': selectedRentalOrderId === rentalOrder.id }"
+              :class="{
+                'selected-row': selectedRentalOrderId === rentalOrder.id,
+              }"
               @click="openRentalOrderModal(rentalOrder)"
             >
               <td>{{ getRentalItemName(rentalOrder.rental_item_id) }}</td>
@@ -410,94 +513,40 @@
           </template>
         </Card>
       </Column>
-      <Column width="30%" align="start" justify="start" class="sticky-right-column">
-        <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
-          <div class="comment-header">
-            <h3>メッセージ</h3>
-          </div>
-          <div class="comment-form">
-            <div class="message-template-panel">
-              <label class="message-template-label" for="message-template-select">
-                テンプレート
-              </label>
-              <select
-                id="message-template-select"
-                class="message-template-select"
-                v-model="selectedMessageTemplateId"
-              >
-                <option value="">テンプレートを選択</option>
-                <option
-                  v-for="template in messageTemplates"
-                  :key="template.id"
-                  :value="String(template.id)"
-                >
-                  {{ template.name }}（{{ template.locale }}）
-                </option>
-              </select>
-              <p
-                v-if="messageSendResult"
-                class="message-send-result"
-                role="status"
-              >
-                {{ messageSendResult }}
-              </p>
-            </div>
-            <textarea
-              class="comment-textarea"
-              placeholder="メールで送信するコメント"
-              v-model="commentBody"
-              :disabled="!selectedMessageTemplate || isSendingMessage"
-            ></textarea>
-            <CommonButton
-              iconName="send"
-              :on_click="openMessagePreview"
-              :disabled="isSendingMessage || !canSendMessage"
-            >
-              送信
-            </CommonButton>
-          </div>
-
-          <div class="comment-history">
-            <h4>送信履歴</h4>
-            <details
-              v-for="comment in sortedComments"
-              :key="comment.id"
-              class="comment-accordion"
-            >
-              <summary>
-                {{ formatCommentTimestamp(comment.created_at) }}
-                <span
-                  class="mail-delivery-status"
-                  :class="mailDeliveryStatusClass(comment.mail_delivery_status)"
-                >
-                  {{ mailDeliveryStatusLabel(comment.mail_delivery_status) }}
-                </span>
-              </summary>
-              <p class="comment-body">{{ comment.body }}</p>
-              <CommonButton
-                v-if="comment.mail_delivery_status === 'failed'"
-                iconName="send"
-                :on_click="() => resendCommentMail(comment)"
-                :disabled="isSendingMessage || resendingCommentId === comment.id"
-              >
-                {{ resendingCommentId === comment.id ? "再送信中" : "再送信" }}
-              </CommonButton>
-            </details>
-            <p v-if="sortedComments.length === 0">送信履歴はまだありません</p>
-          </div>
-        </Card>
+      <Column
+        width="30%"
+        align="start"
+        justify="start"
+        class="sticky-right-column"
+      >
+        <GroupMailSender
+          v-if="group.group.id"
+          :group-id="group.group.id"
+          :user-email="group.user ? group.user.email : ''"
+          source-page="health_center"
+          :group-name="group.group.name"
+          :user-name="group.user ? group.user.name : ''"
+        />
       </Column>
     </Row>
 
     <EditModalsFoodProductEditModal
-      v-if="isOpenEditModal && activeEditType === 'food_product' && selectedFoodProduct"
+      v-if="
+        isOpenEditModal &&
+        activeEditType === 'food_product' &&
+        selectedFoodProduct
+      "
       :food-product="selectedFoodProduct"
       @close="closeEditModal"
       @saved="onEditorSaved"
     />
 
     <EditModalsPurchaseListEditModal
-      v-if="isOpenEditModal && activeEditType === 'purchase_list' && selectedPurchaseList"
+      v-if="
+        isOpenEditModal &&
+        activeEditType === 'purchase_list' &&
+        selectedPurchaseList
+      "
       :purchase-list="selectedPurchaseList"
       :shops="shops"
       @close="closeEditModal"
@@ -505,7 +554,9 @@
     />
 
     <EditModalsEmployeeEditModal
-      v-if="isOpenEditModal && activeEditType === 'employee' && selectedEmployee"
+      v-if="
+        isOpenEditModal && activeEditType === 'employee' && selectedEmployee
+      "
       :employee="selectedEmployee"
       @close="closeEditModal"
       @saved="onEditorSaved"
@@ -519,7 +570,11 @@
     />
 
     <EditModalsRentalOrderEditModal
-      v-if="isOpenEditModal && activeEditType === 'rental_order' && selectedRentalOrder"
+      v-if="
+        isOpenEditModal &&
+        activeEditType === 'rental_order' &&
+        selectedRentalOrder
+      "
       :rental-order="selectedRentalOrder"
       :rental-items="rentalItems"
       @close="closeEditModal"
@@ -527,63 +582,33 @@
     />
 
     <EditModalsCookingProcessOrderEditModal
-      v-if="isOpenEditModal && activeEditType === 'cooking_process_order' && selectedCookingProcessOrder"
+      v-if="
+        isOpenEditModal &&
+        activeEditType === 'cooking_process_order' &&
+        selectedCookingProcessOrder
+      "
       :cooking-process-order="selectedCookingProcessOrder"
       @close="closeEditModal"
       @saved="onEditorSaved"
       @error="openEditError"
     />
-
-    <EditModal
-      v-if="isPreviewModalOpen"
-      title="送信内容の確認"
-      @close="closeMessagePreview"
-    >
-      <template v-slot:form>
-        <div class="mail-preview-field">
-          <h3>宛先</h3>
-          <p>{{ group.user.email }}</p>
-        </div>
-        <div class="mail-preview-field">
-          <h3>件名</h3>
-          <p>{{ renderedMessageSubject }}</p>
-        </div>
-        <div class="mail-preview-field">
-          <h3>本文</h3>
-          <pre>{{ renderedMessageBody }}</pre>
-        </div>
-      </template>
-      <template v-slot:method>
-        <div class="mail-preview-actions">
-          <CommonButton
-            iconName="close"
-            :on_click="closeMessagePreview"
-            :disabled="isSendingMessage"
-          >
-            キャンセル
-          </CommonButton>
-          <CommonButton
-            iconName="send"
-            :on_click="confirmMessageSend"
-            :disabled="isSendingMessage"
-          >
-            {{ isSendingMessage ? "送信中" : "送信する" }}
-          </CommonButton>
-        </div>
-      </template>
-    </EditModal>
-
   </div>
 </template>
 
 <script>
+import {
+  normalizeSubmissionRecordStatus,
+  getSubmissionStatusMeta,
+  getSubmissionStatusSelectClass,
+} from "~/utils/health_center_submission_status";
+
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
   "/api/v1/get_health_center_submission_status_index_for_admin_view";
 const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
 const HEALTH_CENTER_SHOW_ENDPOINT =
   "/api/v1/get_health_center_submission_status_show_for_admin_view/";
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
-  "/api/v1/upsert_health_center_submission_status";
+  "/api/v1/health_center_submission_statuses";
 const HEALTH_CENTER_COMMENT_MAIL_CREATE_ENDPOINT =
   "/api/v1/create_health_center_submission_status_comment_mail";
 const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
@@ -657,7 +682,10 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
 
   const purchaseListsNested = await Promise.all(
     foodProducts.map((foodProduct) =>
-      getOrEmpty(`/purchase_lists/food_product?food_product_ids=${foodProduct.id}`, [])
+      getOrEmpty(
+        `/purchase_lists/food_product?food_product_ids=${foodProduct.id}`,
+        []
+      )
     )
   );
   const purchaseLists = purchaseListsNested.flat();
@@ -735,13 +763,6 @@ export default {
         { value: "approved", label: "承認済み" },
         { value: "unsubmitted", label: "未提出" },
       ],
-      commentBody: "",
-      messageTemplates: [],
-      selectedMessageTemplateId: "",
-      isSendingMessage: false,
-      resendingCommentId: null,
-      messageSendResult: "",
-      isPreviewModalOpen: false,
     };
   },
   watch: {
@@ -749,9 +770,6 @@ export default {
       async handler() {
         await this.reloadPageData();
       },
-    },
-    selectedMessageTemplateId() {
-      this.applySelectedMessageTemplate();
     },
   },
   computed: {
@@ -787,67 +805,37 @@ export default {
         items: groups[foodProductID],
       }));
     },
-    sortedComments() {
-      return this.submissions
-        .flatMap((submission) =>
-          (submission.comments || []).map((comment) => ({
-            ...comment,
-            application_type: submission.application_type,
-          }))
-        )
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    },
     unapprovedSubmissionCount() {
-      return this.submissions.filter((submission) => submission.status !== "approved")
-        .length;
+      return this.submissions.filter(
+        (submission) => submission.status !== "approved"
+      ).length;
     },
     reSubmissionCount() {
-      return this.submissions.filter((submission) => submission.status === "waiting_resubmission").length;
+      return this.submissions.filter(
+        (submission) => submission.status === "waiting_resubmission"
+      ).length;
     },
     unconfirmedCount() {
-      return this.submissions.filter((submission) => submission.status === "unapproved").length;
+      return this.submissions.filter(
+        (submission) => submission.status === "unapproved"
+      ).length;
     },
     unsubmittedCount() {
-      return this.submissions.filter((submission) => submission.status === "unsubmitted").length;
+      return this.submissions.filter(
+        (submission) => submission.status === "unsubmitted"
+      ).length;
     },
     hasEquipmentApplication() {
       return this.unRegisteredGroups.some((item) => item.order_type === 0);
     },
     approvedCount() {
-      return this.submissions.filter((submission) => submission.status === "approved").length;
-    },
-    selectedMessageTemplate() {
-      return this.messageTemplates.find(
-        (template) => String(template.id) === String(this.selectedMessageTemplateId)
-      );
-    },
-    canSendMessage() {
-      return Boolean(
-        this.group.user.email &&
-          this.selectedMessageTemplate &&
-          this.commentBody.trim()
-      );
-    },
-    messageTemplateValues() {
-      return {
-        group_name: this.group.group.name,
-        user_name: this.group.user.name,
-      };
-    },
-    renderedMessageSubject() {
-      if (!this.selectedMessageTemplate) return "";
-      return this.renderTemplateText(
-        this.selectedMessageTemplate.subject,
-        this.messageTemplateValues
-      );
-    },
-    renderedMessageBody() {
-      return this.commentBody.trim();
+      return this.submissions.filter(
+        (submission) => submission.status === "approved"
+      ).length;
     },
   },
   async mounted() {
     await this.reloadPageData();
-    await this.loadMessageTemplates();
     window.scrollTo(0, 0);
   },
   methods: {
@@ -866,16 +854,6 @@ export default {
         throw error;
       }
     },
-    async loadMessageTemplates() {
-      try {
-        const response = await this.$axios.$get(MESSAGE_TEMPLATES_ENDPOINT);
-        this.messageTemplates = response.data || [];
-        this.selectedMessageTemplateId = "";
-      } catch (error) {
-        this.messageTemplates = [];
-        this.selectedMessageTemplateId = "";
-      }
-    },
     onPrevGroup() {
       if (!this.prevGroupId) return;
       this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
@@ -889,50 +867,32 @@ export default {
         (submission) => submission.application_type === applicationType
       );
     },
+    // applicationTypeに対応する申請物自体が存在するかどうか
+    hasApplicationRecord(applicationType) {
+      switch (applicationType) {
+        case "equipment":
+          return this.rentalOrders.length > 0;
+        case "employee":
+          return this.employees.length > 0;
+        case "venue_map":
+          return !!this.venueMap;
+        case "food_product":
+          return this.foodProducts.length > 0;
+        case "purchase_list":
+          return this.purchaseLists.length > 0;
+        case "cooking_process_order":
+          return this.cookingProcessOrders.length > 0;
+        default:
+          return false;
+      }
+    },
     getSubmissionStatusValue(applicationType) {
       const submission = this.getSubmission(applicationType);
-      const status = submission?.status;
-      // statusが null, undefined, または空文字列の場合は「未提出」を返す
-      return this.normalizeStatus(status);
+      const hasApplication = this.hasApplicationRecord(applicationType);
+      return normalizeSubmissionRecordStatus(submission, hasApplication);
     },
-    normalizeStatus(value) {
-      if (value === false || value === null || value === undefined || value === "") {
-        return "unsubmitted";
-      }
-      return value;
-    },
-    getStatusMeta(status) {
-      const statusMap = {
-        unapproved: {
-          icon: "notification_important",
-          label: "未確認",
-        },
-        waiting_resubmission: {
-          icon: "autorenew",
-          label: "再提出待ち",
-        },
-        approved: {
-          icon: "check",
-          label: "承認済み",
-        },
-        unsubmitted: {
-          icon: "close",
-          label: "未提出",
-        },
-      };
-
-      return statusMap[status] || statusMap.unapproved;
-    },
-    getStatusSelectClass(value) {
-      const classMap = {
-        unapproved: "status-select--unapproved",
-        waiting_resubmission: "status-select--waiting-resubmission",
-        approved: "status-select--approved",
-        unsubmitted: "status-select--unsubmitted",
-      };
-
-      return classMap[value] || classMap.unapproved;
-    },
+    getStatusMeta: getSubmissionStatusMeta,
+    getStatusSelectClass: getSubmissionStatusSelectClass,
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済み";
       if (status === "not_send") return "送信しない";
@@ -1084,7 +1044,10 @@ export default {
       const comments = targetSubmission.comments || [];
       const commentIndex = comments.findIndex((item) => item.id === comment.id);
       if (commentIndex >= 0) {
-        comments.splice(commentIndex, 1, { ...comments[commentIndex], ...comment });
+        comments.splice(commentIndex, 1, {
+          ...comments[commentIndex],
+          ...comment,
+        });
       } else {
         comments.push(comment);
       }
@@ -1148,11 +1111,15 @@ export default {
       return shop ? shop.name : "-";
     },
     getRentalItemName(rentalItemID) {
-      const rentalItem = this.rentalItems.find((item) => item.id === rentalItemID);
+      const rentalItem = this.rentalItems.find(
+        (item) => item.id === rentalItemID
+      );
       return rentalItem ? rentalItem.name : "-";
     },
     getFoodProductName(foodProductID) {
-      const foodProduct = this.foodProducts.find((item) => item.id === foodProductID);
+      const foodProduct = this.foodProducts.find(
+        (item) => item.id === foodProductID
+      );
       return foodProduct ? foodProduct.name : "販売品";
     },
     formatStoolTest(stoolTestStatus) {
@@ -1241,134 +1208,6 @@ export default {
   width: 100%;
   padding: 0;
   margin: 0;
-}
-
-.comment-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.comment-history {
-  width: 100%;
-  margin-top: 16px;
-}
-
-.message-template-panel {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.message-template-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent-8);
-}
-
-.message-template-select {
-  width: 100%;
-  min-height: 40px;
-  padding: 8px 10px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 14px;
-}
-
-.message-template-select:focus {
-  outline: none;
-  border-color: var(--button-primary);
-}
-
-.message-send-result {
-  margin: 0;
-  font-size: 13px;
-  color: var(--accent-8);
-}
-
-.comment-accordion {
-  width: 100%;
-  border: 1px solid var(--accent-2);
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-top: 8px;
-  background: #fff;
-}
-
-.comment-accordion summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.comment-body {
-  white-space: pre-wrap;
-  margin: 10px 0 4px;
-}
-
-.comment-textarea {
-  width: 100%;
-  height: 300px;
-  padding: 12px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-.comment-textarea:focus {
-  outline: none;
-  border-color: var(--button-primary);
-}
-
-.comment-textarea:disabled {
-  background: #f5f5f5;
-  color: #777;
-  cursor: not-allowed;
-}
-
-.mail-preview-field {
-  width: 100%;
-}
-
-.mail-preview-field p,
-.mail-preview-field pre {
-  width: 500px;
-  overflow-y: auto;
-  margin: 0;
-  padding: 12px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  background: #fafafa;
-  color: #222;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.65;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.mail-preview-field p {
-  min-height: 20px;
-}
-
-.mail-preview-field pre {
-  min-height: 220px;
-  max-height: 380px;
-}
-
-.mail-preview-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
 }
 
 .textarea-container {
@@ -1632,6 +1471,8 @@ export default {
 .sticky-right-column {
   position: sticky;
   top: 16px;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 .mail-delivery-status {

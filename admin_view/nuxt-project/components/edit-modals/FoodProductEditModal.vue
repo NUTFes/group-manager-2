@@ -9,7 +9,11 @@
         <h3>調理するか</h3>
         <select v-model="isCooking">
           <option disabled value="">選択してください</option>
-          <option v-for="isCook in isCookingList" :key="isCook.id" :value="isCook.value">
+          <option
+            v-for="isCook in isCookingList"
+            :key="isCook.id"
+            :value="isCook.value"
+          >
             {{ isCook.text }}
           </option>
         </select>
@@ -69,7 +73,9 @@ export default {
       const foodProduct = this.getFoodProduct();
       const name = this.name?.trim();
 
-      if (!foodProduct.group_id) {
+      const groupId = foodProduct.group_id || this.$route?.params?.id;
+
+      if (!groupId) {
         this.$emit("error", "団体情報が取得できませんでした");
         return;
       }
@@ -79,17 +85,17 @@ export default {
         return;
       }
 
-      const query = new URLSearchParams({
-        group_id: String(foodProduct.group_id ?? ""),
+      const data = {
+        group_id: String(groupId),
         name,
         is_cooking: String(this.isCooking ?? ""),
         first_day_num: String(this.first ?? ""),
         second_day_num: String(this.second ?? ""),
-      }).toString();
-      const url = `/food_products/${foodProduct.id}?${query}`;
+      };
+      const url = `/food_products/${foodProduct.id}`;
 
       try {
-        const response = await this.$axios.$put(url);
+        const response = await this.$axios.$put(url, data);
         const savedId = response?.data?.id;
 
         if (typeof savedId === "undefined") {

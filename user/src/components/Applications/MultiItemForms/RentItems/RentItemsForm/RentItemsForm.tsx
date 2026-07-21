@@ -14,14 +14,14 @@ import { LOCATION_TYPES } from '../RentItemsForm/schema';
 type RentItemsFormProps = {
   groupId: number;
   groupCategoryId?: number; // 団体カテゴリID
-  isDeadline: boolean;
+  isEditable: boolean;
   status?: HealthCenterSubmissionStatus;
 };
 
 const RentItemsForm: FC<RentItemsFormProps> = ({
   groupId,
   groupCategoryId,
-  isDeadline,
+  isEditable,
   status,
 }) => {
   const {
@@ -76,10 +76,9 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   // isDeclinedStateLoadingがtrueの間は非同期チェック完了前なので、この分岐を保留する
   if (
     !isDeclinedStateLoading &&
-    !isDeadline &&
+    !isEditable &&
     !hasExisting &&
-    hasExplicitlyDeclinedItems === false &&
-    status !== 'waiting_resubmission'
+    hasExplicitlyDeclinedItems === false
   ) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
@@ -122,7 +121,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </p>
             <p>{rentItemsFormTexts.summary.noApplication.description}</p>
           </div>
-          {(isDeadline || status === 'waiting_resubmission') && (
+          {isEditable && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
               <Button
                 size="pc"
@@ -188,7 +187,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           ))}
         </div>
 
-        {(isDeadline || status === 'waiting_resubmission') && (
+        {isEditable && (
           <div className="mt-4 flex w-full items-center justify-center gap-4">
             <Button
               size="pc"

@@ -149,9 +149,6 @@ export const useRentItemsFormHooks = (
     return DEFAULT_MAX_COUNT;
   };
 
-  // 再提出判定
-  const isResubmission = status === 'waiting_resubmission';
-
   const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
@@ -850,6 +847,5 @@ export const useRentItemsFormHooks = (
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
     updateStatus,
-    isResubmission,
   };
 };

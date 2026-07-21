@@ -39,6 +39,7 @@
                 <div v-else>
                   <img
                     :src="venue_map.venue_map.picture_path"
+                    referrerpolicy="no-referrer"
                     style="width: 40%; height: 40%"
                   />
                 </div>
@@ -93,7 +94,6 @@
 </template>
 
 <script>
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
@@ -151,108 +151,6 @@ export default {
       const url = "/api/v1/get_venue_map_for_admin_view/" + id;
       const res = await this.$axios.$get(url);
       this.venue_map = res.data[0];
-    },
-    fileUpload(event) {
-      this.files = event.target.files;
-      if (this.files.length > 0) {
-        const file = this.files[0];
-
-        const validFileName = ["png", "jpeg", "jpg"];
-        const fileName = file.name.split(".").pop().toLowerCase();
-        this.isInvalidFile = !validFileName.includes(fileName);
-        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+$/;
-        const FILE_SIZE_LIMIT = 20 * 1024 * 1024; // 20MB
-        this.isFileSizeCheck = file.size > FILE_SIZE_LIMIT;
-        
-        // ファイルサイズのバリデーション
-        if(this.isFileSizeCheck){
-          this.openSnackBar(
-            "ファイルサイズは20MB以下にしてください。"
-          );
-          this.isFileSizeCheck = true;
-        // ファイル形式のバリデーション
-        } else if (this.isInvalidFile) {
-          this.openSnackBar(
-            "ファイル形式は[.pngか.jpeg又は.jpg]にしてください。"
-          );
-          this.isInvalidFile = true;
-          return;
-          // ファイル名のバリデーション。「^\/:*?"<>|\r\n」が含まれているかどうかのチェック
-        } else if (!fileNameRegex.test(file.name)) {
-          this.openSnackBar(
-            "ファイル名には、日本語・英数字・ハイフン（-）・アンダースコア（_）・スペース「」が使用できます。"
-          );
-          this.isFileCheck = true;
-          return;
-        } else {
-          this.isInvalidFile = false;
-          this.isFileCheck = false;
-          this.isFileSizeCheck = false;
-          this.isFile = true;
-        }
-      }
-    },
-    edit() {
-      for (let f of this.files) {
-        let storageRef = ref(this.$storage, f.name);
-        let uploadTask = uploadBytesResumable(storageRef, f);
-        this.run(uploadTask);
-      }
-    },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "待機";
-              this.isPush.disabled = true;
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const data = {
-              group_id: this.venue_map.group.id,
-              picture_name: uploadTask.snapshot.ref.name,
-              picture_path: downloadURL,
-            };
-
-            if (this.venue_map.venue_map) {
-              //put
-              const editUrl = `/venue_maps/${this.venue_map.venue_map.id}`;
-              this.$axios.$put(editUrl, data).then((response) => {
-                this.reload(response.data.group_id);
-                this.closeEditModal();
-                this.openSnackBar("模擬店平面図を編集しました");
-                this.isPush.disabled = false;
-                this.files = null;
-              });
-            } else {
-              //post
-              const postUrl = `/venue_maps?group_id=${this.venue_map.group.id}`;
-              this.$axios.$post(postUrl, data).then((response) => {
-                this.reload(response.data.group_id);
-                this.closeEditModal();
-                this.openSnackBar("模擬店平面図を登録しました");
-                this.isPush.disabled = false;
-                this.files = null;
-              });
-            }
-          });
-        }
-      );
     },
     async destroy() {
       const delUrl = "/venue_maps/" + this.venue_map.venue_map.id;

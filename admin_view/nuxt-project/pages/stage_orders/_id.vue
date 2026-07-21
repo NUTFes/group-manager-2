@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>晴れ希望</th>
-            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ formatWeather(stageOrder.stage_order.is_sunny) }}</td>
           </tr>
           <tr>
             <th>希望日</th>
@@ -47,11 +47,11 @@
           </tr>
           <tr>
             <th>第一希望</th>
-            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
           </tr>
           <tr>
             <th>第二希望</th>
-            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
           </tr>
           <tr>
             <th>準備時間幅</th>
@@ -232,6 +232,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatWeather, timeBoxOptions } from '~/utils/constants';
 export default {
   watchQuery: ["page"],
   data() {
@@ -245,31 +246,7 @@ export default {
         { id: 1, text: "はい", value: true },
         { id: 2, text: "いいえ", value: false },
       ],
-      timeBox: [
-        "5分",
-        "10分",
-        "15分",
-        "20分",
-        "25分",
-        "30分",
-        "35分",
-        "40分",
-        "45分",
-        "50分",
-        "55分",
-        "60分",
-        "65分",
-        "70分",
-        "75分",
-        "80分",
-        "90分",
-        "95分",
-        "100分",
-        "105分",
-        "110分",
-        "115分",
-        "120分",
-      ],
+      timeBox: timeBoxOptions,
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
       minute_range: [
         "00",
@@ -335,6 +312,7 @@ export default {
     }
   },
   methods: {
+    formatWeather,
     async openEditModal() {
       const groupsListUrl =
         "/api/v1/get_groups_refinemented_by_current_fes_year";
