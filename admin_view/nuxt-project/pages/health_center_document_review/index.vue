@@ -519,6 +519,7 @@ export default {
         );
         group.group.is_health_center_submission_target =
           response.data.is_health_center_submission_target;
+        this.groups = this.filterGroups(this.searchText);
       } catch (error) {
         if (error?.response?.status === 401) {
           this.$router.push("/reauthentication_required");
