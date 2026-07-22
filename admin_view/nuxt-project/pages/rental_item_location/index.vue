@@ -350,6 +350,7 @@ export default {
   },
 
   mounted() {
+    if (!this.$role(this.roleID).assign_items.read) return;
     this.fetchDataFromDB();
   },
 
