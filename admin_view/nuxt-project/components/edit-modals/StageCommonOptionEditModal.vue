@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     stageCommonOption: {
@@ -83,11 +85,13 @@ export default {
         camera_permission: String(this.cameraPermission),
         loud_sound: String(this.loudSound),
       };
-      const url = `/stage_common_options/${sco.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", sco.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "ステージオプション",
+        request: () =>
+          sco.id
+            ? this.$axios.$put(`/stage_common_options/${sco.id}`, data)
+            : this.$axios.$post(`/stage_common_options`, data),
       });
     },
   },

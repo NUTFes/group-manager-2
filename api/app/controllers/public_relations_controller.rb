@@ -14,8 +14,12 @@ class PublicRelationsController < ApplicationController
   end
 
   def create
-    @public_relation = PublicRelation.create(public_relation_params)
-    render json: fmt(created, @public_relation)
+    @public_relation = PublicRelation.new(public_relation_params)
+    if @public_relation.save
+      render json: fmt(created, @public_relation)
+    else
+      render_validation_errors(@public_relation)
+    end
   end
 
   def update
@@ -23,9 +27,13 @@ class PublicRelationsController < ApplicationController
     old_imgur_deletehash = @public_relation.imgur_deletehash
 
     updated = @public_relation.update(public_relation_params)
-    ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path) if updated
+    unless updated
+      render_validation_errors(@public_relation)
+      return
+    end
 
-    render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
+    ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path)
+    render json: fmt(ok, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy

@@ -20,15 +20,22 @@ class RentalOrdersController < ApplicationController
   # POST /rental_orders
   # POST /rental_orders.json
   def create
-    @rental_order = RentalOrder.create(rental_order_params)
-    render json: fmt(created, @rental_order)
+    @rental_order = RentalOrder.new(rental_order_params)
+    if @rental_order.save
+      render json: fmt(created, @rental_order)
+    else
+      render_validation_errors(@rental_order)
+    end
   end
 
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
-    @rental_order.update(rental_order_params)
-    render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
+    if @rental_order.update(rental_order_params)
+      render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
+    else
+      render_validation_errors(@rental_order)
+    end
   end
 
   # DELETE /rental_orders/1

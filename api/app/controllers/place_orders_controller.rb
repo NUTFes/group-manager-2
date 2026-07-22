@@ -20,15 +20,22 @@ class PlaceOrdersController < ApplicationController
   # POST /place_orders
   # POST /place_orders.json
   def create
-    @place_order = PlaceOrder.create(place_order_params)
-    render json: fmt(created, @place_order)
+    @place_order = PlaceOrder.new(place_order_params)
+    if @place_order.save
+      render json: fmt(created, @place_order)
+    else
+      render_validation_errors(@place_order)
+    end
   end
 
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
-    @place_order.update(place_order_params)
-    render json: fmt(created, @place_order, "Updated place_order id = #{params[:id]}")
+    if @place_order.update(place_order_params)
+      render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
+    else
+      render_validation_errors(@place_order)
+    end
   end
 
   # DELETE /place_orders/1

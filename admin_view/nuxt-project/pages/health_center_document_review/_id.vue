@@ -53,7 +53,7 @@
       <button
         type="button"
         class="side-nav-button"
-        :disabled="!prevGroupId"
+        :disabled="!prevGroupId || isNavigatingGroup"
         aria-label="前の食販団体へ移動"
         @click="onPrevGroup"
       >
@@ -64,7 +64,7 @@
       <button
         type="button"
         class="side-nav-button"
-        :disabled="!nextGroupId"
+        :disabled="!nextGroupId || isNavigatingGroup"
         aria-label="次の食販団体へ移動"
         @click="onNextGroup"
       >
@@ -539,6 +539,7 @@
       :food-product="selectedFoodProduct"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsPurchaseListEditModal
@@ -551,6 +552,7 @@
       :shops="shops"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsEmployeeEditModal
@@ -560,6 +562,7 @@
       :employee="selectedEmployee"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsVenueMapEditModal
@@ -579,6 +582,7 @@
       :rental-items="rentalItems"
       @close="closeEditModal"
       @saved="onEditorSaved"
+      @error="openEditError"
     />
 
     <EditModalsCookingProcessOrderEditModal
@@ -615,6 +619,62 @@ const HEALTH_CENTER_COMMENT_MAIL_RESEND_ENDPOINT =
   "/api/v1/resend_health_center_submission_status_comment_mail";
 const MESSAGE_TEMPLATES_ENDPOINT = "/api/v1/message_templates";
 const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
+// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
+// 前後移動ボタンでも維持するために参照するキーのprefix。
+const HEALTH_CENTER_DOCUMENT_REVIEW_INDEX_PATH =
+  "/health_center_document_review";
+
+function getStoredIndexFilters(prefix) {
+  if (typeof localStorage === "undefined") return {};
+
+  const toNumberOrNull = (value) =>
+    value === null || value === undefined ? null : Number(value);
+
+  return {
+    fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
+    isInternational: toNumberOrNull(
+      localStorage.getItem(prefix + "RefInternational")
+    ),
+    isExternal: toNumberOrNull(localStorage.getItem(prefix + "RefExternal")),
+  };
+}
+
+// index.vue側の絞り込みUIと合わせた3値フィルタの意味:
+// 0=絞り込みなし / 1=該当するものだけ / 2=該当しないものだけ
+function matchesTriStateFilter(filterValue, actualValue) {
+  return (
+    filterValue === 0 ||
+    (filterValue === 1 && actualValue === true) ||
+    (filterValue === 2 && !actualValue)
+  );
+}
+
+// 食販団体一覧画面(index.vue)のfilterGroupsと同じ条件で絞り込む。
+// カテゴリは常に「食品販売」(1)固定（index.vue側も同様）。
+function filterFoodSalesGroupIds(
+  items,
+  { fesYearId, isInternational = 0, isExternal = 0 }
+) {
+  return items
+    .filter((item) => {
+      const categoryId =
+        typeof item.group_category === "number"
+          ? item.group_category
+          : item.group_category?.id;
+      const yearId = item.group?.fes_year_id || item.fes_year?.id;
+      const groupIsInternational = item.group?.is_international;
+      const groupIsExternal = item.group?.is_external;
+
+      return (
+        categoryId === 1 &&
+        (fesYearId === 0 || yearId === fesYearId) &&
+        matchesTriStateFilter(isInternational, groupIsInternational) &&
+        matchesTriStateFilter(isExternal, groupIsExternal)
+      );
+    })
+    .map((item) => item.group.id)
+    .sort((a, b) => a - b);
+}
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
   const getOrEmpty = async (url, fallbackValue) => {
@@ -632,33 +692,42 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     HEALTH_CENTER_SHOW_ENDPOINT + routeId
   );
 
-  const currentYearRes = await $axios.$get("/user_page_settings/1");
+  // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
+  // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・国際・学外)が
+  // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
+  const viewedGroupFesYearId = groupRes.data.group.fes_year_id;
+  const storedFilters = getStoredIndexFilters(
+    HEALTH_CENTER_DOCUMENT_REVIEW_INDEX_PATH
+  );
+  const effectiveFesYearId = storedFilters.fesYearId ?? viewedGroupFesYearId;
+
   let foodSalesGroupsRes;
   try {
     foodSalesGroupsRes = await $axios.$get(HEALTH_CENTER_REFINEMENT_ENDPOINT);
   } catch (error) {
     if (error?.response?.status === 404) {
       const legacyUrl =
-        LEGACY_REFINEMENT_ENDPOINT +
-        "?fes_year_id=" +
-        currentYearRes.data.fes_year_id;
+        LEGACY_REFINEMENT_ENDPOINT + "?fes_year_id=" + effectiveFesYearId;
       foodSalesGroupsRes = await $axios.$post(legacyUrl);
     } else {
       throw error;
     }
   }
-  const foodSalesGroupIds = foodSalesGroupsRes.data
-    .filter((item) => {
-      const categoryId =
-        typeof item.group_category === "number"
-          ? item.group_category
-          : item.group_category?.id;
-      const yearId = item.group?.fes_year_id || item.fes_year?.id;
 
-      return categoryId === 1 && yearId === currentYearRes.data.fes_year_id;
-    })
-    .map((item) => item.group.id)
-    .sort((a, b) => a - b);
+  let foodSalesGroupIds = filterFoodSalesGroupIds(foodSalesGroupsRes.data, {
+    fesYearId: effectiveFesYearId,
+    isInternational: storedFilters.isInternational ?? 0,
+    isExternal: storedFilters.isExternal ?? 0,
+  });
+
+  // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
+  // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
+  // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
+  if (!foodSalesGroupIds.includes(Number(routeId))) {
+    foodSalesGroupIds = filterFoodSalesGroupIds(foodSalesGroupsRes.data, {
+      fesYearId: viewedGroupFesYearId,
+    });
+  }
 
   const [
     foodProducts,
@@ -749,6 +818,7 @@ export default {
       selectedEmployeeId: null,
       selectedRentalOrderId: null,
       foodSalesGroupIds: [],
+      isNavigatingGroup: false,
       selectedFoodProduct: null,
       selectedPurchaseList: null,
       selectedEmployee: null,
@@ -851,16 +921,29 @@ export default {
           this.$router.push("/reauthentication_required");
           return;
         }
-        throw error;
+        this.openEditError("データの再取得に失敗しました。再読み込みしてください。");
       }
     },
     onPrevGroup() {
-      if (!this.prevGroupId) return;
-      this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
+      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
+      if (this.isNavigatingGroup || !this.prevGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/health_center_document_review/${this.prevGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     onNextGroup() {
-      if (!this.nextGroupId) return;
-      this.$router.push(`/health_center_document_review/${this.nextGroupId}`);
+      if (this.isNavigatingGroup || !this.nextGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/health_center_document_review/${this.nextGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     getSubmission(applicationType) {
       return this.submissions.find(

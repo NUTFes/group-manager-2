@@ -20,15 +20,22 @@ class StageOrdersController < ApplicationController
   # POST /stage_orders
   # POST /stage_orders.json
   def create
-    @stage_order = StageOrder.create(stage_order_params)
-    render json: fmt(created, @stage_order)
+    @stage_order = StageOrder.new(stage_order_params)
+    if @stage_order.save
+      render json: fmt(created, @stage_order)
+    else
+      render_validation_errors(@stage_order)
+    end
   end
 
   # PATCH/PUT /stage_orders/1
   # PATCH/PUT /stage_orders/1.json
   def update
-    @stage_order.update(stage_order_params)
-    render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
+    if @stage_order.update(stage_order_params)
+      render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
+    else
+      render_validation_errors(@stage_order)
+    end
   end
 
   # DELETE /stage_orders/1

@@ -73,7 +73,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_equal 201, response.parsed_body['status']['code']
+    assert_equal 200, response.parsed_body['status']['code']
     assert_equal 'updated-public-relation-deletehash', @public_relation.reload.imgur_deletehash
   end
 

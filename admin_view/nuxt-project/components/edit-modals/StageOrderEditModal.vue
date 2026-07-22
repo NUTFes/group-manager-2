@@ -72,6 +72,7 @@
 
 <script>
 import { timeBoxOptions } from "../../utils/constants";
+import { saveEditModal } from "~/utils/edit-modal-save";
 
 export default {
   props: {
@@ -134,11 +135,13 @@ export default {
         prepare_time_interval: this.prepareTimeInterval ?? "",
         cleanup_time_interval: this.cleanupTimeInterval ?? "",
       };
-      const url = `/stage_orders/${so.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", so.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "ステージ申請",
+        request: () =>
+          so.id
+            ? this.$axios.$put(`/stage_orders/${so.id}`, data)
+            : this.$axios.$post(`/stage_orders`, data),
       });
     },
   },

@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     powerOrder: {
@@ -74,11 +76,13 @@ export default {
         model: this.model ?? "",
         item_url: this.itemUrl ?? "",
       };
-      const url = `/api/v1/power_orders/${powerOrder.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", powerOrder.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "電力申請",
+        request: () =>
+          powerOrder.id
+            ? this.$axios.$put(`/api/v1/power_orders/${powerOrder.id}`, data)
+            : this.$axios.$post(`/api/v1/power_orders`, data),
       });
     },
   },

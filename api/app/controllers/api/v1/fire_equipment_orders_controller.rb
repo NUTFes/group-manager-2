@@ -29,7 +29,7 @@ class Api::V1::FireEquipmentOrdersController < ApplicationController
     if fire_equipment_order.save
       render json: fmt(created, fire_equipment_order)
     else
-      render json: fmt(unprocessable_entity, [], fire_equipment_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(fire_equipment_order)
     end
   end
 
@@ -40,7 +40,7 @@ class Api::V1::FireEquipmentOrdersController < ApplicationController
     if fire_equipment_order.update(fire_equipment_order_params)
       render json: fmt(ok, fire_equipment_order)
     else
-      render json: fmt(unprocessable_entity, [], fire_equipment_order.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(fire_equipment_order)
     end
   end
 

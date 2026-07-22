@@ -26,8 +26,12 @@ class EmployeesController < ApplicationController
   # POST /employees
   # POST /employees.json
   def create
-    @employee = Employee.create(employee_params)
-    render json: fmt(created, @employee)
+    @employee = Employee.new(employee_params)
+    if @employee.save
+      render json: fmt(created, @employee)
+    else
+      render_validation_errors(@employee)
+    end
   end
 
   # POST /employees/upsert
@@ -69,7 +73,7 @@ class EmployeesController < ApplicationController
     if @employee.update(employee_params)
       render json: fmt(ok, @employee, "Updated employee id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @employee.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@employee)
     end
   end
 

@@ -4,8 +4,9 @@ class UnRegisteredGroupsController < ApplicationController
   before_action :set_un_registered_group, only: %i[show update destroy]
 
   # GET /un_registered_groups
+  # GET /un_registered_groups?group_id=1
   def index
-    @un_registered_groups = UnRegisteredGroup.all
+    @un_registered_groups = params[:group_id].present? ? UnRegisteredGroup.where(group_id: params[:group_id]) : UnRegisteredGroup.all
     render json: fmt(:ok, @un_registered_groups)
   end
 

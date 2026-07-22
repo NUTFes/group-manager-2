@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     employee: {
@@ -84,11 +86,13 @@ export default {
         student_id: this.studentId ?? "",
         stool_test_id: String(this.stoolTestID ?? ""),
       };
-      const url = `/employees/${employee.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", employee.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "従業員申請",
+        request: () =>
+          employee.id
+            ? this.$axios.$put(`/employees/${employee.id}`, data)
+            : this.$axios.$post(`/employees`, data),
       });
     },
   },

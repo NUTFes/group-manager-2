@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     purchaseList: {
@@ -117,11 +119,13 @@ export default {
         url: String(this.url ?? ""),
         remark: String(this.remark ?? ""),
       };
-      const url = `/purchase_lists/${purchaseList.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", purchaseList.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "購入品申請",
+        request: () =>
+          purchaseList.id
+            ? this.$axios.$put(`/purchase_lists/${purchaseList.id}`, data)
+            : this.$axios.$post(`/purchase_lists`, data),
       });
     },
   },

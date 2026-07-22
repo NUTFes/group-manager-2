@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     foodProduct: {
@@ -92,24 +94,14 @@ export default {
         first_day_num: String(this.first ?? ""),
         second_day_num: String(this.second ?? ""),
       };
-      const url = `/food_products/${foodProduct.id}`;
-
-      try {
-        const response = await this.$axios.$put(url, data);
-        const savedId = response?.data?.id;
-
-        if (typeof savedId === "undefined") {
-          console.error("販売品申請の保存レスポンスに id がありませんでした", response);
-          this.$emit("error", "保存に失敗しました");
-          return;
-        }
-
-        this.$emit("saved", savedId);
-        this.$emit("close");
-      } catch (error) {
-        console.error("販売品申請の編集に失敗しました", error);
-        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "販売品申請",
+        request: () =>
+          foodProduct.id
+            ? this.$axios.$put(`/food_products/${foodProduct.id}`, data)
+            : this.$axios.$post(`/food_products`, data),
+      });
     },
   },
 };

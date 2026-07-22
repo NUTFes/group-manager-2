@@ -44,6 +44,7 @@
 
 <script>
 import { departmentList, gradeList } from "../../utils/constants";
+import { saveEditModal } from "~/utils/edit-modal-save";
 
 export default {
   props: {
@@ -95,11 +96,13 @@ export default {
         tel: this.tel ?? "",
         email: this.email ?? "",
       };
-      const url = `/sub_reps/${sr.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", sr.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "副代表申請",
+        request: () =>
+          sr.id
+            ? this.$axios.$put(`/sub_reps/${sr.id}`, data)
+            : this.$axios.$post(`/sub_reps`, data),
       });
     },
   },
