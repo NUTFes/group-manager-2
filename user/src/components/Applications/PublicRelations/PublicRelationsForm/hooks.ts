@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -184,6 +185,7 @@ export const usePublicRelationsFormHooks = (
   const [fileName, setFileName] = useState<string | null>(
     publicRelation?.pictureName || null
   );
+  const { previewUrl, setPreviewUrlFromFile } = useImageObjectUrl();
 
   const values = watch();
 
@@ -204,7 +206,10 @@ export const usePublicRelationsFormHooks = (
   const validateImage = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
       const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+
       img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
         const isSquare = img.width === img.height;
         if (!isSquare) {
           setError('image', {
@@ -217,13 +222,14 @@ export const usePublicRelationsFormHooks = (
         resolve(true);
       };
       img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
         setError('image', {
           type: 'manual',
           message: validationTexts.imageLoadFailed,
         });
         resolve(false);
       };
-      img.src = URL.createObjectURL(file);
+      img.src = objectUrl;
     });
   };
 
@@ -240,6 +246,7 @@ export const usePublicRelationsFormHooks = (
         if (isValid) {
           setValue('image', file);
           setFileName(file.name);
+          setPreviewUrlFromFile(file);
         }
       }
     };
@@ -372,6 +379,7 @@ export const usePublicRelationsFormHooks = (
     setValue,
     values,
     fileName,
+    previewUrl,
     fetchError: fetchPrError,
     isFetching: isPrFetching,
     isMutating: createPrIsMutating || updatePrIsMutating,

@@ -5,6 +5,7 @@ import PublicRelationsForm from '@/components/Applications/PublicRelations/Publi
 import { usePublicRelationsHooks } from '@/components/Applications/PublicRelations/hooks';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
+import ImagePreview from '@/components/ImagePreview';
 
 type PublicRelationsProps = {
   groupId: number;
@@ -76,14 +77,37 @@ const PublicRelations: FC<PublicRelationsProps> = ({
   isRegistered,
 }) => {
   const {
-    formItem,
     isEditing,
     toEdit,
     publicRelation,
     isLoading,
     hasError,
+    getAnnounceStatus,
     publicRelationsTexts,
   } = usePublicRelationsHooks(groupId, isRegistered);
+
+  const formItem: FormItem[] = [
+    {
+      label: publicRelationsTexts.summaryLabels[0],
+      content: publicRelation?.blurb || publicRelationsTexts.states.missingText,
+    },
+    {
+      label: publicRelationsTexts.summaryLabels[1],
+      content: getAnnounceStatus(),
+    },
+    {
+      label: publicRelationsTexts.summaryLabels[2],
+      content: (
+        <ImagePreview
+          src={publicRelation?.picturePath}
+          alt={
+            publicRelation?.pictureName ?? publicRelationsTexts.summaryLabels[2]
+          }
+          emptyFallback={publicRelationsTexts.states.notSet}
+        />
+      ),
+    },
+  ];
 
   return (
     <AccordionMenu
