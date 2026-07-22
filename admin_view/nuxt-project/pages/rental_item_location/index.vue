@@ -128,9 +128,16 @@
       <section class="stock-area">
         <div class="order-group-header">
           <h2>貸出場所</h2>
+          <SearchDropDown
+          :nameList="placeCategoryList"
+          :on_click="refinementPlaces"
+          value="formatted_name"
+        >
+          {{ refPlaces }}
+        </SearchDropDown>
         </div>
         <div class="cards">
-          <template v-for="place in places">
+          <template v-for="place in filteredPlaces">
             <template v-for="[placeSourceBreakdown, groupsInPlace] in [[getPlaceSourceBreakdown(place.id), getGroupsInPlace(place.id)]]">
             <div
               :key="place.id" 
@@ -261,22 +268,29 @@ export default {
       groupCategoryList: [], 
       refCategoryID: 0,      
       refCategoryName: "ALL",
+      placeCategoryList: [],
+      refPlaceID: 0,
+      refPlaces: "ALL"
     };
   },
 
   async asyncData({ $axios }) {
-    const [yearsRes, categoriesRes] = await Promise.all([
+    const [yearsRes, categoriesRes, placeCategoriesRes] = await Promise.all([
       $axios.$get("/fes_years").catch(() => ({ data: [] })),
-      $axios.$get("/group_categories").catch(() => ({ data: [] }))
+      $axios.$get("/group_categories").catch(() => ({ data: [] })),
+      $axios.$get("/place_categories").catch(() => ({ data: [] }))
     ]);
 
     return {
       yearList: yearsRes.data || [],
       groupCategoryList: categoriesRes.data || [],
+      placeCategoryList: placeCategoriesRes.data || [],
       refYearID: 0,
       refYears: "ALL",
       refCategoryID: 0,
       refCategoryName: "ALL",
+      refPlaceID: 0,
+      refPlaces: "ALL"
     };
   },
 
@@ -292,6 +306,18 @@ export default {
         (id) => this.activeSettings[id].selected
       ).map(Number);
     },
+    validPlaceCategoryIds() {
+      if (this.refPlaceID === 0) return [];
+      const category = this.placeCategoryList.find(c => Number(c.id) === this.refPlaceID);
+      if (!category) return [this.refPlaceID];
+      return [this.refPlaceID, ...(category.descendant_ids || [])].map(Number);
+    },
+    filteredPlaces() {
+      if (this.refPlaceID === 0) return this.places;
+      return this.places.filter(p => 
+        this.validPlaceCategoryIds.includes(Number(p.place_category_id))
+      );
+    },
     activeAssignedGroups() {
       return this.groups.filter(g => {
         // 年度での絞り込み
@@ -299,7 +325,17 @@ export default {
         
         // 団体のカテゴリーでの絞り込み
         if (this.refCategoryID !== 0 && Number(g.group_category_id) !== this.refCategoryID) return false;
-        
+
+        // 場所での絞り込み
+        if (this.refPlaceID !== 0) {
+          const rentalPlaceId = this.getGroupRentalPlace(g.id);
+          if (!rentalPlaceId) return false;
+          const place = this.places.find(p => Number(p.id) === Number(rentalPlaceId));
+          if (!place || !this.validPlaceCategoryIds.includes(Number(place.place_category_id))) {
+            return false;
+          }
+        }
+
         const groupAssigns = this.assignments.filter(a => Number(a.group_id) === Number(g.id));
         if (groupAssigns.length === 0) return false;
 
@@ -545,6 +581,15 @@ export default {
         this.refCategoryID = item_id;
         const found = name_list.find(x => x.id === item_id);
         this.refCategoryName = item_id === 0 ? "ALL" : (found ? found.name : "Category");
+      }
+    },
+
+    // 場所の絞り込み
+    refinementPlaces(item_id, name_list) {
+      if (name_list === this.placeCategoryList) {
+        this.refPlaceID = item_id;
+        const found = name_list.find(x => x.id === item_id);
+        this.refPlaces = item_id === 0 ? "ALL" : (found ? found.name : "Place");
       }
     }
   }
