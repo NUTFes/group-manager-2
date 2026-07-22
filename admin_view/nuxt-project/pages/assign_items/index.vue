@@ -103,7 +103,7 @@
           <div 
             v-for="group in filteredGroups" 
             :key="group.id" 
-            draggable="true" 
+            :draggable="$role(roleID).assign_items.update"
             @dragstart="handleDragStartGroup($event, group)" 
             class="group-card"
             :class="{ 'is-fulfilled': isGroupFulfilled(group) }"
@@ -194,6 +194,7 @@
                   <input
                     type="number"
                     min="0"
+                    :disabled="!$role(roleID).assign_items.update"
                     :value="assign.assigned[itemId] || 0"
                     @blur="updateManualAssign($event, assign, itemId)"
                     @keyup.enter="$event.target.blur()"
@@ -472,6 +473,7 @@ export default {
 
     // ドラッグ＆ドロップと保存処理
     handleDragStartGroup(e, group) {
+      if (!this.$role(this.roleID).assign_items.update) return;
       e.dataTransfer.setData('type', 'GROUP');
       e.dataTransfer.setData('groupId', group.id);
     },
