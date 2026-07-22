@@ -16,6 +16,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     update_health_center_submission_target
   ]
 
+  before_action :require_admin!, only: %i[
+    update_health_center_submission_target
+  ]
+
   before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
@@ -75,10 +79,16 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
   end
 
-  # 保健所提出対象フラグの変更（食販企画のみ想定）
+  # 保健所提出対象フラグの変更（食販企画のみ）
   def update_health_center_submission_target
-    group = Group.find(params[:group_id])
-    target = ActiveModel::Type::Boolean.new.cast(params[:is_health_center_submission_target])
+    group = Group.find_by(id: params[:group_id], group_category_id: 1)
+    return render json: fmt(not_found, [], 'group not found'), status: :not_found if group.nil?
+
+    target = params[:is_health_center_submission_target]
+    unless [true, false].include?(target)
+      return render json: fmt(unprocessable_entity, [], 'is_health_center_submission_target must be true or false'),
+                    status: :unprocessable_entity
+    end
 
     if group.update(is_health_center_submission_target: target)
       render json: fmt(ok, group)
