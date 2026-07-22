@@ -13,6 +13,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     create_health_center_submission_status_comment_mail
     resend_health_center_submission_status_comment_mail
     sync_health_center_submission_statuses
+    update_health_center_submission_target
   ]
 
   before_action :require_group_id, only: %i[
@@ -72,6 +73,18 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   def update_health_center_submission_status
     @submission_status = HealthCenterSubmissionStatus.find(params[:id])
     save_health_center_submission_status(@submission_status, unprocessable_http_status: :unprocessable_entity)
+  end
+
+  # 保健所提出対象フラグの変更（食販企画のみ想定）
+  def update_health_center_submission_target
+    group = Group.find(params[:group_id])
+    target = ActiveModel::Type::Boolean.new.cast(params[:is_health_center_submission_target])
+
+    if group.update(is_health_center_submission_target: target)
+      render json: fmt(ok, group)
+    else
+      render json: fmt(unprocessable_entity, [], group.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # ステータス変更（未作成ならINSERT）

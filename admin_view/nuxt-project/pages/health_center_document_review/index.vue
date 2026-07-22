@@ -92,6 +92,18 @@
             @click="() => $router.push({ path: `/health_center_document_review/` + group.group.id })">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
+            <td @click.stop>
+              <SwitchButton
+                :isOn="group.group.is_health_center_submission_target"
+                :on_click="
+                  () =>
+                    onToggleSubmissionTarget(
+                      group,
+                      !group.group.is_health_center_submission_target
+                    )
+                "
+              />
+            </td>
             <td :class="{ unregistered: !isHealthCenterDocumentComplete(group) }">
               <div v-if="isHealthCenterDocumentComplete(group)">◯</div>
               <div v-else>✖️</div>
@@ -193,6 +205,7 @@ export default {
       headers: [
         "ID",
         "参加団体",
+        "提出対象",
         "結果",
         "調理工程申請",
         "販売品申請",
@@ -230,6 +243,7 @@ export default {
         { id: 2, value: "学内", bool: false },
       ],
       isSyncing: false,
+      updatingSubmissionTargetGroupId: null,
     };
   },
   computed: {
@@ -454,6 +468,28 @@ export default {
         alert("申請ステータスの更新に失敗しました");
       } finally {
         this.isSyncing = false;
+      }
+    },
+    async onToggleSubmissionTarget(group, checked) {
+      const groupId = group?.group?.id;
+      if (!groupId || this.updatingSubmissionTargetGroupId === groupId) return;
+
+      this.updatingSubmissionTargetGroupId = groupId;
+      try {
+        const response = await this.$axios.$patch(
+          `/api/v1/update_health_center_submission_target/${groupId}`,
+          { is_health_center_submission_target: checked }
+        );
+        group.group.is_health_center_submission_target =
+          response.data.is_health_center_submission_target;
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/reauthentication_required");
+          return;
+        }
+        alert("保健所提出対象の更新に失敗しました");
+      } finally {
+        this.updatingSubmissionTargetGroupId = null;
       }
     },
     // 申請しないデータかどうかを判定するメソッド

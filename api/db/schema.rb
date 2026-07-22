@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_11_000001) do
+ActiveRecord::Schema.define(version: 2026_07_22_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 2026_07_11_000001) do
     t.boolean "is_international"
     t.boolean "is_external"
     t.bigint "uses_place_id"
+    t.boolean "is_health_center_submission_target", default: true, null: false
     t.index ["uses_place_id"], name: "index_groups_on_uses_place_id"
   end
 
