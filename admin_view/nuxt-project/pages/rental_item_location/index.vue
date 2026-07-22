@@ -1,6 +1,6 @@
 <template>
-  <div class="assign_items">
-    <SubHeader pageTitle="物品貸出場所調整"></SubHeader>
+  <div class="assign_items" v-if="$role(roleID).assign_items.read">
+      <SubHeader pageTitle="物品貸出場所調整"></SubHeader>
     <div class="SearchContainer">
       <div class="SearchContainer-left">
         <SearchDropDown
@@ -60,8 +60,8 @@
           本当にこの団体の割り当てを削除しますか？<br>
         </h4>
         <div class="modal-actions">
-          <YesButton  iconName="delete" :on_click="confirmDelete">削除する</YesButton>
-          <NoButton  iconName="close" :on_click="closeDeleteModal">キャンセル</NoButton>
+          <YesButton v-if="$role(roleID).assign_items.delete" iconName="delete" :on_click="confirmDelete">削除する</YesButton>
+          <NoButton iconName="close" :on_click="closeDeleteModal">キャンセル</NoButton>
         </div>
       </div>
     </div>
@@ -86,13 +86,13 @@
         <div class="order-group-content">
           <template v-for="group in activeAssignedGroups">
             <template v-for="[rentalPlaceId, sourceBreakdown] in [[getGroupRentalPlace(group.id), getGroupSourceBreakdown(group.id)]]">
-              <div 
-                :key="group.id" 
-                draggable="true" 
-                @dragstart="handleDragStartGroup($event, group)" 
-                class="group-card"
-                :class="{ 'is-fulfilled': rentalPlaceId }"
-              >
+            <div
+              :key="group.id" 
+              draggable="true"
+              @dragstart="handleDragStartGroup($event, group)"
+              class="group-card"
+              :class="{ 'is-fulfilled': rentalPlaceId }"
+            >
                 <div class="group-name">
                   {{ group.name }}
                   <span class="assigned" v-if="rentalPlaceId">
@@ -132,12 +132,12 @@
         <div class="cards">
           <template v-for="place in places">
             <template v-for="[placeSourceBreakdown, groupsInPlace] in [[getPlaceSourceBreakdown(place.id), getGroupsInPlace(place.id)]]">
-              <div 
-                :key="place.id" 
-                @dragover.prevent 
-                @drop="handleDropOnPlace($event, place)" 
-                class="stock-card"
-              >
+            <div
+              :key="place.id" 
+              @dragover.prevent
+              @drop="handleDropOnPlace($event, place)"
+              class="stock-card"
+            >
                 <!-- 貸出場所情報（テーブルによる合計・内訳の常時表示） -->
                 <div class="stock-info">
                   <h3>{{ place.name }}</h3>
@@ -224,17 +224,18 @@
                           </span>
                         </div>
                       </div>
-                      <button class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
+                      <button v-if="$role(roleID).assign_items.delete" class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
                     </div>
                   </template>
+                  </div>
                 </div>
-              </div>
             </template>
           </template>
-        </div>
+          </div>
       </section>
     </main>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -356,6 +357,7 @@ export default {
     },
 
     async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
+      if (!this.$role(this.roleID).assign_items.update) return;
       if (groupAssignments.length === 0) return;
 
       const promises = groupAssignments.map(assign => {
@@ -379,6 +381,8 @@ export default {
     },
 
     async handleDropOnPlace(e, rentalPlace) {
+      if (!this.$role(this.roleID).assign_items.update) return;
+
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP_LOCATION') return;
       
@@ -400,6 +404,7 @@ export default {
     // 削除確認モーダルの制御
     // ----------------------------
     openDeleteModal(groupId) {
+      if (!this.$role(this.roleID).assign_items.delete) return;
       this.targetDeleteGroupId = groupId;
       this.isDeleteModalOpen = true;
     },
@@ -408,12 +413,14 @@ export default {
       this.targetDeleteGroupId = null;
     },
     async confirmDelete() {
+      if (!this.$role(this.roleID).assign_items.delete) return;
       if (!this.targetDeleteGroupId) return;
       await this.removeGroupFromPlace(this.targetDeleteGroupId);
       this.closeDeleteModal();
     },
 
     async removeGroupFromPlace(groupId) {
+      if (!this.$role(this.roleID).assign_items.delete) return;
       const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
       try {
         await this.updateAssignmentsPlace(groupAssignments, null);
