@@ -326,16 +326,6 @@ export default {
         // 団体のカテゴリーでの絞り込み
         if (this.refCategoryID !== 0 && Number(g.group_category_id) !== this.refCategoryID) return false;
 
-        // 場所での絞り込み
-        if (this.refPlaceID !== 0) {
-          const rentalPlaceId = this.getGroupRentalPlace(g.id);
-          if (!rentalPlaceId) return false;
-          const place = this.places.find(p => Number(p.id) === Number(rentalPlaceId));
-          if (!place || !this.validPlaceCategoryIds.includes(Number(place.place_category_id))) {
-            return false;
-          }
-        }
-
         const groupAssigns = this.assignments.filter(a => Number(a.group_id) === Number(g.id));
         if (groupAssigns.length === 0) return false;
 
