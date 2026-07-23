@@ -9,6 +9,7 @@ on:
       - "user/package.json"
       - "user/pnpm-lock.yaml"
       - "user/playwright.config.ts"
+      - "admin_view/nuxt-project/**"
       - "Makefile"
       - ".github/workflows/api-access-control.yml"
   pull_request:
@@ -19,6 +20,7 @@ on:
       - "user/package.json"
       - "user/pnpm-lock.yaml"
       - "user/playwright.config.ts"
+      - "admin_view/nuxt-project/**"
       - "Makefile"
       - ".github/workflows/api-access-control.yml"
 
@@ -86,3 +88,14 @@ jobs:
 
       - name: Run all E2E tests
         run: make test-e2e
+
+      - name: Install admin dependencies
+        working-directory: admin_view/nuxt-project
+        run: npm ci
+
+      - name: Install admin Playwright browser
+        working-directory: admin_view/nuxt-project
+        run: npx playwright install --with-deps chromium
+
+      - name: Run all admin E2E tests
+        run: make test-admin-e2e

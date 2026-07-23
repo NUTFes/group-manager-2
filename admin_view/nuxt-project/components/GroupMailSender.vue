@@ -254,7 +254,7 @@ export default {
       try {
         const payload = {
           group_id: this.groupId,
-          message_template_id: this.selectedMessageTemplateId,
+          message_template_id: Number(this.selectedMessageTemplateId),
           body: this.commentBody,
         };
 

@@ -33,7 +33,6 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     const sendButton = page.getByRole("button", { name: "送信" });
     await expect(sendButton).toBeDisabled();
     const commentTextarea = page.locator(".comment-textarea");
-    await commentTextarea.scrollIntoViewIfNeeded();
     await expect(commentTextarea).toBeDisabled();
     await page.locator("#message-template-select").selectOption("1");
     await expect(commentTextarea).toBeEnabled();
@@ -64,7 +63,7 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
     expect(requestsBeforeConfirm).toEqual([]);
 
     await page.getByRole("button", { name: "送信する" }).click();
-    await expect(page.getByText("メッセージを送信しました")).toBeVisible();
+    await expect(page.getByText("送信しました", { exact: true })).toBeVisible();
 
     const requests = await page.request
       .get(`${API_URL}/_e2e/requests`)
@@ -139,12 +138,14 @@ test.describe("保健所提出書類確認画面の再提出メール", () => {
 
     await page.getByRole("button", { name: "送信する" }).click();
     await expect(
-      page.getByText("メッセージの送信に失敗しました")
+      page.getByText("送信に失敗しました", { exact: true })
     ).toBeVisible();
-    await expect(page.getByText("未送信または送信失敗")).toBeVisible();
+    await expect(page.getByText("エラー", { exact: true })).toBeVisible();
     await page.getByText("2026/06/21").click();
     await page.getByRole("button", { name: "再送信" }).click();
-    await expect(page.getByText("メッセージを再送信しました")).toBeVisible();
+    await expect(
+      page.getByText("再送信しました", { exact: true })
+    ).toBeVisible();
 
     const requests = await page.request
       .get(`${API_URL}/_e2e/requests`)

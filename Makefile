@@ -90,6 +90,11 @@ test-e2e:
 		pnpm exec playwright install chromium >/dev/null && \
 		PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e'
 
+test-admin-e2e:
+	cd admin_view/nuxt-project && \
+		npm run test:e2e && \
+		PLAYWRIGHT_ADMIN_API_URL=http://localhost:3000 npm run test:e2e:real
+
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
 

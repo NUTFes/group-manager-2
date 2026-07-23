@@ -8,7 +8,8 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,vue,json,css}'",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:real": "playwright test --config playwright.real.config.js"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",

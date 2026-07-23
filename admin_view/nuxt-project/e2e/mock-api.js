@@ -3,6 +3,7 @@ const http = require("http");
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
 const unauthorizedPaths = new Set();
+const mailComments = [];
 
 const templates = [
   {
@@ -70,6 +71,7 @@ http
 
     if (url.pathname === "/_e2e/requests" && request.method === "DELETE") {
       requests.length = 0;
+      mailComments.length = 0;
       unauthorizedPaths.clear();
       sendJson(response, 200, { ok: true });
       return;
@@ -136,6 +138,17 @@ http
         });
         return;
       }
+    }
+
+    if (
+      url.pathname === "/api/v1/group_mail_comments" &&
+      request.method === "GET"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: mailComments,
+      });
+      return;
     }
 
     if (url.pathname === "/api/v1/message_templates/1") {
@@ -277,6 +290,10 @@ http
           payload.body === "送信失敗テスト" ? "failed" : "sent",
         created_at: "2026-06-21T10:00:00.000+09:00",
       };
+      mailComments.splice(0, mailComments.length, {
+        ...comment,
+        source: "health_center",
+      });
 
       if (payload.body === "送信失敗テスト") {
         sendJson(response, 502, {
@@ -299,6 +316,9 @@ http
       request.method === "POST"
     ) {
       requests.push({ method: "POST", path: url.pathname, payload: {} });
+      if (mailComments[0]) {
+        mailComments[0].mail_delivery_status = "sent";
+      }
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: {
