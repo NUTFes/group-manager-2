@@ -16,7 +16,7 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
     @registry = ApiAccessControlRegistry.new
   end
 
-  test 'every protected route rejects unauthenticated requests' do
+  test 'every business route rejects unauthenticated requests' do
     routes_for(%w[participant staff manager]).each do |route|
       request_route(route)
 
@@ -37,15 +37,6 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
       request_route(route, headers: auth_headers(@staff))
 
       assert_response :forbidden, route_label(route)
-    end
-  end
-
-  test 'every public route passes the access-control gate without authentication' do
-    routes_for(%w[public]).each do |route|
-      request_route(route)
-
-      assert_not_equal 401, response.status, route_label(route)
-      assert_not_equal 403, response.status, route_label(route)
     end
   end
 

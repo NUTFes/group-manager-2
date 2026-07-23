@@ -51,7 +51,7 @@ class ApplicationController < ActionController::API
 
   def enforce_api_access_policy!
     category = api_access_control_registry.category_for(controller_path, action_name)
-    return if %w[excluded public].include?(category)
+    return if category == 'excluded'
 
     if %w[participant staff manager].include?(category)
       authenticate_api_user!

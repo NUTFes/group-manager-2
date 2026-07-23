@@ -3,10 +3,11 @@ version: 1
 # This file is the runtime access policy. The registry test keeps every business
 # controller action synchronized with Rails routes.
 access:
-  public:
+  participant:
     api/v1/fes_dates_api: [get_current_fes_dates]
     api/v1/rental_items_api:
-      [get_inside_shop_rentable_items, get_outside_shop_rentable_items, get_stage_rentable_items]
+      [get_all_rentable_items, get_inside_shop_rentable_items,
+       get_outside_shop_rentable_items, get_stage_rentable_items]
     fes_dates: [index, show]
     group_categories: [index, show]
     news: [index, show]
@@ -15,13 +16,11 @@ access:
     shops: [index, show]
     stages: [index, show, show_rainy, show_sunny]
 
-  participant:
     announcements: [create, destroy, index, show, update]
     api/v1/current_user_api:
       [current_regist_info, edit_user_info, get_current_user_with_user_detail, get_user_detail_raw,
        is_login, password_reset]
     api/v1/food_products_api: [get_food_products_by_group_id]
-    api/v1/rental_items_api: [get_all_rentable_items]
     api/v1/users: [show]
     check_all_registered: [show]
     contact_persons: [create, destroy, index, show, update]
@@ -154,7 +153,5 @@ access:
     api/v1/users: [edit_user_info, reset_password, update]
     groups: [destroy]
     users: [destroy, simply_user_create, update]
-
-  system: {}
 
 unresolved_routes: {}

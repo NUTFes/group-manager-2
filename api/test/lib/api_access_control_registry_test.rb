@@ -23,13 +23,24 @@ class ApiAccessControlRegistryTest < ActiveSupport::TestCase
     assert_empty @registry.classified_actions.keys & @registry.unresolved_actions
   end
 
-  test 'all classified routes use a supported category' do
+  test 'access policy contains exactly the three supported role categories' do
     assert_equal 1, @registry.config.fetch('version')
-    assert_empty @registry.config.fetch('access').keys - ApiAccessControlRegistry::CATEGORIES
+    assert_equal(
+      ApiAccessControlRegistry::CATEGORIES.sort,
+      @registry.config.fetch('access').keys.sort
+    )
     assert(
       @registry.classified_actions.values.all? do |category|
         ApiAccessControlRegistry::CATEGORIES.include?(category)
       end
     )
+  end
+
+  test 'only authentication flow actions are marked unauthenticated' do
+    assert @registry.unauthenticated_auth_action?('api/auth/registrations', 'create')
+    assert @registry.unauthenticated_auth_action?('devise_token_auth/sessions', 'create')
+    assert @registry.unauthenticated_auth_action?('devise_token_auth/passwords', 'create')
+    assert_not @registry.unauthenticated_auth_action?('devise_token_auth/sessions', 'destroy')
+    assert_not @registry.unauthenticated_auth_action?('news', 'index')
   end
 end

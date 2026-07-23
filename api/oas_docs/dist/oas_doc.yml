@@ -672,6 +672,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.auth.Registration"
+      security: []
   "/api/auth/cancel":
     get:
       tags:
@@ -752,6 +753,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/api.auth.Session"
       deprecated: false
+      security: []
     post:
       tags:
       - api/auth/session
@@ -1494,8 +1496,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FesDatesApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/api/v1/get_refinement_fes_date_by_fes_year/{fes_year_id}":
     get:
       tags:
@@ -4014,8 +4019,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/api/v1/get_outside_shop_rentable_items":
     get:
       tags:
@@ -4035,8 +4043,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/api/v1/get_rentable_items":
     get:
       tags:
@@ -4104,8 +4115,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/api/v1/get_refinement_rental_orders":
     post:
       tags:
@@ -5837,6 +5851,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
     put:
       tags:
       - devise_token_auth/password
@@ -5854,6 +5869,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
     post:
       tags:
       - devise_token_auth/password
@@ -5875,6 +5891,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
   "/api/auth/password/edit":
     get:
       tags:
@@ -5895,6 +5912,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Password"
       deprecated: false
+      security: []
   "/api/auth/password/new":
     get:
       tags:
@@ -5915,6 +5933,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Password"
       deprecated: false
+      security: []
   "/api/auth/sign_in":
     get:
       tags:
@@ -5935,6 +5954,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Session"
       deprecated: false
+      security: []
     post:
       tags:
       - devise_token_auth/session
@@ -5956,6 +5976,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Session"
+      security: []
   "/api/auth/sign_out":
     delete:
       tags:
@@ -6238,8 +6259,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - fes_date
@@ -6286,6 +6310,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6294,7 +6320,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - fes_date
@@ -7133,8 +7158,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - group_category
@@ -7181,6 +7209,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -7189,7 +7219,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - group_category
@@ -7732,8 +7761,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - news
@@ -7780,6 +7812,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -7788,7 +7822,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - news
@@ -7900,8 +7933,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - place
@@ -7948,6 +7984,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -7956,7 +7994,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - place
@@ -10138,8 +10175,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - rental_item
@@ -10232,6 +10272,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10240,7 +10282,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - rental_item
@@ -10723,8 +10764,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - shop
@@ -10771,6 +10815,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10779,7 +10825,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - shop
@@ -10891,8 +10936,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/stages":
     get:
       tags:
@@ -10912,8 +10960,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
     post:
       tags:
       - stage
@@ -10960,6 +11011,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10968,7 +11021,6 @@ paths:
         required: true
         schema:
           type: integer
-      security: []
     patch:
       tags:
       - stage
@@ -11080,8 +11132,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
-      security: []
   "/stage_common_options":
     get:
       tags:

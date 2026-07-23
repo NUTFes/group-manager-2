@@ -7,9 +7,10 @@ require Rails.root.join('lib/openapi_access_control_sync')
 class OpenapiAccessControlSyncTest < ActiveSupport::TestCase
   self.fixture_table_names = []
 
-  test 'documents public and protected operations according to the registry' do
+  test 'documents every business operation as protected according to the registry' do
     document = {
       'paths' => {
+        '/api/auth/sign_in' => { 'post' => { 'responses' => { '200' => { 'description' => 'OK' } } } },
         '/news' => { 'get' => { 'responses' => { '200' => { 'description' => 'OK' } } } },
         '/announcements' => { 'get' => { 'responses' => {} } },
         '/groups' => { 'get' => { 'responses' => {} } },
@@ -25,7 +26,10 @@ class OpenapiAccessControlSyncTest < ActiveSupport::TestCase
       OpenapiAccessControlSync.new(document_path: Pathname(file.path)).call
       synced = YAML.safe_load_file(file.path, aliases: true).fetch('paths')
 
-      assert_equal [], synced.dig('/news', 'get', 'security')
+      assert_equal [], synced.dig('/api/auth/sign_in', 'post', 'security')
+      assert_not synced.dig('/news', 'get').key?('security')
+      assert synced.dig('/news', 'get', 'responses').key?('401')
+      assert synced.dig('/news', 'get', 'responses').key?('404')
       assert synced.dig('/announcements', 'get', 'responses').key?('401')
       assert synced.dig('/announcements', 'get', 'responses').key?('404')
       assert synced.dig('/groups', 'get', 'responses').key?('403')
@@ -46,13 +50,14 @@ class OpenapiAccessControlSyncTest < ActiveSupport::TestCase
       operation = paths.dig(path, method.downcase)
       assert operation, "OpenAPI operation missing: #{method} #{path}"
 
-      if category == 'public'
-        assert_equal [], operation['security'], "Public security mismatch: #{method} #{path}"
-      else
-        assert operation.fetch('responses').key?('401'), "401 missing: #{method} #{path}"
-      end
+      assert_not operation.key?('security'), "Operation-level security override remains: #{method} #{path}"
+      assert operation.fetch('responses').key?('401'), "401 missing: #{method} #{path}"
       assert operation.fetch('responses').key?('403'), "403 missing: #{method} #{path}" if role_restricted_categories.include?(category)
       assert operation.fetch('responses').key?('404'), "404 missing: #{method} #{path}" if category == 'participant'
     end
+
+    assert_equal [], paths.dig('/api/auth', 'post', 'security')
+    assert_equal [], paths.dig('/api/auth/sign_in', 'post', 'security')
+    assert_equal [], paths.dig('/api/auth/password', 'post', 'security')
   end
 end

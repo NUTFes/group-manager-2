@@ -245,6 +245,12 @@ test.describe('power and fire equipment resubmission status', () => {
     expect(response.status()).toBe(401);
   });
 
+  test('rejects unauthenticated access to a former public API', async () => {
+    const response = await api.get('/news');
+
+    expect(response.status()).toBe(401);
+  });
+
   test('rejects role 3 access to a staff API', async () => {
     const response = await api.get('/api/v1/fire_equipment_orders', {
       headers: authContext.headers,

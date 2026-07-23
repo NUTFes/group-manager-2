@@ -3,7 +3,17 @@
 require 'yaml'
 
 class ApiAccessControlRegistry
-  CATEGORIES = %w[public participant staff manager system].freeze
+  CATEGORIES = %w[participant staff manager].freeze
+  UNAUTHENTICATED_AUTH_ACTIONS = %w[
+    api/auth/registrations#create
+    api/auth/sessions#index
+    devise_token_auth/passwords#create
+    devise_token_auth/passwords#edit
+    devise_token_auth/passwords#new
+    devise_token_auth/passwords#update
+    devise_token_auth/sessions#create
+    devise_token_auth/sessions#new
+  ].freeze
   EXCLUDED_CONTROLLER_PREFIXES = %w[
     action_mailbox/
     active_storage/
@@ -47,6 +57,10 @@ class ApiAccessControlRegistry
     return 'unresolved' if unresolved_actions.include?(key)
 
     'unclassified'
+  end
+
+  def unauthenticated_auth_action?(controller, action)
+    UNAUTHENTICATED_AUTH_ACTIONS.include?(action_key(controller, action))
   end
 
   def routed_actions

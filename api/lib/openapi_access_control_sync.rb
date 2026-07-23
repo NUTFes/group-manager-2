@@ -28,6 +28,10 @@ class OpenapiAccessControlSync
           path_item.delete(method)
           next
         end
+        if category == 'unauthenticated_auth'
+          operation['security'] = []
+          next
+        end
         next unless ApiAccessControlRegistry::CATEGORIES.include?(category)
 
         apply_access_contract(operation, category)
@@ -52,18 +56,19 @@ class OpenapiAccessControlSync
       path = route.path.spec.to_s
                   .sub('(.:format)', '')
                   .gsub(/:([a-zA-Z_]+)/, '{\1}')
+      category = if registry.unauthenticated_auth_action?(controller, action)
+                   'unauthenticated_auth'
+                 else
+                   registry.category_for(controller, action)
+                 end
       route.verb.to_s.scan(/[A-Z]+/).each do |method|
-        categories[[path, method]] = registry.category_for(controller, action)
+        categories[[path, method]] = category
       end
     end
   end
 
   def apply_access_contract(operation, category)
-    if category == 'public'
-      operation['security'] = []
-      return
-    end
-
+    operation.delete('security')
     responses = operation['responses'] ||= {}
     responses['401'] ||= { 'description' => 'Unauthorized' }
     responses['403'] ||= { 'description' => 'Forbidden' } if %w[staff manager].include?(category)

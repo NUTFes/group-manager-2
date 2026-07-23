@@ -8,14 +8,14 @@ Issue #2136 の移行先となるアクセス区分を
 
 | 区分 | 認証 | 認可・スコープ |
 |---|---|---|
-| Public | 不要 | 公開を明示した参照専用API |
-| Participant | 必須 | `current_api_user.groups` 内のデータだけ操作可能 |
+| Participant | 必須 | role_id 1, 2, 3。参加団体向けAPI。団体依存データは `current_api_user.groups` 内だけ操作可能 |
 | Staff | 必須 | role_id 1, 2。管理画面、審査、帳票、マスタ管理 |
 | Manager | 必須 | role_id 1。ユーザー権限や他ユーザーの認証情報を変更する操作 |
-| System | 個別 | Webhookや内部連携ごとに署名、共有secretなどを定義 |
 
 StaffとManagerもParticipant APIを利用できる。Participant APIの区分は
 「role_id 3だけ」という意味ではなく、団体所有権によるスコープが必要という意味である。
+登録、ログイン、ログイン状態確認、パスワード再設定などの認証処理だけをアクセス台帳の対象外とし、
+業務APIには未認証でアクセスできるPublic区分を設けない。
 
 ## 2026-07-19時点の台帳
 
@@ -23,11 +23,9 @@ Rails内部、Action Mailbox、Active Storage、Devise Token Authのルートを
 
 | 区分 | action数 |
 |---|---:|
-| Public | 20 |
-| Participant | 121 |
+| Participant | 141 |
 | Staff | 226 |
 | Manager | 7 |
-| System | 0 |
 | 修正・削除待ち | 0 |
 | 合計 | 374 |
 
@@ -49,5 +47,6 @@ API変更のpushとPull Requestで実行する。
 台帳にない業務ルートは実行時にも拒否される。Participantの処理ではcontroller側で所有権スコープを適用し、
 別団体のIDは404にする。
 
-`make openapi` は台帳を使ってOpenAPI成果物も同期する。Publicには `security: []`、認証APIには401、
+`make openapi` は台帳を使ってOpenAPI成果物も同期する。未認証で利用する認証処理だけに
+`security: []`、全業務APIに401、
 Staff/Managerには403、Participantには所有権不一致の404を追加し、削除済みルートを成果物から除外する。

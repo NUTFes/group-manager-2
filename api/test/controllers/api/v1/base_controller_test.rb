@@ -106,11 +106,18 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  # 認証の例外系。公開用の貸出物品APIは未認証でも利用できる。
-  test 'unauthenticated request can access public rental item api' do
-    get '/api/v1/get_stage_rentable_items', as: :json
+  test 'general user can access formerly public rental item api after authentication' do
+    get '/api/v1/get_stage_rentable_items',
+        headers: auth_headers(@user),
+        as: :json
 
     assert_response :success
+  end
+
+  test 'formerly public rental item api rejects unauthenticated requests' do
+    get '/api/v1/get_stage_rentable_items', as: :json
+
+    assert_response :unauthorized
   end
 
   # 認証の失敗系。未認証リクエストは v1 API を利用できない。
