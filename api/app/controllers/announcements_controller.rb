@@ -6,7 +6,7 @@ class AnnouncementsController < ApplicationController
   # GET /announcements
   # GET /announcements.json
   def index
-    @announcements = participant_scope(Announcement)
+    @announcements = current_user_group_scope(Announcement)
     render json: fmt(ok, @announcements)
   end
 
@@ -47,7 +47,7 @@ class AnnouncementsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_announcement
-    @announcement = participant_record!(Announcement, params[:id])
+    @announcement = current_user_group_record!(Announcement, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

@@ -6,7 +6,7 @@ class ContactPersonsController < ApplicationController
   # GET /contact_persons
   # GET /contact_persons.json
   def index
-    @contact_persons = participant_scope(ContactPerson)
+    @contact_persons = current_user_group_scope(ContactPerson)
     render json: @contact_persons
   end
 
@@ -53,7 +53,7 @@ class ContactPersonsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_contact_person
-    @contact_person = participant_record!(ContactPerson, params[:id])
+    @contact_person = current_user_group_record!(ContactPerson, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

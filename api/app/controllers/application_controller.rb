@@ -53,7 +53,7 @@ class ApplicationController < ActionController::API
     category = api_access_control_registry.category_for(controller_path, action_name)
     return if category == 'excluded'
 
-    if %w[participant staff manager].include?(category)
+    if %w[user staff manager].include?(category)
       authenticate_api_user!
       return if performed?
     end
@@ -62,7 +62,7 @@ class ApplicationController < ActionController::API
     return if performed?
 
     require_manager! if category == 'manager'
-    return if performed? || %w[participant staff manager].include?(category)
+    return if performed? || %w[user staff manager].include?(category)
 
     render json: fmt({ code: 403, message: 'Forbidden' }), status: :forbidden
   end
@@ -113,12 +113,12 @@ class ApplicationController < ActionController::API
     nil
   end
 
-  def participant_scope(model)
+  def current_user_group_scope(model)
     model.where(group_id: current_api_user.groups.select(:id))
   end
 
-  def participant_record!(model, id)
-    record = participant_scope(model).find_by(id: id)
+  def current_user_group_record!(model, id)
+    record = current_user_group_scope(model).find_by(id: id)
     return record if record
 
     render json: fmt(not_found, [], 'Not Found'), status: :not_found

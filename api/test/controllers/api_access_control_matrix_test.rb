@@ -9,24 +9,24 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
   setup do
     Role.create!(id: Role::MANAGER_ID, name: 'manager')
     Role.create!(id: Role::STAFF_ID, name: 'staff')
-    Role.create!(id: Role::PARTICIPANT_ID, name: 'participant')
+    Role.create!(id: Role::USER_ID, name: 'user')
 
     @staff = create_user!('matrix-staff@example.com', Role::STAFF_ID)
-    @participant = create_user!('matrix-participant@example.com', Role::PARTICIPANT_ID)
+    @user = create_user!('matrix-user@example.com', Role::USER_ID)
     @registry = ApiAccessControlRegistry.new
   end
 
   test 'every business route rejects unauthenticated requests' do
-    routes_for(%w[participant staff manager]).each do |route|
+    routes_for(%w[user staff manager]).each do |route|
       request_route(route)
 
       assert_response :unauthorized, route_label(route)
     end
   end
 
-  test 'every staff and manager route rejects participants' do
+  test 'every staff and manager route rejects users' do
     routes_for(%w[staff manager]).each do |route|
-      request_route(route, headers: auth_headers(@participant))
+      request_route(route, headers: auth_headers(@user))
 
       assert_response :forbidden, route_label(route)
     end

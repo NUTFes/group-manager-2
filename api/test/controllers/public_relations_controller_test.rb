@@ -7,7 +7,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups]
 
   setup do
-    create_participant!
+    create_role_user!
     PublicRelation.delete_all
     @public_relation = PublicRelation.create!(
       group_id: groups(:one).id,
@@ -139,17 +139,17 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_participant!
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
-    @participant = User.find_or_initialize_by(id: 1)
-    @participant.update!(
+  def create_role_user!
+    Role.find_or_create_by!(id: Role::USER_ID) { |role| role.name = 'user' }
+    @user = User.find_or_initialize_by(id: 1)
+    @user.update!(
       name: 'public-relation-test', email: 'public-relation-test@example.com',
-      uid: 'public-relation-test@example.com', provider: 'email', role_id: 3,
+      uid: 'public-relation-test@example.com', provider: 'email', role_id: Role::USER_ID,
       password: 'password', password_confirmation: 'password'
     )
   end
 
   def auth_headers
-    @participant.create_new_auth_token
+    @user.create_new_auth_token
   end
 end

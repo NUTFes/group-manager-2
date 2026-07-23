@@ -7,7 +7,7 @@ class RentalOrdersController < ApplicationController
   # GET /rental_orders
   # GET /rental_orders.json
   def index
-    @rental_orders = participant_scope(RentalOrder)
+    @rental_orders = current_user_group_scope(RentalOrder)
     render json: fmt(ok, @rental_orders)
   end
 
@@ -60,7 +60,7 @@ class RentalOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rental_order
-    @rental_order = participant_record!(RentalOrder, params[:id])
+    @rental_order = current_user_group_record!(RentalOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.

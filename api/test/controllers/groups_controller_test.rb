@@ -7,17 +7,17 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     Role.find_or_create_by!(id: Role::MANAGER_ID) { |role| role.name = 'manager' }
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
+    Role.find_or_create_by!(id: Role::USER_ID) { |role| role.name = 'user' }
     @manager = create_user!('manager-groups-controller@example.com', Role::MANAGER_ID)
-    @participant = create_user!('participant-groups-controller@example.com', 3)
-    @other_participant = create_user!('other-participant-groups-controller@example.com', 3)
+    @user = create_user!('user-groups-controller@example.com', Role::USER_ID)
+    @other_user = create_user!('other-user-groups-controller@example.com', Role::USER_ID)
     @fes_year = FesYear.create!(year_num: 2026)
     @group_category = GroupCategory.create!(name: 'test category')
     @group = Group.create!(
       name: 'Test group',
       project_name: 'Test project',
       activity: 'Test activity',
-      user: @participant,
+      user: @user,
       fes_year: @fes_year,
       group_category: @group_category
     )
@@ -32,7 +32,7 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Group.count') do
       post groups_url,
            params: group_params.merge(name: 'Created group'),
-           headers: auth_headers(@participant).merge(skip_slack_header),
+           headers: auth_headers(@user).merge(skip_slack_header),
            as: :json
     end
 
@@ -40,47 +40,47 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show group' do
-    get group_url(@group), headers: auth_headers(@participant), as: :json
+    get group_url(@group), headers: auth_headers(@user), as: :json
     assert_response :success
   end
 
   test 'should update group' do
     patch group_url(@group),
           params: group_params.merge(name: 'Updated group'),
-          headers: auth_headers(@participant).merge(skip_slack_header),
+          headers: auth_headers(@user).merge(skip_slack_header),
           as: :json
 
     assert_response :success
     assert_equal 'Updated group', @group.reload.name
   end
 
-  test 'participant cannot access another participants group' do
+  test 'user cannot access another users group' do
     other_group = Group.create!(
       name: 'Other group',
       project_name: 'Other project',
       activity: 'Other activity',
-      user: @other_participant,
+      user: @other_user,
       fes_year: @fes_year,
       group_category: @group_category
     )
 
-    get group_url(other_group), headers: auth_headers(@participant), as: :json
+    get group_url(other_group), headers: auth_headers(@user), as: :json
     assert_response :not_found
 
     patch group_url(other_group),
           params: { name: 'Stolen group' },
-          headers: auth_headers(@participant).merge(skip_slack_header),
+          headers: auth_headers(@user).merge(skip_slack_header),
           as: :json
     assert_response :not_found
     assert_equal 'Other group', other_group.reload.name
   end
 
   test 'create ignores a supplied user id' do
-    assert_difference -> { @participant.groups.count }, 1 do
-      assert_no_difference -> { @other_participant.groups.count } do
+    assert_difference -> { @user.groups.count }, 1 do
+      assert_no_difference -> { @other_user.groups.count } do
         post groups_url,
-             params: group_params.merge(name: 'Owned group', user_id: @other_participant.id),
-             headers: auth_headers(@participant).merge(skip_slack_header),
+             params: group_params.merge(name: 'Owned group', user_id: @other_user.id),
+             headers: auth_headers(@user).merge(skip_slack_header),
              as: :json
       end
     end
@@ -118,7 +118,7 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
       fes_year_id: @group.fes_year_id,
       group_category_id: @group.group_category_id,
       project_name: @group.project_name,
-      user_id: @participant.id
+      user_id: @user.id
     }
   end
 

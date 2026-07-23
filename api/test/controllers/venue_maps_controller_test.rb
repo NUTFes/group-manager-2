@@ -7,7 +7,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups]
 
   setup do
-    create_participant!
+    create_role_user!
     HealthCenterSubmissionStatus.delete_all
     VenueMap.delete_all
     @venue_map = VenueMap.create!(
@@ -132,17 +132,17 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_participant!
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
-    @participant = User.find_or_initialize_by(id: 1)
-    @participant.update!(
+  def create_role_user!
+    Role.find_or_create_by!(id: Role::USER_ID) { |role| role.name = 'user' }
+    @user = User.find_or_initialize_by(id: 1)
+    @user.update!(
       name: 'venue-map-test', email: 'venue-map-test@example.com',
-      uid: 'venue-map-test@example.com', provider: 'email', role_id: 3,
+      uid: 'venue-map-test@example.com', provider: 'email', role_id: Role::USER_ID,
       password: 'password', password_confirmation: 'password'
     )
   end
 
   def auth_headers
-    @participant.create_new_auth_token
+    @user.create_new_auth_token
   end
 end

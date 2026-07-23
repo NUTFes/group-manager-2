@@ -7,7 +7,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups food_products cooking_process_orders]
 
   setup do
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
+    Role.find_or_create_by!(id: Role::USER_ID) { |role| role.name = 'user' }
     @user = User.find_or_initialize_by(id: 1)
     @user.update!(
       name: 'cooking-process-test',

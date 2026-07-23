@@ -6,7 +6,7 @@ class FireEquipmentOrdersController < ApplicationController
   # GET /fire_equipment_orders
   def index
     fes_year_id = params[:fes_year_id]
-    owned_orders = participant_scope(FireEquipmentOrder)
+    owned_orders = current_user_group_scope(FireEquipmentOrder)
     @fire_equipment_orders = if fes_year_id.present? && fes_year_id.to_i != 0
                                owned_orders.joins(:group).where(groups: { fes_year_id: fes_year_id })
                              else

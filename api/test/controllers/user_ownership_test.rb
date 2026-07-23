@@ -2,23 +2,23 @@
 
 require 'test_helper'
 
-class ParticipantOwnershipTest < ActionDispatch::IntegrationTest
+class UserOwnershipTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
   setup do
-    Role.create!(id: 3, name: 'participant')
-    @participant = create_user!('participant-ownership@example.com')
-    @other_participant = create_user!('other-participant-ownership@example.com')
+    Role.create!(id: Role::USER_ID, name: 'user')
+    @user = create_user!('user-ownership@example.com')
+    @other_user = create_user!('other-user-ownership@example.com')
     fes_year = FesYear.create!(year_num: 2026)
     group_category = GroupCategory.create!(name: 'ownership test')
-    @group = create_group!('Owned group', @participant, fes_year, group_category)
-    @other_group = create_group!('Other group', @other_participant, fes_year, group_category)
+    @group = create_group!('Owned group', @user, fes_year, group_category)
+    @other_group = create_group!('Other group', @other_user, fes_year, group_category)
     @announcement = Announcement.create!(group: @group, message: 'owned')
     @other_announcement = Announcement.create!(group: @other_group, message: 'other')
   end
 
-  test 'participant list is scoped to owned groups' do
-    get '/announcements', headers: auth_headers(@participant), as: :json
+  test 'user list is scoped to owned groups' do
+    get '/announcements', headers: auth_headers(@user), as: :json
 
     assert_response :success
     ids = response.parsed_body.fetch('data').pluck('id')
@@ -26,44 +26,44 @@ class ParticipantOwnershipTest < ActionDispatch::IntegrationTest
     assert_not_includes ids, @other_announcement.id
   end
 
-  test 'participant cannot read update or destroy another groups record' do
-    get "/announcements/#{@other_announcement.id}", headers: auth_headers(@participant), as: :json
+  test 'user cannot read update or destroy another groups record' do
+    get "/announcements/#{@other_announcement.id}", headers: auth_headers(@user), as: :json
     assert_response :not_found
 
     patch "/announcements/#{@other_announcement.id}",
           params: { message: 'stolen' },
-          headers: auth_headers(@participant),
+          headers: auth_headers(@user),
           as: :json
     assert_response :not_found
 
-    delete "/announcements/#{@other_announcement.id}", headers: auth_headers(@participant), as: :json
+    delete "/announcements/#{@other_announcement.id}", headers: auth_headers(@user), as: :json
     assert_response :not_found
     assert_equal 'other', @other_announcement.reload.message
   end
 
-  test 'participant cannot create or move a record into another group' do
+  test 'user cannot create or move a record into another group' do
     assert_no_difference('Announcement.count') do
       post '/announcements',
            params: { group_id: @other_group.id, message: 'stolen' },
-           headers: auth_headers(@participant),
+           headers: auth_headers(@user),
            as: :json
     end
     assert_response :not_found
 
     patch "/announcements/#{@announcement.id}",
           params: { group_id: @other_group.id },
-          headers: auth_headers(@participant),
+          headers: auth_headers(@user),
           as: :json
     assert_response :not_found
     assert_equal @group.id, @announcement.reload.group_id
   end
 
-  test 'participant bulk upsert rejects another group and another groups record id' do
+  test 'user bulk upsert rejects another group and another groups record id' do
     other_food_product = FoodProduct.create!(group: @other_group, name: 'other food')
 
     post '/food_products/upsert',
          params: { food_products: [{ group_id: @other_group.id, name: 'stolen' }] },
-         headers: auth_headers(@participant),
+         headers: auth_headers(@user),
          as: :json
     assert_response :not_found
 
@@ -71,21 +71,21 @@ class ParticipantOwnershipTest < ActionDispatch::IntegrationTest
          params: {
            food_products: [{ id: other_food_product.id, group_id: @group.id, name: 'stolen' }]
          },
-         headers: auth_headers(@participant),
+         headers: auth_headers(@user),
          as: :json
     assert_response :not_found
     assert_equal 'other food', other_food_product.reload.name
   end
 
-  test 'legacy v1 participant endpoint rejects another group' do
+  test 'legacy v1 user endpoint rejects another group' do
     get "/api/v1/get_food_products_by_group_id/#{@other_group.id}",
-        headers: auth_headers(@participant),
+        headers: auth_headers(@user),
         as: :json
 
     assert_response :not_found
   end
 
-  test 'participant group endpoints reject another group' do
+  test 'user group endpoints reject another group' do
     paths = [
       "/check_all_registered/#{@other_group.id}",
       "/food_products/group/#{@other_group.id}",
@@ -105,16 +105,16 @@ class ParticipantOwnershipTest < ActionDispatch::IntegrationTest
     ]
 
     paths.each do |path|
-      get path, headers: auth_headers(@participant), as: :json
+      get path, headers: auth_headers(@user), as: :json
       assert_response :not_found, "expected another group's resource to be hidden: GET #{path}"
     end
   end
 
-  test 'participant nested endpoint rejects another groups parent record' do
+  test 'user nested endpoint rejects another groups parent record' do
     other_food_product = FoodProduct.create!(group: @other_group, name: 'other food')
 
     get "/purchase_lists/food_product?food_product_ids[]=#{other_food_product.id}",
-        headers: auth_headers(@participant),
+        headers: auth_headers(@user),
         as: :json
 
     assert_response :not_found
@@ -130,7 +130,7 @@ class ParticipantOwnershipTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role_id: 3
+      role_id: Role::USER_ID
     )
   end
 

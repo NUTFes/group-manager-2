@@ -8,27 +8,27 @@ class UsersAccessControlTest < ActionDispatch::IntegrationTest
   setup do
     Role.create!(id: Role::MANAGER_ID, name: 'manager')
     Role.create!(id: Role::STAFF_ID, name: 'staff')
-    Role.create!(id: 3, name: 'participant')
+    Role.create!(id: Role::USER_ID, name: 'user')
 
     @manager = create_user!('manager-users-access@example.com', Role::MANAGER_ID)
     @staff = create_user!('staff-users-access@example.com', Role::STAFF_ID)
-    @participant = create_user!('participant-users-access@example.com', 3)
+    @user = create_user!('user-users-access@example.com', Role::USER_ID)
   end
 
   test 'unauthenticated request cannot access users endpoints' do
     get '/current_user', as: :json
     assert_response :unauthorized
 
-    put "/users/#{@participant.id}", params: { role_id: Role::STAFF_ID }, as: :json
+    put "/users/#{@user.id}", params: { role_id: Role::STAFF_ID }, as: :json
     assert_response :unauthorized
   end
 
-  test 'participant can access only their current user endpoint' do
-    get '/current_user', headers: auth_headers(@participant), as: :json
+  test 'user can access only their current user endpoint' do
+    get '/current_user', headers: auth_headers(@user), as: :json
     assert_response :success
-    assert_equal @participant.id, response.parsed_body.fetch('id')
+    assert_equal @user.id, response.parsed_body.fetch('id')
 
-    get '/users', headers: auth_headers(@participant), as: :json
+    get '/users', headers: auth_headers(@user), as: :json
     assert_response :forbidden
   end
 
@@ -36,26 +36,26 @@ class UsersAccessControlTest < ActionDispatch::IntegrationTest
     get '/users', headers: auth_headers(@staff), as: :json
     assert_response :success
 
-    put "/users/#{@participant.id}",
+    put "/users/#{@user.id}",
         params: { role_id: Role::STAFF_ID },
         headers: auth_headers(@staff),
         as: :json
     assert_response :forbidden
-    assert_equal 3, @participant.reload.role_id
+    assert_equal Role::USER_ID, @user.reload.role_id
 
-    delete "/users/#{@participant.id}", headers: auth_headers(@staff), as: :json
+    delete "/users/#{@user.id}", headers: auth_headers(@staff), as: :json
     assert_response :forbidden
-    assert User.exists?(@participant.id)
+    assert User.exists?(@user.id)
   end
 
   test 'manager can change a user' do
-    put "/users/#{@participant.id}",
+    put "/users/#{@user.id}",
         params: { role_id: Role::STAFF_ID },
         headers: auth_headers(@manager),
         as: :json
 
     assert_response :success
-    assert_equal Role::STAFF_ID, @participant.reload.role_id
+    assert_equal Role::STAFF_ID, @user.reload.role_id
   end
 
   private

@@ -53,7 +53,7 @@ class OpenapiAccessControlSyncTest < ActiveSupport::TestCase
       assert_not operation.key?('security'), "Operation-level security override remains: #{method} #{path}"
       assert operation.fetch('responses').key?('401'), "401 missing: #{method} #{path}"
       assert operation.fetch('responses').key?('403'), "403 missing: #{method} #{path}" if role_restricted_categories.include?(category)
-      assert operation.fetch('responses').key?('404'), "404 missing: #{method} #{path}" if category == 'participant'
+      assert operation.fetch('responses').key?('404'), "404 missing: #{method} #{path}" if category == 'user'
     end
 
     assert_equal [], paths.dig('/api/auth', 'post', 'security')

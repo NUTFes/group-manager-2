@@ -3,7 +3,7 @@
 require 'yaml'
 
 class ApiAccessControlRegistry
-  CATEGORIES = %w[participant staff manager].freeze
+  CATEGORIES = %w[user staff manager].freeze
   UNAUTHENTICATED_AUTH_ACTIONS = %w[
     api/auth/registrations#create
     api/auth/sessions#index

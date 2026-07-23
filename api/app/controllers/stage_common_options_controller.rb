@@ -7,7 +7,7 @@ class StageCommonOptionsController < ApplicationController
   # GET /stage_common_options
   # GET /stage_common_options.json
   def index
-    @stage_common_options = participant_scope(StageCommonOption)
+    @stage_common_options = current_user_group_scope(StageCommonOption)
     render json: fmt(ok, @stage_common_options)
   end
 
@@ -60,7 +60,7 @@ class StageCommonOptionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_common_option
-    @stage_common_option = participant_record!(StageCommonOption, params[:id])
+    @stage_common_option = current_user_group_record!(StageCommonOption, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.

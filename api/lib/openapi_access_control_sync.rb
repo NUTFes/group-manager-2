@@ -72,6 +72,6 @@ class OpenapiAccessControlSync
     responses = operation['responses'] ||= {}
     responses['401'] ||= { 'description' => 'Unauthorized' }
     responses['403'] ||= { 'description' => 'Forbidden' } if %w[staff manager].include?(category)
-    responses['404'] ||= { 'description' => 'Not Found' } if category == 'participant'
+    responses['404'] ||= { 'description' => 'Not Found' } if category == 'user'
   end
 end

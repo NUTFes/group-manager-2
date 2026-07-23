@@ -8,7 +8,7 @@ class SubRepsController < ApplicationController
   # GET /sub_reps
   # GET /sub_reps.json
   def index
-    @sub_reps = participant_scope(SubRep)
+    @sub_reps = current_user_group_scope(SubRep)
     render json: fmt(ok, @sub_reps)
   end
 
@@ -61,7 +61,7 @@ class SubRepsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_sub_rep
-    @sub_rep = participant_record!(SubRep, params[:id])
+    @sub_rep = current_user_group_record!(SubRep, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.

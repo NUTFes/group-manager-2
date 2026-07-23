@@ -30,7 +30,7 @@ module Api
                       params.permit(allowed_attrs, nested)
                     end
 
-        permitted.merge(role_id: Role::PARTICIPANT_ID)
+        permitted.merge(role_id: Role::USER_ID)
       end
 
       # アカウント更新時の Strong Parameters

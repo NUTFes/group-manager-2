@@ -8,10 +8,10 @@ class HighRiskAccessControlTest < ActionDispatch::IntegrationTest
   setup do
     Role.create!(id: Role::MANAGER_ID, name: 'manager')
     Role.create!(id: Role::STAFF_ID, name: 'staff')
-    Role.create!(id: 3, name: 'participant')
+    Role.create!(id: Role::USER_ID, name: 'user')
 
     @staff = create_user!('staff-high-risk@example.com', Role::STAFF_ID)
-    @participant = create_user!('participant-high-risk@example.com', 3)
+    @user = create_user!('user-high-risk@example.com', Role::USER_ID)
   end
 
   test 'unauthenticated request cannot create or update groups' do
@@ -22,11 +22,11 @@ class HighRiskAccessControlTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'participant cannot list or destroy groups' do
-    get '/groups', headers: auth_headers(@participant), as: :json
+  test 'user cannot list or destroy groups' do
+    get '/groups', headers: auth_headers(@user), as: :json
     assert_response :forbidden
 
-    delete '/groups/999999', headers: auth_headers(@participant), as: :json
+    delete '/groups/999999', headers: auth_headers(@user), as: :json
     assert_response :forbidden
   end
 
@@ -36,9 +36,9 @@ class HighRiskAccessControlTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test 'participant cannot output pdf' do
+  test 'user cannot output pdf' do
     get '/print_pdf/group_all/1/output',
-        headers: auth_headers(@participant),
+        headers: auth_headers(@user),
         as: :json
 
     assert_response :forbidden

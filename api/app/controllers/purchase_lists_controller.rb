@@ -5,7 +5,7 @@ class PurchaseListsController < ApplicationController
 
   # GET /purchase_lists
   def index
-    @purchase_lists = participant_purchase_lists
+    @purchase_lists = current_user_purchase_lists
     render json: fmt(ok, @purchase_lists)
   end
 
@@ -16,8 +16,8 @@ class PurchaseListsController < ApplicationController
 
   # POST /purchase_lists
   def create
-    food_product = participant_scope(FoodProduct).find_by(id: purchase_list_params[:food_product_id])
-    return render_participant_purchase_list_not_found unless food_product
+    food_product = current_user_group_scope(FoodProduct).find_by(id: purchase_list_params[:food_product_id])
+    return render_purchase_list_not_found unless food_product
 
     @purchase_list = PurchaseList.new(purchase_list_params.merge(food_product_id: food_product.id))
 
@@ -31,7 +31,7 @@ class PurchaseListsController < ApplicationController
   # PATCH/PUT /purchase_lists/1
   def update
     attrs = purchase_list_params
-    return render_participant_purchase_list_not_found if attrs[:food_product_id].present? && !participant_scope(FoodProduct).exists?(id: attrs[:food_product_id])
+    return render_purchase_list_not_found if attrs[:food_product_id].present? && !current_user_group_scope(FoodProduct).exists?(id: attrs[:food_product_id])
 
     if @purchase_list.update(attrs)
       render json: fmt(ok, @purchase_list, "Updated purchase_list id = #{params[:id]}")
@@ -49,8 +49,8 @@ class PurchaseListsController < ApplicationController
   # GET /purchase_lists/food_product
   def get_by_food_product_id
     requested_ids = Array(params[:food_product_ids]).map(&:to_i)
-    owned_ids = participant_scope(FoodProduct).where(id: requested_ids).pluck(:id)
-    return render_participant_purchase_list_not_found unless owned_ids.sort == requested_ids.uniq.sort
+    owned_ids = current_user_group_scope(FoodProduct).where(id: requested_ids).pluck(:id)
+    return render_purchase_list_not_found unless owned_ids.sort == requested_ids.uniq.sort
 
     @purchase_lists = PurchaseList.where(food_product_id: owned_ids)
 
@@ -70,9 +70,9 @@ class PurchaseListsController < ApplicationController
     ]
 
     upsert = purchase_list_bulk_params.map do |attrs|
-      food_product = participant_scope(FoodProduct).find_by(id: attrs[:food_product_id])
-      return render_participant_purchase_list_not_found unless food_product
-      return render_participant_purchase_list_not_found if attrs[:id].present? && !participant_purchase_lists.exists?(id: attrs[:id])
+      food_product = current_user_group_scope(FoodProduct).find_by(id: attrs[:food_product_id])
+      return render_purchase_list_not_found unless food_product
+      return render_purchase_list_not_found if attrs[:id].present? && !current_user_purchase_lists.exists?(id: attrs[:id])
 
       attrs[:food_product_id] = food_product.id
       # nil補完（すべてのキーを明示的に持たせる）
@@ -105,8 +105,8 @@ class PurchaseListsController < ApplicationController
   private
 
   def set_purchase_list
-    @purchase_list = participant_purchase_lists.find_by(id: params[:id])
-    render_participant_purchase_list_not_found unless @purchase_list
+    @purchase_list = current_user_purchase_lists.find_by(id: params[:id])
+    render_purchase_list_not_found unless @purchase_list
   end
 
   # 一括登録・更新のStrong Parameters（upsert_all用）
@@ -140,13 +140,13 @@ class PurchaseListsController < ApplicationController
     )
   end
 
-  def participant_purchase_lists
+  def current_user_purchase_lists
     PurchaseList
       .joins(:food_product)
       .where(food_products: { group_id: current_api_user.groups.select(:id) })
   end
 
-  def render_participant_purchase_list_not_found
+  def render_purchase_list_not_found
     render json: fmt(not_found, [], 'Not Found'), status: :not_found
   end
 end

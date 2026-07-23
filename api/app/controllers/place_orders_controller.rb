@@ -7,7 +7,7 @@ class PlaceOrdersController < ApplicationController
   # GET /place_orders
   # GET /place_orders.json
   def index
-    @place_orders = participant_scope(PlaceOrder)
+    @place_orders = current_user_group_scope(PlaceOrder)
     render json: fmt(ok, @place_orders)
   end
 
@@ -60,7 +60,7 @@ class PlaceOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order
-    @place_order = participant_record!(PlaceOrder, params[:id])
+    @place_order = current_user_group_record!(PlaceOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.

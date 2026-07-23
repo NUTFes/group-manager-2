@@ -7,8 +7,7 @@ const USERS = {
   manager:
     process.env.PLAYWRIGHT_ADMIN_MANAGER_EMAIL || "nutfes-taro@email.com",
   staff: process.env.PLAYWRIGHT_ADMIN_STAFF_EMAIL || "nutfes-jiro@email.com",
-  participant:
-    process.env.PLAYWRIGHT_ADMIN_PARTICIPANT_EMAIL || "nutfes-saburo@email.com",
+  user: process.env.PLAYWRIGHT_ADMIN_USER_EMAIL || "nutfes-saburo@email.com",
 };
 
 const login = async (page, email) => {
@@ -72,16 +71,14 @@ test.describe("admin real API access control", () => {
     });
   }
 
-  test("participantはadminのダッシュボードAPIを利用できない", async ({
-    page,
-  }) => {
+  test("userはadminのダッシュボードAPIを利用できない", async ({ page }) => {
     const dashboardResponse = page.waitForResponse(
       (response) =>
         response.url() === `${API_URL}/api/v1/dashboard` &&
         response.request().method() === "GET"
     );
 
-    await login(page, USERS.participant);
+    await login(page, USERS.user);
 
     expect((await dashboardResponse).status()).toBe(403);
     await expect(

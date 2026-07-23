@@ -6,7 +6,7 @@ class UnRegisteredGroupsController < ApplicationController
   # GET /un_registered_groups
   # GET /un_registered_groups?group_id=1
   def index
-    @un_registered_groups = participant_scope(UnRegisteredGroup)
+    @un_registered_groups = current_user_group_scope(UnRegisteredGroup)
     @un_registered_groups = @un_registered_groups.where(group_id: params[:group_id]) if params[:group_id].present?
     render json: fmt(:ok, @un_registered_groups)
   end
@@ -71,7 +71,7 @@ class UnRegisteredGroupsController < ApplicationController
   private
 
   def set_un_registered_group
-    @un_registered_group = participant_record!(UnRegisteredGroup, params[:id])
+    @un_registered_group = current_user_group_record!(UnRegisteredGroup, params[:id])
   end
 
   def un_registered_group_params

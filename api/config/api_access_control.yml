@@ -3,7 +3,7 @@ version: 1
 # This file is the runtime access policy. The registry test keeps every business
 # controller action synchronized with Rails routes.
 access:
-  participant:
+  user:
     api/v1/fes_dates_api: [get_current_fes_dates]
     api/v1/rental_items_api:
       [get_all_rentable_items, get_inside_shop_rentable_items,

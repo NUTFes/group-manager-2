@@ -6,7 +6,7 @@ class VenueMapsController < ApplicationController
   # GET /venue_maps
   # GET /venue_maps.json
   def index
-    @venue_maps = participant_scope(VenueMap)
+    @venue_maps = current_user_group_scope(VenueMap)
     render json: fmt(ok, @venue_maps)
   end
 
@@ -69,7 +69,7 @@ class VenueMapsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_venue_map
-    @venue_map = participant_record!(VenueMap, params[:id])
+    @venue_map = current_user_group_record!(VenueMap, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

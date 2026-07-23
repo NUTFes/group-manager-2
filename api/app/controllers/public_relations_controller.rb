@@ -5,7 +5,7 @@ class PublicRelationsController < ApplicationController
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 
   def index
-    @public_relations = participant_scope(PublicRelation)
+    @public_relations = current_user_group_scope(PublicRelation)
     render json: fmt(ok, @public_relations)
   end
 
@@ -60,7 +60,7 @@ class PublicRelationsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_public_relation
-    @public_relation = participant_record!(PublicRelation, params[:id])
+    @public_relation = current_user_group_record!(PublicRelation, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.

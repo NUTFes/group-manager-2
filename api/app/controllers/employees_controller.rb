@@ -7,7 +7,7 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = participant_scope(Employee)
+    @employees = current_user_group_scope(Employee)
     render json: fmt(ok, @employees)
   end
 
@@ -45,7 +45,7 @@ class EmployeesController < ApplicationController
   def upsert
     now = Time.current
     records = employees_params
-    return render_employee_not_found unless participant_employee_params?(records)
+    return render_employee_not_found unless current_user_employee_params?(records)
 
     records = records.map do |attrs|
       attrs[:id] ||= nil
@@ -59,9 +59,9 @@ class EmployeesController < ApplicationController
     # より正確な検索条件を構築
     scopes = records.map do |attrs|
       if attrs[:id].present?
-        participant_scope(Employee).where(id: attrs[:id])
+        current_user_group_scope(Employee).where(id: attrs[:id])
       else
-        participant_scope(Employee).where(
+        current_user_group_scope(Employee).where(
           group_id: attrs[:group_id],
           name: attrs[:name],
           student_id: attrs[:student_id],
@@ -99,7 +99,7 @@ class EmployeesController < ApplicationController
   private
 
   def set_employee
-    @employee = participant_record!(Employee, params[:id])
+    @employee = current_user_group_record!(Employee, params[:id])
   end
 
   # 単一レコード用 Strong Parameters
@@ -118,10 +118,10 @@ class EmployeesController < ApplicationController
     end
   end
 
-  def participant_employee_params?(records)
+  def current_user_employee_params?(records)
     records.all? do |attrs|
       current_api_user.groups.exists?(id: attrs[:group_id]) &&
-        (attrs[:id].blank? || participant_scope(Employee).exists?(id: attrs[:id]))
+        (attrs[:id].blank? || current_user_group_scope(Employee).exists?(id: attrs[:id]))
     end
   end
 
