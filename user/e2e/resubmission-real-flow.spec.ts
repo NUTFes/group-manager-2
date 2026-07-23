@@ -116,6 +116,30 @@ const skipSlackNotificationHeader = {
 test.describe('real API power and fire equipment resubmission flow', () => {
   test.setTimeout(120_000);
 
+  test('opens the login page without requesting protected business APIs', async ({
+    page,
+  }) => {
+    const businessRequests: string[] = [];
+    const apiOrigin = new URL(API_BASE_URL).origin;
+
+    page.on('request', (request) => {
+      if (
+        request.url().startsWith(apiOrigin) &&
+        !new URL(request.url()).pathname.startsWith('/api/auth')
+      ) {
+        businessRequests.push(request.url());
+      }
+    });
+
+    await page.goto('/');
+    await expect(page.getByRole('button', { name: 'ログイン' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '新規登録' })).toBeVisible();
+    await expect(page.getByText('お知らせ')).toBeVisible();
+    await page.waitForTimeout(500);
+
+    expect(businessRequests).toEqual([]);
+  });
+
   test('rejects unauthenticated group lookup', async () => {
     const api = await request.newContext({
       baseURL: API_BASE_URL,
@@ -272,9 +296,16 @@ const loginThroughUi = async (page: Page, expectedUserId: number) => {
   const loginForm = page.locator('form').filter({
     has: page.getByLabel('メールアドレス'),
   });
+  const newsResponsePromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === 'GET' &&
+      new URL(response.url()).pathname === '/news'
+  );
   await loginForm.getByRole('button', { name: 'ログイン' }).click();
 
   await expect(page).toHaveURL(/\/home/, { timeout: 15_000 });
+  const newsResponse = await newsResponsePromise;
+  expect(newsResponse.status()).toBe(200);
   await expect
     .poll(
       async () => {
