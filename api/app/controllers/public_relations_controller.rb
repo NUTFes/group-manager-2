@@ -5,7 +5,7 @@ class PublicRelationsController < ApplicationController
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 
   def index
-    @public_relations = PublicRelation.all
+    @public_relations = participant_scope(PublicRelation)
     render json: fmt(ok, @public_relations)
   end
 
@@ -14,7 +14,10 @@ class PublicRelationsController < ApplicationController
   end
 
   def create
-    @public_relation = PublicRelation.create(public_relation_params)
+    group = current_api_user_group!(public_relation_params[:group_id])
+    return unless group
+
+    @public_relation = PublicRelation.create(public_relation_params.merge(group_id: group.id))
     render json: fmt(created, @public_relation)
   end
 
@@ -22,7 +25,10 @@ class PublicRelationsController < ApplicationController
     old_picture_path = @public_relation.picture_path
     old_imgur_deletehash = @public_relation.imgur_deletehash
 
-    updated = @public_relation.update(public_relation_params)
+    attrs = public_relation_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    updated = @public_relation.update(attrs)
     ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path) if updated
 
     render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
@@ -46,20 +52,16 @@ class PublicRelationsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_public_relation
-    if PublicRelation.exists?(params[:id])
-      @public_relation = PublicRelation.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}")
-    end
+    @public_relation = participant_record!(PublicRelation, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_public_relation_by_group_id
-    if PublicRelation.exists?(group_id: params[:group_id])
-      @public_relation = PublicRelation.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found public_relation with group_id = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @public_relation = PublicRelation.find_by(group_id: group.id)
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @public_relation
   end
 
   # Only allow a list of trusted parameters through.

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::MessageTemplatesController < Api::V1::BaseController
+class Api::V1::MessageTemplatesController < Api::V1::StaffController
   COPY_SUFFIX = { 'ja' => 'のコピー', 'en' => ' copy' }.freeze
 
   before_action :set_message_template, only: %i[show update copy_source]

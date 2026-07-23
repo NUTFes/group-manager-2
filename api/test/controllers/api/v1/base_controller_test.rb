@@ -60,6 +60,38 @@ class Api::V1::BaseControllerTest < ActionDispatch::IntegrationTest
     assert_equal true, response.parsed_body
   end
 
+  test 'staff cannot update another user role' do
+    get "/api/v1/update_user/#{@user.id}/#{Role::STAFF_ID}",
+        headers: auth_headers(@staff),
+        as: :json
+
+    assert_response :forbidden
+    assert_equal 3, @user.reload.role_id
+  end
+
+  test 'staff cannot edit another user or reset their password' do
+    post '/api/v1/users/edit_user_info',
+         params: { user_id: @user.id },
+         headers: auth_headers(@staff),
+         as: :json
+    assert_response :forbidden
+
+    post '/api/v1/users/reset_password',
+         params: { user_id: @user.id },
+         headers: auth_headers(@staff),
+         as: :json
+    assert_response :forbidden
+  end
+
+  test 'manager can update another user role' do
+    get "/api/v1/update_user/#{@user.id}/#{Role::STAFF_ID}",
+        headers: auth_headers(@admin),
+        as: :json
+
+    assert_response :success
+    assert_equal Role::STAFF_ID, @user.reload.role_id
+  end
+
   test 'general user can access authenticated rental item api' do
     get '/api/v1/get_all_rentable_items',
         headers: auth_headers(@user),

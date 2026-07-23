@@ -6,10 +6,11 @@ class FireEquipmentOrdersController < ApplicationController
   # GET /fire_equipment_orders
   def index
     fes_year_id = params[:fes_year_id]
+    owned_orders = participant_scope(FireEquipmentOrder)
     @fire_equipment_orders = if fes_year_id.present? && fes_year_id.to_i != 0
-                               FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year_id })
+                               owned_orders.joins(:group).where(groups: { fes_year_id: fes_year_id })
                              else
-                               FireEquipmentOrder.includes(:group).all
+                               owned_orders.includes(:group)
                              end
     orders_with_fuel_japanese = @fire_equipment_orders.map do |order|
       order.as_json(include: { group: { only: %i[id name] } }).merge(
@@ -24,7 +25,7 @@ class FireEquipmentOrdersController < ApplicationController
     fire_equipment_order = FireEquipmentOrder
                            .where(group_id: current_api_user.groups.select(:id))
                            .find_by(id: params[:id])
-    return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}") if fire_equipment_order.nil?
+    return render_submit_not_found if fire_equipment_order.nil?
 
     order_with_fuel_japanese = fire_equipment_order.as_json(include: { group: { only: %i[id name] } }).merge(
       fuel_japanese: fire_equipment_order.fuel_japanese
@@ -34,7 +35,10 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders/group/:group_id
   def get_by_group_id
-    orders = FireEquipmentOrder.where(group_id: params[:group_id]).order(:id)
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    orders = group.fire_equipment_orders.order(:id)
     render json: fmt(ok, orders)
   end
 

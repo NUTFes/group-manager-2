@@ -7,6 +7,17 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups food_products cooking_process_orders]
 
   setup do
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
+    @user = User.find_or_initialize_by(id: 1)
+    @user.update!(
+      name: 'cooking-process-test',
+      email: 'cooking-process-test@example.com',
+      uid: 'cooking-process-test@example.com',
+      provider: 'email',
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: 3
+    )
     @group = groups(:one)
   end
 
@@ -25,6 +36,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent: tent
              }
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -49,6 +61,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent: tent
              }
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -73,6 +86,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent_ja: '麺をゆでる。'
              }
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -96,6 +110,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent: tent
              }
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -121,6 +136,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
               tent: order.tent
             }
           },
+          headers: auth_headers,
           as: :json
     end
 
@@ -149,6 +165,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
               tent: changed_tent
             }
           },
+          headers: auth_headers,
           as: :json
     end
 
@@ -179,6 +196,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                }
              ]
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -211,6 +229,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                }
              ]
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -231,6 +250,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent: unique_tent('Boil noodles')
              }
            },
+           headers: auth_headers,
            as: :json
     end
     assert_response :not_found
@@ -247,6 +267,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                tent: unique_tent('Boil noodles')
              }
            },
+           headers: auth_headers,
            as: :json
     end
     assert_response :not_found
@@ -267,6 +288,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
                  }
                ]
              },
+             headers: auth_headers,
              as: :json
       end
     end
@@ -287,6 +309,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
               tent: order.tent
             }
           },
+          headers: auth_headers,
           as: :json
     end
 
@@ -296,6 +319,10 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def auth_headers
+    @user.create_new_auth_token
+  end
 
   def create_food_product
     FoodProduct.create!(

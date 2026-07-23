@@ -2,6 +2,10 @@ import { expect, request, test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 
 const API_BASE_URL = process.env.PLAYWRIGHT_API_BASE_URL ?? 'http://api:3000';
+const MANAGER_EMAIL =
+  process.env.PLAYWRIGHT_STATUS_MANAGER_EMAIL ?? 'nutfes-heinai-g@email.com';
+const MANAGER_PASSWORD =
+  process.env.PLAYWRIGHT_STATUS_MANAGER_PASSWORD ?? 'gidaifes';
 
 type ApiResponse<T> = {
   status: {
@@ -54,8 +58,11 @@ const existingResubmissionApplicationTypes = [
 ] as const;
 
 test.describe('power and fire equipment resubmission status', () => {
+  test.describe.configure({ mode: 'serial' });
+
   let api: APIRequestContext;
   let authContext: AuthContext;
+  let managerAuthContext: AuthContext;
   let groupId: number | undefined;
 
   // E2E用ユーザーを作り、そのユーザーが所有する団体だけを操作対象にする。
@@ -66,8 +73,13 @@ test.describe('power and fire equipment resubmission status', () => {
         'Content-Type': 'application/json',
       },
     });
+    managerAuthContext = await signInAsManager(api);
     authContext = await registerAndGetAuthContext(api);
-    const group = await createGroup(api, authContext.userId);
+    const group = await createGroup(
+      api,
+      authContext.headers,
+      authContext.userId
+    );
     groupId = group.id;
   });
 
@@ -75,10 +87,16 @@ test.describe('power and fire equipment resubmission status', () => {
     try {
       if (groupId !== undefined) {
         await api.delete(`/groups/${groupId}`, {
-          headers: skipSlackNotificationHeader,
+          headers: {
+            ...managerAuthContext.headers,
+            ...skipSlackNotificationHeader,
+          },
         });
         groupId = undefined;
       }
+      await api.delete(`/users/${authContext.userId}`, {
+        headers: managerAuthContext.headers,
+      });
     } finally {
       await api.dispose();
     }
@@ -106,7 +124,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const waitingPower = await submitSubmissionStatus(
       api,
-      authContext.headers,
+      managerAuthContext.headers,
       groupId!,
       {
         application_type: 'power_order',
@@ -118,7 +136,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const waitingFire = await submitSubmissionStatus(
       api,
-      authContext.headers,
+      managerAuthContext.headers,
       groupId!,
       {
         application_type: 'fire_equipment_order',
@@ -163,7 +181,7 @@ test.describe('power and fire equipment resubmission status', () => {
       existingResubmissionApplicationTypes.map((applicationType) =>
         submitSubmissionStatus(
           api,
-          authContext.headers,
+          managerAuthContext.headers,
           groupId!,
           {
             application_type: applicationType,
@@ -210,6 +228,30 @@ test.describe('power and fire equipment resubmission status', () => {
       );
     });
   });
+
+  test('rejects unauthenticated group creation', async () => {
+    const response = await api.post('/groups', {
+      headers: skipSlackNotificationHeader,
+      data: {
+        name: `e2e-unauthenticated-group-${Date.now()}`,
+        project_name: 'must not be created',
+        activity: 'e2e',
+        user_id: authContext.userId,
+        group_category_id: 1,
+        fes_year_id: 1,
+      },
+    });
+
+    expect(response.status()).toBe(401);
+  });
+
+  test('rejects role 3 access to a staff API', async () => {
+    const response = await api.get('/api/v1/fire_equipment_orders', {
+      headers: authContext.headers,
+    });
+
+    expect(response.status()).toBe(403);
+  });
 });
 
 const registerAndGetAuthContext = async (
@@ -232,7 +274,9 @@ const registerAndGetAuthContext = async (
   });
 
   expect(response.ok()).toBe(true);
-  const body = (await response.json()) as { data: { id: number } };
+  const body = (await response.json()) as {
+    data: { id: number; role_id: number };
+  };
   const headers = response.headers();
 
   expect(headers['access-token']).toBeTruthy();
@@ -240,6 +284,35 @@ const registerAndGetAuthContext = async (
   expect(headers.uid).toBe(email);
 
   expect(body.data.id).toBeGreaterThan(0);
+  expect(body.data.role_id).toBe(3);
+
+  return {
+    userId: body.data.id,
+    headers: {
+      'access-token': headers['access-token'],
+      client: headers.client,
+      uid: headers.uid,
+    },
+  };
+};
+
+const signInAsManager = async (
+  api: APIRequestContext
+): Promise<AuthContext> => {
+  const response = await api.post('/api/auth/sign_in', {
+    data: {
+      email: MANAGER_EMAIL,
+      password: MANAGER_PASSWORD,
+    },
+  });
+
+  expect(response.ok()).toBe(true);
+  const body = (await response.json()) as { data: { id: number } };
+  const headers = response.headers();
+
+  expect(headers['access-token']).toBeTruthy();
+  expect(headers.client).toBeTruthy();
+  expect(headers.uid).toBe(MANAGER_EMAIL);
 
   return {
     userId: body.data.id,
@@ -253,10 +326,11 @@ const registerAndGetAuthContext = async (
 
 const createGroup = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   userId: number
 ): Promise<Group> => {
   const response = await api.post('/groups', {
-    headers: skipSlackNotificationHeader,
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
     data: {
       name: `e2e-resubmission-group-${Date.now()}`,
       project_name: 'e2e resubmission project',
@@ -280,24 +354,30 @@ const createPowerOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<PowerOrder> => {
-  const response = await api.post('/api/v1/power_orders', {
+  const response = await api.put('/power_orders/submit', {
     headers: authHeaders,
     data: {
       group_id: groupId,
-      item: `e2e-hot-plate-${Date.now()}`,
-      power: 1200,
-      manufacturer: 'e2e maker',
-      model: 'E2E-POWER',
-      item_url: 'https://example.com/e2e-power',
+      use_power: true,
+      power_orders: [
+        {
+          item: `e2e-hot-plate-${Date.now()}`,
+          power: 1200,
+          manufacturer: 'e2e maker',
+          model: 'E2E-POWER',
+          item_url: 'https://example.com/e2e-power',
+        },
+      ],
     },
   });
 
   expect(response.ok()).toBe(true);
-  const body = (await response.json()) as ApiResponse<PowerOrder>;
-  expect(body.status.code).toBe(201);
-  expect(body.data.id).toBeGreaterThan(0);
+  const body = (await response.json()) as ApiResponse<PowerOrder[]>;
+  expect(body.status.code).toBe(200);
+  expect(body.data).toHaveLength(1);
+  expect(body.data[0].id).toBeGreaterThan(0);
 
-  return body.data;
+  return body.data[0];
 };
 
 const createFireEquipmentOrder = async (
@@ -305,27 +385,30 @@ const createFireEquipmentOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<FireEquipmentOrder> => {
-  const response = await api.post('/api/v1/fire_equipment_orders', {
+  const response = await api.put('/fire_equipment_orders/submit', {
     headers: authHeaders,
     data: {
-      fire_equipment_order: {
-        group_id: groupId,
-        name: `e2e-burner-${Date.now()}`,
-        quantity: 1,
-        fuel: 'gas_bottle',
-        usage: 'e2e cooking',
-        is_takeaway: false,
-        remark: 'e2e',
-      },
+      group_id: groupId,
+      fire_equipment_orders: [
+        {
+          name: `e2e-burner-${Date.now()}`,
+          quantity: 1,
+          fuel: 'gas_bottle',
+          usage: 'e2e cooking',
+          is_takeaway: false,
+          remark: 'e2e',
+        },
+      ],
     },
   });
 
   expect(response.ok()).toBe(true);
-  const body = (await response.json()) as ApiResponse<FireEquipmentOrder>;
-  expect(body.status.code).toBe(201);
-  expect(body.data.id).toBeGreaterThan(0);
+  const body = (await response.json()) as ApiResponse<FireEquipmentOrder[]>;
+  expect(body.status.code).toBe(200);
+  expect(body.data).toHaveLength(1);
+  expect(body.data[0].id).toBeGreaterThan(0);
 
-  return body.data;
+  return body.data[0];
 };
 
 const getSubmissionStatuses = async (

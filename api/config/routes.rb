@@ -69,7 +69,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :assign_items
   resources :assign_stages
   resources :stage_orders do
     collection do
@@ -262,12 +261,6 @@ Rails.application.routes.draw do
       #---火気使用申請
       get 'get_groups_for_fire_equipment_order' => 'groups_api#get_groups_for_fire_equipment_order'
 
-      #---実行委員担当者申請ページ
-      get 'get_contact_person_index_for_admin_view' => 'contact_persons_api#get_contact_person_index_for_admin_view'
-      get 'get_contact_person_show_for_admin_view/:id' => 'contact_persons_api#get_contact_person_show_for_admin_view'
-      post 'get_refinement_contact_persons' => 'contact_persons_api#get_refinement_contact_persons'
-      post 'get_search_contact_persons' => 'contact_persons_api#get_search_contact_persons'
-
       #---申請情報ページ
       get 'get_order_info_for_admin_view/:id' => 'order_infos_api#get_order_info_for_admin_view'
       post 'get_refinement_order_infos' => 'order_infos_api#get_refinement_order_infos'
@@ -332,11 +325,6 @@ Rails.application.routes.draw do
       get 'get_public_relations_csv/:fes_year_id' => 'output_csv#output_public_relations_csv'
       get 'get_fire_equipment_orders_csv/:fes_year_id' => 'output_csv#output_fire_equipment_orders_csv'
 
-      #---pdf出力
-      get 'output_pdf/rental_items' => 'print_pdf#rental_items_pdf'
-      get 'output_pdf/power_orders' => 'print_pdf#power_orders_pdf'
-      get 'get_project_check_list_pdf/:group_id' => 'output_pdf#output_project_check_list_pdf'
-
       # ダッシュボード
       get 'dashboard' => 'dashboard_api#get_dashboard_info'
 
@@ -346,13 +334,8 @@ Rails.application.routes.draw do
       post 'users/reset_password' => 'users#reset_password'
       post 'get_refinement_users' => 'users#get_refinement_users'
       post 'get_search_users' => 'users#get_search_users'
-      get 'users/get_user_detail' => 'users#get_user_detail'
-
       # 現在のユーザーについて
       get 'current_user' => 'current_user_api#get_current_user_with_user_detail'
-      get 'current_user/groups' => 'current_user_api#get_groups'
-      get 'current_user/groups/places' => 'current_user_api#get_groups_place_allow_list'
-      get 'current_user/regist_info' => 'current_user_api#get_regist_info'
       get 'current_user/is_login' => 'current_user_api#is_login'
 
       ### TODO: フロントが整備されたらこのAPIを/current_user/regist_infoにして既存のものを消す
@@ -362,10 +345,6 @@ Rails.application.routes.draw do
       get 'current_user/get_user_detail_raw' => 'current_user_api#get_user_detail_raw'
       post 'current_user/edit_user_info' => 'current_user_api#edit_user_info'
       post 'current_user/password_reset' => 'current_user_api#password_reset'
-
-      # --- 新規ユーザー周りのAPI ---
-      get 'get_user_with_user_details' => 'users_api#get_user_with_user_details'
-      get 'get_user_with_user_detail' => 'user_api#get_user_with_user_detail'
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::PowerOrdersController < Api::V1::BaseController
+class Api::V1::PowerOrdersController < Api::V1::StaffController
   def create
     power_order = PowerOrder.new(power_order_params)
 

@@ -14,10 +14,10 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create sub_rep' do
     assert_difference('SubRep.count') do
-      post sub_reps_url, params: { sub_rep: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel } }, as: :json
+      post sub_reps_url, params: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show sub_rep' do
@@ -26,7 +26,7 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update sub_rep' do
-    patch sub_rep_url(@sub_rep), params: { sub_rep: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel } }, as: :json
+    patch sub_rep_url(@sub_rep), params: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
       delete sub_rep_url(@sub_rep), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

@@ -10,7 +10,7 @@ class SubRepsController < ApplicationController
   # GET /sub_reps
   # GET /sub_reps.json
   def index
-    @sub_reps = SubRep.all
+    @sub_reps = participant_scope(SubRep)
     render json: fmt(ok, @sub_reps)
   end
 
@@ -23,14 +23,20 @@ class SubRepsController < ApplicationController
   # POST /sub_reps
   # POST /sub_reps.json
   def create
-    @sub_rep = SubRep.create(sub_rep_params)
+    group = current_api_user_group!(sub_rep_params[:group_id])
+    return unless group
+
+    @sub_rep = SubRep.create(sub_rep_params.merge(group_id: group.id))
     render json: fmt(created, @sub_rep)
   end
 
   # PATCH/PUT /sub_reps/1
   # PATCH/PUT /sub_reps/1.json
   def update
-    @sub_rep.update(sub_rep_params)
+    attrs = sub_rep_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    @sub_rep.update(attrs)
     render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
   end
 
@@ -50,20 +56,16 @@ class SubRepsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_sub_rep
-    if SubRep.exists?(params[:id])
-      @sub_rep = SubRep.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
-    end
+    @sub_rep = participant_record!(SubRep, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_sub_reps_by_group_id
-    if SubRep.exists?(group_id: params[:group_id])
-      @sub_rep = SubRep.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found sub_rep = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @sub_rep = SubRep.find_by(group_id: group.id)
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @sub_rep
   end
 
   # Only allow a list of trusted parameters through.

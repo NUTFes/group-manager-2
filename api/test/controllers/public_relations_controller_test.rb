@@ -7,6 +7,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups]
 
   setup do
+    create_participant!
     PublicRelation.delete_all
     @public_relation = PublicRelation.create!(
       group_id: groups(:one).id,
@@ -20,7 +21,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   test 'should get index without imgur_deletehash' do
     @public_relation.update!(imgur_deletehash: 'index-deletehash')
 
-    get public_relations_url, as: :json
+    get public_relations_url, headers: auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -40,6 +41,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
              blurb: 'new blurb',
              is_announcement_requested: true
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -51,7 +53,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   test 'should show public_relation without imgur_deletehash' do
     @public_relation.update!(imgur_deletehash: 'show-deletehash')
 
-    get public_relation_url(@public_relation), as: :json
+    get public_relation_url(@public_relation), headers: auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -69,6 +71,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
               blurb: 'updated blurb',
               is_announcement_requested: false
             },
+            headers: auth_headers,
             as: :json
     end
 
@@ -97,6 +100,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
               blurb: @public_relation.blurb,
               is_announcement_requested: @public_relation.is_announcement_requested
             },
+            headers: auth_headers,
             as: :json
     end
 
@@ -113,7 +117,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
         deletehashes << deletehash
         true
       }) do
-        delete public_relation_url(@public_relation), as: :json
+        delete public_relation_url(@public_relation), headers: auth_headers, as: :json
       end
     end
 
@@ -126,10 +130,26 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
     @public_relation.update!(imgur_deletehash: nil)
 
     assert_difference('PublicRelation.count', -1) do
-      delete public_relation_url(@public_relation), as: :json
+      delete public_relation_url(@public_relation), headers: auth_headers, as: :json
     end
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
+  end
+
+  private
+
+  def create_participant!
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
+    @participant = User.find_or_initialize_by(id: 1)
+    @participant.update!(
+      name: 'public-relation-test', email: 'public-relation-test@example.com',
+      uid: 'public-relation-test@example.com', provider: 'email', role_id: 3,
+      password: 'password', password_confirmation: 'password'
+    )
+  end
+
+  def auth_headers
+    @participant.create_new_auth_token
   end
 end

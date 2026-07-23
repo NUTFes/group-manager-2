@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::HealthCenterSubmissionStatusesApiController < Api::V1::BaseController
+class Api::V1::HealthCenterSubmissionStatusesApiController < Api::V1::StaffController
   APPLICATION_TYPES = HealthCenterSubmissionStatus.application_types.keys.freeze
 
   before_action :require_group_id, only: %i[

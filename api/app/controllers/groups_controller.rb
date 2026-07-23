@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class GroupsController < ApplicationController
+class GroupsController < AuthenticatedController
+  before_action :require_staff_or_above!, only: %i[index]
+  before_action :require_manager!, only: %i[destroy]
   before_action :set_group, only: %i[show update destroy]
 
   # GET /groups
@@ -18,19 +20,20 @@ class GroupsController < ApplicationController
 
   # GET /groups/user/:user_id/
   def get_user_group_id_and_group_category_id
-    @group = Group.find_by(user_id: params[:user_id])
+    @group = current_api_user.groups.find_by(user_id: params[:user_id])
 
     if @group
       render json: fmt(ok, { id: @group.id, group_category_id: @group.group_category_id })
     else
-      render json: fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}")
+      render json: fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}"),
+             status: :not_found
     end
   end
 
   # POST /groups
   # POST /groups.json
   def create
-    @group = Group.create(group_params)
+    @group = current_api_user.groups.create(group_params)
     render json: fmt(created, @group)
 
     unless Current.skip_slack_notification
@@ -118,17 +121,16 @@ class GroupsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_group
-    # groupのIDのgroupが存在するかを確認
-    if Group.exists?(params[:id])
-      @group = Group.find(params[:id])
-    else
-      # なければnot found
-      render json: fmt(not_found, [], "Not found group id = #{params[:id]}")
-    end
+    scope = action_name == 'destroy' ? Group.all : current_api_user.groups
+    @group = scope.find_by(id: params[:id])
+    return if @group
+
+    render json: fmt(not_found, [], "Not found group id = #{params[:id]}"),
+           status: :not_found
   end
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee, :is_international, :is_external, :uses_place_id)
+    params.permit(:name, :project_name, :activity, :group_category_id, :fes_year_id, :committee, :is_international, :is_external, :uses_place_id)
   end
 end

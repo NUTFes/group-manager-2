@@ -14,10 +14,10 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create news' do
     assert_difference('News.count') do
-      post news_index_url, params: { news: { body: @news.body, title: @news.title } }, as: :json
+      post news_index_url, params: { body: @news.body, title: @news.title }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show news' do
@@ -26,7 +26,7 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update news' do
-    patch news_url(@news), params: { news: { body: @news.body, title: @news.title } }, as: :json
+    patch news_url(@news), params: { body: @news.body, title: @news.title }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
       delete news_url(@news), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

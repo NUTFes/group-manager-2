@@ -15,6 +15,6 @@ class FoodProductTest < ActiveSupport::TestCase
     end
 
     status = HealthCenterSubmissionStatus.find_by(group: groups(:two), application_type: :food_product)
-    assert_equal 'unsubmitted', status.status
+    assert_equal 'unapproved', status.status
   end
 end

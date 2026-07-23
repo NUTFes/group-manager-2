@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::SubRepApiController < Api::V1::BaseController
+class Api::V1::SubRepApiController < Api::V1::StaffController
   # あいまい検索機能
   def get_search_sub_reps
     word = params[:word]

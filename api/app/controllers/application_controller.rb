@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require 'digest'
+require Rails.root.join('lib/api_access_control_registry')
 
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
+  before_action :enforce_api_access_policy!
   around_action :set_skip_slack_notification
 
   # status
@@ -42,6 +44,31 @@ class ApplicationController < ActionController::API
 
   private
 
+  def enforce_api_access_policy!
+    category = api_access_control_registry.category_for(controller_path, action_name)
+    return if %w[excluded public].include?(category)
+
+    if %w[participant staff manager].include?(category)
+      authenticate_api_user!
+      return if performed?
+    end
+
+    require_staff_or_above! if %w[staff manager].include?(category)
+    return if performed?
+
+    require_manager! if category == 'manager'
+    return if performed? || %w[participant staff manager].include?(category)
+
+    render json: fmt({ code: 403, message: 'Forbidden' }), status: :forbidden
+  end
+
+  def api_access_control_registry
+    registry = Rails.application.config.x[:api_access_control_registry]
+    return registry if registry.is_a?(ApiAccessControlRegistry)
+
+    Rails.application.config.x[:api_access_control_registry] = ApiAccessControlRegistry.new
+  end
+
   def set_skip_slack_notification
     Current.skip_slack_notification = skip_slack_notification_header?
     yield
@@ -53,11 +80,17 @@ class ApplicationController < ActionController::API
     !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
   end
 
-  def require_admin!
-    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
-    return if [1, 2].include?(current_api_user&.role_id)
+  def require_staff_or_above!
+    return if current_api_user&.role_id.in?(Role::STAFF_OR_ABOVE_IDS)
 
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
+    render json: fmt({ code: 403, message: 'Forbidden' }),
+           status: :forbidden
+  end
+
+  def require_manager!
+    return if current_api_user&.role_id == Role::MANAGER_ID
+
+    render json: fmt({ code: 403, message: 'Forbidden' }),
            status: :forbidden
   end
 
@@ -65,6 +98,26 @@ class ApplicationController < ActionController::API
     return nil if group_id.blank?
 
     current_api_user.groups.find_by(id: group_id)
+  end
+
+  def current_api_user_group!(group_id)
+    group = current_api_user_group(group_id)
+    return group if group
+
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
+    nil
+  end
+
+  def participant_scope(model)
+    model.where(group_id: current_api_user.groups.select(:id))
+  end
+
+  def participant_record!(model, id)
+    record = participant_scope(model).find_by(id: id)
+    return record if record
+
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
+    nil
   end
 
   def save_health_center_submission_status(submission_status, unprocessable_http_status: nil)

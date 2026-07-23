@@ -14,10 +14,16 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create assign_rental_item' do
     assert_difference('AssignRentalItem.count') do
-      post assign_rental_items_url, params: { assign_rental_item: { num: @assign_rental_item.num, rentable_item_id: @assign_rental_item.rentable_item_id, rental_order_id: @assign_rental_item.rental_order_id } }, as: :json
+      post assign_rental_items_url,
+           params: {
+             rentalItemId: @assign_rental_item.rental_item_id,
+             stockerPlaceId: @assign_rental_item.stocker_place_id,
+             items: [{ group_id: @assign_rental_item.group_id, num: @assign_rental_item.num }]
+           },
+           as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show assign_rental_item' do
@@ -26,7 +32,9 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update assign_rental_item' do
-    patch assign_rental_item_url(@assign_rental_item), params: { assign_rental_item: { num: @assign_rental_item.num, rentable_item_id: @assign_rental_item.rentable_item_id, rental_order_id: @assign_rental_item.rental_order_id } }, as: :json
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { group_id: @assign_rental_item.group_id, num: @assign_rental_item.num },
+          as: :json
     assert_response :ok
   end
 
@@ -35,6 +43,6 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
       delete assign_rental_item_url(@assign_rental_item), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::DashboardApiController < Api::V1::BaseController
+class Api::V1::DashboardApiController < Api::V1::StaffController
   def get_dashboard_info
     # ユーザー数
     all_user_num = User.all.length

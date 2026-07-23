@@ -6,7 +6,7 @@ class VenueMapsController < ApplicationController
   # GET /venue_maps
   # GET /venue_maps.json
   def index
-    @venue_maps = VenueMap.all
+    @venue_maps = participant_scope(VenueMap)
     render json: fmt(ok, @venue_maps)
   end
 
@@ -19,7 +19,10 @@ class VenueMapsController < ApplicationController
   # POST /venue_maps
   # POST /venue_maps.json
   def create
-    @venue_map = VenueMap.create(venue_map_params)
+    group = current_api_user_group!(venue_map_params[:group_id])
+    return unless group
+
+    @venue_map = VenueMap.create(venue_map_params.merge(group_id: group.id))
     render json: fmt(created, @venue_map)
   end
 
@@ -29,7 +32,10 @@ class VenueMapsController < ApplicationController
     old_picture_path = @venue_map.picture_path
     old_imgur_deletehash = @venue_map.imgur_deletehash
 
-    updated = @venue_map.update(venue_map_params)
+    attrs = venue_map_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    updated = @venue_map.update(attrs)
     ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @venue_map.picture_path) if updated
 
     render json: fmt(created, @venue_map, "Updated venue_map id = #{params[:id]}")
@@ -48,11 +54,14 @@ class VenueMapsController < ApplicationController
 
   # GET /venue_maps/group/:group_id
   def get_by_group_id
-    venue_map = VenueMap.find_by(group_id: params[:group_id])
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    venue_map = VenueMap.find_by(group_id: group.id)
     if venue_map
       render json: fmt(ok, venue_map)
     else
-      render json: fmt(not_found, [], "VenueMap not found for group_id: #{params[:group_id]}")
+      render json: fmt(not_found, [], 'Not Found'), status: :not_found
     end
   end
 
@@ -60,11 +69,7 @@ class VenueMapsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_venue_map
-    if VenueMap.exists?(params[:id])
-      @venue_map = VenueMap.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found venue_map = #{params[:id]}")
-    end
+    @venue_map = participant_record!(VenueMap, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

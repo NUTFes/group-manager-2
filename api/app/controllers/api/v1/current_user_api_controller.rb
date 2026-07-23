@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::CurrentUserApiController < Api::V1::BaseController
-  skip_before_action :require_staff_or_above!
-
+class Api::V1::CurrentUserApiController < Api::V1::AuthenticatedController
   # ログインユーザーの登録情報を全て取得する
   def current_regist_info
     @user = current_api_user
@@ -21,6 +19,12 @@ class Api::V1::CurrentUserApiController < Api::V1::BaseController
     @user = current_api_user
     @user_detail = @user.with_user_detail
     render json: fmt(ok, @user_detail)
+  end
+
+  # Legacy admin_view response shape. Keep until that screen uses the current
+  # user endpoint above.
+  def get_user_detail_raw
+    render json: { user: current_api_user, user_detail: current_api_user.user_detail }
   end
 
   def edit_user_info

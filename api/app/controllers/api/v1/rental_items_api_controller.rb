@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::RentalItemsApiController < Api::V1::BaseController
+class Api::V1::RentalItemsApiController < Api::V1::StaffController
   skip_before_action :authenticate_api_user!, only: %i[
     get_inside_shop_rentable_items get_outside_shop_rentable_items
     get_stage_rentable_items

@@ -7,7 +7,7 @@ class StageCommonOptionsController < ApplicationController
   # GET /stage_common_options
   # GET /stage_common_options.json
   def index
-    @stage_common_options = StageCommonOption.all
+    @stage_common_options = participant_scope(StageCommonOption)
     render json: fmt(ok, @stage_common_options)
   end
 
@@ -20,14 +20,20 @@ class StageCommonOptionsController < ApplicationController
   # POST /stage_common_options
   # POST /stage_common_options.json
   def create
-    @stage_common_option = StageCommonOption.create(stage_common_option_params)
+    group = current_api_user_group!(stage_common_option_params[:group_id])
+    return unless group
+
+    @stage_common_option = StageCommonOption.create(stage_common_option_params.merge(group_id: group.id))
     render json: fmt(created, @stage_common_option)
   end
 
   # PATCH/PUT /stage_common_options/1
   # PATCH/PUT /stage_common_options/1.json
   def update
-    @stage_common_option.update(stage_common_option_params)
+    attrs = stage_common_option_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    @stage_common_option.update(attrs)
     render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
   end
 
@@ -40,27 +46,23 @@ class StageCommonOptionsController < ApplicationController
 
   # GET /place_orders/group_id/1
   def get_by_group_id
-    render json: fmt(ok, @place_order)
+    render json: fmt(ok, @stage_common_option)
   end
 
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_common_option
-    if StageCommonOption.exists?(params[:id])
-      @stage_common_option = StageCommonOption.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}")
-    end
+    @stage_common_option = participant_record!(StageCommonOption, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_common_option_by_group_id
-    if StageCommonOption.exists?(group_id: params[:group_id])
-      @stage_common_option = StageCommonOption.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @stage_common_option = StageCommonOption.find_by(group_id: group.id)
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_common_option
   end
 
   # Only allow a list of trusted parameters through.

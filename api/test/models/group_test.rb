@@ -6,12 +6,14 @@ class GroupTest < ActiveSupport::TestCase
   fixtures :group_categories, :fes_years, :places, :stocker_places
 
   def setup
+    Role.find_or_create_by!(id: Role::MANAGER_ID) { |role| role.name = 'manager' }
     @user = User.create!(
+      name: 'Test User',
       email: 'test@example.com',
       password: 'password',
       provider: 'email',
       uid: 'test@example.com',
-      role_id: 1
+      role_id: Role::MANAGER_ID
     )
     @group_category = group_categories(:one)
     @fes_year = fes_years(:one)

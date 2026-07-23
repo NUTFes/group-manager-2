@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OutputCsvController < Api::V1::BaseController
+class Api::V1::OutputCsvController < Api::V1::StaffController
   require 'csv'
   require 'set'
   include ApplicationHelper

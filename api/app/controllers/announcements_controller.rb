@@ -6,7 +6,7 @@ class AnnouncementsController < ApplicationController
   # GET /announcements
   # GET /announcements.json
   def index
-    @announcements = Announcement.all
+    @announcements = participant_scope(Announcement)
     render json: fmt(ok, @announcements)
   end
 
@@ -19,14 +19,20 @@ class AnnouncementsController < ApplicationController
   # POST /announcements
   # POST /announcements.json
   def create
-    @announcement = Announcement.create(announcement_params)
+    group = current_api_user_group!(announcement_params[:group_id])
+    return unless group
+
+    @announcement = Announcement.create(announcement_params.merge(group_id: group.id))
     render json: fmt(created, @announcement)
   end
 
   # PATCH/PUT /announcements/1
   # PATCH/PUT /announcements/1.json
   def update
-    @announcement.update(announcement_params)
+    attrs = announcement_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    @announcement.update(attrs)
     render json: fmt(created, @announcement, "Updated announcement id = #{params[:id]}")
   end
 
@@ -41,11 +47,7 @@ class AnnouncementsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_announcement
-    if Announcement.exists?(params[:id])
-      @announcement = Announcement.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found announcement = #{params[:id]}")
-    end
+    @announcement = participant_record!(Announcement, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

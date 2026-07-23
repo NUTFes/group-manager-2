@@ -1,0 +1,78 @@
+name: API Access Control
+
+on:
+  push:
+    branches: ["*"]
+    paths:
+      - "api/**"
+      - "user/e2e/**"
+      - "user/package.json"
+      - "user/pnpm-lock.yaml"
+      - "user/playwright.config.ts"
+      - "Makefile"
+      - ".github/workflows/api-access-control.yml"
+  pull_request:
+    branches: ["gm3/develop"]
+    paths:
+      - "api/**"
+      - "user/e2e/**"
+      - "user/package.json"
+      - "user/pnpm-lock.yaml"
+      - "user/playwright.config.ts"
+      - "Makefile"
+      - ".github/workflows/api-access-control.yml"
+
+concurrency:
+  group: api-access-control-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rails-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create local compose environment files
+        run: touch webhook.env api/.env
+
+      - name: Start database
+        run: |
+          docker compose up -d db
+          until docker compose exec -T db mysqladmin ping -h localhost -ppassword --silent; do
+            sleep 2
+          done
+
+      - name: Prepare test database
+        run: docker compose run --rm -e RAILS_ENV=test api rails db:prepare
+
+      - name: Run all Rails tests
+        run: docker compose run --rm api rails test
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create local compose environment files
+        run: touch webhook.env api/.env
+
+      - name: Start database
+        run: |
+          docker compose up -d db
+          until docker compose exec -T db mysqladmin ping -h localhost -ppassword --silent; do
+            sleep 2
+          done
+
+      - name: Prepare E2E database
+        run: |
+          docker compose run --rm api rails db:prepare
+          docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
+
+      - name: Install user dependencies
+        run: docker compose run --rm user pnpm install --frozen-lockfile
+
+      - name: Start API
+        run: docker compose up -d api
+
+      - name: Run all E2E tests
+        run: make test-e2e

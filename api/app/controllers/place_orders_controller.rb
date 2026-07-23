@@ -7,7 +7,7 @@ class PlaceOrdersController < ApplicationController
   # GET /place_orders
   # GET /place_orders.json
   def index
-    @place_orders = PlaceOrder.all
+    @place_orders = participant_scope(PlaceOrder)
     render json: fmt(ok, @place_orders)
   end
 
@@ -20,14 +20,20 @@ class PlaceOrdersController < ApplicationController
   # POST /place_orders
   # POST /place_orders.json
   def create
-    @place_order = PlaceOrder.create(place_order_params)
+    group = current_api_user_group!(place_order_params[:group_id])
+    return unless group
+
+    @place_order = PlaceOrder.create(place_order_params.merge(group_id: group.id))
     render json: fmt(created, @place_order)
   end
 
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
-    @place_order.update(place_order_params)
+    attrs = place_order_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    @place_order.update(attrs)
     render json: fmt(created, @place_order, "Updated place_order id = #{params[:id]}")
   end
 
@@ -47,20 +53,16 @@ class PlaceOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order
-    if PlaceOrder.exists?(params[:id])
-      @place_order = PlaceOrder.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found place_order = #{params[:id]}")
-    end
+    @place_order = participant_record!(PlaceOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order_by_group_id
-    if PlaceOrder.exists?(group_id: params[:group_id])
-      @place_order = PlaceOrder.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @place_order = PlaceOrder.find_by(group_id: group.id)
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @place_order
   end
 
   # Only allow a list of trusted parameters through.

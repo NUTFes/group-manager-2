@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::EmployeesApiController < Api::V1::BaseController
+class Api::V1::EmployeesApiController < Api::V1::StaffController
   def get_employee_index_for_admin_view
     @employees = Employee.with_groups
     render json: fmt(ok, @employees)

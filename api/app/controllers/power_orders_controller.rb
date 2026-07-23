@@ -61,7 +61,7 @@ class PowerOrdersController < ApplicationController
                    .where(group_id: current_api_user.groups.select(:id))
                    .find_by(id: params[:id])
 
-    @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
+    @power_order || render(json: fmt(not_found, [], 'Not Found'), status: :not_found)
   end
 
   # Use callbacks to share common setup or constraints between actions.
@@ -72,7 +72,7 @@ class PowerOrdersController < ApplicationController
       @power_orders = group.power_orders
     else
       Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
-      render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
+      render json: fmt(not_found, [], 'Not Found'), status: :not_found
     end
   end
 

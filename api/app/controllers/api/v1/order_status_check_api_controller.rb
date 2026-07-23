@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OrderStatusCheckApiController < Api::V1::BaseController
+class Api::V1::OrderStatusCheckApiController < Api::V1::StaffController
   def get_order_status_check_for_admin_view
     @groups = Group.with_order_status_check(params[:id])
     render json: fmt(ok, @groups)

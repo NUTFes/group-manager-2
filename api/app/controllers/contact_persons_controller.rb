@@ -6,7 +6,7 @@ class ContactPersonsController < ApplicationController
   # GET /contact_persons
   # GET /contact_persons.json
   def index
-    @contact_persons = ContactPerson.all
+    @contact_persons = participant_scope(ContactPerson)
     render json: @contact_persons
   end
 
@@ -19,7 +19,10 @@ class ContactPersonsController < ApplicationController
   # POST /contact_persons
   # POST /contact_persons.json
   def create
-    @contact_person = ContactPerson.new(contact_person_params)
+    group = current_api_user_group!(contact_person_params[:group_id])
+    return unless group
+
+    @contact_person = ContactPerson.new(contact_person_params.merge(group_id: group.id))
     if @contact_person.save
       render json: @contact_person
     else
@@ -30,7 +33,10 @@ class ContactPersonsController < ApplicationController
   # PATCH/PUT /contact_persons/1
   # PATCH/PUT /contact_persons/1.json
   def update
-    if @contact_person.update(contact_person_params)
+    attrs = contact_person_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @contact_person.update(attrs)
       render json: @contact_person
     else
       render json: @contact_person.errors, status: :unprocessable_entity
@@ -47,7 +53,7 @@ class ContactPersonsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_contact_person
-    @contact_person = ContactPerson.find(params[:id])
+    @contact_person = participant_record!(ContactPerson, params[:id])
   end
 
   # Only allow a list of trusted parameters through.

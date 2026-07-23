@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::RepresentativesApiController < Api::V1::BaseController
+class Api::V1::RepresentativesApiController < Api::V1::StaffController
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   NO_SUB_REP = {
     id: nil,

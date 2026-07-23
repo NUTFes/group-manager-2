@@ -5,7 +5,7 @@ class CookingProcessOrdersController < ApplicationController
 
   # GET /cooking_process_orders
   def index
-    @cooking_process_orders = CookingProcessOrder.all
+    @cooking_process_orders = participant_scope(CookingProcessOrder)
     render json: @cooking_process_orders
   end
 
@@ -16,7 +16,10 @@ class CookingProcessOrdersController < ApplicationController
 
   # GET /cooking_process_orders/group/:group_id
   def get_by_group_id
-    @cooking_process_orders = CookingProcessOrder.where(group_id: params[:group_id])
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @cooking_process_orders = CookingProcessOrder.where(group_id: group.id)
     if @cooking_process_orders.present?
       render json: fmt(ok, @cooking_process_orders)
     else
@@ -27,7 +30,9 @@ class CookingProcessOrdersController < ApplicationController
   # POST /cooking_process_orders
   def create
     attrs = cooking_process_order_params.to_h.symbolize_keys
-    food_product = FoodProduct.find(params[:cooking_process_order][:food_product_id])
+    food_product = participant_scope(FoodProduct).find_by(id: attrs[:food_product_id])
+    return render_cooking_process_order_not_found unless food_product
+
     attrs[:group_id] = food_product.group_id
     attrs = apply_tent_translation(attrs)
 
@@ -41,14 +46,20 @@ class CookingProcessOrdersController < ApplicationController
 
   # PATCH/PUT /cooking_process_orders/1
   def update
-    attrs = apply_tent_translation(
-      cooking_process_order_params.to_h.symbolize_keys,
-      existing: @cooking_process_order
-    )
+    attrs = cooking_process_order_params.to_h.symbolize_keys
+    if attrs[:food_product_id].present?
+      food_product = participant_scope(FoodProduct).find_by(id: attrs[:food_product_id])
+      return render_cooking_process_order_not_found unless food_product
+
+      attrs[:group_id] = food_product.group_id
+    else
+      attrs[:group_id] = @cooking_process_order.group_id
+    end
+    attrs = apply_tent_translation(attrs, existing: @cooking_process_order)
     if @cooking_process_order.update(attrs)
       render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
     else
-      render json: fmt(error, @cooking_process_order.errors.full_messages), status: :unprocessable_entity
+      render json: fmt(unprocessable_entity, @cooking_process_order.errors.full_messages), status: :unprocessable_entity
     end
   end
 
@@ -69,6 +80,13 @@ class CookingProcessOrdersController < ApplicationController
               .to_h
               .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+      return render_cooking_process_order_unprocessable if attrs[:food_product_id].blank?
+
+      food_product = participant_scope(FoodProduct).find_by(id: attrs[:food_product_id])
+      return render_cooking_process_order_not_found unless food_product
+      return render_cooking_process_order_not_found if attrs[:id].present? && !participant_scope(CookingProcessOrder).exists?(id: attrs[:id])
+
+      attrs[:group_id] = food_product.group_id
       attrs = apply_tent_translation(
         attrs,
         existing: existing_cooking_process_order_for(attrs, existing_orders),
@@ -84,9 +102,9 @@ class CookingProcessOrdersController < ApplicationController
     # 更新／挿入されたレコードを取得して返却
     scopes = upserts.map do |attrs|
       if attrs[:id].present?
-        CookingProcessOrder.where(id: attrs[:id])
+        participant_scope(CookingProcessOrder).where(id: attrs[:id])
       else
-        CookingProcessOrder.where(
+        participant_scope(CookingProcessOrder).where(
           group_id: attrs[:group_id],
           food_product_id: attrs[:food_product_id]
         )
@@ -109,9 +127,7 @@ class CookingProcessOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions
   def set_cooking_process_order
-    @cooking_process_order = CookingProcessOrder.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Not found' }, status: :not_found
+    @cooking_process_order = participant_record!(CookingProcessOrder, params[:id])
   end
 
   # Only allow a list of trusted parameters through
@@ -165,11 +181,11 @@ class CookingProcessOrdersController < ApplicationController
     end
 
     records_by_id =
-      CookingProcessOrder
+      participant_scope(CookingProcessOrder)
       .where(id: ids)
       .index_by { |order| order.id.to_s }
     records_by_food_product_id =
-      CookingProcessOrder
+      participant_scope(CookingProcessOrder)
       .where(food_product_id: food_product_ids)
       .index_by { |order| order.food_product_id.to_s }
 
@@ -185,5 +201,13 @@ class CookingProcessOrdersController < ApplicationController
     elsif attrs[:food_product_id].present?
       existing_orders[:by_food_product_id][attrs[:food_product_id].to_s]
     end
+  end
+
+  def render_cooking_process_order_not_found
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
+  end
+
+  def render_cooking_process_order_unprocessable
+    render json: fmt(unprocessable_entity, [], 'food_product_id is required'), status: :unprocessable_entity
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OrderInfosApiController < Api::V1::BaseController
+class Api::V1::OrderInfosApiController < Api::V1::StaffController
   def get_order_info_for_admin_view
     @groups = Group.with_order_info(params[:id])
     render json: fmt(ok, @groups)

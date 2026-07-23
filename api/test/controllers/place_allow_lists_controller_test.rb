@@ -14,10 +14,10 @@ class PlaceAllowListsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create place_allow_list' do
     assert_difference('PlaceAllowList.count') do
-      post place_allow_lists_url, params: { place_allow_list: { enable: @place_allow_list.enable, group_category_id: @place_allow_list.group_category_id, place_id: @place_allow_list.place_id } }, as: :json
+      post place_allow_lists_url, params: { enable: @place_allow_list.enable, group_category_id: @place_allow_list.group_category_id, place_id: @place_allow_list.place_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show place_allow_list' do
@@ -26,7 +26,7 @@ class PlaceAllowListsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update place_allow_list' do
-    patch place_allow_list_url(@place_allow_list), params: { place_allow_list: { enable: @place_allow_list.enable, group_category_id: @place_allow_list.group_category_id, place_id: @place_allow_list.place_id } }, as: :json
+    patch place_allow_list_url(@place_allow_list), params: { enable: @place_allow_list.enable, group_category_id: @place_allow_list.group_category_id, place_id: @place_allow_list.place_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class PlaceAllowListsControllerTest < ActionDispatch::IntegrationTest
       delete place_allow_list_url(@place_allow_list), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

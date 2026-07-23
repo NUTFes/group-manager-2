@@ -7,6 +7,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = %w[groups]
 
   setup do
+    create_participant!
     HealthCenterSubmissionStatus.delete_all
     VenueMap.delete_all
     @venue_map = VenueMap.create!(
@@ -19,7 +20,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should get index without imgur_deletehash' do
     @venue_map.update!(imgur_deletehash: 'index-deletehash')
 
-    get venue_maps_url, as: :json
+    get venue_maps_url, headers: auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -37,6 +38,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
              picture_path: 'https://i.imgur.com/new-venue-map.png',
              imgur_deletehash: 'new-venue-map-deletehash'
            },
+           headers: auth_headers,
            as: :json
     end
 
@@ -48,7 +50,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should show venue_map without imgur_deletehash' do
     @venue_map.update!(imgur_deletehash: 'show-deletehash')
 
-    get venue_map_url(@venue_map), as: :json
+    get venue_map_url(@venue_map), headers: auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -64,6 +66,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
               picture_path: 'https://i.imgur.com/updated-venue-map.png',
               imgur_deletehash: 'updated-venue-map-deletehash'
             },
+            headers: auth_headers,
             as: :json
     end
 
@@ -90,6 +93,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
               picture_path: 'https://i.imgur.com/new-venue-map.png',
               imgur_deletehash: 'new-venue-map-deletehash'
             },
+            headers: auth_headers,
             as: :json
     end
 
@@ -106,7 +110,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
         deletehashes << deletehash
         true
       }) do
-        delete venue_map_url(@venue_map), as: :json
+        delete venue_map_url(@venue_map), headers: auth_headers, as: :json
       end
     end
 
@@ -119,10 +123,26 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
     @venue_map.update!(imgur_deletehash: nil)
 
     assert_difference('VenueMap.count', -1) do
-      delete venue_map_url(@venue_map), as: :json
+      delete venue_map_url(@venue_map), headers: auth_headers, as: :json
     end
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
+  end
+
+  private
+
+  def create_participant!
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'participant' }
+    @participant = User.find_or_initialize_by(id: 1)
+    @participant.update!(
+      name: 'venue-map-test', email: 'venue-map-test@example.com',
+      uid: 'venue-map-test@example.com', provider: 'email', role_id: 3,
+      password: 'password', password_confirmation: 'password'
+    )
+  end
+
+  def auth_headers
+    @participant.create_new_auth_token
   end
 end

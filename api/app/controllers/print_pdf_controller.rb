@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-class PrintPdfController < ApplicationController
+class PrintPdfController < StaffController
   include ActionController::MimeResponds
-
-  before_action :authenticate_api_user!
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf

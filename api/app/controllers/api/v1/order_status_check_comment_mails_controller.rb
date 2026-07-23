@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OrderStatusCheckCommentMailsController < Api::V1::BaseController
+class Api::V1::OrderStatusCheckCommentMailsController < Api::V1::StaffController
   # メモを保存し、保存済みメモの本文をメール送信する
   def create
     errors = validate_comment_mail_params

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::FesDatesApiController < Api::V1::BaseController
+class Api::V1::FesDatesApiController < Api::V1::StaffController
   skip_before_action :authenticate_api_user!, only: %i[get_current_fes_dates]
   skip_before_action :require_staff_or_above!, only: %i[get_current_fes_dates]
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::PowerOrdersApiController < Api::V1::BaseController
+class Api::V1::PowerOrdersApiController < Api::V1::StaffController
   def get_power_order_index_for_admin_view
     @power_orders = PowerOrder.with_groups
     render json: fmt(ok, @power_orders)

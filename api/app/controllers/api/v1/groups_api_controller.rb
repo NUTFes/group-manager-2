@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::GroupsApiController < Api::V1::BaseController
+class Api::V1::GroupsApiController < Api::V1::StaffController
   def get_group_index_for_admin_view
     @groups = Group.with_group_categories_and_fes_years
     render json: fmt(ok, @groups)

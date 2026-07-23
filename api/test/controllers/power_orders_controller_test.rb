@@ -33,7 +33,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     other_power_order = create_power_order!(other_group)
 
     get power_order_url(other_power_order), headers: auth_headers(@user), as: :json
-    assert_response :success
+    assert_response :not_found
     assert_equal 404, response.parsed_body['status']['code']
   end
 

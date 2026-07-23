@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::MailDeliveriesController < Api::V1::BaseController
+class Api::V1::MailDeliveriesController < Api::V1::StaffController
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP
   MULTIPLE_RECIPIENTS_REGEXP = /[,;]|\S+@\S+\s+\S+@\S+|<[^>]+>.*<[^>]+>/
 
