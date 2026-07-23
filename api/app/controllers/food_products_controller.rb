@@ -33,7 +33,7 @@ class FoodProductsController < ApplicationController
     if @food_product.save
       render json: fmt(created, @food_product)
     else
-      render json: fmt(unprocessable_entity, [], @food_product.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render_validation_errors(@food_product)
     end
   end
 

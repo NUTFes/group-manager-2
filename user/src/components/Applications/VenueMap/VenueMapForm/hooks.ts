@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
 import { VenueMapFormData, venueMapFormSchema } from './schema';
 
 export const useVenueMapFormHooks = (
@@ -155,7 +156,7 @@ export const useVenueMapFormHooks = (
   const [fileName, setFileName] = useState<string | null>(
     venueMap?.pictureName || null
   );
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { previewUrl, setPreviewUrlFromFile } = useImageObjectUrl();
 
   const values = watch();
 
@@ -169,7 +170,7 @@ export const useVenueMapFormHooks = (
         const file = target.files[0];
         setValue('image', file, { shouldDirty: true });
         setFileName(file.name);
-        setPreviewUrl(URL.createObjectURL(file));
+        setPreviewUrlFromFile(file);
       }
     };
     input.click();
@@ -227,13 +228,6 @@ export const useVenueMapFormHooks = (
       toast.error(t('applications.venueMap.messages.submitFailed'));
     }
   }, [createError, updateError, t]);
-
-  useEffect(() => {
-    if (!previewUrl) return;
-    return () => {
-      URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
 
   const onSubmit = async (formData: VenueMapFormData) => {
     try {

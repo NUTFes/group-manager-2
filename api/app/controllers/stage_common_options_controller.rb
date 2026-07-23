@@ -23,8 +23,12 @@ class StageCommonOptionsController < ApplicationController
     group = current_api_user_group!(stage_common_option_params[:group_id])
     return unless group
 
-    @stage_common_option = StageCommonOption.create(stage_common_option_params.merge(group_id: group.id))
-    render json: fmt(created, @stage_common_option)
+    @stage_common_option = StageCommonOption.new(stage_common_option_params.merge(group_id: group.id))
+    if @stage_common_option.save
+      render json: fmt(created, @stage_common_option)
+    else
+      render_validation_errors(@stage_common_option)
+    end
   end
 
   # PATCH/PUT /stage_common_options/1
@@ -33,8 +37,11 @@ class StageCommonOptionsController < ApplicationController
     attrs = stage_common_option_params
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
-    @stage_common_option.update(attrs)
-    render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
+    if @stage_common_option.update(attrs)
+      render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
+    else
+      render_validation_errors(@stage_common_option)
+    end
   end
 
   # DELETE /stage_common_options/1

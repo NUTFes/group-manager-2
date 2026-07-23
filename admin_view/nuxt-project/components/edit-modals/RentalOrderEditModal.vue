@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     rentalOrder: {
@@ -88,16 +90,14 @@ export default {
         rental_item_id: this.rentalItemID,
         num: this.num,
       };
-      const url = `/rental_orders/${rentalOrder.id}`;
-
-      try {
-        await this.$axios.$put(url, data);
-        this.$emit("saved", rentalOrder.id);
-        this.$emit("close");
-      } catch (e) {
-        // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)
-        console.error("物品申請の編集に失敗しました", e);
-      }
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "物品申請",
+        request: () =>
+          rentalOrder.id
+            ? this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
+            : this.$axios.$post(`/rental_orders`, data),
+      });
     },
   },
 };

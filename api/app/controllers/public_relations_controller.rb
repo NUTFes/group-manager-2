@@ -17,8 +17,12 @@ class PublicRelationsController < ApplicationController
     group = current_api_user_group!(public_relation_params[:group_id])
     return unless group
 
-    @public_relation = PublicRelation.create(public_relation_params.merge(group_id: group.id))
-    render json: fmt(created, @public_relation)
+    @public_relation = PublicRelation.new(public_relation_params.merge(group_id: group.id))
+    if @public_relation.save
+      render json: fmt(created, @public_relation)
+    else
+      render_validation_errors(@public_relation)
+    end
   end
 
   def update
@@ -29,9 +33,13 @@ class PublicRelationsController < ApplicationController
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
     updated = @public_relation.update(attrs)
-    ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path) if updated
+    unless updated
+      render_validation_errors(@public_relation)
+      return
+    end
 
-    render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
+    ImgurImageDeleter.call_if_replaced(old_picture_path, old_imgur_deletehash, @public_relation.picture_path)
+    render json: fmt(ok, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy

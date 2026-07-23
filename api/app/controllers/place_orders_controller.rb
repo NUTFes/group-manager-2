@@ -23,8 +23,12 @@ class PlaceOrdersController < ApplicationController
     group = current_api_user_group!(place_order_params[:group_id])
     return unless group
 
-    @place_order = PlaceOrder.create(place_order_params.merge(group_id: group.id))
-    render json: fmt(created, @place_order)
+    @place_order = PlaceOrder.new(place_order_params.merge(group_id: group.id))
+    if @place_order.save
+      render json: fmt(created, @place_order)
+    else
+      render_validation_errors(@place_order)
+    end
   end
 
   # PATCH/PUT /place_orders/1
@@ -33,8 +37,11 @@ class PlaceOrdersController < ApplicationController
     attrs = place_order_params
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
-    @place_order.update(attrs)
-    render json: fmt(created, @place_order, "Updated place_order id = #{params[:id]}")
+    if @place_order.update(attrs)
+      render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
+    else
+      render_validation_errors(@place_order)
+    end
   end
 
   # DELETE /place_orders/1

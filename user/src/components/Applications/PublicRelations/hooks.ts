@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePublicRelationData } from '@/api/publicRelationsApi';
 import { useTranslation } from 'next-i18next';
-import { FormItem } from '@/components/FormList/type';
 import { publicRelationLabels } from '../label';
 
 export const usePublicRelationsHooks = (
@@ -45,25 +44,6 @@ export const usePublicRelationsHooks = (
     }
   };
 
-  // モックデータのフォールバックなしでAPIベースのformItemsを作成
-  const formItem: FormItem[] = [
-    {
-      label: publicRelationsTexts.summaryLabels[0],
-      // APIは'blurb'フィールドでPRテキストを返す
-      content: publicRelation?.blurb || publicRelationsTexts.states.missingText,
-    },
-    {
-      label: publicRelationsTexts.summaryLabels[1],
-      content: getAnnounceStatus(),
-    },
-    {
-      label: publicRelationsTexts.summaryLabels[2],
-      // APIからpictureNameを使用
-      content:
-        publicRelation?.pictureName || publicRelationsTexts.states.notSet,
-    },
-  ];
-
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -102,7 +82,7 @@ export const usePublicRelationsHooks = (
     hasError,
     isEditing,
     toEdit,
-    formItem,
+    getAnnounceStatus,
     mutate: refetchData,
     refetchData,
     publicRelationsTexts,

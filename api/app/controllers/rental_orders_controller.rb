@@ -23,8 +23,12 @@ class RentalOrdersController < ApplicationController
     group = current_api_user_group!(rental_order_params[:group_id])
     return unless group
 
-    @rental_order = RentalOrder.create(rental_order_params.merge(group_id: group.id))
-    render json: fmt(created, @rental_order)
+    @rental_order = RentalOrder.new(rental_order_params.merge(group_id: group.id))
+    if @rental_order.save
+      render json: fmt(created, @rental_order)
+    else
+      render_validation_errors(@rental_order)
+    end
   end
 
   # PATCH/PUT /rental_orders/1
@@ -33,8 +37,11 @@ class RentalOrdersController < ApplicationController
     attrs = rental_order_params
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
-    @rental_order.update(attrs)
-    render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
+    if @rental_order.update(attrs)
+      render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
+    else
+      render_validation_errors(@rental_order)
+    end
   end
 
   # DELETE /rental_orders/1

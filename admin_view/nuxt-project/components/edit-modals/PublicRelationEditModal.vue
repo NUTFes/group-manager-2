@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     publicRelation: {
@@ -53,11 +55,13 @@ export default {
         blurb: this.blurb ?? "",
         picture_path: this.picturePath ?? "",
       };
-      const url = `/public_relations/${pr.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", pr.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "PR申請",
+        request: () =>
+          pr.id
+            ? this.$axios.$put(`/public_relations/${pr.id}`, data)
+            : this.$axios.$post(`/public_relations`, data),
       });
     },
   },

@@ -23,8 +23,12 @@ class StageOrdersController < ApplicationController
     group = current_api_user_group!(stage_order_params[:group_id])
     return unless group
 
-    @stage_order = StageOrder.create(stage_order_params.merge(group_id: group.id))
-    render json: fmt(created, @stage_order)
+    @stage_order = StageOrder.new(stage_order_params.merge(group_id: group.id))
+    if @stage_order.save
+      render json: fmt(created, @stage_order)
+    else
+      render_validation_errors(@stage_order)
+    end
   end
 
   # PATCH/PUT /stage_orders/1
@@ -33,8 +37,11 @@ class StageOrdersController < ApplicationController
     attrs = stage_order_params
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
-    @stage_order.update(attrs)
-    render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
+    if @stage_order.update(attrs)
+      render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
+    else
+      render_validation_errors(@stage_order)
+    end
   end
 
   # DELETE /stage_orders/1

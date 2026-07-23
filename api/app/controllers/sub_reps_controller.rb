@@ -3,9 +3,7 @@
 class SubRepsController < ApplicationController
   before_action :set_sub_rep, only: %i[show update destroy]
   before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
-
-  # 🌟この行を追加！GET以外のアクションだけに認証かける神テク✨
-  before_action :authenticate_api_user!, only: %i[index show]
+  before_action :authenticate_api_user!, except: %i[index show get_by_group_id]
 
   # GET /sub_reps
   # GET /sub_reps.json
@@ -26,8 +24,12 @@ class SubRepsController < ApplicationController
     group = current_api_user_group!(sub_rep_params[:group_id])
     return unless group
 
-    @sub_rep = SubRep.create(sub_rep_params.merge(group_id: group.id))
-    render json: fmt(created, @sub_rep)
+    @sub_rep = SubRep.new(sub_rep_params.merge(group_id: group.id))
+    if @sub_rep.save
+      render json: fmt(created, @sub_rep)
+    else
+      render_validation_errors(@sub_rep)
+    end
   end
 
   # PATCH/PUT /sub_reps/1
@@ -36,8 +38,11 @@ class SubRepsController < ApplicationController
     attrs = sub_rep_params
     return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
 
-    @sub_rep.update(attrs)
-    render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
+    if @sub_rep.update(attrs)
+      render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
+    else
+      render_validation_errors(@sub_rep)
+    end
   end
 
   # DELETE /sub_reps/1

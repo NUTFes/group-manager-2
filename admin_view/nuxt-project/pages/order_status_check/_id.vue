@@ -16,7 +16,7 @@
         <button
           type="button"
           class="side-nav-button"
-          :disabled="!prevGroupId"
+          :disabled="!prevGroupId || isNavigatingGroup"
           aria-label="前の団体へ移動"
           @click="onPrevGroup"
         >
@@ -27,7 +27,7 @@
         <button
           type="button"
           class="side-nav-button"
-          :disabled="!nextGroupId"
+          :disabled="!nextGroupId || isNavigatingGroup"
           aria-label="次の団体へ移動"
           @click="onNextGroup"
         >
@@ -127,13 +127,23 @@
                   <tr>
                     <th>副代表</th>
                     <td>
-                      <template v-if="isUnregistered('sub_rep')">
-                        申請しない
-                      </template>
+                      <EditPlaceholderLine
+                        v-if="isUnregistered('sub_rep')"
+                        text="申請しない"
+                        :on-edit="
+                          () => openModal('sub_rep', { group_id: currentGroupId })
+                        "
+                      />
                       <template v-else-if="group.sub_rep">
                         {{ group.sub_rep.name }}
                       </template>
-                      <template v-else>未登録</template>
+                      <EditPlaceholderLine
+                        v-else
+                        text="未登録"
+                        :on-edit="
+                          () => openModal('sub_rep', { group_id: currentGroupId })
+                        "
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -146,7 +156,13 @@
               <div class="section-header">
                 <h2>会場申請</h2>
               </div>
-              <p v-if="isUnregistered('place_order')">申請しない</p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('place_order')"
+                text="申請しない"
+                :on-edit="
+                  () => openModal('place_order', { group_id: currentGroupId })
+                "
+              />
               <VerticalTable v-else-if="group.place_order">
                 <tbody
                   class="selectable-row"
@@ -171,7 +187,13 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else>未登録</p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () => openModal('place_order', { group_id: currentGroupId })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -179,41 +201,55 @@
             <div v-if="shouldShow('rental_orders')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>物品申請</h2>
-                <div
-                  class="status-select-with-icon"
-                  v-if="!isUnregistered('rental_item_order')"
-                  :class="
-                    getStatusSelectClass(getSubmissionStatusValue('equipment'))
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(getSubmissionStatusValue("equipment")).icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
-                          getSubmissionStatusValue('equipment')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('equipment')"
-                      @change="onStatusChange('equipment', $event.target.value)"
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                <div class="section-actions">
+                  <CommonButton
+                    iconName="add_circle"
+                    :on_click="
+                      () =>
+                        openModal('rental_order', { group_id: currentGroupId })
+                    "
+                    >追加</CommonButton
+                  >
+                  <div
+                    class="status-select-with-icon"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('equipment')
+                      )
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(getSubmissionStatusValue("equipment"))
+                          .icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('equipment')
+                          )
+                        "
+                        :value="getSubmissionStatusValue('equipment')"
+                        @change="
+                          onStatusChange('equipment', $event.target.value)
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -253,7 +289,13 @@
               <div class="section-header">
                 <h2>ステージ申請</h2>
               </div>
-              <p v-if="isUnregistered('stage_order')">申請しない</p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('stage_order')"
+                text="申請しない"
+                :on-edit="
+                  () => openModal('stage_order', { group_id: currentGroupId })
+                "
+              />
               <VerticalTable
                 v-else-if="group.stage_orders && group.stage_orders.length > 0"
               >
@@ -291,7 +333,13 @@
                 </tr>
               </VerticalTable>
 
-              <p v-else>未登録</p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () => openModal('stage_order', { group_id: currentGroupId })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -300,7 +348,16 @@
               <div class="section-header">
                 <h2>ステージオプション</h2>
               </div>
-              <p v-if="isUnregistered('stage_common_option')">申請しない</p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('stage_common_option')"
+                text="申請しない"
+                :on-edit="
+                  () =>
+                    openModal('stage_common_option', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <VerticalTable v-else-if="group.stage_common_option">
                 <tbody
                   class="selectable-row"
@@ -335,7 +392,16 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else>未登録</p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () =>
+                    openModal('stage_common_option', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -343,46 +409,55 @@
             <div v-if="shouldShow('power_orders')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>電力申請</h2>
-                <div
-                  class="status-select-with-icon"
-                  v-if="!isUnregistered('power_order')"
-                  :class="
-                    getStatusSelectClass(
-                      getSubmissionStatusValue('power_order')
-                    )
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(getSubmissionStatusValue("power_order"))
-                        .icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
-                          getSubmissionStatusValue('power_order')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('power_order')"
-                      @change="
-                        onStatusChange('power_order', $event.target.value)
-                      "
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                <div class="section-actions">
+                  <CommonButton
+                    iconName="add_circle"
+                    :on_click="
+                      () =>
+                        openModal('power_order', { group_id: currentGroupId })
+                    "
+                    >追加</CommonButton
+                  >
+                  <div
+                    class="status-select-with-icon"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('power_order')
+                      )
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(getSubmissionStatusValue("power_order"))
+                          .icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('power_order')
+                          )
+                        "
+                        :value="getSubmissionStatusValue('power_order')"
+                        @change="
+                          onStatusChange('power_order', $event.target.value)
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -430,7 +505,16 @@
               <div class="section-header">
                 <h2>PR情報</h2>
               </div>
-              <p v-if="isUnregistered('public_relation')">申請しない</p>
+              <EditPlaceholderLine
+                v-if="isUnregistered('public_relation')"
+                text="申請しない"
+                :on-edit="
+                  () =>
+                    openModal('public_relation', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <VerticalTable v-else-if="group.public_relation">
                 <tbody
                   class="selectable-row"
@@ -465,7 +549,16 @@
                 </tbody>
               </VerticalTable>
 
-              <p v-else>未登録</p>
+              <EditPlaceholderLine
+                v-else
+                text="未登録"
+                :on-edit="
+                  () =>
+                    openModal('public_relation', {
+                      group_id: currentGroupId,
+                    })
+                "
+              />
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -473,41 +566,51 @@
             <div v-if="shouldShow('employees')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>従業員申請</h2>
-                <div
-                  class="status-select-with-icon"
-                  v-if="!isUnregistered('employee')"
-                  :class="
-                    getStatusSelectClass(getSubmissionStatusValue('employee'))
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(getSubmissionStatusValue("employee")).icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
-                          getSubmissionStatusValue('employee')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('employee')"
-                      @change="onStatusChange('employee', $event.target.value)"
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                <div class="section-actions">
+                  <CommonButton
+                    iconName="add_circle"
+                    :on_click="
+                      () => openModal('employee', { group_id: currentGroupId })
+                    "
+                    >追加</CommonButton
+                  >
+                  <div
+                    class="status-select-with-icon"
+                    :class="
+                      getStatusSelectClass(getSubmissionStatusValue('employee'))
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(getSubmissionStatusValue("employee")).icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('employee')
+                          )
+                        "
+                        :value="getSubmissionStatusValue('employee')"
+                        @change="
+                          onStatusChange('employee', $event.target.value)
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -546,6 +649,7 @@
                     :on_click="
                       () =>
                         openModal('venue_map', {
+                          group_id: currentGroupId,
                           ...group.venue_map,
                           group_name: group.group.name,
                         })
@@ -554,7 +658,6 @@
                   >
                   <div
                     class="status-select-with-icon"
-                    v-if="!isUnregistered('venue_map')"
                     :class="
                       getStatusSelectClass(
                         getSubmissionStatusValue('venue_map')
@@ -621,46 +724,55 @@
             <div v-if="shouldShow('food_products')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>販売品申請</h2>
-                <div
-                  class="status-select-with-icon"
-                  v-if="!isUnregistered('food_product')"
-                  :class="
-                    getStatusSelectClass(
-                      getSubmissionStatusValue('food_product')
-                    )
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(getSubmissionStatusValue("food_product"))
-                        .icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
-                          getSubmissionStatusValue('food_product')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('food_product')"
-                      @change="
-                        onStatusChange('food_product', $event.target.value)
-                      "
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                <div class="section-actions">
+                  <CommonButton
+                    iconName="add_circle"
+                    :on_click="
+                      () =>
+                        openModal('food_product', { group_id: currentGroupId })
+                    "
+                    >追加</CommonButton
+                  >
+                  <div
+                    class="status-select-with-icon"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('food_product')
+                      )
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(getSubmissionStatusValue("food_product"))
+                          .icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('food_product')
+                          )
+                        "
+                        :value="getSubmissionStatusValue('food_product')"
+                        @change="
+                          onStatusChange('food_product', $event.target.value)
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -699,7 +811,6 @@
                 <h2>購入品申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('purchase_list')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('purchase_list')
@@ -751,9 +862,19 @@
                   :key="index"
                   style="margin-bottom: 20px"
                 >
-                  <h4 style="margin-bottom: 8px">
-                    {{ fpWrapper.food_product.name }}
-                  </h4>
+                  <div class="subsection-header-with-button">
+                    <h4>{{ fpWrapper.food_product.name }}</h4>
+                    <CommonButton
+                      iconName="add_circle"
+                      :on_click="
+                        () =>
+                          openModal('purchase_list', {
+                            food_product_id: fpWrapper.food_product.id,
+                          })
+                      "
+                      >追加</CommonButton
+                    >
+                  </div>
                   <VerticalTable
                     v-if="
                       fpWrapper.purchase_lists &&
@@ -816,7 +937,6 @@
                 <h2>調理工程申請</h2>
                 <div
                   class="status-select-with-icon"
-                  v-if="!isUnregistered('cooking_process_order')"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('cooking_process_order')
@@ -927,10 +1047,26 @@
                       </tr>
                     </tbody>
                   </VerticalTable>
-                  <p v-else-if="isUnregistered('cooking_process_order')">
-                    申請しない
-                  </p>
-                  <p v-else>調理工程未登録</p>
+                  <EditPlaceholderLine
+                    v-else-if="isUnregistered('cooking_process_order')"
+                    text="申請しない"
+                    :on-edit="
+                      () =>
+                        openModal('cooking_process_order', {
+                          food_product_id: fpWrapper.food_product.id,
+                        })
+                    "
+                  />
+                  <EditPlaceholderLine
+                    v-else
+                    text="調理工程未登録"
+                    :on-edit="
+                      () =>
+                        openModal('cooking_process_order', {
+                          food_product_id: fpWrapper.food_product.id,
+                        })
+                    "
+                  />
                 </div>
               </div>
               <p v-else>未登録</p>
@@ -941,50 +1077,63 @@
             <div v-if="shouldShow('fire_equipment_orders')" style="width: 100%">
               <div class="section-header-with-button">
                 <h2>火気使用申請</h2>
-                <div
-                  class="status-select-with-icon"
-                  v-if="!isUnregistered('fire_equipment_order')"
-                  :class="
-                    getStatusSelectClass(
-                      getSubmissionStatusValue('fire_equipment_order')
-                    )
-                  "
-                >
-                  <span class="material-icons status-icon">
-                    {{
-                      getStatusMeta(
-                        getSubmissionStatusValue("fire_equipment_order")
-                      ).icon
-                    }}
-                  </span>
-                  <div class="select-wrapper">
-                    <select
-                      class="status-select"
-                      :class="
-                        getStatusSelectClass(
+                <div class="section-actions">
+                  <CommonButton
+                    iconName="add_circle"
+                    :on_click="
+                      () =>
+                        openModal('fire_equipment_order', {
+                          group_id: currentGroupId,
+                        })
+                    "
+                    >追加</CommonButton
+                  >
+                  <div
+                    class="status-select-with-icon"
+                    :class="
+                      getStatusSelectClass(
+                        getSubmissionStatusValue('fire_equipment_order')
+                      )
+                    "
+                  >
+                    <span class="material-icons status-icon">
+                      {{
+                        getStatusMeta(
+                          getSubmissionStatusValue("fire_equipment_order")
+                        ).icon
+                      }}
+                    </span>
+                    <div class="select-wrapper">
+                      <select
+                        class="status-select"
+                        :class="
+                          getStatusSelectClass(
+                            getSubmissionStatusValue('fire_equipment_order')
+                          )
+                        "
+                        :value="
                           getSubmissionStatusValue('fire_equipment_order')
-                        )
-                      "
-                      :value="getSubmissionStatusValue('fire_equipment_order')"
-                      @change="
-                        onStatusChange(
-                          'fire_equipment_order',
-                          $event.target.value
-                        )
-                      "
-                    >
-                      <option
-                        v-for="option in statusOptions"
-                        :key="option.value"
-                        :value="option.value"
-                        :disabled="option.value === 'unsubmitted'"
+                        "
+                        @change="
+                          onStatusChange(
+                            'fire_equipment_order',
+                            $event.target.value
+                          )
+                        "
                       >
-                        {{ option.label }}
-                      </option>
-                    </select>
-                    <span class="material-icons select-caret"
-                      >arrow_drop_down</span
-                    >
+                        <option
+                          v-for="option in statusOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          :disabled="option.value === 'unsubmitted'"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                      <span class="material-icons select-caret"
+                        >arrow_drop_down</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1051,6 +1200,7 @@
       v-bind="dynamicProps"
       @saved="onEditorSaved"
       @close="closeModal"
+      @error="openEditError"
     />
     <!-- プレビューモーダル (平面図 & 物品申請) -->
     <transition name="fade" appear>
@@ -1135,6 +1285,9 @@ import {
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/health_center_submission_statuses";
+// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
+// 前後移動ボタンでも維持するために参照するキーのprefix。
+const ORDER_STATUS_CHECK_INDEX_PATH = "/order_status_check";
 
 export default {
   components: {
@@ -1160,6 +1313,7 @@ export default {
       loading: true,
       unregisteredGroups: [],
       allGroupIds: [],
+      isNavigatingGroup: false,
       activeEditType: null,
       selectedItem: null,
       isOpenEditModal: false,
@@ -1217,7 +1371,11 @@ export default {
   watch: {
     "$route.params.id": {
       async handler() {
+        const previousFesYearId = this.group?.group?.fes_year_id;
         await this.fetchData();
+        if (this.group?.group?.fes_year_id !== previousFesYearId) {
+          await this.fetchAllGroupIds();
+        }
       },
     },
   },
@@ -1260,20 +1418,82 @@ export default {
       }
     },
     async fetchAllGroupIds() {
+      // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
+      // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・参加形式・国際・学外)が
+      // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
+      const fesYearId = this.group?.group?.fes_year_id;
+      if (!fesYearId) return;
+
+      const storedFilters = this.getStoredIndexFilters();
+      const filteredIds = await this.fetchGroupIdsByFilter({
+        fesYearId: storedFilters.fesYearId ?? fesYearId,
+        groupCategoryId: storedFilters.groupCategoryId ?? 0,
+        isInternational: storedFilters.isInternational ?? 0,
+        isExternal: storedFilters.isExternal ?? 0,
+      });
+      // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
+      // それまでのallGroupIdsを保持したまま何もしない。
+      if (filteredIds === null) return;
+
+      // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
+      // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
+      // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
+      if (filteredIds.includes(this.currentGroupId)) {
+        this.allGroupIds = filteredIds;
+        return;
+      }
+
+      const fallbackIds = await this.fetchGroupIdsByFilter({ fesYearId });
+      if (fallbackIds === null) return;
+      this.allGroupIds = fallbackIds;
+    },
+    getStoredIndexFilters() {
+      if (typeof localStorage === "undefined") return {};
+
+      const toNumberOrNull = (value) =>
+        value === null || value === undefined ? null : Number(value);
+      const prefix = ORDER_STATUS_CHECK_INDEX_PATH;
+
+      return {
+        fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
+        groupCategoryId: toNumberOrNull(
+          localStorage.getItem(prefix + "RefCategory")
+        ),
+        isInternational: toNumberOrNull(
+          localStorage.getItem(prefix + "RefInternational")
+        ),
+        isExternal: toNumberOrNull(
+          localStorage.getItem(prefix + "RefExternal")
+        ),
+      };
+    },
+    async fetchGroupIdsByFilter({
+      fesYearId,
+      groupCategoryId = 0,
+      isInternational = 0,
+      isExternal = 0,
+    }) {
       try {
-        const currentYearRes = await this.$axios.$get("/user_page_settings/1");
-        const url =
-          "/api/v1/get_refinement_order_status_check?fes_year_id=" +
-          currentYearRes.data.fes_year_id;
-        const refRes = await this.$axios.$post(url);
+        const refRes = await this.$axios.$post(
+          "/api/v1/get_refinement_order_status_check",
+          null,
+          {
+            params: {
+              fes_year_id: fesYearId,
+              group_category_id: groupCategoryId,
+              is_international: isInternational,
+              is_external: isExternal,
+            },
+          }
+        );
 
         if (refRes && refRes.data) {
-          this.allGroupIds = refRes.data
-            .map((g) => g.group.id)
-            .sort((a, b) => a - b);
+          return refRes.data.map((g) => g.group.id).sort((a, b) => a - b);
         }
+        return [];
       } catch (e) {
         console.error("Failed to fetch all group ids", e);
+        return null;
       }
     },
     isUnregistered(orderType) {
@@ -1307,14 +1527,25 @@ export default {
       }
     },
     onPrevGroup() {
-      if (this.prevGroupId) {
-        this.$router.push(`/order_status_check/${this.prevGroupId}`);
-      }
+      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
+      if (this.isNavigatingGroup || !this.prevGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/order_status_check/${this.prevGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     onNextGroup() {
-      if (this.nextGroupId) {
-        this.$router.push(`/order_status_check/${this.nextGroupId}`);
-      }
+      if (this.isNavigatingGroup || !this.nextGroupId) return;
+      this.isNavigatingGroup = true;
+      this.$router
+        .push(`/order_status_check/${this.nextGroupId}`)
+        .catch(() => {})
+        .finally(() => {
+          this.isNavigatingGroup = false;
+        });
     },
     openModal(type, item) {
       this.activeEditType = type;
@@ -1421,7 +1652,47 @@ export default {
       window.open(url, "_blank", "noopener,noreferrer");
     },
     async onEditorSaved() {
+      await this.clearUnregisteredFlagIfNeeded();
       await this.fetchData(true);
+    },
+    openEditError(message) {
+      if (message) {
+        window.alert(message);
+      }
+    },
+    // 「申請しない」だった項目にデータを登録した場合、
+    // un_registered_groups の記録が残っていると表示が「申請しない」のままになるため削除する
+    async clearUnregisteredFlagIfNeeded() {
+      const orderTypeByEditType = {
+        rental_order: "rental_item_order",
+        power_order: "power_order",
+        sub_rep: "sub_rep",
+        employee: "employee",
+        fire_equipment_order: "fire_equipment_order",
+      };
+      const orderType = orderTypeByEditType[this.activeEditType];
+      if (!orderType || !this.isUnregistered(orderType)) return;
+
+      // fetchDataで取得済みのunregisteredGroupsに削除対象があるので、
+      // 同じ内容を取りに行くGETリクエストを重ねて発行しない。
+      const records = this.unregisteredGroups.filter(
+        (record) => record.order_type === orderType
+      );
+      if (records.length === 0) return;
+
+      try {
+        await Promise.all(
+          records.map((record) =>
+            this.$axios.$delete(`/un_registered_groups/${record.id}`)
+          )
+        );
+      } catch {
+        // ここに入るのはネットワークエラーなど「申請しない」フラグの解除に
+        // 本当に失敗したケース。表示が「申請しない」のまま残ることを利用者に伝える。
+        window.alert(
+          "「申請しない」の解除に失敗しました。画面を再読み込みしても解消しない場合は再度お試しください。"
+        );
+      }
     },
   },
 };
@@ -1450,6 +1721,13 @@ export default {
 .selectable-row:hover,
 .selectable-row:hover tr {
   background-color: #f0f4ff;
+}
+.subsection-header-with-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 .selectable-card {
   cursor: pointer;

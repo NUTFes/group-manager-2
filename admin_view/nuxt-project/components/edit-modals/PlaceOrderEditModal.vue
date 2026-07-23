@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     placeOrder: {
@@ -92,11 +94,13 @@ export default {
         third: String(this.third ?? ""),
         remark: this.remark ?? "",
       };
-      const url = `/place_orders/${po.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", po.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "会場申請",
+        request: () =>
+          po.id
+            ? this.$axios.$put(`/place_orders/${po.id}`, data)
+            : this.$axios.$post(`/place_orders`, data),
       });
     },
   },

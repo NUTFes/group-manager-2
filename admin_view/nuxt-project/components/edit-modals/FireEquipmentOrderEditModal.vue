@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
 export default {
   props: {
     fireEquipmentOrder: {
@@ -116,11 +118,16 @@ export default {
         is_takeaway: String(this.isTakeaway),
         remark: this.remark ?? "",
       };
-      const url = `/api/v1/fire_equipment_orders/${fire_equipment_order.id}`;
-
-      await this.$axios.$put(url, data).then(() => {
-        this.$emit("saved", fire_equipment_order.id);
-        this.$emit("close");
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "火気設備申請",
+        request: () =>
+          fire_equipment_order.id
+            ? this.$axios.$put(
+                `/api/v1/fire_equipment_orders/${fire_equipment_order.id}`,
+                data
+              )
+            : this.$axios.$post(`/api/v1/fire_equipment_orders`, data),
       });
     },
   },

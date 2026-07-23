@@ -42,6 +42,11 @@ class ApplicationController < ActionController::API
     # return { status: status, path: request.fullpath, data: data } // fullpathいるかな？
   end
 
+  # create/update のバリデーション失敗時に共通で使うエラーレスポンス
+  def render_validation_errors(record)
+    render json: fmt(unprocessable_entity, [], record.errors.full_messages.join(', ')), status: :unprocessable_entity
+  end
+
   private
 
   def enforce_api_access_policy!
