@@ -2,7 +2,7 @@ name: API Access Control
 
 on:
   push:
-    branches: ["**"]
+    branches: ["gm3/develop"]
     paths:
       - "api/**"
       - "user/e2e/**"
