@@ -9,6 +9,19 @@
         <h3>メッセージ</h3>
       </div>
       <div class="comment-form">
+        <div class="message-mode-panel">
+          <label class="message-mode-label" for="message-mode-select">
+            種別
+          </label>
+          <select
+            id="message-mode-select"
+            class="message-mode-select"
+            v-model="sendMode"
+          >
+            <option value="mail">メール</option>
+            <option value="memo">メモ</option>
+          </select>
+        </div>
         <div class="message-template-panel">
           <label class="message-template-label" for="message-template-select">
             テンプレート
@@ -16,7 +29,8 @@
           <select
             id="message-template-select"
             class="message-template-select"
-            v-model="selectedMessageTemplateId"
+            :value="selectedMessageTemplateId"
+            @change="onTemplateSelect($event.target.value)"
           >
             <option value="">テンプレートを選択</option>
             <option
@@ -31,18 +45,31 @@
             {{ messageSendResult }}
           </p>
         </div>
+        <label class="comment-subject-label" for="comment-subject-input">件名</label>
+        <input
+          id="comment-subject-input"
+          type="text"
+          class="comment-subject-input"
+          placeholder="件名"
+          v-model="commentSubject"
+          :disabled="isSendingMessage"
+        />
+        <label class="comment-body-label" for="comment-body-textarea">本文</label>
         <textarea
+          id="comment-body-textarea"
           class="comment-textarea"
-          placeholder="メールで送信するコメント"
+          :placeholder="
+            sendMode === 'mail' ? 'メールで送信するコメント' : '実行委員内で共有するメモ'
+          "
           v-model="commentBody"
-          :disabled="!selectedMessageTemplate || isSendingMessage"
+          :disabled="isSendingMessage"
         ></textarea>
         <CommonButton
-          iconName="send"
+          :iconName="sendMode === 'mail' ? 'send' : 'save'"
           :on_click="openMessagePreview"
           :disabled="isSendingMessage || !canSendMessage"
         >
-          送信
+          {{ sendMode === "mail" ? "送信" : "保存" }}
         </CommonButton>
       </div>
 
@@ -54,7 +81,10 @@
           class="comment-accordion"
         >
           <summary>
-            {{ formatCommentTimestamp(comment.created_at) }}
+            <span class="comment-summary-time">
+              <span class="comment-timestamp">{{ formatCommentTimestamp(comment.created_at) }}</span>
+              <span class="comment-summary-subject">{{ comment.subject }}</span>
+            </span>
             <span
               class="mail-delivery-status"
               :class="mailDeliveryStatusClass(comment.mail_delivery_status)"
@@ -75,6 +105,7 @@
             </span>
           </summary>
           <p class="comment-body">{{ comment.body }}</p>
+          <p v-if="comment.memo" class="comment-memo">メモ: {{ comment.memo }}</p>
           <CommonButton
             v-if="comment.mail_delivery_status === 'failed'"
             iconName="send"
@@ -90,11 +121,11 @@
 
     <EditModal
       v-if="isPreviewModalOpen"
-      title="送信内容の確認"
+      :title="sendMode === 'mail' ? '送信内容の確認' : 'メモ保存の確認'"
       @close="closeMessagePreview"
     >
       <template v-slot:form>
-        <div class="mail-preview-field">
+        <div v-if="sendMode === 'mail'" class="mail-preview-field">
           <h3>宛先</h3>
           <p>{{ userEmail }}</p>
         </div>
@@ -117,11 +148,41 @@
             キャンセル
           </CommonButton>
           <CommonButton
-            iconName="send"
+            :iconName="sendMode === 'mail' ? 'send' : 'save'"
             :on_click="confirmMessageSend"
             :disabled="isSendingMessage"
           >
-            {{ isSendingMessage ? "送信中" : "送信する" }}
+            {{
+              isSendingMessage
+                ? sendMode === "mail"
+                  ? "送信中"
+                  : "保存中"
+                : sendMode === "mail"
+                ? "送信する"
+                : "保存する"
+            }}
+          </CommonButton>
+        </div>
+      </template>
+    </EditModal>
+
+    <EditModal
+      v-if="isOverwriteModalOpen"
+      title="テンプレートの反映確認"
+      @close="cancelTemplateOverwrite"
+    >
+      <template v-slot:form>
+        <p class="overwrite-confirm-text">
+          入力中の件名・本文をテンプレートの内容で上書きします。よろしいですか？
+        </p>
+      </template>
+      <template v-slot:method>
+        <div class="mail-preview-actions">
+          <CommonButton iconName="close" :on_click="cancelTemplateOverwrite">
+            取消
+          </CommonButton>
+          <CommonButton iconName="check" :on_click="confirmTemplateOverwrite">
+            上書き
           </CommonButton>
         </div>
       </template>
@@ -155,39 +216,30 @@ export default {
   },
   data() {
     return {
+      sendMode: "mail",
       messageTemplates: [],
       selectedMessageTemplateId: "",
+      commentSubject: "",
       commentBody: "",
       isSendingMessage: false,
       messageSendResult: "",
       resendingCommentId: null,
       comments: [],
       isPreviewModalOpen: false,
+      isOverwriteModalOpen: false,
+      pendingTemplateId: "",
     };
   },
   computed: {
-    selectedMessageTemplate() {
-      return this.messageTemplates.find(
-        (t) => String(t.id) === this.selectedMessageTemplateId
-      );
-    },
     canSendMessage() {
       return (
         this.userEmail &&
-        this.selectedMessageTemplateId &&
+        this.commentSubject.trim().length > 0 &&
         this.commentBody.trim().length > 0
       );
     },
     renderedMessageSubject() {
-      if (!this.selectedMessageTemplate) return "";
-      const base = this.renderTemplateText(
-        this.selectedMessageTemplate.subject,
-        this.messageTemplateValues
-      );
-      if (this.sourcePage === "order_status") {
-        return "【申請状況について】" + base;
-      }
-      return base;
+      return this.commentSubject.trim();
     },
     renderedMessageBody() {
       return this.commentBody.trim();
@@ -197,19 +249,6 @@ export default {
         group_name: this.groupName || "",
         user_name: this.userName || "",
       };
-    },
-  },
-  watch: {
-    selectedMessageTemplate(newTemplate) {
-      if (!newTemplate) {
-        this.commentBody = "";
-        return;
-      }
-      this.commentBody = this.renderTemplateText(
-        newTemplate.body,
-        this.messageTemplateValues
-      );
-      this.messageSendResult = "";
     },
   },
   async mounted() {
@@ -241,6 +280,54 @@ export default {
         (_, key) => String(values[key] || "")
       );
     },
+    onTemplateSelect(newTemplateId) {
+      const hasContent =
+        this.commentSubject.trim().length > 0 ||
+        this.commentBody.trim().length > 0;
+
+      if (hasContent) {
+        this.pendingTemplateId = newTemplateId;
+        this.isOverwriteModalOpen = true;
+        return;
+      }
+
+      this.applyTemplateSelection(newTemplateId);
+    },
+    applyTemplateSelection(templateId) {
+      this.selectedMessageTemplateId = templateId;
+      const template = this.messageTemplates.find(
+        (t) => String(t.id) === templateId
+      );
+
+      if (!template) {
+        this.commentSubject = "";
+        this.commentBody = "";
+        return;
+      }
+
+      const subject = this.renderTemplateText(
+        template.subject,
+        this.messageTemplateValues
+      );
+      this.commentSubject =
+        this.sourcePage === "order_status"
+          ? "【申請状況について】" + subject
+          : subject;
+      this.commentBody = this.renderTemplateText(
+        template.body,
+        this.messageTemplateValues
+      );
+      this.messageSendResult = "";
+    },
+    confirmTemplateOverwrite() {
+      this.applyTemplateSelection(this.pendingTemplateId);
+      this.pendingTemplateId = "";
+      this.isOverwriteModalOpen = false;
+    },
+    cancelTemplateOverwrite() {
+      this.pendingTemplateId = "";
+      this.isOverwriteModalOpen = false;
+    },
     openMessagePreview() {
       if (!this.canSendMessage) return;
       this.isPreviewModalOpen = true;
@@ -254,32 +341,38 @@ export default {
       try {
         const payload = {
           group_id: this.groupId,
-          message_template_id: this.selectedMessageTemplateId,
+          message_template_id: this.selectedMessageTemplateId || null,
+          subject: this.commentSubject.trim(),
           body: this.commentBody,
         };
 
         if (this.sourcePage === "health_center") {
           // TODO: 将来的にはapplication_typeを動的に選択できるようにする（現在は food_product に固定）
           payload.application_type = "food_product";
-          await this.$axios.post(
-            "/api/v1/create_health_center_submission_status_comment_mail",
-            payload
-          );
+          const endpoint =
+            this.sendMode === "memo"
+              ? "/api/v1/create_health_center_submission_status_comment"
+              : "/api/v1/create_health_center_submission_status_comment_mail";
+          await this.$axios.post(endpoint, payload);
         } else {
-          await this.$axios.post(
-            "/api/v1/order_status_check_comment_mails",
-            payload
-          );
+          const endpoint =
+            this.sendMode === "memo"
+              ? "/api/v1/create_order_status_check_comment"
+              : "/api/v1/order_status_check_comment_mails";
+          await this.$axios.post(endpoint, payload);
         }
 
+        this.commentSubject = "";
         this.commentBody = "";
         this.selectedMessageTemplateId = "";
-        this.messageSendResult = "送信しました";
+        this.messageSendResult =
+          this.sendMode === "memo" ? "保存しました" : "送信しました";
         this.closeMessagePreview();
         await this.fetchComments();
       } catch (error) {
         console.error("メッセージの送信に失敗しました:", error);
-        this.messageSendResult = "送信に失敗しました";
+        this.messageSendResult =
+          this.sendMode === "memo" ? "保存に失敗しました" : "送信に失敗しました";
         this.closeMessagePreview();
         await this.fetchComments(); // エラー履歴も表示するため
       } finally {
@@ -328,12 +421,12 @@ export default {
     },
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済";
-      if (status === "not_send") return "未送信";
+      if (status === "not_send") return "メモ";
       return "エラー";
     },
     mailDeliveryStatusClass(status) {
       if (status === "sent") return "mail-delivery-status--sent";
-      if (status === "not_send") return "mail-delivery-status--not-send";
+      if (status === "not_send") return "mail-delivery-status--memo";
       return "mail-delivery-status--failed";
     },
   },
@@ -363,6 +456,36 @@ export default {
 .comment-history {
   width: 100%;
   margin-top: 16px;
+}
+
+.message-mode-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.message-mode-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-8);
+}
+
+.message-mode-select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.message-mode-select:focus {
+  outline: none;
+  border-color: var(--button-primary);
 }
 
 .message-template-panel {
@@ -413,11 +536,66 @@ export default {
 .comment-accordion summary {
   cursor: pointer;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comment-summary-time {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.comment-summary-subject {
+  font-size: 0.85em;
+  font-weight: normal;
+  color: var(--accent-8);
 }
 
 .comment-body {
   white-space: pre-wrap;
   margin: 10px 0 4px;
+}
+
+.comment-memo {
+  white-space: pre-wrap;
+  margin: 4px 0;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: var(--accent-1);
+  font-size: 0.9em;
+  color: var(--accent-8);
+}
+
+.comment-subject-label,
+.comment-body-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-8);
+  margin-bottom: 4px;
+}
+
+.comment-subject-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.comment-subject-input:focus {
+  outline: none;
+  border-color: var(--button-primary);
+}
+
+.comment-subject-input:disabled {
+  background-color: var(--accent-1);
 }
 
 .comment-textarea {
@@ -430,6 +608,7 @@ export default {
   font-size: 14px;
   resize: vertical;
   box-sizing: border-box;
+  margin-bottom: 12px;
 }
 
 .comment-textarea:focus {
@@ -463,9 +642,9 @@ export default {
   color: #9a5b00;
 }
 
-.mail-delivery-status--not-send {
-  background: #eeeeee;
-  color: #555;
+.mail-delivery-status--memo {
+  background: #e8eaf6;
+  color: #3949ab;
 }
 
 .source-label {
@@ -517,5 +696,13 @@ export default {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.overwrite-confirm-text {
+  width: 500px;
+  margin: 0;
+  color: #222;
+  font-size: 14px;
+  line-height: 1.65;
 }
 </style>
