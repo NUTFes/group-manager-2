@@ -27,12 +27,6 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
       group_category: group_category,
       fes_year: fes_year
     )
-    @template = MessageTemplate.create!(
-      locale: 'ja',
-      name: 'GM再提出依頼',
-      subject: '再提出依頼: {group_name}',
-      body: '{group_name} 代表 {user_name} 様'
-    )
   end
 
   teardown do
@@ -54,8 +48,8 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     comment = Comment.last
     assert comment.sent?
     assert_equal 'sent', response.parsed_body['data']['mail_delivery_status']
-    assert_includes comment.body, '件名: 再提出依頼: 技大祭企画'
-    assert_includes comment.body, '食品名を修正してください。'
+    assert_equal '再提出依頼: 技大祭企画', comment.subject
+    assert_equal '食品名を修正してください。', comment.body
   end
 
   # 暫定権限の正常系。role_id 2 の staff でもメール送信付きメモを作成できることを確認する。
@@ -101,7 +95,8 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
   # 再送信正常系
   test 'resends failed comment' do
     comment = @group.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -119,7 +114,8 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
   test 'fails to resend when representative email is blank' do
     @representative.update!(email: '')
     comment = @group.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -138,7 +134,7 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
   def valid_params
     {
       group_id: @group.id,
-      message_template_id: @template.id,
+      subject: '再提出依頼: 技大祭企画',
       body: '食品名を修正してください。'
     }
   end
