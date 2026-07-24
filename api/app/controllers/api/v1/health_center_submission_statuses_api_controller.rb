@@ -104,18 +104,13 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     end
 
     @comment = @submission_status.comments.build(
+      subject: params[:subject],
       body: params[:body],
+      memo: params[:memo],
       mail_delivery_status: :not_send
     )
     if @comment.save
-      render json: fmt(created, {
-                         id: @comment.id,
-                         body: @comment.body,
-                         mail_delivery_status: @comment.mail_delivery_status,
-                         created_at: @comment.created_at,
-                         commentable_type: @comment.commentable_type,
-                         commentable_id: @comment.commentable_id
-                       })
+      render json: fmt(created, comment_response(@comment))
     else
       render json: fmt(unprocessable_entity, [], @comment.errors.full_messages.join(', '))
     end
@@ -126,22 +121,15 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     errors = validate_comment_mail_params
     return render json: fmt(unprocessable_entity, errors), status: :unprocessable_entity if errors.present?
 
-    template = MessageTemplate.find_by(id: params[:message_template_id])
-    return render json: fmt(not_found, [], 'message_template not found'), status: :not_found if template.nil?
-
     group = Group.includes(:user).find_by(id: params[:group_id])
     return render json: fmt(not_found, [], 'group not found'), status: :not_found if group.nil?
     return render json: fmt(unprocessable_entity, [], 'representative email is required'), status: :unprocessable_entity if group.user&.email.blank?
 
-    mail_values = {
-      group_name: group.name,
-      user_name: group.user.name
-    }
-    subject = template.render_subject(mail_values)
+    subject = params[:subject].to_s.strip
     body = params[:body].to_s.strip
-    comment_body = build_mail_comment_body(subject, body)
+    memo = params[:memo].to_s.strip
 
-    comment = save_failed_mail_comment!(comment_body)
+    comment = save_failed_mail_comment!(subject: subject, body: body, memo: memo)
     deliver_comment_mail!(comment, to: group.user.email, subject: subject, body: body)
 
     render json: fmt(created, comment_response(comment)), status: :created
@@ -162,8 +150,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     group = comment.commentable.group
     return render json: fmt(unprocessable_entity, [], 'representative email is required'), status: :unprocessable_entity if group.user&.email.blank?
 
-    subject, body = parse_mail_comment_body(comment.body)
-    deliver_comment_mail!(comment, to: group.user.email, subject: subject, body: body)
+    deliver_comment_mail!(comment, to: group.user.email, subject: comment.subject, body: comment.body)
 
     render json: fmt(ok, comment_response(comment))
   rescue StandardError => e
@@ -226,7 +213,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     errors << 'group_id is required' if params[:group_id].blank?
     errors << 'application_type is required' if params[:application_type].blank?
     errors << 'Invalid application_type' if params[:application_type].present? && !valid_application_type?(params[:application_type].to_s)
-    errors << 'message_template_id is required' if params[:message_template_id].blank?
+    errors << 'subject is required' if params[:subject].to_s.strip.blank?
     errors << 'body is required' if params[:body].to_s.strip.blank?
     errors
   end
@@ -239,7 +226,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
            status: :forbidden
   end
 
-  def save_failed_mail_comment!(body)
+  def save_failed_mail_comment!(subject:, body:, memo:)
     submission_status = nil
     comment = nil
 
@@ -249,7 +236,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
       submission_status.save! if submission_status.new_record?
       comment = submission_status.comments.create!(
+        subject: subject,
         body: body,
+        memo: memo,
         mail_delivery_status: :failed
       )
     end
@@ -258,7 +247,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   rescue ActiveRecord::RecordNotUnique
     submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
     submission_status.comments.create!(
+      subject: subject,
       body: body,
+      memo: memo,
       mail_delivery_status: :failed
     )
   end
@@ -272,22 +263,14 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     comment.update!(mail_delivery_status: :sent)
   end
 
-  def build_mail_comment_body(subject, body)
-    "件名: #{subject}\n\n#{body}"
-  end
-
-  def parse_mail_comment_body(comment_body)
-    subject_line, body = comment_body.to_s.split("\n\n", 2)
-    subject = subject_line.to_s.sub(/\A件名:\s*/, '')
-    [subject, body.to_s]
-  end
-
   def comment_response(comment)
     return {} if comment.nil?
 
     {
       id: comment.id,
+      subject: comment.subject,
       body: comment.body,
+      memo: comment.memo,
       mail_delivery_status: comment.mail_delivery_status,
       created_at: comment.created_at,
       commentable_type: comment.commentable_type,

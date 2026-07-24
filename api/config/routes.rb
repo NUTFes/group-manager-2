@@ -282,6 +282,7 @@ Rails.application.routes.draw do
           post :resend
         end
       end
+      post 'create_order_status_check_comment' => 'order_status_check_comment_mails#create_comment'
       resources :group_mail_comments, only: [:index], controller: 'group_mail_comments_api'
 
       #---保健所提出確認画面

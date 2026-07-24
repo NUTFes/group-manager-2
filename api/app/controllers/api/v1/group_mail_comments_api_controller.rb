@@ -31,7 +31,9 @@ class Api::V1::GroupMailCommentsApiController < ApplicationController
   def comment_response(comment)
     {
       id: comment.id,
+      subject: comment.subject,
       body: comment.body,
+      memo: comment.memo,
       mail_delivery_status: comment.mail_delivery_status,
       created_at: comment.created_at,
       commentable_type: comment.commentable_type,
