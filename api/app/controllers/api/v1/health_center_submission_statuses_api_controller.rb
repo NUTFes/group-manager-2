@@ -20,6 +20,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     get_health_center_submission_status_show_for_admin_view
   ]
   before_action :require_mail_delivery_role!, only: %i[
+    create_health_center_submission_status_comment
     create_health_center_submission_status_comment_mail
     resend_health_center_submission_status_comment_mail
   ]
