@@ -14,9 +14,8 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
 
     subject = params[:subject].to_s.strip
     body = params[:body].to_s.strip
-    memo = params[:memo].to_s.strip
 
-    comment = save_failed_mail_comment!(group, subject: subject, body: body, memo: memo)
+    comment = save_failed_mail_comment!(group, subject: subject, body: body)
     deliver_comment_mail!(comment, to: group.user.email, subject: subject, body: body)
 
     render json: fmt(created, comment_response(comment)), status: :created
@@ -38,8 +37,7 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
     comment = group.comments.create!(
       subject: params[:subject].to_s.strip,
       body: params[:body].to_s.strip,
-      memo: params[:memo].to_s.strip,
-      mail_delivery_status: :not_send
+      mail_delivery_status: :memo
     )
 
     render json: fmt(created, comment_response(comment)), status: :created
@@ -83,11 +81,10 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
            status: :forbidden
   end
 
-  def save_failed_mail_comment!(group, subject:, body:, memo:)
+  def save_failed_mail_comment!(group, subject:, body:)
     group.comments.create!(
       subject: subject,
       body: body,
-      memo: memo,
       mail_delivery_status: :failed
     )
   end
@@ -108,7 +105,6 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
       id: comment.id,
       subject: comment.subject,
       body: comment.body,
-      memo: comment.memo,
       mail_delivery_status: comment.mail_delivery_status,
       created_at: comment.created_at,
       commentable_type: comment.commentable_type,

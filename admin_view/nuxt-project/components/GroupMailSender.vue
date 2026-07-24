@@ -105,7 +105,6 @@
             </span>
           </summary>
           <p class="comment-body">{{ comment.body }}</p>
-          <p v-if="comment.memo" class="comment-memo">メモ: {{ comment.memo }}</p>
           <CommonButton
             v-if="comment.mail_delivery_status === 'failed'"
             iconName="send"
@@ -421,12 +420,12 @@ export default {
     },
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済";
-      if (status === "not_send") return "メモ";
+      if (status === "memo") return "メモ";
       return "エラー";
     },
     mailDeliveryStatusClass(status) {
       if (status === "sent") return "mail-delivery-status--sent";
-      if (status === "not_send") return "mail-delivery-status--memo";
+      if (status === "memo") return "mail-delivery-status--memo";
       return "mail-delivery-status--failed";
     },
   },
@@ -556,16 +555,6 @@ export default {
 .comment-body {
   white-space: pre-wrap;
   margin: 10px 0 4px;
-}
-
-.comment-memo {
-  white-space: pre-wrap;
-  margin: 4px 0;
-  padding: 8px 10px;
-  border-radius: 4px;
-  background: var(--accent-1);
-  font-size: 0.9em;
-  color: var(--accent-8);
 }
 
 .comment-subject-label,

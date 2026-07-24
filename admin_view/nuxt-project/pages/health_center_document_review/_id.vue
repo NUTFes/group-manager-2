@@ -978,13 +978,13 @@ export default {
     getStatusSelectClass: getSubmissionStatusSelectClass,
     mailDeliveryStatusLabel(status) {
       if (status === "sent") return "送信済み";
-      if (status === "not_send") return "送信しない";
+      if (status === "memo") return "送信しない";
 
       return "未送信または送信失敗";
     },
     mailDeliveryStatusClass(status) {
       if (status === "sent") return "mail-delivery-status--sent";
-      if (status === "not_send") return "mail-delivery-status--not-send";
+      if (status === "memo") return "mail-delivery-status--not-send";
 
       return "mail-delivery-status--failed";
     },

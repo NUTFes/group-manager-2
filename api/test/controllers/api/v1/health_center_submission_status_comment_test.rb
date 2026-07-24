@@ -21,8 +21,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentTest < ActionDispatch::Integra
     )
   end
 
-  # 通常メモ作成: メール送信しないメモとしてnot_sendで保存されることを確認する。
-  test 'creates a not_send comment without mail delivery' do
+  # 通常メモ作成: メール送信しないメモとしてmemoで保存されることを確認する。
+  test 'creates a memo comment without mail delivery' do
     assert_difference -> { Comment.count }, 1 do
       post '/api/v1/create_health_center_submission_status_comment',
            params: {
@@ -36,8 +36,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentTest < ActionDispatch::Integra
 
     assert_response :success
     comment = Comment.last
-    assert comment.not_send?
-    assert_equal 'not_send', response.parsed_body['data']['mail_delivery_status']
+    assert comment.memo?
+    assert_equal 'memo', response.parsed_body['data']['mail_delivery_status']
   end
 
   private

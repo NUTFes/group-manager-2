@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "mail_delivery_status", default: 0, null: false
     t.string "subject"
-    t.text "memo"
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
   end
 

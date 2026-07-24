@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-class AddSubjectAndMemoToComments < ActiveRecord::Migration[6.1]
+class AddSubjectToComments < ActiveRecord::Migration[6.1]
   def up
     add_column :comments, :subject, :string
-    add_column :comments, :memo, :text
 
     Comment.reset_column_information
     Comment.find_each do |comment|
@@ -20,7 +19,6 @@ class AddSubjectAndMemoToComments < ActiveRecord::Migration[6.1]
   end
 
   def down
-    remove_column :comments, :memo
     remove_column :comments, :subject
   end
 end

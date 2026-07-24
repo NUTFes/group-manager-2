@@ -139,7 +139,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
   end
 
   # 再送信の防御: 送信しない通常メモはAPIを直接叩いても再送できない。
-  test 'does not resend not_send comment' do
+  test 'does not resend memo comment' do
     submission_status = HealthCenterSubmissionStatus.create!(
       group: @group,
       application_type: :food_product,
@@ -147,7 +147,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     )
     comment = submission_status.comments.create!(
       body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
-      mail_delivery_status: :not_send
+      mail_delivery_status: :memo
     )
 
     assert_no_difference -> { ActionMailer::Base.deliveries.size } do
