@@ -336,7 +336,6 @@ export default {
       try {
         const payload = {
           group_id: this.groupId,
-          message_template_id: this.selectedMessageTemplateId || null,
           subject: this.commentSubject.trim(),
           body: this.commentBody,
         };
