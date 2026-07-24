@@ -304,14 +304,10 @@ export default {
         return;
       }
 
-      const subject = this.renderTemplateText(
+      this.commentSubject = this.renderTemplateText(
         template.subject,
         this.messageTemplateValues
       );
-      this.commentSubject =
-        this.sourcePage === "order_status"
-          ? "【申請状況について】" + subject
-          : subject;
       this.commentBody = this.renderTemplateText(
         template.body,
         this.messageTemplateValues
