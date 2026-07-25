@@ -84,7 +84,7 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
   def materialized_path(route)
     route.path.spec.to_s
          .delete_suffix('(.:format)')
-         .gsub(/:([a-zA-Z_]+)/, '1')
+         .gsub(/:([a-zA-Z_]+)/, '999999999')
          .gsub(/\*([a-zA-Z_]+)/, 'test')
   end
 

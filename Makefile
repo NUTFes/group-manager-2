@@ -103,5 +103,10 @@ openapi:
 	docker compose run --rm api bundle exec rake routes:oas:build
 	docker compose run --rm api bundle exec rake openapi:sync_access_control
 
+api-access-docs:
+	docker compose run --rm api bundle exec rake api_access_control:export_markdown \
+		OUTPUT_PATH=/myapp/tmp/group-manager-api-access-control.md
+	cp api/tmp/group-manager-api-access-control.md docs/group-manager-api-access-control.md
+
 erd:
 	docker compose run --rm api bundle exec rake erd filetype=png filename=er

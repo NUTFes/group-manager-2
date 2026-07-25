@@ -3,6 +3,8 @@
 Issue #2136 の移行先となるアクセス区分を
 [`api/config/api_access_control.yml`](../api/config/api_access_control.yml) に記録する。
 この台帳を実行時のデフォルト拒否ポリシーとして使用し、各 `controller#action` の認証・認可を適用する。
+HTTPメソッド・パス単位の完全な一覧は
+[`group-manager-api-access-control.md`](./group-manager-api-access-control.md) に記録する。
 
 ## アクセス区分
 
@@ -35,6 +37,7 @@ Rails内部、Action Mailbox、Active Storage、Devise Token Authのルートを
 ## 更新方法
 
 ルートを追加、変更、削除した場合は、同じ変更内で台帳も更新する。
+`make api-access-docs` でNotion取込用の権限一覧を再生成する。
 次のテストは未分類ルート、削除済み定義、重複分類、未解決ルートの増減を検出する。
 
 ```bash
