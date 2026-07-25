@@ -44,6 +44,14 @@ docker compose run --rm api rails test test/lib/api_access_control_registry_test
 `.github/workflows/api-access-control.yml` は台帳、ロール差、所有権、OpenAPI同期の回帰テストを
 API変更のpushとPull Requestで実行する。
 
+`api_access_control_matrix_test.rb` は全業務ルートについて、未認証の401、権限不足の403に加え、
+userルートをuser・staff・manager、staffルートをstaff・manager、managerルートをmanagerが
+それぞれ認証・認可ゲート通過できることを検証する。
+
+`user_ownership_test.rb` と `user_ownership_crud_matrix_test.rb` は、団体依存APIの一覧・参照・作成・
+更新・削除・一括更新・申請submitをcontroller横断で実行し、別団体のIDを404で秘匿して
+データを変更しないことを検証する。
+
 台帳にない業務ルートは実行時にも拒否される。Userの処理ではcontroller側で所有権スコープを適用し、
 別団体のIDは404にする。
 
