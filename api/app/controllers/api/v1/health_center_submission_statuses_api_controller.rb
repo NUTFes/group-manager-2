@@ -93,7 +93,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   # メモ（コメント）保存
   def create_health_center_submission_status_comment
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
-    return render json: fmt(unprocessable_entity, [], 'subject is required') if params[:subject].to_s.strip.blank?
+    return render json: fmt(unprocessable_entity, [], 'subject is required'), status: :unprocessable_entity if params[:subject].to_s.strip.blank?
 
     @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
     return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?

@@ -28,6 +28,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentTest < ActionDispatch::Integra
            params: {
              group_id: @group.id,
              application_type: 'food_product',
+             subject: '確認メモ',
              body: '確認だけのメモです'
            },
            headers: auth_headers(@admin),
@@ -38,6 +39,23 @@ class Api::V1::HealthCenterSubmissionStatusCommentTest < ActionDispatch::Integra
     comment = Comment.last
     assert comment.memo?
     assert_equal 'memo', response.parsed_body['data']['mail_delivery_status']
+    assert_equal '確認メモ', comment.subject
+  end
+
+  # 異常系: subjectが未指定の場合はメモを作成できない。
+  test 'fails when subject is missing' do
+    assert_no_difference -> { Comment.count } do
+      post '/api/v1/create_health_center_submission_status_comment',
+           params: {
+             group_id: @group.id,
+             application_type: 'food_product',
+             body: '確認だけのメモです'
+           },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
   end
 
   private
