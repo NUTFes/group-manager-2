@@ -521,6 +521,7 @@
       >
         <GroupMailSender
           v-if="group.group.id"
+          :key="group.group.id"
           :group-id="group.group.id"
           :user-email="group.user ? group.user.email : ''"
           source-page="health_center"
