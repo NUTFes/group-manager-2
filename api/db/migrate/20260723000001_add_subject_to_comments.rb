@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class AddSubjectToComments < ActiveRecord::Migration[6.1]
+  class MigrationComment < ActiveRecord::Base
+    self.table_name = 'comments'
+  end
+
   def up
     add_column :comments, :subject, :string
 
-    Comment.reset_column_information
-    Comment.find_each do |comment|
+    MigrationComment.reset_column_information
+    MigrationComment.find_each do |comment|
       next if comment.body.blank?
 
       subject_line, rest = comment.body.split("\n\n", 2)
