@@ -45,7 +45,9 @@
             {{ messageSendResult }}
           </p>
         </div>
-        <label class="comment-subject-label" for="comment-subject-input">件名</label>
+        <label class="comment-subject-label" for="comment-subject-input"
+          >件名</label
+        >
         <input
           id="comment-subject-input"
           type="text"
@@ -55,12 +57,16 @@
           v-model="commentSubject"
           :disabled="isSendingMessage"
         />
-        <label class="comment-body-label" for="comment-body-textarea">本文</label>
+        <label class="comment-body-label" for="comment-body-textarea"
+          >本文</label
+        >
         <textarea
           id="comment-body-textarea"
           class="comment-textarea"
           :placeholder="
-            sendMode === 'mail' ? 'メールで送信するコメント' : '実行委員内で共有するメモ'
+            sendMode === 'mail'
+              ? 'メールで送信するコメント'
+              : '実行委員内で共有するメモ'
           "
           v-model="commentBody"
           :disabled="isSendingMessage"
@@ -83,7 +89,9 @@
         >
           <summary>
             <span class="comment-summary-time">
-              <span class="comment-timestamp">{{ formatCommentTimestamp(comment.created_at) }}</span>
+              <span class="comment-timestamp">{{
+                formatCommentTimestamp(comment.created_at)
+              }}</span>
               <span class="comment-summary-subject">{{ comment.subject }}</span>
             </span>
             <span
@@ -368,7 +376,9 @@ export default {
       } catch (error) {
         console.error("メッセージの送信に失敗しました:", error);
         this.messageSendResult =
-          this.sendMode === "memo" ? "保存に失敗しました" : "送信に失敗しました";
+          this.sendMode === "memo"
+            ? "保存に失敗しました"
+            : "送信に失敗しました";
         this.closeMessagePreview();
         await this.fetchComments(); // エラー履歴も表示するため
       } finally {

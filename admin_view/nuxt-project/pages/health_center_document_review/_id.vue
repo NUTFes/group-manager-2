@@ -916,7 +916,9 @@ export default {
           this.$router.push("/reauthentication_required");
           return;
         }
-        this.openEditError("データの再取得に失敗しました。再読み込みしてください。");
+        this.openEditError(
+          "データの再取得に失敗しました。再読み込みしてください。"
+        );
       }
     },
     onPrevGroup() {
