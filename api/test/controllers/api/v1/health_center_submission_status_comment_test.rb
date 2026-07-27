@@ -58,6 +58,39 @@ class Api::V1::HealthCenterSubmissionStatusCommentTest < ActionDispatch::Integra
     assert_response :unprocessable_entity
   end
 
+  # 異常系: application_typeが不正な場合はメモを作成できない。
+  test 'fails when application_type is invalid' do
+    assert_no_difference -> { Comment.count } do
+      post '/api/v1/create_health_center_submission_status_comment',
+           params: {
+             group_id: @group.id,
+             application_type: 'invalid_type',
+             subject: '確認メモ',
+             body: '確認だけのメモです'
+           },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  # 異常系: group_idが未指定の場合はメモを作成できない。
+  test 'fails when group_id is missing' do
+    assert_no_difference -> { Comment.count } do
+      post '/api/v1/create_health_center_submission_status_comment',
+           params: {
+             application_type: 'food_product',
+             subject: '確認メモ',
+             body: '確認だけのメモです'
+           },
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   private
 
   def create_user!(email:, role_id:)
