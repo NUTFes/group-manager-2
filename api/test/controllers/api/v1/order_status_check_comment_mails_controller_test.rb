@@ -92,6 +92,57 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     assert_includes response.parsed_body['data'], 'group_id is required'
   end
 
+  # 異常系: subjectが未指定の場合はメール送信付きメモを作成できない。
+  test 'fails when subject is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/order_status_check_comment_mails',
+           params: valid_params.except(:subject),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
+  # 正常系: メモをメール送信せずmemoで保存する。
+  test 'creates a memo comment without mail delivery' do
+    assert_difference('Comment.count', 1) do
+      assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+        post '/api/v1/create_order_status_check_comment',
+             params: valid_params,
+             headers: auth_headers(@admin),
+             as: :json
+      end
+    end
+
+    assert_response :created
+    comment = Comment.last
+    assert comment.memo?
+    assert_equal 'memo', response.parsed_body['data']['mail_delivery_status']
+  end
+
+  # 異常系: group_idが存在しない場合は404を返す。
+  test 'fails to create memo comment when group does not exist' do
+    post '/api/v1/create_order_status_check_comment',
+         params: valid_params.merge(group_id: 0),
+         headers: auth_headers(@admin),
+         as: :json
+
+    assert_response :not_found
+  end
+
+  # 異常系: subjectが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when subject is missing' do
+    post '/api/v1/create_order_status_check_comment',
+         params: valid_params.except(:subject),
+         headers: auth_headers(@admin),
+         as: :json
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
   # 再送信正常系
   test 'resends failed comment' do
     comment = @group.comments.create!(
