@@ -109,6 +109,19 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_equal 'failed', response.parsed_body['data']['mail_delivery_status']
   end
 
+  # 異常系: subjectが未指定の場合はメール送信付きメモを作成できない。
+  test 'fails when subject is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_health_center_submission_status_comment_mail',
+           params: valid_params.except(:subject),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
   # 再送信: failedの保存済みメモを再送し、成功時にsentへ更新する。
   test 'resends failed comment and marks it sent' do
     submission_status = HealthCenterSubmissionStatus.create!(
