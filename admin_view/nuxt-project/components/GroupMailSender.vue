@@ -338,7 +338,7 @@ export default {
         const payload = {
           group_id: this.groupId,
           subject: this.commentSubject.trim(),
-          body: this.commentBody,
+          body: this.commentBody.trim(),
         };
 
         if (this.sourcePage === "health_center") {
