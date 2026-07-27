@@ -51,6 +51,7 @@
           type="text"
           class="comment-subject-input"
           placeholder="件名"
+          maxlength="255"
           v-model="commentSubject"
           :disabled="isSendingMessage"
         />
