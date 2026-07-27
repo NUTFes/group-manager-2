@@ -23,6 +23,13 @@ class AddSubjectToComments < ActiveRecord::Migration[6.1]
   end
 
   def down
+    MigrationComment.reset_column_information
+    MigrationComment.where.not(subject: nil).where.not(subject: '').find_each do |comment|
+      comment.update_columns(
+        body: "件名: #{comment.subject}\n\n#{comment.body}"
+      )
+    end
+
     remove_column :comments, :subject
   end
 end
