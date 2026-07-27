@@ -176,7 +176,6 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
     t.boolean "is_international"
     t.boolean "is_external"
     t.bigint "uses_place_id"
-    t.boolean "is_health_center_submission_target", default: true, null: false
     t.index ["uses_place_id"], name: "index_groups_on_uses_place_id"
   end
 
