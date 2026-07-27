@@ -10,4 +10,5 @@ class Comment < ApplicationRecord
   }
 
   validates :body, presence: true
+  validates :subject, length: { maximum: 255 }, allow_nil: true
 end
