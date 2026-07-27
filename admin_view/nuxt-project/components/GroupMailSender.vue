@@ -231,8 +231,9 @@ export default {
   },
   computed: {
     canSendMessage() {
+      const hasRecipient = this.sendMode !== "mail" || !!this.userEmail;
       return (
-        this.userEmail &&
+        hasRecipient &&
         this.commentSubject.trim().length > 0 &&
         this.commentBody.trim().length > 0
       );
