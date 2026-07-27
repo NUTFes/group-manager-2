@@ -143,6 +143,32 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     assert_includes response.parsed_body['data'], 'subject is required'
   end
 
+  # 異常系: bodyが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when body is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_order_status_check_comment',
+           params: valid_params.except(:body),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'body is required'
+  end
+
+  # 異常系: group_idが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when group_id is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_order_status_check_comment',
+           params: valid_params.except(:group_id),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'group_id is required'
+  end
+
   # 再送信正常系
   test 'resends failed comment' do
     comment = @group.comments.create!(
