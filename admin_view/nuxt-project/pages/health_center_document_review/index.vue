@@ -34,6 +34,13 @@
         >
           {{ refExternal }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="submissionTargetList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refSubmissionTarget }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -92,6 +99,18 @@
             @click="() => $router.push({ path: `/health_center_document_review/` + group.group.id })">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
+            <td @click.stop>
+              <SwitchButton
+                :isOn="group.group.is_health_center_submission_target"
+                :on_click="
+                  () =>
+                    onToggleSubmissionTarget(
+                      group,
+                      !group.group.is_health_center_submission_target
+                    )
+                "
+              />
+            </td>
             <td :class="{ unregistered: !isHealthCenterDocumentComplete(group) }">
               <div v-if="isHealthCenterDocumentComplete(group)">◯</div>
               <div v-else>✖️</div>
@@ -193,6 +212,7 @@ export default {
       headers: [
         "ID",
         "参加団体",
+        "提出対象",
         "結果",
         "調理工程申請",
         "販売品申請",
@@ -229,7 +249,14 @@ export default {
         { id: 1, value: "学外", bool: true },
         { id: 2, value: "学内", bool: false },
       ],
+      refSubmissionTarget: "ALL",
+      refSubmissionTargetID: 0,
+      submissionTargetList: [
+        { id: 1, value: "対象", bool: true },
+        { id: 2, value: "対象外", bool: false },
+      ],
       isSyncing: false,
+      updatingSubmissionTargetGroupIds: {},
     };
   },
   computed: {
@@ -281,6 +308,17 @@ export default {
       this.updateFilters(this.refExternalID, this.externalList);
     } else {
       this.refExternal = "External";
+    }
+
+    const storedSubmissionTargetID = localStorage.getItem(
+      this.$route.path + "RefSubmissionTarget"
+    );
+
+    if (storedSubmissionTargetID) {
+      this.refSubmissionTargetID = Number(storedSubmissionTargetID);
+      this.updateFilters(this.refSubmissionTargetID, this.submissionTargetList);
+    } else {
+      this.refSubmissionTarget = "SubmissionTarget";
     }
 
     this.fetchFilteredData();
@@ -356,6 +394,10 @@ export default {
         this.$route.path + "RefExternal",
         this.refExternalID
       );
+      localStorage.setItem(
+        this.$route.path + "RefSubmissionTarget",
+        this.refSubmissionTargetID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
@@ -393,6 +435,15 @@ export default {
           this.refExternal = "External: ALL";
         } else {
           this.refExternal = name_list[item_id - 1].value;
+        }
+        // 保健所提出対象で絞り込む時
+      } else if (name_list === this.submissionTargetList) {
+        this.refSubmissionTargetID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refSubmissionTarget = "提出対象: ALL";
+        } else {
+          this.refSubmissionTarget = name_list[item_id - 1].value;
         }
       }
     },
@@ -456,6 +507,29 @@ export default {
         this.isSyncing = false;
       }
     },
+    async onToggleSubmissionTarget(group, checked) {
+      const groupId = group?.group?.id;
+      if (!groupId || this.updatingSubmissionTargetGroupIds[groupId]) return;
+
+      this.$set(this.updatingSubmissionTargetGroupIds, groupId, true);
+      try {
+        const response = await this.$axios.$patch(
+          `/api/v1/update_health_center_submission_target/${groupId}`,
+          { is_health_center_submission_target: checked }
+        );
+        group.group.is_health_center_submission_target =
+          response.data.is_health_center_submission_target;
+        this.groups = this.filterGroups(this.searchText);
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/reauthentication_required");
+          return;
+        }
+        alert("保健所提出対象の更新に失敗しました");
+      } finally {
+        this.$delete(this.updatingSubmissionTargetGroupIds, groupId);
+      }
+    },
     // 申請しないデータかどうかを判定するメソッド
     isUnregistered(groupId, orderType) {
       return this.unregisteredGroups.some(item =>
@@ -513,6 +587,7 @@ export default {
         const yearId = this.getGroupYearId(group);
         const isInternational = group.group?.is_international;
         const isExternal = group.group?.is_external;
+        const isSubmissionTarget = group.group?.is_health_center_submission_target;
         const matchedWord =
           normalizedWord.length === 0 ||
           group.group?.name?.toLowerCase().includes(normalizedWord);
@@ -526,6 +601,9 @@ export default {
           (this.refExternalID === 0 ||
             (this.refExternalID === 1 && isExternal === true) ||
             (this.refExternalID === 2 && !isExternal)) &&
+          (this.refSubmissionTargetID === 0 ||
+            (this.refSubmissionTargetID === 1 && isSubmissionTarget === true) ||
+            (this.refSubmissionTargetID === 2 && !isSubmissionTarget)) &&
           matchedWord
         );
       });

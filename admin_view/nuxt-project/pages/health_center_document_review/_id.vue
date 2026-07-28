@@ -15,6 +15,18 @@
             group.user.email
           }}</a>
         </p>
+        <div class="submission-target-toggle">
+          <span class="submission-target-label">保健所提出対象</span>
+          <SwitchButton
+            :isOn="group.group.is_health_center_submission_target"
+            :on_click="
+              () =>
+                onToggleSubmissionTarget(
+                  !group.group.is_health_center_submission_target
+                )
+            "
+          />
+        </div>
         <div class="submission-summary" role="status" aria-live="polite">
           <template v-if="unapprovedSubmissionCount > 0">
             <div class="submission-summary-main">
@@ -792,12 +804,14 @@ export default {
           id: null,
           name: "",
           project_name: "",
+          is_health_center_submission_target: true,
         },
         user: {
           name: "",
           email: "",
         },
       },
+      isUpdatingSubmissionTarget: false,
       foodProducts: [],
       purchaseLists: [],
       cookingProcessOrders: [],
@@ -996,6 +1010,28 @@ export default {
         savedSubmission.status = response.data.status;
       }
     },
+    async onToggleSubmissionTarget(checked) {
+      const groupId = this.group.group.id;
+      if (!groupId || this.isUpdatingSubmissionTarget) return;
+
+      this.isUpdatingSubmissionTarget = true;
+      try {
+        const response = await this.$axios.$patch(
+          `/api/v1/update_health_center_submission_target/${groupId}`,
+          { is_health_center_submission_target: checked }
+        );
+        this.group.group.is_health_center_submission_target =
+          response.data.is_health_center_submission_target;
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/reauthentication_required");
+          return;
+        }
+        alert("保健所提出対象の更新に失敗しました");
+      } finally {
+        this.isUpdatingSubmissionTarget = false;
+      }
+    },
     openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
       this.selectedFoodProductId = foodProduct.id;
@@ -1159,6 +1195,17 @@ export default {
 .mail-link {
   color: var(--accent-7);
   text-decoration: underline;
+}
+
+.submission-target-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
 }
 
 .section-title-with-button,
