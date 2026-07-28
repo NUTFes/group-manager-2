@@ -57,7 +57,7 @@
       <div class="delete-modal-content">
         <h2>割り当ての削除</h2>
         <h4>
-          本当にこの団体の割り当てを削除しますか？<br>
+          本当にこの場所からこの団体の割り当てを削除しますか？<br>
         </h4>
         <div class="modal-actions">
           <YesButton v-if="$role(roleID).assign_items.delete" iconName="delete" :on_click="confirmDelete">削除する</YesButton>
@@ -85,18 +85,22 @@
         </div>
         <div class="order-group-content">
           <template v-for="group in activeAssignedGroups">
-            <template v-for="[rentalPlaceId, sourceBreakdown] in [[getGroupRentalPlace(group.id), getGroupSourceBreakdown(group.id)]]">
+            <template v-for="[sourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
             <div
-              :key="group.id" 
+              :key="group.id"
               draggable="true"
               @dragstart="handleDragStartGroup($event, group)"
               class="group-card"
-              :class="{ 'is-fulfilled': rentalPlaceId }"
+              :class="{ 'is-fulfilled': isGroupFullyAssigned(group.id) }"
             >
                 <div class="group-name">
                   {{ group.name }}
-                  <span class="assigned" v-if="rentalPlaceId">
-                    {{ getPlaceName(rentalPlaceId) }}へ
+                </div>
+                <!-- チェックボックスで有効化されている物品はまとめて1枚のカードに表示 -->
+                <div class="item-summary">
+                  <span v-for="itemId in activeItemIdsForGroup(group.id)" :key="itemId" class="item-chip">
+                    {{ getItemName(itemId) }}: {{ getGroupTotalItem(group.id, itemId) }}
+                    <template v-if="getGroupItemPlace(group.id, itemId)">({{ getPlaceName(getGroupItemPlace(group.id, itemId)) }})</template>
                   </span>
                 </div>
                 <!-- 左側にも搬入元内訳を簡易表示 -->
@@ -204,17 +208,17 @@
                     割り当て済み団体をここにドロップ
                   </div>
                   <template v-else>
-                    <div 
+                    <div
                       v-for="group in groupsInPlace"
-                      :key="group.id" 
+                      :key="group.id"
                       class="assignment-item"
                     >
-                      <template v-for="[groupSourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
+                      <template v-for="[groupSourceBreakdown] in [[getGroupSourceBreakdownForPlace(group.id, place.id)]]">
                         <div class="assign-group-name">
                           {{ group.name }}
                           <div class="import-source">
                             <span v-for="source in groupSourceBreakdown" :key="source.id">
-                              {{ source.name }}より: 
+                              {{ source.name }}より:
                               <template v-for="itemId in activeItemIds">
                                 <span v-if="source.items[itemId] > 0" :key="itemId" style="margin-right: 8px;">
                                   {{ getItemName(itemId) }}{{ source.items[itemId] }}
@@ -225,13 +229,13 @@
                         </div>
                       </template>
                       <div class="assign-inputs">
-                        <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
+                        <div v-for="itemId in itemIdsAssignedAtPlace(group.id, place.id)" :key="itemId" class="assign-input-group">
                           <span class="input-label">
-                            {{ getItemName(itemId) }} {{ getGroupTotalItem(group.id, itemId) }}
+                            {{ getItemName(itemId) }} {{ getGroupItemTotalAtPlace(group.id, itemId, place.id) }}
                           </span>
                         </div>
                       </div>
-                      <button v-if="$role(roleID).assign_items.delete" class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
+                      <button v-if="$role(roleID).assign_items.delete" class="btn-delete" @click="openDeleteModal(group.id, place.id)">✕</button>
                     </div>
                   </template>
                   </div>
@@ -256,6 +260,7 @@ export default {
       isModalOpen: false,
       isDeleteModalOpen: false,
       targetDeleteGroupId: null,
+      targetDeletePlaceId: null,
       items: [],
       groups: [],
       places: [],
@@ -412,11 +417,13 @@ export default {
 
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP_LOCATION') return;
-      
+
       const groupId = e.dataTransfer.getData('groupId');
       if (!groupId) return;
 
-      const groupAssignments = this.getAssignmentsBy('group_id', groupId);
+      const groupAssignments = this.assignments.filter(
+        a => Number(a.group_id) === Number(groupId) && this.activeItemIds.includes(Number(a.rental_item_id))
+      );
       if (groupAssignments.length === 0) return;
 
       try {
@@ -430,25 +437,29 @@ export default {
     // ----------------------------
     // 削除確認モーダルの制御
     // ----------------------------
-    openDeleteModal(groupId) {
+    openDeleteModal(groupId, placeId) {
       if (!this.$role(this.roleID).assign_items.delete) return;
       this.targetDeleteGroupId = groupId;
+      this.targetDeletePlaceId = placeId;
       this.isDeleteModalOpen = true;
     },
     closeDeleteModal() {
       this.isDeleteModalOpen = false;
       this.targetDeleteGroupId = null;
+      this.targetDeletePlaceId = null;
     },
     async confirmDelete() {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      if (!this.targetDeleteGroupId) return;
-      await this.removeGroupFromPlace(this.targetDeleteGroupId);
+      if (!this.targetDeleteGroupId || !this.targetDeletePlaceId) return;
+      await this.removeGroupFromPlace(this.targetDeleteGroupId, this.targetDeletePlaceId);
       this.closeDeleteModal();
     },
 
-    async removeGroupFromPlace(groupId) {
+    async removeGroupFromPlace(groupId, placeId) {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
+      const groupAssignments = this.assignments.filter(
+        a => Number(a.group_id) === Number(groupId) && Number(a.rental_place_id) === Number(placeId)
+      );
       try {
         await this.updateAssignmentsPlace(groupAssignments, null);
       } catch (error) {
@@ -485,9 +496,35 @@ export default {
       return this.getNameById(this.places, placeId);
     },
 
-    getGroupRentalPlace(groupId) {
-      const assign = this.getAssignmentsBy('group_id', groupId).find(a => a.rental_place_id);
+    getGroupItemPlace(groupId, itemId) {
+      const assign = this.assignments.find(
+        a => Number(a.group_id) === Number(groupId) && Number(a.rental_item_id) === Number(itemId) && a.rental_place_id
+      );
       return assign ? assign.rental_place_id : null;
+    },
+
+    activeItemIdsForGroup(groupId) {
+      return this.activeItemIds.filter(itemId => this.getGroupTotalItem(groupId, itemId) > 0);
+    },
+
+    isGroupFullyAssigned(groupId) {
+      const itemIds = this.activeItemIdsForGroup(groupId);
+      if (itemIds.length === 0) return false;
+      return itemIds.every(itemId => this.getGroupItemPlace(groupId, itemId));
+    },
+
+    getGroupItemTotalAtPlace(groupId, itemId, placeId) {
+      return this.assignments
+        .filter(
+          a => Number(a.group_id) === Number(groupId) &&
+            Number(a.rental_item_id) === Number(itemId) &&
+            Number(a.rental_place_id) === Number(placeId)
+        )
+        .reduce((sum, a) => sum + Number(a.num || 0), 0);
+    },
+
+    itemIdsAssignedAtPlace(groupId, placeId) {
+      return this.activeItemIds.filter(itemId => this.getGroupItemTotalAtPlace(groupId, itemId, placeId) > 0);
     },
 
     getGroupsInPlace(placeId) {
@@ -515,6 +552,14 @@ export default {
 
     getPlaceSourceBreakdown(placeId) {
       return this.calculateSourceBreakdown(this.getAssignmentsBy('rental_place_id', placeId));
+    },
+
+    getGroupSourceBreakdownForPlace(groupId, placeId) {
+      return this.calculateSourceBreakdown(
+        this.assignments.filter(
+          a => Number(a.group_id) === Number(groupId) && Number(a.rental_place_id) === Number(placeId)
+        )
+      );
     },
 
     calculateSourceBreakdown(assignRecords) {
@@ -822,6 +867,18 @@ export default {
   border-color: #16a34a;
   opacity: 0.6;
 }
+.item-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.item-chip {
+  font-size: 12px;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px 8px;
+}
 .group-name {
   font-weight: bold;
   margin-bottom: 12px;
@@ -864,13 +921,6 @@ export default {
   padding-top: 8px;
   padding-bottom: 4px;
   padding-left: 8px;
-}
-.assigned {  
-  font-size: 12px;
-  background-color: #e2e8f0;
-  border-radius: 10px;
-  padding: 4px 8px;
-  color: #000000;
 }
 .stock-area {
   flex: 1;
