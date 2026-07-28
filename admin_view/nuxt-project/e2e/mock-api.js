@@ -6,6 +6,11 @@ const unauthorizedPaths = new Set();
 let comments = [];
 let nextCommentId = 1;
 
+const commentCreatedAt = (id) =>
+  new Date(
+    Date.parse("2026-06-21T10:00:00.000+09:00") + id * 1000
+  ).toISOString();
+
 const templates = [
   {
     id: 1,
@@ -286,8 +291,9 @@ http
     ) {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
+      const commentId = nextCommentId++;
       const comment = {
-        id: nextCommentId++,
+        id: commentId,
         commentable_type: "HealthCenterSubmissionStatus",
         commentable_id: 1,
         source: "health_center",
@@ -295,7 +301,7 @@ http
         body: payload.body,
         mail_delivery_status:
           payload.body === "送信失敗テスト" ? "failed" : "sent",
-        created_at: "2026-06-21T10:00:00.000+09:00",
+        created_at: commentCreatedAt(commentId),
       };
       comments.push(comment);
 
@@ -321,15 +327,16 @@ http
     ) {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
+      const commentId = nextCommentId++;
       const comment = {
-        id: nextCommentId++,
+        id: commentId,
         commentable_type: "HealthCenterSubmissionStatus",
         commentable_id: 1,
         source: "health_center",
         subject: payload.subject,
         body: payload.body,
         mail_delivery_status: "memo",
-        created_at: "2026-06-21T10:00:00.000+09:00",
+        created_at: commentCreatedAt(commentId),
       };
       comments.push(comment);
 
