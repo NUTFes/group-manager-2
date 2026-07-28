@@ -323,15 +323,36 @@ export default {
         this.validPlaceCategoryIds.includes(Number(place.place_category_id))
       );
     },
+    // 団体ID・貸出場所IDごとに割当をあらかじめ振り分けておき、
+    // 全件走査を繰り返さずに済むようにする(assignmentsが変わった時だけ再計算される)
+    assignmentsByGroupId() {
+      const map = new Map();
+      this.assignments.forEach(a => {
+        const groupId = Number(a.group_id);
+        if (!map.has(groupId)) map.set(groupId, []);
+        map.get(groupId).push(a);
+      });
+      return map;
+    },
+    assignmentsByPlaceId() {
+      const map = new Map();
+      this.assignments.forEach(a => {
+        if (a.rental_place_id == null) return;
+        const placeId = Number(a.rental_place_id);
+        if (!map.has(placeId)) map.set(placeId, []);
+        map.get(placeId).push(a);
+      });
+      return map;
+    },
     activeAssignedGroups() {
       return this.groups.filter(g => {
         // 年度での絞り込み
         if (this.refYearID !== 0 && Number(g.fes_year_id) !== this.refYearID) return false;
-        
+
         // 団体のカテゴリーでの絞り込み
         if (this.refCategoryID !== 0 && Number(g.group_category_id) !== this.refCategoryID) return false;
 
-        const groupAssigns = this.assignments.filter(a => Number(a.group_id) === Number(g.id));
+        const groupAssigns = this.getGroupAssignments(g.id);
         if (groupAssigns.length === 0) return false;
 
         return this.activeItemIds.some(itemId => {
@@ -392,13 +413,27 @@ export default {
       if (!this.$role(this.roleID).assign_items.update) return;
       if (groupAssignments.length === 0) return;
 
-      // 途中で失敗した場合に不整合な書き込みを広げないよう、直列に更新する
-      for (const assign of groupAssignments) {
-        await this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: rentalPlaceId });
-        assign.rental_place_id = rentalPlaceId;
-      }
+      const previousPlaceIds = groupAssignments.map(a => a.rental_place_id);
 
+      // 体感速度のため先に画面へ反映し、サーバー側は直列に更新する
+      groupAssignments.forEach(a => { a.rental_place_id = rentalPlaceId; });
       this.assignments = [...this.assignments];
+
+      try {
+        for (const assign of groupAssignments) {
+          await this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: rentalPlaceId });
+        }
+      } catch (error) {
+        // 途中で失敗した場合は、既にサーバーへ反映済みの分も含めて元の場所へ補償的に戻す
+        await Promise.allSettled(
+          groupAssignments.map((assign, i) =>
+            this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: previousPlaceIds[i] })
+          )
+        );
+        groupAssignments.forEach((a, i) => { a.rental_place_id = previousPlaceIds[i]; });
+        this.assignments = [...this.assignments];
+        throw error;
+      }
     },
 
     async handleDropOnPlace(e, rentalPlace) {
@@ -410,8 +445,8 @@ export default {
       const groupId = e.dataTransfer.getData('groupId');
       if (!groupId) return;
 
-      const groupAssignments = this.assignments.filter(
-        a => Number(a.group_id) === Number(groupId) && this.activeItemIds.includes(Number(a.rental_item_id))
+      const groupAssignments = this.getGroupAssignments(groupId).filter(
+        a => this.activeItemIds.includes(Number(a.rental_item_id))
       );
       if (groupAssignments.length === 0) return;
 
@@ -439,15 +474,15 @@ export default {
     },
     async confirmDelete() {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      if (!this.targetDeleteGroupId || !this.targetDeletePlaceId) return;
+      if (this.targetDeleteGroupId == null || this.targetDeletePlaceId == null) return;
       await this.removeGroupFromPlace(this.targetDeleteGroupId, this.targetDeletePlaceId);
       this.closeDeleteModal();
     },
 
     async removeGroupFromPlace(groupId, placeId) {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      const groupAssignments = this.assignments.filter(
-        a => Number(a.group_id) === Number(groupId) && Number(a.rental_place_id) === Number(placeId)
+      const groupAssignments = this.getGroupAssignments(groupId).filter(
+        a => Number(a.rental_place_id) === Number(placeId)
       );
       try {
         await this.updateAssignmentsPlace(groupAssignments, null);
@@ -464,8 +499,12 @@ export default {
       return record ? record.name : '不明';
     },
 
-    getAssignmentsBy(key, value) {
-      return this.assignments.filter(a => Number(a[key]) === Number(value));
+    getGroupAssignments(groupId) {
+      return this.assignmentsByGroupId.get(Number(groupId)) || [];
+    },
+
+    getPlaceAssignments(placeId) {
+      return this.assignmentsByPlaceId.get(Number(placeId)) || [];
     },
 
     getTotalItem(assignRecords, itemId) {
@@ -486,8 +525,8 @@ export default {
     },
 
     getGroupItemPlace(groupId, itemId) {
-      const assign = this.assignments.find(
-        a => Number(a.group_id) === Number(groupId) && Number(a.rental_item_id) === Number(itemId) && a.rental_place_id
+      const assign = this.getGroupAssignments(groupId).find(
+        a => Number(a.rental_item_id) === Number(itemId) && a.rental_place_id
       );
       return assign ? assign.rental_place_id : null;
     },
@@ -504,12 +543,8 @@ export default {
     },
 
     getGroupItemTotalAtPlace(groupId, itemId, placeId) {
-      return this.assignments
-        .filter(
-          a => Number(a.group_id) === Number(groupId) &&
-            Number(a.rental_item_id) === Number(itemId) &&
-            Number(a.rental_place_id) === Number(placeId)
-        )
+      return this.getGroupAssignments(groupId)
+        .filter(a => Number(a.rental_item_id) === Number(itemId) && Number(a.rental_place_id) === Number(placeId))
         .reduce((sum, a) => sum + Number(a.num || 0), 0);
     },
 
@@ -519,9 +554,9 @@ export default {
 
     getGroupsInPlace(placeId) {
       const groupIdsInPlace = [...new Set(
-        this.getAssignmentsBy('rental_place_id', placeId).map(a => Number(a.group_id))
+        this.getPlaceAssignments(placeId).map(a => Number(a.group_id))
       )];
-      
+
       return this.groups.filter(g => {
         if (!groupIdsInPlace.includes(Number(g.id))) return false;
         return this.activeItemIds.some(itemId => this.getGroupTotalItem(g.id, itemId) > 0);
@@ -529,26 +564,24 @@ export default {
     },
 
     getGroupTotalItem(groupId, itemId) {
-      return this.getTotalItem(this.getAssignmentsBy('group_id', groupId), itemId);
+      return this.getTotalItem(this.getGroupAssignments(groupId), itemId);
     },
 
     getPlaceTotalItem(placeId, itemId) {
-      return this.getTotalItem(this.getAssignmentsBy('rental_place_id', placeId), itemId);
+      return this.getTotalItem(this.getPlaceAssignments(placeId), itemId);
     },
 
     getGroupSourceBreakdown(groupId) {
-      return this.calculateSourceBreakdown(this.getAssignmentsBy('group_id', groupId));
+      return this.calculateSourceBreakdown(this.getGroupAssignments(groupId));
     },
 
     getPlaceSourceBreakdown(placeId) {
-      return this.calculateSourceBreakdown(this.getAssignmentsBy('rental_place_id', placeId));
+      return this.calculateSourceBreakdown(this.getPlaceAssignments(placeId));
     },
 
     getGroupSourceBreakdownForPlace(groupId, placeId) {
       return this.calculateSourceBreakdown(
-        this.assignments.filter(
-          a => Number(a.group_id) === Number(groupId) && Number(a.rental_place_id) === Number(placeId)
-        )
+        this.getGroupAssignments(groupId).filter(a => Number(a.rental_place_id) === Number(placeId))
       );
     },
 
