@@ -41,12 +41,14 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   def get_refinement_order_status_check
     fes_year_id = params[:fes_year_id].to_i
     group_category_id = params[:group_category_id].to_i
+    committee = params[:committee].to_i
     is_international = params[:is_international].to_i
     is_external = params[:is_external].to_i # 0: 指定なし(ALL) 1: true 2: false
 
     @groups = Group.with_order_status_check_relations
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
+    @groups = @groups.where(committee: committee == 1) unless committee == 0
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 

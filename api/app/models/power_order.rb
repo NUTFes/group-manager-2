@@ -3,7 +3,7 @@
 class PowerOrder < ApplicationRecord
   belongs_to :group
 
-  after_create :ensure_health_center_submission_status
+  after_create :ensure_health_center_submission_status, :clear_unregistered_group
 
   def self.with_groups
     @record = PowerOrder.preload(:group)
@@ -42,5 +42,9 @@ class PowerOrder < ApplicationRecord
       application_type: :power_order,
       status: :unapproved
     )
+  end
+
+  def clear_unregistered_group
+    group.un_registered_groups.power_order.destroy_all
   end
 end

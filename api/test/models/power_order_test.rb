@@ -26,6 +26,14 @@ class PowerOrderTest < ActiveSupport::TestCase
     assert_equal 'unapproved', status.status
   end
 
+  test 'removes conflicting unregistered flag after create' do
+    UnRegisteredGroup.create!(group: @group, order_type: :power_order)
+
+    assert_difference -> { @group.un_registered_groups.power_order.count }, -1 do
+      PowerOrder.create!(group: @group, item: '電気ケトル', power: 1000)
+    end
+  end
+
   private
 
   def create_group!

@@ -4,7 +4,7 @@ class RentalOrder < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item
 
-  after_create :ensure_health_center_submission_status
+  after_create :ensure_health_center_submission_status, :clear_unregistered_group
 
   def self.with_groups_and_rental_item
     @record = RentalOrder.preload(:group)
@@ -47,5 +47,9 @@ class RentalOrder < ApplicationRecord
       application_type: :equipment,
       status: :unapproved
     )
+  end
+
+  def clear_unregistered_group
+    group.un_registered_groups.rental_item_order.destroy_all
   end
 end

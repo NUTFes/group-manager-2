@@ -496,6 +496,11 @@
                     <span v-else>-</span>
                   </td>
                 </tr>
+                <tr class="power-total-row">
+                  <th>合計電力</th>
+                  <td>{{ powerTotal }} W</td>
+                  <td colspan="3"></td>
+                </tr>
               </VerticalTable>
 
               <p v-else>未登録</p>
@@ -1351,6 +1356,13 @@ export default {
         return null;
       return this.allGroupIds[this.currentGroupIndex + 1];
     },
+    powerTotal() {
+      return (this.group?.power_orders || []).reduce(
+        (sum, orderWrapper) =>
+          sum + (Number(orderWrapper.power_order?.power) || 0),
+        0
+      );
+    },
     activeModalComponent() {
       if (!this.activeEditType) return null;
       const pascalCase = this.activeEditType
@@ -1431,8 +1443,11 @@ export default {
       const filteredIds = await this.fetchGroupIdsByFilter({
         fesYearId: storedFilters.fesYearId ?? fesYearId,
         groupCategoryId: storedFilters.groupCategoryId ?? 0,
+        committee: storedFilters.committee ?? 0,
         isInternational: storedFilters.isInternational ?? 0,
         isExternal: storedFilters.isExternal ?? 0,
+        sortMode: storedFilters.sortMode ?? "section",
+        nameSortDirection: storedFilters.nameSortDirection ?? "asc",
       });
       // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
       // それまでのallGroupIdsを保持したまま何もしない。
@@ -1462,19 +1477,27 @@ export default {
         groupCategoryId: toNumberOrNull(
           localStorage.getItem(prefix + "RefCategory")
         ),
+        committee: toNumberOrNull(
+          localStorage.getItem(prefix + "RefCommittee")
+        ),
         isInternational: toNumberOrNull(
           localStorage.getItem(prefix + "RefInternational")
         ),
         isExternal: toNumberOrNull(
           localStorage.getItem(prefix + "RefExternal")
         ),
+        sortMode: localStorage.getItem(prefix + "SortMode"),
+        nameSortDirection: localStorage.getItem(prefix + "NameSortDirection"),
       };
     },
     async fetchGroupIdsByFilter({
       fesYearId,
       groupCategoryId = 0,
+      committee = 0,
       isInternational = 0,
       isExternal = 0,
+      sortMode = "section",
+      nameSortDirection = "asc",
     }) {
       try {
         const refRes = await this.$axios.$post(
@@ -1484,6 +1507,7 @@ export default {
             params: {
               fes_year_id: fesYearId,
               group_category_id: groupCategoryId,
+              committee,
               is_international: isInternational,
               is_external: isExternal,
             },
@@ -1491,7 +1515,11 @@ export default {
         );
 
         if (refRes && refRes.data) {
-          return refRes.data.map((g) => g.group.id).sort((a, b) => a - b);
+          return this.sortGroupWrappers(
+            refRes.data,
+            sortMode,
+            nameSortDirection
+          ).map((groupWrapper) => groupWrapper.group.id);
         }
         return [];
       } catch (e) {
@@ -1499,7 +1527,45 @@ export default {
         return null;
       }
     },
+    sortGroupWrappers(groups, sortMode, nameSortDirection) {
+      const nameCoefficient = nameSortDirection === "desc" ? -1 : 1;
+      return [...groups].sort((a, b) => {
+        if (sortMode === "section") {
+          const sectionComparison =
+            this.getGroupSectionOrder(a) - this.getGroupSectionOrder(b);
+          if (sectionComparison !== 0) return sectionComparison;
+        }
+
+        const nameComparison = String(a.group.name || "").localeCompare(
+          String(b.group.name || ""),
+          "ja"
+        );
+        if (nameComparison !== 0) {
+          return nameComparison * (sortMode === "name" ? nameCoefficient : 1);
+        }
+        return (
+          (a.group.id - b.group.id) *
+          (sortMode === "name" ? nameCoefficient : 1)
+        );
+      });
+    },
+    getGroupSectionOrder(groupWrapper) {
+      const group = groupWrapper.group;
+      const categoryId = Number(group.group_category_id);
+      if (group.committee || categoryId === 6) return 0;
+      if (group.is_international) return 1;
+      return 2 + (Number.isNaN(categoryId) ? 999 : categoryId);
+    },
     isUnregistered(orderType) {
+      const applicationFieldByOrderType = {
+        power_order: "power_orders",
+        rental_item_order: "rental_orders",
+        fire_equipment_order: "fire_equipment_orders",
+      };
+      const applicationField = applicationFieldByOrderType[orderType];
+      const application = applicationField && this.group?.[applicationField];
+      if (Array.isArray(application) && application.length > 0) return false;
+
       return this.unregisteredGroups.some(
         (item) => item.order_type === orderType
       );
@@ -1706,6 +1772,9 @@ export default {
   margin-bottom: 16px;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
+}
+.power-total-row {
+  font-weight: bold;
 }
 .venue-map-image {
   border: 1px solid #ccc;

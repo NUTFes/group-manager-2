@@ -3,7 +3,7 @@
 class FireEquipmentOrder < ApplicationRecord
   belongs_to :group
 
-  after_create :ensure_health_center_submission_status
+  after_create :ensure_health_center_submission_status, :clear_unregistered_group
   # enum gas_bottle: ガスボンベ、lp_gas: LPガス、charcoal: 炭
   enum fuel: { gas_bottle: 1, lp_gas: 2, charcoal: 3 }
 
@@ -43,5 +43,9 @@ class FireEquipmentOrder < ApplicationRecord
       application_type: :fire_equipment_order,
       status: :unapproved
     )
+  end
+
+  def clear_unregistered_group
+    group.un_registered_groups.fire_equipment_order.destroy_all
   end
 end

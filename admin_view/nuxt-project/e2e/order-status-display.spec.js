@@ -1,4 +1,6 @@
 const { expect, test } = require("@playwright/test");
+const fs = require("fs");
+const path = require("path");
 
 const API_URL = process.env.PLAYWRIGHT_ADMIN_API_URL || "http://127.0.0.1:3201";
 
@@ -30,6 +32,33 @@ const openNuxtRoute = async (page, path) => {
     (routePath) => window.$nuxt.$router.push(routePath),
     path
   );
+};
+
+const captureScreenshot = async (page, fileName) => {
+  if (!process.env.CAPTURE_ISSUE_2146_SCREENSHOTS) return;
+
+  const screenshotDir = path.resolve(
+    __dirname,
+    "../../../docs/screenshots/issue-2146"
+  );
+  fs.mkdirSync(screenshotDir, { recursive: true });
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.screenshot({
+    path: path.join(screenshotDir, fileName),
+    fullPage: true,
+  });
+};
+
+const captureElementScreenshot = async (page, locator, fileName) => {
+  if (!process.env.CAPTURE_ISSUE_2146_SCREENSHOTS) return;
+
+  const screenshotDir = path.resolve(
+    __dirname,
+    "../../../docs/screenshots/issue-2146"
+  );
+  fs.mkdirSync(screenshotDir, { recursive: true });
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await locator.screenshot({ path: path.join(screenshotDir, fileName) });
 };
 
 test.describe("申請状況の表示", () => {
@@ -200,10 +229,207 @@ test.describe("申請状況の表示", () => {
     });
     await expect(row).toBeVisible();
     const cells = row.locator("td");
-    await expect(cells.nth(2)).toHaveText("ー");
+    await expect(cells.nth(1)).toHaveText("ー");
+    await expect(cells.nth(3)).toHaveText("ー");
     await expect(cells.nth(4)).toHaveText("ー");
-    await expect(cells.nth(5)).toHaveText("ー");
-    await expect(cells.nth(8)).toHaveText("ー");
-    await expect(cells.nth(14)).toHaveText("ー");
+    await expect(cells.nth(7)).toHaveText("ー");
+    await expect(cells.nth(13)).toHaveText("ー");
+  });
+
+  test("分類別表示と全体の団体名順を切り替えられる", async ({ page }) => {
+    const groups = [
+      {
+        group: {
+          id: 1,
+          name: "D-実行委員",
+          group_category_id: 6,
+          committee: true,
+          is_international: false,
+        },
+        group_category: 6,
+      },
+      {
+        group: {
+          id: 2,
+          name: "A-国際",
+          group_category_id: 4,
+          committee: false,
+          is_international: true,
+        },
+        group_category: 4,
+      },
+      {
+        group: {
+          id: 3,
+          name: "B-食品",
+          group_category_id: 1,
+          committee: false,
+          is_international: false,
+        },
+        group_category: 1,
+      },
+      {
+        group: {
+          id: 4,
+          name: "C-ステージ",
+          group_category_id: 3,
+          committee: false,
+          is_international: false,
+        },
+        group_category: 3,
+      },
+    ];
+
+    await page.route(`${API_URL}/group_categories`, (route) =>
+      fulfillData(route, [
+        { id: 1, name: "食品販売" },
+        { id: 3, name: "ステージ" },
+        { id: 4, name: "展示・体験" },
+        { id: 6, name: "実行委員" },
+      ])
+    );
+    await page.route(`${API_URL}/fes_years`, (route) =>
+      fulfillData(route, [{ id: 1, year_num: 2026 }])
+    );
+    await page.route(
+      `${API_URL}/api/v1/get_refinement_order_status_check*`,
+      (route) => {
+        const committee = new URL(route.request().url()).searchParams.get(
+          "committee"
+        );
+        fulfillData(route, committee === "1" ? [groups[0]] : groups);
+      }
+    );
+    await page.route(`${API_URL}/un_registered_groups*`, (route) =>
+      fulfillData(route, [])
+    );
+
+    await openNuxtRoute(page, "/order_status_check");
+
+    await expect(page.locator(".group-section-row")).toHaveText([
+      "実行委員会（1団体）",
+      "国際（1団体）",
+      "食品販売（1団体）",
+      "ステージ（1団体）",
+    ]);
+    await captureScreenshot(page, "order-status-sections.png");
+
+    const nameSortButton = page.getByRole("button", { name: /団体名順/ });
+    await nameSortButton.click();
+    await expect(page.locator(".group-section-row")).toHaveCount(0);
+    await expect(
+      page.locator("tbody tr.clickable-row td:nth-child(1)")
+    ).toHaveText(["A-国際", "B-食品", "C-ステージ", "D-実行委員"]);
+    await captureScreenshot(page, "order-status-name-sort.png");
+
+    await nameSortButton.click();
+    await expect(
+      page.locator("tbody tr.clickable-row td:nth-child(1)")
+    ).toHaveText(["D-実行委員", "C-ステージ", "B-食品", "A-国際"]);
+
+    const committeeFilter = page
+      .locator(".drop-down-content")
+      .filter({ hasText: "団体種別: ALL" });
+    await committeeFilter.getByRole("button").first().click();
+    await committeeFilter
+      .getByRole("button", { name: "実行委員会", exact: true })
+      .click();
+    await expect(
+      page.locator("tbody tr.clickable-row td:nth-child(1)")
+    ).toHaveText(["D-実行委員"]);
+  });
+
+  test("申請データがある場合は申請しない回答より申請内容を優先する", async ({
+    page,
+  }) => {
+    const group = {
+      group: {
+        id: 1,
+        name: "申請内容優先団体",
+        project_name: "食品販売",
+        activity: "飲食物の販売",
+        group_category_id: 1,
+        committee: false,
+        is_international: false,
+        is_external: false,
+        fes_year_id: 1,
+      },
+      user: { name: "代表者", email: "representative@example.com" },
+      group_category: "食品販売",
+      power_orders: [
+        {
+          power_order: {
+            id: 1,
+            item: "ホットプレート",
+            power: 1200,
+          },
+        },
+        {
+          power_order: {
+            id: 2,
+            item: "電気ケトル",
+            power: 300,
+          },
+        },
+      ],
+      rental_orders: [
+        {
+          rental_item: {
+            rental_item: { id: 1, group_id: 1, rental_item_id: 1, num: 2 },
+            name: "長机",
+            num: 2,
+          },
+        },
+      ],
+      fire_equipment_orders: [
+        {
+          fire_equipment_order: {
+            id: 1,
+            name: "カセットコンロ",
+            quantity: 1,
+            fuel_japanese: "ガスボンベ",
+          },
+        },
+      ],
+    };
+    const unregisteredGroups = [
+      { id: 1, group_id: 1, order_type: "power_order" },
+      { id: 2, group_id: 1, order_type: "rental_item_order" },
+      { id: 3, group_id: 1, order_type: "fire_equipment_order" },
+    ];
+
+    await page.route(
+      `${API_URL}/api/v1/get_order_info_for_admin_view/1`,
+      (route) => fulfillData(route, group)
+    );
+    await page.route(
+      `${API_URL}/api/v1/get_health_center_submission_status_show_for_admin_view/1`,
+      (route) => fulfillData(route, { submissions: [] })
+    );
+    await page.route(`${API_URL}/un_registered_groups?group_id=1`, (route) =>
+      fulfillData(route, unregisteredGroups)
+    );
+    await page.route(
+      `${API_URL}/api/v1/get_refinement_order_status_check*`,
+      (route) =>
+        fulfillData(route, [
+          {
+            group: group.group,
+            group_category: 1,
+          },
+        ])
+    );
+
+    await openNuxtRoute(page, "/order_status_check/1");
+
+    await expect(page.getByText("ホットプレート")).toBeVisible();
+    await expect(page.getByText("長机", { exact: true })).toBeVisible();
+    await expect(page.getByText("カセットコンロ")).toBeVisible();
+    await expect(page.locator(".power-total-row")).toContainText("1500 W");
+    await captureElementScreenshot(
+      page,
+      page.getByRole("heading", { name: "電力申請" }).locator("xpath=../.."),
+      "order-status-detail-power-total.png"
+    );
   });
 });
