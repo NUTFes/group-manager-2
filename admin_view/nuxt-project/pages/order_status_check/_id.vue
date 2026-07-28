@@ -498,7 +498,7 @@
                 </tr>
                 <tr class="power-total-row">
                   <th>合計電力</th>
-                  <td>{{ powerTotal }} W</td>
+                  <td>{{ group.total_power }} W</td>
                   <td colspan="3"></td>
                 </tr>
               </VerticalTable>
@@ -1355,13 +1355,6 @@ export default {
       )
         return null;
       return this.allGroupIds[this.currentGroupIndex + 1];
-    },
-    powerTotal() {
-      return (this.group?.power_orders || []).reduce(
-        (sum, orderWrapper) =>
-          sum + (Number(orderWrapper.power_order?.power) || 0),
-        0
-      );
     },
     activeModalComponent() {
       if (!this.activeEditType) return null;

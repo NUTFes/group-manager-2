@@ -12511,6 +12511,9 @@ components:
         id:
           type: integer
           format: int64
+        total_power:
+          type: integer
+          description: 参加団体が申請した電力の合計値（W）
     api.v1.OrderStatusCheckApi:
       type: object
       properties:

@@ -200,6 +200,7 @@ class Group < ApplicationRecord
                           }
                         end
                       end,
+        total_power: group.sum_power_orders,
         rental_orders: if group.rental_orders.none?
                          nil
                        else

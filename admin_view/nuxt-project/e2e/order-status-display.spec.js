@@ -1,6 +1,4 @@
 const { expect, test } = require("@playwright/test");
-const fs = require("fs");
-const path = require("path");
 
 const API_URL = process.env.PLAYWRIGHT_ADMIN_API_URL || "http://127.0.0.1:3201";
 
@@ -32,33 +30,6 @@ const openNuxtRoute = async (page, path) => {
     (routePath) => window.$nuxt.$router.push(routePath),
     path
   );
-};
-
-const captureScreenshot = async (page, fileName) => {
-  if (!process.env.CAPTURE_ISSUE_2146_SCREENSHOTS) return;
-
-  const screenshotDir = path.resolve(
-    __dirname,
-    "../../../docs/screenshots/issue-2146"
-  );
-  fs.mkdirSync(screenshotDir, { recursive: true });
-  await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.screenshot({
-    path: path.join(screenshotDir, fileName),
-    fullPage: true,
-  });
-};
-
-const captureElementScreenshot = async (page, locator, fileName) => {
-  if (!process.env.CAPTURE_ISSUE_2146_SCREENSHOTS) return;
-
-  const screenshotDir = path.resolve(
-    __dirname,
-    "../../../docs/screenshots/issue-2146"
-  );
-  fs.mkdirSync(screenshotDir, { recursive: true });
-  await page.setViewportSize({ width: 1920, height: 1080 });
-  await locator.screenshot({ path: path.join(screenshotDir, fileName) });
 };
 
 test.describe("申請状況の表示", () => {
@@ -312,16 +283,12 @@ test.describe("申請状況の表示", () => {
       "食品販売（1団体）",
       "ステージ（1団体）",
     ]);
-    await captureScreenshot(page, "order-status-sections.png");
-
     const nameSortButton = page.getByRole("button", { name: /団体名順/ });
     await nameSortButton.click();
     await expect(page.locator(".group-section-row")).toHaveCount(0);
     await expect(
       page.locator("tbody tr.clickable-row td:nth-child(1)")
     ).toHaveText(["A-国際", "B-食品", "C-ステージ", "D-実行委員"]);
-    await captureScreenshot(page, "order-status-name-sort.png");
-
     await nameSortButton.click();
     await expect(
       page.locator("tbody tr.clickable-row td:nth-child(1)")
@@ -391,6 +358,7 @@ test.describe("申請状況の表示", () => {
           },
         },
       ],
+      total_power: 1500,
     };
     const unregisteredGroups = [
       { id: 1, group_id: 1, order_type: "power_order" },
@@ -426,10 +394,5 @@ test.describe("申請状況の表示", () => {
     await expect(page.getByText("長机", { exact: true })).toBeVisible();
     await expect(page.getByText("カセットコンロ")).toBeVisible();
     await expect(page.locator(".power-total-row")).toContainText("1500 W");
-    await captureElementScreenshot(
-      page,
-      page.getByRole("heading", { name: "電力申請" }).locator("xpath=../.."),
-      "order-status-detail-power-total.png"
-    );
   });
 });
