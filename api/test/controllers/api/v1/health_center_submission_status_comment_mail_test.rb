@@ -27,12 +27,6 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
       group_category: group_category,
       fes_year: fes_year
     )
-    @template = MessageTemplate.create!(
-      locale: 'ja',
-      name: 'GM再提出依頼',
-      subject: '再提出依頼: {group_name}',
-      body: '{group_name} 代表 {user_name} 様'
-    )
   end
 
   teardown do
@@ -54,8 +48,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     comment = Comment.last
     assert comment.sent?
     assert_equal 'sent', response.parsed_body['data']['mail_delivery_status']
-    assert_includes comment.body, '件名: 再提出依頼: 技大祭企画'
-    assert_includes comment.body, '食品名を修正してください。'
+    assert_equal '再提出依頼: 技大祭企画', comment.subject
+    assert_equal '食品名を修正してください。', comment.body
   end
 
   # 暫定権限の正常系。role_id 2 の staff でもメール送信付きメモを作成できることを確認する。
@@ -115,6 +109,19 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     assert_equal 'failed', response.parsed_body['data']['mail_delivery_status']
   end
 
+  # 異常系: subjectが未指定の場合はメール送信付きメモを作成できない。
+  test 'fails when subject is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_health_center_submission_status_comment_mail',
+           params: valid_params.except(:subject),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
   # 再送信: failedの保存済みメモを再送し、成功時にsentへ更新する。
   test 'resends failed comment and marks it sent' do
     submission_status = HealthCenterSubmissionStatus.create!(
@@ -123,7 +130,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
       status: :waiting_resubmission
     )
     comment = submission_status.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -139,15 +147,16 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
   end
 
   # 再送信の防御: 送信しない通常メモはAPIを直接叩いても再送できない。
-  test 'does not resend not_send comment' do
+  test 'does not resend memo comment' do
     submission_status = HealthCenterSubmissionStatus.create!(
       group: @group,
       application_type: :food_product,
       status: :waiting_resubmission
     )
     comment = submission_status.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
-      mail_delivery_status: :not_send
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
+      mail_delivery_status: :memo
     )
 
     assert_no_difference -> { ActionMailer::Base.deliveries.size } do
@@ -167,7 +176,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
       status: :waiting_resubmission
     )
     comment = submission_status.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :sent
     )
 
@@ -188,7 +198,8 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
       status: :waiting_resubmission
     )
     comment = submission_status.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -207,7 +218,7 @@ class Api::V1::HealthCenterSubmissionStatusCommentMailTest < ActionDispatch::Int
     {
       group_id: @group.id,
       application_type: 'food_product',
-      message_template_id: @template.id,
+      subject: '再提出依頼: 技大祭企画',
       body: '食品名を修正してください。'
     }
   end
