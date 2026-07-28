@@ -57,7 +57,7 @@
       <div class="delete-modal-content">
         <h2>割り当ての削除</h2>
         <h4>
-          本当にこの団体の割り当てを削除しますか？<br>
+          本当にこの場所からこの団体の割り当てを削除しますか？<br>
         </h4>
         <div class="modal-actions">
           <YesButton v-if="$role(roleID).assign_items.delete" iconName="delete" :on_click="confirmDelete">削除する</YesButton>
@@ -85,18 +85,22 @@
         </div>
         <div class="order-group-content">
           <template v-for="group in activeAssignedGroups">
-            <template v-for="[rentalPlaceId, sourceBreakdown] in [[getGroupRentalPlace(group.id), getGroupSourceBreakdown(group.id)]]">
+            <template v-for="[sourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
             <div
-              :key="group.id" 
+              :key="group.id"
               draggable="true"
               @dragstart="handleDragStartGroup($event, group)"
               class="group-card"
-              :class="{ 'is-fulfilled': rentalPlaceId }"
+              :class="{ 'is-fulfilled': isGroupFullyAssigned(group.id) }"
             >
                 <div class="group-name">
                   {{ group.name }}
-                  <span class="assigned" v-if="rentalPlaceId">
-                    {{ getPlaceName(rentalPlaceId) }}へ
+                </div>
+                <!-- チェックボックスで有効化されている物品はまとめて1枚のカードに表示 -->
+                <div class="item-summary">
+                  <span v-for="itemId in activeItemIdsForGroup(group.id)" :key="itemId" class="item-chip">
+                    {{ getItemName(itemId) }}: {{ getGroupTotalItem(group.id, itemId) }}
+                    <template v-if="getGroupItemPlace(group.id, itemId)">({{ getPlaceName(getGroupItemPlace(group.id, itemId)) }})</template>
                   </span>
                 </div>
                 <!-- 左側にも搬入元内訳を簡易表示 -->
@@ -204,17 +208,17 @@
                     割り当て済み団体をここにドロップ
                   </div>
                   <template v-else>
-                    <div 
+                    <div
                       v-for="group in groupsInPlace"
-                      :key="group.id" 
+                      :key="group.id"
                       class="assignment-item"
                     >
-                      <template v-for="[groupSourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
+                      <template v-for="[groupSourceBreakdown] in [[getGroupSourceBreakdownForPlace(group.id, place.id)]]">
                         <div class="assign-group-name">
                           {{ group.name }}
                           <div class="import-source">
                             <span v-for="source in groupSourceBreakdown" :key="source.id">
-                              {{ source.name }}より: 
+                              {{ source.name }}より:
                               <template v-for="itemId in activeItemIds">
                                 <span v-if="source.items[itemId] > 0" :key="itemId" style="margin-right: 8px;">
                                   {{ getItemName(itemId) }}{{ source.items[itemId] }}
@@ -225,13 +229,13 @@
                         </div>
                       </template>
                       <div class="assign-inputs">
-                        <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
+                        <div v-for="itemId in itemIdsAssignedAtPlace(group.id, place.id)" :key="itemId" class="assign-input-group">
                           <span class="input-label">
-                            {{ getItemName(itemId) }} {{ getGroupTotalItem(group.id, itemId) }}
+                            {{ getItemName(itemId) }} {{ getGroupItemTotalAtPlace(group.id, itemId, place.id) }}
                           </span>
                         </div>
                       </div>
-                      <button v-if="$role(roleID).assign_items.delete" class="btn-delete" @click="openDeleteModal(group.id)">✕</button>
+                      <button v-if="$role(roleID).assign_items.delete" class="btn-delete" @click="openDeleteModal(group.id, place.id)">✕</button>
                     </div>
                   </template>
                   </div>
@@ -256,6 +260,8 @@ export default {
       isModalOpen: false,
       isDeleteModalOpen: false,
       targetDeleteGroupId: null,
+      targetDeletePlaceId: null,
+      updatingGroupIds: new Set(),
       items: [],
       groups: [],
       places: [],
@@ -318,15 +324,36 @@ export default {
         this.validPlaceCategoryIds.includes(Number(place.place_category_id))
       );
     },
+    // 団体ID・貸出場所IDごとに割当をあらかじめ振り分けておき、
+    // 全件走査を繰り返さずに済むようにする(assignmentsが変わった時だけ再計算される)
+    assignmentsByGroupId() {
+      const map = new Map();
+      this.assignments.forEach(a => {
+        const groupId = Number(a.group_id);
+        if (!map.has(groupId)) map.set(groupId, []);
+        map.get(groupId).push(a);
+      });
+      return map;
+    },
+    assignmentsByPlaceId() {
+      const map = new Map();
+      this.assignments.forEach(a => {
+        if (a.rental_place_id == null) return;
+        const placeId = Number(a.rental_place_id);
+        if (!map.has(placeId)) map.set(placeId, []);
+        map.get(placeId).push(a);
+      });
+      return map;
+    },
     activeAssignedGroups() {
       return this.groups.filter(g => {
         // 年度での絞り込み
         if (this.refYearID !== 0 && Number(g.fes_year_id) !== this.refYearID) return false;
-        
+
         // 団体のカテゴリーでの絞り込み
         if (this.refCategoryID !== 0 && Number(g.group_category_id) !== this.refCategoryID) return false;
 
-        const groupAssigns = this.assignments.filter(a => Number(a.group_id) === Number(g.id));
+        const groupAssigns = this.getGroupAssignments(g.id);
         if (groupAssigns.length === 0) return false;
 
         return this.activeItemIds.some(itemId => {
@@ -383,28 +410,39 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
-    async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
+    async updateAssignmentsPlace(groupAssignments, rentalPlaceId) {
       if (!this.$role(this.roleID).assign_items.update) return;
       if (groupAssignments.length === 0) return;
 
-      const promises = groupAssignments.map(assign => {
-        const payload = {
-          group_id: assign.groupId,
-          rentalItemId: assign.rentalItemId,
-          num: assign.num,
-          stockerPlaceId: assign.stockerPlaceId,
-          rental_place_id: rentalPlaceId
-        };
-        return this.$axios.$put(`/assign_rental_items/${assign.id}`, payload);
-      });
+      // 同一団体への操作が処理中に重複して走ると、後発の正常な更新を
+      // 先発のロールバックが上書きしてしまうため、団体単位で多重実行を防ぐ
+      const groupId = Number(groupAssignments[0].group_id);
+      if (this.updatingGroupIds.has(groupId)) return;
+      this.updatingGroupIds.add(groupId);
 
-      await Promise.all(promises);
+      const previousPlaceIds = groupAssignments.map(a => a.rental_place_id);
 
-      groupAssignments.forEach(a => {
-        a.rental_place_id = rentalPlaceId;
-      });
-
+      // 体感速度のため先に画面へ反映し、サーバー側は直列に更新する
+      groupAssignments.forEach(a => { a.rental_place_id = rentalPlaceId; });
       this.assignments = [...this.assignments];
+
+      try {
+        for (const assign of groupAssignments) {
+          await this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: rentalPlaceId });
+        }
+      } catch (error) {
+        // 途中で失敗した場合は、既にサーバーへ反映済みの分も含めて元の場所へ補償的に戻す
+        await Promise.allSettled(
+          groupAssignments.map((assign, i) =>
+            this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: previousPlaceIds[i] })
+          )
+        );
+        groupAssignments.forEach((a, i) => { a.rental_place_id = previousPlaceIds[i]; });
+        this.assignments = [...this.assignments];
+        throw error;
+      } finally {
+        this.updatingGroupIds.delete(groupId);
+      }
     },
 
     async handleDropOnPlace(e, rentalPlace) {
@@ -412,11 +450,13 @@ export default {
 
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP_LOCATION') return;
-      
+
       const groupId = e.dataTransfer.getData('groupId');
       if (!groupId) return;
 
-      const groupAssignments = this.getAssignmentsBy('group_id', groupId);
+      const groupAssignments = this.getGroupAssignments(groupId).filter(
+        a => this.activeItemIds.includes(Number(a.rental_item_id))
+      );
       if (groupAssignments.length === 0) return;
 
       try {
@@ -430,29 +470,34 @@ export default {
     // ----------------------------
     // 削除確認モーダルの制御
     // ----------------------------
-    openDeleteModal(groupId) {
+    openDeleteModal(groupId, placeId) {
       if (!this.$role(this.roleID).assign_items.delete) return;
       this.targetDeleteGroupId = groupId;
+      this.targetDeletePlaceId = placeId;
       this.isDeleteModalOpen = true;
     },
     closeDeleteModal() {
       this.isDeleteModalOpen = false;
       this.targetDeleteGroupId = null;
+      this.targetDeletePlaceId = null;
     },
     async confirmDelete() {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      if (!this.targetDeleteGroupId) return;
-      await this.removeGroupFromPlace(this.targetDeleteGroupId);
+      if (this.targetDeleteGroupId == null || this.targetDeletePlaceId == null) return;
+      await this.removeGroupFromPlace(this.targetDeleteGroupId, this.targetDeletePlaceId);
       this.closeDeleteModal();
     },
 
-    async removeGroupFromPlace(groupId) {
+    async removeGroupFromPlace(groupId, placeId) {
       if (!this.$role(this.roleID).assign_items.delete) return;
-      const groupAssignments = this.assignments.filter(a => Number(a.group_id) === Number(groupId) && a.rental_place_id);
+      const groupAssignments = this.getGroupAssignments(groupId).filter(
+        a => Number(a.rental_place_id) === Number(placeId)
+      );
       try {
         await this.updateAssignmentsPlace(groupAssignments, null);
       } catch (error) {
         alert("割り当ての解除に失敗しました。");
+        await this.fetchDataFromDB();
       }
     },
 
@@ -464,8 +509,12 @@ export default {
       return record ? record.name : '不明';
     },
 
-    getAssignmentsBy(key, value) {
-      return this.assignments.filter(a => Number(a[key]) === Number(value));
+    getGroupAssignments(groupId) {
+      return this.assignmentsByGroupId.get(Number(groupId)) || [];
+    },
+
+    getPlaceAssignments(placeId) {
+      return this.assignmentsByPlaceId.get(Number(placeId)) || [];
     },
 
     getTotalItem(assignRecords, itemId) {
@@ -485,36 +534,65 @@ export default {
       return this.getNameById(this.places, placeId);
     },
 
-    getGroupRentalPlace(groupId) {
-      const assign = this.getAssignmentsBy('group_id', groupId).find(a => a.rental_place_id);
+    getGroupItemPlace(groupId, itemId) {
+      const assign = this.getGroupAssignments(groupId).find(
+        a => Number(a.rental_item_id) === Number(itemId) && a.rental_place_id
+      );
       return assign ? assign.rental_place_id : null;
+    },
+
+    activeItemIdsForGroup(groupId) {
+      return this.activeItemIds.filter(itemId => this.getGroupTotalItem(groupId, itemId) > 0);
+    },
+
+    isGroupFullyAssigned(groupId) {
+      // 場所が団体内でバラバラでもよく、各物品がどこかしらに割り当て済みかどうかを見る
+      const itemIds = this.activeItemIdsForGroup(groupId);
+      if (itemIds.length === 0) return false;
+      return itemIds.every(itemId => this.getGroupItemPlace(groupId, itemId));
+    },
+
+    getGroupItemTotalAtPlace(groupId, itemId, placeId) {
+      return this.getGroupAssignments(groupId)
+        .filter(a => Number(a.rental_item_id) === Number(itemId) && Number(a.rental_place_id) === Number(placeId))
+        .reduce((sum, a) => sum + Number(a.num || 0), 0);
+    },
+
+    itemIdsAssignedAtPlace(groupId, placeId) {
+      return this.activeItemIds.filter(itemId => this.getGroupItemTotalAtPlace(groupId, itemId, placeId) > 0);
     },
 
     getGroupsInPlace(placeId) {
       const groupIdsInPlace = [...new Set(
-        this.getAssignmentsBy('rental_place_id', placeId).map(a => Number(a.group_id))
+        this.getPlaceAssignments(placeId).map(a => Number(a.group_id))
       )];
-      
+
       return this.groups.filter(g => {
         if (!groupIdsInPlace.includes(Number(g.id))) return false;
-        return this.activeItemIds.some(itemId => this.getGroupTotalItem(g.id, itemId) > 0);
+        return this.activeItemIds.some(itemId => this.getGroupItemTotalAtPlace(g.id, itemId, placeId) > 0);
       });
     },
 
     getGroupTotalItem(groupId, itemId) {
-      return this.getTotalItem(this.getAssignmentsBy('group_id', groupId), itemId);
+      return this.getTotalItem(this.getGroupAssignments(groupId), itemId);
     },
 
     getPlaceTotalItem(placeId, itemId) {
-      return this.getTotalItem(this.getAssignmentsBy('rental_place_id', placeId), itemId);
+      return this.getTotalItem(this.getPlaceAssignments(placeId), itemId);
     },
 
     getGroupSourceBreakdown(groupId) {
-      return this.calculateSourceBreakdown(this.getAssignmentsBy('group_id', groupId));
+      return this.calculateSourceBreakdown(this.getGroupAssignments(groupId));
     },
 
     getPlaceSourceBreakdown(placeId) {
-      return this.calculateSourceBreakdown(this.getAssignmentsBy('rental_place_id', placeId));
+      return this.calculateSourceBreakdown(this.getPlaceAssignments(placeId));
+    },
+
+    getGroupSourceBreakdownForPlace(groupId, placeId) {
+      return this.calculateSourceBreakdown(
+        this.getGroupAssignments(groupId).filter(a => Number(a.rental_place_id) === Number(placeId))
+      );
     },
 
     calculateSourceBreakdown(assignRecords) {
@@ -822,6 +900,18 @@ export default {
   border-color: #16a34a;
   opacity: 0.6;
 }
+.item-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.item-chip {
+  font-size: 12px;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px 8px;
+}
 .group-name {
   font-weight: bold;
   margin-bottom: 12px;
@@ -864,13 +954,6 @@ export default {
   padding-top: 8px;
   padding-bottom: 4px;
   padding-left: 8px;
-}
-.assigned {  
-  font-size: 12px;
-  background-color: #e2e8f0;
-  border-radius: 10px;
-  padding: 4px 8px;
-  color: #000000;
 }
 .stock-area {
   flex: 1;
