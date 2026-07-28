@@ -308,14 +308,14 @@ export default {
     },
     validPlaceCategoryIds() {
       if (this.refPlaceID === 0) return [];
-      const category = this.placeCategoryList.find(c => Number(c.id) === this.refPlaceID);
+      const category = this.placeCategoryList.find(placeCategory => Number(placeCategory.id) === this.refPlaceID);
       if (!category) return [this.refPlaceID];
       return [this.refPlaceID, ...(category.descendant_ids || [])].map(Number);
     },
     filteredPlaces() {
       if (this.refPlaceID === 0) return this.places;
-      return this.places.filter(p => 
-        this.validPlaceCategoryIds.includes(Number(p.place_category_id))
+      return this.places.filter(place =>
+        this.validPlaceCategoryIds.includes(Number(place.place_category_id))
       );
     },
     activeAssignedGroups() {
@@ -579,8 +579,15 @@ export default {
     refinementPlaces(item_id, name_list) {
       if (name_list === this.placeCategoryList) {
         this.refPlaceID = item_id;
-        const found = name_list.find(x => x.id === item_id);
-        this.refPlaces = item_id === 0 ? "ALL" : (found ? found.name : "Place");
+        const matchedPlace = name_list.find(x => x.id === item_id);
+
+        if (item_id === 0) {
+          this.refPlaces = "ALL";
+        } else if (!matchedPlace) {
+          this.refPlaces = "Place";
+        } else {
+          this.refPlaces = matchedPlace.name;
+        }
       }
     }
   }
