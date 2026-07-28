@@ -388,26 +388,15 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
-    async updateAssignmentsPlace(groupAssignments, rentalPlaceId) { 
+    async updateAssignmentsPlace(groupAssignments, rentalPlaceId) {
       if (!this.$role(this.roleID).assign_items.update) return;
       if (groupAssignments.length === 0) return;
 
-      const promises = groupAssignments.map(assign => {
-        const payload = {
-          group_id: assign.groupId,
-          rentalItemId: assign.rentalItemId,
-          num: assign.num,
-          stockerPlaceId: assign.stockerPlaceId,
-          rental_place_id: rentalPlaceId
-        };
-        return this.$axios.$put(`/assign_rental_items/${assign.id}`, payload);
-      });
-
-      await Promise.all(promises);
-
-      groupAssignments.forEach(a => {
-        a.rental_place_id = rentalPlaceId;
-      });
+      // 途中で失敗した場合に不整合な書き込みを広げないよう、直列に更新する
+      for (const assign of groupAssignments) {
+        await this.$axios.$put(`/assign_rental_items/${assign.id}`, { rental_place_id: rentalPlaceId });
+        assign.rental_place_id = rentalPlaceId;
+      }
 
       this.assignments = [...this.assignments];
     },
@@ -508,6 +497,7 @@ export default {
     },
 
     isGroupFullyAssigned(groupId) {
+      // 場所が団体内でバラバラでもよく、各物品がどこかしらに割り当て済みかどうかを見る
       const itemIds = this.activeItemIdsForGroup(groupId);
       if (itemIds.length === 0) return false;
       return itemIds.every(itemId => this.getGroupItemPlace(groupId, itemId));
