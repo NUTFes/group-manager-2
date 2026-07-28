@@ -261,6 +261,7 @@ export default {
       isDeleteModalOpen: false,
       targetDeleteGroupId: null,
       targetDeletePlaceId: null,
+      updatingGroupIds: new Set(),
       items: [],
       groups: [],
       places: [],
@@ -413,6 +414,12 @@ export default {
       if (!this.$role(this.roleID).assign_items.update) return;
       if (groupAssignments.length === 0) return;
 
+      // 同一団体への操作が処理中に重複して走ると、後発の正常な更新を
+      // 先発のロールバックが上書きしてしまうため、団体単位で多重実行を防ぐ
+      const groupId = Number(groupAssignments[0].group_id);
+      if (this.updatingGroupIds.has(groupId)) return;
+      this.updatingGroupIds.add(groupId);
+
       const previousPlaceIds = groupAssignments.map(a => a.rental_place_id);
 
       // 体感速度のため先に画面へ反映し、サーバー側は直列に更新する
@@ -433,6 +440,8 @@ export default {
         groupAssignments.forEach((a, i) => { a.rental_place_id = previousPlaceIds[i]; });
         this.assignments = [...this.assignments];
         throw error;
+      } finally {
+        this.updatingGroupIds.delete(groupId);
       }
     },
 
@@ -488,6 +497,7 @@ export default {
         await this.updateAssignmentsPlace(groupAssignments, null);
       } catch (error) {
         alert("割り当ての解除に失敗しました。");
+        await this.fetchDataFromDB();
       }
     },
 
@@ -559,7 +569,7 @@ export default {
 
       return this.groups.filter(g => {
         if (!groupIdsInPlace.includes(Number(g.id))) return false;
-        return this.activeItemIds.some(itemId => this.getGroupTotalItem(g.id, itemId) > 0);
+        return this.activeItemIds.some(itemId => this.getGroupItemTotalAtPlace(g.id, itemId, placeId) > 0);
       });
     },
 
