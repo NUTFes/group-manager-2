@@ -2767,28 +2767,6 @@ paths:
           - 1
           - 2
           default: 0
-  "/api/v1/get_search_order_status_check":
-    post:
-      tags:
-      - api/v1/order_status_check_api
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-        '422':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
   "/api/v1/create_order_status_check_comment":
     post:
       tags:

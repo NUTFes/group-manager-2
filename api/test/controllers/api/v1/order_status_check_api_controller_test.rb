@@ -19,12 +19,17 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
     food_category = GroupCategory.create!(name: '食品販売')
     stage_category = GroupCategory.create!(name: 'ステージ')
     exhibition_category = GroupCategory.create!(name: '展示・体験')
-    committee_category = GroupCategory.create!(name: '実行委員')
+    committee_category = GroupCategory.create!(id: GroupCategory::COMMITTEE_ID, name: '実行委員')
     year = FesYear.create!(year_num: 2026)
-    @committee_group = create_group!(
-      name: 'D-実行委員',
-      committee: true,
+    @committee_category_group = create_group!(
+      name: 'D-カテゴリ実行委員',
       category: committee_category,
+      year: year
+    )
+    @committee_flag_group = create_group!(
+      name: 'E-フラグ実行委員',
+      committee: true,
+      category: exhibition_category,
       year: year
     )
     @international_group = create_group!(
@@ -45,20 +50,24 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
     )
   end
 
-  test 'filters order status groups by committee flag' do
-    assert_equal [@committee_group.id], refined_group_ids(committee: 1)
+  test 'filters order status groups by committee flag or category' do
+    assert_equal [@committee_category_group.id, @committee_flag_group.id].sort,
+                 refined_group_ids(committee: 1).sort
     assert_equal [@international_group.id, @food_group.id, @participant_group.id].sort,
                  refined_group_ids(committee: 2).sort
-    assert_equal [@committee_group.id, @international_group.id, @food_group.id, @participant_group.id].sort,
+    assert_equal [@committee_category_group.id, @committee_flag_group.id, @international_group.id, @food_group.id,
+                  @participant_group.id].sort,
                  refined_group_ids(committee: 0).sort
   end
 
   test 'returns category and name sort orders' do
     post_refinement
 
-    assert_equal [@committee_group.id, @international_group.id, @food_group.id, @participant_group.id],
+    assert_equal [@committee_category_group.id, @committee_flag_group.id, @international_group.id, @food_group.id,
+                  @participant_group.id],
                  response.parsed_body.dig('sort_orders', 'category')
-    assert_equal [@international_group.id, @food_group.id, @participant_group.id, @committee_group.id],
+    assert_equal [@international_group.id, @food_group.id, @participant_group.id, @committee_category_group.id,
+                  @committee_flag_group.id],
                  response.parsed_body.dig('sort_orders', 'name')
   end
 

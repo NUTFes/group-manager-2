@@ -48,7 +48,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     @groups = Group.with_order_status_check_relations
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
-    @groups = @groups.where(committee: committee == 1) unless committee == 0
+    @groups = filter_by_committee(@groups, committee)
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
@@ -62,19 +62,18 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     end
   end
 
-  # あいまい検索機能
-  def get_search_order_status_check
-    word = params[:word]
-    @groups = Group.with_order_status_check_relations.where('name LIKE ?', "%#{word}%")
+  private
 
-    if @groups.none?
-      render json: fmt(not_found, [], 'Not found groups')
+  def filter_by_committee(groups, committee)
+    case committee
+    when 1
+      groups.where(committee: true).or(groups.where(group_category_id: GroupCategory::COMMITTEE_ID))
+    when 2
+      groups.where(committee: [false, nil]).where.not(group_category_id: GroupCategory::COMMITTEE_ID)
     else
-      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
+      groups
     end
   end
-
-  private
 
   def order_status_sort_orders(groups)
     {
@@ -85,7 +84,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
 
   def group_category_order(group)
     category_id = group.group_category_id
-    return 0 if group.committee? || category_id == 6
+    return 0 if group.committee? || category_id == GroupCategory::COMMITTEE_ID
     return 1 if group.is_international?
 
     2 + (category_id || 999)

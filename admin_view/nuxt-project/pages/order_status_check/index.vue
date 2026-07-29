@@ -449,6 +449,9 @@ import {
   normalizeSubmissionStatus,
   getSubmissionStatusMeta,
 } from "~/utils/health_center_submission_status";
+
+const COMMITTEE_CATEGORY_ID = 6;
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -576,7 +579,7 @@ export default {
         { key: "committee", label: "実行委員会" },
         { key: "international", label: "国際" },
         ...this.groupCategories
-          .filter((category) => category.id !== 6)
+          .filter((category) => category.id !== COMMITTEE_CATEGORY_ID)
           .sort((a, b) => a.id - b.id)
           .map((category) => ({
             key: `category-${category.id}`,
@@ -828,7 +831,8 @@ export default {
     getGroupCategoryKey(groupWrapper) {
       const group = groupWrapper.group;
       const categoryId = Number(group.group_category_id);
-      if (group.committee || categoryId === 6) return "committee";
+      if (group.committee || categoryId === COMMITTEE_CATEGORY_ID)
+        return "committee";
       if (group.is_international) return "international";
       return `category-${categoryId}`;
     },

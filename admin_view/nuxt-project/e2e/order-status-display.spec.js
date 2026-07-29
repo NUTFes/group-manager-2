@@ -215,7 +215,7 @@ test.describe("申請状況の表示", () => {
           id: 1,
           name: "D-実行委員",
           group_category_id: 6,
-          committee: true,
+          committee: false,
           is_international: false,
         },
         group_category: 6,
