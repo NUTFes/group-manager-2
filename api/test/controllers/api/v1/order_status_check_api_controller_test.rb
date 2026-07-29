@@ -53,11 +53,11 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
                  refined_group_ids(committee: 0).sort
   end
 
-  test 'returns section and name sort orders' do
+  test 'returns category and name sort orders' do
     post_refinement
 
     assert_equal [@committee_group.id, @international_group.id, @food_group.id, @participant_group.id],
-                 response.parsed_body.dig('sort_orders', 'section')
+                 response.parsed_body.dig('sort_orders', 'category')
     assert_equal [@international_group.id, @food_group.id, @participant_group.id, @committee_group.id],
                  response.parsed_body.dig('sort_orders', 'name')
   end

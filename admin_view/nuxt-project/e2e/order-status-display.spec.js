@@ -275,9 +275,9 @@ test.describe("申請状況の表示", () => {
         fulfillData(route, filteredGroups, {
           sort_orders:
             committee === "1"
-              ? { section: [1], name: [1] }
+              ? { category: [1], name: [1] }
               : {
-                  section: [1, 2, 3, 4],
+                  category: [1, 2, 3, 4],
                   name: [2, 3, 4, 1],
                 },
         });
@@ -289,7 +289,7 @@ test.describe("申請状況の表示", () => {
 
     await openNuxtRoute(page, "/order_status_check");
 
-    await expect(page.locator(".group-section-row")).toHaveText([
+    await expect(page.locator(".group-category-row")).toHaveText([
       "実行委員会（1団体）",
       "国際（1団体）",
       "食品販売（1団体）",
@@ -298,7 +298,7 @@ test.describe("申請状況の表示", () => {
     const requestCountBeforeSort = refinementRequestCount;
     const nameSortButton = page.getByRole("button", { name: /団体名順/ });
     await nameSortButton.click();
-    await expect(page.locator(".group-section-row")).toHaveCount(0);
+    await expect(page.locator(".group-category-row")).toHaveCount(0);
     await expect(
       page.locator("tbody tr.clickable-row td:nth-child(1)")
     ).toHaveText(["A-国際", "B-食品", "C-ステージ", "D-実行委員"]);

@@ -78,12 +78,12 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
 
   def order_status_sort_orders(groups)
     {
-      section: groups.sort_by { |group| [group_section_order(group), group.name.to_s, group.id] }.map(&:id),
+      category: groups.sort_by { |group| [group_category_order(group), group.name.to_s, group.id] }.map(&:id),
       name: groups.sort_by { |group| [group.name.to_s, group.id] }.map(&:id)
     }
   end
 
-  def group_section_order(group)
+  def group_category_order(group)
     category_id = group.group_category_id
     return 0 if group.committee? || category_id == 6
     return 1 if group.is_international?

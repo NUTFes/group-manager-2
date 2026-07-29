@@ -1439,7 +1439,7 @@ export default {
         committee: storedFilters.committee ?? 0,
         isInternational: storedFilters.isInternational ?? 0,
         isExternal: storedFilters.isExternal ?? 0,
-        sortMode: storedFilters.sortMode ?? "section",
+        sortMode: storedFilters.sortMode ?? "category",
         nameSortDirection: storedFilters.nameSortDirection ?? "asc",
       });
       // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
@@ -1489,7 +1489,7 @@ export default {
       committee = 0,
       isInternational = 0,
       isExternal = 0,
-      sortMode = "section",
+      sortMode = "category",
       nameSortDirection = "asc",
     }) {
       try {

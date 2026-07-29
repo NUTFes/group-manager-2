@@ -43,7 +43,7 @@
       <template v-slot:search>
         <SearchBar>
           <input
-            v-model="searchText"
+            v-model="searchName"
             @keypress.enter="searchGroups"
             type="text"
             size="25"
@@ -92,9 +92,9 @@
                 <div class="group-sort-actions">
                   <button
                     type="button"
-                    :class="{ active: sortMode === 'section' }"
-                    :aria-pressed="sortMode === 'section'"
-                    @click.stop="setSectionSort"
+                    :class="{ active: sortMode === 'category' }"
+                    :aria-pressed="sortMode === 'category'"
+                    @click.stop="setCategorySort"
                   >
                     分類別
                   </button>
@@ -118,18 +118,18 @@
         <template v-slot:table-body>
           <tr
             v-for="(group, index) in displayRows"
-            :key="group.isSection ? group.key : group.group.id"
+            :key="group.isCategory ? group.key : group.group.id"
             @click="
-              group.isSection
+              group.isCategory
                 ? null
                 : $router.push(`/order_status_check/${group.group.id}`)
             "
-            :class="{ 'clickable-row': !group.isSection }"
+            :class="{ 'clickable-row': !group.isCategory }"
           >
             <td
-              v-if="group.isSection"
+              v-if="group.isCategory"
               :colspan="headers.length"
-              class="group-section-row"
+              class="group-category-row"
             >
               {{ group.label }}（{{ group.count }}団体）
             </td>
@@ -488,12 +488,12 @@ export default {
       refExternal: "ALL",
       refExternalID: 0,
       groupCategories: [],
-      searchText: "",
-      appliedSearchText: "",
-      sortMode: "section",
+      searchName: "",
+      appliedSearchName: "",
+      sortMode: "category",
       nameSortDirection: "asc",
       sortOrders: {
-        section: [],
+        category: [],
         name: [],
       },
       applicantList: [
@@ -531,7 +531,7 @@ export default {
     return {
       groups: groupsRes.data,
       sortOrders: groupsRes.sort_orders || {
-        section: groupIds,
+        category: groupIds,
         name: groupIds,
       },
       unregisteredGroups: unregisteredGroupsRes.data,
@@ -546,7 +546,7 @@ export default {
       roleID: (state) => state.users.role,
     }),
     searchedGroups() {
-      const word = this.appliedSearchText.trim().toLocaleLowerCase("ja");
+      const word = this.appliedSearchName.trim().toLocaleLowerCase("ja");
       if (!word) return this.groups;
       return this.groups.filter((group) =>
         String(group.group.name || "")
@@ -572,7 +572,7 @@ export default {
         return this.orderedGroups;
       }
 
-      const sectionDefinitions = [
+      const categoryDefinitions = [
         { key: "committee", label: "実行委員会" },
         { key: "international", label: "国際" },
         ...this.groupCategories
@@ -585,31 +585,31 @@ export default {
       ];
       const rows = [];
 
-      sectionDefinitions.forEach((section) => {
-        const sectionGroups = this.orderedGroups.filter(
-          (group) => this.getGroupSectionKey(group) === section.key
+      categoryDefinitions.forEach((category) => {
+        const categoryGroups = this.orderedGroups.filter(
+          (group) => this.getGroupCategoryKey(group) === category.key
         );
-        if (sectionGroups.length === 0) return;
+        if (categoryGroups.length === 0) return;
 
         rows.push({
-          isSection: true,
-          key: `section-${section.key}`,
-          label: section.label,
-          count: sectionGroups.length,
+          isCategory: true,
+          key: `category-${category.key}`,
+          label: category.label,
+          count: categoryGroups.length,
         });
-        rows.push(...sectionGroups);
+        rows.push(...categoryGroups);
       });
 
       const knownKeys = new Set(
-        sectionDefinitions.map((section) => section.key)
+        categoryDefinitions.map((category) => category.key)
       );
       const uncategorizedGroups = this.orderedGroups.filter(
-        (group) => !knownKeys.has(this.getGroupSectionKey(group))
+        (group) => !knownKeys.has(this.getGroupCategoryKey(group))
       );
       if (uncategorizedGroups.length > 0) {
         rows.push({
-          isSection: true,
-          key: "section-uncategorized",
+          isCategory: true,
+          key: "category-uncategorized",
           label: "その他",
           count: uncategorizedGroups.length,
         });
@@ -676,7 +676,7 @@ export default {
     const storedSortDirection = localStorage.getItem(
       this.$route.path + "NameSortDirection"
     );
-    if (storedSortMode === "name" || storedSortMode === "section") {
+    if (storedSortMode === "name" || storedSortMode === "category") {
       this.sortMode = storedSortMode;
     }
     if (storedSortDirection === "asc" || storedSortDirection === "desc") {
@@ -778,7 +778,7 @@ export default {
       this.groups = refRes.data || [];
       const groupIds = this.groups.map((group) => group.group.id);
       this.sortOrders = refRes.sort_orders || {
-        section: groupIds,
+        category: groupIds,
         name: groupIds,
       };
 
@@ -786,12 +786,12 @@ export default {
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
       this.unregisteredGroups = unregisteredRes.data;
 
-      const storedSearchText = localStorage.getItem(
-        this.$route.path + "SearchText"
+      const storedSearchName = localStorage.getItem(
+        this.$route.path + "SearchName"
       );
-      if (storedSearchText) {
-        this.searchText = storedSearchText;
-        this.appliedSearchText = storedSearchText;
+      if (storedSearchName) {
+        this.searchName = storedSearchName;
+        this.appliedSearchName = storedSearchName;
       }
       this.$nextTick(() => {
         window.scrollTo(
@@ -801,11 +801,11 @@ export default {
       });
     },
     searchGroups() {
-      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
-      this.appliedSearchText = this.searchText;
+      localStorage.setItem(this.$route.path + "SearchName", this.searchName);
+      this.appliedSearchName = this.searchName;
     },
-    setSectionSort() {
-      this.sortMode = "section";
+    setCategorySort() {
+      this.sortMode = "category";
       this.persistSort();
     },
     setNameSort() {
@@ -825,7 +825,7 @@ export default {
         this.nameSortDirection
       );
     },
-    getGroupSectionKey(groupWrapper) {
+    getGroupCategoryKey(groupWrapper) {
       const group = groupWrapper.group;
       const categoryId = Number(group.group_category_id);
       if (group.committee || categoryId === 6) return "committee";
@@ -946,7 +946,7 @@ export default {
 .clickable-row:hover {
   background-color: #f5f5f5;
 }
-.group-section-row {
+.group-category-row {
   background-color: #e8edf7;
   color: var(--accent-3);
   font-weight: bold;
