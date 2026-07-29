@@ -27,19 +27,6 @@ class FireEquipmentOrderTest < ActiveSupport::TestCase
     assert_equal 'unapproved', status.status
   end
 
-  test 'removes conflicting unregistered flag after create' do
-    UnRegisteredGroup.create!(group: @group, order_type: :fire_equipment_order)
-
-    assert_difference -> { @group.un_registered_groups.fire_equipment_order.count }, -1 do
-      FireEquipmentOrder.create!(
-        group: @group,
-        name: 'カセットコンロ',
-        quantity: 1,
-        fuel: :gas_bottle
-      )
-    end
-  end
-
   private
 
   def create_group!

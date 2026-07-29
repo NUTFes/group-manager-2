@@ -829,17 +829,6 @@ export default {
     },
     // 申請しないデータかどうかを判定するメソッド
     isUnregistered(groupId, orderType) {
-      const groupWrapper = this.groups.find(
-        (item) => item.group.id === groupId
-      );
-      const applicationFieldByOrderType = {
-        power_order: "power_orders",
-        rental_item_order: "rental_orders",
-        fire_equipment_order: "fire_equipment_order",
-      };
-      const applicationField = applicationFieldByOrderType[orderType];
-      if (applicationField && groupWrapper?.[applicationField]) return false;
-
       return this.unregisteredGroups.some(
         (item) => item.group_id === groupId && item.order_type === orderType
       );

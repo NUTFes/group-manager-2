@@ -306,9 +306,7 @@ test.describe("申請状況の表示", () => {
     ).toHaveText(["D-実行委員"]);
   });
 
-  test("申請データがある場合は申請しない回答より申請内容を優先する", async ({
-    page,
-  }) => {
+  test("詳細画面に申請内容と合計電力を表示する", async ({ page }) => {
     const group = {
       group: {
         id: 1,
@@ -360,12 +358,6 @@ test.describe("申請状況の表示", () => {
       ],
       total_power: 1500,
     };
-    const unregisteredGroups = [
-      { id: 1, group_id: 1, order_type: "power_order" },
-      { id: 2, group_id: 1, order_type: "rental_item_order" },
-      { id: 3, group_id: 1, order_type: "fire_equipment_order" },
-    ];
-
     await page.route(
       `${API_URL}/api/v1/get_order_info_for_admin_view/1`,
       (route) => fulfillData(route, group)
@@ -375,7 +367,7 @@ test.describe("申請状況の表示", () => {
       (route) => fulfillData(route, { submissions: [] })
     );
     await page.route(`${API_URL}/un_registered_groups?group_id=1`, (route) =>
-      fulfillData(route, unregisteredGroups)
+      fulfillData(route, [])
     );
     await page.route(
       `${API_URL}/api/v1/get_refinement_order_status_check*`,

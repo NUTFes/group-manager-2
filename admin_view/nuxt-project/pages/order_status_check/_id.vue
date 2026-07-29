@@ -1550,15 +1550,6 @@ export default {
       return 2 + (Number.isNaN(categoryId) ? 999 : categoryId);
     },
     isUnregistered(orderType) {
-      const applicationFieldByOrderType = {
-        power_order: "power_orders",
-        rental_item_order: "rental_orders",
-        fire_equipment_order: "fire_equipment_orders",
-      };
-      const applicationField = applicationFieldByOrderType[orderType];
-      const application = applicationField && this.group?.[applicationField];
-      if (Array.isArray(application) && application.length > 0) return false;
-
       return this.unregisteredGroups.some(
         (item) => item.order_type === orderType
       );
