@@ -383,19 +383,14 @@ test.describe("申請状況の表示", () => {
     await page.route(`${API_URL}/un_registered_groups?group_id=1`, (route) =>
       fulfillData(route, [])
     );
-    await page.route(
-      `${API_URL}/api/v1/get_refinement_order_status_check*`,
-      (route) =>
-        fulfillData(route, [
-          {
-            group: group.group,
-            group_category: 1,
-          },
-        ])
-    );
-
     await openNuxtRoute(page, "/order_status_check/1");
 
+    await expect(
+      page.getByRole("button", { name: "前の団体へ移動" })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "次の団体へ移動" })
+    ).toHaveCount(0);
     await expect(page.getByText("ホットプレート")).toBeVisible();
     await expect(page.getByText("長机", { exact: true })).toBeVisible();
     await expect(page.getByText("カセットコンロ")).toBeVisible();

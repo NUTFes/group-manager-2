@@ -12,28 +12,6 @@
     </div>
 
     <template v-else-if="group">
-      <div class="side-nav side-nav-left">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!prevGroupId || isNavigatingGroup"
-          aria-label="前の団体へ移動"
-          @click="onPrevGroup"
-        >
-          <span class="side-nav-icon">&lt;</span>
-        </button>
-      </div>
-      <div class="side-nav side-nav-right">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!nextGroupId || isNavigatingGroup"
-          aria-label="次の団体へ移動"
-          @click="onNextGroup"
-        >
-          <span class="side-nav-icon">&gt;</span>
-        </button>
-      </div>
       <Row
         wrap="nowrap"
         align="start"
@@ -1293,9 +1271,6 @@ import {
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/health_center_submission_statuses";
-// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
-// 前後移動ボタンでも維持するために参照するキーのprefix。
-const ORDER_STATUS_CHECK_INDEX_PATH = "/order_status_check";
 
 export default {
   components: {
@@ -1320,8 +1295,6 @@ export default {
       group: null,
       loading: true,
       unregisteredGroups: [],
-      allGroupIds: [],
-      isNavigatingGroup: false,
       activeEditType: null,
       selectedItem: null,
       isOpenEditModal: false,
@@ -1339,22 +1312,6 @@ export default {
     currentGroupId() {
       const id = Number(this.$route.params.id);
       return Number.isNaN(id) ? null : id;
-    },
-    currentGroupIndex() {
-      if (!this.currentGroupId || this.allGroupIds.length === 0) return -1;
-      return this.allGroupIds.indexOf(this.currentGroupId);
-    },
-    prevGroupId() {
-      if (this.currentGroupIndex <= 0) return null;
-      return this.allGroupIds[this.currentGroupIndex - 1];
-    },
-    nextGroupId() {
-      if (
-        this.currentGroupIndex < 0 ||
-        this.currentGroupIndex >= this.allGroupIds.length - 1
-      )
-        return null;
-      return this.allGroupIds[this.currentGroupIndex + 1];
     },
     activeModalComponent() {
       if (!this.activeEditType) return null;
@@ -1379,17 +1336,12 @@ export default {
   watch: {
     "$route.params.id": {
       async handler() {
-        const previousFesYearId = this.group?.group?.fes_year_id;
         await this.fetchData();
-        if (this.group?.group?.fes_year_id !== previousFesYearId) {
-          await this.fetchAllGroupIds();
-        }
       },
     },
   },
   async mounted() {
     await this.fetchData();
-    await this.fetchAllGroupIds();
   },
   methods: {
     formatWeather,
@@ -1425,104 +1377,6 @@ export default {
         }
       }
     },
-    async fetchAllGroupIds() {
-      // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
-      // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・参加形式・国際・学外)が
-      // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
-      const fesYearId = this.group?.group?.fes_year_id;
-      if (!fesYearId) return;
-
-      const storedFilters = this.getStoredIndexFilters();
-      const filteredIds = await this.fetchGroupIdsByFilter({
-        fesYearId: storedFilters.fesYearId ?? fesYearId,
-        groupCategoryId: storedFilters.groupCategoryId ?? 0,
-        committee: storedFilters.committee ?? 0,
-        isInternational: storedFilters.isInternational ?? 0,
-        isExternal: storedFilters.isExternal ?? 0,
-        sortMode: storedFilters.sortMode ?? "category",
-        nameSortDirection: storedFilters.nameSortDirection ?? "asc",
-      });
-      // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
-      // それまでのallGroupIdsを保持したまま何もしない。
-      if (filteredIds === null) return;
-
-      // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
-      // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
-      // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
-      if (filteredIds.includes(this.currentGroupId)) {
-        this.allGroupIds = filteredIds;
-        return;
-      }
-
-      const fallbackIds = await this.fetchGroupIdsByFilter({ fesYearId });
-      if (fallbackIds === null) return;
-      this.allGroupIds = fallbackIds;
-    },
-    getStoredIndexFilters() {
-      if (typeof localStorage === "undefined") return {};
-
-      const toNumberOrNull = (value) =>
-        value === null || value === undefined ? null : Number(value);
-      const prefix = ORDER_STATUS_CHECK_INDEX_PATH;
-
-      return {
-        fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
-        groupCategoryId: toNumberOrNull(
-          localStorage.getItem(prefix + "RefCategory")
-        ),
-        committee: toNumberOrNull(
-          localStorage.getItem(prefix + "RefCommittee")
-        ),
-        isInternational: toNumberOrNull(
-          localStorage.getItem(prefix + "RefInternational")
-        ),
-        isExternal: toNumberOrNull(
-          localStorage.getItem(prefix + "RefExternal")
-        ),
-        sortMode: localStorage.getItem(prefix + "SortMode"),
-        nameSortDirection: localStorage.getItem(prefix + "NameSortDirection"),
-      };
-    },
-    async fetchGroupIdsByFilter({
-      fesYearId,
-      groupCategoryId = 0,
-      committee = 0,
-      isInternational = 0,
-      isExternal = 0,
-      sortMode = "category",
-      nameSortDirection = "asc",
-    }) {
-      try {
-        const refRes = await this.$axios.$post(
-          "/api/v1/get_refinement_order_status_check",
-          null,
-          {
-            params: {
-              fes_year_id: fesYearId,
-              group_category_id: groupCategoryId,
-              committee,
-              is_international: isInternational,
-              is_external: isExternal,
-            },
-          }
-        );
-
-        if (refRes && refRes.data) {
-          const fallbackIds = refRes.data.map(
-            (groupWrapper) => groupWrapper.group.id
-          );
-          const ids = [...(refRes.sort_orders?.[sortMode] || fallbackIds)];
-          if (sortMode === "name" && nameSortDirection === "desc") {
-            ids.reverse();
-          }
-          return ids;
-        }
-        return [];
-      } catch (e) {
-        console.error("Failed to fetch all group ids", e);
-        return null;
-      }
-    },
     isUnregistered(orderType) {
       return this.unregisteredGroups.some(
         (item) => item.order_type === orderType
@@ -1552,27 +1406,6 @@ export default {
         default:
           return true; // power_orders, rental_orders, public_relation 等は基本表示
       }
-    },
-    onPrevGroup() {
-      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
-      if (this.isNavigatingGroup || !this.prevGroupId) return;
-      this.isNavigatingGroup = true;
-      this.$router
-        .push(`/order_status_check/${this.prevGroupId}`)
-        .catch(() => {})
-        .finally(() => {
-          this.isNavigatingGroup = false;
-        });
-    },
-    onNextGroup() {
-      if (this.isNavigatingGroup || !this.nextGroupId) return;
-      this.isNavigatingGroup = true;
-      this.$router
-        .push(`/order_status_check/${this.nextGroupId}`)
-        .catch(() => {})
-        .finally(() => {
-          this.isNavigatingGroup = false;
-        });
     },
     openModal(type, item) {
       this.activeEditType = type;
@@ -1771,62 +1604,6 @@ export default {
   width: 100%;
 }
 
-.side-nav {
-  position: fixed;
-  top: 50vh;
-  transform: translateY(-50%);
-  z-index: 20;
-}
-
-.side-nav-left {
-  left: calc(260px + 60px - 56px);
-}
-
-.side-nav-right {
-  right: calc(60px - 56px);
-}
-
-.side-nav-button {
-  min-width: 20px;
-  width: 20px;
-  height: 56px;
-  padding: 0;
-  letter-spacing: 0;
-  gap: 0;
-  font-size: 10px;
-  border-radius: 10px;
-  border: 1px solid #c9ccd1;
-  box-shadow: none;
-  backdrop-filter: none;
-  color: #6b7280;
-  background: #ffffff;
-  opacity: 0.9;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.side-nav-icon {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.side-nav-button:hover {
-  background: #f3f4f6;
-  border-color: #b8bcc2;
-  color: #4b5563;
-  opacity: 1;
-}
-
-.side-nav-button:disabled {
-  background: #f9fafb;
-  border-color: #e5e7eb;
-  color: #9ca3af;
-  opacity: 1;
-  cursor: not-allowed;
-}
-
 .comment-form {
   width: 100%;
   padding: 0;
@@ -1881,25 +1658,6 @@ export default {
   .sticky-right-column {
     position: static;
     top: auto;
-  }
-
-  .side-nav-left {
-    left: 8px;
-  }
-
-  .side-nav-right {
-    right: 8px;
-  }
-
-  .side-nav-button {
-    min-width: 18px;
-    width: 18px;
-    height: 46px;
-    border-radius: 8px;
-  }
-
-  .side-nav-icon {
-    font-size: 12px;
   }
 }
 
