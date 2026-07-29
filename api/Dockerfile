@@ -1,4 +1,4 @@
-FROM ruby:3.0.7
+FROM ruby:3.3.12
 
 # ビルド時の引数としてPLATFORMを定義
 ARG PLATFORM
@@ -8,12 +8,10 @@ ENV PLATFORM=${PLATFORM}
 
 
 # M1 Mac 対策として必要なパッケージのインストール
-RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo 'deb http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list \
-      && apt-get update \
-      && apt-get install -y nodejs npm yarn \
-      && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0\
-      && apt-get install fonts-ipa* \
+RUN apt-get update \
+      && apt-get install -y nodejs npm \
+      && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0 \
+      && apt-get install -y fonts-ipa* \
       && mkdir /myapp
 
 # GraphViz is required by rails-erd
