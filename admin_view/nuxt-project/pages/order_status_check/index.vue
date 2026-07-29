@@ -492,6 +492,10 @@ export default {
       appliedSearchText: "",
       sortMode: "section",
       nameSortDirection: "asc",
+      sortOrders: {
+        section: [],
+        name: [],
+      },
       applicantList: [
         { id: 1, value: "実行委員会", bool: true },
         { id: 2, value: "一般参加団体", bool: false },
@@ -514,6 +518,7 @@ export default {
       "/api/v1/get_refinement_order_status_check?fes_year_id=" +
       currentYearRes.data.fes_year_id;
     const groupsRes = await $axios.$post(url);
+    const groupIds = groupsRes.data.map((group) => group.group.id);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
@@ -525,6 +530,10 @@ export default {
 
     return {
       groups: groupsRes.data,
+      sortOrders: groupsRes.sort_orders || {
+        section: groupIds,
+        name: groupIds,
+      },
       unregisteredGroups: unregisteredGroupsRes.data,
       groupCategories: groupCategoryRes.data,
       yearList: yearsRes.data,
@@ -545,12 +554,22 @@ export default {
           .includes(word)
       );
     },
+    orderedGroups() {
+      const groupById = new Map(
+        this.searchedGroups.map((group) => [group.group.id, group])
+      );
+      const defaultOrder = this.groups.map((group) => group.group.id);
+      const order = [...(this.sortOrders[this.sortMode] || defaultOrder)];
+
+      if (this.sortMode === "name" && this.nameSortDirection === "desc") {
+        order.reverse();
+      }
+
+      return order.map((id) => groupById.get(id)).filter(Boolean);
+    },
     displayRows() {
       if (this.sortMode === "name") {
-        return this.sortGroupsByName(
-          this.searchedGroups,
-          this.nameSortDirection
-        );
+        return this.orderedGroups;
       }
 
       const sectionDefinitions = [
@@ -567,11 +586,8 @@ export default {
       const rows = [];
 
       sectionDefinitions.forEach((section) => {
-        const sectionGroups = this.sortGroupsByName(
-          this.searchedGroups.filter(
-            (group) => this.getGroupSectionKey(group) === section.key
-          ),
-          "asc"
+        const sectionGroups = this.orderedGroups.filter(
+          (group) => this.getGroupSectionKey(group) === section.key
         );
         if (sectionGroups.length === 0) return;
 
@@ -587,11 +603,8 @@ export default {
       const knownKeys = new Set(
         sectionDefinitions.map((section) => section.key)
       );
-      const uncategorizedGroups = this.sortGroupsByName(
-        this.searchedGroups.filter(
-          (group) => !knownKeys.has(this.getGroupSectionKey(group))
-        ),
-        "asc"
+      const uncategorizedGroups = this.orderedGroups.filter(
+        (group) => !knownKeys.has(this.getGroupSectionKey(group))
       );
       if (uncategorizedGroups.length > 0) {
         rows.push({
@@ -762,9 +775,12 @@ export default {
         "&is_external=" +
         this.refExternalID;
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data) {
-        this.groups.push(res);
-      }
+      this.groups = refRes.data || [];
+      const groupIds = this.groups.map((group) => group.group.id);
+      this.sortOrders = refRes.sort_orders || {
+        section: groupIds,
+        name: groupIds,
+      };
 
       // 申請しないデータも再取得
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
@@ -808,17 +824,6 @@ export default {
         this.$route.path + "NameSortDirection",
         this.nameSortDirection
       );
-    },
-    sortGroupsByName(groups, direction) {
-      const coefficient = direction === "desc" ? -1 : 1;
-      return [...groups].sort((a, b) => {
-        const comparison = String(a.group.name || "").localeCompare(
-          String(b.group.name || ""),
-          "ja"
-        );
-        if (comparison !== 0) return comparison * coefficient;
-        return (a.group.id - b.group.id) * coefficient;
-      });
     },
     getGroupSectionKey(groupWrapper) {
       const group = groupWrapper.group;

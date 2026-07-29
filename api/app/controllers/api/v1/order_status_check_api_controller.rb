@@ -55,7 +55,10 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
-      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
+      groups = @groups.to_a
+      response = fmt(ok, fit_group_index_for_admin_view(groups))
+      response[:sort_orders] = order_status_sort_orders(groups)
+      render json: response
     end
   end
 
@@ -69,5 +72,22 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
+  end
+
+  private
+
+  def order_status_sort_orders(groups)
+    {
+      section: groups.sort_by { |group| [group_section_order(group), group.name.to_s, group.id] }.map(&:id),
+      name: groups.sort_by { |group| [group.name.to_s, group.id] }.map(&:id)
+    }
+  end
+
+  def group_section_order(group)
+    category_id = group.group_category_id
+    return 0 if group.committee? || category_id == 6
+    return 1 if group.is_international?
+
+    2 + (category_id || 999)
   end
 end

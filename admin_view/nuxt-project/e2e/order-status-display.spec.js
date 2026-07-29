@@ -13,13 +13,14 @@ const authenticate = async (page) => {
   });
 };
 
-const fulfillData = (route, data) =>
+const fulfillData = (route, data, extra = {}) =>
   route.fulfill({
     status: 200,
     contentType: "application/json",
     body: JSON.stringify({
       status: { code: 200, message: "Success" },
       data,
+      ...extra,
     }),
   });
 
@@ -262,13 +263,24 @@ test.describe("申請状況の表示", () => {
     await page.route(`${API_URL}/fes_years`, (route) =>
       fulfillData(route, [{ id: 1, year_num: 2026 }])
     );
+    let refinementRequestCount = 0;
     await page.route(
       `${API_URL}/api/v1/get_refinement_order_status_check*`,
       (route) => {
+        refinementRequestCount += 1;
         const committee = new URL(route.request().url()).searchParams.get(
           "committee"
         );
-        fulfillData(route, committee === "1" ? [groups[0]] : groups);
+        const filteredGroups = committee === "1" ? [groups[0]] : groups;
+        fulfillData(route, filteredGroups, {
+          sort_orders:
+            committee === "1"
+              ? { section: [1], name: [1] }
+              : {
+                  section: [1, 2, 3, 4],
+                  name: [2, 3, 4, 1],
+                },
+        });
       }
     );
     await page.route(`${API_URL}/un_registered_groups*`, (route) =>
@@ -283,6 +295,7 @@ test.describe("申請状況の表示", () => {
       "食品販売（1団体）",
       "ステージ（1団体）",
     ]);
+    const requestCountBeforeSort = refinementRequestCount;
     const nameSortButton = page.getByRole("button", { name: /団体名順/ });
     await nameSortButton.click();
     await expect(page.locator(".group-section-row")).toHaveCount(0);
@@ -293,6 +306,7 @@ test.describe("申請状況の表示", () => {
     await expect(
       page.locator("tbody tr.clickable-row td:nth-child(1)")
     ).toHaveText(["D-実行委員", "C-ステージ", "B-食品", "A-国際"]);
+    expect(refinementRequestCount).toBe(requestCountBeforeSort);
 
     const committeeFilter = page
       .locator(".drop-down-content")

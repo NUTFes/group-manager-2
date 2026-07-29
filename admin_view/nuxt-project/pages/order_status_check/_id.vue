@@ -1508,46 +1508,20 @@ export default {
         );
 
         if (refRes && refRes.data) {
-          return this.sortGroupWrappers(
-            refRes.data,
-            sortMode,
-            nameSortDirection
-          ).map((groupWrapper) => groupWrapper.group.id);
+          const fallbackIds = refRes.data.map(
+            (groupWrapper) => groupWrapper.group.id
+          );
+          const ids = [...(refRes.sort_orders?.[sortMode] || fallbackIds)];
+          if (sortMode === "name" && nameSortDirection === "desc") {
+            ids.reverse();
+          }
+          return ids;
         }
         return [];
       } catch (e) {
         console.error("Failed to fetch all group ids", e);
         return null;
       }
-    },
-    sortGroupWrappers(groups, sortMode, nameSortDirection) {
-      const nameCoefficient = nameSortDirection === "desc" ? -1 : 1;
-      return [...groups].sort((a, b) => {
-        if (sortMode === "section") {
-          const sectionComparison =
-            this.getGroupSectionOrder(a) - this.getGroupSectionOrder(b);
-          if (sectionComparison !== 0) return sectionComparison;
-        }
-
-        const nameComparison = String(a.group.name || "").localeCompare(
-          String(b.group.name || ""),
-          "ja"
-        );
-        if (nameComparison !== 0) {
-          return nameComparison * (sortMode === "name" ? nameCoefficient : 1);
-        }
-        return (
-          (a.group.id - b.group.id) *
-          (sortMode === "name" ? nameCoefficient : 1)
-        );
-      });
-    },
-    getGroupSectionOrder(groupWrapper) {
-      const group = groupWrapper.group;
-      const categoryId = Number(group.group_category_id);
-      if (group.committee || categoryId === 6) return 0;
-      if (group.is_international) return 1;
-      return 2 + (Number.isNaN(categoryId) ? 999 : categoryId);
     },
     isUnregistered(orderType) {
       return this.unregisteredGroups.some(

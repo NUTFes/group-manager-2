@@ -2707,6 +2707,20 @@ paths:
       - api/v1/order_status_check_api
       summary: post summary
       description: post description
+      responses:
+        '200':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
+        '422':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+      deprecated: false
       parameters:
       - name: fes_year_id
         in: query
@@ -2753,20 +2767,6 @@ paths:
           - 1
           - 2
           default: 0
-      responses:
-        '201':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-        '422':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-      deprecated: false
   "/api/v1/get_search_order_status_check":
     post:
       tags:
@@ -12520,6 +12520,32 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.OrderStatusCheckRefinementResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        sort_orders:
+          type: object
+          description: 絞り込み後の団体ID表示順
+          properties:
+            section:
+              type: array
+              items:
+                type: integer
+            name:
+              type: array
+              items:
+                type: integer
     api.v1.OrderStatusCheckCommentMail: {}
     api.v1.OutputCsv:
       type: object
