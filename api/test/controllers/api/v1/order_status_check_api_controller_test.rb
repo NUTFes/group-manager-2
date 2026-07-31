@@ -71,6 +71,13 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
                  response.parsed_body.dig('sort_orders', 'name')
   end
 
+  test 'returns empty data when no groups match filters' do
+    post_refinement(fes_year_id: -1)
+
+    assert_equal 404, response.parsed_body.dig('status', 'code')
+    assert_equal [], response.parsed_body['data']
+  end
+
   private
 
   def create_group!(name:, category:, year:, committee: false, is_international: false)
@@ -91,10 +98,10 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
     response.parsed_body.fetch('data').map { |group| group.dig('group', 'id') }
   end
 
-  def post_refinement(committee: 0)
+  def post_refinement(committee: 0, fes_year_id: 0)
     post '/api/v1/get_refinement_order_status_check',
          params: {
-           fes_year_id: 0,
+           fes_year_id: fes_year_id,
            group_category_id: 0,
            committee: committee,
            is_international: 0,

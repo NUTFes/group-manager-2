@@ -32,11 +32,33 @@ class Api::V1::OrderInfosApiControllerTest < ActionDispatch::IntegrationTest
     PowerOrder.create!(group: @group, item: 'ホットプレート', power: 1200)
     PowerOrder.create!(group: @group, item: '電気ケトル', power: 300)
 
-    get "/api/v1/get_order_info_for_admin_view/#{@group.id}",
-        headers: @manager.create_new_auth_token,
-        as: :json
+    get_order_info
 
     assert_response :success
     assert_equal 1500, response.parsed_body.dig('data', 'total_power')
+  end
+
+  test 'returns zero total power without power orders' do
+    get_order_info
+
+    assert_response :success
+    assert_equal 0, response.parsed_body.dig('data', 'total_power')
+  end
+
+  test 'treats nil power as zero' do
+    PowerOrder.create!(group: @group, item: '電力未入力機器', power: nil)
+
+    get_order_info
+
+    assert_response :success
+    assert_equal 0, response.parsed_body.dig('data', 'total_power')
+  end
+
+  private
+
+  def get_order_info
+    get "/api/v1/get_order_info_for_admin_view/#{@group.id}",
+        headers: @manager.create_new_auth_token,
+        as: :json
   end
 end

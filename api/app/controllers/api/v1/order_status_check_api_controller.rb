@@ -52,10 +52,10 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
-    if @groups.none?
+    groups = @groups.to_a
+    if groups.empty?
       render json: fmt(not_found, [], 'Not found groups')
     else
-      groups = @groups.to_a
       response = fmt(ok, fit_group_index_for_admin_view(groups))
       response[:sort_orders] = order_status_sort_orders(groups)
       render json: response

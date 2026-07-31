@@ -272,7 +272,7 @@ test.describe("申請状況の表示", () => {
           "committee"
         );
         const filteredGroups = committee === "1" ? [groups[0]] : groups;
-        fulfillData(route, filteredGroups, {
+        return fulfillData(route, filteredGroups, {
           sort_orders:
             committee === "1"
               ? { category: [1], name: [1] }
