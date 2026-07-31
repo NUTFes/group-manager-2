@@ -3,7 +3,7 @@
 class MessageTemplate < ApplicationRecord
   SUPPORTED_VARIABLES = %w[group_name user_name].freeze
 
-  enum locale: { ja: 0, en: 1 }
+  enum :locale, { ja: 0, en: 1 }
 
   SUPPORTED_LOCALES = locales.keys.freeze
 
