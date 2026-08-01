@@ -7,19 +7,19 @@ services:
     command: tunnel run
 
   api:
-    image: ${HARBOR_REG}/group-manager/api:latest
+    image: ghcr.io/nutfes/group-manager/api:${IMAGE_TAG}
     container_name: prod-api
     env_file: [.env]
 
   user:
-    image: ${HARBOR_REG}/group-manager/user:latest
+    image: ghcr.io/nutfes/group-manager/user:${IMAGE_TAG}
     container_name: prod-view
     ports:
       - "8003:3000"
     env_file: [.env]
 
   admin_view:
-    image: ${HARBOR_REG}/group-manager/admin:latest
+    image: ghcr.io/nutfes/group-manager/admin:${IMAGE_TAG}
     container_name: prod-admin
     env_file: [.env]
     ports:
