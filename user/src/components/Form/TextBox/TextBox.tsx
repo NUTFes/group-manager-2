@@ -48,7 +48,7 @@ const TextBox: FC<TextBoxProps> = ({
             value={value}
             onChange={handleChange}
             onBlur={onBlur}
-            className={`h-12 w-[400px] rounded-[10px] border-2 p-4 text-font ${error ? 'border-alert' : 'border-main'}`}
+            className={`h-12 w-full max-w-[400px] rounded-[10px] border-2 p-4 text-font ${error ? 'border-alert' : 'border-main'}`}
           />
           {isPassword && (
             <button
