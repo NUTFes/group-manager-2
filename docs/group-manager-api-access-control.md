@@ -1,6 +1,6 @@
 # Group Manager API アクセス権限一覧
 
-> 生成日: 2026-07-26
+> 生成日: 2026-08-05
 >
 > 正本: `api/config/api_access_control.yml` と Rails routes
 >
@@ -21,7 +21,7 @@
 |---|---|---|---:|---:|---|
 | 未認証で利用できる認証フロー | 不要 | 未ログインを含む全利用者 | 8 | 9 | 各認証APIのバリデーションに従う |
 | user権限API | 必要 | user / staff / manager | 141 | 159 | 未認証401、団体所有権不一致404 |
-| staff権限API | 必要 | staff / manager | 226 | 248 | 未認証401、userは403 |
+| staff権限API | 必要 | staff / manager | 228 | 250 | 未認証401、userは403 |
 | manager権限API | 必要 | manager | 7 | 7 | 未認証401、user・staffは403 |
 
 ## HTTPステータスの意味
@@ -230,6 +230,7 @@
 |---|---|---|
 | `POST` | `/api/v1/create_health_center_submission_status_comment` | `api/v1/health_center_submission_statuses_api#create_health_center_submission_status_comment` |
 | `POST` | `/api/v1/create_health_center_submission_status_comment_mail` | `api/v1/health_center_submission_statuses_api#create_health_center_submission_status_comment_mail` |
+| `POST` | `/api/v1/create_order_status_check_comment` | `api/v1/order_status_check_comment_mails#create_comment` |
 | `GET` | `/api/v1/dashboard` | `api/v1/dashboard_api#get_dashboard_info` |
 | `GET` | `/api/v1/fire_equipment_orders` | `api/v1/fire_equipment_orders#index` |
 | `POST` | `/api/v1/fire_equipment_orders` | `api/v1/fire_equipment_orders#create` |
@@ -353,6 +354,7 @@
 | `POST` | `/api/v1/resend_health_center_submission_status_comment_mail/:comment_id` | `api/v1/health_center_submission_statuses_api#resend_health_center_submission_status_comment_mail` |
 | `POST` | `/api/v1/sync_health_center_submission_statuses` | `api/v1/health_center_submission_statuses_api#sync_health_center_submission_statuses` |
 | `PATCH` | `/api/v1/update_health_center_submission_status/:id` | `api/v1/health_center_submission_statuses_api#update_health_center_submission_status` |
+| `PATCH` | `/api/v1/update_health_center_submission_target/:group_id` | `api/v1/health_center_submission_statuses_api#update_health_center_submission_target` |
 | `POST` | `/api/v1/upsert_health_center_submission_status` | `api/v1/health_center_submission_statuses_api#upsert_health_center_submission_status` |
 | `GET` | `/assign_group_places` | `assign_group_places#index` |
 | `POST` | `/assign_group_places` | `assign_group_places#create` |

@@ -275,6 +275,7 @@ Rails.application.routes.draw do
           post :resend
         end
       end
+      post 'create_order_status_check_comment' => 'order_status_check_comment_mails#create_comment'
       resources :group_mail_comments, only: [:index], controller: 'group_mail_comments_api'
 
       #---保健所提出確認画面
@@ -287,6 +288,7 @@ Rails.application.routes.draw do
       post 'create_health_center_submission_status_comment_mail' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment_mail'
       post 'resend_health_center_submission_status_comment_mail/:comment_id' => 'health_center_submission_statuses_api#resend_health_center_submission_status_comment_mail'
       post 'sync_health_center_submission_statuses' => 'health_center_submission_statuses_api#sync_health_center_submission_statuses'
+      patch 'update_health_center_submission_target/:group_id' => 'health_center_submission_statuses_api#update_health_center_submission_target'
 
       #---開催日
       get 'get_refinement_fes_date_by_fes_year/:fes_year_id' => 'fes_dates_api#get_refinement_fes_date_by_fes_year'

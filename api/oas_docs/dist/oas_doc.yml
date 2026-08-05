@@ -2462,6 +2462,43 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/update_health_center_submission_target/{group_id}":
+    patch:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/health_center_submission_statuses_api description
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/api/v1/upsert_health_center_submission_status":
     post:
       tags:
@@ -2859,6 +2896,32 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
+  "/api/v1/create_order_status_check_comment":
+    post:
+      tags:
+      - api/v1/order_status_check_comment_mail
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '422':
+          description: api/v1/order_status_check_comment_mail description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
   "/api/v1/order_status_check_comment_mails":
     post:
       tags:

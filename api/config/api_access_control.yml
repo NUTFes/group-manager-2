@@ -76,13 +76,14 @@ access:
        get_health_center_submission_status_counts, get_health_center_submission_status_index_for_admin_view,
        get_health_center_submission_status_show_for_admin_view,
        resend_health_center_submission_status_comment_mail, sync_health_center_submission_statuses,
-       update_health_center_submission_status, upsert_health_center_submission_status]
+       update_health_center_submission_status, update_health_center_submission_target,
+       upsert_health_center_submission_status]
     api/v1/mail_deliveries: [create]
     api/v1/message_templates: [copy_source, create, index, show, update]
     api/v1/order_infos_api: [get_order_info_for_admin_view, get_refinement_order_infos, get_search_order_infos]
     api/v1/order_status_check_api:
       [get_order_status_check_for_admin_view, get_refinement_order_status_check, get_search_order_status_check]
-    api/v1/order_status_check_comment_mails: [create, resend]
+    api/v1/order_status_check_comment_mails: [create, create_comment, resend]
     api/v1/output_csv:
       [output_announcements_csv, output_assign_rental_items_csv, output_cooking_process_orders_csv,
        output_employees_csv, output_fire_equipment_orders_csv, output_food_products_csv,

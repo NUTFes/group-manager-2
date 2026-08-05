@@ -26,7 +26,8 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
 
     # Order status comment
     @group.comments.create!(
-      body: "件名: 確認\n\n状況確認",
+      subject: '確認',
+      body: '状況確認',
       mail_delivery_status: :sent
     )
 
@@ -36,7 +37,8 @@ class Api::V1::GroupMailCommentsApiControllerTest < ActionDispatch::IntegrationT
       status: 'unapproved'
     )
     health_status.comments.create!(
-      body: "件名: 保健所\n\n再提出",
+      subject: '保健所',
+      body: '再提出',
       mail_delivery_status: :sent
     )
   end

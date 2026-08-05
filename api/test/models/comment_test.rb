@@ -49,9 +49,9 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   # 初期値: 明示しないコメントはメール送信しない通常メモとして扱う。
-  test 'defaults mail delivery status to not_send' do
+  test 'defaults mail delivery status to memo' do
     comment = Comment.new(commentable: @submission_status, body: '再提出依頼')
 
-    assert comment.not_send?
+    assert comment.memo?
   end
 end

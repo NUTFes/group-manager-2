@@ -131,7 +131,8 @@
                         v-if="isUnregistered('sub_rep')"
                         text="申請しない"
                         :on-edit="
-                          () => openModal('sub_rep', { group_id: currentGroupId })
+                          () =>
+                            openModal('sub_rep', { group_id: currentGroupId })
                         "
                       />
                       <template v-else-if="group.sub_rep">
@@ -141,7 +142,8 @@
                         v-else
                         text="未登録"
                         :on-edit="
-                          () => openModal('sub_rep', { group_id: currentGroupId })
+                          () =>
+                            openModal('sub_rep', { group_id: currentGroupId })
                         "
                       />
                     </td>
@@ -1184,6 +1186,7 @@
         >
           <GroupMailSender
             v-if="group.group.id"
+            :key="group.group.id"
             :group-id="group.group.id"
             :user-email="group.user ? group.user.email : ''"
             source-page="order_status"

@@ -27,12 +27,6 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
       group_category: group_category,
       fes_year: fes_year
     )
-    @template = MessageTemplate.create!(
-      locale: 'ja',
-      name: 'GM再提出依頼',
-      subject: '再提出依頼: {group_name}',
-      body: '{group_name} 代表 {user_name} 様'
-    )
   end
 
   teardown do
@@ -54,8 +48,8 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     comment = Comment.last
     assert comment.sent?
     assert_equal 'sent', response.parsed_body['data']['mail_delivery_status']
-    assert_includes comment.body, '件名: 再提出依頼: 技大祭企画'
-    assert_includes comment.body, '食品名を修正してください。'
+    assert_equal '再提出依頼: 技大祭企画', comment.subject
+    assert_equal '食品名を修正してください。', comment.body
   end
 
   # 暫定権限の正常系。role_id 2 の staff でもメール送信付きメモを作成できることを確認する。
@@ -110,10 +104,88 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
     assert_includes response.parsed_body['data'], 'group_id is required'
   end
 
+  # 異常系: subjectが未指定の場合はメール送信付きメモを作成できない。
+  test 'fails when subject is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/order_status_check_comment_mails',
+           params: valid_params.except(:subject),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
+  # 正常系: メモをメール送信せずmemoで保存する。
+  test 'creates a memo comment without mail delivery' do
+    assert_difference('Comment.count', 1) do
+      assert_no_difference -> { ActionMailer::Base.deliveries.size } do
+        post '/api/v1/create_order_status_check_comment',
+             params: valid_params,
+             headers: auth_headers(@admin),
+             as: :json
+      end
+    end
+
+    assert_response :created
+    comment = Comment.last
+    assert comment.memo?
+    assert_equal 'memo', response.parsed_body['data']['mail_delivery_status']
+  end
+
+  # 異常系: group_idが存在しない場合は404を返す。
+  test 'fails to create memo comment when group does not exist' do
+    post '/api/v1/create_order_status_check_comment',
+         params: valid_params.merge(group_id: 0),
+         headers: auth_headers(@admin),
+         as: :json
+
+    assert_response :not_found
+  end
+
+  # 異常系: subjectが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when subject is missing' do
+    post '/api/v1/create_order_status_check_comment',
+         params: valid_params.except(:subject),
+         headers: auth_headers(@admin),
+         as: :json
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'subject is required'
+  end
+
+  # 異常系: bodyが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when body is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_order_status_check_comment',
+           params: valid_params.except(:body),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'body is required'
+  end
+
+  # 異常系: group_idが未指定の場合はメモを作成できない。
+  test 'fails to create memo comment when group_id is missing' do
+    assert_no_difference('Comment.count') do
+      post '/api/v1/create_order_status_check_comment',
+           params: valid_params.except(:group_id),
+           headers: auth_headers(@admin),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body['data'], 'group_id is required'
+  end
+
   # 再送信正常系
   test 'resends failed comment' do
     comment = @group.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -131,7 +203,8 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
   test 'fails to resend when representative email is blank' do
     @representative.update!(email: '')
     comment = @group.comments.create!(
-      body: "件名: 再提出依頼: 技大祭企画\n\n食品名を修正してください。",
+      subject: '再提出依頼: 技大祭企画',
+      body: '食品名を修正してください。',
       mail_delivery_status: :failed
     )
 
@@ -150,7 +223,7 @@ class Api::V1::OrderStatusCheckCommentMailsControllerTest < ActionDispatch::Inte
   def valid_params
     {
       group_id: @group.id,
-      message_template_id: @template.id,
+      subject: '再提出依頼: 技大祭企画',
       body: '食品名を修正してください。'
     }
   end

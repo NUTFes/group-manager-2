@@ -1,21 +1,26 @@
 <template>
-  <div class="assign_items">
-    <SubHeader pageTitle="物品割り当て"></SubHeader>
-    <div class="SearchContainer">
-      <div class="SearchContainer-left">
-        <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementGroups"
-        value="year_num"
+  <div>
+    <div class="assign_items" v-if="this.$role(roleID).assign_items.read">
+      <SubHeader pageTitle="物品割り当て"></SubHeader>
+      <div class="SearchContainer">
+        <div class="SearchContainer-left">
+          <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementGroups"
+          value="year_num"
+          >
+          {{ refYears }}
+          </SearchDropDown>
+        </div>
+        <CommonButton
+          v-if="this.$role(roleID).assign_items.update"
+          class="btn-primary"
+          iconName="edit"
+          :on_click="openModal"
         >
-        {{ refYears }}
-        </SearchDropDown>
+          対象物品を設定
+        </CommonButton>
       </div>
-      <CommonButton class="btn-primary" 
-        iconName="edit" :on_click="openModal">
-        対象物品を設定
-      </CommonButton>
-    </div>
 
      <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
@@ -66,7 +71,12 @@
         </div>
         <div class="modal-actions">
           <NoButton class="btn-secondary" iconName="close" :on_click="closeModal">キャンセル</NoButton>
-          <YesButton class="btn-primary" iconName="add_circle" :on_click="applyModalSettings">決定</YesButton>
+          <YesButton
+            v-if="this.$role(roleID).assign_items.update"
+            class="btn-primary"
+            iconName="add_circle"
+            :on_click="applyModalSettings"
+          >決定</YesButton>
         </div>
       </div>
      </div>
@@ -93,7 +103,7 @@
           <div 
             v-for="group in filteredGroups" 
             :key="group.id" 
-            draggable="true" 
+            :draggable="$role(roleID).assign_items.update"
             @dragstart="handleDragStartGroup($event, group)" 
             class="group-card"
             :class="{ 'is-fulfilled': isGroupFulfilled(group) }"
@@ -153,6 +163,7 @@
           @dragover.prevent 
           @drop="handleDropOnStock($event, stock)" 
           class="stock-card"
+          :class="{ 'non-interactive': !$role(roleID).assign_items.update }"
         >
           <div class="stock-info">
             <h3>{{ stock.name }}</h3>
@@ -183,13 +194,14 @@
                   <input
                     type="number"
                     min="0"
+                    :disabled="!$role(roleID).assign_items.update"
                     :value="assign.assigned[itemId] || 0"
                     @blur="updateManualAssign($event, assign, itemId)"
                     @keyup.enter="$event.target.blur()"
                     class="num-input highlight"
                   >
                 </div>
-                <button class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
+                <button v-if="$role(roleID).assign_items.delete" class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
           </div>
         </div>
@@ -208,6 +220,8 @@
         <NoButton iconName="close" :on_click="closeAssignDeleteModal">いいえ</NoButton>
       </template>
     </DeleteModal>
+    </div>
+    <h1 v-else>閲覧権限がありません</h1>
   </div>
 </template>
 
@@ -321,7 +335,7 @@ export default {
         if (Object.keys(this.modalSettings).length === 0) {
           const settings = {};
           this.items.forEach(item => {
-            const isDefault = item.id === 1 || item.id === 3; // 机と椅子
+            const isDefault = item.name === '机' || item.name === '椅子';
             settings[item.id] = { selected: isDefault, rule: 'requested', fixedValue: 0 };
           });
           this.modalSettings = JSON.parse(JSON.stringify(settings));
@@ -459,11 +473,13 @@ export default {
 
     // ドラッグ＆ドロップと保存処理
     handleDragStartGroup(e, group) {
+      if (!this.$role(this.roleID).assign_items.update) return;
       e.dataTransfer.setData('type', 'GROUP');
       e.dataTransfer.setData('groupId', group.id);
     },
 
     async handleDropOnStock(e, stock) {
+      if (!this.$role(this.roleID).assign_items.update) return;
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP') return;
       
@@ -542,6 +558,7 @@ export default {
     },
     // 数の手動変更と保存処理
     async updateManualAssign(e, assign, itemId) {
+      if (!this.$role(this.roleID).assign_items.update) return;
      let newValue = parseInt(e.target.value, 10);
       if (isNaN(newValue) || newValue < 0) {
         newValue = 0;
@@ -604,6 +621,7 @@ export default {
 
     // 削除処理
     async deleteAssign() {
+      if (!this.$role(this.roleID).assign_items.delete) return;
       const targetAssign = this.assignments.find(a => a.id === this.assignRentalItemDeleteId);
 
       if (targetAssign && targetAssign.dbIds && targetAssign.dbIds.length > 0) {
@@ -637,6 +655,7 @@ export default {
       this.closeAssignDeleteModal();
     },
     openAssignDeleteModal(id) {
+      if (!this.$role(this.roleID).assign_items.delete) return;
       this.assignRentalItemDeleteId = id;
       this.isOpenAssignDeleteModal = true;
     },
@@ -646,6 +665,7 @@ export default {
 
     // モーダル制御
     openModal() {
+      if (!this.$role(this.roleID).assign_items.update) return;
       this.modalSettings = JSON.parse(JSON.stringify(this.activeSettings));
       this.isModalOpen = true;
     },
@@ -653,6 +673,7 @@ export default {
       this.isModalOpen = false;
     },
     applyModalSettings() {
+      if (!this.$role(this.roleID).assign_items.update) return;
       this.activeSettings = JSON.parse(JSON.stringify(this.modalSettings));
       this.isModalOpen = false;
     },

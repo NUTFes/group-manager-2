@@ -3,7 +3,13 @@ const http = require("http");
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
 const unauthorizedPaths = new Set();
-const mailComments = [];
+let comments = [];
+let nextCommentId = 1;
+
+const commentCreatedAt = (id) =>
+  new Date(
+    Date.parse("2026-06-21T10:00:00.000+09:00") + id * 1000
+  ).toISOString();
 
 const templates = [
   {
@@ -71,8 +77,9 @@ http
 
     if (url.pathname === "/_e2e/requests" && request.method === "DELETE") {
       requests.length = 0;
-      mailComments.length = 0;
       unauthorizedPaths.clear();
+      comments = [];
+      nextCommentId = 1;
       sendJson(response, 200, { ok: true });
       return;
     }
@@ -138,17 +145,6 @@ http
         });
         return;
       }
-    }
-
-    if (
-      url.pathname === "/api/v1/group_mail_comments" &&
-      request.method === "GET"
-    ) {
-      sendJson(response, 200, {
-        status: { code: 200, message: "Success" },
-        data: mailComments,
-      });
-      return;
     }
 
     if (url.pathname === "/api/v1/message_templates/1") {
@@ -276,24 +272,38 @@ http
     }
 
     if (
+      url.pathname === "/api/v1/group_mail_comments" &&
+      request.method === "GET"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [...comments].sort((a, b) =>
+          b.created_at.localeCompare(a.created_at)
+        ),
+      });
+      return;
+    }
+
+    if (
       url.pathname ===
         "/api/v1/create_health_center_submission_status_comment_mail" &&
       request.method === "POST"
     ) {
       const payload = await readBody(request);
       requests.push({ method: "POST", path: url.pathname, payload });
+      const commentId = nextCommentId++;
       const comment = {
-        id: 1,
+        id: commentId,
+        commentable_type: "HealthCenterSubmissionStatus",
         commentable_id: 1,
-        body: `件名: 【GM再提出】修正をお願いします\n\n${payload.body}`,
+        source: "health_center",
+        subject: payload.subject,
+        body: payload.body,
         mail_delivery_status:
           payload.body === "送信失敗テスト" ? "failed" : "sent",
-        created_at: "2026-06-21T10:00:00.000+09:00",
+        created_at: commentCreatedAt(commentId),
       };
-      mailComments.splice(0, mailComments.length, {
-        ...comment,
-        source: "health_center",
-      });
+      comments.push(comment);
 
       if (payload.body === "送信失敗テスト") {
         sendJson(response, 502, {
@@ -312,24 +322,53 @@ http
 
     if (
       url.pathname ===
-        "/api/v1/resend_health_center_submission_status_comment_mail/1" &&
+        "/api/v1/create_health_center_submission_status_comment" &&
       request.method === "POST"
     ) {
+      const payload = await readBody(request);
+      requests.push({ method: "POST", path: url.pathname, payload });
+      const commentId = nextCommentId++;
+      const comment = {
+        id: commentId,
+        commentable_type: "HealthCenterSubmissionStatus",
+        commentable_id: 1,
+        source: "health_center",
+        subject: payload.subject,
+        body: payload.body,
+        mail_delivery_status: "memo",
+        created_at: commentCreatedAt(commentId),
+      };
+      comments.push(comment);
+
+      sendJson(response, 201, {
+        status: { code: 201, message: "Created" },
+        data: comment,
+      });
+      return;
+    }
+
+    if (
+      /^\/api\/v1\/resend_health_center_submission_status_comment_mail\/\d+$/.test(
+        url.pathname
+      ) &&
+      request.method === "POST"
+    ) {
+      const id = Number(url.pathname.split("/").pop());
       requests.push({ method: "POST", path: url.pathname, payload: {} });
-      if (mailComments[0]) {
-        mailComments[0].mail_delivery_status = "sent";
+      const comment = comments.find((c) => c.id === id);
+
+      if (!comment) {
+        sendJson(response, 404, {
+          status: { code: 404, message: "Not Found" },
+          data: [],
+        });
+        return;
       }
+
+      comment.mail_delivery_status = "sent";
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
-        data: {
-          id: 1,
-          commentable_id: 1,
-          body:
-            "件名: 【GM再提出】修正をお願いします\n\n" +
-            "技大祭企画 代表 山田太郎 様\n\n送信失敗テスト",
-          mail_delivery_status: "sent",
-          created_at: "2026-06-21T10:00:00.000+09:00",
-        },
+        data: comment,
       });
       return;
     }
