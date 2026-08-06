@@ -37,7 +37,7 @@ const TextBox: FC<TextBoxProps> = ({
 
   return (
     <>
-      <label>
+      <label className="block w-full">
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※{requiredLabel}</p>}

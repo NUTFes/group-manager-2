@@ -18,9 +18,9 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <form
         onSubmit={handleSignInSubmit}
-        className="flex flex-col items-center gap-12 rounded-[30px] bg-white px-8 py-10 shadow-2xl md:px-60 md:py-20"
+        className="flex w-full min-w-0 flex-col items-center gap-12 rounded-[30px] bg-white px-4 py-10 shadow-2xl sm:px-8 md:px-60 md:py-20"
       >
-        <div className="flex w-full max-w-96 flex-col items-center justify-center gap-12">
+        <div className="flex w-full min-w-0 max-w-96 flex-col items-center justify-center gap-12">
           <TextBox
             label={loginModalTexts.labels.email}
             type="email"
