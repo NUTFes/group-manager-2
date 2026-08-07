@@ -8,6 +8,13 @@ class StockerPlace < ApplicationRecord
 
   validate :place_category_id_must_be_nil_or_integer
 
+  # 書類出力用の場所名。英語版で name_en が未登録の場合は日本語名にフォールバックする
+  def display_name(use_english: false)
+    return name_en if use_english && name_en.present?
+
+    name.to_s
+  end
+
   private
 
   def place_category_id_must_be_nil_or_integer
