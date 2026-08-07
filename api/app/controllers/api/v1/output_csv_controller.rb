@@ -112,39 +112,41 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_rental_orders_csv
+    # 在庫場所・貸出場所を出力するため、申請(RentalOrder)ではなく割当(AssignRentalItem)を元にする。
+    # 貸出物品リストまとめPDFと同じデータソース
+    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place,
+                                                          group: %i[group_category user fes_year])
+
     if params[:fes_year_id].to_i == 0
-      @rental_orders = Group.preload(:rental_orders).map(&:rental_orders)
+      @assign_rental_items = assign_rental_items_scope
       filename_year = '全'
     else
-      @rental_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:rental_orders).map(&:rental_orders)
+      @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: params[:fes_year_id] }).references(:groups)
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 開催年]
+      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年]
       csv << column_name
-      @rental_orders.each do |group|
+      @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
-        next if group.nil?
+        next if assign_rental_item.nil?
 
-        group.each do |rental_order|
-          # データが存在しない場合はスキップする
-          next if rental_order.nil?
-
-          column_values = [
-            rental_order.group.name,
-            rental_order.group.user.name,
-            rental_order.group.user.email,
-            rental_order.group.group_category.name,
-            rental_order.rental_item.name,
-            rental_order.num,
-            rental_order.group.fes_year.year_num
-          ]
-          csv << column_values
-        end
+        column_values = [
+          assign_rental_item.group.name,
+          assign_rental_item.group.user.name,
+          assign_rental_item.group.user.email,
+          assign_rental_item.group.group_category.name,
+          assign_rental_item.rental_item.name,
+          assign_rental_item.stock_place_name,
+          assign_rental_item.rental_place_name,
+          assign_rental_item.num,
+          assign_rental_item.group.fes_year.year_num
+        ]
+        csv << column_values
       end
     end
-    send_data(csv_data, filename: "物品申請_#{filename_year}年度.csv")
+    send_data(csv_data, filename: "貸出物品リストまとめ_#{filename_year}年度.csv")
   end
 
   def  output_power_orders_csv
