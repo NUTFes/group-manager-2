@@ -20,7 +20,8 @@
             <th>団体名</th>
             <th>企画名</th>
             <th>名称</th>
-            <th>借用場所</th>
+            <th>在庫場所</th>
+            <th>貸出場所</th>
             <th>個数</th>
             <th>備考欄</th>
           </tr>
@@ -37,13 +38,14 @@
           <% group.assign_rental_items.each_with_index do |assign_rental_item, index| %>
             <% if index > 0 %><tr><% end %>
             <td><%= assign_rental_item.rental_item.name %></td>
-            <td><%= assign_rental_item.stocker_place.name %></td>
+            <td><%= assign_rental_item.stock_place_name %></td>
+            <td><%= assign_rental_item.rental_place_name %></td>
             <td><%= assign_rental_item.num %></td>
             <td></td>
             </tr>
           <% end %>
         <% else %>
-          <td colspan="3">なし</td>
+          <td colspan="4">なし</td>
         </tr>
         <% end %>
       <% end %>
