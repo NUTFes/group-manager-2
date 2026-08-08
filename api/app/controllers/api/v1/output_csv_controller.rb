@@ -47,7 +47,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: params[:fes_year_id] }).references(:groups)
-      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -122,7 +122,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = '全'
     else
       @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: params[:fes_year_id] }).references(:groups)
-      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      filename_year = FesYear.find_by(id: params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
