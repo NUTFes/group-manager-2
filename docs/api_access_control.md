@@ -5,6 +5,8 @@ Issue #2136 の移行先となるアクセス区分を
 この台帳を実行時のデフォルト拒否ポリシーとして使用し、各 `controller#action` の認証・認可を適用する。
 HTTPメソッド・パス単位の完全な一覧は
 [`group-manager-api-access-control.md`](./group-manager-api-access-control.md) に記録する。
+現在のテスト配置と変更内容ごとの追加先は
+[`api-access-control-testing.md`](./api-access-control-testing.md) に記録する。
 
 ## アクセス区分
 
