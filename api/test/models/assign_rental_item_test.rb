@@ -70,6 +70,16 @@ class AssignRentalItemTest < ActiveSupport::TestCase
     assert_equal '第1体育館前', assign_rental_item.rental_place_name(use_english: true)
   end
 
+  test 'stock place name uses japanese when english name is not registered' do
+    assign_rental_item = AssignRentalItem.new(
+      group: @group,
+      rental_item: @rental_item,
+      num: 1,
+      stocker_place: stocker_places(:without_name_en)
+    )
+    assert_equal '第1体育館前', assign_rental_item.stock_place_name(use_english: true)
+  end
+
   test 'rental_place_name is blank when rental place is not assigned' do
     assign_rental_item = AssignRentalItem.new(
       group: @group,
@@ -90,5 +100,6 @@ class AssignRentalItemTest < ActiveSupport::TestCase
       stocker_place: nil
     )
     assert_equal '', assign_rental_item.stock_place_name
+    assert_equal '', assign_rental_item.stock_place_name(use_english: true)
   end
 end
