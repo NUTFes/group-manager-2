@@ -5,7 +5,9 @@
     <% is_new_page = true %>
 
     <% category.each do |group| %>
-      <% group_items_count = group.assign_rental_items.exists? ? group.assign_rental_items.count : 1 %>
+      <%# exists?/count は常にSQLを発行しプリロードを使わないため、any?/size を使う %>
+      <% assign_rental_items = group.assign_rental_items %>
+      <% group_items_count = assign_rental_items.any? ? assign_rental_items.size : 1 %>
       <% if item_count + group_items_count > page_items_limit || is_new_page %>
         <% if !is_new_page %>
           </table>
@@ -34,8 +36,8 @@
         <td rowspan=<%= group_items_count %>><%= group.number %></td>
         <td rowspan=<%= group_items_count %>><%= group.name %></td>
         <td rowspan=<%= group_items_count %>><%= group.project_name %></td>
-        <% if group.assign_rental_items.exists? %>
-          <% group.assign_rental_items.each_with_index do |assign_rental_item, index| %>
+        <% if assign_rental_items.any? %>
+          <% assign_rental_items.each_with_index do |assign_rental_item, index| %>
             <% if index > 0 %><tr><% end %>
             <td><%= assign_rental_item.rental_item.name %></td>
             <td><%= assign_rental_item.stock_place_name %></td>
