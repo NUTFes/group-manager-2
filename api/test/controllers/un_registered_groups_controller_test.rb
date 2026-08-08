@@ -6,7 +6,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
   # NOTE: 一部の既存フィクスチャ（employees, assign_rental_items 等）が
   # スキーマと乖離しており fixtures :all のままだと setup 時点で読み込みに失敗するため、
   # このテストに必要なフィクスチャのみに限定する。
-  self.fixture_table_names = %w[groups un_registered_groups]
+  self.fixture_table_names = %w[users groups un_registered_groups]
 
   setup do
     @un_registered_group = un_registered_groups(:one)
@@ -59,7 +59,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
       post un_registered_groups_url, params: { un_registered_group: { group_id: nil, order_type: nil } }, as: :json
     end
 
-    assert_response :unprocessable_entity
+    assert_response :not_found
   end
 
   test 'should show un_registered_group' do
@@ -79,7 +79,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
 
   test 'group action returns not found body when no records match' do
     get group_un_registered_groups_url,
-        params: { group_id: @un_registered_group.group_id, order_type: 'nonexistent_order_type' }
+        params: { group_id: @un_registered_group.group_id, order_type: 'fire_equipment_order' }
     assert_response :success
 
     body = response.parsed_body

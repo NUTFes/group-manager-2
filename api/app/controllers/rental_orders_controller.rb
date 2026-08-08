@@ -7,7 +7,7 @@ class RentalOrdersController < ApplicationController
   # GET /rental_orders
   # GET /rental_orders.json
   def index
-    @rental_orders = RentalOrder.all
+    @rental_orders = current_user_group_scope(RentalOrder)
     render json: fmt(ok, @rental_orders)
   end
 
@@ -20,7 +20,10 @@ class RentalOrdersController < ApplicationController
   # POST /rental_orders
   # POST /rental_orders.json
   def create
-    @rental_order = RentalOrder.new(rental_order_params)
+    group = current_api_user_group!(rental_order_params[:group_id])
+    return unless group
+
+    @rental_order = RentalOrder.new(rental_order_params.merge(group_id: group.id))
     if @rental_order.save
       render json: fmt(created, @rental_order)
     else
@@ -31,7 +34,10 @@ class RentalOrdersController < ApplicationController
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
-    if @rental_order.update(rental_order_params)
+    attrs = rental_order_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @rental_order.update(attrs)
       render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
     else
       render_validation_errors(@rental_order)
@@ -54,20 +60,15 @@ class RentalOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rental_order
-    if RentalOrder.exists?(params[:id])
-      @rental_order = RentalOrder.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found rental_order = #{params[:id]}")
-    end
+    @rental_order = current_user_group_record!(RentalOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rental_orders_by_group_id
-    if RentalOrder.exists?(group_id: params[:group_id])
-      @rental_orders = RentalOrder.where(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found rental_order = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @rental_orders = RentalOrder.where(group_id: group.id)
   end
 
   # Only allow a list of trusted parameters through.

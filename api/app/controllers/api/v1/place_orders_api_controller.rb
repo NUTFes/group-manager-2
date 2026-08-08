@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::PlaceOrdersApiController < ApplicationController
+class Api::V1::PlaceOrdersApiController < Api::V1::StaffController
   def get_place_order_index_for_admin_view
     @place_orders = PlaceOrder.get_with_groups
     render json: fmt(ok, @place_orders)

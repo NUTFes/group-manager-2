@@ -1,0 +1,158 @@
+version: 1
+
+# This file is the runtime access policy. The registry test keeps every business
+# controller action synchronized with Rails routes.
+access:
+  user:
+    api/v1/fes_dates_api: [get_current_fes_dates]
+    api/v1/rental_items_api:
+      [get_all_rentable_items, get_inside_shop_rentable_items,
+       get_outside_shop_rentable_items, get_stage_rentable_items]
+    fes_dates: [index, show]
+    group_categories: [index, show]
+    news: [index, show]
+    places: [index, show]
+    rental_items: [index, show]
+    shops: [index, show]
+    stages: [index, show, show_rainy, show_sunny]
+
+    announcements: [create, destroy, index, show, update]
+    api/v1/current_user_api:
+      [current_regist_info, edit_user_info, get_current_user_with_user_detail, get_user_detail_raw,
+       is_login, password_reset]
+    api/v1/food_products_api: [get_food_products_by_group_id]
+    api/v1/users: [show]
+    check_all_registered: [show]
+    contact_persons: [create, destroy, index, show, update]
+    cooking_process_orders: [create, destroy, get_by_group_id, index, show, update, upsert]
+    employees: [create, destroy, get_by_group, index, show, update, upsert]
+    fes_years: [index, show]
+    fire_equipment_orders: [get_by_group_id, index, show, submit]
+    food_products: [create, destroy, group_food_products, index, show, update, upsert]
+    groups: [create, get_user_group_id_and_group_category_id, show, update]
+    health_center_submission_statuses: [create, index, update]
+    place_orders: [create, destroy, get_by_group_id, index, show, update]
+    power_orders: [get_by_group_id, index, show, submit]
+    public_relations: [create, destroy, get_by_group_id, index, show, update]
+    purchase_lists: [create, destroy, get_by_food_product_id, index, show, update, upsert_all]
+    rental_orders: [create, destroy, get_by_group_id, index, show, update]
+    stage_common_options: [create, destroy, get_by_group_id, index, show, update]
+    stage_orders: [create, destroy, get_by_group_id, index, show, update]
+    sub_reps: [create, destroy, get_by_group_id, index, show, update]
+    un_registered_groups: [create, destroy, group, index, show, update]
+    user_details: [create, destroy, index, show, update]
+    user_page_settings: [index, show]
+    users: [get_current_user]
+    venue_maps: [create, destroy, get_by_group_id, index, show, update]
+
+  staff:
+    api/v1/announcements_api:
+      [get_announcement_for_admin_view, get_announcement_index_for_admin_view,
+       get_announcement_show_for_admin_view, get_refinement_announcements, get_search_announcements]
+    api/v1/assign_rental_items_api: [get_refinement_assign_rental_item, get_refinement_stocker_item]
+    api/v1/cooking_process_orders_api:
+      [get_cooking_process_order_by_food_product_id, get_cooking_process_order_for_admin_view,
+       get_refinement_cooking_process_orders, get_search_cooking_process_orders]
+    api/v1/dashboard_api: [get_dashboard_info]
+    api/v1/employees_api:
+      [get_employee_index_for_admin_view, get_employee_show_for_admin_view,
+       get_refinement_employees, get_search_employees]
+    api/v1/fes_dates_api: [get_refinement_fes_date_by_fes_year]
+    api/v1/fire_equipment_orders: [create, destroy, index, show, update]
+    api/v1/food_products_api:
+      [get_food_product_index_for_admin_view, get_food_product_show_for_admin_view,
+       get_food_products_have_no_cooking_process_order, get_refinement_food_products,
+       get_search_food_products]
+    api/v1/group_mail_comments_api: [index]
+    api/v1/groups_api:
+      [get_group_for_admin_view, get_group_index_for_admin_view, get_group_show_for_admin_view,
+       get_groups_for_fire_equipment_order, get_groups_have_no_announcement,
+       get_groups_have_no_cooking_process_order, get_groups_have_no_public_relation,
+       get_groups_have_no_venue_map, get_groups_refinemented_by_current_fes_year,
+       get_refinement_groups, get_search_groups]
+    api/v1/health_center_submission_statuses: [create]
+    api/v1/health_center_submission_statuses_api:
+      [create_health_center_submission_status_comment, create_health_center_submission_status_comment_mail,
+       get_health_center_submission_status_counts, get_health_center_submission_status_index_for_admin_view,
+       get_health_center_submission_status_show_for_admin_view,
+       resend_health_center_submission_status_comment_mail, sync_health_center_submission_statuses,
+       update_health_center_submission_status, update_health_center_submission_target,
+       upsert_health_center_submission_status]
+    api/v1/mail_deliveries: [create]
+    api/v1/message_templates: [copy_source, create, index, show, update]
+    api/v1/order_infos_api: [get_order_info_for_admin_view, get_refinement_order_infos, get_search_order_infos]
+    api/v1/order_status_check_api:
+      [get_order_status_check_for_admin_view, get_refinement_order_status_check, get_search_order_status_check]
+    api/v1/order_status_check_comment_mails: [create, create_comment, resend]
+    api/v1/output_csv:
+      [output_announcements_csv, output_assign_rental_items_csv, output_cooking_process_orders_csv,
+       output_employees_csv, output_fire_equipment_orders_csv, output_food_products_csv,
+       output_groups_csv, output_place_orders_csv, output_power_orders_csv,
+       output_public_relations_csv, output_purchase_lists_csv, output_rental_orders_csv,
+       output_stage_common_options_csv, output_stage_orders_csv, output_sub_reps_csv, output_users_csv]
+    api/v1/place_orders_api:
+      [get_place_order_index_for_admin_view, get_place_order_show_for_admin_view,
+       get_refinement_place_orders, get_search_place_orders]
+    api/v1/power_orders: [create, destroy, update]
+    api/v1/power_orders_api:
+      [get_power_order_index_for_admin_view, get_power_order_show_for_admin_view,
+       get_refinement_power_orders, get_search_power_orders]
+    api/v1/public_relations_api:
+      [get_public_relation_for_admin_view, get_refinement_public_relations, get_search_public_relations]
+    api/v1/purchase_lists_api:
+      [get_purchase_list_index_for_admin_view, get_purchase_list_show_for_admin_view,
+       get_refinement_purchase_lists, get_search_purchase_lists]
+    api/v1/rental_items_api: [get_rentable_items, get_shop_rentable_items]
+    api/v1/rental_orders_api:
+      [get_refinement_rental_orders, get_rental_order_index_for_admin_view,
+       get_rental_order_show_for_admin_view, get_search_rental_orders]
+    api/v1/representatives_api: [get_refinement_represantatives, get_search_representatives]
+    api/v1/stage_common_options_api:
+      [get_refinement_stage_common_options, get_search_stage_common_options,
+       get_stage_common_option_index_for_admin_view, get_stage_common_option_show_for_admin_view]
+    api/v1/stage_orders_api:
+      [get_refinement_stage_orders, get_search_stage_orders,
+       get_stage_order_index_for_admin_view, get_stage_order_show_for_admin_view]
+    api/v1/sub_rep_api: [get_search_sub_reps]
+    api/v1/users:
+      [get_refinement_users, get_representative_index_for_admin_view,
+       get_representative_show_for_admin_view, get_search_users,
+       get_user_index_for_admin_view, get_user_show_for_admin_view]
+    api/v1/venue_maps_api:
+      [get_refinement_venue_maps, get_search_venue_maps, get_venue_map_for_admin_view]
+    assign_group_places: [create, destroy, index, show, update]
+    assign_rental_items: [create, destroy, index, show, update]
+    assign_stages: [create, destroy, index, show, update]
+    fes_dates: [create, destroy, update]
+    fes_years: [create, destroy, update]
+    group_categories: [create, destroy, update]
+    group_identification: [create, destroy, index, update]
+    groups: [index]
+    memos: [create, destroy, index, show, update]
+    news: [create, destroy, update]
+    place_allow_lists: [create, destroy, index, show, update]
+    place_categories: [create, destroy, index, show, update]
+    place_number: [create, destroy, index, update]
+    places: [create, destroy, update]
+    print_pdf:
+      [output_all_groups_info_pdf, output_all_groups_rental_items_pdf, output_contacts_pdf,
+       output_employees_pdf, output_food_products_pdf, output_group_info_pdf,
+       output_health_office_documents_pdf, output_powers_pdf,
+       output_rental_items_list_pdf, output_rental_items_pdf]
+    rentable_items: [create, destroy, index, show, update]
+    rental_item_allow_lists: [create, destroy, index, show, update]
+    rental_items: [create, destroy, translate, update]
+    shops: [create, destroy, update]
+    stage_number: [create, destroy, index, update]
+    stages: [create, destroy, update]
+    stocker_items: [create, destroy, index, show, update]
+    stocker_places: [create, destroy, index, show, update]
+    user_page_settings: [create, destroy, update]
+    users: [index, show]
+
+  manager:
+    api/v1/users: [edit_user_info, reset_password, update]
+    groups: [destroy]
+    users: [destroy, simply_user_create, update]
+
+unresolved_routes: {}

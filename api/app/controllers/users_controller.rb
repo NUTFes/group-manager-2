@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class UsersController < ApplicationController
+class UsersController < AuthenticatedController
   before_action :set_user, only: %i[show update destroy]
-
-  before_action :authenticate_api_user!, only: %i[index show get_current_user show_user_detail show_user_detail]
+  before_action :require_staff_or_above!, only: %i[index show]
+  before_action :require_manager!, only: %i[update destroy simply_user_create]
 
   def index
     @users = User.all

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::StageCommonOptionsApiController < ApplicationController
+class Api::V1::StageCommonOptionsApiController < Api::V1::StaffController
   def get_stage_common_option_index_for_admin_view
     @stage_common_options = StageCommonOption.with_groups
     render json: fmt(ok, @stage_common_options)

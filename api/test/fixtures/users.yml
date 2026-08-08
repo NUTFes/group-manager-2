@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+one:
+  id: 1
+  name: Fixture Manager
+  email: fixture-manager@example.com
+  uid: fixture-manager@example.com
+  provider: email
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role_id: 1

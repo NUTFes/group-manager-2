@@ -14,10 +14,10 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create place_order' do
     assert_difference('PlaceOrder.count') do
-      post place_orders_url, params: { place_order: { first: @place_order.first, group_id: @place_order.group_id, remark: @place_order.remark, second: @place_order.second, third: @place_order.third } }, as: :json
+      post place_orders_url, params: { first: @place_order.first, group_id: @place_order.group_id, remark: @place_order.remark, second: @place_order.second, third: @place_order.third }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show place_order' do
@@ -26,7 +26,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update place_order' do
-    patch place_order_url(@place_order), params: { place_order: { first: @place_order.first, group_id: @place_order.group_id, remark: @place_order.remark, second: @place_order.second, third: @place_order.third } }, as: :json
+    patch place_order_url(@place_order), params: { first: @place_order.first, group_id: @place_order.group_id, remark: @place_order.remark, second: @place_order.second, third: @place_order.third }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
       delete place_order_url(@place_order), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

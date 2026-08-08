@@ -1,13 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  group: one
+  id: 1
+  group_id: 1
   name: MyString
   student_id: 1
-  stool_test: one
+  stool_test_id: 1
 
 two:
-  group: one
+  id: 2
+  group_id: 1
   name: MyString
   student_id: 1
-  stool_test: one
+  stool_test_id: 2

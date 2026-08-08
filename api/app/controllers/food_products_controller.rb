@@ -5,13 +5,16 @@ class FoodProductsController < ApplicationController
 
   # GET /food_products
   def index
-    @food_products = FoodProduct.all
+    @food_products = current_user_group_scope(FoodProduct)
     render json: fmt(ok, @food_products)
   end
 
   # GET /group/:group_id/food_products
   def group_food_products
-    @food_products = FoodProduct.where(group_id: params[:group_id])
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @food_products = FoodProduct.where(group_id: group.id)
     render json: fmt(ok, @food_products)
   end
 
@@ -23,7 +26,10 @@ class FoodProductsController < ApplicationController
   # POST /food_products
   # 単一レコード作成
   def create
-    @food_product = FoodProduct.new(food_product_params)
+    group = current_api_user_group!(food_product_params[:group_id])
+    return unless group
+
+    @food_product = FoodProduct.new(food_product_params.merge(group_id: group.id))
     if @food_product.save
       render json: fmt(created, @food_product)
     else
@@ -44,6 +50,9 @@ class FoodProductsController < ApplicationController
               .to_h
               .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+      return render_food_product_not_found unless current_api_user.groups.exists?(id: attrs[:group_id])
+      return render_food_product_not_found if attrs[:id].present? && !current_user_group_scope(FoodProduct).exists?(id: attrs[:id])
+
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
       attrs
@@ -54,9 +63,9 @@ class FoodProductsController < ApplicationController
     # 更新／挿入されたレコードを取得して返却
     scopes = upserts.map do |attrs|
       if attrs[:id].present?
-        FoodProduct.where(id: attrs[:id])
+        current_user_group_scope(FoodProduct).where(id: attrs[:id])
       else
-        FoodProduct.where(
+        current_user_group_scope(FoodProduct).where(
           group_id: attrs[:group_id],
           name: attrs[:name],
           is_cooking: attrs[:is_cooking],
@@ -76,8 +85,13 @@ class FoodProductsController < ApplicationController
   # PATCH/PUT /food_products/:id
   # 単一レコード更新
   def update
-    @food_product = FoodProduct.find_by(id: params[:id])
-    if @food_product&.update(food_product_params)
+    @food_product = current_user_group_record!(FoodProduct, params[:id])
+    return unless @food_product
+
+    attrs = food_product_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @food_product.update(attrs)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else
       error = @food_product&.errors
@@ -95,14 +109,15 @@ class FoodProductsController < ApplicationController
   private
 
   def set_food_product
-    @food_product = FoodProduct.find_by(id: params[:id])
-    return if @food_product
-
-    render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+    @food_product = current_user_group_record!(FoodProduct, params[:id])
   end
 
   # 単一レコード用 Strong Parameters
   def food_product_params
     params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num, :is_alcohol)
+  end
+
+  def render_food_product_not_found
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
   end
 end

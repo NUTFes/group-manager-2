@@ -7,7 +7,7 @@ class StageOrdersController < ApplicationController
   # GET /stage_orders
   # GET /stage_orders.json
   def index
-    @stage_orders = StageOrder.all
+    @stage_orders = current_user_group_scope(StageOrder)
     render json: fmt(ok, @stage_orders)
   end
 
@@ -20,7 +20,10 @@ class StageOrdersController < ApplicationController
   # POST /stage_orders
   # POST /stage_orders.json
   def create
-    @stage_order = StageOrder.new(stage_order_params)
+    group = current_api_user_group!(stage_order_params[:group_id])
+    return unless group
+
+    @stage_order = StageOrder.new(stage_order_params.merge(group_id: group.id))
     if @stage_order.save
       render json: fmt(created, @stage_order)
     else
@@ -31,7 +34,10 @@ class StageOrdersController < ApplicationController
   # PATCH/PUT /stage_orders/1
   # PATCH/PUT /stage_orders/1.json
   def update
-    if @stage_order.update(stage_order_params)
+    attrs = stage_order_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @stage_order.update(attrs)
       render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
     else
       render_validation_errors(@stage_order)
@@ -54,20 +60,16 @@ class StageOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_order
-    if StageOrder.exists?(params[:id])
-      @stage_order = StageOrder.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}")
-    end
+    @stage_order = current_user_group_record!(StageOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_order_by_group_id
-    if StageOrder.exists?(group_id: params[:group_id])
-      @stage_order = StageOrder.find_by(group_id: params[:group_id])
-    else
-      render json: fmt(not_found, [], "Not found stage_order = #{params[:group_id]}")
-    end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @stage_order = StageOrder.find_by(group_id: group.id)
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_order
   end
 
   # Only allow a list of trusted parameters through.

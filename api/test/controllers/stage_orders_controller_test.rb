@@ -6,7 +6,7 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
   # NOTE: 一部の既存フィクスチャ（employees, assign_rental_items 等）が
   # スキーマと乖離しており fixtures :all のままだと setup 時点で読み込みに失敗するため、
   # このテストに必要なフィクスチャのみに限定する。
-  self.fixture_table_names = %w[groups fes_years fes_dates stage_orders]
+  self.fixture_table_names = %w[users groups fes_years fes_dates stage_orders]
 
   setup do
     @stage_order = stage_orders(:one)

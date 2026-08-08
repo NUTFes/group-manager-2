@@ -6,20 +6,12 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
   # NOTE: 一部の既存フィクスチャ（employees, assign_rental_items 等）が
   # スキーマと乖離しており fixtures :all のままだと setup 時点で読み込みに失敗するため、
   # このテストに必要なフィクスチャのみに限定する。
-  self.fixture_table_names = %w[groups departments grades sub_reps]
+  self.fixture_table_names = %w[users groups departments grades sub_reps]
 
   setup do
+    Role.find_or_create_by!(id: Role::MANAGER_ID) { |role| role.name = 'manager' }
     @sub_rep = sub_reps(:one)
-    Role.find_or_create_by!(name: 'admin')
-    @user = User.create!(
-      name: 'sub-rep-test-user',
-      email: 'sub-rep-test-user@example.com',
-      uid: 'sub-rep-test-user@example.com',
-      provider: 'email',
-      password: 'password',
-      password_confirmation: 'password',
-      role: Role.find_by(name: 'admin')
-    )
+    @user = users(:one)
   end
 
   def valid_params
@@ -77,7 +69,10 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create requires authentication' do
-    post sub_reps_url, params: valid_params, as: :json
+    post sub_reps_url,
+         params: valid_params,
+         headers: { 'Content-Type' => 'application/json' },
+         as: :json
     assert_response :unauthorized
   end
 end

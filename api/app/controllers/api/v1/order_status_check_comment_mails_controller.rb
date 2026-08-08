@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
-  before_action :require_mail_delivery_role!
-
+class Api::V1::OrderStatusCheckCommentMailsController < Api::V1::StaffController
   # メモを保存し、保存済みメモの本文をメール送信する
   def create
     errors = validate_comment_mail_params
@@ -72,13 +70,6 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
     errors << 'subject is required' if params[:subject].to_s.strip.blank?
     errors << 'body is required' if params[:body].to_s.strip.blank?
     errors
-  end
-
-  def require_mail_delivery_role!
-    return if [1, 2].include?(current_api_user&.role_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
-           status: :forbidden
   end
 
   def save_failed_mail_comment!(group, subject:, body:)

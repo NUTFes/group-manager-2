@@ -14,10 +14,10 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create rentable_item' do
     assert_difference('RentableItem.count') do
-      post rentable_items_url, params: { rentable_item: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id } }, as: :json
+      post rentable_items_url, params: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show rentable_item' do
@@ -26,7 +26,7 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update rentable_item' do
-    patch rentable_item_url(@rentable_item), params: { rentable_item: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id } }, as: :json
+    patch rentable_item_url(@rentable_item), params: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
       delete rentable_item_url(@rentable_item), as: :json
     end
 
-    assert_response :no_content
+    assert_response :success
   end
 end

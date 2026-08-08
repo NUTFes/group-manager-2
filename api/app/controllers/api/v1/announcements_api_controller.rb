@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::AnnouncementsApiController < ApplicationController
+class Api::V1::AnnouncementsApiController < Api::V1::StaffController
   def get_announcement_index_for_admin_view
     @announcements = Announcement.with_groups
     render json: fmt(ok, @announcements)

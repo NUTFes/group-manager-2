@@ -90,6 +90,11 @@ type UnRegisteredGroup = {
   order_type: string | number;
 };
 
+type UnRegisteredGroupResponse = {
+  status: ApiResponse<unknown>['status'] | 'ok';
+  data: UnRegisteredGroup[];
+};
+
 type RestoreState = {
   auth?: AuthContext;
   groupId?: number;
@@ -110,6 +115,48 @@ const skipSlackNotificationHeader = {
 
 test.describe('real API power and fire equipment resubmission flow', () => {
   test.setTimeout(120_000);
+
+  test('opens the login page without requesting protected business APIs', async ({
+    page,
+  }) => {
+    const businessRequests: string[] = [];
+    const apiOrigin = new URL(API_BASE_URL).origin;
+
+    page.on('request', (request) => {
+      if (
+        request.url().startsWith(apiOrigin) &&
+        !new URL(request.url()).pathname.startsWith('/api/auth')
+      ) {
+        businessRequests.push(request.url());
+      }
+    });
+
+    await page.goto('/');
+    await expect(page.getByRole('button', { name: 'ログイン' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '新規登録' })).toBeVisible();
+    await expect(page.getByText('お知らせ')).toBeVisible();
+    await page.waitForTimeout(500);
+
+    expect(businessRequests).toEqual([]);
+  });
+
+  test('rejects unauthenticated group lookup', async () => {
+    const api = await request.newContext({
+      baseURL: API_BASE_URL,
+      extraHTTPHeaders: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+
+    try {
+      const response = await api.get('/groups/user/1');
+
+      expect(response.status()).toBe(401);
+    } finally {
+      await api.dispose();
+    }
+  });
 
   // 指定ログインユーザーの団体を実DBで再提出状態にし、user画面から再提出完了まで確認する。
   test('submits power and fire equipment orders through login, real API, and real DB', async ({
@@ -231,6 +278,9 @@ test.describe('real API power and fire equipment resubmission flow', () => {
         prepared.updatedFireEquipment
       );
     } finally {
+      if (restoreState.auth) {
+        restoreState.auth = await signInForApi(api);
+      }
       await restorePreparedState(api, restoreState);
       await api.dispose();
     }
@@ -246,9 +296,16 @@ const loginThroughUi = async (page: Page, expectedUserId: number) => {
   const loginForm = page.locator('form').filter({
     has: page.getByLabel('メールアドレス'),
   });
+  const newsResponsePromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === 'GET' &&
+      new URL(response.url()).pathname === '/news'
+  );
   await loginForm.getByRole('button', { name: 'ログイン' }).click();
 
   await expect(page).toHaveURL(/\/home/, { timeout: 15_000 });
+  const newsResponse = await newsResponsePromise;
+  expect(newsResponse.status()).toBe(200);
   await expect
     .poll(
       async () => {
@@ -318,20 +375,50 @@ const prepareResubmissionState = async (
   restoreState: RestoreState
 ) => {
   const stamp = Date.now();
-  const group = await ensureUserGroup(api, authContext.userId, restoreState);
+  const group = await ensureUserGroup(
+    api,
+    authContext.headers,
+    authContext.userId,
+    restoreState
+  );
   restoreState.groupId = group.id;
   restoreState.originalGroupCategoryId = group.group_category_id;
 
   if (group.group_category_id !== FOOD_SALES_GROUP_CATEGORY_ID) {
-    await updateGroupCategory(api, group.id, FOOD_SALES_GROUP_CATEGORY_ID);
+    await updateGroupCategory(
+      api,
+      authContext.headers,
+      group.id,
+      FOOD_SALES_GROUP_CATEGORY_ID
+    );
   }
 
   restoreState.originalUnregisteredRows = [
-    ...(await getUnregisteredRows(api, group.id, POWER_ORDER_TYPE)),
-    ...(await getUnregisteredRows(api, group.id, FIRE_EQUIPMENT_ORDER_TYPE)),
+    ...(await getUnregisteredRows(
+      api,
+      authContext.headers,
+      group.id,
+      POWER_ORDER_TYPE
+    )),
+    ...(await getUnregisteredRows(
+      api,
+      authContext.headers,
+      group.id,
+      FIRE_EQUIPMENT_ORDER_TYPE
+    )),
   ];
-  await clearUnregisteredRows(api, group.id, POWER_ORDER_TYPE);
-  await clearUnregisteredRows(api, group.id, FIRE_EQUIPMENT_ORDER_TYPE);
+  await clearUnregisteredRows(
+    api,
+    authContext.headers,
+    group.id,
+    POWER_ORDER_TYPE
+  );
+  await clearUnregisteredRows(
+    api,
+    authContext.headers,
+    group.id,
+    FIRE_EQUIPMENT_ORDER_TYPE
+  );
 
   const initialPower = powerPayload(group.id, `初期-${stamp}`, 820);
   const updatedPower = powerPayload(group.id, `更新-${stamp}`, 930);
@@ -425,7 +512,10 @@ const restorePreparedState = async (
 
   if (state.createdGroupId) {
     await api.delete(`/groups/${state.createdGroupId}`, {
-      headers: skipSlackNotificationHeader,
+      headers: {
+        ...state.auth?.headers,
+        ...skipSlackNotificationHeader,
+      },
     });
     return;
   }
@@ -491,10 +581,25 @@ const restorePreparedState = async (
     );
   }
 
-  await clearUnregisteredRows(api, state.groupId, POWER_ORDER_TYPE);
-  await clearUnregisteredRows(api, state.groupId, FIRE_EQUIPMENT_ORDER_TYPE);
+  await clearUnregisteredRows(
+    api,
+    state.auth!.headers,
+    state.groupId,
+    POWER_ORDER_TYPE
+  );
+  await clearUnregisteredRows(
+    api,
+    state.auth!.headers,
+    state.groupId,
+    FIRE_EQUIPMENT_ORDER_TYPE
+  );
   for (const row of state.originalUnregisteredRows ?? []) {
-    await createUnregisteredRow(api, state.groupId, row.order_type);
+    await createUnregisteredRow(
+      api,
+      state.auth!.headers,
+      state.groupId,
+      row.order_type
+    );
   }
 
   if (
@@ -503,6 +608,7 @@ const restorePreparedState = async (
   ) {
     await updateGroupCategory(
       api,
+      state.auth!.headers,
       state.groupId,
       state.originalGroupCategoryId
     );
@@ -537,13 +643,14 @@ const signInForApi = async (api: APIRequestContext): Promise<AuthContext> => {
 
 const ensureUserGroup = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   userId: number,
   restoreState: RestoreState
 ): Promise<GroupUserResponse> => {
-  const existingGroup = await getGroupByUser(api, userId);
+  const existingGroup = await getGroupByUser(api, authHeaders, userId);
   if (existingGroup) return existingGroup;
 
-  const createdGroup = await createGroup(api, userId);
+  const createdGroup = await createGroup(api, authHeaders, userId);
   restoreState.createdGroupId = createdGroup.id;
   return {
     id: createdGroup.id,
@@ -553,9 +660,12 @@ const ensureUserGroup = async (
 
 const getGroupByUser = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   userId: number
 ): Promise<GroupUserResponse | undefined> => {
-  const response = await api.get(`/groups/user/${userId}`);
+  const response = await api.get(`/groups/user/${userId}`, {
+    headers: authHeaders,
+  });
   const body = (await response.json()) as ApiResponse<GroupUserResponse | []>;
   if (body.status.code === 404) return undefined;
   expect(body.status.code).toBe(200);
@@ -564,10 +674,11 @@ const getGroupByUser = async (
 
 const createGroup = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   userId: number
 ): Promise<Group> => {
   const response = await api.post('/groups', {
-    headers: skipSlackNotificationHeader,
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
     data: {
       name: `e2e-real-resubmission-${Date.now()}`,
       project_name: 'e2e real resubmission',
@@ -582,11 +693,12 @@ const createGroup = async (
 
 const updateGroupCategory = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number,
   groupCategoryId: number
 ) => {
   const response = await api.patch(`/groups/${groupId}`, {
-    headers: skipSlackNotificationHeader,
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
     data: {
       group_category_id: groupCategoryId,
     },
@@ -653,10 +765,10 @@ const getFireEquipmentOrderByGroup = async (
   const response = await api.get(`/fire_equipment_orders/group/${groupId}`, {
     headers: authHeaders,
   });
-  const body = (await response.json()) as ApiResponse<FireEquipmentOrder | []>;
-  if (body.status.code === 404 || Array.isArray(body.data)) return undefined;
+  const body = (await response.json()) as ApiResponse<FireEquipmentOrder[]>;
+  if (body.status.code === 404 || body.data.length === 0) return undefined;
   expect(body.status.code).toBe(200);
-  return body.data;
+  return body.data[0];
 };
 
 const createFireEquipmentOrder = async (
@@ -752,35 +864,46 @@ const restoreSubmissionStatus = async (
 
 const getUnregisteredRows = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number,
   orderType: number
 ): Promise<UnRegisteredGroup[]> => {
   const response = await api.get(
-    `/un_registered_groups/group?group_id=${groupId}&order_type=${orderType}`
+    `/un_registered_groups/group?group_id=${groupId}&order_type=${orderType}`,
+    { headers: authHeaders }
   );
-  const body = (await response.json()) as ApiResponse<UnRegisteredGroup[]>;
-  if (body.status.code === 404) return [];
-  expect(body.status.code).toBe(200);
+  const body = (await response.json()) as UnRegisteredGroupResponse;
+  if (typeof body.status !== 'string' && body.status.code === 404) return [];
+
+  expect(response.status()).toBe(200);
+  expect(body.status).toBe('ok');
   return body.data;
 };
 
 const clearUnregisteredRows = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number,
   orderType: number
 ) => {
-  const rows = await getUnregisteredRows(api, groupId, orderType);
+  const rows = await getUnregisteredRows(api, authHeaders, groupId, orderType);
   await Promise.all(
-    rows.map((row) => api.delete(`/un_registered_groups/${row.id}`))
+    rows.map((row) =>
+      api.delete(`/un_registered_groups/${row.id}`, {
+        headers: authHeaders,
+      })
+    )
   );
 };
 
 const createUnregisteredRow = async (
   api: APIRequestContext,
+  authHeaders: AuthHeaders,
   groupId: number,
   orderType: string | number
 ) => {
   const response = await api.post('/un_registered_groups', {
+    headers: authHeaders,
     data: {
       un_registered_group: {
         group_id: groupId,
@@ -788,7 +911,12 @@ const createUnregisteredRow = async (
       },
     },
   });
-  await readApiResponse<UnRegisteredGroup>(response, 200);
+  expect(response.status()).toBe(201);
+  const body = (await response.json()) as {
+    status: 'ok';
+    data: UnRegisteredGroup;
+  };
+  expect(body.status).toBe('ok');
 };
 
 const powerPayload = (

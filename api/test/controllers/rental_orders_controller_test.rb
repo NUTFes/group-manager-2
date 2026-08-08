@@ -6,7 +6,7 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
   # NOTE: 一部の既存フィクスチャ（employees, assign_rental_items 等）が
   # スキーマと乖離しており fixtures :all のままだと setup 時点で読み込みに失敗するため、
   # このテストに必要なフィクスチャのみに限定する。
-  self.fixture_table_names = %w[groups rental_items rental_orders]
+  self.fixture_table_names = %w[users groups rental_items rental_orders]
 
   setup do
     @rental_order = rental_orders(:one)

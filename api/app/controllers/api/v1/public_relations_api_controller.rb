@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::PublicRelationsApiController < ApplicationController
+class Api::V1::PublicRelationsApiController < Api::V1::StaffController
   def get_public_relation_for_admin_view
     @groups = Group.with_public_relation(params[:id])
     render json: fmt(ok, @groups)
