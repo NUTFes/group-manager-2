@@ -28,6 +28,21 @@ class Api::V1::MessageTemplatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [second_template.id, third_template.id, first_template.id], response_data.pluck('id')
   end
 
+  # 一覧取得の正常系。Authorizationヘッダー単独でも認証でき、レスポンスにも
+  # Authorizationヘッダー(Bearer形式)が含まれることを確認する。
+  # devise_token_authはheaders_names[:authorization]をリクエスト解析・レスポンス生成の
+  # 両方に使うため、access-token等の旧ヘッダーが無くても認証できる必要がある。
+  test 'admin can get templates using only the Authorization header' do
+    MessageTemplate.create!(valid_params)
+    authorization = auth_headers(@admin).fetch('Authorization')
+
+    get api_v1_message_templates_path, headers: { 'Authorization' => authorization }, as: :json
+
+    assert_response :success
+    assert_equal 1, response_data.size
+    assert_match(/\ABearer /, response.headers['Authorization'])
+  end
+
   # 一覧取得の正常系。暫定的に許可対象としているrole_id 2でもテンプレート一覧を取得できることを確認する。
   test 'role 2 user can get templates' do
     MessageTemplate.create!(valid_params)

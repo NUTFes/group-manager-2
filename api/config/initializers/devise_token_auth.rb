@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 DeviseTokenAuth.setup do |config|
-  # API-only mode has no session middleware. Use Warden without persisting the
-  # authenticated resource in a session.
+  # false にすると、トークン認証のたびに Warden の sign_in 経路を通り
+  # active_for_authentication? が評価される（:confirmable や :lockable を
+  # 有効にした場合、未確認/無効化ユーザーを即時拒否できる）。
+  # 現在の User モデルはどちらのモジュールも使用していないため実質的な効果はないが、
+  # 将来有効化した際に安全側で動作するようこの設定を維持する。
   config.bypass_sign_in = false
 
   # By default the authorization headers will change after each request. The
