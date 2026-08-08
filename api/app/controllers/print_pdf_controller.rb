@@ -3,9 +3,14 @@
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
 
-  RENTAL_ITEM_PDF_ASSOCIATIONS = {
-    assign_rental_items: %i[rental_item stocker_place rental_place]
-  }.freeze
+  # 物品貸出関連の帳票（物品貸出表・貸出物品リストまとめ）が参照する関連をまとめてプリロードする
+  RENTAL_ITEM_PDF_ASSOCIATIONS = [
+    :group_category,
+    :power_orders,                                      # Group#sum_power_orders が参照する
+    { fes_year: :fes_dates },                           # 活動日・貸出日・返却日の表示に使う
+    { group_identification: { place_number: :place } }, # Group#number / Group#place が参照する
+    { assign_rental_items: %i[rental_item stocker_place rental_place] }
+  ].freeze
 
   before_action :authenticate_api_user!
 
