@@ -2708,12 +2708,12 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '201':
+        '200':
           description: api/v1/order_status_check_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
         '422':
           description: api/v1/order_status_check_api description
           content:
@@ -2721,30 +2721,52 @@ paths:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
       deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
-  "/api/v1/get_search_order_status_check":
-    post:
-      tags:
-      - api/v1/order_status_check_api
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-        '422':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
+      parameters:
+      - name: fes_year_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: group_category_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: committee
+        in: query
+        description: 0=ALL, 1=実行委員会, 2=一般参加団体
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
+      - name: is_international
+        in: query
+        description: 0=ALL, 1=国際, 2=国内
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
+      - name: is_external
+        in: query
+        description: 0=ALL, 1=学外, 2=学内
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
   "/api/v1/create_order_status_check_comment":
     post:
       tags:
@@ -12467,12 +12489,41 @@ components:
         id:
           type: integer
           format: int64
+        total_power:
+          type: integer
+          description: 参加団体が申請した電力の合計値（W）
     api.v1.OrderStatusCheckApi:
       type: object
       properties:
         id:
           type: integer
           format: int64
+    api.v1.OrderStatusCheckRefinementResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        sort_orders:
+          type: object
+          description: 絞り込み後の団体ID表示順
+          properties:
+            category:
+              type: array
+              items:
+                type: integer
+            name:
+              type: array
+              items:
+                type: integer
     api.v1.OrderStatusCheckCommentMail: {}
     api.v1.OutputCsv:
       type: object

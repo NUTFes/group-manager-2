@@ -200,6 +200,7 @@ class Group < ApplicationRecord
                           }
                         end
                       end,
+        total_power: group.sum_power_orders,
         rental_orders: if group.rental_orders.none?
                          nil
                        else
@@ -909,11 +910,7 @@ class Group < ApplicationRecord
 
   # 電力申請の総和を計算する
   def sum_power_orders
-    sum = 0
-    power_orders.each do |power_order|
-      sum += power_order.power
-    end
-    return sum
+    power_orders.sum { |power_order| power_order.power.to_i }
   end
 
   # 購入品の個数を計算する
