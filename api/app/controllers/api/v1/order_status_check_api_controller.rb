@@ -41,31 +41,52 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   def get_refinement_order_status_check
     fes_year_id = params[:fes_year_id].to_i
     group_category_id = params[:group_category_id].to_i
+    committee = params[:committee].to_i
     is_international = params[:is_international].to_i
     is_external = params[:is_external].to_i # 0: 指定なし(ALL) 1: true 2: false
 
     @groups = Group.with_order_status_check_relations
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
+    @groups = filter_by_committee(@groups, committee)
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
-    if @groups.none?
+    groups = @groups.to_a
+    if groups.empty?
       render json: fmt(not_found, [], 'Not found groups')
     else
-      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
+      response = fmt(ok, fit_group_index_for_admin_view(groups))
+      response[:sort_orders] = order_status_sort_orders(groups)
+      render json: response
     end
   end
 
-  # あいまい検索機能
-  def get_search_order_status_check
-    word = params[:word]
-    @groups = Group.with_order_status_check_relations.where('name LIKE ?', "%#{word}%")
+  private
 
-    if @groups.none?
-      render json: fmt(not_found, [], 'Not found groups')
+  def filter_by_committee(groups, committee)
+    case committee
+    when 1
+      groups.where(committee: true).or(groups.where(group_category_id: GroupCategory::COMMITTEE_ID))
+    when 2
+      groups.where(committee: [false, nil]).where.not(group_category_id: GroupCategory::COMMITTEE_ID)
     else
-      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
+      groups
     end
+  end
+
+  def order_status_sort_orders(groups)
+    {
+      category: groups.sort_by { |group| [group_category_order(group), group.name.to_s, group.id] }.map(&:id),
+      name: groups.sort_by { |group| [group.name.to_s, group.id] }.map(&:id)
+    }
+  end
+
+  def group_category_order(group)
+    category_id = group.group_category_id
+    return 0 if group.committee? || category_id == GroupCategory::COMMITTEE_ID
+    return 1 if group.is_international?
+
+    2 + (category_id || 999)
   end
 end

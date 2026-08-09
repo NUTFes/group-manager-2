@@ -276,7 +276,6 @@ Rails.application.routes.draw do
       #---申請状況一覧
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
-      post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
       resources :order_status_check_comment_mails, only: [:create] do
         member do
           post :resend
