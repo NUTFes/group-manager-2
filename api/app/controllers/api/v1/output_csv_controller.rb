@@ -2,7 +2,6 @@
 
 class Api::V1::OutputCsvController < ApplicationController
   require 'csv'
-  require 'set'
   before_action :authenticate_api_user!
   include ApplicationHelper
 

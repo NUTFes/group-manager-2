@@ -1,4 +1,4 @@
-FROM ruby:3.0.7
+FROM ruby:3.3.12
 
 # ビルド時の引数としてPLATFORMを定義
 ARG PLATFORM
@@ -8,23 +8,25 @@ ENV PLATFORM=${PLATFORM}
 
 
 # M1 Mac 対策として必要なパッケージのインストール
-RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo 'deb http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list \
-      && apt-get update \
-      && apt-get install -y nodejs npm yarn \
-      && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0\
-      && apt-get install fonts-ipa* \
+RUN apt-get update \
+      && apt-get install -y --no-install-recommends \
+        nodejs npm build-essential libpq-dev libgtk-3-0 libnss3 \
+        libatk-bridge2.0-0 fonts-ipa* \
+      && rm -rf /var/lib/apt/lists/* \
       && mkdir /myapp
 
 # GraphViz is required by rails-erd
 RUN apt-get update && apt-get install -y graphviz
 
 # PLATFORMが'arm64-darwin'の場合のみ、特定のコマンドを実行
+# wkhtmltopdf/packaging 0.12.6-1のarm64版はstretch/buster/bionic/focal/xenial向けのみ配布されており、
+# 現行ベースイメージ(Debian trixie)向けビルドは存在しない。配布物の中で最も新しいDebian向けのbuster版を使用する。
 RUN if [ "$PLATFORM" = "arm64-darwin" ]; then \
-      apt-get install -y wget xz-utils fontconfig libxrender1 libxext6 libfreetype6 xfonts-75dpi xfonts-base && \
-      wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.stretch_arm64.deb && \
-      dpkg -i wkhtmltox_0.12.6-1.stretch_arm64.deb && \
-      rm wkhtmltox_0.12.6-1.stretch_arm64.deb; \
+      apt-get install -y --no-install-recommends wget xz-utils fontconfig libxrender1 libxext6 libfreetype6 xfonts-75dpi xfonts-base && \
+      rm -rf /var/lib/apt/lists/* && \
+      wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_arm64.deb && \
+      dpkg -i wkhtmltox_0.12.6-1.buster_arm64.deb && \
+      rm wkhtmltox_0.12.6-1.buster_arm64.deb; \
     fi
 
 
