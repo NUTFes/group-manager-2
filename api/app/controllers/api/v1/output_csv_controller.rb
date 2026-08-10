@@ -112,8 +112,7 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_rental_orders_csv
-    # 在庫場所・貸出場所を出力するため、申請(RentalOrder)ではなく割当(AssignRentalItem)を元にする。
-    # 貸出物品リストまとめPDFと同じデータソース
+    #NOTE: 在庫場所・貸出場所を出力するため、申請(RentalOrder)ではなく割当(AssignRentalItem)を元にする。
     assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place,
                                                           group: %i[group_category user fes_year])
 
@@ -146,7 +145,7 @@ class Api::V1::OutputCsvController < ApplicationController
         csv << column_values
       end
     end
-    send_data(csv_data, filename: "貸出物品リストまとめ_#{filename_year}年度.csv")
+    send_data(csv_data, filename: "貸出物品リスト_#{filename_year}年度.csv")
   end
 
   def  output_power_orders_csv
