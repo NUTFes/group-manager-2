@@ -34,7 +34,11 @@ concurrency:
 jobs:
   RuboCop-Check:
     name: RuboCop Auto Fix
-    runs-on: ubuntu-latest
+    # ubuntu-latest(24.04)向けの Ruby 3.0 ビルドが提供されておらず、
+    # ランナー同梱の新しいRubyが使われて bundle install が失敗するため、
+    # Ruby 3.0 が利用できる 22.04 に固定する。
+    # このイメージもいずれ廃止されるため、暫定対応。
+    runs-on: ubuntu-22.04
 
     # bot の自動コミットで再トリガーされた実行を自動スキップ（無限ループ防止）
     if: github.actor != 'github-actions[bot]'
@@ -55,9 +59,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          # .rubocop.yml の AllCops.TargetRubyVersion(3.0) に合わせるのが基本
-          # .ruby-version を使うなら：ruby-version-file: 'api/.ruby-version'
-          ruby-version: '3.0'
+          # api/.ruby-version を唯一の指定元にする（Gemfileの ruby '3.0.7' と一致）
+          ruby-version-file: 'api/.ruby-version'
           bundler-cache: true
 
       # ① 自動修正（-A）
