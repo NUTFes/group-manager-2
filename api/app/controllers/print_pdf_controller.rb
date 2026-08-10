@@ -3,12 +3,13 @@
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
 
-  # 物品貸出関連の帳票（物品貸出表・貸出物品リストまとめ）が参照する関連をまとめてプリロードする
+  # 物品貸出関連の帳票（物品貸出表・貸出物品リストまとめ）が参照する関連の一覧。
+  # 各アクションで Group.includes(...) に渡してプリロードする
   RENTAL_ITEM_PDF_ASSOCIATIONS = [
     :group_category,
-    :power_orders,                                      
-    { fes_year: :fes_dates },                           
-    { group_identification: { place_number: :place } }, 
+    :power_orders,
+    { fes_year: :fes_dates },
+    { group_identification: { place_number: :place } },
     { assign_rental_items: %i[rental_item stocker_place rental_place] }
   ].freeze
 
