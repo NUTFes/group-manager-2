@@ -9,13 +9,13 @@ class AssignRentalItem < ApplicationRecord
   validates :rental_place, presence: true, if: -> { rental_place_id.present? }
 
   # 在庫場所名（物品が保管されている場所）。未設定の場合は空文字
-  def stock_place_name(use_english: false)
-    stocker_place&.display_name(use_english: use_english).to_s
+  def stock_place_name(locale: :ja)
+    stocker_place&.display_name(locale: locale).to_s
   end
 
   # 貸出場所名（当日の受け渡し場所）。貸出場所調整で未設定の場合は空文字
-  def rental_place_name(use_english: false)
-    rental_place&.display_name(use_english: use_english).to_s
+  def rental_place_name(locale: :ja)
+    rental_place&.display_name(locale: locale).to_s
   end
 
   def self.with_groups_and_rental_item

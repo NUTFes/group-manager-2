@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th><%= t('print_pdf.output_all_groups_rental_items.org.category') %></th>
-        <td colspan=2><%= @use_english_name_for_pdf && group.group_category.name_en.present? ? group.group_category.name_en : group.group_category.name %></td>
+        <td colspan=2><%= @pdf_locale == :en && group.group_category.name_en.present? ? group.group_category.name_en : group.group_category.name %></td>
       </tr>
       <tr>
         <th rowspan=2><%= t('print_pdf.output_all_groups_rental_items.org.activity_time') %></th>
@@ -59,9 +59,9 @@
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= @use_english_name_for_pdf && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
-      <td><%= assign_rental_item.stock_place_name(use_english: @use_english_name_for_pdf) %></td>
-      <td><%= assign_rental_item.rental_place_name(use_english: @use_english_name_for_pdf) %></td>
+      <td><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
+      <td><%= assign_rental_item.stock_place_name(locale: @pdf_locale) %></td>
+      <td><%= assign_rental_item.rental_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.num %></td>
       <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
       <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
