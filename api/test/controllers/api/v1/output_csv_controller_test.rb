@@ -150,7 +150,7 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
 
   # CSVの先頭にはExcel対策のBOMが付くため、取り除いてからパースする
   def parse_csv(body)
-    CSV.parse(body.sub(/\A\uFEFF/, ''))
+    CSV.parse(body.delete_prefix("\uFEFF"))
   end
 
   def assert_no_csv_downloaded
