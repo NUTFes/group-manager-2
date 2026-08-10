@@ -12,12 +12,19 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # createは物品ID・在庫場所IDを1つ受け取り、items配列の団体ごとに割当を作る形式
   test 'should create assign_rental_item' do
     assert_difference('AssignRentalItem.count') do
-      post assign_rental_items_url, params: { assign_rental_item: { num: @assign_rental_item.num, rentable_item_id: @assign_rental_item.rentable_item_id, rental_order_id: @assign_rental_item.rental_order_id } }, as: :json
+      post assign_rental_items_url,
+           params: {
+             rentalItemId: @assign_rental_item.rental_item_id,
+             stockerPlaceId: @assign_rental_item.stocker_place_id,
+             items: [{ group_id: @assign_rental_item.group_id, num: @assign_rental_item.num }]
+           },
+           as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show assign_rental_item' do
@@ -25,8 +32,11 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # updateはネストさせず、トップレベルのパラメータを受け取る
   test 'should update assign_rental_item' do
-    patch assign_rental_item_url(@assign_rental_item), params: { assign_rental_item: { num: @assign_rental_item.num, rentable_item_id: @assign_rental_item.rentable_item_id, rental_order_id: @assign_rental_item.rental_order_id } }, as: :json
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { num: @assign_rental_item.num, group_id: @assign_rental_item.group_id },
+          as: :json
     assert_response :ok
   end
 
@@ -35,6 +45,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
       delete assign_rental_item_url(@assign_rental_item), as: :json
     end
 
-    assert_response :no_content
+    # destroyは204ではなく、削除結果をJSONで返す実装になっている
+    assert_response :success
   end
 end
