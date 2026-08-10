@@ -334,8 +334,12 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
-      await downloadFile(this.$axios,url, "物品申請一覧_CSV", "text/csv");
-      this.openSnackBar("物品申請一覧_CSVをダウンロードしました");
+      const succeeded = await downloadFile(this.$axios,url, "物品申請一覧_CSV", "text/csv");
+      this.openSnackBar(
+        succeeded
+          ? "物品申請一覧_CSVをダウンロードしました"
+          : "物品申請一覧_CSVのダウンロードに失敗しました"
+      );
     },
   },
 };
