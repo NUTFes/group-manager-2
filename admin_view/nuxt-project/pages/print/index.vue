@@ -244,7 +244,12 @@ export default {
     },
     async downloadRentalItemsCSV() {
       const endpoint = `/api/v1/get_rental_items_list_csv/${this.currentYearID}`;
-      const succeeded = await downloadFile(this.$axios,endpoint, '貸出物品リスト', 'text/csv');
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "貸出物品リスト",
+        "text/csv"
+      );
       this.openSnackBar(
         succeeded
           ? "貸出物品リストのCSVをダウンロードしました"
@@ -268,7 +273,12 @@ export default {
     },
     async downloadRentalItemsAllCSV() {
       const endpoint = `/api/v1/get_assign_rental_items_csv/${this.currentYearID}`;
-      const succeeded = await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ', 'text/csv');
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "物品貸し出し表まとめ",
+        "text/csv"
+      );
       this.openSnackBar(
         succeeded
           ? "物品貸し出し表まとめのCSVをダウンロードしました"

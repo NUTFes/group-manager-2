@@ -133,6 +133,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      // テンプレートの {{ message }} が参照するため、data() に宣言しておく
+      message: "",
       headers: ["ID", "参加団体", "委員", "貸出物品", "個数"],
       isOpenAddModal: false,
       rentalOrders: [],
@@ -334,7 +336,12 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
-      const succeeded = await downloadFile(this.$axios,url, "物品申請一覧_CSV", "text/csv");
+      const succeeded = await downloadFile(
+        this.$axios,
+        url,
+        "物品申請一覧_CSV",
+        "text/csv"
+      );
       this.openSnackBar(
         succeeded
           ? "物品申請一覧_CSVをダウンロードしました"
