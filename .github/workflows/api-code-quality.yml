@@ -59,8 +59,9 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          # api/.ruby-version を唯一の指定元にする（Gemfileの ruby '3.0.7' と一致）
-          ruby-version-file: 'api/.ruby-version'
+          # ruby-version を省略すると working-directory の .ruby-version を読むため、
+          # api/.ruby-version が唯一の指定元になる（Gemfileの ruby '3.0.7' と一致）
+          working-directory: ./api
           bundler-cache: true
 
       # ① 自動修正（-A）
