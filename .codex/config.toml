@@ -1,0 +1,10 @@
+[mcp_servers.playwright]
+command = "docker"
+args = [
+    "run",
+    "-i",
+    "--rm",
+    "--add-host=host.docker.internal:host-gateway",
+    "mcp/playwright",
+    "--headless",
+]
