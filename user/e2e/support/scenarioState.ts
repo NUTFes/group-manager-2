@@ -1,0 +1,139 @@
+// Applications 配下のE2Eで共有するシナリオ状態。
+// モックサーバ(mockServer.ts)が可変の疑似バックエンドとしてこのオブジェクトを読み書きする。
+
+export const mockUser = {
+  id: 1001,
+  name: 'e2e user',
+  email: 'e2e-ui@example.com',
+};
+
+export const mockGroupId = 2001;
+
+export type SubmissionStatusValue =
+  | 'unapproved'
+  | 'waiting_resubmission'
+  | 'approved'
+  | 'unsubmitted';
+
+export const submissionApplicationTypes = [
+  'equipment',
+  'employee',
+  'food_product',
+  'purchase_list',
+  'venue_map',
+  'cooking_process_order',
+  'power_order',
+  'fire_equipment_order',
+] as const;
+
+export type SubmissionApplicationType =
+  (typeof submissionApplicationTypes)[number];
+
+export type PowerOrder = {
+  id: number;
+  group_id: number;
+  item: string;
+  power: number;
+  manufacturer: string;
+  model: string;
+  item_url: string;
+};
+
+export type FireEquipmentOrder = {
+  id: number;
+  group_id: number;
+  name: string;
+  quantity: number;
+  fuel: 'gas_bottle' | 'lp_gas' | 'charcoal';
+  usage: string;
+  is_takeaway: boolean;
+  remark: string;
+};
+
+export type FireEquipmentBody = {
+  id?: number;
+  group_id?: number;
+  name?: string;
+  quantity?: number;
+  fuel?: number | FireEquipmentOrder['fuel'];
+  usage?: string;
+  is_takeaway?: boolean;
+  remark?: string;
+};
+
+export type PageMode = 'registration' | 'resubmission' | 'closed';
+
+export type ScenarioState = {
+  pageMode: PageMode;
+  groupCategoryId: number;
+  fireEquipmentPermissions: {
+    canAdd: boolean;
+    canEdit: boolean;
+  };
+  hasUnregisteredFireEquipment: boolean;
+  statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
+  powerOrders: PowerOrder[];
+  fireEquipmentOrders: FireEquipmentOrder[];
+  /** モックサーバが受け取った書き込み系リクエストのパス。送信後の再検証をassertするために使う。 */
+  requestedUrls: string[];
+};
+
+export const scenarioState = (pageMode: PageMode): ScenarioState => ({
+  pageMode,
+  groupCategoryId: 1,
+  fireEquipmentPermissions: {
+    canAdd: pageMode === 'registration',
+    canEdit: pageMode === 'registration',
+  },
+  hasUnregisteredFireEquipment: false,
+  statuses: {
+    equipment: 'unsubmitted',
+    employee: 'unsubmitted',
+    food_product: 'unsubmitted',
+    purchase_list: 'unsubmitted',
+    venue_map: 'unsubmitted',
+    cooking_process_order: 'unsubmitted',
+    power_order:
+      pageMode === 'resubmission'
+        ? 'waiting_resubmission'
+        : pageMode === 'closed'
+          ? 'unapproved'
+          : 'unsubmitted',
+    fire_equipment_order:
+      pageMode === 'resubmission'
+        ? 'waiting_resubmission'
+        : pageMode === 'closed'
+          ? 'unapproved'
+          : 'unsubmitted',
+  },
+  powerOrders:
+    pageMode !== 'registration'
+      ? [
+          {
+            id: 4001,
+            group_id: mockGroupId,
+            item: 'E2E ホットプレート',
+            power: 800,
+            manufacturer: 'E2E Maker',
+            model: 'E2E-800',
+            item_url: 'https://example.com/power',
+          },
+        ]
+      : [],
+  fireEquipmentOrders:
+    pageMode !== 'registration'
+      ? [
+          {
+            id: 5001,
+            group_id: mockGroupId,
+            name: 'E2E バーナー',
+            quantity: 1,
+            fuel: 'gas_bottle',
+            usage: 'E2E 調理',
+            is_takeaway: true,
+            remark: 'E2E 備考',
+          },
+        ]
+      : [],
+  requestedUrls: [],
+});
