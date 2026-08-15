@@ -192,6 +192,12 @@ export type ScenarioState = {
   };
   /** true の間だけ POST/PATCH /groups をHTTP 500で失敗させる(失敗トースト検証用)。 */
   forceGroupSubmitError: boolean;
+  /**
+   * GET /groups/:id の応答を意図的に遅らせるミリ秒。
+   * GroupForm が団体データ到着前にマウントされる経路を決定的に再現するために使う
+   * (既定の 0 だと到着が速すぎて、どちらの経路を通るかが実行ごとに変わる)。
+   */
+  groupFetchDelayMs: number;
   fireEquipmentPermissions: {
     canAdd: boolean;
     canEdit: boolean;
@@ -234,6 +240,7 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
     checkAllRegistered: 0,
   },
   forceGroupSubmitError: false,
+  groupFetchDelayMs: 0,
   fireEquipmentPermissions: {
     canAdd: pageMode === 'registration',
     canEdit: pageMode === 'registration',

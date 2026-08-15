@@ -132,6 +132,11 @@ const groupHandler: MockHandler = async ({
 
   if (method === 'GET' && pathname === `/groups/${mockGroupId}`) {
     state.groupFetchCounts.groups += 1;
+    if (state.groupFetchDelayMs > 0) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, state.groupFetchDelayMs)
+      );
+    }
     await fulfillJson(
       route,
       state.group ? apiResponse(state.group) : apiNotFound()

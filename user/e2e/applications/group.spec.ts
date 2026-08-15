@@ -211,6 +211,10 @@ test.describe('group application', () => {
 
   // validateEdit(): 既存の団体があるときだけ働く手書き等価比較。
   // 一つも変えていない間は送信ボタンが無効。
+  //
+  // 初回に開いたフォームは団体データ到着前にマウントされることがあり空欄になる
+  // (直下の BUG テストを参照)。ここでは一度キャンセルして一覧へ戻し、
+  // データが揃った状態で修正ボタンから開き直すことで経路を決定的にしている。
   test('keeps the submit button disabled until a value actually changes', async ({
     page,
   }) => {
@@ -220,9 +224,45 @@ test.describe('group application', () => {
     await page.goto('/home');
     await openGroup(page);
 
+    await page
+      .getByRole('button', { name: BUTTONS.cancel, exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(page.getByLabel(FIELDS.name)).toHaveValue('E2Eテスト団体');
     await expect(submitButton(page)).toBeDisabled();
 
     await page.getByLabel(FIELDS.name).fill('別の団体名');
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
+  // BUG(新規発見): Group/hooks.ts の hasLoadedOnce は最初のロードで latch するため、
+  // groupId 確定後に /groups/:id を取り直している間もローディング表示に戻らない。
+  // その結果 GroupForm が団体データ未到着のままマウントされ、
+  // useForm の defaultValues(groups?.x ?? '') が空で確定してしまう。
+  // データが後から届いてもフォームは空欄のままで、登録済みなのに
+  // 「未変更」と判定されず送信ボタンが活性になる。
+  test('mounts the edit form empty when the group data has not arrived yet', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    // 到着を遅らせて、フォームが先にマウントされる経路を確定させる。
+    state.groupFetchDelayMs = 500;
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openGroup(page);
+
+    // キャンセルボタンは groups が届いてから描画されるので、これで到着を待てる。
+    await expect(
+      page.getByRole('button', { name: BUTTONS.cancel, exact: true })
+    ).toBeVisible();
+
+    // 団体データは届いているのに、フォームは空欄のまま。
+    await expect(page.getByLabel(FIELDS.name)).toHaveValue('');
     await expect(submitButton(page)).toBeEnabled();
   });
 
