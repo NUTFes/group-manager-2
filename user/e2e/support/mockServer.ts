@@ -16,6 +16,7 @@ import {
 } from './fixtures';
 import {
   type FireEquipmentBody,
+  type PlaceOrderRecord,
   type PowerOrder,
   type ScenarioState,
   type StageOptionRecord,
@@ -368,6 +369,56 @@ const stageOptionHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 会場申請。作成/更新はステージオプションと同じく legacy フェッチャ経由で、
+ * 値は snake_case のクエリ文字列で届く。
+ */
+const venueApplicationHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === '/places') {
+    await fulfillJson(route, apiResponse(state.places));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === `/place_orders/group/${mockGroupId}`) {
+    await fulfillJson(
+      route,
+      state.placeOrder ? apiResponse(state.placeOrder) : apiNotFound()
+    );
+    return true;
+  }
+
+  const placeOrderFromQuery = (id: number): PlaceOrderRecord => ({
+    id,
+    group_id: Number(query.get('group_id') ?? mockGroupId),
+    first: Number(query.get('first') ?? 0),
+    second: Number(query.get('second') ?? 0),
+    third: Number(query.get('third') ?? 0),
+    remark: query.get('remark') ?? '',
+  });
+
+  if (method === 'POST' && pathname === '/place_orders') {
+    state.requestedUrls.push(pathname);
+    state.placeOrder = placeOrderFromQuery(8001);
+    await fulfillJson(route, apiResponse(state.placeOrder));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/place_orders\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    state.placeOrder = placeOrderFromQuery(Number(pathname.split('/').at(-1)));
+    await fulfillJson(route, apiResponse(state.placeOrder));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -411,6 +462,7 @@ const handlers: MockHandler[] = [
   unregisteredGroupHandler,
   fireEquipmentHandler,
   stageOptionHandler,
+  venueApplicationHandler,
   newsHandler,
   emptyApplicationHandler,
 ];

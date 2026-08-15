@@ -49,7 +49,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   group: true,
   sub_rep: true,
   rental_item: true,
-  place_order: true,
+  place_order: state.placeOrder !== null,
   stage_order: false,
   stage_option: state.stageOption !== null,
   power_order: state.powerOrders.length > 0,

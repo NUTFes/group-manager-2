@@ -71,6 +71,39 @@ export type StageOptionRecord = {
   loud_sound: boolean;
 };
 
+/** GET /places?group_id=:id が返す会場候補。 */
+export type PlaceRecord = {
+  id: number;
+  name: string;
+};
+
+/** GET /place_orders/group/:id が返す会場申請。 */
+export type PlaceOrderRecord = {
+  id: number;
+  group_id: number;
+  first: number;
+  second: number;
+  third: number;
+  remark: string;
+};
+
+/** schema.ts の DEFAULT_ID(未選択) と OTHER_OPTION_ID(その他=備考必須) に対応する。 */
+export const PLACE_IDS = {
+  unselected: 1,
+  gym1: 2,
+  gym2: 3,
+  courtyard: 4,
+  other: 11,
+} as const;
+
+export const defaultPlaces: PlaceRecord[] = [
+  { id: PLACE_IDS.unselected, name: '未選択' },
+  { id: PLACE_IDS.gym1, name: '第1体育館' },
+  { id: PLACE_IDS.gym2, name: '第2体育館' },
+  { id: PLACE_IDS.courtyard, name: '中庭' },
+  { id: PLACE_IDS.other, name: 'その他' },
+];
+
 export type PageMode = 'registration' | 'resubmission' | 'closed';
 
 export type ScenarioState = {
@@ -86,6 +119,8 @@ export type ScenarioState = {
   fireEquipmentOrders: FireEquipmentOrder[];
   /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
   stageOption: StageOptionRecord | null;
+  places: PlaceRecord[];
+  placeOrder: PlaceOrderRecord | null;
   /** モックサーバが受け取った書き込み系リクエストのパス。送信後の再検証をassertするために使う。 */
   requestedUrls: string[];
 };
@@ -148,5 +183,7 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
         ]
       : [],
   stageOption: null,
+  places: defaultPlaces,
+  placeOrder: null,
   requestedUrls: [],
 });
