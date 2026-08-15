@@ -16,6 +16,7 @@ import {
 } from './fixtures';
 import {
   type FireEquipmentBody,
+  type GroupRecord,
   type PlaceOrderRecord,
   type PowerOrder,
   type ScenarioState,
@@ -72,8 +73,36 @@ const authHandler: MockHandler = async ({ route, url }) => {
   return false;
 };
 
-const groupHandler: MockHandler = async ({ route, path, state }) => {
+/**
+ * 団体申請本体。作成/更新は legacy フェッチャ経由で、値は snake_case のクエリ文字列で届く。
+ * Group は check_all_registered.group を握るページ全体のゲートでもあるため、
+ * /groups/user/:id と /groups/:id の2つのGETを別々に持つ。
+ */
+const groupFromQuery = (id: number, query: URLSearchParams): GroupRecord => ({
+  id,
+  name: query.get('name') ?? '',
+  project_name: query.get('project_name') ?? '',
+  activity: query.get('activity') ?? '',
+  user_id: Number(query.get('user_id') ?? mockUser.id),
+  group_category_id: Number(query.get('group_category_id') ?? 1),
+  fes_year_id: Number(query.get('fes_year_id') ?? 1),
+  is_international: query.get('is_international') === 'true',
+  committee: query.get('committee') === '1',
+  is_external: query.get('is_external') === 'true',
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
+});
+
+const groupHandler: MockHandler = async ({
+  route,
+  path,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
   if (path === `/groups/user/${mockUser.id}`) {
+    state.groupFetchCounts.groupByUserId += 1;
     await fulfillJson(
       route,
       apiResponse({
@@ -91,7 +120,44 @@ const groupHandler: MockHandler = async ({ route, path, state }) => {
   }
 
   if (path === `/check_all_registered/${mockGroupId}`) {
+    state.groupFetchCounts.checkAllRegistered += 1;
     await fulfillJson(route, apiResponse(checkAllRegistered(state)));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === '/group_categories') {
+    await fulfillJson(route, apiResponse(state.groupCategories));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === `/groups/${mockGroupId}`) {
+    state.groupFetchCounts.groups += 1;
+    await fulfillJson(
+      route,
+      state.group ? apiResponse(state.group) : apiNotFound()
+    );
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/groups') {
+    state.requestedUrls.push(pathname);
+    if (state.forceGroupSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.group = groupFromQuery(mockGroupId, query);
+    await fulfillJson(route, apiResponse(state.group));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/groups\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    if (state.forceGroupSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.group = groupFromQuery(Number(pathname.split('/').at(-1)), query);
+    await fulfillJson(route, apiResponse(state.group));
     return true;
   }
 

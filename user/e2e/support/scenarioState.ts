@@ -9,6 +9,52 @@ export const mockUser = {
 
 export const mockGroupId = 2001;
 
+/**
+ * GET /groups/:id が返す団体申請本体のレコード(snake_case)。
+ * Group は他の申請と違いページ全体の登録判定(check_all_registered.group)を握るため、
+ * scenarioState() の既定値では「登録済み」にしておく(既定を未登録にすると、
+ * Group を意識していない他の spec が軒並み isGroupRegistered=false で落ちてしまう)。
+ * 未登録シナリオを作りたいテストだけ state.group = null を上書きする。
+ */
+export type GroupRecord = {
+  id: number;
+  name: string;
+  project_name: string;
+  activity: string;
+  user_id: number;
+  group_category_id: number;
+  fes_year_id: number;
+  is_international: boolean;
+  committee: boolean;
+  is_external: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+/** GET /group_categories が返す参加形式一覧。 */
+export type GroupCategoryRecord = {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+const groupCategoryTimestamps = {
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
+};
+
+/** src/utils/constants.ts の GROUP_CATEGORY と対応する。 */
+export const defaultGroupCategories: GroupCategoryRecord[] = [
+  { id: 1, name: '食品販売', ...groupCategoryTimestamps },
+  { id: 2, name: '物品販売', ...groupCategoryTimestamps },
+  { id: 3, name: 'ステージ', ...groupCategoryTimestamps },
+  { id: 4, name: '展示・体験', ...groupCategoryTimestamps },
+  { id: 5, name: '研究室公開', ...groupCategoryTimestamps },
+  { id: 6, name: '実行委員会', ...groupCategoryTimestamps },
+  { id: 7, name: 'その他', ...groupCategoryTimestamps },
+];
+
 export type SubmissionStatusValue =
   | 'unapproved'
   | 'waiting_resubmission'
@@ -130,6 +176,22 @@ export type PageMode = 'registration' | 'resubmission' | 'closed';
 export type ScenarioState = {
   pageMode: PageMode;
   groupCategoryId: number;
+  /** null は未登録。既定は登録済み(理由は GroupRecord のコメントを参照)。 */
+  group: GroupRecord | null;
+  groupCategories: GroupCategoryRecord[];
+  /**
+   * requestedUrls は書き込み系リクエストしか記録しないため、
+   * mutateGroups 等(props由来の本物のmutate)が実際にGETを再発火させたかを
+   * 数えるための専用カウンタ。他のspecはこのフィールドを参照しないため、
+   * ここへの加算が既存specの assert に影響することはない。
+   */
+  groupFetchCounts: {
+    groups: number;
+    groupByUserId: number;
+    checkAllRegistered: number;
+  };
+  /** true の間だけ POST/PATCH /groups をHTTP 500で失敗させる(失敗トースト検証用)。 */
+  forceGroupSubmitError: boolean;
   fireEquipmentPermissions: {
     canAdd: boolean;
     canEdit: boolean;
@@ -151,6 +213,27 @@ export type ScenarioState = {
 export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   pageMode,
   groupCategoryId: 1,
+  group: {
+    id: mockGroupId,
+    name: 'E2Eテスト団体',
+    project_name: 'E2Eテスト企画',
+    activity: 'E2Eテスト企画内容',
+    user_id: mockUser.id,
+    group_category_id: 1,
+    fes_year_id: 1,
+    is_international: false,
+    committee: false,
+    is_external: false,
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+  },
+  groupCategories: defaultGroupCategories,
+  groupFetchCounts: {
+    groups: 0,
+    groupByUserId: 0,
+    checkAllRegistered: 0,
+  },
+  forceGroupSubmitError: false,
   fireEquipmentPermissions: {
     canAdd: pageMode === 'registration',
     canEdit: pageMode === 'registration',

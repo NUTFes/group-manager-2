@@ -47,7 +47,7 @@ export const submission = (
 });
 
 export const checkAllRegistered = (state: ScenarioState) => ({
-  group: true,
+  group: state.group !== null,
   // 「申請しない」を登録した場合も回答済みとみなす(バックエンドと同じ扱い)。
   sub_rep:
     state.viceRepresentative !== null ||
