@@ -71,6 +71,27 @@ export type StageOptionRecord = {
   loud_sound: boolean;
 };
 
+/** src/api/unRegisteredGroupApi.ts の ORDER_TYPES と対応する。 */
+export const ORDER_TYPES = {
+  rentalItem: 0,
+  power: 1,
+  subRep: 2,
+  employee: 3,
+  fireEquipment: 4,
+} as const;
+
+/** GET /sub_reps/group/:id が返す副代表。 */
+export type ViceRepresentativeRecord = {
+  id: number;
+  group_id: number;
+  name: string;
+  student_id: number;
+  grade_id: number;
+  department_id: number;
+  email: string;
+  tel: string;
+};
+
 /** GET /places?group_id=:id が返す会場候補。 */
 export type PlaceRecord = {
   id: number;
@@ -113,7 +134,8 @@ export type ScenarioState = {
     canAdd: boolean;
     canEdit: boolean;
   };
-  hasUnregisteredFireEquipment: boolean;
+  /** 「申請しない」を登録済みの申請種別(ORDER_TYPES の値)。 */
+  unregisteredOrderTypes: number[];
   statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
   fireEquipmentOrders: FireEquipmentOrder[];
@@ -121,6 +143,7 @@ export type ScenarioState = {
   stageOption: StageOptionRecord | null;
   places: PlaceRecord[];
   placeOrder: PlaceOrderRecord | null;
+  viceRepresentative: ViceRepresentativeRecord | null;
   /** モックサーバが受け取った書き込み系リクエストのパス。送信後の再検証をassertするために使う。 */
   requestedUrls: string[];
 };
@@ -132,7 +155,7 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
     canAdd: pageMode === 'registration',
     canEdit: pageMode === 'registration',
   },
-  hasUnregisteredFireEquipment: false,
+  unregisteredOrderTypes: [],
   statuses: {
     equipment: 'unsubmitted',
     employee: 'unsubmitted',
@@ -185,5 +208,6 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   stageOption: null,
   places: defaultPlaces,
   placeOrder: null,
+  viceRepresentative: null,
   requestedUrls: [],
 });

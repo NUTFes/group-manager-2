@@ -5,6 +5,7 @@ import type { Route } from '@playwright/test';
 import {
   type FireEquipmentBody,
   type FireEquipmentOrder,
+  ORDER_TYPES,
   type PowerOrder,
   type ScenarioState,
   type SubmissionApplicationType,
@@ -47,7 +48,10 @@ export const submission = (
 
 export const checkAllRegistered = (state: ScenarioState) => ({
   group: true,
-  sub_rep: true,
+  // 「申請しない」を登録した場合も回答済みとみなす(バックエンドと同じ扱い)。
+  sub_rep:
+    state.viceRepresentative !== null ||
+    state.unregisteredOrderTypes.includes(ORDER_TYPES.subRep),
   rental_item: true,
   place_order: state.placeOrder !== null,
   stage_order: false,

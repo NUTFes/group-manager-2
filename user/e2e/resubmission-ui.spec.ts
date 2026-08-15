@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { mockHomePageApis } from './support/mockServer';
 import {
+  ORDER_TYPES,
   scenarioState,
   submissionApplicationTypes,
 } from './support/scenarioState';
@@ -260,7 +261,7 @@ test.describe('resubmission UI', () => {
     ).toHaveCount(0);
 
     state.fireEquipmentOrders = [];
-    state.hasUnregisteredFireEquipment = true;
+    state.unregisteredOrderTypes = [ORDER_TYPES.fireEquipment];
     await page.reload();
     await page.getByRole('button', { name: /火気使用申請/ }).click();
     await expect(page.getByText('火気申請は不要（登録済み）')).toBeVisible();

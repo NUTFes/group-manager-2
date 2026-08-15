@@ -22,6 +22,7 @@ import {
   type StageOptionRecord,
   type SubmissionApplicationType,
   type SubmissionStatusValue,
+  type ViceRepresentativeRecord,
   mockGroupId,
   mockUser,
   submissionApplicationTypes,
@@ -215,33 +216,28 @@ const powerHandler: MockHandler = async ({ route, path, method, state }) => {
   return false;
 };
 
+/** 「この申請はしない」マーカー。申請種別(order_type)ごとに0件か1件を返す。 */
+const unregisteredGroupId = (orderType: number) => 6000 + orderType;
+
 const unregisteredGroupHandler: MockHandler = async ({
   route,
-  path,
+  pathname,
+  query,
   method,
   state,
 }) => {
-  if (
-    method === 'GET' &&
-    path === `/un_registered_groups/group?group_id=${mockGroupId}&order_type=1`
-  ) {
-    await fulfillJson(route, apiResponse([]));
-    return true;
-  }
-
-  if (
-    method === 'GET' &&
-    path === `/un_registered_groups/group?group_id=${mockGroupId}&order_type=4`
-  ) {
+  if (method === 'GET' && pathname === '/un_registered_groups/group') {
+    const orderType = Number(query.get('order_type'));
+    const isUnregistered = state.unregisteredOrderTypes.includes(orderType);
     await fulfillJson(
       route,
       apiResponse(
-        state.hasUnregisteredFireEquipment
+        isUnregistered
           ? [
               {
-                id: 6001,
-                group_id: mockGroupId,
-                order_type: 'fire_equipment_order',
+                id: unregisteredGroupId(orderType),
+                group_id: Number(query.get('group_id') ?? mockGroupId),
+                order_type: orderType,
                 created_at: '2026-01-01T00:00:00.000Z',
                 updated_at: '2026-01-01T00:00:00.000Z',
               },
@@ -252,11 +248,92 @@ const unregisteredGroupHandler: MockHandler = async ({
     return true;
   }
 
-  if (
-    (method === 'DELETE' || method === 'POST') &&
-    path === '/un_registered_groups'
-  ) {
-    state.requestedUrls.push(path);
+  if (method === 'POST' && pathname === '/un_registered_groups') {
+    state.requestedUrls.push(pathname);
+    const body = (await route.request().postDataJSON()) as {
+      order_type?: number;
+    };
+    const orderType = Number(body?.order_type ?? -1);
+    if (orderType >= 0 && !state.unregisteredOrderTypes.includes(orderType)) {
+      state.unregisteredOrderTypes.push(orderType);
+    }
+    await fulfillJson(route, apiResponse([]));
+    return true;
+  }
+
+  if (method === 'DELETE' && pathname === '/un_registered_groups') {
+    state.requestedUrls.push(pathname);
+    await fulfillJson(route, apiResponse([]));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/un_registered_groups\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    state.unregisteredOrderTypes = state.unregisteredOrderTypes.filter(
+      (orderType) => unregisteredGroupId(orderType) !== id
+    );
+    await fulfillJson(route, apiResponse([]));
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * 副代表申請。作成/更新は legacy フェッチャ経由で値はクエリに載る。
+ * 「一人で参加」を選ぶと副代表を削除するが、未登録時は id が undefined のまま
+ * DELETE /sub_reps/undefined が飛ぶため、数値以外の id も受け付ける。
+ */
+const viceRepresentativeHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === `/sub_reps/group/${mockGroupId}`) {
+    await fulfillJson(
+      route,
+      state.viceRepresentative
+        ? apiResponse(state.viceRepresentative)
+        : apiNotFound()
+    );
+    return true;
+  }
+
+  const viceRepresentativeFromQuery = (
+    id: number
+  ): ViceRepresentativeRecord => ({
+    id,
+    group_id: Number(query.get('group_id') ?? mockGroupId),
+    name: query.get('name') ?? '',
+    student_id: Number(query.get('student_id') ?? 0),
+    grade_id: Number(query.get('grade_id') ?? 0),
+    department_id: Number(query.get('department_id') ?? 0),
+    email: query.get('email') ?? '',
+    tel: query.get('tel') ?? '',
+  });
+
+  if (method === 'POST' && pathname === '/sub_reps') {
+    state.requestedUrls.push(pathname);
+    state.viceRepresentative = viceRepresentativeFromQuery(9001);
+    await fulfillJson(route, apiResponse(state.viceRepresentative));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/sub_reps\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    state.viceRepresentative = viceRepresentativeFromQuery(
+      Number(pathname.split('/').at(-1))
+    );
+    await fulfillJson(route, apiResponse(state.viceRepresentative));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/sub_reps\/[^/]+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    state.viceRepresentative = null;
     await fulfillJson(route, apiResponse([]));
     return true;
   }
@@ -463,6 +540,7 @@ const handlers: MockHandler[] = [
   fireEquipmentHandler,
   stageOptionHandler,
   venueApplicationHandler,
+  viceRepresentativeHandler,
   newsHandler,
   emptyApplicationHandler,
 ];
