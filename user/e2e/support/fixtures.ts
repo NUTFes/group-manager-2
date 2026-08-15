@@ -17,6 +17,15 @@ export const apiResponse = <T>(data: T) => ({
   data,
 });
 
+/**
+ * 未登録を表す封筒。HTTPは200のまま status.code だけ404にする。
+ * 取得系フックが `status.code === 200` を見て undefined に落とす経路を再現するため。
+ */
+export const apiNotFound = () => ({
+  status: { code: 404, message: 'Not Found' },
+  data: null,
+});
+
 export const fulfillJson = (route: Route, body: unknown) =>
   route.fulfill({
     status: 200,
@@ -42,7 +51,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   rental_item: true,
   place_order: true,
   stage_order: false,
-  stage_option: false,
+  stage_option: state.stageOption !== null,
   power_order: state.powerOrders.length > 0,
   employee: false,
   venue_map: false,

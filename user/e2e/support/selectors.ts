@@ -36,6 +36,22 @@ export const BUTTONS = {
   cancel: 'キャンセル',
 } as const;
 
+/**
+ * Radio コンポーネントは input の name 属性にラベル文字列を入れるため、
+ * 同じ「はい/いいえ」が複数組あってもラベルで一意に絞り込める。
+ * optionId は Option.id（はい=1 / いいえ=0 など）。
+ */
+export const selectRadio = (page: Page, groupLabel: string, optionId: number) =>
+  page
+    .locator(
+      `input[type="radio"][name="${groupLabel}"][value="${String(optionId)}"]`
+    )
+    .check();
+
+/** フォーム内の送信ボタン。isDisable 時はラベルが消えるため type で引く。 */
+export const submitButton = (page: Page) =>
+  page.locator('form button[type="submit"]');
+
 export const fillPowerForm = async (
   page: Page,
   values: {

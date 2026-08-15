@@ -5,6 +5,7 @@
 // 申請機能を増やすときはハンドラを1つ足して handlers に追加する。
 import type { Page, Route } from '@playwright/test';
 import {
+  apiNotFound,
   apiResponse,
   checkAllRegistered,
   fireEquipmentFromBody,
@@ -17,6 +18,7 @@ import {
   type FireEquipmentBody,
   type PowerOrder,
   type ScenarioState,
+  type StageOptionRecord,
   type SubmissionApplicationType,
   type SubmissionStatusValue,
   mockGroupId,
@@ -30,6 +32,10 @@ export type MockContext = {
   url: string;
   /** pathname + search */
   path: string;
+  /** search を含まない pathname */
+  pathname: string;
+  /** クエリ文字列。legacy フェッチャは本文ではなくクエリに値を載せる点に注意。 */
+  query: URLSearchParams;
   method: string;
   state: ScenarioState;
 };
@@ -311,6 +317,57 @@ const fireEquipmentHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * ステージオプション申請。
+ * 作成/更新は legacyPost/PatchFetcher 経由のため、値は本文ではなく
+ * snake_case のクエリ文字列で届く点に注意。
+ */
+const stageOptionHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (
+    method === 'GET' &&
+    pathname === `/stage_common_options/group/${mockGroupId}`
+  ) {
+    await fulfillJson(
+      route,
+      state.stageOption ? apiResponse(state.stageOption) : apiNotFound()
+    );
+    return true;
+  }
+
+  const stageOptionFromQuery = (id: number): StageOptionRecord => ({
+    id,
+    group_id: Number(query.get('group_id') ?? mockGroupId),
+    own_equipment: query.get('own_equipment') === 'true',
+    bgm: query.get('bgm') === 'true',
+    camera_permission: query.get('camera_permission') === 'true',
+    loud_sound: query.get('loud_sound') === 'true',
+  });
+
+  if (method === 'POST' && pathname === '/stage_common_options') {
+    state.requestedUrls.push(pathname);
+    state.stageOption = stageOptionFromQuery(7001);
+    await fulfillJson(route, apiResponse(state.stageOption));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/stage_common_options\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    state.stageOption = stageOptionFromQuery(
+      Number(pathname.split('/').at(-1))
+    );
+    await fulfillJson(route, apiResponse(state.stageOption));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -353,6 +410,7 @@ const handlers: MockHandler[] = [
   powerHandler,
   unregisteredGroupHandler,
   fireEquipmentHandler,
+  stageOptionHandler,
   newsHandler,
   emptyApplicationHandler,
 ];
@@ -365,6 +423,8 @@ export const mockHomePageApis = async (page: Page, state: ScenarioState) => {
       route,
       url,
       path: `${requestUrl.pathname}${requestUrl.search}`,
+      pathname: requestUrl.pathname,
+      query: requestUrl.searchParams,
       method: route.request().method(),
       state,
     };

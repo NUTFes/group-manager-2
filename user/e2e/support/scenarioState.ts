@@ -61,6 +61,16 @@ export type FireEquipmentBody = {
   remark?: string;
 };
 
+/** GET /stage_common_options/group/:id が返すレコード(snake_case)。 */
+export type StageOptionRecord = {
+  id: number;
+  group_id: number;
+  own_equipment: boolean;
+  bgm: boolean;
+  camera_permission: boolean;
+  loud_sound: boolean;
+};
+
 export type PageMode = 'registration' | 'resubmission' | 'closed';
 
 export type ScenarioState = {
@@ -74,6 +84,8 @@ export type ScenarioState = {
   statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
   fireEquipmentOrders: FireEquipmentOrder[];
+  /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
+  stageOption: StageOptionRecord | null;
   /** モックサーバが受け取った書き込み系リクエストのパス。送信後の再検証をassertするために使う。 */
   requestedUrls: string[];
 };
@@ -135,5 +147,6 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
           },
         ]
       : [],
+  stageOption: null,
   requestedUrls: [],
 });
