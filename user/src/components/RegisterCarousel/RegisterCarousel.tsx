@@ -28,7 +28,7 @@ type FormStepProps = {
 
 const FormStep: FC<FormStepProps> = ({ step, steps }) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex w-max min-w-full items-center justify-center">
       <div className="relative h-[81px] w-[388px] shrink-0">
         <div className="absolute left-[6px] top-0 h-14 w-[376px]">
           <div
@@ -271,74 +271,74 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center space-y-4 rounded-lg bg-baseColor">
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex w-full items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.email}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {values.mail}
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.password}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {'*'.repeat(values.password.length)}
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.name}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {values.name}
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.tel}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {values.tel}
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.studentId}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {values.studentId}
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.grade}
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[38px] w-full min-w-0 max-w-[298px] items-center justify-start pr-[68px]">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {
                           gradeOptions.find(
                             (grade) => grade.id === values.gradeId
@@ -347,14 +347,14 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-auto min-h-[63px] w-full min-w-0 max-w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         {review.department}
                       </div>
                     </div>
-                    <div className="inline-flex h-[65px] w-[298px] items-center justify-start">
-                      <div className="text-base font-medium text-font">
+                    <div className="inline-flex h-auto min-h-[65px] w-full min-w-0 max-w-[298px] items-center justify-start">
+                      <div className="min-w-0 break-words text-base font-medium text-font">
                         {
                           departmentOptions.find(
                             (department) =>
