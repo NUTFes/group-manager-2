@@ -29,7 +29,7 @@ type FormStepProps = {
 const FormStep: FC<FormStepProps> = ({ step, steps }) => {
   return (
     <div className="flex items-center justify-center">
-      <div className="relative h-[81px] w-[388px]">
+      <div className="relative h-[81px] w-[388px] shrink-0">
         <div className="absolute left-[6px] top-0 h-14 w-[376px]">
           <div
             className={`absolute left-[72px] top-[24px] h-2 w-20 ${
@@ -167,11 +167,18 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSignUpSubmit} ref={formRef} noValidate>
-        <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
-          <FormStep step={stepIndex} steps={steps} />
+      <form
+        onSubmit={handleSignUpSubmit}
+        ref={formRef}
+        noValidate
+        className="w-full min-w-0"
+      >
+        <section className="w-full min-w-0 rounded-2xl bg-white px-4 py-6 shadow-md sm:px-8 md:px-32 md:py-5">
+          <div className="overflow-x-auto">
+            <FormStep step={stepIndex} steps={steps} />
+          </div>
           <div
-            className="mx-auto max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
+            className="mx-auto max-h-[60vh] w-full max-w-[450px] overflow-y-auto overflow-x-hidden pt-4"
             ref={emblaRef}
           >
             <div className="flex">
