@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_16_000001) do
+ActiveRecord::Schema.define(version: 2026_08_16_000002) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -22,9 +22,10 @@ ActiveRecord::Schema.define(version: 2026_08_16_000001) do
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
-    t.integer "place_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "stocker_place_id"
+    t.index ["stocker_place_id"], name: "index_assign_group_places_on_stocker_place_id"
   end
 
   create_table "assign_rental_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -517,6 +518,7 @@ ActiveRecord::Schema.define(version: 2026_08_16_000001) do
     t.string "imgur_deletehash"
   end
 
+  add_foreign_key "assign_group_places", "stocker_places"
   add_foreign_key "assign_rental_items", "stocker_places", column: "rental_place_id"
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"

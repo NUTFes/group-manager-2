@@ -77,7 +77,7 @@ class Api::V1::RentalOrdersApiController < ApplicationController
         unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id, rental_item_id: rental_order.rental_item_id).sum(:num)
         assign_place = if (place_order = rental_order.group.place_order)
                          if (assign_group_place = place_order.assign_group_place)
-                           assign_group_place.place.name
+                           assign_group_place.stocker_place.name
                          else
                            'not yet'
                          end
@@ -101,13 +101,13 @@ class Api::V1::RentalOrdersApiController < ApplicationController
       # place_idが指定
     elsif place_id != 0
       @rental_orders.each do |rental_order|
-        next unless (place_order = rental_order.group.place_order) && (assign_group_place = place_order.assign_group_place) && (assign_group_place.place_id == place_id)
+        next unless (place_order = rental_order.group.place_order) && (assign_group_place = place_order.assign_group_place) && (assign_group_place.stocker_place_id == place_id)
 
         unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id, rental_item_id: rental_order.rental_item_id).sum(:num)
         temp = {
           id: rental_order.id,
           group_name: rental_order.group.name,
-          assign_place: assign_group_place.place.name,
+          assign_place: assign_group_place.stocker_place.name,
           rental_item: rental_order.rental_item.name,
           num: rental_order.num,
           unassigned_num: unassigned_num
