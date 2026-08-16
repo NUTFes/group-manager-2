@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_23_000001) do
+ActiveRecord::Schema.define(version: 2026_08_16_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -175,9 +175,7 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
     t.boolean "committee"
     t.boolean "is_international"
     t.boolean "is_external"
-    t.bigint "uses_place_id"
     t.boolean "is_health_center_submission_target", default: true, null: false
-    t.index ["uses_place_id"], name: "index_groups_on_uses_place_id"
   end
 
   create_table "health_center_submission_statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -523,7 +521,6 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
-  add_foreign_key "groups", "stocker_places", column: "uses_place_id"
   add_foreign_key "health_center_submission_statuses", "groups"
   add_foreign_key "place_categories", "place_categories", column: "parent_id"
   add_foreign_key "stocker_places", "place_categories"
