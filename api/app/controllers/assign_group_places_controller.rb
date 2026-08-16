@@ -19,15 +19,22 @@ class AssignGroupPlacesController < ApplicationController
   # POST /assign_group_places
   # POST /assign_group_places.json
   def create
-    @assign_group_place = AssignGroupPlace.create(assign_group_place_params)
-    render json: fmt(created, @assign_group_place)
+    @assign_group_place = AssignGroupPlace.new(assign_group_place_params)
+    if @assign_group_place.save
+      render json: fmt(created, @assign_group_place)
+    else
+      render_validation_errors(@assign_group_place)
+    end
   end
 
   # PATCH/PUT /assign_group_places/1
   # PATCH/PUT /assign_group_places/1.json
   def update
-    @assign_group_place.update(assign_group_place_params)
-    render json: fmt(created, @assign_group_place, "Updated assign_group_place id = #{params[:id]}")
+    if @assign_group_place.update(assign_group_place_params)
+      render json: fmt(ok, @assign_group_place, "Updated assign_group_place id = #{params[:id]}")
+    else
+      render_validation_errors(@assign_group_place)
+    end
   end
 
   # DELETE /assign_group_places/1

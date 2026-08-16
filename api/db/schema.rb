@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2026_08_16_000002) do
     t.integer "place_order_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "stocker_place_id"
+    t.bigint "stocker_place_id", null: false
     t.index ["stocker_place_id"], name: "index_assign_group_places_on_stocker_place_id"
   end
 
