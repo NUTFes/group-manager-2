@@ -19,6 +19,7 @@ en:
           item_name: "Item Name"
           pickup_location: "Pickup Location"
           quantity: "Quantity"
+          remark: "Remarks"
           pickup_date: "Pickup Date"
           return_date: "Return Date"
           pickup_confirmation: "Pickup Confirmation"

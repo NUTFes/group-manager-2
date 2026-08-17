@@ -19,6 +19,7 @@ ja:
           item_name: "物品名"
           pickup_location: "借りる場所"
           quantity: "数量"
+          remark: "備考"
           pickup_date: "貸出日"
           return_date: "返却日"
           pickup_confirmation: "借用チェック"
