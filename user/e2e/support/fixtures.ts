@@ -55,7 +55,9 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   sub_rep:
     state.viceRepresentative !== null ||
     state.unregisteredOrderTypes.includes(ORDER_TYPES.subRep),
-  rental_item: true,
+  rental_item:
+    state.rentalOrders.length > 0 ||
+    state.unregisteredOrderTypes.includes(ORDER_TYPES.rentalItem),
   place_order: state.placeOrder !== null,
   stage_order: state.stageOrders.length > 0,
   stage_option: state.stageOption !== null,

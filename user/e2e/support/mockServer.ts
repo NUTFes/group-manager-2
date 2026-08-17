@@ -24,6 +24,7 @@ import {
   type PlaceOrderRecord,
   type PowerOrder,
   type PublicRelationRecord,
+  type RentalOrderRecord,
   type ScenarioState,
   type StageOptionRecord,
   type StageOrderRecord,
@@ -376,10 +377,16 @@ const unregisteredGroupHandler: MockHandler = async ({
 
   if (method === 'POST' && pathname === '/un_registered_groups') {
     state.requestedUrls.push(pathname);
+    // RentItems(rentItemsApi.ts)専用の useRegisterUnRegisteredGroup だけは
+    // { un_registered_group: { group_id, order_type } } とネストしたボディを送る
+    // (他群の useMutateUnregisteredGroup はフラットな { group_id, order_type })。
     const body = (await route.request().postDataJSON()) as {
       order_type?: number;
+      un_registered_group?: { order_type?: number };
     };
-    const orderType = Number(body?.order_type ?? -1);
+    const orderType = Number(
+      body?.order_type ?? body?.un_registered_group?.order_type ?? -1
+    );
     if (orderType >= 0 && !state.unregisteredOrderTypes.includes(orderType)) {
       state.unregisteredOrderTypes.push(orderType);
     }
@@ -1130,6 +1137,112 @@ const purchaseListsHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 物品申請。物品マスタは団体タイプ/会場タイプに応じて3つのエンドポイント
+ * (全件/屋内/屋外)を使い分けるが、いずれも同じ state.rentableItems を
+ * is_inside_shop_rentable / is_outside_shop_rentable でフィルタするだけ。
+ * 作成/更新は legacyPost/PatchFetcher 経由だが、rentItemsApi.ts の呼び出し側は
+ * query ではなく body だけを渡すため、他の legacy 群(stageOption 等)と異なり
+ * JSONボディ(既に snake_case)がそのまま届く。削除は
+ * @/hooks/useApi.ts の useApiMutations().remove(素のfetch)経由。
+ * id は同時実行される複数POSTがレースしても衝突しないよう rental_item_id から
+ * 決定的に導出する(items は重複IDを許さないフォームバリデーションのため一意)。
+ */
+const rentItemsHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === '/api/v1/get_all_rentable_items') {
+    await fulfillJson(route, apiResponse(state.rentableItems));
+    return true;
+  }
+
+  if (
+    method === 'GET' &&
+    pathname === '/api/v1/get_inside_shop_rentable_items'
+  ) {
+    await fulfillJson(
+      route,
+      apiResponse(
+        state.rentableItems.filter((item) => item.is_inside_shop_rentable)
+      )
+    );
+    return true;
+  }
+
+  if (
+    method === 'GET' &&
+    pathname === '/api/v1/get_outside_shop_rentable_items'
+  ) {
+    await fulfillJson(
+      route,
+      apiResponse(
+        state.rentableItems.filter((item) => item.is_outside_shop_rentable)
+      )
+    );
+    return true;
+  }
+
+  if (method === 'GET' && pathname === `/rental_orders/group/${mockGroupId}`) {
+    await fulfillJson(route, apiResponse(state.rentalOrders));
+    return true;
+  }
+
+  const rentalOrderFromBody = (
+    body: Partial<RentalOrderRecord>,
+    id: number
+  ): RentalOrderRecord => ({
+    id,
+    group_id: body.group_id ?? mockGroupId,
+    rental_item_id: body.rental_item_id ?? 0,
+    num: body.num ?? 0,
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+  });
+
+  if (method === 'POST' && pathname === '/rental_orders') {
+    state.requestedUrls.push(pathname);
+    const body = (await route
+      .request()
+      .postDataJSON()) as Partial<RentalOrderRecord>;
+    const record = rentalOrderFromBody(
+      body,
+      20100 + (body.rental_item_id ?? 0)
+    );
+    state.rentalOrders = [...state.rentalOrders, record];
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/rental_orders\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    const body = (await route
+      .request()
+      .postDataJSON()) as Partial<RentalOrderRecord>;
+    const record = rentalOrderFromBody(body, id);
+    state.rentalOrders = state.rentalOrders.map((order) =>
+      order.id === id ? record : order
+    );
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/rental_orders\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    state.rentalOrders = state.rentalOrders.filter(
+      (order) => order.id !== id
+    );
+    await fulfillJson(route, apiResponse(null));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -1184,6 +1297,7 @@ const handlers: MockHandler[] = [
   cookingProcessOrderHandler,
   foodProductHandler,
   purchaseListsHandler,
+  rentItemsHandler,
   newsHandler,
   emptyApplicationHandler,
 ];

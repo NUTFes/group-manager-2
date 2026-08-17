@@ -44,6 +44,75 @@ const groupCategoryTimestamps = {
   updated_at: '2026-01-01T00:00:00.000Z',
 };
 
+/**
+ * GET /api/v1/get_all_rentable_items 等が返す貸出物品マスタ(snake_case)。
+ * useAllRentableItems/useRentableItemsByType はこのレスポンスを camelcaseKeys で
+ * 変換するため、is_inside_shop_rentable 等は実際には isInsideShopRentable として
+ * 届く。にもかかわらず useRentItemsFormHooks 側は item.is_stage_rentable(snake_case)
+ * のままアクセスしており、常に undefined になる
+ * (BUG: 実行委員会/ステージ団体の is_stage_rentable フィルタは機能しない)。
+ */
+export type RentableItemRecord = {
+  id: number;
+  name: string;
+  name_en?: string;
+  is_inside_shop_rentable: boolean;
+  is_outside_shop_rentable: boolean;
+  is_stage_rentable: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+const rentableItemTimestamps = {
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
+};
+
+/** RentItemsForm/schema.ts の ITEM_IDS と対応する。 */
+export const RENTABLE_ITEM_IDS = {
+  table: 1,
+  longTable: 2,
+  chair: 3,
+  partition: 4,
+  partitionLeg: 5,
+  displayBoard: 6,
+  tent: 7,
+} as const;
+
+export const defaultRentableItems: RentableItemRecord[] = [
+  {
+    id: RENTABLE_ITEM_IDS.table,
+    name: 'E2E テーブル',
+    is_inside_shop_rentable: true,
+    is_outside_shop_rentable: true,
+    is_stage_rentable: false,
+    ...rentableItemTimestamps,
+  },
+  {
+    id: RENTABLE_ITEM_IDS.chair,
+    name: 'E2E 椅子',
+    is_inside_shop_rentable: true,
+    is_outside_shop_rentable: true,
+    is_stage_rentable: false,
+    ...rentableItemTimestamps,
+  },
+];
+
+/**
+ * GET /rental_orders/group/:id が返す物品申請レコード(snake_case)。
+ * 作成/更新は legacyPost/PatchFetcher 経由だが、rentItemsApi.ts の呼び出し側は
+ * query ではなく body だけを渡すため(他の legacy 群と異なり)、
+ * JSONボディ(既に snake_case)がそのまま届く。
+ */
+export type RentalOrderRecord = {
+  id: number;
+  group_id: number;
+  rental_item_id: number;
+  num: number;
+  created_at: string;
+  updated_at: string;
+};
+
 /** src/utils/constants.ts の GROUP_CATEGORY と対応する。 */
 export const defaultGroupCategories: GroupCategoryRecord[] = [
   { id: 1, name: '食品販売', ...groupCategoryTimestamps },
@@ -450,6 +519,10 @@ export type ScenarioState = {
   shops: ShopRecord[];
   /** GET /purchase_lists/food_product が返す購入品リスト。空配列は未登録。 */
   purchaseLists: PurchaseListRecord[];
+  /** GET /api/v1/get_all_rentable_items 等が返す貸出物品マスタ。既定は defaultRentableItems。 */
+  rentableItems: RentableItemRecord[];
+  /** GET /rental_orders/group/:id が返す物品申請。空配列は未登録。 */
+  rentalOrders: RentalOrderRecord[];
   /** true の間だけ Imgur アップロードをHTTP 500で失敗させる。 */
   forceImgurUploadError: boolean;
   /** Imgur へのアップロードリクエスト回数。 */
@@ -556,6 +629,8 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   cookingProcessOrders: [],
   shops: defaultShops,
   purchaseLists: [],
+  rentableItems: defaultRentableItems,
+  rentalOrders: [],
   forceImgurUploadError: false,
   imgurUploadCount: 0,
   requestedUrls: [],
