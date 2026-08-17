@@ -12,6 +12,6 @@ class ItemRentalLog < ApplicationRecord
 
   validates :uid, presence: true, uniqueness: true
   validates :category, presence: true
-  validates :quantity, presence: true
+  validates :quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :recorder_email, presence: true
 end
