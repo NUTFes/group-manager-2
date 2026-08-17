@@ -11,26 +11,34 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     @headers = { 'Cf-Access-Authenticated-User-Email' => 'recorder@example.com' }
   end
 
-  test 'should get index filtered by rental_place_id and group_id' do
+  test 'should get index filtered by rental_place_id and group_id, including planned quantity' do
     AssignRentalItem.create!(
       group_id: @group.id,
       rental_item_id: @item_rental_log.rental_item_id,
       stocker_place_id: @stocker_place.id,
       rental_place_id: @stocker_place.id,
-      num: 1
+      num: 5
     )
 
     get item_rental_logs_url, params: { rental_place_id: @stocker_place.id, group_id: @group.id }
     assert_response :success
 
     body = response.parsed_body
-    ids = body['data'].pluck('id')
-    assert_includes ids, @item_rental_log.id
+    log_ids = body['data']['item_rental_logs'].pluck('id')
+    assert_includes log_ids, @item_rental_log.id
+
+    planned_nums = body['data']['assign_rental_items'].pluck('num')
+    assert_includes planned_nums, 5
   end
 
-  test 'should require rental_place_id on index' do
+  test 'should get index without filters when rental_place_id is absent' do
     get item_rental_logs_url
-    assert_response :unprocessable_entity
+    assert_response :success
+
+    body = response.parsed_body
+    log_ids = body['data']['item_rental_logs'].pluck('id')
+    assert_includes log_ids, item_rental_logs(:one).id
+    assert_includes log_ids, item_rental_logs(:two).id
   end
 
   test 'should create item_rental_log and take recorder_email from header' do

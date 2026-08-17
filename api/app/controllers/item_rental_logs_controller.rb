@@ -3,11 +3,11 @@
 class ItemRentalLogsController < ApplicationController
   # GET /item_rental_logs
   def index
-    return render_unprocessable_entity('rental_place_id is required') if params[:rental_place_id].blank?
+    assign_rental_items = AssignRentalItem.where(assign_rental_item_filter_params)
+    rental_item_ids = assign_rental_items.distinct.pluck(:rental_item_id)
+    item_rental_logs = ItemRentalLog.where(rental_item_id: rental_item_ids)
 
-    rental_item_ids = AssignRentalItem.where(assign_rental_item_filter_params).distinct.pluck(:rental_item_id)
-
-    render json: fmt(ok, ItemRentalLog.where(rental_item_id: rental_item_ids))
+    render json: fmt(ok, { item_rental_logs: item_rental_logs, assign_rental_items: assign_rental_items })
   end
 
   # POST /item_rental_logs
@@ -36,7 +36,8 @@ class ItemRentalLogsController < ApplicationController
   end
 
   def assign_rental_item_filter_params
-    filter = { rental_place_id: params[:rental_place_id] }
+    filter = {}
+    filter[:rental_place_id] = params[:rental_place_id] if params[:rental_place_id].present?
     filter[:group_id] = params[:group_id] if params[:group_id].present?
     filter
   end
