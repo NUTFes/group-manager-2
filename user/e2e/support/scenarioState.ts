@@ -279,6 +279,84 @@ export type FoodProductRecord = {
 };
 
 /**
+ * GET /shops が返す購入品申請の店舗マスタ(snake_case)。
+ * src/components/Applications/PurchaseLists/constants.ts の
+ * NET_ORDER_SHOP_ID(998)/OTHER_SHOP_ID(999) と対応する特殊な店舗IDを含む
+ * (これらのIDを選ぶと購入品フォームのURL/備考の必須条件が変わる)。
+ */
+export type ShopRecord = {
+  id: number;
+  name: string;
+  tel: string;
+  opening_hours: string;
+  address: string;
+  created_at: string;
+  updated_at: string;
+};
+
+/** src/components/Applications/PurchaseLists/constants.ts の特殊な店舗IDと対応する。 */
+export const SHOP_IDS = {
+  regular: 1,
+  netOrder: 998,
+  other: 999,
+} as const;
+
+const shopTimestamps = {
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
+};
+
+export const defaultShops: ShopRecord[] = [
+  {
+    id: SHOP_IDS.regular,
+    name: 'E2E 商店',
+    tel: '0258-00-0000',
+    opening_hours: '9:00-18:00',
+    address: 'E2E市1-1-1',
+    ...shopTimestamps,
+  },
+  {
+    id: SHOP_IDS.netOrder,
+    name: 'ネット注文',
+    tel: '',
+    opening_hours: '',
+    address: '',
+    ...shopTimestamps,
+  },
+  {
+    id: SHOP_IDS.other,
+    name: 'その他',
+    tel: '',
+    opening_hours: '',
+    address: '',
+    ...shopTimestamps,
+  },
+];
+
+/**
+ * GET /purchase_lists/food_product が返す購入品申請レコード(snake_case)。
+ * 販売品(FoodProduct)に紐づく。作成/更新/削除は @/hooks/useApi.ts の
+ * useAuthenticated* 系(JSONボディ、snakecase-keysで変換)経由。
+ * usePurchaseListsForm は送信件数で作成/更新APIを切り替える
+ * (1件: POST /purchase_lists または PATCH /purchase_lists/:id、
+ *  2件以上: 常に POST /purchase_lists/upsert)。
+ */
+export type PurchaseListRecord = {
+  id: number;
+  group_id?: number;
+  food_product_id: number;
+  shop_id: number;
+  fes_date_id: number;
+  items: string;
+  is_fresh: boolean;
+  purchase_date: string;
+  url?: string | null;
+  remark?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/**
  * GET /cooking_process_orders/group/:id が返す調理工程申請レコード(snake_case)。
  * useGetCookingProcessOrder は status.code を見ず data.data の中身だけで判定するため、
  * 他群のような apiNotFound() 表現は使わない(stageOrders と同じパターン)。
@@ -362,6 +440,10 @@ export type ScenarioState = {
   foodProducts: FoodProductRecord[];
   /** GET /cooking_process_orders/group/:id が返す調理工程申請。空配列は未登録。 */
   cookingProcessOrders: CookingProcessOrderRecord[];
+  /** GET /shops が返す購入品申請の店舗マスタ。既定は defaultShops。 */
+  shops: ShopRecord[];
+  /** GET /purchase_lists/food_product が返す購入品リスト。空配列は未登録。 */
+  purchaseLists: PurchaseListRecord[];
   /** true の間だけ Imgur アップロードをHTTP 500で失敗させる。 */
   forceImgurUploadError: boolean;
   /** Imgur へのアップロードリクエスト回数。 */
@@ -465,6 +547,8 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   forceVenueMapSubmitError: false,
   foodProducts: [],
   cookingProcessOrders: [],
+  shops: defaultShops,
+  purchaseLists: [],
   forceImgurUploadError: false,
   imgurUploadCount: 0,
   requestedUrls: [],

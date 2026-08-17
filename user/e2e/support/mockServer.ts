@@ -13,6 +13,7 @@ import {
   foodProductFromBody,
   fulfillJson,
   powerOrderFromBody,
+  purchaseListFromBody,
   submission,
   userPageSettings,
 } from './fixtures';
@@ -1036,6 +1037,95 @@ const foodProductHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 購入品申請。販売品(FoodProduct)ごとに複数件対応し、店舗(Shop)マスタにも依存する。
+ * GET は food_product_ids[] クエリで絞り込む。
+ * 作成/更新/削除は @/hooks/useApi.ts の useAuthenticated* 系(JSONボディ、
+ * snakecase-keysで変換)経由。usePurchaseListsForm は送信件数で作成/更新APIを
+ * 切り替える(1件: POST /purchase_lists または PATCH /purchase_lists/:id、
+ * 2件以上: 常に POST /purchase_lists/upsert)。
+ */
+const purchaseListsHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === '/shops') {
+    await fulfillJson(route, apiResponse(state.shops));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === '/purchase_lists/food_product') {
+    const foodProductIds = query.getAll('food_product_ids[]').map(Number);
+    const filtered = state.purchaseLists.filter((item) =>
+      foodProductIds.includes(item.food_product_id)
+    );
+    await fulfillJson(route, apiResponse(filtered));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/purchase_lists') {
+    state.requestedUrls.push(pathname);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof purchaseListFromBody
+    >[0];
+    const record = purchaseListFromBody(body, 23001);
+    state.purchaseLists = [...state.purchaseLists, record];
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/purchase_lists\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof purchaseListFromBody
+    >[0];
+    const existing = state.purchaseLists.find((item) => item.id === id);
+    const record = purchaseListFromBody(body, id, existing);
+    state.purchaseLists = state.purchaseLists.map((item) =>
+      item.id === id ? record : item
+    );
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/purchase_lists/upsert') {
+    state.requestedUrls.push(pathname);
+    const body = (await route.request().postDataJSON()) as {
+      purchase_lists: Parameters<typeof purchaseListFromBody>[0][];
+    };
+    let nextId = 23101;
+    const upserted = body.purchase_lists.map((item) => {
+      const existing = item.id
+        ? state.purchaseLists.find((p) => p.id === item.id)
+        : undefined;
+      const id = item.id ?? existing?.id ?? nextId++;
+      return purchaseListFromBody(item, id, existing);
+    });
+    state.purchaseLists = [
+      ...state.purchaseLists.filter(
+        (item) => !upserted.some((updated) => updated.id === item.id)
+      ),
+      ...upserted,
+    ];
+    await fulfillJson(route, apiResponse(upserted));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/purchase_lists\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    state.purchaseLists = state.purchaseLists.filter((item) => item.id !== id);
+    await fulfillJson(route, apiResponse(null));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -1089,6 +1179,7 @@ const handlers: MockHandler[] = [
   venueMapHandler,
   cookingProcessOrderHandler,
   foodProductHandler,
+  purchaseListsHandler,
   newsHandler,
   emptyApplicationHandler,
 ];

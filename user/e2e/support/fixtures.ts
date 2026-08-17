@@ -9,6 +9,7 @@ import {
   type FoodProductRecord,
   ORDER_TYPES,
   type PowerOrder,
+  type PurchaseListRecord,
   type ScenarioState,
   type SubmissionApplicationType,
   type SubmissionStatusValue,
@@ -64,7 +65,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
     state.unregisteredOrderTypes.includes(ORDER_TYPES.employee),
   venue_map: state.venueMap !== null,
   food_product: state.foodProducts.length > 0,
-  purchase_list: false,
+  purchase_list: state.purchaseLists.length > 0,
   cooking_process_order: state.cookingProcessOrders.length > 0,
   fire_equipment_order: state.fireEquipmentOrders.length > 0,
   public_relation: state.publicRelation !== null,
@@ -188,4 +189,39 @@ export const fireEquipmentFromBody = (
   usage: body.usage ?? '',
   is_takeaway: body.is_takeaway ?? true,
   remark: body.remark ?? '',
+});
+
+/**
+ * POST /purchase_lists, PATCH /purchase_lists/:id, POST /purchase_lists/upsert の
+ * JSONボディ(1件分)から組み立てる。useAuthenticatedPost/PatchWithId経由のため
+ * JSONボディで届き、snakecase-keysで深く変換されるためキーは最初からsnake_case。
+ */
+export const purchaseListFromBody = (
+  body: {
+    id?: number | null;
+    group_id?: number;
+    food_product_id?: number;
+    shop_id?: number;
+    fes_date_id?: number;
+    items?: string;
+    is_fresh?: boolean;
+    purchase_date?: string;
+    url?: string | null;
+    remark?: string | null;
+  },
+  id: number,
+  existing?: PurchaseListRecord
+): PurchaseListRecord => ({
+  id,
+  group_id: body.group_id ?? mockGroupId,
+  food_product_id: body.food_product_id ?? 0,
+  shop_id: body.shop_id ?? 0,
+  fes_date_id: body.fes_date_id ?? 1,
+  items: body.items ?? '',
+  is_fresh: body.is_fresh ?? true,
+  purchase_date: body.purchase_date ?? '',
+  url: body.url ?? null,
+  remark: body.remark ?? null,
+  created_at: existing?.created_at ?? '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
 });
