@@ -222,8 +222,12 @@ test.describe('venue application', () => {
       .click();
 
     // placeOrderMutate() により、フォームから一覧表示へ切り替わり登録内容が反映される。
-    // (先に select が消えるのを待たないと、同名の <option> と多重一致する)
+    // (先に3つのselectが全て消えるのを待たないと、同名の<option>と多重一致する。
+    // 1つ目だけ待つと、フルスイート実行時など負荷が高い環境では2/3個目の
+    // selectがまだ残っている瞬間を拾ってstrict mode violationになることがある)
     await expect(page.getByLabel(FIELDS.first)).toHaveCount(0);
+    await expect(page.getByLabel(FIELDS.second)).toHaveCount(0);
+    await expect(page.getByLabel(FIELDS.third)).toHaveCount(0);
     await expect(page.getByText('第1体育館')).toBeVisible();
 
     // 登録済みバッジの元になる check_all_registered も再取得される。

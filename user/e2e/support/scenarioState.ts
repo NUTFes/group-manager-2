@@ -183,6 +183,20 @@ export type PublicRelationRecord = {
   updated_at: string;
 };
 
+/**
+ * GET /venue_maps/group/:id が返す模擬店平面図申請レコード(snake_case)。
+ * VenueMapResponse には checklist は含まれない(バックエンドに保存されない)ため、
+ * 編集時も毎回チェックリストの再チェックが必要になる。
+ */
+export type VenueMapRecord = {
+  id: number;
+  group_id: number;
+  picture_name: string;
+  picture_path: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type PageMode = 'registration' | 'resubmission' | 'closed';
 
 export type ScenarioState = {
@@ -228,6 +242,10 @@ export type ScenarioState = {
   publicRelation: PublicRelationRecord | null;
   /** true の間だけ POST/PATCH /public_relations をHTTP 500で失敗させる(二重トースト検証用)。 */
   forcePublicRelationSubmitError: boolean;
+  /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
+  venueMap: VenueMapRecord | null;
+  /** true の間だけ POST/PATCH /venue_maps をHTTP 500で失敗させる(二重トースト検証用)。 */
+  forceVenueMapSubmitError: boolean;
   /** true の間だけ Imgur アップロードをHTTP 500で失敗させる。 */
   forceImgurUploadError: boolean;
   /** Imgur へのアップロードリクエスト回数。 */
@@ -321,6 +339,8 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   viceRepresentative: null,
   publicRelation: null,
   forcePublicRelationSubmitError: false,
+  venueMap: null,
+  forceVenueMapSubmitError: false,
   forceImgurUploadError: false,
   imgurUploadCount: 0,
   requestedUrls: [],

@@ -24,6 +24,7 @@ import {
   type StageOptionRecord,
   type SubmissionApplicationType,
   type SubmissionStatusValue,
+  type VenueMapRecord,
   type ViceRepresentativeRecord,
   mockGroupId,
   mockUser,
@@ -677,6 +678,61 @@ const publicRelationHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 模擬店平面図申請。PublicRelationsのほぼクローンだが、作成/更新は
+ * useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由。ただし呼び出し側が
+ * trigger({ query: apiData }) と `query` で渡すため、bodyではなく
+ * legacy群と同じ snake_case のクエリ文字列として届く点に注意。
+ */
+const venueMapHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === `/venue_maps/group/${mockGroupId}`) {
+    await fulfillJson(
+      route,
+      state.venueMap ? apiResponse(state.venueMap) : apiNotFound()
+    );
+    return true;
+  }
+
+  const venueMapFromQuery = (id: number): VenueMapRecord => ({
+    id,
+    group_id: Number(query.get('group_id') ?? mockGroupId),
+    picture_name: query.get('picture_name') ?? '',
+    picture_path: query.get('picture_path') ?? '',
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+  });
+
+  if (method === 'POST' && pathname === '/venue_maps') {
+    state.requestedUrls.push(pathname);
+    if (state.forceVenueMapSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.venueMap = venueMapFromQuery(12001);
+    await fulfillJson(route, apiResponse(state.venueMap));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/venue_maps\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    if (state.forceVenueMapSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.venueMap = venueMapFromQuery(Number(pathname.split('/').at(-1)));
+    await fulfillJson(route, apiResponse(state.venueMap));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -725,6 +781,7 @@ const handlers: MockHandler[] = [
   venueApplicationHandler,
   viceRepresentativeHandler,
   publicRelationHandler,
+  venueMapHandler,
   newsHandler,
   emptyApplicationHandler,
 ];

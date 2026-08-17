@@ -58,7 +58,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   stage_option: state.stageOption !== null,
   power_order: state.powerOrders.length > 0,
   employee: false,
-  venue_map: false,
+  venue_map: state.venueMap !== null,
   food_product: false,
   purchase_list: false,
   cooking_process_order: false,
