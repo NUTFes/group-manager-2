@@ -10,6 +10,7 @@ import {
   checkAllRegistered,
   employeeFromBody,
   fireEquipmentFromBody,
+  foodProductFromBody,
   fulfillJson,
   powerOrderFromBody,
   submission,
@@ -983,6 +984,58 @@ const cookingProcessOrderHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 販売品申請。GET /food_products/group/:id は cookingProcessOrderHandler が既に持つ
+ * (調理工程の対象一覧としても使うため)。ここでは書き込み系だけを担当する。
+ * 作成/更新の区別はなく、常に POST /food_products/upsert を
+ * useAuthenticatedPost(JSONボディ、snakecase-keysで変換)経由で丸ごと置き換える。
+ * 削除は @/hooks/useApi.ts の useApiMutations().remove 経由で
+ * DELETE /food_products/:id が個別に飛ぶ(upsertの前に、消えた行の分だけ)。
+ */
+const foodProductHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+  state,
+}) => {
+  if (method === 'POST' && pathname === '/food_products/upsert') {
+    state.requestedUrls.push(pathname);
+    const body = (await route.request().postDataJSON()) as {
+      food_products: Array<{
+        id?: number;
+        group_id?: number;
+        name?: string;
+        is_cooking?: boolean;
+        first_day_num?: number;
+        second_day_num?: number;
+        is_alcohol?: boolean;
+      }>;
+    };
+    let nextId = 22101;
+    state.foodProducts = body.food_products.map((product) => {
+      const existing = product.id
+        ? state.foodProducts.find((p) => p.id === product.id)
+        : undefined;
+      const id = product.id ?? nextId++;
+      return foodProductFromBody(product, id, existing);
+    });
+    await fulfillJson(route, apiResponse(state.foodProducts));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/food_products\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    state.foodProducts = state.foodProducts.filter(
+      (product) => product.id !== id
+    );
+    await fulfillJson(route, apiResponse(null));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -1035,6 +1088,7 @@ const handlers: MockHandler[] = [
   publicRelationHandler,
   venueMapHandler,
   cookingProcessOrderHandler,
+  foodProductHandler,
   newsHandler,
   emptyApplicationHandler,
 ];

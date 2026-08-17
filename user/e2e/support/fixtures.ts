@@ -6,6 +6,7 @@ import {
   type EmployeeRecord,
   type FireEquipmentBody,
   type FireEquipmentOrder,
+  type FoodProductRecord,
   ORDER_TYPES,
   type PowerOrder,
   type ScenarioState,
@@ -62,7 +63,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
     state.employees.length > 0 ||
     state.unregisteredOrderTypes.includes(ORDER_TYPES.employee),
   venue_map: state.venueMap !== null,
-  food_product: false,
+  food_product: state.foodProducts.length > 0,
   purchase_list: false,
   cooking_process_order: state.cookingProcessOrders.length > 0,
   fire_equipment_order: state.fireEquipmentOrders.length > 0,
@@ -134,6 +135,35 @@ export const employeeFromBody = (
   student_id: Number(body.student_id ?? 0),
   stool_test_id: body.stool_test_id ?? 1,
   created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
+});
+
+/**
+ * POST /food_products/upsert のJSONボディ(食品1件分)から組み立てる。
+ * 既存レコードのcreated_atは引き継ぎ、それ以外は毎回上書きする(useAuthenticatedPost経由、
+ * snakecase-keysでボディが深く変換されるため、キーは最初からsnake_case)。
+ */
+export const foodProductFromBody = (
+  body: {
+    id?: number;
+    group_id?: number;
+    name?: string;
+    is_cooking?: boolean;
+    first_day_num?: number;
+    second_day_num?: number;
+    is_alcohol?: boolean;
+  },
+  id: number,
+  existing?: FoodProductRecord
+): FoodProductRecord => ({
+  id,
+  group_id: body.group_id ?? mockGroupId,
+  name: body.name ?? '',
+  is_cooking: body.is_cooking ?? false,
+  first_day_num: body.first_day_num ?? 0,
+  second_day_num: body.second_day_num ?? 0,
+  is_alcohol: body.is_alcohol ?? false,
+  created_at: existing?.created_at ?? '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 });
 
