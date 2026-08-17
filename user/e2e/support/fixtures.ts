@@ -63,7 +63,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   purchase_list: false,
   cooking_process_order: false,
   fire_equipment_order: state.fireEquipmentOrders.length > 0,
-  public_relation: false,
+  public_relation: state.publicRelation !== null,
 });
 
 export const userPageSettings = (state: ScenarioState) => {

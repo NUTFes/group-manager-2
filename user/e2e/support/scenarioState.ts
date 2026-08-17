@@ -171,6 +171,18 @@ export const defaultPlaces: PlaceRecord[] = [
   { id: PLACE_IDS.other, name: 'その他' },
 ];
 
+/** GET /public_relations/group/:id が返すPR文申請レコード(snake_case)。 */
+export type PublicRelationRecord = {
+  id: number;
+  group_id: number;
+  blurb: string;
+  picture_name: string;
+  picture_path: string;
+  is_announcement_requested: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type PageMode = 'registration' | 'resubmission' | 'closed';
 
 export type ScenarioState = {
@@ -212,6 +224,14 @@ export type ScenarioState = {
   places: PlaceRecord[];
   placeOrder: PlaceOrderRecord | null;
   viceRepresentative: ViceRepresentativeRecord | null;
+  /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
+  publicRelation: PublicRelationRecord | null;
+  /** true の間だけ POST/PATCH /public_relations をHTTP 500で失敗させる(二重トースト検証用)。 */
+  forcePublicRelationSubmitError: boolean;
+  /** true の間だけ Imgur アップロードをHTTP 500で失敗させる。 */
+  forceImgurUploadError: boolean;
+  /** Imgur へのアップロードリクエスト回数。 */
+  imgurUploadCount: number;
   /** モックサーバが受け取った書き込み系リクエストのパス。送信後の再検証をassertするために使う。 */
   requestedUrls: string[];
 };
@@ -299,5 +319,9 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   places: defaultPlaces,
   placeOrder: null,
   viceRepresentative: null,
+  publicRelation: null,
+  forcePublicRelationSubmitError: false,
+  forceImgurUploadError: false,
+  imgurUploadCount: 0,
   requestedUrls: [],
 });

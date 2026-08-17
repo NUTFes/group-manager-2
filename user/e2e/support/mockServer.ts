@@ -19,6 +19,7 @@ import {
   type GroupRecord,
   type PlaceOrderRecord,
   type PowerOrder,
+  type PublicRelationRecord,
   type ScenarioState,
   type StageOptionRecord,
   type SubmissionApplicationType,
@@ -28,6 +29,10 @@ import {
   mockUser,
   submissionApplicationTypes,
 } from './scenarioState';
+
+/** 1x1 の透明PNG。Next Image Optimizer の実ネットワークアクセスを避けるためのダミー画像。 */
+const TRANSPARENT_PNG_BASE64 =
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 
 export type MockContext = {
   route: Route;
@@ -45,6 +50,50 @@ export type MockContext = {
 
 /** 応答したら true、担当外なら false を返す。 */
 export type MockHandler = (ctx: MockContext) => Promise<boolean>;
+
+/**
+ * Imgur への画像アップロード(PublicRelationsForm/hooks.ts が直接 fetch する外部URL)。
+ * page.route('**\/*') はページが発行するリクエストなら外部ドメインも捕まえられるため、
+ * ここでモックして実ネットワークへのアップロードを避ける。
+ */
+const imgurHandler: MockHandler = async ({ route, url, method, state }) => {
+  if (method === 'POST' && url.startsWith('https://api.imgur.com/3/image')) {
+    state.imgurUploadCount += 1;
+    if (state.forceImgurUploadError) {
+      await route.fulfill({ status: 500, body: 'e2e forced imgur failure' });
+      return true;
+    }
+    await fulfillJson(route, {
+      data: { link: 'https://i.imgur.com/e2e-mock.png' },
+      success: true,
+      status: 200,
+    });
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * next/image の最適化エンドポイント。放置すると元画像(Imgurの実URL)へ
+ * サーバサイドで実ネットワークアクセスしてしまうため、ダミー画像で埋めて避ける。
+ */
+const nextImageOptimizerHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+}) => {
+  if (method === 'GET' && pathname === '/_next/image') {
+    await route.fulfill({
+      status: 200,
+      contentType: 'image/png',
+      body: Buffer.from(TRANSPARENT_PNG_BASE64, 'base64'),
+    });
+    return true;
+  }
+
+  return false;
+};
 
 const authHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/api/auth/session')) {
@@ -567,6 +616,67 @@ const venueApplicationHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * PR文申請。作成/更新は legacyPost/PatchFetcher 経由のため、値は本文ではなく
+ * snake_case のクエリ文字列で届く(他の legacy 群と同じ)。
+ */
+const publicRelationHandler: MockHandler = async ({
+  route,
+  pathname,
+  query,
+  method,
+  state,
+}) => {
+  if (
+    method === 'GET' &&
+    pathname === `/public_relations/group/${mockGroupId}`
+  ) {
+    await fulfillJson(
+      route,
+      state.publicRelation ? apiResponse(state.publicRelation) : apiNotFound()
+    );
+    return true;
+  }
+
+  const publicRelationFromQuery = (id: number): PublicRelationRecord => ({
+    id,
+    group_id: Number(query.get('group_id') ?? mockGroupId),
+    blurb: query.get('blurb') ?? '',
+    picture_name: query.get('picture_name') ?? '',
+    picture_path: query.get('picture_path') ?? '',
+    is_announcement_requested:
+      query.get('is_announcement_requested') === 'true',
+    created_at: '2026-01-01T00:00:00.000Z',
+    updated_at: '2026-01-01T00:00:00.000Z',
+  });
+
+  if (method === 'POST' && pathname === '/public_relations') {
+    state.requestedUrls.push(pathname);
+    if (state.forcePublicRelationSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.publicRelation = publicRelationFromQuery(11001);
+    await fulfillJson(route, apiResponse(state.publicRelation));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/public_relations\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    if (state.forcePublicRelationSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    state.publicRelation = publicRelationFromQuery(
+      Number(pathname.split('/').at(-1))
+    );
+    await fulfillJson(route, apiResponse(state.publicRelation));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -603,6 +713,8 @@ const emptyApplicationHandler: MockHandler = async ({ route, path }) => {
  * emptyApplicationHandler は他を食い潰すため必ず末尾に置くこと。
  */
 const handlers: MockHandler[] = [
+  imgurHandler,
+  nextImageOptimizerHandler,
   authHandler,
   groupHandler,
   submissionStatusHandler,
@@ -612,6 +724,7 @@ const handlers: MockHandler[] = [
   stageOptionHandler,
   venueApplicationHandler,
   viceRepresentativeHandler,
+  publicRelationHandler,
   newsHandler,
   emptyApplicationHandler,
 ];
