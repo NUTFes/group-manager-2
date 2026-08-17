@@ -409,6 +409,12 @@ export type ScenarioState = {
   statuses: Record<SubmissionApplicationType, SubmissionStatusValue>;
   powerOrders: PowerOrder[];
   fireEquipmentOrders: FireEquipmentOrder[];
+  /**
+   * true の間だけ PUT /fire_equipment_orders/submit をHTTP 500で失敗させる。
+   * この群は submitFireEquipmentOrders() が throw せず {success:false} を返す契約のため、
+   * 失敗時にトーストが何回出るかを実際に確かめるためのフラグ。
+   */
+  forceFireEquipmentSubmitError: boolean;
   /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
   stageOption: StageOptionRecord | null;
   /** ステージ申請のマスターデータ。既定値は defaultFesDates/defaultSunnyStages/defaultRainyStages。 */
@@ -531,6 +537,7 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
           },
         ]
       : [],
+  forceFireEquipmentSubmitError: false,
   stageOption: null,
   fesDates: defaultFesDates,
   sunnyStages: defaultSunnyStages,

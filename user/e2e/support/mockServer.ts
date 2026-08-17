@@ -500,6 +500,10 @@ const fireEquipmentHandler: MockHandler = async ({
 
   if (method === 'PUT' && path === '/fire_equipment_orders/submit') {
     state.requestedUrls.push(path);
+    if (state.forceFireEquipmentSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
     const body = (await route.request().postDataJSON()) as {
       fire_equipment_orders: FireEquipmentBody[];
     };
