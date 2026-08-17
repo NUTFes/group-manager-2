@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  rental_order_id: 1
-  rentable_item_id: 1
+  group: one
+  rental_item: one
+  stocker_place: one
   num: 1
+  remark: 長岡高専A
 
 two:
-  rental_order_id: 1
-  rentable_item_id: 1
+  group: two
+  rental_item: two
+  stocker_place: two
   num: 1
+  remark:

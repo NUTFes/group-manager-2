@@ -25,7 +25,8 @@ class AssignRentalItemsController < ApplicationController
           group_id: item_params[:group_id],
           rental_item_id: assign_rental_items_params[:rentalItemId],
           num: item_params[:num],
-          stocker_place_id: assign_rental_items_params[:stockerPlaceId]
+          stocker_place_id: assign_rental_items_params[:stockerPlaceId],
+          remark: item_params[:remark]
         )
       end
     end
@@ -61,11 +62,11 @@ class AssignRentalItemsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assign_rental_items_params
-    params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num])
+    params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num remark])
   end
 
   # update用のストロングパラメータ (単数形)
   def assign_rental_item_params
-    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId, :rental_place_id)
+    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId, :rental_place_id, :remark)
   end
 end
