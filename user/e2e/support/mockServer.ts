@@ -1233,9 +1233,7 @@ const rentItemsHandler: MockHandler = async ({
   if (method === 'DELETE' && /^\/rental_orders\/\d+$/.test(pathname)) {
     state.requestedUrls.push(pathname);
     const id = Number(pathname.split('/').at(-1));
-    state.rentalOrders = state.rentalOrders.filter(
-      (order) => order.id !== id
-    );
+    state.rentalOrders = state.rentalOrders.filter((order) => order.id !== id);
     await fulfillJson(route, apiResponse(null));
     return true;
   }
