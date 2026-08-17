@@ -191,15 +191,28 @@
               <div class="assign-inputs">
                 <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
                   <span class="input-label">{{ getItemName(itemId) }}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    :disabled="!$role(roleID).assign_items.update"
-                    :value="assign.assigned[itemId] || 0"
-                    @blur="updateManualAssign($event, assign, itemId)"
-                    @keyup.enter="$event.target.blur()"
-                    class="num-input highlight"
-                  >
+                  <div class="assign-fields">
+                    <input
+                      type="number"
+                      min="0"
+                      :aria-label="getItemName(itemId) + 'の割り当て個数'"
+                      :disabled="!$role(roleID).assign_items.update"
+                      :value="assign.assigned[itemId] || 0"
+                      @blur="updateManualAssign($event, assign, itemId)"
+                      @keyup.enter="$event.target.blur()"
+                      class="num-input highlight"
+                    >
+                    <input
+                      type="text"
+                      :aria-label="getItemName(itemId) + 'の備考'"
+                      :disabled="!$role(roleID).assign_items.update || !hasAssignRecord(assign, itemId)"
+                      :value="assign.remarks[itemId] || ''"
+                      placeholder="番号・名称など"
+                      @blur="updateAssignRemark($event, assign, itemId)"
+                      @keyup.enter="$event.target.blur()"
+                      class="remark-input"
+                    >
+                  </div>
                 </div>
                 <button v-if="$role(roleID).assign_items.delete" class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
@@ -448,12 +461,14 @@ export default {
             stockId: Number(stockId), 
             groupName: groupInfo ? groupInfo.name : '不明',
             assigned: {},
+            remarks: {},
             dbIds: [] 
           };
         }
         
         // 数量を加算
         assignMap[key].assigned[itemKey] = (assignMap[key].assigned[itemKey] || 0) + Number(a.num || 0);
+        assignMap[key].remarks[itemKey] = a.remark || '';
 
         if (a.id) {
           assignMap[key].dbIds.push({
@@ -498,6 +513,8 @@ export default {
         groupName: group.name,
         stockId: stock.id,
         assigned: {},
+        remarks: {},
+        dbIds: [],
         baseItemIds: [...this.activeItemIds]
       };
 
@@ -515,6 +532,7 @@ export default {
 
       this.items.forEach(item => {
         if (newAssignment.assigned[item.id] === undefined) newAssignment.assigned[item.id] = 0;
+        newAssignment.remarks[item.id] = '';
       });
 
       this.assignments.push(newAssignment);
@@ -524,7 +542,7 @@ export default {
           const assignedNum = newAssignment.assigned[itemId];
           if (assignedNum > 0) {
             const payload = {
-              items: [{ group_id: newAssignment.groupId, num: assignedNum }],
+              items: [{ group_id: newAssignment.groupId, num: assignedNum, remark: null }],
               rentalItemId: Number(itemId),
               stockerPlaceId: newAssignment.stockId
             };
@@ -577,6 +595,7 @@ export default {
           // パターンA: 0になったら割り当て解除（DELETE）
           await this.$axios.$delete(`/assign_rental_items/${dbRecord.id}`);
           assign.dbIds = assign.dbIds.filter(db => db.id !== dbRecord.id);
+          this.$set(assign.remarks, itemId, '');
 
         } else if (dbRecord) {
           // PUT処理
@@ -596,7 +615,7 @@ export default {
         } else if (!dbRecord && newValue > 0) {
           // これまで0だったところに新規で数を入力した場合（POST）
           const postPayload = {
-            items: [{ group_id: assign.groupId, num: newValue }],
+            items: [{ group_id: assign.groupId, num: newValue, remark: null }],
             rentalItemId: Number(itemId),
             stockerPlaceId: assign.stockId
           };
@@ -616,6 +635,30 @@ export default {
         // エラー時は画面の表示を元の数字に戻す
         assign.assigned[itemId] = oldValue;
         alert("更新に失敗しました。在庫数の上限を超えていないか等を確認してください。");
+      }
+    },
+
+    async updateAssignRemark(e, assign, itemId) {
+      if (!this.$role(this.roleID).assign_items.update) return;
+
+      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
+      if (!dbRecord) return;
+
+      const newValue = e.target.value.trim();
+      const oldValue = assign.remarks[itemId] || '';
+      if (newValue === oldValue) return;
+
+      this.$set(assign.remarks, itemId, newValue);
+
+      try {
+        await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, {
+          remark: newValue || null
+        });
+      } catch (error) {
+        this.$set(assign.remarks, itemId, oldValue);
+        e.target.value = oldValue;
+        console.error("備考の更新に失敗しました", error);
+        alert("備考の更新に失敗しました。時間をおいて再度お試しください。");
       }
     },
 
@@ -706,6 +749,10 @@ export default {
     getGroupName(groupId) {
       const group = this.groups.find(g => g.id === Number(groupId));
       return group ? group.name : '不明';
+    },
+    hasAssignRecord(assign, itemId) {
+      return Array.isArray(assign.dbIds)
+        && assign.dbIds.some(db => Number(db.itemId) === Number(itemId));
     },
     getUsedStock(stockId, itemId) {
       return this.assignments
@@ -931,6 +978,16 @@ export default {
   font-weight: bold;
 }
 .num-input:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+}
+.remark-input {
+  width: 140px;
+  padding: 4px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+.remark-input:disabled {
   background-color: #f1f5f9;
   color: #94a3b8;
 }
@@ -1169,12 +1226,18 @@ export default {
   gap: 8px;
   margin-right: 12px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 .assign-input-group {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+.assign-fields {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .input-label {
   font-size: 12px;
