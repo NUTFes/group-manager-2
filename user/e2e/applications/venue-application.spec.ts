@@ -200,10 +200,10 @@ test.describe('venue application', () => {
     await expect(submitButton(page)).toBeEnabled();
   });
 
-  // BUG(Phase 4-1): 送信後に呼ばれる mutate('/check_all_registered/:id') は
-  // 文字列キーのため SWR のタプルキーと一致せず no-op。
-  // 一方 placeOrderMutate() はフック由来のため機能し、一覧自体は更新される。
-  test('refreshes its own summary but never revalidates check_all_registered', async ({
+  // 修正済み(旧 Phase 4-1): 以前は mutate('/check_all_registered/:id') に
+  // 文字列キーを渡していて no-op だった。自分の一覧は placeOrderMutate() で
+  // 更新される一方、登録済みバッジだけ古いままになっていた。
+  test('refreshes its own summary and revalidates check_all_registered', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -215,19 +215,22 @@ test.describe('venue application', () => {
     await choose(page, FIELDS.first, PLACE_IDS.gym1);
     await choose(page, FIELDS.second, PLACE_IDS.gym2);
     await choose(page, FIELDS.third, PLACE_IDS.courtyard);
+
+    const checkAllRegisteredBefore = state.groupFetchCounts.checkAllRegistered;
     await page
       .getByRole('button', { name: BUTTONS.register, exact: true })
       .click();
 
-    // placeOrderMutate() は機能するので、フォームから一覧表示へ切り替わり登録内容が反映される。
+    // placeOrderMutate() により、フォームから一覧表示へ切り替わり登録内容が反映される。
     // (先に select が消えるのを待たないと、同名の <option> と多重一致する)
     await expect(page.getByLabel(FIELDS.first)).toHaveCount(0);
     await expect(page.getByText('第1体育館')).toBeVisible();
 
-    // 一方 check_all_registered は再取得されない。
-    expect(
-      state.requestedUrls.filter((url) => url.includes('/check_all_registered'))
-    ).toHaveLength(0);
+    // 登録済みバッジの元になる check_all_registered も再取得される。
+    // requestedUrls は書き込み系しか記録しないため、GET は専用カウンタで見る。
+    await expect
+      .poll(() => state.groupFetchCounts.checkAllRegistered)
+      .toBeGreaterThan(checkAllRegisteredBefore);
   });
 
   // 締切後は一覧のみで、修正ボタンを出さない。

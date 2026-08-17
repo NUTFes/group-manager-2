@@ -7,8 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { stageOptionLabels } from '../../label';
+import {
+  revalidateByUrl,
+  revalidateCheckAllRegistered,
+} from '../../shared/revalidate';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
@@ -57,7 +60,9 @@ export const useStageOptionFormHooks = (
     if (stageOptions) {
       try {
         await update({ query: formData });
-        mutate(`/stage_common_options/group/${formData.groupId}`);
+        await revalidateByUrl(
+          `/stage_common_options/group/${formData.groupId}`
+        );
 
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
         return true;
@@ -68,8 +73,10 @@ export const useStageOptionFormHooks = (
     } else {
       try {
         await create({ query: formData });
-        mutate(`/stage_common_options/group/${formData.groupId}`);
-        mutate(`/check_all_registered/${formData.groupId}`);
+        await revalidateByUrl(
+          `/stage_common_options/group/${formData.groupId}`
+        );
+        await revalidateCheckAllRegistered(formData.groupId);
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
         reset();
         return true;

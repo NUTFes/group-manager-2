@@ -47,6 +47,24 @@ export const useGroupFormHooks = (
   // フォームをリアルタイム監視
   const values = watch();
 
+  // defaultValues は mount 時に一度しか評価されないため、団体データが
+  // フォームより後に届いた場合は空欄のままになる。到着時に流し込み直す。
+  useEffect(() => {
+    if (!groups) return;
+
+    reset({
+      name: groups.name ?? '',
+      projectName: groups.projectName ?? '',
+      isInternational: groups.isInternational ?? false,
+      isExternal: groups.isExternal ?? false,
+      groupCategoryId: groups.groupCategoryId ?? GROUP_CATEGORY.FOOD_SALES,
+      activity: groups.activity ?? '',
+      userId: groups.userId ?? userId,
+      fesYearId: groups.fesYearId ?? 1,
+      committee: groups.committee ? 1 : 0,
+    });
+  }, [groups, userId, reset]);
+
   const groupFormTexts = {
     fields: {
       name: t(groupLabels[0]),
@@ -102,26 +120,12 @@ export const useGroupFormHooks = (
   };
 
   // 新しい団体申請を作成
-  const {
-    trigger: create,
-    error: createError,
-    isMutating: createIsMutating,
-  } = useCreateGroups();
+  const { trigger: create, isMutating: createIsMutating } = useCreateGroups();
 
   // 既存の団体申請を更新
-  const {
-    trigger: update,
-    error: updateError,
-    isMutating: updateIsMutating,
-  } = useUpdateGroups(groups?.id ?? 0);
-
-  const registerFailedMessage = groupFormTexts.messages.registerFailed;
-
-  useEffect(() => {
-    if (createError || updateError) {
-      toast.error(registerFailedMessage);
-    }
-  }, [createError, updateError, registerFailedMessage]);
+  const { trigger: update, isMutating: updateIsMutating } = useUpdateGroups(
+    groups?.id ?? 0
+  );
 
   const onSubmit = async (formData: GroupForm) => {
     // 既存の団体申請がある場合は更新

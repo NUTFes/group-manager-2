@@ -243,9 +243,13 @@ test.describe('group application', () => {
   // groupId 確定後に /groups/:id を取り直している間もローディング表示に戻らない。
   // その結果 GroupForm が団体データ未到着のままマウントされ、
   // useForm の defaultValues(groups?.x ?? '') が空で確定してしまう。
-  // データが後から届いてもフォームは空欄のままで、登録済みなのに
-  // 「未変更」と判定されず送信ボタンが活性になる。
-  test('mounts the edit form empty when the group data has not arrived yet', async ({
+  // 修正済み: Group/hooks.ts の hasLoadedOnce は最初のロードで latch するため、
+  // groupId 確定後に /groups/:id を取り直している間もローディング表示に戻らず、
+  // GroupForm が団体データ未到着のままマウントされることがある。
+  // useForm の defaultValues は mount 時に一度しか評価されないので、以前は
+  // データが後から届いてもフォームが空欄のままだった。
+  // GroupForm/hooks.ts に到着時の reset() を足して流し込み直すようにした。
+  test('fills the edit form once the group data arrives late', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -261,17 +265,15 @@ test.describe('group application', () => {
       page.getByRole('button', { name: BUTTONS.cancel, exact: true })
     ).toBeVisible();
 
-    // 団体データは届いているのに、フォームは空欄のまま。
-    await expect(page.getByLabel(FIELDS.name)).toHaveValue('');
-    await expect(submitButton(page)).toBeEnabled();
+    // 遅れて届いた団体データがフォームへ流し込まれ、未変更なので送信は無効。
+    await expect(page.getByLabel(FIELDS.name)).toHaveValue('E2Eテスト団体');
+    await expect(submitButton(page)).toBeDisabled();
   });
 
-  // BUG(Phase 4-3): GroupForm/hooks.ts は catch 内の toast.error に加えて
-  // useEffect(createError || updateError) でも toast.error(registerFailedMessage) を呼ぶ。
-  // 新規登録が失敗すると、同じ文言の失敗トーストが2回表示される。
-  test('shows the same failure toast twice when creation fails', async ({
-    page,
-  }) => {
+  // 修正済み(旧 Phase 4-3): 以前は catch 内の toast.error に加えて
+  // useEffect(createError || updateError) でも toast.error を呼んでいたため、
+  // 登録失敗時に同じ文言のトーストが2回出ていた。useEffect 側を削除した。
+  test('shows the failure toast once when creation fails', async ({ page }) => {
     const state = scenarioState('registration');
     state.group = null;
     state.forceGroupSubmitError = true;
@@ -288,14 +290,14 @@ test.describe('group application', () => {
       .getByRole('button', { name: BUTTONS.register, exact: true })
       .click();
 
-    await expect(page.getByText('登録に失敗しました。')).toHaveCount(2);
+    await expect(page.getByText('登録に失敗しました。')).toHaveCount(1);
   });
 
-  // BUG(Phase 4-3): catch ブロックは更新用の updateFailed ("更新に失敗しました。") を
-  // 出すが、useEffect は create/update を区別せず常に registerFailed
-  // ("登録に失敗しました。") を出す。そのため更新失敗時は文言の異なる
-  // 2つの失敗トーストが同時に表示される。
-  test('shows two differently worded failure toasts when update fails', async ({
+  // 修正済み(旧 Phase 4-3): catch は更新用の "更新に失敗しました。" を出す一方、
+  // useEffect は create/update を区別せず常に "登録に失敗しました。" を出していたため、
+  // 更新失敗時は文言の異なる2つのトーストが同時に出ていた。
+  // 今は更新用の文言だけが1回出る。
+  test('shows only the update failure toast when update fails', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -304,12 +306,11 @@ test.describe('group application', () => {
 
     await page.goto('/home');
     await openGroup(page);
-    // BUGにより初回表示から既存値入りの編集フォームが開くので、そのまま変更して送信する。
     await page.getByLabel(FIELDS.name).fill('E2E更新失敗団体');
     await submitButton(page).click();
 
     await expect(page.getByText('更新に失敗しました。')).toBeVisible();
-    await expect(page.getByText('登録に失敗しました。')).toBeVisible();
+    await expect(page.getByText('登録に失敗しました。')).toHaveCount(0);
   });
 
   // BUG: home/index.tsx は Group の isDeadline に userPageSettings.isRegistGroup を

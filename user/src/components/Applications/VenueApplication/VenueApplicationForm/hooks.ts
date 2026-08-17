@@ -10,7 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { KeyedMutator, mutate } from 'swr';
+import { KeyedMutator } from 'swr';
+import { revalidateCheckAllRegistered } from '../../shared/revalidate';
 import {
   DEFAULT_ID,
   VenueApplicationType,
@@ -96,12 +97,6 @@ export const useVenueApplicationFormHooks = (
   };
 
   const onSubmit = async (formData: VenueApplicationType) => {
-    if (errors.first || errors.second || errors.third || errors.remark) {
-      console.error(errors);
-      toast.error(t('form.validation.inputError'));
-      return;
-    }
-
     try {
       await submitHandler(formData);
       toast.success(t('form.messages.registerSuccess'));
@@ -111,7 +106,7 @@ export const useVenueApplicationFormHooks = (
       if (handleClose) {
         handleClose();
       }
-      mutate(`/check_all_registered/${formData.groupId}`);
+      await revalidateCheckAllRegistered(formData.groupId);
     } catch {
       console.error(error);
       console.error(updateError);

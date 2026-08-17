@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
-import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
@@ -22,9 +21,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
     errors,
     onSubmit,
     setValue,
-    createError,
     createIsMutating,
-    updateError,
     updateIsMutating,
     convertToBoolean,
     validateEdit,
@@ -32,10 +29,6 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
     values,
     stageOptionFormTexts,
   } = useStageOptionFormHooks(stageOptions, groupId);
-
-  if (createError || updateError) {
-    toast.error(stageOptionFormTexts.messages.submitFailed);
-  }
 
   return (
     <FormContainer>

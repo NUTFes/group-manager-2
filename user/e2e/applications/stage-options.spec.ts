@@ -97,10 +97,11 @@ test.describe('stage options application', () => {
     });
   });
 
-  // BUG(Phase 4-1): 送信後の mutate() が文字列キーのため no-op で、
-  // 取得系SWRが再検証されない。結果、登録直後の一覧は入力値ではなく
-  // 未登録時の既定値（全て「いいえ」）を表示してしまう。
-  test('does not revalidate after create, so the summary shows stale values', async ({
+  // 修正済み(旧 Phase 4-1): 以前は mutate() に文字列キーを渡しており
+  // SWR のタプルキー [url, session] と一致せず no-op だったため、
+  // 登録直後の一覧が未登録時の既定値（全て「いいえ」）のままだった。
+  // revalidateByUrl / revalidateCheckAllRegistered で再検証するようにした。
+  test('revalidates after create, so the summary shows the submitted values', async ({
     page,
   }) => {
     const state = stageScenario('registration');
@@ -119,18 +120,13 @@ test.describe('stage options application', () => {
 
     await expect(page.getByText('送信しました')).toBeVisible();
 
-    // 全て「はい」で登録したのに、再検証されないため一覧は「いいえ」のまま。
+    // 全て「はい」で登録したので、一覧にも「はい」が反映される。
     // FormList は 1項目を <div><div>label</div></div><div>content</div> で描画するため、
     // ラベルから2つ上をたどって同じ項目の値を見る。
     const summary = page
       .getByText(LABELS.ownEquipment, { exact: true })
       .locator('xpath=../..');
-    await expect(summary.getByText('いいえ', { exact: true })).toBeVisible();
-
-    // /check_all_registered も再取得されない（初回ロードの1回のみ）。
-    expect(
-      state.requestedUrls.filter((url) => url.includes('/check_all_registered'))
-    ).toHaveLength(0);
+    await expect(summary.getByText('はい', { exact: true })).toBeVisible();
   });
 
   // 登録済みなら一覧表示になり、修正ボタンでフォームへ切り替わる。
