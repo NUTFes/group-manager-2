@@ -129,6 +129,36 @@ test.describe('rent items application', () => {
     });
   });
 
+  // API が500を返した場合、トーストとフォーム内バナーで別々のi18nキー(異なる文言)が
+  // 表示される(Power/FireEquipmentは同一文言を使い回すが、この群は独立している)。
+  test('shows different toast and banner text when the submit API fails', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openRentItems(page);
+    await selectRadio(page, FIELDS.question, 1);
+    await page.getByLabel(FIELDS.item).selectOption({ label: 'E2E テーブル' });
+
+    await page.route('**/rental_orders', async (route) => {
+      if (route.request().method() === 'POST') {
+        await route.fulfill({ status: 500, body: 'e2e forced failure' });
+        return;
+      }
+      await route.continue();
+    });
+
+    await submitButton(page).click();
+
+    await expect(page.getByText('物品申請の送信に失敗しました')).toBeVisible();
+    await expect(
+      page.getByText('送信中にエラーが発生しました。もう一度お試しください。')
+    ).toBeVisible();
+    expect(state.rentalOrders).toHaveLength(0);
+  });
+
   // addItem/remove: 物品を追加・削除できる。
   test('adds and removes item rows in the form', async ({ page }) => {
     const state = scenarioState('registration');
