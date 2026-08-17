@@ -167,6 +167,71 @@ test.describe('stage application', () => {
     });
   });
 
+  // refine: 準備+本番+片付けの合計が120分を超えると totalTime エラーで送信不可になる。
+  test('blocks submission when prep + perform + cleanup exceeds 120 minutes', async ({
+    page,
+  }) => {
+    const state = stageScenario('registration');
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openStage(page);
+
+    await fillStageForm(page, {
+      date: 1,
+      sunnyFirst: 101,
+      sunnySecond: 102,
+      rainyFirst: 201,
+      rainySecond: 202,
+      prepTime: '50',
+      performTime: '50',
+      cleanupTime: '30',
+    });
+
+    await expect(
+      page.getByText('準備、本番、片付けの合計時間が120分を超えています')
+    ).toBeVisible();
+    await expect(submitButton(page)).toBeDisabled();
+    expect(state.requestedUrls).toHaveLength(0);
+  });
+
+  // BUG(Phase 4-1相当、未修正): onSubmit成功時に
+  // mutate(`check_all_registered/${currentGroupId}`) を呼んでいるが、
+  // 先頭の '/' が無い文字列キーであり、SWRの実際のキーはタプル
+  // [`/check_all_registered/${id}`, session] のため一致せず no-op になる。
+  // そのため登録直後に check_all_registered が再取得されることはない
+  // (アコーディオンの登録済みバッジは次回のページ遷移まで更新されない)。
+  test('does not revalidate check_all_registered after a successful create (BUG: mutate key has no leading slash)', async ({
+    page,
+  }) => {
+    const state = stageScenario('registration');
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openStage(page);
+
+    await fillStageForm(page, {
+      date: 1,
+      sunnyFirst: 101,
+      sunnySecond: 102,
+      rainyFirst: 201,
+      rainySecond: 202,
+      prepTime: '20',
+      performTime: '60',
+      cleanupTime: '20',
+    });
+
+    const checkAllRegisteredBefore = state.groupFetchCounts.checkAllRegistered;
+    await submitButton(page).click();
+
+    await expect(page.getByText('ステージ希望を登録しました。')).toBeVisible();
+    // 少し待っても増えないことを確認する(増えていれば直った証拠になる)。
+    await page.waitForTimeout(300);
+    expect(state.groupFetchCounts.checkAllRegistered).toBe(
+      checkAllRegisteredBefore
+    );
+  });
+
   // 登録済みなら一覧表示になり、修正ボタンでフォームへ切り替わる。
   test('shows the summary with an edit button when already registered', async ({
     page,
@@ -188,5 +253,70 @@ test.describe('stage application', () => {
       .first()
       .click();
     await expect(page.getByLabel(FIELDS.sunnyFirst)).toBeVisible();
+  });
+
+  // 既存値を変更して送信すると、晴天/雨天それぞれ PUT /stage_orders/:id が呼ばれる。
+  test('updates existing sunny and rainy stage orders via PUT', async ({
+    page,
+  }) => {
+    const state = stageScenario('registration');
+    state.stageOrders = registeredStageOrders();
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openStage(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await page.getByLabel(FIELDS.performTime).fill('30');
+    await submitButton(page).click();
+
+    await expect(page.getByText('ステージ希望を更新しました。')).toBeVisible();
+    expect(state.requestedUrls).toContain('/stage_orders/13001');
+    expect(state.requestedUrls).toContain('/stage_orders/13002');
+
+    const sunny = state.stageOrders.find((order) => order.id === 13001);
+    const rainy = state.stageOrders.find((order) => order.id === 13002);
+    expect(sunny).toMatchObject({ use_time_interval: '30分' });
+    expect(rainy).toMatchObject({ use_time_interval: '30分' });
+  });
+
+  // useStageForm の送信ボタンは isValid のみで活性判定しており、isDirty は見ていない。
+  // そのため他群(stage-options等)と違い、既存の有効な値のまま修正モードに入った
+  // 時点で、何も変更していなくても送信ボタンは活性のまま。
+  test('enables the submit button on edit entry even before any change', async ({
+    page,
+  }) => {
+    const state = stageScenario('registration');
+    state.stageOrders = registeredStageOrders();
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openStage(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(page.getByLabel(FIELDS.sunnyFirst)).toBeVisible();
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
+  // 締切後は一覧のみで、修正ボタンを出さない。
+  test('hides the edit button after the deadline', async ({ page }) => {
+    const state = stageScenario('closed');
+    state.stageOrders = registeredStageOrders();
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openStage(page);
+
+    await expect(page.getByText('1日目 (2026-09-19) 土')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: BUTTONS.edit, exact: true })
+    ).toHaveCount(0);
+    expect(state.requestedUrls).toHaveLength(0);
   });
 });
