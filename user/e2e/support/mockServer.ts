@@ -22,6 +22,7 @@ import {
   type PublicRelationRecord,
   type ScenarioState,
   type StageOptionRecord,
+  type StageOrderRecord,
   type SubmissionApplicationType,
   type SubmissionStatusValue,
   type VenueMapRecord,
@@ -568,6 +569,94 @@ const stageOptionHandler: MockHandler = async ({
 };
 
 /**
+ * ステージ申請(晴天/雨天)。
+ * マスターデータ(開催日/晴天ステージ/雨天ステージ)は GET のみで固定。
+ * 作成/更新は useApiMutations(独自実装の postData/putData)経由の生fetchで、
+ * legacy 群と異なりJSONボディ(snake_case)がそのまま届く。
+ * サーバ側の envelope({status,data})も付けていないが、呼び出し側(submitStageOrder)は
+ * レスポンスの中身を見ないため、他群と同じ apiResponse() を使っても問題ない。
+ * 晴天/雨天は同じ POST /stage_orders に is_sunny違いで2回飛んでくる。
+ */
+const stageOrderId = (isSunny: boolean) => (isSunny ? 13001 : 13002);
+
+const stageOrderFromBody = (
+  body: Partial<StageOrderRecord>,
+  id: number
+): StageOrderRecord => ({
+  id,
+  group_id: Number(body.group_id ?? mockGroupId),
+  fes_date_id: Number(body.fes_date_id ?? 0),
+  is_sunny: Boolean(body.is_sunny),
+  stage_first: Number(body.stage_first ?? 0),
+  stage_second: Number(body.stage_second ?? 0),
+  use_time_interval: body.use_time_interval ?? '',
+  prepare_time_interval: body.prepare_time_interval ?? '',
+  cleanup_time_interval: body.cleanup_time_interval ?? '',
+});
+
+const upsertStageOrder = (state: ScenarioState, record: StageOrderRecord) => {
+  state.stageOrders = [
+    ...state.stageOrders.filter((order) => order.id !== record.id),
+    record,
+  ];
+};
+
+const stageOrderHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === '/api/v1/get_current_fes_dates') {
+    await fulfillJson(route, apiResponse(state.fesDates));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === '/sunny/stages') {
+    await fulfillJson(route, apiResponse(state.sunnyStages));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === '/rainy/stages') {
+    await fulfillJson(route, apiResponse(state.rainyStages));
+    return true;
+  }
+
+  if (method === 'GET' && pathname === '/stage_orders') {
+    await fulfillJson(route, apiResponse(state.stageOrders));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/stage_orders') {
+    state.requestedUrls.push(pathname);
+    const body = (await route
+      .request()
+      .postDataJSON()) as Partial<StageOrderRecord>;
+    const record = stageOrderFromBody(
+      body,
+      stageOrderId(Boolean(body.is_sunny))
+    );
+    upsertStageOrder(state, record);
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'PUT' && /^\/stage_orders\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    const body = (await route
+      .request()
+      .postDataJSON()) as Partial<StageOrderRecord>;
+    const record = stageOrderFromBody(body, id);
+    upsertStageOrder(state, record);
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  return false;
+};
+
+/**
  * 会場申請。作成/更新はステージオプションと同じく legacy フェッチャ経由で、
  * 値は snake_case のクエリ文字列で届く。
  */
@@ -778,6 +867,7 @@ const handlers: MockHandler[] = [
   unregisteredGroupHandler,
   fireEquipmentHandler,
   stageOptionHandler,
+  stageOrderHandler,
   venueApplicationHandler,
   viceRepresentativeHandler,
   publicRelationHandler,

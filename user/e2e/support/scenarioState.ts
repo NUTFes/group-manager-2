@@ -117,6 +117,54 @@ export type StageOptionRecord = {
   loud_sound: boolean;
 };
 
+/**
+ * GET /stage_orders?group_id=:id が返すステージ申請レコード(snake_case)。
+ * 晴天/雨天で1件ずつ(is_sunny で区別)存在しうる。
+ * 作成/更新は useApiMutations(独自実装の postData/putData)経由のJSONボディで、
+ * legacy 系と違い camelCase ではなく素の snake_case のまま送られる
+ * (snakecaseKeysを通すが、送信側の baseOrderData が元々snake_caseキーのため実質no-op)。
+ */
+export type StageOrderRecord = {
+  id: number;
+  group_id: number;
+  fes_date_id: number;
+  is_sunny: boolean;
+  stage_first: number;
+  stage_second: number;
+  use_time_interval: string;
+  prepare_time_interval: string;
+  cleanup_time_interval: string;
+};
+
+/** GET /api/v1/get_current_fes_dates が返す開催日(snake_case)。 */
+export type FesDateRecord = {
+  id: number;
+  days_num: number;
+  date: string;
+  day: string;
+};
+
+/** GET /sunny/stages, GET /rainy/stages が返すステージ候補。 */
+export type StageRecord = {
+  id: number;
+  name: string;
+};
+
+export const defaultFesDates: FesDateRecord[] = [
+  { id: 1, days_num: 1, date: '2026-09-19', day: '土' },
+  { id: 2, days_num: 2, date: '2026-09-20', day: '日' },
+];
+
+export const defaultSunnyStages: StageRecord[] = [
+  { id: 101, name: '晴れ A ステージ' },
+  { id: 102, name: '晴れ B ステージ' },
+];
+
+export const defaultRainyStages: StageRecord[] = [
+  { id: 201, name: '雨天 A ステージ' },
+  { id: 202, name: '雨天 B ステージ' },
+];
+
 /** src/api/unRegisteredGroupApi.ts の ORDER_TYPES と対応する。 */
 export const ORDER_TYPES = {
   rentalItem: 0,
@@ -235,6 +283,16 @@ export type ScenarioState = {
   fireEquipmentOrders: FireEquipmentOrder[];
   /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
   stageOption: StageOptionRecord | null;
+  /** ステージ申請のマスターデータ。既定値は defaultFesDates/defaultSunnyStages/defaultRainyStages。 */
+  fesDates: FesDateRecord[];
+  sunnyStages: StageRecord[];
+  rainyStages: StageRecord[];
+  /**
+   * ステージ申請。晴天/雨天それぞれ0〜1件。空配列は未登録。
+   * useGetStageOrders は status.code を見ず data.data の中身だけで判定するため、
+   * 他群のような apiNotFound() 表現は使わない。
+   */
+  stageOrders: StageOrderRecord[];
   places: PlaceRecord[];
   placeOrder: PlaceOrderRecord | null;
   viceRepresentative: ViceRepresentativeRecord | null;
@@ -334,6 +392,10 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
         ]
       : [],
   stageOption: null,
+  fesDates: defaultFesDates,
+  sunnyStages: defaultSunnyStages,
+  rainyStages: defaultRainyStages,
+  stageOrders: [],
   places: defaultPlaces,
   placeOrder: null,
   viceRepresentative: null,
