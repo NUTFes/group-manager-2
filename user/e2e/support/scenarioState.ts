@@ -174,6 +174,22 @@ export const ORDER_TYPES = {
   fireEquipment: 4,
 } as const;
 
+/**
+ * GET /employees/group/:id が返す従業員(snake_case)。
+ * 作成/更新/削除は @/hooks/useApi.ts の useAuthenticated* 系(JSONボディ)経由。
+ * student_id はフォーム上は文字列(8桁)だが、DBは数値で返す
+ * (EmployeesFrom/hooks.ts の convertEmployeesToFormData が String() で変換する前提のため)。
+ */
+export type EmployeeRecord = {
+  id: number;
+  group_id: number;
+  name: string;
+  student_id: number;
+  stool_test_id: number;
+  created_at: string;
+  updated_at: string;
+};
+
 /** GET /sub_reps/group/:id が返す副代表。 */
 export type ViceRepresentativeRecord = {
   id: number;
@@ -330,6 +346,10 @@ export type ScenarioState = {
   places: PlaceRecord[];
   placeOrder: PlaceOrderRecord | null;
   viceRepresentative: ViceRepresentativeRecord | null;
+  /** GET /employees/group/:id が返す従業員。空配列は未登録。 */
+  employees: EmployeeRecord[];
+  /** true の間だけ POST/PATCH /employees, /employees/upsert をHTTP 500で失敗させる。 */
+  forceEmployeeSubmitError: boolean;
   /** null は未登録。GET は status.code 404 を返し、アプリ側は undefined として扱う。 */
   publicRelation: PublicRelationRecord | null;
   /** true の間だけ POST/PATCH /public_relations をHTTP 500で失敗させる(二重トースト検証用)。 */
@@ -437,6 +457,8 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   places: defaultPlaces,
   placeOrder: null,
   viceRepresentative: null,
+  employees: [],
+  forceEmployeeSubmitError: false,
   publicRelation: null,
   forcePublicRelationSubmitError: false,
   venueMap: null,

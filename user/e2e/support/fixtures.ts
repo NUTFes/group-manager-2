@@ -3,6 +3,7 @@
 // (src/api/api.ts の request() が camelcase-keys で変換するため)。
 import type { Route } from '@playwright/test';
 import {
+  type EmployeeRecord,
   type FireEquipmentBody,
   type FireEquipmentOrder,
   ORDER_TYPES,
@@ -57,7 +58,9 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   stage_order: state.stageOrders.length > 0,
   stage_option: state.stageOption !== null,
   power_order: state.powerOrders.length > 0,
-  employee: false,
+  employee:
+    state.employees.length > 0 ||
+    state.unregisteredOrderTypes.includes(ORDER_TYPES.employee),
   venue_map: state.venueMap !== null,
   food_product: false,
   purchase_list: false,
@@ -112,6 +115,26 @@ export const powerOrderFromBody = (
   manufacturer: body.manufacturer ?? '',
   model: body.model ?? '',
   item_url: body.item_url ?? '',
+});
+
+/** POST /employees, PATCH /employees/:id, POST /employees/upsert のJSONボディから組み立てる。 */
+export const employeeFromBody = (
+  body: {
+    id?: number;
+    group_id?: number;
+    name?: string;
+    student_id?: number | string;
+    stool_test_id?: number;
+  },
+  id: number
+): EmployeeRecord => ({
+  id,
+  group_id: body.group_id ?? mockGroupId,
+  name: body.name ?? '',
+  student_id: Number(body.student_id ?? 0),
+  stool_test_id: body.stool_test_id ?? 1,
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-01-01T00:00:00.000Z',
 });
 
 export const fuelToApiValue = (

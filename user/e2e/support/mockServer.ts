@@ -8,6 +8,7 @@ import {
   apiNotFound,
   apiResponse,
   checkAllRegistered,
+  employeeFromBody,
   fireEquipmentFromBody,
   fulfillJson,
   powerOrderFromBody,
@@ -519,6 +520,98 @@ const fireEquipmentHandler: MockHandler = async ({
 };
 
 /**
+ * 従業員申請。作成/更新/削除は @/hooks/useApi.ts の useAuthenticated* 系
+ * (JSONボディ、snakecase-keysで変換)経由。legacy群と違いクエリではなく本文で届く。
+ * 従業員数が1人なら POST /employees(新規) か PATCH /employees/:id(更新)、
+ * 2人以上なら常に POST /employees/upsert が使われる(hooks.ts の分岐)。
+ * GET は他群と違い status.code を見ず data.data の中身だけで判定するため、
+ * apiNotFound() は使わない(空配列 = 未登録)。
+ */
+const employeesHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === `/employees/group/${mockGroupId}`) {
+    await fulfillJson(route, apiResponse(state.employees));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/employees/upsert') {
+    state.requestedUrls.push(pathname);
+    if (state.forceEmployeeSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    const body = (await route.request().postDataJSON()) as {
+      employees: Array<{
+        id?: number;
+        group_id?: number;
+        name?: string;
+        student_id?: number | string;
+        stool_test_id?: number;
+      }>;
+    };
+    let nextId = 15101;
+    state.employees = body.employees.map((employee) =>
+      employeeFromBody(employee, employee.id ?? nextId++)
+    );
+    await fulfillJson(route, apiResponse(state.employees));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/employees') {
+    state.requestedUrls.push(pathname);
+    if (state.forceEmployeeSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    const body = (await route.request().postDataJSON()) as {
+      group_id?: number;
+      name?: string;
+      student_id?: number | string;
+      stool_test_id?: number;
+    };
+    const record = employeeFromBody(body, 15001);
+    state.employees = [...state.employees, record];
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'PATCH' && /^\/employees\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    if (state.forceEmployeeSubmitError) {
+      await route.fulfill({ status: 500, body: 'e2e forced failure' });
+      return true;
+    }
+    const id = Number(pathname.split('/').at(-1));
+    const body = (await route.request().postDataJSON()) as {
+      group_id?: number;
+      name?: string;
+      student_id?: number | string;
+      stool_test_id?: number;
+    };
+    const record = employeeFromBody(body, id);
+    state.employees = state.employees.map((employee) =>
+      employee.id === id ? record : employee
+    );
+    await fulfillJson(route, apiResponse(record));
+    return true;
+  }
+
+  if (method === 'DELETE' && /^\/employees\/\d+$/.test(pathname)) {
+    state.requestedUrls.push(pathname);
+    const id = Number(pathname.split('/').at(-1));
+    state.employees = state.employees.filter((employee) => employee.id !== id);
+    await fulfillJson(route, apiResponse(null));
+    return true;
+  }
+
+  return false;
+};
+
+/**
  * ステージオプション申請。
  * 作成/更新は legacyPost/PatchFetcher 経由のため、値は本文ではなく
  * snake_case のクエリ文字列で届く点に注意。
@@ -934,6 +1027,7 @@ const handlers: MockHandler[] = [
   powerHandler,
   unregisteredGroupHandler,
   fireEquipmentHandler,
+  employeesHandler,
   stageOptionHandler,
   stageOrderHandler,
   venueApplicationHandler,
