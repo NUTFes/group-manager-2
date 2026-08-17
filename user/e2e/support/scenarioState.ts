@@ -245,6 +245,40 @@ export type VenueMapRecord = {
   updated_at: string;
 };
 
+/**
+ * GET /food_products/group/:id が返す販売品(snake_case)。
+ * 調理工程申請は isCooking な販売品ごとに1件対応するため、
+ * 空配列だと調理工程申請の入力欄自体が出ず警告文だけになる。
+ */
+export type FoodProductRecord = {
+  id: number;
+  group_id: number;
+  name: string;
+  is_cooking: boolean;
+  first_day_num: number;
+  second_day_num: number;
+  is_alcohol: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+/**
+ * GET /cooking_process_orders/group/:id が返す調理工程申請レコード(snake_case)。
+ * useGetCookingProcessOrder は status.code を見ず data.data の中身だけで判定するため、
+ * 他群のような apiNotFound() 表現は使わない(stageOrders と同じパターン)。
+ */
+export type CookingProcessOrderRecord = {
+  id: number;
+  group_id: number;
+  food_product_id: number;
+  pre_open_kitchen: boolean;
+  during_open_kitchen: boolean;
+  tent: string;
+  tent_ja: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type PageMode = 'registration' | 'resubmission' | 'closed';
 
 export type ScenarioState = {
@@ -304,6 +338,10 @@ export type ScenarioState = {
   venueMap: VenueMapRecord | null;
   /** true の間だけ POST/PATCH /venue_maps をHTTP 500で失敗させる(二重トースト検証用)。 */
   forceVenueMapSubmitError: boolean;
+  /** GET /food_products/group/:id が返す販売品。既定は空(調理工程申請は警告文になる)。 */
+  foodProducts: FoodProductRecord[];
+  /** GET /cooking_process_orders/group/:id が返す調理工程申請。空配列は未登録。 */
+  cookingProcessOrders: CookingProcessOrderRecord[];
   /** true の間だけ Imgur アップロードをHTTP 500で失敗させる。 */
   forceImgurUploadError: boolean;
   /** Imgur へのアップロードリクエスト回数。 */
@@ -403,6 +441,8 @@ export const scenarioState = (pageMode: PageMode): ScenarioState => ({
   forcePublicRelationSubmitError: false,
   venueMap: null,
   forceVenueMapSubmitError: false,
+  foodProducts: [],
+  cookingProcessOrders: [],
   forceImgurUploadError: false,
   imgurUploadCount: 0,
   requestedUrls: [],

@@ -61,7 +61,7 @@ export const checkAllRegistered = (state: ScenarioState) => ({
   venue_map: state.venueMap !== null,
   food_product: false,
   purchase_list: false,
-  cooking_process_order: false,
+  cooking_process_order: state.cookingProcessOrders.length > 0,
   fire_equipment_order: state.fireEquipmentOrders.length > 0,
   public_relation: state.publicRelation !== null,
 });

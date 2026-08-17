@@ -15,6 +15,7 @@ import {
   userPageSettings,
 } from './fixtures';
 import {
+  type CookingProcessOrderRecord,
   type FireEquipmentBody,
   type GroupRecord,
   type PlaceOrderRecord,
@@ -822,6 +823,73 @@ const venueMapHandler: MockHandler = async ({
   return false;
 };
 
+/**
+ * 調理工程申請。販売品(FoodProduct)ごとに0〜1件対応する。
+ * 作成/更新の区別はなく、常に POST /cooking_process_orders/upsert を
+ * useAuthenticatedPost(JSONボディ、snakecase-keysで深く変換)経由で呼ぶ。
+ * useGetCookingProcessOrder/useGetFoodProducts はどちらも status.code を見ず
+ * data.data の中身だけで判定するため、他群のような apiNotFound() は使わない。
+ */
+const cookingProcessOrderHandler: MockHandler = async ({
+  route,
+  pathname,
+  method,
+  state,
+}) => {
+  if (method === 'GET' && pathname === `/food_products/group/${mockGroupId}`) {
+    await fulfillJson(route, apiResponse(state.foodProducts));
+    return true;
+  }
+
+  if (
+    method === 'GET' &&
+    pathname === `/cooking_process_orders/group/${mockGroupId}`
+  ) {
+    await fulfillJson(route, apiResponse(state.cookingProcessOrders));
+    return true;
+  }
+
+  if (method === 'POST' && pathname === '/cooking_process_orders/upsert') {
+    state.requestedUrls.push(pathname);
+    const body = (await route.request().postDataJSON()) as {
+      cooking_process_orders: Array<{
+        id?: number;
+        group_id?: number;
+        food_product_id?: number;
+        pre_open_kitchen?: boolean;
+        during_open_kitchen?: boolean;
+        tent?: string;
+      }>;
+    };
+
+    let nextId = 14001;
+    state.cookingProcessOrders = body.cooking_process_orders.map((order) => {
+      const existing = order.id
+        ? state.cookingProcessOrders.find((o) => o.id === order.id)
+        : state.cookingProcessOrders.find(
+            (o) => o.food_product_id === order.food_product_id
+          );
+      const id = order.id ?? existing?.id ?? nextId++;
+      const record: CookingProcessOrderRecord = {
+        id,
+        group_id: order.group_id ?? mockGroupId,
+        food_product_id: order.food_product_id ?? 0,
+        pre_open_kitchen: order.pre_open_kitchen ?? false,
+        during_open_kitchen: order.during_open_kitchen ?? false,
+        tent: order.tent ?? '',
+        tent_ja: existing?.tent_ja ?? null,
+        created_at: existing?.created_at ?? '2026-01-01T00:00:00.000Z',
+        updated_at: '2026-01-01T00:00:00.000Z',
+      };
+      return record;
+    });
+    await fulfillJson(route, apiResponse(state.cookingProcessOrders));
+    return true;
+  }
+
+  return false;
+};
+
 const newsHandler: MockHandler = async ({ route, url }) => {
   if (url.includes('/news')) {
     await fulfillJson(route, []);
@@ -872,6 +940,7 @@ const handlers: MockHandler[] = [
   viceRepresentativeHandler,
   publicRelationHandler,
   venueMapHandler,
+  cookingProcessOrderHandler,
   newsHandler,
   emptyApplicationHandler,
 ];
