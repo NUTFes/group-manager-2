@@ -352,13 +352,22 @@ export default function HomePage() {
   const groupId = groupUserIdAndGroupCategoryId?.id;
   const displayGroupId = groupId ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
-  const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
     useGetCheckAllRegisteredGroups(groupId);
   const registrationStatus: CheckAllRegisteredGroups =
     checkAllRegisteredGroups ?? {};
   const isGroupRegistered = groupId ? registrationStatus.group === true : false;
+  // Group の isRegistered(= isGroupRegistered)は、他の申請と違い未解決の
+  // undefined を false に潰してしまうため、Group 側の「未解決なら編集モードを
+  // 初期化しない」ガードが効かない。check_all_registered は groupId が判明して
+  // から発火する分だけ必ず遅れるので、その解決まで待たないと登録済みでも
+  // 常に編集フォームで開いてしまう。
+  // 団体未作成(groupId なし)のときは永久ローディングを避けて解決済みとみなす。
+  const isGroupResolved =
+    userId !== undefined &&
+    !isLoadingGroupByUserId &&
+    (!groupId || checkAllRegisteredGroups !== undefined);
   const { healthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
 

@@ -136,13 +136,13 @@ test.describe('group application', () => {
     await expect(page.getByText('E2E登録団体')).toBeVisible();
   });
 
-  // BUG: Group/hooks.ts の isGroupResolved は useGetGroupByUserId の完了だけを見ており、
-  // isRegistered の元になる check_all_registered の解決を待たない。
-  // check_all_registered は groupId が判明してから初めて発火するため必ず1テンポ遅れ、
-  // isEditing を決める一度きりの初期化effectは常に isRegistered=false(未解決)を掴む。
-  // そのため「登録済み」でも、アコーディオンを開くと(FormListの要約ではなく)
-  // 既存値が入った編集フォームがいきなり開く。
-  test('opens directly into the edit form on first load even though the group is already registered', async ({
+  // 修正済み: 以前は home/index.tsx の isGroupResolved が useGetGroupByUserId の
+  // 完了だけを見ており、isRegistered の元になる check_all_registered の解決を
+  // 待たなかった。check_all_registered は groupId が判明してから発火するぶん必ず
+  // 遅れるうえ、Group の isRegistered は未解決の undefined を false に潰すため、
+  // isEditing を決める一度きりの初期化effectが常に「未登録」を掴んでいた。
+  // その結果、登録済みでもアコーディオンを開くと編集フォームが直接開いていた。
+  test('shows the summary with an edit button when already registered', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -151,28 +151,20 @@ test.describe('group application', () => {
     await page.goto('/home');
     await openGroup(page);
 
-    await expect(page.getByLabel(FIELDS.name)).toHaveValue(state.group!.name);
-    // validateEdit(): まだ何も変えていないので送信ボタンは無効。
-    await expect(submitButton(page)).toBeDisabled();
-
-    // 「キャンセル」で isEditing をトグルすると、ようやく本来のFormList要約になる。
-    await page
-      .getByRole('button', { name: BUTTONS.cancel, exact: true })
-      .click();
+    // 登録済みなので、まず FormList の要約が出る。
     await expect(page.getByText(state.group!.name)).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: BUTTONS.edit, exact: true })
-    ).toBeVisible();
+    await expect(page.getByLabel(FIELDS.name)).toHaveCount(0);
 
-    // 修正ボタンで再びフォームへ戻れる。
+    // 修正ボタンで編集フォームへ切り替わり、既存値が入っている。
     await page
       .getByRole('button', { name: BUTTONS.edit, exact: true })
       .first()
       .click();
     await expect(page.getByLabel(FIELDS.name)).toHaveValue(state.group!.name);
+    // validateEdit(): まだ何も変えていないので送信ボタンは無効。
+    await expect(submitButton(page)).toBeDisabled();
   });
 
-  // 前項のBUGにより初回表示から編集フォームが開くので、そのまま値を変更して送信できる。
   // PATCH /groups/:id が呼ばれ、update は mutateGroups() のみ呼ぶため
   // (create と違い mutateCheckAllRegisteredGroups / mutateGroupByUserId は呼ばれない)、
   // 自分の再取得だけが増える。
@@ -184,6 +176,10 @@ test.describe('group application', () => {
 
     await page.goto('/home');
     await openGroup(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
     await expect(page.getByLabel(FIELDS.name)).toHaveValue(state.group!.name);
 
     const groupsCountBefore = state.groupFetchCounts.groups;
@@ -211,10 +207,6 @@ test.describe('group application', () => {
 
   // validateEdit(): 既存の団体があるときだけ働く手書き等価比較。
   // 一つも変えていない間は送信ボタンが無効。
-  //
-  // 初回に開いたフォームは団体データ到着前にマウントされることがあり空欄になる
-  // (直下の BUG テストを参照)。ここでは一度キャンセルして一覧へ戻し、
-  // データが揃った状態で修正ボタンから開き直すことで経路を決定的にしている。
   test('keeps the submit button disabled until a value actually changes', async ({
     page,
   }) => {
@@ -223,10 +215,6 @@ test.describe('group application', () => {
 
     await page.goto('/home');
     await openGroup(page);
-
-    await page
-      .getByRole('button', { name: BUTTONS.cancel, exact: true })
-      .click();
     await page
       .getByRole('button', { name: BUTTONS.edit, exact: true })
       .first()
@@ -239,10 +227,6 @@ test.describe('group application', () => {
     await expect(submitButton(page)).toBeEnabled();
   });
 
-  // BUG(新規発見): Group/hooks.ts の hasLoadedOnce は最初のロードで latch するため、
-  // groupId 確定後に /groups/:id を取り直している間もローディング表示に戻らない。
-  // その結果 GroupForm が団体データ未到着のままマウントされ、
-  // useForm の defaultValues(groups?.x ?? '') が空で確定してしまう。
   // 修正済み: Group/hooks.ts の hasLoadedOnce は最初のロードで latch するため、
   // groupId 確定後に /groups/:id を取り直している間もローディング表示に戻らず、
   // GroupForm が団体データ未到着のままマウントされることがある。
@@ -253,17 +237,16 @@ test.describe('group application', () => {
     page,
   }) => {
     const state = scenarioState('registration');
-    // 到着を遅らせて、フォームが先にマウントされる経路を確定させる。
+    // 到着を遅らせて、フォームが団体データより先にマウントされる経路を確定させる。
     state.groupFetchDelayMs = 500;
     await mockHomePageApis(page, state);
 
     await page.goto('/home');
     await openGroup(page);
-
-    // キャンセルボタンは groups が届いてから描画されるので、これで到着を待てる。
-    await expect(
-      page.getByRole('button', { name: BUTTONS.cancel, exact: true })
-    ).toBeVisible();
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
 
     // 遅れて届いた団体データがフォームへ流し込まれ、未変更なので送信は無効。
     await expect(page.getByLabel(FIELDS.name)).toHaveValue('E2Eテスト団体');
@@ -306,6 +289,10 @@ test.describe('group application', () => {
 
     await page.goto('/home');
     await openGroup(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
     await page.getByLabel(FIELDS.name).fill('E2E更新失敗団体');
     await submitButton(page).click();
 
@@ -313,12 +300,12 @@ test.describe('group application', () => {
     await expect(page.getByText('登録に失敗しました。')).toHaveCount(0);
   });
 
-  // BUG: home/index.tsx は Group の isDeadline に userPageSettings.isRegistGroup を
-  // 渡しているが、これは pageMode に連動せず常に true を返す固定値(state駆動の
-  // isEditGroup フィールドは定義されているだけで実際には未使用)。そのため他の申請と
-  // 違い、pageMode: 'closed' でも Group は締切扱いにならず修正ボタンが出続け、
-  // 編集も引き続き行える。
-  test('stays editable past the deadline because isDeadline reads isRegistGroup (always true), not isEditGroup', async ({
+  // Group の isDeadline は他の申請と違い userPageSettings.isRegistGroup を読む。
+  // 団体申請にとっては登録受付期間そのものが締切なので、これは妥当な参照。
+  // モックの is_regist_group は pageMode に連動しない固定値 true なので、
+  // pageMode: 'closed' でも Group だけは編集可能なまま残る。
+  // (pageMode に連動する is_edit_group は型に定義されているが未使用。)
+  test('stays editable while group registration is still open', async ({
     page,
   }) => {
     const state = scenarioState('closed');
@@ -327,13 +314,6 @@ test.describe('group application', () => {
     await page.goto('/home');
     await openGroup(page);
 
-    // 登録済みでも初回はBUGにより編集フォームが開くので、一旦キャンセルして
-    // 本来のFormList要約表示に切り替える。
-    await page
-      .getByRole('button', { name: BUTTONS.cancel, exact: true })
-      .click();
-
-    // 他の申請なら締切後は修正ボタンが消えるが、Group はそうならず出続ける。
     await expect(
       page.getByRole('button', { name: BUTTONS.edit, exact: true })
     ).toBeVisible();
