@@ -9,9 +9,10 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { stageOptionLabels } from '../../label';
 import {
+  isUnchanged,
   revalidateByUrl,
   revalidateCheckAllRegistered,
-} from '../../shared/revalidate';
+} from '../../shared';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
@@ -111,19 +112,13 @@ export const useStageOptionFormHooks = (
     return value === '1' ? true : false;
   };
 
-  const validateEdit = () => {
-    if (stageOptions && values) {
-      if (
-        stageOptions.bgm === values.bgm &&
-        stageOptions.cameraPermission === values.cameraPermission &&
-        stageOptions.loudSound === values.loudSound &&
-        stageOptions.ownEquipment === values.ownEquipment
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const validateEdit = () =>
+    isUnchanged(stageOptions, values, [
+      'ownEquipment',
+      'bgm',
+      'cameraPermission',
+      'loudSound',
+    ]);
 
   return {
     handleSubmit,
