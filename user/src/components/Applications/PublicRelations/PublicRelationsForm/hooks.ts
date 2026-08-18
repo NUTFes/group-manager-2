@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   PublicRelationResponse,
   useCreatePublicRelation,
@@ -9,9 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
-import { isUnchanged } from '../../shared';
+import { isUnchanged, revalidateCheckAllRegistered } from '../../shared';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -169,18 +168,12 @@ export const usePublicRelationsFormHooks = (
   }
 
   // PublicRelation API フック
-  const {
-    trigger: createPr,
-    error: createPrError,
-    isMutating: createPrIsMutating,
-  } = useCreatePublicRelation();
+  const { trigger: createPr, isMutating: createPrIsMutating } =
+    useCreatePublicRelation();
 
   const updatePrId = publicRelation?.id || 0;
-  const {
-    trigger: updatePr,
-    error: updatePrError,
-    isMutating: updatePrIsMutating,
-  } = useUpdatePublicRelation(updatePrId);
+  const { trigger: updatePr, isMutating: updatePrIsMutating } =
+    useUpdatePublicRelation(updatePrId);
 
   // ファイル名はフォームの画像かAPIデータから取得する
   const [fileName, setFileName] = useState<string | null>(
@@ -311,12 +304,6 @@ export const usePublicRelationsFormHooks = (
     }
   };
 
-  useEffect(() => {
-    if (createPrError || updatePrError) {
-      toast.error(submitFailedMessage);
-    }
-  }, [createPrError, updatePrError, submitFailedMessage]);
-
   // 更新されたonSubmit実装
   const onSubmit = async (formData: PublicRelationsFormData) => {
     try {
@@ -365,7 +352,7 @@ export const usePublicRelationsFormHooks = (
 
       // データ更新後、mutateで最新データを取得
       await prMutate();
-      mutate(`check_all_registered/${groupId}`);
+      await revalidateCheckAllRegistered(groupId);
 
       toast.success(submitSuccessMessage);
       return true; // 送信成功を返す
@@ -390,8 +377,6 @@ export const usePublicRelationsFormHooks = (
     handleAnnounceChange,
     announceOptions,
     onSubmit,
-    createError: createPrError,
-    updateError: updatePrError,
     validateEdit,
     publicRelationsFormTexts,
   };

@@ -157,13 +157,14 @@ test.describe('public relations application', () => {
     await expect(page.getByLabel(FIELDS.text)).toHaveCount(0);
     await expect(page.getByText('E2E登録PR文')).toBeVisible();
 
-    // BUG: mutate(`check_all_registered/${groupId}`) は先頭スラッシュの無い
-    // 文字列キーで呼ばれており、useAuthenticatedGet が使う実際のタプルキー
-    // [url, session] とは一致しない。そのため登録済みバッジのもとになる
-    // check_all_registered は再検証されず、カウントは変化しない。
-    expect(state.groupFetchCounts.checkAllRegistered).toBe(
-      checkAllRegisteredBefore
-    );
+    // 修正済み(旧 Phase 4-1): 以前は mutate(`check_all_registered/${groupId}`) を
+    // 先頭スラッシュの無い文字列キーで呼んでおり、useAuthenticatedGet が使う
+    // 実際のタプルキー [url, session] と一致せず check_all_registered は
+    // 再検証されなかった。revalidateCheckAllRegistered() に置き換えたことで、
+    // 登録済みバッジのもとになる check_all_registered も再取得される。
+    await expect
+      .poll(() => state.groupFetchCounts.checkAllRegistered)
+      .toBeGreaterThan(checkAllRegisteredBefore);
   });
 
   // 正方形チェックは new Image() の読み込み後に同期的にsetErrorで反映される。
@@ -275,12 +276,13 @@ test.describe('public relations application', () => {
     expect(state.requestedUrls).toHaveLength(0);
   });
 
-  // BUG(二重toast): PublicRelationsForm/hooks.ts は catch内のtoast.errorに加えて
-  // useEffect(() => { if (createError || updateError) toast.error(...) }) を持つため、
-  // 送信自体(POST/PATCH /public_relations)が失敗すると同じ文言のトーストが2回出る。
-  // Group/GroupForm/hooks.ts では既に同種のuseEffectを削除済みだが、
-  // PublicRelationsはまだ未修正のため、ここでは現状(2回出る)をそのまま記録する。
-  test('shows the failure toast twice when the submission itself fails', async ({
+  // 修正済み(旧 Phase 4-2): 以前は PublicRelationsForm/hooks.ts が
+  // catch内のtoast.errorに加えて
+  // useEffect(() => { if (createError || updateError) toast.error(...) }) も
+  // 持っていたため、送信自体(POST/PATCH /public_relations)が失敗すると
+  // 同じ文言のトーストが2回出ていた。useEffect側を削除し、catch側の
+  // toast.errorのみが呼ばれるようにした。
+  test('shows the failure toast once when the submission itself fails', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -297,13 +299,13 @@ test.describe('public relations application', () => {
       .getByRole('button', { name: BUTTONS.register, exact: true })
       .click();
 
-    await expect(page.getByText(MESSAGES.submitFailed)).toHaveCount(2);
+    await expect(page.getByText(MESSAGES.submitFailed)).toHaveCount(1);
     expect(state.publicRelation).toBeNull();
   });
 
-  // Imgurアップロード自体が失敗した場合は例外がcreatePr呼び出し前にthrowされるため
-  // createError/updateErrorは発生せず、useEffect側は発火しない。
-  // (上のテストとの対比: 失敗の原因によってトーストが1回のときと2回のときがある)
+  // Imgurアップロード自体が失敗した場合も、createPr呼び出し前にthrowされた
+  // 例外がonSubmitのcatchで捕まりtoast.errorが1回呼ばれるだけ
+  // (上のテストと同じくcatch側のみが通知元になる)。
   test('shows the failure toast once when only the Imgur upload fails', async ({
     page,
   }) => {

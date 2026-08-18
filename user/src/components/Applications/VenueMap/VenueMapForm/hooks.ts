@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   VenueMapResponse,
   useCreateVenueMap,
@@ -9,9 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
-import { VenueMapFormData, venueMapFormSchema } from './schema';
+import { revalidateCheckAllRegistered } from '../../shared';
+import {
+  VALIDATION_MESSAGES,
+  VenueMapFormData,
+  venueMapFormSchema,
+} from './schema';
 
 export const useVenueMapFormHooks = (
   groupId: number,
@@ -105,8 +109,15 @@ export const useVenueMapFormHooks = (
     >;
 
     if (venueMap) {
-      // 既存データがある場合は、画像がなくてもエラーにしない
-      if (errors.image) {
+      // 既存データを編集する場合は、画像が必須ではない。
+      // ただし画像必須エラー以外（形式不正・サイズ超過など）は残し、
+      // 選択した画像が不正な場合はユーザーに検証エラーを見せる。
+      if (
+        errors.image &&
+        typeof errors.image === 'object' &&
+        errors.image.type === 'custom' &&
+        errors.image.message === VALIDATION_MESSAGES.IMAGE
+      ) {
         delete errors.image;
       }
     } else {
@@ -114,7 +125,7 @@ export const useVenueMapFormHooks = (
       if (!values.image) {
         errors.image = {
           type: 'custom',
-          message: 'applications.venueMap.validation.imageRequired',
+          message: VALIDATION_MESSAGES.IMAGE,
         };
       }
     }
@@ -140,18 +151,12 @@ export const useVenueMapFormHooks = (
     },
   });
 
-  const {
-    trigger: createVenueMap,
-    error: createError,
-    isMutating: createIsMutating,
-  } = useCreateVenueMap();
+  const { trigger: createVenueMap, isMutating: createIsMutating } =
+    useCreateVenueMap();
 
   const updateId = venueMap?.id || 0;
-  const {
-    trigger: updateVenueMap,
-    error: updateError,
-    isMutating: updateIsMutating,
-  } = usePatchVenueMap(updateId);
+  const { trigger: updateVenueMap, isMutating: updateIsMutating } =
+    usePatchVenueMap(updateId);
 
   const [fileName, setFileName] = useState<string | null>(
     venueMap?.pictureName || null
@@ -212,7 +217,7 @@ export const useVenueMapFormHooks = (
       });
 
       if (!response.ok) {
-        throw new Error(`エラー: ${response.status}`);
+        throw new Error(`Error: ${response.status}`);
       }
 
       const data = await response.json();
@@ -222,12 +227,6 @@ export const useVenueMapFormHooks = (
       throw new Error(t('applications.venueMap.messages.imgurUploadFailed'));
     }
   };
-
-  useEffect(() => {
-    if (createError || updateError) {
-      toast.error(t('applications.venueMap.messages.submitFailed'));
-    }
-  }, [createError, updateError, t]);
 
   const onSubmit = async (formData: VenueMapFormData) => {
     try {
@@ -255,7 +254,7 @@ export const useVenueMapFormHooks = (
       }
 
       await venueMapMutate();
-      mutate(`check_all_registered/${groupId}`);
+      await revalidateCheckAllRegistered(groupId);
 
       toast.success(t('applications.venueMap.messages.submitSuccess'));
       reset({ ...formData, image: undefined }); // 送信後は image フィールドをクリア

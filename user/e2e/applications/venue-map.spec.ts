@@ -1,18 +1,20 @@
 // 模擬店平面図申請(VenueMap)の特性化テスト。
 //
-// VenueMapはPublicRelationsのほぼクローンだが、静かに挙動がずれている:
-//   1. 手書きresolverラップが、編集時に画像エラーを種類を問わず全て消す
-//      (PublicRelationsはメッセージ文字列を照合し、required エラーだけを消す)。
+// VenueMapはPublicRelationsのほぼクローンだが、いくつか実装の違いが残る:
+//   1. 修正済み(旧Phase4-3): 手書きresolverラップは、以前は編集時に画像エラーを
+//      種類を問わず全て消していたが、PublicRelationsと同様にメッセージ文字列を
+//      照合し、required エラーだけを消すように揃えた。
 //   2. setValue('image', ..., { shouldDirty: true }) を使い、送信ボタンの
 //      無効化もPublicRelationsのvalidateEdit()ではなくRHFのisDirtyで判定する。
-//   3. Imgur失敗時の内部エラーが日本語ハードコード(`エラー: ${status}`)。
-//      PublicRelationsは英語(`Error: ${status}`)。
+//   3. 修正済み(旧Phase4-4): Imgur失敗時の内部エラーは以前は日本語ハードコード
+//      (`エラー: ${status}`)だったが、PublicRelationsと同じ英語
+//      (`Error: ${status}`)に揃えた。
 //   4. 画像エラーのキーがtextsオブジェクトではなく生のリテラル文字列
 //      (ただしUpload側のtranslateErrorがt(key, {defaultValue:key})を
 //      呼ぶため、翻訳キーとして解決できれば表示自体は正しい日本語になる)。
 //   5. 送信完了の通知が onSubmitted?.() コールバック(PublicRelationsは
 //      フォーム側で toEdit() を直接呼ぶ)。
-// 挙動を「直す」ことはせず、現状をそのまま記録する。
+// 上記の修正済み挙動以外は「現状こうである」をそのまま記録する。
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import path from 'node:path';
@@ -188,13 +190,14 @@ test.describe('venue map application', () => {
       page.getByRole('button', { name: /のプレビューを開く/ })
     ).toBeVisible();
 
-    // BUG: mutate(`check_all_registered/${groupId}`) は先頭スラッシュの無い
-    // 文字列キーで呼ばれており、useAuthenticatedGet が使う実際のタプルキー
-    // [url, session] とは一致しない。そのため登録済みバッジのもとになる
-    // check_all_registered は再検証されず、カウントは変化しない。
-    expect(state.groupFetchCounts.checkAllRegistered).toBe(
-      checkAllRegisteredBefore
-    );
+    // 修正済み(旧 Phase 4-1): 以前は mutate(`check_all_registered/${groupId}`) を
+    // 先頭スラッシュの無い文字列キーで呼んでおり、useAuthenticatedGet が使う
+    // 実際のタプルキー [url, session] と一致せず check_all_registered は
+    // 再検証されなかった。revalidateCheckAllRegistered() に置き換えたことで、
+    // 登録済みバッジのもとになる check_all_registered も再取得される。
+    await expect
+      .poll(() => state.groupFetchCounts.checkAllRegistered)
+      .toBeGreaterThan(checkAllRegisteredBefore);
   });
 
   // 登録済みなら一覧表示になり、画像プレビューと修正ボタンが出る。
@@ -268,19 +271,17 @@ test.describe('venue map application', () => {
     });
   });
 
-  // BUG: PublicRelationsの手書きresolverはエラーメッセージ文字列を照合して
-  // 「必須」エラーだけを消すが、VenueMapは `if (errors.image) delete errors.image`
-  // で編集時の画像エラーを種類を問わず全て消す。
+  // 修正済み(旧 Phase 4-3): 以前は編集時のresolverラップが
+  // `if (errors.image) delete errors.image` で画像エラーを種類を問わず全て
+  // 消していた。zodResolverは検証失敗時 result.values を空オブジェクトで返すため、
+  // エラーを後から消してもresult.valuesは空のまま戻らず、許可されていない形式の
+  // ファイルを選んでもエラー表示が一切出ないまま、実際には送信されず
+  // (formData.image が undefined)、既存の画像を維持したまま静かに「成功」して
+  // いた(ユーザーは新しい画像に差し替わったと誤認するが実際には差し替わらない)。
   //
-  // ただしzodResolverは検証失敗時、result.values を空オブジェクトで返す
-  // (エラーが1つでもあればフォーム全体のparseが失敗する)ため、resolverラップが
-  // errors.image を後から消してもresult.valuesはすでに空のまま。
-  // その結果: 許可されていない形式のファイルを選んでもエラー表示は一切出ず、
-  // ファイル名・プレビューはUI上「アップロード済み」に見えるが、実際に送信される
-  // formData.image は undefined になり、送信は「画像を変更しなかった」ものとして
-  // 既存の画像のまま静かに成功してしまう(ユーザーは新しい画像に差し替わったと
-  // 誤認するが、実際には差し替わっていない)。
-  test('silently drops an invalid image type when editing an existing venue map', async ({
+  // PublicRelationsと同様、画像必須エラーだけを消すように揃えたことで、
+  // 形式不正エラー(fileType)は消されずに残るようになった。
+  test('rejects an invalid image type when editing an existing venue map', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -296,24 +297,25 @@ test.describe('venue map application', () => {
       mimeType: 'image/gif',
       buffer: Buffer.from('e2e-not-a-real-image'),
     });
-    // クライアント側の見た目上は選択が反映される(検証はしていないため)。
+    // クライアント側の見た目上は選択が反映される(選択時点では検証していないため)。
     await expect(
       page.getByText('アップロード済み: wrong-type.gif')
     ).toBeVisible();
 
-    // 本来 schema.ts の fileType refine に引っかかるはずだが、編集時は
-    // resolverラップが errors.image を無条件で消すためエラー表示が出ない。
-    await expect(
-      page.getByText('ファイル形式はpngまたはjpegにしてください')
-    ).toHaveCount(0);
-
     await checkAllChecklistItems(page);
     await submitButton(page).click();
 
-    await expect(page.getByText(MESSAGES.submitSuccess)).toBeVisible();
-    // Imgurへは一切アップロードされない(formData.imageが空になっているため)。
+    // schema.ts の fileType refine に引っかかり、エラーが表示され送信はブロックされる。
+    await expect(
+      page.getByText('ファイル形式はpngまたはjpegにしてください')
+    ).toBeVisible();
+
+    // 検証を通過しないため送信自体が行われず、Imgurへのアップロードも起きない。
     expect(state.imgurUploadCount).toBe(0);
-    // 送信結果は既存の画像のまま(見た目は差し替えたはずなのに実データは不変)。
+    expect(state.requestedUrls).not.toContain(
+      `/venue_maps/${registeredVenueMapId}`
+    );
+    // 既存の画像はそのまま変わらない。
     expect(state.venueMap).toMatchObject({
       picture_name: 'existing.png',
       picture_path: 'https://i.imgur.com/existing.png',
@@ -338,12 +340,13 @@ test.describe('venue map application', () => {
     expect(state.requestedUrls).toHaveLength(0);
   });
 
-  // BUG(二重toast): VenueMapForm/hooks.ts は catch内のtoast.errorに加えて
-  // useEffect(() => { if (createError || updateError) toast.error(...) }) を持つため、
-  // 送信自体(POST/PATCH /venue_maps)が失敗すると同じ文言のトーストが2回出る。
-  // Group/GroupForm/hooks.ts では既に同種のuseEffectを削除済みだが、
-  // VenueMapはまだ未修正のため、ここでは現状(2回出る)をそのまま記録する。
-  test('shows the failure toast twice when the submission itself fails', async ({
+  // 修正済み(旧 Phase 4-2): 以前は VenueMapForm/hooks.ts が catch内の
+  // toast.errorに加えて
+  // useEffect(() => { if (createError || updateError) toast.error(...) }) も
+  // 持っていたため、送信自体(POST/PATCH /venue_maps)が失敗すると同じ文言の
+  // トーストが2回出ていた。useEffect側を削除し、catch側のtoast.errorのみが
+  // 呼ばれるようにした。
+  test('shows the failure toast once when the submission itself fails', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -359,18 +362,21 @@ test.describe('venue map application', () => {
       .getByRole('button', { name: BUTTONS.register, exact: true })
       .click();
 
-    await expect(page.getByText(MESSAGES.submitFailed)).toHaveCount(2);
+    await expect(page.getByText(MESSAGES.submitFailed)).toHaveCount(1);
     expect(state.venueMap).toBeNull();
   });
 
-  // Imgurアップロード自体が失敗した場合は例外がcreateVenueMap呼び出し前に
-  // throwされるため createError/updateError は発生せず、useEffect側は発火しない
-  // (上のテストとの対比: 失敗の原因によってトーストが1回のときと2回のときがある)。
-  // uploadImageToImgur内部で imgurUploadFailedメッセージへ詰め替えられた例外は
+  // Imgurアップロード自体が失敗した場合も、createVenueMap呼び出し前にthrowされた
+  // 例外がonSubmitのcatchで捕まりtoast.errorが1回呼ばれるだけ
+  // (上のテストと同じくcatch側のみが通知元になる)。
+  // uploadImageToImgur内部でimgurUploadFailedメッセージへ詰め替えられた例外は
   // onSubmitの外側catchでさらに揉み消され、結局 submitFailed の文言で
   // トーストされる(PublicRelationsと同じ構造)。
-  // また、VenueMapは内部エラーを `エラー: ${status}` と日本語ハードコードしており
-  // (PublicRelationsは `Error: ${status}` と英語)、これはコンソールログにのみ残る。
+  //
+  // 修正済み(旧 Phase 4-4): uploadImageToImgur内部の生エラーは以前
+  // `エラー: ${status}` と日本語ハードコードされていたが、PublicRelationsと
+  // 同じ英語(`Error: ${status}`)に揃えた。これはコンソールログにのみ残り、
+  // ユーザー向けトーストには影響しない。
   test('shows the failure toast once when only the Imgur upload fails', async ({
     page,
   }) => {
@@ -395,9 +401,8 @@ test.describe('venue map application', () => {
     await expect(page.getByText(MESSAGES.submitFailed)).toHaveCount(1);
     expect(state.requestedUrls).not.toContain('/venue_maps');
 
-    // BUG: uploadImageToImgur内部の生エラーが日本語ハードコード('エラー: 500')。
-    // ユーザーには翻訳済みメッセージが出るが、コンソールにはこの生文字列が残る。
-    expect(consoleErrors.some((text) => text.includes('エラー: 500'))).toBe(
+    // コンソールに残る生エラーは英語表記になった('Error: 500')。
+    expect(consoleErrors.some((text) => text.includes('Error: 500'))).toBe(
       true
     );
   });
