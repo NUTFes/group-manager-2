@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   HealthCenterSubmissionStatus,
   isResubmissionStatus,
@@ -8,9 +7,11 @@ import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import { venueMapLabels } from '../label';
+import { useEditableSection } from '../shared';
 
 export const useVenueMapHooks = (
   groupId: number,
+  isRegistered?: boolean,
   status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
@@ -21,14 +22,13 @@ export const useVenueMapHooks = (
     mutateVenueMap,
   } = useGetVenueMap(groupId);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-
   const isResubmission = isResubmissionStatus(status);
 
-  const toEdit = () => {
-    setIsEditing(!isEditing);
-  };
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading: isFetching, isRegistered });
 
   const updateStatus = useUpdateSubmissionStatusFor(groupId, 'venue_map');
 
@@ -44,14 +44,10 @@ export const useVenueMapHooks = (
       }
     }
 
-    setIsEditing(false);
-  };
-
-  useEffect(() => {
-    if (!isFetching) {
-      setHasLoadedOnce(true);
+    if (isEditing) {
+      toEdit();
     }
-  }, [isFetching]);
+  };
 
   const venueMapTexts = {
     title: t('applications.venueMap.title'),
@@ -67,7 +63,7 @@ export const useVenueMapHooks = (
 
   return {
     venueMap,
-    isLoading: isFetching && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     hasError: !!fetchError,
     isEditing,
     toEdit,

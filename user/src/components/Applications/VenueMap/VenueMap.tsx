@@ -22,7 +22,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline?: boolean;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   venueMapData: ReturnType<typeof useVenueMapHooks>['venueMap'];
   formItems: FormItem[];
@@ -104,7 +104,7 @@ const VenueMap: FC<VenueMapProps> = ({
   isRegistered,
   status,
 }) => {
-  const venueMapHooks = useVenueMapHooks(groupId, status);
+  const venueMapHooks = useVenueMapHooks(groupId, isRegistered, status);
   const {
     venueMap,
     isLoading,
