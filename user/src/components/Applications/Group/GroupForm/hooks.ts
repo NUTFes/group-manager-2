@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { groupLabels } from '../../label';
+import { isUnchanged } from '../../shared';
 import { GroupForm, groupSchema } from './schema';
 
 export const useGroupFormHooks = (
@@ -156,21 +157,15 @@ export const useGroupFormHooks = (
     }
   };
 
-  const validateEdit = () => {
-    if (groups && values) {
-      if (
-        groups.name === values.name &&
-        groups.projectName === values.projectName &&
-        groups.isInternational === values.isInternational &&
-        groups.isExternal === values.isExternal &&
-        groups.groupCategoryId === values.groupCategoryId &&
-        groups.activity === values.activity
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const validateEdit = () =>
+    isUnchanged(groups, values, [
+      'name',
+      'projectName',
+      'isInternational',
+      'isExternal',
+      'groupCategoryId',
+      'activity',
+    ]);
 
   return {
     handleSubmit,
