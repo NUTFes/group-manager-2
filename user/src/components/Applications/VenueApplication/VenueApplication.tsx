@@ -15,7 +15,7 @@ const VenueApplication: FC<VenueApplicationProps> = ({
   isRegistered,
   groupId,
 }) => {
-  const venueApplicationHooks = useVenueApplicationHooks(groupId);
+  const venueApplicationHooks = useVenueApplicationHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu

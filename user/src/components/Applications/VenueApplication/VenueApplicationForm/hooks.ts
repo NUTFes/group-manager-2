@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { KeyedMutator } from 'swr';
-import { revalidateCheckAllRegistered } from '../../shared/revalidate';
+import { isUnchanged, revalidateCheckAllRegistered } from '../../shared';
 import {
   DEFAULT_ID,
   VenueApplicationType,
@@ -114,19 +114,8 @@ export const useVenueApplicationFormHooks = (
     }
   };
 
-  const validateEdit = () => {
-    if (placeOrder && values) {
-      if (
-        placeOrder.first === values.first &&
-        placeOrder.second === values.second &&
-        placeOrder.third === values.third &&
-        placeOrder.remark === values.remark
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const validateEdit = () =>
+    isUnchanged(placeOrder, values, ['first', 'second', 'third', 'remark']);
 
   return {
     placesLoading,
