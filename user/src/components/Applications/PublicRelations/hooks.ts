@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
 import { usePublicRelationData } from '@/api/publicRelationsApi';
 import { useTranslation } from 'next-i18next';
 import { publicRelationLabels } from '../label';
+import { useEditableSection } from '../shared';
 
 export const usePublicRelationsHooks = (
   groupId: number,
@@ -44,31 +44,14 @@ export const usePublicRelationsHooks = (
     }
   };
 
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  useEffect(() => {
-    if (!prIsLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [prIsLoading]);
-
-  useEffect(() => {
-    if (hasInitializedEditing.current || isRegistered === undefined) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered]);
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading: prIsLoading, isRegistered });
 
   // ローディング状態とエラー状態はpublicRelationのみを参照する
-  const isLoading = prIsLoading && !hasLoadedOnce;
+  const isLoading = isSectionLoading;
   const hasError = prError;
 
   // フォーム送信後にデータを再取得するための関数

@@ -11,6 +11,7 @@ import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
+import { isUnchanged } from '../../shared';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -190,18 +191,20 @@ export const usePublicRelationsFormHooks = (
   const values = watch();
 
   // 変更がある場合のみ送信ボタンを有効化する
-  const validateEdit = () => {
-    if (!publicRelation) return false;
-
-    const hasTextChanged = values.prText !== publicRelation.blurb;
-    // アナウンス選択の変更をチェック
-    const isAnnounceRequested = publicRelation.isAnnouncementRequested || false;
-    const hasAnnounceChanged =
-      (values.announce === 'yes') !== isAnnounceRequested;
-    const hasImageChanged = !!values.image;
-
-    return !(hasTextChanged || hasAnnounceChanged || hasImageChanged);
-  };
+  // image は元データに対応する値がないため、常に undefined と比較する
+  // （values.image が選択されていれば不一致になり「変更あり」を表す）
+  const validateEdit = () =>
+    isUnchanged(
+      publicRelation
+        ? {
+            prText: publicRelation.blurb,
+            announce: publicRelation.isAnnouncementRequested ? 'yes' : 'no',
+            image: undefined,
+          }
+        : undefined,
+      values,
+      ['prText', 'announce', 'image']
+    );
 
   const validateImage = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
