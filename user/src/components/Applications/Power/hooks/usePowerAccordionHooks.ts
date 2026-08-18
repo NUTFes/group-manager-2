@@ -5,6 +5,10 @@ export const usePowerAccordionHooks = () => {
 
   const powerAccordionTexts = {
     title: t('applications.power.title'),
+    deadline: {
+      title: t('applications.power.deadline.title'),
+      description: t('applications.power.deadline.description'),
+    },
   };
 
   return {

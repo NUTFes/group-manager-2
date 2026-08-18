@@ -7,16 +7,17 @@
 //   削除ボタンの表示可否は form.getValues() をレンダー中に呼んで判定している
 //   (index > 0 かつ productName が空のときだけ表示)。
 // - 「はい/いいえ」を選ぶ前(undecided)の画面は PowerFormView ではなく
-//   PowerNegativeView が使われる(ラジオのみのはずが、実際には register ボタンも
-//   一緒に描画される。下の BUG テストで固定する)。
+//   PowerNegativeView が使われる(ラジオのみで、register ボタンは
+//   「いいえ」を明示的に選ぶまで出さない。以前は選択前から出ていたバグを
+//   修正済み)。
 // - 送信は常に PUT /power_orders/submit 一本(use_power: true/false で
 //   登録/申請なしを切り替える)。新規登録・更新・申請なしのいずれも同じ
 //   エンドポイントで、ボタン文言も常に「登録」のまま(火気申請のように
 //   編集中だけ「保存」に変わることはない)。
-// - PowerSummaryView.isDeadline は名前に反して「締切前(編集可能)」を意味する
-//   反転した命名(Power.tsx が isDeadline={!isFormLocked} を渡す)。
-//   結果としての見た目(締切後は修正・削除ボタンなし)は他群と同じなので、
-//   ここでは実際の表示結果だけを assert する。
+// - PowerSummaryView は `isEditable` prop(締切前、または再提出可能なステータス
+//   で編集できるか)を受け取る。以前は `isDeadline` という名前で true が
+//   「ロックされていない(編集可能)」を意味する反転した命名だったため改名した
+//   (見た目は変わらない)。
 // - 一覧からの削除(handleDeleteDevice)はAPIを叩かない。残り0件ならラジオ
 //   「いいえ」の登録待ち画面に、1件以上残るならフォーム編集画面に切り替わる
 //   だけで、実際にPUT /power_orders/submitが飛ぶのは改めて登録ボタンを
@@ -73,11 +74,10 @@ const openPower = (page: Page) =>
     .click();
 
 test.describe('power application', () => {
-  // BUG: 未登録時、「はい/いいえ」を選ぶ前でもラジオと一緒に登録ボタンが
-  // 表示されてしまう(申請しない登録用のボタンが、選択前から出る)。
-  // 火気使用申請は同じ状況で入力フォーム自体を出さないだけだが、
-  // 電力申請は"申請しない"登録ボタンまで一緒に見えている点が異なる。
-  test('BUG: shows a register button alongside the yes/no question before choosing', async ({
+  // 修正済み: 以前は未登録時、「はい/いいえ」を選ぶ前でもラジオと一緒に
+  // 「申請しない」登録用の登録ボタンが表示されてしまっていた。
+  // 火気使用申請と同様、「いいえ」を明示的に選ぶまでは登録ボタンを出さない。
+  test('does not show a register button alongside the yes/no question before choosing', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -88,10 +88,10 @@ test.describe('power application', () => {
 
     await expect(page.getByText(FIELDS.question)).toBeVisible();
     await expect(page.getByLabel(FIELDS.productName)).toHaveCount(0);
-    // ラジオが未選択のままでも登録ボタンが見えている(BUG)。
+    // ラジオが未選択の間は登録ボタンが出ない。
     await expect(
       page.getByRole('button', { name: BUTTONS.register, exact: true })
-    ).toBeVisible();
+    ).toHaveCount(0);
   });
 
   // 「はい」を選ぶと登録フォームが現れる。
@@ -449,11 +449,11 @@ test.describe('power application', () => {
     expect(state.requestedUrls).toHaveLength(0);
   });
 
-  // BUG: 締切後で何も登録していない(機器なし・不使用マーカーもなし)場合でも、
-  // 「不使用」を選んだかのように「電力申請は不要（登録済み）」と表示してしまう。
-  // 火気使用申請は同じ状況で「申請期限が過ぎています」という締切案内になるが、
-  // 電力申請にはその分岐がなく、未回答のまま不使用扱いの文言が出る。
-  test('BUG: shows the not-applying notice after the deadline even when nothing was ever registered', async ({
+  // 修正済み: 以前は締切後で何も登録していない(機器なし・不使用マーカーもなし)
+  // 場合でも、「不使用」を選んだかのように「電力申請は不要（登録済み）」と
+  // 表示してしまっていた。火気使用申請と同様、この場合は「申請期限が
+  // 過ぎています」という締切案内を表示するように分岐を追加した。
+  test('shows the deadline notice after the deadline when nothing was ever registered', async ({
     page,
   }) => {
     const state = scenarioState('closed');
@@ -463,7 +463,8 @@ test.describe('power application', () => {
     await page.goto('/home');
     await openPower(page);
 
-    await expect(page.getByText('電力申請は不要（登録済み）')).toBeVisible();
+    await expect(page.getByText('申請期限が過ぎています')).toBeVisible();
+    await expect(page.getByText('電力申請は不要（登録済み）')).toHaveCount(0);
     expect(state.requestedUrls).toHaveLength(0);
   });
 
@@ -474,7 +475,7 @@ test.describe('power application', () => {
     const state = scenarioState('registration');
     state.powerOrders = [];
     // usePowerApplication自身は un_registered_groups へPOSTしないため
-    // (下のBUGテスト参照)、未登録マーカーをstate直接操作で再現する。
+    // (上のテスト参照)、未登録マーカーをstate直接操作で再現する。
     state.unregisteredOrderTypes = [ORDER_TYPES.power];
     await mockHomePageApis(page, state);
 

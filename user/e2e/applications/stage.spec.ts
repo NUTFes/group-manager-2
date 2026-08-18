@@ -195,13 +195,14 @@ test.describe('stage application', () => {
     expect(state.requestedUrls).toHaveLength(0);
   });
 
-  // BUG(Phase 4-1相当、未修正): onSubmit成功時に
-  // mutate(`check_all_registered/${currentGroupId}`) を呼んでいるが、
+  // 修正済み(旧 Phase 4-1相当): 以前は onSubmit成功時に
+  // mutate(`check_all_registered/${currentGroupId}`) を呼んでいたが、
   // 先頭の '/' が無い文字列キーであり、SWRの実際のキーはタプル
-  // [`/check_all_registered/${id}`, session] のため一致せず no-op になる。
-  // そのため登録直後に check_all_registered が再取得されることはない
-  // (アコーディオンの登録済みバッジは次回のページ遷移まで更新されない)。
-  test('does not revalidate check_all_registered after a successful create (BUG: mutate key has no leading slash)', async ({
+  // [`/check_all_registered/${id}`, session] のため一致せず no-op だった。
+  // shared/revalidate.ts の revalidateCheckAllRegistered() に置き換えたことで、
+  // 登録直後に check_all_registered が再取得されるようになった
+  // (アコーディオンの登録済みバッジもその場で更新される)。
+  test('revalidates check_all_registered after a successful create', async ({
     page,
   }) => {
     const state = stageScenario('registration');
@@ -225,11 +226,9 @@ test.describe('stage application', () => {
     await submitButton(page).click();
 
     await expect(page.getByText('ステージ希望を登録しました。')).toBeVisible();
-    // 少し待っても増えないことを確認する(増えていれば直った証拠になる)。
-    await page.waitForTimeout(300);
-    expect(state.groupFetchCounts.checkAllRegistered).toBe(
-      checkAllRegisteredBefore
-    );
+    await expect
+      .poll(() => state.groupFetchCounts.checkAllRegistered)
+      .toBeGreaterThan(checkAllRegisteredBefore);
   });
 
   // 登録済みなら一覧表示になり、修正ボタンでフォームへ切り替わる。

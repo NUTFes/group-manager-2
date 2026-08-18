@@ -9,8 +9,8 @@ import { StageFormData } from '@/utils/validate/validate';
 import { useTranslation } from 'next-i18next';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { stageLabels } from '@/components/Applications/label';
+import { revalidateCheckAllRegistered } from '../../shared';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -150,7 +150,7 @@ export const useStageFormHooks = (groupId: number) => {
       );
 
       if (result.success) {
-        mutate(`check_all_registered/${currentGroupId}`);
+        await revalidateCheckAllRegistered(currentGroupId);
         toast.success(
           hasExisting
             ? t('applications.stage.messages.updateSuccess')

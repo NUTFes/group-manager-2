@@ -527,6 +527,10 @@
           "no": "いいえ"
         }
       },
+      "deadline": {
+        "title": "申請期限が過ぎています",
+        "description": "電力申請の締切期限が過ぎているため、新規申請はできません。"
+      },
       "summary": {
         "noApplication": {
           "label": "電力申請は不要（登録済み）",

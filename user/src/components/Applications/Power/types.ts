@@ -73,5 +73,8 @@ export interface PowerSummaryViewProps {
   devices: Device[];
   onEdit: () => void;
   onDeleteDevice: (id: number) => void;
-  isDeadline: boolean;
+  // 締切前、または締切後でも再提出可能なステータスのため編集できる状態か。
+  // 以前は `isDeadline` という名前で true が「ロックされていない(編集可能)」を
+  // 意味する反転した命名だったため、実態に合わせて改名した。
+  isEditable: boolean;
 }
