@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
@@ -18,6 +17,7 @@ import {
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
 import { useApiMutations } from '@/hooks/useApi';
+import { useEditableSection } from '../shared';
 
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
@@ -29,9 +29,6 @@ export const useFoodProductHooks = (
   status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const isResubmission = isResubmissionStatus(status);
 
@@ -83,9 +80,11 @@ export const useFoodProductHooks = (
     },
   ];
 
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading, isRegistered });
 
   const updateStatus = useUpdateSubmissionStatusFor(groupId, 'food_product');
 
@@ -162,7 +161,9 @@ export const useFoodProductHooks = (
       if (!statusUpdated) return;
 
       // ステータス更新まで成功した時だけビューモードへ戻す
-      setIsEditing(false);
+      if (isEditing) {
+        toEdit();
+      }
 
       toast.success(t('applications.foodProduct.messages.updateSuccess'), {
         position: 'top-right',
@@ -239,7 +240,9 @@ export const useFoodProductHooks = (
       if (!statusUpdated) return;
 
       // 成功時のみビューモードに戻す
-      setIsEditing(false);
+      if (isEditing) {
+        toEdit();
+      }
 
       toast.success(t('applications.foodProduct.messages.createSuccess'), {
         position: 'top-right',
@@ -351,22 +354,7 @@ export const useFoodProductHooks = (
     }
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (hasInitializedEditing.current || isRegistered === undefined) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered]);
-
-  const isLoadingWithMutation = (isLoading && !hasLoadedOnce) || isMutating;
+  const isLoadingWithMutation = isSectionLoading || isMutating;
 
   const refetchData = async () => {
     await mutateFoodProducts();
