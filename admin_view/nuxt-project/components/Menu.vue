@@ -230,6 +230,7 @@ export default {
           icon: "assignment_ind",
           click: "/rental_item_location"
         },
+        { title: "会場割り当て", icon: "pin_drop", click: "/assign_group_places" },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         {
@@ -250,7 +251,6 @@ export default {
         { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
         { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
         { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
-        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
         { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
         { title: "会場アナウンス文申請", icon: "campaign", click: "/announcement" },
       ],
