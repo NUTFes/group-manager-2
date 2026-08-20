@@ -16,6 +16,7 @@
 /playwright-report
 /test-results
 /.playwright-browsers
+/storybook-static
 
 # next.js
 /.next/
