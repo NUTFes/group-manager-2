@@ -496,6 +496,11 @@ export const useEmployeesApplicationHooks = (
 
   /**
    * フォーム送信時の処理
+   *
+   * 「いいえ」選択時はtype="button"のhandleNoApplicationClickが直接呼ばれ、
+   * <form onSubmit>を経由しない(NEED_APPLICATION.NOのボタンだけtype="button"
+   * になっている)。そのためこのhandleSubmitがdata.needApplication === NO で
+   * 呼ばれることは無く、以前あったNO分岐は到達しないデッドコードだった。
    */
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
@@ -506,10 +511,6 @@ export const useEmployeesApplicationHooks = (
           needApplication: data.needApplication,
           employees: data.employees,
         });
-      } else if (data.needApplication === NEED_APPLICATION.NO) {
-        // 従業員申請なしの場合
-        await employeesBusinessHooks.handleNoApplicationSubmit();
-        await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       }
 
       // 再提出完了時
