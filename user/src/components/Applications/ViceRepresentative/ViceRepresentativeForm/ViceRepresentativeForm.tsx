@@ -33,6 +33,8 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
     values,
     setIsIndividualById,
     isIndividual,
+    isSubmitting,
+    validateEdit,
   } = useViceRepresentativeFormHook(
     viceRepresentative,
     groupId,
@@ -106,7 +108,12 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
           )}
         </div>
         <div className="mt-10 flex w-full items-center justify-center">
-          <Button size="pc" color="main" type="submit">
+          <Button
+            size="pc"
+            color="main"
+            type="submit"
+            isDisable={isSubmitting || validateEdit()}
+          >
             {viceRepresentative
               ? viceRepresentativeFormTexts.buttons.save
               : viceRepresentativeFormTexts.buttons.register}

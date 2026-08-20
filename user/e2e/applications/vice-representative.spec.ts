@@ -10,7 +10,12 @@ import {
   mockGroupId,
   scenarioState,
 } from '../support/scenarioState';
-import { APPLICATION_TITLES, BUTTONS, selectRadio } from '../support/selectors';
+import {
+  APPLICATION_TITLES,
+  BUTTONS,
+  selectRadio,
+  submitButton,
+} from '../support/selectors';
 
 const FIELDS = {
   isIndividual: '一人での参加ですか？',
@@ -242,6 +247,52 @@ test.describe('vice representative application', () => {
     await expect(page.getByText('送信しました。')).toBeVisible();
     expect(state.requestedUrls).toContain('/sub_reps/9001');
     expect(state.viceRepresentative).toMatchObject({ name: '長岡 次郎' });
+  });
+
+  // B-2(送信ボタン無効化の統一): 他群のvalidateEdit()と同じisUnchanged()判定を追加した。
+  // 編集フォームを開いた直後(値が既存データと1つも変わっていない)は無効、
+  // 1項目でも変更すれば有効になる。
+  test('keeps the submit button disabled until a value actually changes', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.viceRepresentative = registeredViceRepresentative();
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openViceRepresentative(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page.getByLabel(FIELDS.name).fill('長岡 次郎');
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
+  // isUnchanged()はname/studentId/gradeId/departmentId/email/telのみを見るため、
+  // 「一人での参加」への切り替えはこれらの値を変えなくても常に送信可能でなければならない
+  // (でなければ個人参加への切り替え自体が送信できなくなってしまう)。
+  test('keeps the submit button enabled when switching to individual participation without other changes', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.viceRepresentative = registeredViceRepresentative();
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openViceRepresentative(page);
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await selectRadio(page, FIELDS.isIndividual, INDIVIDUAL);
+    await expect(submitButton(page)).toBeEnabled();
   });
 
   // 締切後は一覧のみで、修正ボタンを出さない。

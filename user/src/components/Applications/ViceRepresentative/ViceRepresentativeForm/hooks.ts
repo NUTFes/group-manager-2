@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { viceRepresentativeLabels } from '@/components/Applications/label';
+import { isUnchanged } from '../../shared';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
@@ -65,7 +66,7 @@ export const useViceRepresentativeFormHook = (
     handleSubmit,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
   } = useForm<ViceRepresentativeForm>({
@@ -88,6 +89,20 @@ export const useViceRepresentativeFormHook = (
   });
 
   const values = watch();
+
+  // 送信ボタンの無効化判定(B-2: isSubmitting || isUnchanged(...)へ統一)。
+  // isIndividualがtrueの間は、name等の項目を変えていなくても
+  // 「一人での参加」への切り替え自体が意味のある変更なので、常に送信可能にする。
+  const validateEdit = () =>
+    !isIndividual &&
+    isUnchanged(viceRepresentative, values, [
+      'name',
+      'studentId',
+      'gradeId',
+      'departmentId',
+      'email',
+      'tel',
+    ]);
 
   const onSubmit = (onSuccess: () => void) =>
     handleSubmit(async (data) => {
@@ -133,6 +148,8 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
     onSubmit,
+    isSubmitting,
+    validateEdit,
     isIndividual,
     setIsIndividualById,
     values,
