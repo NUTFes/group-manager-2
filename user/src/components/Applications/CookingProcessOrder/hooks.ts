@@ -80,6 +80,7 @@ export const useCookingProcessOrder = (
     useUpsertCookingProcessOrders();
 
   const methods = useForm<CookingProcessOrderSchema>({
+    mode: 'onChange',
     resolver: zodResolver(cookingProcessOrderSchema),
     defaultValues: {
       cookingProcessOrders: [],

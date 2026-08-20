@@ -36,6 +36,7 @@ export const useVenueApplicationFormHooks = (
     setValue,
     watch,
   } = useForm<VenueApplicationType>({
+    mode: 'onChange',
     resolver: zodResolver(venueApplicationFormSchema),
     defaultValues: {
       groupId: groupId,

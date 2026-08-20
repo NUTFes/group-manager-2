@@ -55,7 +55,7 @@ export const useFoodProductFormHooks = (
     watch,
     control,
   } = useForm<FoodProductFormData>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     resolver: zodResolver(foodProductSchema),
     defaultValues: {
       products: createDefaultProducts(foodProductsProp),

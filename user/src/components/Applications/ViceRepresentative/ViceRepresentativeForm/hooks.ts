@@ -69,6 +69,7 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
   } = useForm<ViceRepresentativeForm>({
+    mode: 'onChange',
     resolver: isIndividual
       ? async (values: ViceRepresentativeForm) => ({
           values,

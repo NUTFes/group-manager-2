@@ -143,7 +143,7 @@ export const useVenueMapFormHooks = (
     watch,
     reset,
   } = useForm<VenueMapFormData>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     criteriaMode: 'all',
     resolver: resolver,
     defaultValues: {

@@ -148,7 +148,7 @@ export const usePublicRelationsFormHooks = (
     setError,
     watch,
   } = useForm<PublicRelationsFormData>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     criteriaMode: 'all', // 全フィールド・全ルールを検証
     resolver: resolver,
     defaultValues: {
