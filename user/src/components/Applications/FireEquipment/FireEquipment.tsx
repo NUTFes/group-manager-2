@@ -145,7 +145,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
               color="main"
               onClick={handleApplyNegative}
             >
-              {t('form.actions.register')}
+              {t('applications.fireEquipment.buttons.noApplication')}
             </Button>
           </div>
         </div>

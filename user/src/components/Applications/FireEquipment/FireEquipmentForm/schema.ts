@@ -25,7 +25,10 @@ export const FireEquipmentItemSchema = z
     remarks: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (!data.isTakeaway && (data.remarks ?? '') === '') {
+    // 手書きのisItemValid(hooks.ts)はremarksをtrimして空判定するが、
+    // ここでtrimしないと空白のみの備考がzod上は非空値として通ってしまい、
+    // 送信ボタンは無効なのにエラーメッセージが出ない行き止まりになっていた。
+    if (!data.isTakeaway && (data.remarks ?? '').trim() === '') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: VALIDATION_MESSAGES.REMARK_REQUIRED,

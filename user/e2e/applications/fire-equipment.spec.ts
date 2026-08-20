@@ -35,9 +35,11 @@ const FIELDS = {
   remark: '備考',
 } as const;
 
-// BUG: applications.fireEquipment.buttons.noApplication ("火気を使用しない") は
-// common.json に定義されているが、実装(negativeRegister)では使われておらず、
-// 通常の登録ボタンと同じ t('form.actions.register')="登録" が表示される(死んだ翻訳キー)。
+// 修正済み: 以前は applications.fireEquipment.buttons.noApplication
+// ("火気を使用しない") が common.json に定義されているのに未使用で、
+// negativeRegister の登録ボタンは通常の登録ボタンと同じ
+// t('form.actions.register')="登録" を再利用していた(同一画面に「登録」が2つ
+// 並ぶ)。定義済みのi18nキーを使うように修正した。
 
 const registeredFireEquipmentOrder =
   (): ScenarioState['fireEquipmentOrders'][number] => ({
@@ -118,11 +120,11 @@ test.describe('fire equipment application', () => {
     await expect(submitButton(page)).toBeEnabled();
   });
 
-  // BUG: isItemValid(手書き)は remarks を trim() して空判定するが、
-  // zod の superRefine は trim しない。そのため「いいえ」を選んで
-  // 空白のみの備考を入れると、送信ボタンは無効になるのにエラー文言は出ない
-  // (2つの検証ロジックがずれている)。
-  test('BUG: disables submit for whitespace-only remark without showing a validation error', async ({
+  // 修正済み: 以前は isItemValid(手書き)が remarks を trim() して空判定するのに、
+  // zod の superRefine は trim しなかったため、「いいえ」を選んで空白のみの
+  // 備考を入れると送信ボタンは無効になるのにエラー文言が出ない行き止まりだった。
+  // zod 側でも trim して判定するようにし、エラー文言が表示されるようにした。
+  test('shows a validation error for whitespace-only remark while the submit button stays disabled', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -145,15 +147,15 @@ test.describe('fire equipment application', () => {
     await selectRadio(page, 'items.0.isTakeaway', 2);
     await expect(submitButton(page)).toBeDisabled();
 
-    // 空白のみを入力: zod的には空文字ではないため superRefine のエラーは出ない。
+    // 空白のみを入力: zod側もtrimして判定するため、非空値扱いにはならない。
     await page.getByLabel(FIELDS.remark).fill(' ');
 
     // 手書きの isItemValid は trim() するため無効のまま。
     await expect(submitButton(page)).toBeDisabled();
-    // しかし zod 側のエラー文言は表示されない(ずれ)。
+    // zod 側のエラー文言も表示されるようになった。
     await expect(
       page.getByText('持ち帰りが「いいえ」の場合、備考欄は必須です')
-    ).toHaveCount(0);
+    ).toBeVisible();
   });
 
   // 入力して登録すると PUT /fire_equipment_orders/submit がJSONボディで呼ばれる。
@@ -223,10 +225,10 @@ test.describe('fire equipment application', () => {
     await openFireEquipment(page);
     await selectRadio(page, FIELDS.question, 2);
 
-    // negativeRegister のボタンは「火気を使用しない」ではなく通常の登録ボタンと
-    // 同じ文言("登録")を再利用している(上記 BUG コメント参照)。
+    // negativeRegister のボタンは定義済みのi18nキー(「火気を使用しない」)を使う。
+    // 通常の登録ボタンと同じ「登録」文言を再利用していたバグは修正済み。
     await page
-      .getByRole('button', { name: BUTTONS.register, exact: true })
+      .getByRole('button', { name: '火気を使用しない', exact: true })
       .click();
 
     await expect(
