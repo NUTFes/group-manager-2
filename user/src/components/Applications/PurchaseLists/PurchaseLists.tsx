@@ -59,8 +59,17 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     initialIsRegistered
   );
 
-  const { control, fields, append, remove, triggerSubmit, errors, setValue } =
-    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
+  const {
+    control,
+    fields,
+    append,
+    remove,
+    triggerSubmit,
+    errors,
+    isSubmitting,
+    validateEdit,
+    setValue,
+  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
 
   const updateRowBySelector = usePurchaseListRowUpdater(
     purchaseLists,
@@ -151,6 +160,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          isDisableSubmit={isSubmitting || validateEdit()}
           hasExisting
         />
       </AccordionMenu>
@@ -196,6 +206,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          isDisableSubmit={isSubmitting || validateEdit()}
           hasExisting={!!(purchaseLists && purchaseLists.length > 0)}
         />
       </AccordionMenu>

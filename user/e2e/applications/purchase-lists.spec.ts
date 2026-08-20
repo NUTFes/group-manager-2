@@ -394,6 +394,50 @@ test.describe('purchase lists application', () => {
     ]);
   });
 
+  // B-2(送信ボタン無効化の統一): 制御が存在しなかった判定に
+  // isSubmitting || validateEdit()(isUnchangedの配列版)を追加した。
+  // 編集フォームを開いた直後(値が既存データと1つも変わっていない)は無効、
+  // 1項目でも変更すれば有効になる。
+  test('keeps the submit button disabled until a value actually changes when editing', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.foodProducts = [registeredFoodProduct()];
+    state.purchaseLists = [registeredPurchaseList()];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openApplication(page, 'purchaseLists');
+    await page.getByRole('button', { name: BUTTONS.edit, exact: true }).click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page.getByLabel(LABELS.items).fill('たこ・キャベツ・小麦粉(更新)');
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
+  // 行を追加すると既存データと件数が一致しなくなるため送信可能になる
+  // (未入力のまま送信すればzodのバリデーションで止まる)。
+  test('keeps the submit button enabled after adding a new row while editing', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.foodProducts = [registeredFoodProduct()];
+    state.purchaseLists = [registeredPurchaseList()];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openApplication(page, 'purchaseLists');
+    await page.getByRole('button', { name: BUTTONS.edit, exact: true }).click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page
+      .getByRole('button', { name: '購入品を追加', exact: true })
+      .click();
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
   // 一覧カードの削除ボタンは DELETE /purchase_lists/:id を直接呼ぶ。
   // 最後の1件を消すと編集モード(新規登録フォーム)に戻る。
   test('deletes a purchase list from the summary card', async ({ page }) => {
@@ -459,6 +503,10 @@ test.describe('purchase lists application', () => {
   });
 
   // 締め切り後でも、ステータスが再提出待ちの場合は編集フォームがそのまま出る。
+  // B-2で送信ボタンにvalidateEdit()を追加したため、開いた直後(未変更)は
+  // ボタンが無効化されラベルが消える(Buttonの仕様)。そのため
+  // getByRole('button',{name})ではなくsubmitButton()で引く
+  // (support/mockServer.tsのブリーフに記載の既知の落とし穴と同じ理由)。
   test('shows an editable form after the deadline when resubmission is requested', async ({
     page,
   }) => {
@@ -472,8 +520,11 @@ test.describe('purchase lists application', () => {
     await openApplication(page, 'purchaseLists');
 
     await expect(page.getByLabel(LABELS.foodProduct)).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: BUTTONS.save, exact: true })
-    ).toBeVisible();
+    await expect(submitButton(page)).toBeVisible();
+    // 何も変更していないので無効(isUnchanged=true)。
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page.getByLabel(LABELS.items).fill('たこ・キャベツ・小麦粉(再提出)');
+    await expect(submitButton(page)).toBeEnabled();
   });
 });

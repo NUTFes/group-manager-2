@@ -14,9 +14,15 @@ import {
 import { useGetShops } from '@/api/shopApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
-import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
+import {
+  UseFormSetValue,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
+import { isUnchanged } from '../shared';
 import {
   DATE_FORMAT,
   DEFAULT_PURCHASE_ITEM,
@@ -307,6 +313,35 @@ export const usePurchaseListsForm = (
 
   const { control, handleSubmit, formState, reset, setValue } = formMethods;
 
+  const watchedItems = useWatch({ control, name: 'purchaseLists' }) ?? [];
+
+  // 送信ボタンの無効化判定(B-2: isSubmitting || isUnchanged(...)へ統一)。
+  // purchaseListsは配列のため、共有のisUnchanged()をそのままは使えない。
+  // initialDataが実在の登録データ(全項目にidがある)の場合のみ「編集」とみなし、
+  // 件数が一致し、かつ全項目がisUnchanged()となる場合のみ「未変更」とする。
+  // 行の追加・削除で件数が変わった場合や新規登録時は常にfalse(=送信可能)。
+  const hasExistingData = !!(
+    initialData &&
+    initialData.length > 0 &&
+    initialData.every((item) => item.id != null)
+  );
+
+  const validateEdit = () => {
+    if (!hasExistingData || !initialData) return false;
+    if (initialData.length !== watchedItems.length) return false;
+    return initialData.every((original, index) =>
+      isUnchanged(original, watchedItems[index], [
+        'foodProductId',
+        'items',
+        'isFresh',
+        'shopId',
+        'purchaseDate',
+        'url',
+        'remark',
+      ])
+    );
+  };
+
   // initialDataが変更されたら、フォームの値をリセットする
   // 深い比較のためにJSONを使用し、パフォーマンスを考慮してuseRefで前回の値を記録
   const previousInitialDataRef = useRef<string>();
@@ -412,6 +447,8 @@ export const usePurchaseListsForm = (
     remove: onRemove,
     triggerSubmit: handleSubmit(handleActualSubmit),
     errors: formState.errors,
+    isSubmitting: formState.isSubmitting,
+    validateEdit,
     setValue,
     reset,
   };
