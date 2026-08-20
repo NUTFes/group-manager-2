@@ -6,12 +6,12 @@ import {
   UseFormReturn,
   useWatch,
 } from 'react-hook-form';
-import Button from '@/components/Button/Button';
+import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
-import Selector from '@/components/Form/Selector/Selector';
+import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
-import TextBox from '@/components/Form/TextBox/TextBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
+import TextBox from '@/components/Form/TextBox';
+import FormContainer from '@/components/FormContainer';
 import {
   DEFAULT_PURCHASE_ITEM,
   FRESH_TYPE_ID,

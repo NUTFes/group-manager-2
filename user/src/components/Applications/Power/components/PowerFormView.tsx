@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
 import { POWER_LIMIT } from '../constants';
 import { usePowerFormViewHooks } from '../hooks/usePowerFormViewHooks';
 import { PowerFormViewProps } from '../types';

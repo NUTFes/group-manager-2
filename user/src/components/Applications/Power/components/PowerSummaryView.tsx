@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import Button from '@/components/Button/Button';
-import FormList from '@/components/FormList/FormList';
+import Button from '@/components/Button';
+import FormList from '@/components/FormList';
 import { usePowerSummaryViewHooks } from '../hooks/usePowerSummaryViewHooks';
 import { PowerSummaryViewProps } from '../types';
 

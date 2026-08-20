@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import Selector from '@/components/Form/Selector/Selector';
-import TextBox from '@/components/Form/TextBox/TextBox';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import Selector from '@/components/Form/Selector';
+import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { useStageFormHooks } from '../hooks';
 import { useStageFormViewHooks } from '../hooks/useStageFormViewHooks';

@@ -5,9 +5,9 @@ import {
   isResubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
+import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
 import {
   useFoodProducts,

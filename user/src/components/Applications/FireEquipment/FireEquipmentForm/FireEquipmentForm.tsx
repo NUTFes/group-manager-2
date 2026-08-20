@@ -4,13 +4,13 @@ import {
   FireEquipmentResponse,
 } from '@/api/fireEquipmentApi';
 import { useTranslation } from 'next-i18next';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import Selector from '@/components/Form/Selector/Selector';
-import TextArea from '@/components/Form/TextArea/TextArea';
-import TextBox from '@/components/Form/TextBox/TextBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
-import FormList from '@/components/FormList/FormList';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import Selector from '@/components/Form/Selector';
+import TextArea from '@/components/Form/TextArea';
+import TextBox from '@/components/Form/TextBox';
+import FormContainer from '@/components/FormContainer';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { useFireEquipmentFormHooks } from './hooks';
 

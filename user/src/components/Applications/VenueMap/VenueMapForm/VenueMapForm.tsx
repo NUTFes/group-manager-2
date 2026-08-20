@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { VenueMapResponse } from '@/api/venueMapApi';
-import Button from '@/components/Button/Button';
+import Button from '@/components/Button';
 import Checkbox from '@/components/Form/CheckBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
+import FormContainer from '@/components/FormContainer';
 import ImagePreview from '@/components/ImagePreview';
-import Upload from '@/components/Upload/Upload';
+import Upload from '@/components/Upload';
 import { useVenueMapFormHooks } from './hooks';
 
 type VenueMapFormProps = {

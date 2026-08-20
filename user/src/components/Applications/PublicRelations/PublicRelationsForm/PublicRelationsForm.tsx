@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import TextArea from '@/components/Form/TextArea/TextArea';
-import FormContainer from '@/components/FormContainer/FormContainer';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import TextArea from '@/components/Form/TextArea';
+import FormContainer from '@/components/FormContainer';
 import ImagePreview from '@/components/ImagePreview';
-import Upload from '@/components/Upload/Upload';
+import Upload from '@/components/Upload';
 import { usePublicRelationsFormHooks } from './hooks';
 
 type PublicRelationsFormProps = {

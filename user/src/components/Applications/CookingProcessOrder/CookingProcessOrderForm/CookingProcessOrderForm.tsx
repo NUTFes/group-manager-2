@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
-import CheckBox from '../../../Form/CheckBox';
-import Radio from '../../../Form/Radio';
-import TextArea from '../../../Form/TextArea';
-import FormContainer from '../../../FormContainer';
+import CheckBox from '@/components/Form/CheckBox';
+import Radio from '@/components/Form/Radio';
+import TextArea from '@/components/Form/TextArea';
+import FormContainer from '@/components/FormContainer';
 import { useCookingProcessOrderForm } from './hooks';
 
 type CookingProcessOrderFormProps = {

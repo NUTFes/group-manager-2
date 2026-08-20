@@ -4,14 +4,14 @@ import {
   canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
+import AccordionMenu from '@/components/AccordionMenu';
+import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm';
 import {
   ProductInput,
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 
 type FoodProductProps = {

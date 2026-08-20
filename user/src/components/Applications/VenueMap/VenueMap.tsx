@@ -3,8 +3,8 @@ import {
   HealthCenterSubmissionStatus,
   canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import FormList from '@/components/FormList/FormList';
+import AccordionMenu from '@/components/AccordionMenu';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import ImagePreview from '@/components/ImagePreview';
 import VenueMapForm from './VenueMapForm';

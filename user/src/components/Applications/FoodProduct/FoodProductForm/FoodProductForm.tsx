@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { ApiResponse } from '@/api/api';
 import { KeyedMutator } from 'swr';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import TextBox from '@/components/Form/TextBox/TextBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
-import FormList from '@/components/FormList/FormList';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import TextBox from '@/components/Form/TextBox';
+import FormContainer from '@/components/FormContainer';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { useFoodProductFormHooks } from './hooks';
 import { ProductInput, RegisteredProduct } from './schema';
