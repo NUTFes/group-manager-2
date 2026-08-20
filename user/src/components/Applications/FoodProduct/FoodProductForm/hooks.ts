@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { isUnchanged } from '../../shared';
 import {
   FoodProductFormData,
   ProductInput,
@@ -147,6 +148,24 @@ export const useFoodProductFormHooks = (
     },
   };
 
+  // 送信ボタンの無効化判定(B-2: isSubmitting || isUnchanged(...)へ統一)。
+  // productsは配列のため、既存の商品数と一致し、かつ全項目がisUnchanged()となる
+  // 場合のみ「未変更」とみなす。新規登録(foodProductsProp未指定)や、
+  // 行の追加・削除で件数が変わった場合は常にfalse(=送信可能)になる。
+  const validateEdit = () => {
+    if (!foodProductsProp || foodProductsProp.length === 0) return false;
+    if (foodProductsProp.length !== products.length) return false;
+    return foodProductsProp.every((original, index) =>
+      isUnchanged(original, products[index], [
+        'name',
+        'isAlcohol',
+        'isCooking',
+        'day1Quantity',
+        'day2Quantity',
+      ])
+    );
+  };
+
   const handleAlcoholChange = (index: number, value: string) => {
     const isAlcohol = parseInt(value) === FORM_VALUES.YES;
     setValue(`products.${index}.isAlcohol`, isAlcohol);
@@ -223,6 +242,7 @@ export const useFoodProductFormHooks = (
     onSubmit,
     addProduct,
     removeProduct,
+    validateEdit,
     products,
     fields,
     replace,

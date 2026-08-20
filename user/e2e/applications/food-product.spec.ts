@@ -79,8 +79,9 @@ test.describe('food product application', () => {
     ).toBeVisible();
   });
 
-  // mode:'onSubmit' のため送信ボタンはisValidを見ず、isMutating中しか無効化されない。
-  // 未入力のままでも押せてしまい、送信してから初めてzodのエラーが表示される。
+  // 新規登録時はvalidateEdit()の比較対象(original)が無いため常にfalseになり、
+  // isSubmitting中以外は無効化されない。未入力のままでも押せてしまい、
+  // 送信してから初めてzodのエラーが表示される。
   test('keeps the submit button enabled even before required fields are filled', async ({
     page,
   }) => {
@@ -185,6 +186,53 @@ test.describe('food product application', () => {
         url.startsWith('/health_center_submission_statuses/')
       )
     ).toBe(true);
+  });
+
+  // B-2(送信ボタン無効化の統一): isMutating(実体はisSubmitting)のみだった判定に
+  // isUnchanged()を足した。編集フォームを開いた直後(値が既存データと1つも
+  // 変わっていない)は無効、1項目でも変更すれば有効になる。
+  test('keeps the submit button disabled until a value actually changes when editing', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.foodProducts = [registeredFoodProduct()];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openApplication(page, 'foodProduct');
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page.getByLabel(LABELS.name).fill('E2E たこ焼き(更新)');
+    await expect(submitButton(page)).toBeEnabled();
+  });
+
+  // 商品を追加すると、既存データと件数が一致しなくなるため送信可能になる
+  // (未入力のまま送信すればzodのバリデーションで止まる)。
+  test('keeps the submit button enabled after adding a new row while editing', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.foodProducts = [registeredFoodProduct()];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openApplication(page, 'foodProduct');
+    await page
+      .getByRole('button', { name: BUTTONS.edit, exact: true })
+      .first()
+      .click();
+
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page
+      .getByRole('button', { name: '販売品の追加', exact: true })
+      .click();
+    await expect(submitButton(page)).toBeEnabled();
   });
 
   // 登録済みなら一覧(カード)表示になり、修正ボタンでフォームへ切り替わる。

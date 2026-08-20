@@ -57,6 +57,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
     onSubmit,
     addProduct,
     removeProduct,
+    validateEdit,
     products,
     foodProductFormTexts,
   } = useFoodProductFormHooks(
@@ -274,7 +275,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   size="pc"
                   color="main"
                   type="submit"
-                  isDisable={isMutating}
+                  isDisable={isMutating || validateEdit()}
                   icon={
                     foodProducts && foodProducts.length > 0 ? 'save' : 'send'
                   }
