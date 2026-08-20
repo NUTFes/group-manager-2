@@ -7,10 +7,10 @@
 //   isFoodSellingGroup=true になり、会場タイプは屋外に固定され
 //   (locationType選択UI自体が非表示: hideLocationTypeSelect)、
 //   会場タイプに応じた物品一覧は屋外用エンドポイントを叩く。
-// - hasItems の defaultValues は false。Radio は tri-state(未選択)を
-//   表現できないbooleanのため、初期表示から「いいえ」が選択された状態になり、
-//   「はい/いいえ」を選ぶ前から「申請しない」登録ボタンが出てしまう
-//   (Power申請と同種のBUG)。
+// - hasItems は tri-state(true/false/undefined)。「はい/いいえ」を選ぶまでは
+//   undefined のままで、どちらの登録ボタンも出さない(以前は boolean の
+//   defaultValues=false だったため、選ぶ前から「いいえ」の登録ボタンが
+//   出てしまうバグがあった。Power申請と同種で修正済み)。
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { mockHomePageApis } from '../support/mockServer';
@@ -18,6 +18,7 @@ import {
   ORDER_TYPES,
   RENTABLE_ITEM_IDS,
   type RentalOrderRecord,
+  defaultRentableItems,
   mockGroupId,
   scenarioState,
 } from '../support/scenarioState';
@@ -50,9 +51,11 @@ const openRentItems = (page: Page) =>
     .click();
 
 test.describe('rent items application', () => {
-  // BUG: hasItemsのdefaultValuesがfalseのため、「はい/いいえ」を選ぶ前から
-  // 「いいえ」が選択された状態になり、「申請しない」登録ボタンが表示されてしまう。
-  test('BUG: shows the not-applying register button before choosing yes or no', async ({
+  // 修正済み: 以前は hasItems の defaultValues が false(boolean)だったため、
+  // 「はい/いいえ」を選ぶ前から「いいえ」が選択された状態になり、「申請しない」
+  // 登録ボタンが表示されてしまっていた。hasItemsをtri-stateにし、選ぶまでは
+  // どちらの登録ボタンも出さないようにした。
+  test('does not show a register button before choosing yes or no', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -69,10 +72,10 @@ test.describe('rent items application', () => {
     await expect(
       page.getByText('※食品販売団体は屋外での出店のみとなります')
     ).toBeVisible();
-    // 未選択のはずが「いいえ」の登録ボタンが見えてしまう(BUG)。
+    // 未選択の間は登録ボタンが出ない。
     await expect(
       page.getByRole('button', { name: BUTTONS.register, exact: true })
-    ).toBeVisible();
+    ).toHaveCount(0);
   });
 
   // 「はい」を選ぶと登録フォームが現れる。
@@ -242,7 +245,8 @@ test.describe('rent items application', () => {
 
     await page.goto('/home');
     await openRentItems(page);
-    // hasItemsのdefaultはfalseなので、既に「いいえ」が選択された状態。
+    // 「いいえ」を明示的に選ぶまで登録ボタンは出ない。
+    await selectRadio(page, FIELDS.question, 0);
     await page
       .getByRole('button', { name: BUTTONS.register, exact: true })
       .click();
@@ -299,5 +303,55 @@ test.describe('rent items application', () => {
 
     await expect(page.getByText('申請期限が過ぎています')).toBeVisible();
     expect(state.requestedUrls).toHaveLength(0);
+  });
+
+  // 修正済み: ステージ団体はSTAGE_ITEM_IDSに加えて isStageRentable フラグを
+  // 持つ物品も選べる。以前は item.is_stage_rentable と snake_case のまま
+  // 読んでいたため(useAllRentableItemsの応答はcamelcase-keysで変換されており
+  // 実際はisStageRentable)、フラグは常にundefinedになり、STAGE_ITEM_IDSに
+  // 含まれない物品はステージ団体から選べなかった。
+  test('includes items flagged isStageRentable for stage groups even outside STAGE_ITEM_IDS', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.groupCategoryId = 3; // ステージ
+    const timestamps = {
+      created_at: '2026-01-01T00:00:00.000Z',
+      updated_at: '2026-01-01T00:00:00.000Z',
+    };
+    state.rentableItems = [
+      ...defaultRentableItems,
+      {
+        id: RENTABLE_ITEM_IDS.displayBoard,
+        name: 'E2E 掲示板(ステージ用)',
+        is_inside_shop_rentable: false,
+        is_outside_shop_rentable: false,
+        is_stage_rentable: true,
+        ...timestamps,
+      },
+      {
+        id: RENTABLE_ITEM_IDS.partition,
+        name: 'E2E パーテーション(非対応)',
+        is_inside_shop_rentable: true,
+        is_outside_shop_rentable: false,
+        is_stage_rentable: false,
+        ...timestamps,
+      },
+    ];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openRentItems(page);
+    await selectRadio(page, FIELDS.question, 1);
+
+    const options = await page
+      .getByLabel(FIELDS.item)
+      .locator('option')
+      .allTextContents();
+    // is_stage_rentable(実際はisStageRentable)が立っている物品は、
+    // STAGE_ITEM_IDSに含まれなくても選択肢に出る。
+    expect(options).toContain('E2E 掲示板(ステージ用)');
+    // フラグが立っていない物品はSTAGE_ITEM_IDS外なので選択肢に出ない。
+    expect(options).not.toContain('E2E パーテーション(非対応)');
   });
 });

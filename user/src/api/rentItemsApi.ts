@@ -19,13 +19,16 @@ const API_ENDPOINTS = {
 };
 
 // 物品マスター情報の型
+// useAuthenticatedGet経由のレスポンスはcamelcase-keysでdeep変換されるため、
+// is_stage_rentableはisStageRentableとして届く(以前はsnake_caseのまま
+// 型定義していたためTSでも検出できず、実行時に常にundefinedになっていた)。
 export type RentalItem = {
   id: number;
   name: string;
   nameEn?: string;
   is_inside_shop_rentable: boolean;
   is_outside_shop_rentable: boolean;
-  is_stage_rentable: boolean;
+  isStageRentable: boolean;
   created_at: string;
   updated_at: string;
 };

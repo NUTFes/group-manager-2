@@ -98,7 +98,8 @@ export const useRentItemsFormHooks = (
   // React Hook Form初期化 (Zodスキーマ使用)
   const form = useForm<RentItemsFormData>({
     defaultValues: {
-      hasItems: false,
+      // 「はい/いいえ」を選ぶ前は未選択のまま(tri-state)にする。
+      hasItems: undefined,
       // 食品販売団体は強制的に屋外
       locationType: isFoodSellingGroup
         ? LOCATION_TYPES.OUTDOOR
@@ -178,8 +179,11 @@ export const useRentItemsFormHooks = (
       // ステージ団体はステージ用物品のみ
       return allItems.filter(
         (item) =>
-          // ステージ用物品のIDリストに含まれるか、is_stage_rentableフラグがある場合
-          STAGE_ITEM_IDS.includes(item.id) || item.is_stage_rentable
+          // ステージ用物品のIDリストに含まれるか、isStageRentableフラグがある場合。
+          // レスポンスはcamelcase-keysでdeep変換されるため、実際のプロパティは
+          // isStageRentable(以前はsnake_caseのis_stage_rentableで読んでおり、
+          // 常にundefinedになってフィルタが機能していなかった)。
+          STAGE_ITEM_IDS.includes(item.id) || item.isStageRentable
       );
     } else if (isFoodSellingGroup || locationType === LOCATION_TYPES.OUTDOOR) {
       // 食品販売団体または屋外団体は屋外用物品のみ

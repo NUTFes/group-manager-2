@@ -226,7 +226,10 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           render={({ field }) => (
             <Radio
               label={rentItemsFormTexts.radio.question}
-              value={field.value ? '1' : '0'}
+              // 未選択(undefined)の間はどちらのラジオも選択済みにしない。
+              value={
+                field.value === true ? '1' : field.value === false ? '0' : ''
+              }
               onChange={(value: string) => {
                 field.onChange(value === '1');
                 form.trigger();
@@ -248,7 +251,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         />
       </div>
 
-      {!hasItems && (
+      {hasItems === false && (
         <>
           <div className="mt-4 flex justify-center">
             <Button
@@ -269,7 +272,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         </>
       )}
 
-      {hasItems && (
+      {hasItems === true && (
         <>
           {/* 特殊団体でない場合のみ、会場タイプ選択を表示 */}
           {!hideLocationTypeSelect && (

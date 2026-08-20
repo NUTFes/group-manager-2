@@ -46,11 +46,12 @@ const groupCategoryTimestamps = {
 
 /**
  * GET /api/v1/get_all_rentable_items 等が返す貸出物品マスタ(snake_case)。
+ * このRecord自体はRailsの生レスポンスを模すのでsnake_caseのままが正しい。
  * useAllRentableItems/useRentableItemsByType はこのレスポンスを camelcaseKeys で
- * 変換するため、is_inside_shop_rentable 等は実際には isInsideShopRentable として
- * 届く。にもかかわらず useRentItemsFormHooks 側は item.is_stage_rentable(snake_case)
- * のままアクセスしており、常に undefined になる
- * (BUG: 実行委員会/ステージ団体の is_stage_rentable フィルタは機能しない)。
+ * 変換するため、is_stage_rentable は実際には isStageRentable として届く。
+ * 以前は useRentItemsFormHooks 側が item.is_stage_rentable(snake_case)の
+ * ままアクセスしており、常に undefined になって実行委員会/ステージ団体向けの
+ * フィルタが機能していなかった(修正済み。型定義とアクセスをcamelCaseへ揃えた)。
  */
 export type RentableItemRecord = {
   id: number;
