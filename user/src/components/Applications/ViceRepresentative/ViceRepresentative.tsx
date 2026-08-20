@@ -4,7 +4,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import ViceRepresentativeForm from './ViceRepresentativeForm';
-import { useViceRepresentativeHook } from './hook';
+import { useViceRepresentativeHook } from './hooks';
 
 type ViceRepresentativeProps = {
   isDeadline: boolean;

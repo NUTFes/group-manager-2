@@ -217,7 +217,7 @@ test.describe('employees application', () => {
     ]);
   });
 
-  // EmployeeForm の削除ボタンは送信を待たず、即座に DELETE /employees/:id を呼ぶ。
+  // EmployeesForm の削除ボタンは送信を待たず、即座に DELETE /employees/:id を呼ぶ。
   test('deletes an existing employee immediately without waiting for submit', async ({
     page,
   }) => {

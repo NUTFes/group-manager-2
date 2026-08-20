@@ -8,7 +8,7 @@ import FormContainer from '@/components/FormContainer';
 import {
   useViceRepresentativeFormHook,
   useViceRepresentativeFormTexts,
-} from './hook';
+} from './hooks';
 
 type ViceRepresentativeFormProps = {
   viceRepresentative?: ViceRepresentativeResponse;

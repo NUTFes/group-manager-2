@@ -10,7 +10,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
-import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
+import { EmployeesForm } from './EmployeesForm/EmployeesForm';
 import { useEmployeesApplicationHooks } from './hooks';
 
 type EmployeesProps = {
@@ -163,7 +163,7 @@ const Content: FC<ContentProps> = ({
             <div className="flex w-full flex-col gap-10">
               {employeesApplicationHook.form.fieldArray.fields.map(
                 (field, idx) => (
-                  <EmployeeForm
+                  <EmployeesForm
                     key={`${field.fieldId}-${idx}`}
                     index={idx}
                     onDelete={() =>

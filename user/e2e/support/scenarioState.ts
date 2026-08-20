@@ -248,7 +248,7 @@ export const ORDER_TYPES = {
  * GET /employees/group/:id が返す従業員(snake_case)。
  * 作成/更新/削除は @/hooks/useApi.ts の useAuthenticated* 系(JSONボディ)経由。
  * student_id はフォーム上は文字列(8桁)だが、DBは数値で返す
- * (EmployeesFrom/hooks.ts の convertEmployeesToFormData が String() で変換する前提のため)。
+ * (EmployeesForm/hooks.ts の convertEmployeesToFormData が String() で変換する前提のため)。
  */
 export type EmployeeRecord = {
   id: number;
