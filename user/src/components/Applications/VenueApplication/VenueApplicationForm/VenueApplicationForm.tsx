@@ -99,7 +99,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
               isDisable={validateEdit()}
             >
               {placeOrder
-                ? venueApplicationFormTexts.actions.edit
+                ? venueApplicationFormTexts.actions.save
                 : venueApplicationFormTexts.actions.register}
             </Button>
           </div>

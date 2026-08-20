@@ -473,7 +473,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </MultiItemFormButton>
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
               {hasExisting
-                ? rentItemsFormTexts.buttons.edit
+                ? rentItemsFormTexts.buttons.save
                 : rentItemsFormTexts.buttons.register}
             </Button>
           </div>

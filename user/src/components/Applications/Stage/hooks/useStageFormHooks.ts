@@ -186,7 +186,7 @@ export const useStageFormHooks = (groupId: number) => {
     minutes: (value: string) => t('applications.stage.minutes', { value }),
     buttons: {
       cancel: t('form.actions.cancel'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
       register: t('form.actions.register'),
     },
     formatError: (message: string) => t(message, { defaultValue: message }),

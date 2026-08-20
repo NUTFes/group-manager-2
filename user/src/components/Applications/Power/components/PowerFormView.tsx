@@ -19,6 +19,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   showForm,
   submitError,
   onSubmit,
+  hasExisting,
 }) => {
   const { handleSubmit } = formMethods;
   const { powerFormViewTexts } = usePowerFormViewHooks(radioOptions);
@@ -83,7 +84,9 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 color="main"
                 isDisable={!isValid || totalPower > POWER_LIMIT}
               >
-                {powerFormViewTexts.actions.register}
+                {hasExisting
+                  ? powerFormViewTexts.actions.save
+                  : powerFormViewTexts.actions.register}
               </Button>
             </div>
           </div>

@@ -585,6 +585,7 @@ export const useEmployeesApplicationHooks = (
     },
     formActions: {
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
     },
   };
 
@@ -593,6 +594,7 @@ export const useEmployeesApplicationHooks = (
     isUnregisteredGroup,
     isFormListMode,
     isDeadlineMode,
+    isEmployeesData,
     tableData,
     texts,
 

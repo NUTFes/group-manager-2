@@ -164,6 +164,7 @@ export const useViceRepresentativeFormTexts = () => {
     },
     buttons: {
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
     },
     radioOptions,
     gradeOptions,

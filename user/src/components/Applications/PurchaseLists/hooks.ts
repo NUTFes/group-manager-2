@@ -455,7 +455,7 @@ export const usePurchaseListsFormTexts = () => {
       delete: t('form.actions.delete'),
       addItem: t('applications.purchaseLists.buttons.addItem'),
       register: t('form.actions.register'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
     },
     errors: {
       format: translateError,

@@ -249,7 +249,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                   isDisable={!isValid}
                 >
                   {hasExisting
-                    ? stageFormTexts.buttons.edit
+                    ? stageFormTexts.buttons.save
                     : stageFormTexts.buttons.register}
                 </Button>
               </div>

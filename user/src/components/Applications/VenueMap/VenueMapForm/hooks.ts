@@ -87,7 +87,7 @@ export const useVenueMapFormHooks = (
     buttons: {
       cancel: t('form.actions.cancel'),
       submitting: t('applications.venueMap.buttons.submitting'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
       register: t('form.actions.register'),
     },
   };

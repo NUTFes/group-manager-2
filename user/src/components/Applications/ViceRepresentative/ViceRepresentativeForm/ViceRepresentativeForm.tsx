@@ -107,7 +107,9 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
         </div>
         <div className="mt-10 flex w-full items-center justify-center">
           <Button size="pc" color="main" type="submit">
-            {viceRepresentativeFormTexts.buttons.register}
+            {viceRepresentative
+              ? viceRepresentativeFormTexts.buttons.save
+              : viceRepresentativeFormTexts.buttons.register}
           </Button>
         </div>
       </form>

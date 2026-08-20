@@ -237,9 +237,7 @@ test.describe('vice representative application', () => {
       .click();
 
     await page.getByLabel(FIELDS.name).fill('長岡 次郎');
-    await page
-      .getByRole('button', { name: BUTTONS.register, exact: true })
-      .click();
+    await page.getByRole('button', { name: BUTTONS.save, exact: true }).click();
 
     await expect(page.getByText('送信しました。')).toBeVisible();
     expect(state.requestedUrls).toContain('/sub_reps/9001');

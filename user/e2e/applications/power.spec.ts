@@ -270,8 +270,8 @@ test.describe('power application', () => {
   });
 
   // 既存値を変更して保存すると PUT /power_orders/submit が id 付きで呼ばれる。
-  // 火気申請と違い、編集中でもボタン文言は「保存」ではなく常に「登録」のまま。
-  test('updates an existing order via the edit form, submit button stays labeled register', async ({
+  // 編集中はボタン文言が「保存」になる。
+  test('updates an existing order via the edit form, submit button is labeled save', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -288,13 +288,11 @@ test.describe('power application', () => {
     );
 
     await page.getByLabel(FIELDS.productName).fill('E2E 更新ホットプレート');
-    // 「保存」ボタンは存在せず、常に「登録」。
+    // 「登録」ボタンは存在せず、常に「保存」。
     await expect(
-      page.getByRole('button', { name: BUTTONS.save, exact: true })
+      page.getByRole('button', { name: BUTTONS.register, exact: true })
     ).toHaveCount(0);
-    await page
-      .getByRole('button', { name: BUTTONS.register, exact: true })
-      .click();
+    await page.getByRole('button', { name: BUTTONS.save, exact: true }).click();
 
     await expect(page.getByText('電力申請情報を更新しました。')).toBeVisible();
     expect(state.requestedUrls).toContain('/power_orders/submit');
@@ -357,9 +355,7 @@ test.describe('power application', () => {
     // 残り1件のフォームが編集状態で表示される。
     await expect(page.getByLabel(FIELDS.productName)).toHaveCount(1);
 
-    await page
-      .getByRole('button', { name: BUTTONS.register, exact: true })
-      .click();
+    await page.getByRole('button', { name: BUTTONS.save, exact: true }).click();
 
     await expect(page.getByText('電力申請情報を更新しました。')).toBeVisible();
     expect(state.requestedUrls).toContain('/power_orders/submit');

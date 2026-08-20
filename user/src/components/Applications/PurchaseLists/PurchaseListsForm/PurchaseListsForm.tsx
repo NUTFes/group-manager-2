@@ -33,6 +33,7 @@ export type PurchaseListsFormProps = {
   foodProductOptions: FoodProductOption[];
   shopOptions: { id: number; name: string }[];
   onFoodProductChange?: (foodProductId: number, index: number) => void;
+  hasExisting?: boolean;
 };
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
@@ -45,6 +46,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   foodProductOptions,
   shopOptions,
   onFoodProductChange,
+  hasExisting,
 }) => {
   const purchaseListsFormTexts = usePurchaseListsFormTexts();
   // フォーム全体の値を監視
@@ -233,7 +235,9 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
             {purchaseListsFormTexts.buttons.addItem}
           </Button>
           <Button size="pc" color="main" type="submit">
-            {purchaseListsFormTexts.buttons.register}
+            {hasExisting
+              ? purchaseListsFormTexts.buttons.save
+              : purchaseListsFormTexts.buttons.register}
           </Button>
         </div>
       </div>

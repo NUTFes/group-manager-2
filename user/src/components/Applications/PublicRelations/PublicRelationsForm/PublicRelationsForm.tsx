@@ -135,7 +135,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                 isDisable={isMutating || validateEdit()}
               >
                 {publicRelation
-                  ? publicRelationsFormTexts.buttons.edit
+                  ? publicRelationsFormTexts.buttons.save
                   : publicRelationsFormTexts.buttons.register}
               </Button>
             </div>

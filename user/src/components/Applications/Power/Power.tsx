@@ -172,6 +172,7 @@ const Power: FC<PowerProps> = ({
           showForm={applyPower === 'yes'}
           submitError={submitError}
           onSubmit={handleFormSubmit}
+          hasExisting={hasExisting}
         />
       );
   }

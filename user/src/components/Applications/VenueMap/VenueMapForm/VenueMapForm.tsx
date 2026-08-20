@@ -117,7 +117,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
               {isMutating
                 ? venueMapFormTexts.buttons.submitting
                 : venueMap
-                  ? venueMapFormTexts.buttons.edit
+                  ? venueMapFormTexts.buttons.save
                   : venueMapFormTexts.buttons.register}
             </Button>
           </div>

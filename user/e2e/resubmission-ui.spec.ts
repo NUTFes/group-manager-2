@@ -170,7 +170,7 @@ test.describe('resubmission UI', () => {
       itemUrl: 'https://example.com/updated-power',
       power: '950',
     });
-    await page.getByRole('button', { name: '登録', exact: true }).click();
+    await page.getByRole('button', { name: '保存', exact: true }).click();
 
     await expect(page.getByText('E2E 更新ホットプレート')).toBeVisible();
     await expect(page.getByText('更新メーカー')).toBeVisible();

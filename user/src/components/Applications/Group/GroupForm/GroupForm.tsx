@@ -139,7 +139,7 @@ const GroupForm: FC<GroupFormProps> = ({
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
             {groups
-              ? groupFormTexts.buttons.edit
+              ? groupFormTexts.buttons.save
               : groupFormTexts.buttons.register}
           </Button>
         </div>

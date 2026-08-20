@@ -202,8 +202,8 @@ test.describe('rent items application', () => {
   });
 
   // 既存値を変更して保存すると PATCH /rental_orders/:id が呼ばれる。
-  // 送信ボタンの文言は「登録」ではなく hasExisting=true のため「修正」のまま。
-  test('updates an existing order via the edit form, submit button is labeled edit', async ({
+  // 送信ボタンの文言は hasExisting=true のため「保存」になる。
+  test('updates an existing order via the edit form, submit button is labeled save', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -221,10 +221,10 @@ test.describe('rent items application', () => {
     await expect(page.getByLabel(FIELDS.count)).toHaveValue('2');
 
     await page.getByLabel(FIELDS.count).selectOption('5');
-    // 送信ボタンのラベルは常に「修正」(hasExisting=trueのため)。
+    // 送信ボタンのラベルは「保存」(hasExisting=trueのため)。
     await expect(
-      page.getByRole('button', { name: BUTTONS.register, exact: true })
-    ).toHaveCount(0);
+      page.getByRole('button', { name: BUTTONS.save, exact: true })
+    ).toBeVisible();
     await submitButton(page).click();
 
     await expect(page.getByText('物品申請を更新しました')).toBeVisible();

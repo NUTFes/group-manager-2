@@ -151,7 +151,9 @@ const Content: FC<ContentProps> = ({
           undefined && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button size="pc" color="main" type="submit" isDisable>
-              {texts.formActions.register}
+              {employeesApplicationHook.isEmployeesData
+                ? texts.formActions.save
+                : texts.formActions.register}
             </Button>
           </div>
         )}
@@ -194,7 +196,9 @@ const Content: FC<ContentProps> = ({
                     employeesApplicationHook.employeesBusinessHooks.isUpserting
                   }
                 >
-                  {texts.formActions.register}
+                  {employeesApplicationHook.isEmployeesData
+                    ? texts.formActions.save
+                    : texts.formActions.register}
                 </Button>
               </div>
             </div>

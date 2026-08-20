@@ -36,6 +36,7 @@ export interface PowerFormViewProps {
   showForm: boolean;
   submitError: string | null;
   onSubmit: (data: PowerApplicationFormData) => Promise<void>;
+  hasExisting?: boolean;
 }
 
 export interface PowerFormProps {

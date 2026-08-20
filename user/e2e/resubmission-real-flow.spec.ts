@@ -149,7 +149,7 @@ test.describe('real API power and fire equipment resubmission flow', () => {
         .click();
       await fillPowerForm(powerSection, prepared.updatedPower);
       await powerSection
-        .getByRole('button', { name: '登録', exact: true })
+        .getByRole('button', { name: '保存', exact: true })
         .click();
 
       await expect(

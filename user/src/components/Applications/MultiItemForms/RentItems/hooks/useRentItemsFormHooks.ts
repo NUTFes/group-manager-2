@@ -814,6 +814,7 @@ export const useRentItemsFormHooks = (
     buttons: {
       edit: t('form.actions.edit'),
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
       delete: t('form.actions.delete'),
       addItem: t('applications.rentItems.buttons.addItem'),
     },

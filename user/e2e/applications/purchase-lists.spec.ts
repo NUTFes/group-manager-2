@@ -383,9 +383,7 @@ test.describe('purchase lists application', () => {
     await page.getByRole('button', { name: BUTTONS.edit, exact: true }).click();
 
     await page.getByLabel(LABELS.items).fill('たこ・キャベツ・小麦粉(更新)');
-    await page
-      .getByRole('button', { name: BUTTONS.register, exact: true })
-      .click();
+    await page.getByRole('button', { name: BUTTONS.save, exact: true }).click();
 
     await expect(page.getByText('購入品申請が更新されました')).toBeVisible();
     expect(state.requestedUrls).toContain(
@@ -475,7 +473,7 @@ test.describe('purchase lists application', () => {
 
     await expect(page.getByLabel(LABELS.foodProduct)).toBeVisible();
     await expect(
-      page.getByRole('button', { name: BUTTONS.register, exact: true })
+      page.getByRole('button', { name: BUTTONS.save, exact: true })
     ).toBeVisible();
   });
 });

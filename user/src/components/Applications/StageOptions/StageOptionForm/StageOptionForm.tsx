@@ -107,7 +107,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
             {stageOptions
-              ? stageOptionFormTexts.buttons.edit
+              ? stageOptionFormTexts.buttons.save
               : stageOptionFormTexts.buttons.register}
           </Button>
         </div>

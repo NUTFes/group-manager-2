@@ -68,7 +68,7 @@ export const usePublicRelationsFormHooks = (
     },
     buttons: {
       cancel: t('form.actions.cancel'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
       register: t('form.actions.register'),
     },
     options: {

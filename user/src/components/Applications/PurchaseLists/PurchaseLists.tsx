@@ -151,6 +151,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          hasExisting
         />
       </AccordionMenu>
     );
@@ -195,6 +196,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          hasExisting={!!(purchaseLists && purchaseLists.length > 0)}
         />
       </AccordionMenu>
     );
