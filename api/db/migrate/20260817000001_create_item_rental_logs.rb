@@ -6,6 +6,7 @@ class CreateItemRentalLogs < ActiveRecord::Migration[6.1]
       t.string :uid, null: false
       t.bigint :stocker_place_id, null: false
       t.bigint :rental_item_id, null: false
+      t.bigint :assign_rental_item_id, null: false
       t.integer :category, null: false
       t.integer :quantity, null: false
       t.string :recorder_email, null: false
@@ -14,6 +15,7 @@ class CreateItemRentalLogs < ActiveRecord::Migration[6.1]
       t.index :uid, unique: true
       t.index :stocker_place_id
       t.index :rental_item_id
+      t.index :assign_rental_item_id
     end
   end
 end

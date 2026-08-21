@@ -3,6 +3,7 @@
 class ItemRentalLog < ApplicationRecord
   belongs_to :stocker_place
   belongs_to :rental_item
+  belongs_to :assign_rental_item
 
   enum :category, {
     rental: 0,

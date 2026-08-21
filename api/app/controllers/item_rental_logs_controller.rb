@@ -4,8 +4,7 @@ class ItemRentalLogsController < ApplicationController
   # GET /item_rental_logs
   def index
     assign_rental_items = AssignRentalItem.where(assign_rental_item_filter_params)
-    rental_item_ids = assign_rental_items.distinct.pluck(:rental_item_id)
-    item_rental_logs = ItemRentalLog.where(rental_item_id: rental_item_ids)
+    item_rental_logs = ItemRentalLog.where(assign_rental_item_id: assign_rental_items.select(:id))
 
     render json: fmt(ok, { item_rental_logs: item_rental_logs, assign_rental_items: assign_rental_items })
   end
@@ -17,7 +16,15 @@ class ItemRentalLogsController < ApplicationController
 
     return render_unprocessable_entity('Invalid category') unless valid_category?(params[:category])
 
-    item_rental_log = ItemRentalLog.new(item_rental_log_params)
+    assign_rental_item = AssignRentalItem.find_by(id: params[:assign_rental_item_id])
+    return render_not_found('assign_rental_item not found') unless assign_rental_item
+
+    item_rental_log = ItemRentalLog.new(
+      item_rental_log_params.merge(
+        rental_item_id: assign_rental_item.rental_item_id,
+        stocker_place_id: assign_rental_item.stocker_place_id
+      )
+    )
     item_rental_log.recorder_email = recorder_email
 
     if item_rental_log.save
@@ -43,7 +50,7 @@ class ItemRentalLogsController < ApplicationController
   end
 
   def item_rental_log_params
-    params.permit(:uid, :stocker_place_id, :rental_item_id, :category, :quantity)
+    params.permit(:uid, :assign_rental_item_id, :category, :quantity)
   end
 
   def recorder_email
@@ -52,5 +59,9 @@ class ItemRentalLogsController < ApplicationController
 
   def render_unprocessable_entity(message)
     render json: fmt(unprocessable_entity, [], message), status: :unprocessable_entity
+  end
+
+  def render_not_found(message)
+    render json: fmt(not_found, [], message), status: :not_found
   end
 end

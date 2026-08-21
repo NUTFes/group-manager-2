@@ -196,8 +196,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_17_000001) do
     t.integer "item_id"
     t.integer "item_num"
     t.integer "people_num"
-    t.datetime "time_start"
-    t.datetime "time_end"
+    t.datetime "time_start", precision: nil
+    t.datetime "time_end", precision: nil
     t.integer "date_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -207,11 +207,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_17_000001) do
     t.string "uid", null: false
     t.bigint "stocker_place_id", null: false
     t.bigint "rental_item_id", null: false
+    t.bigint "assign_rental_item_id", null: false
     t.integer "category", null: false
     t.integer "quantity", null: false
     t.string "recorder_email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["assign_rental_item_id"], name: "index_item_rental_logs_on_assign_rental_item_id"
     t.index ["rental_item_id"], name: "index_item_rental_logs_on_rental_item_id"
     t.index ["stocker_place_id"], name: "index_item_rental_logs_on_stocker_place_id"
     t.index ["uid"], name: "index_item_rental_logs_on_uid", unique: true
@@ -499,17 +501,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_17_000001) do
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.datetime "reset_password_sent_at", precision: nil
     t.boolean "allow_password_change", default: false
-    t.datetime "remember_created_at"
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "name"
     t.string "email"
