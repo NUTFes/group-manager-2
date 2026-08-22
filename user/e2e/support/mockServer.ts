@@ -779,13 +779,12 @@ const stageOrderHandler: MockHandler = async ({
 };
 
 /**
- * 会場申請。作成/更新はステージオプションと同じく legacy フェッチャ経由で、
- * 値は snake_case のクエリ文字列で届く。
+ * 会場申請。作成/更新は useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由のため、
+ * 値は JSON ボディ(snakecase-keysで変換)で届く。
  */
 const venueApplicationHandler: MockHandler = async ({
   route,
   pathname,
-  query,
   method,
   state,
 }) => {
@@ -802,25 +801,43 @@ const venueApplicationHandler: MockHandler = async ({
     return true;
   }
 
-  const placeOrderFromQuery = (id: number): PlaceOrderRecord => ({
+  const placeOrderFromBody = (
+    body: {
+      group_id?: number;
+      first?: number;
+      second?: number;
+      third?: number;
+      remark?: string;
+    },
+    id: number
+  ): PlaceOrderRecord => ({
     id,
-    group_id: Number(query.get('group_id') ?? mockGroupId),
-    first: Number(query.get('first') ?? 0),
-    second: Number(query.get('second') ?? 0),
-    third: Number(query.get('third') ?? 0),
-    remark: query.get('remark') ?? '',
+    group_id: Number(body.group_id ?? mockGroupId),
+    first: Number(body.first ?? 0),
+    second: Number(body.second ?? 0),
+    third: Number(body.third ?? 0),
+    remark: body.remark ?? '',
   });
 
   if (method === 'POST' && pathname === '/place_orders') {
     state.requestedUrls.push(pathname);
-    state.placeOrder = placeOrderFromQuery(8001);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof placeOrderFromBody
+    >[0];
+    state.placeOrder = placeOrderFromBody(body, 8001);
     await fulfillJson(route, apiResponse(state.placeOrder));
     return true;
   }
 
   if (method === 'PATCH' && /^\/place_orders\/\d+$/.test(pathname)) {
     state.requestedUrls.push(pathname);
-    state.placeOrder = placeOrderFromQuery(Number(pathname.split('/').at(-1)));
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof placeOrderFromBody
+    >[0];
+    state.placeOrder = placeOrderFromBody(
+      body,
+      Number(pathname.split('/').at(-1))
+    );
     await fulfillJson(route, apiResponse(state.placeOrder));
     return true;
   }

@@ -88,11 +88,11 @@ export const useVenueApplicationFormHooks = (
   const submitHandler = async (formData: VenueApplicationType) => {
     if (isEdit) {
       await updateTrigger({
-        query: formData,
+        body: formData,
       });
     } else {
       await registerTrigger({
-        query: formData,
+        body: formData,
       });
     }
   };
