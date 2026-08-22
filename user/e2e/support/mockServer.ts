@@ -881,13 +881,12 @@ const venueApplicationHandler: MockHandler = async ({
 };
 
 /**
- * PR文申請。作成/更新は legacyPost/PatchFetcher 経由のため、値は本文ではなく
- * snake_case のクエリ文字列で届く(他の legacy 群と同じ)。
+ * PR文申請。作成/更新は useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由のため、
+ * 値は JSON ボディ(snakecase-keysで変換)で届く。
  */
 const publicRelationHandler: MockHandler = async ({
   route,
   pathname,
-  query,
   method,
   state,
 }) => {
@@ -902,14 +901,22 @@ const publicRelationHandler: MockHandler = async ({
     return true;
   }
 
-  const publicRelationFromQuery = (id: number): PublicRelationRecord => ({
+  const publicRelationFromBody = (
+    body: {
+      group_id?: number;
+      blurb?: string;
+      picture_name?: string;
+      picture_path?: string;
+      is_announcement_requested?: boolean;
+    },
+    id: number
+  ): PublicRelationRecord => ({
     id,
-    group_id: Number(query.get('group_id') ?? mockGroupId),
-    blurb: query.get('blurb') ?? '',
-    picture_name: query.get('picture_name') ?? '',
-    picture_path: query.get('picture_path') ?? '',
-    is_announcement_requested:
-      query.get('is_announcement_requested') === 'true',
+    group_id: Number(body.group_id ?? mockGroupId),
+    blurb: body.blurb ?? '',
+    picture_name: body.picture_name ?? '',
+    picture_path: body.picture_path ?? '',
+    is_announcement_requested: Boolean(body.is_announcement_requested),
     created_at: '2026-01-01T00:00:00.000Z',
     updated_at: '2026-01-01T00:00:00.000Z',
   });
@@ -920,7 +927,10 @@ const publicRelationHandler: MockHandler = async ({
       await route.fulfill({ status: 500, body: 'e2e forced failure' });
       return true;
     }
-    state.publicRelation = publicRelationFromQuery(11001);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof publicRelationFromBody
+    >[0];
+    state.publicRelation = publicRelationFromBody(body, 11001);
     await fulfillJson(route, apiResponse(state.publicRelation));
     return true;
   }
@@ -931,7 +941,11 @@ const publicRelationHandler: MockHandler = async ({
       await route.fulfill({ status: 500, body: 'e2e forced failure' });
       return true;
     }
-    state.publicRelation = publicRelationFromQuery(
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof publicRelationFromBody
+    >[0];
+    state.publicRelation = publicRelationFromBody(
+      body,
       Number(pathname.split('/').at(-1))
     );
     await fulfillJson(route, apiResponse(state.publicRelation));

@@ -344,10 +344,10 @@ export const usePublicRelationsFormHooks = (
       // PR関連APIにデータを送信
       if (publicRelation) {
         // 既存データの更新 (PUT)
-        await updatePr({ query: prQueryData });
+        await updatePr({ body: prQueryData });
       } else {
         // 新規作成 (POST)
-        await createPr({ query: prQueryData });
+        await createPr({ body: prQueryData });
       }
 
       // データ更新後、mutateで最新データを取得
