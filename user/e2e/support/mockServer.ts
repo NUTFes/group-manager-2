@@ -414,14 +414,14 @@ const unregisteredGroupHandler: MockHandler = async ({
 };
 
 /**
- * 副代表申請。作成/更新は legacy フェッチャ経由で値はクエリに載る。
+ * 副代表申請。作成/更新は useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由のため、
+ * 値は JSON ボディ(snakecase-keysで変換)で届く。
  * 「一人で参加」を選ぶと副代表を削除するが、未登録時は id が undefined のまま
  * DELETE /sub_reps/undefined が飛ぶため、数値以外の id も受け付ける。
  */
 const viceRepresentativeHandler: MockHandler = async ({
   route,
   pathname,
-  query,
   method,
   state,
 }) => {
@@ -435,29 +435,45 @@ const viceRepresentativeHandler: MockHandler = async ({
     return true;
   }
 
-  const viceRepresentativeFromQuery = (
+  const viceRepresentativeFromBody = (
+    body: {
+      group_id?: number;
+      name?: string;
+      student_id?: number;
+      grade_id?: number;
+      department_id?: number;
+      email?: string;
+      tel?: string;
+    },
     id: number
   ): ViceRepresentativeRecord => ({
     id,
-    group_id: Number(query.get('group_id') ?? mockGroupId),
-    name: query.get('name') ?? '',
-    student_id: Number(query.get('student_id') ?? 0),
-    grade_id: Number(query.get('grade_id') ?? 0),
-    department_id: Number(query.get('department_id') ?? 0),
-    email: query.get('email') ?? '',
-    tel: query.get('tel') ?? '',
+    group_id: Number(body.group_id ?? mockGroupId),
+    name: body.name ?? '',
+    student_id: Number(body.student_id ?? 0),
+    grade_id: Number(body.grade_id ?? 0),
+    department_id: Number(body.department_id ?? 0),
+    email: body.email ?? '',
+    tel: body.tel ?? '',
   });
 
   if (method === 'POST' && pathname === '/sub_reps') {
     state.requestedUrls.push(pathname);
-    state.viceRepresentative = viceRepresentativeFromQuery(9001);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof viceRepresentativeFromBody
+    >[0];
+    state.viceRepresentative = viceRepresentativeFromBody(body, 9001);
     await fulfillJson(route, apiResponse(state.viceRepresentative));
     return true;
   }
 
   if (method === 'PATCH' && /^\/sub_reps\/\d+$/.test(pathname)) {
     state.requestedUrls.push(pathname);
-    state.viceRepresentative = viceRepresentativeFromQuery(
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof viceRepresentativeFromBody
+    >[0];
+    state.viceRepresentative = viceRepresentativeFromBody(
+      body,
       Number(pathname.split('/').at(-1))
     );
     await fulfillJson(route, apiResponse(state.viceRepresentative));
