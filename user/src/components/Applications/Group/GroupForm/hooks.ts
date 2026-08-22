@@ -132,7 +132,7 @@ export const useGroupFormHooks = (
     // 既存の団体申請がある場合は更新
     if (groups) {
       try {
-        await update({ query: formData });
+        await update({ body: formData });
         await mutateGroups();
         toast.success(groupFormTexts.messages.updateSuccess);
         return true;
@@ -143,7 +143,7 @@ export const useGroupFormHooks = (
       // 団体申請がない場合は新規作成
     } else {
       try {
-        await create({ query: formData });
+        await create({ body: formData });
         await mutateGroups();
         await mutateCheckAllRegisteredGroups();
         await mutateGroupByUserId();

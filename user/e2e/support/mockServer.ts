@@ -130,21 +130,35 @@ const authHandler: MockHandler = async ({ route, url }) => {
 };
 
 /**
- * 団体申請本体。作成/更新は legacy フェッチャ経由で、値は snake_case のクエリ文字列で届く。
+ * 団体申請本体。作成/更新は useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由のため、
+ * 値は JSON ボディ(snakecase-keysで変換)で届く。
  * Group は check_all_registered.group を握るページ全体のゲートでもあるため、
  * /groups/user/:id と /groups/:id の2つのGETを別々に持つ。
  */
-const groupFromQuery = (id: number, query: URLSearchParams): GroupRecord => ({
+const groupFromBody = (
+  id: number,
+  body: {
+    name?: string;
+    project_name?: string;
+    activity?: string;
+    user_id?: number;
+    group_category_id?: number;
+    fes_year_id?: number;
+    is_international?: boolean;
+    committee?: number;
+    is_external?: boolean;
+  }
+): GroupRecord => ({
   id,
-  name: query.get('name') ?? '',
-  project_name: query.get('project_name') ?? '',
-  activity: query.get('activity') ?? '',
-  user_id: Number(query.get('user_id') ?? mockUser.id),
-  group_category_id: Number(query.get('group_category_id') ?? 1),
-  fes_year_id: Number(query.get('fes_year_id') ?? 1),
-  is_international: query.get('is_international') === 'true',
-  committee: query.get('committee') === '1',
-  is_external: query.get('is_external') === 'true',
+  name: body.name ?? '',
+  project_name: body.project_name ?? '',
+  activity: body.activity ?? '',
+  user_id: Number(body.user_id ?? mockUser.id),
+  group_category_id: Number(body.group_category_id ?? 1),
+  fes_year_id: Number(body.fes_year_id ?? 1),
+  is_international: Boolean(body.is_international),
+  committee: Number(body.committee) === 1,
+  is_external: Boolean(body.is_external),
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 });
@@ -153,7 +167,6 @@ const groupHandler: MockHandler = async ({
   route,
   path,
   pathname,
-  query,
   method,
   state,
 }) => {
@@ -206,7 +219,10 @@ const groupHandler: MockHandler = async ({
       await route.fulfill({ status: 500, body: 'e2e forced failure' });
       return true;
     }
-    state.group = groupFromQuery(mockGroupId, query);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof groupFromBody
+    >[1];
+    state.group = groupFromBody(mockGroupId, body);
     await fulfillJson(route, apiResponse(state.group));
     return true;
   }
@@ -217,7 +233,10 @@ const groupHandler: MockHandler = async ({
       await route.fulfill({ status: 500, body: 'e2e forced failure' });
       return true;
     }
-    state.group = groupFromQuery(Number(pathname.split('/').at(-1)), query);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof groupFromBody
+    >[1];
+    state.group = groupFromBody(Number(pathname.split('/').at(-1)), body);
     await fulfillJson(route, apiResponse(state.group));
     return true;
   }
