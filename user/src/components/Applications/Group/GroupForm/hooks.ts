@@ -25,6 +25,7 @@ export const useGroupFormHooks = (
   // 団体カテゴリー一覧を取得
   const {
     handleSubmit,
+    control,
     setValue,
     formState: { errors },
     reset,
@@ -169,14 +170,13 @@ export const useGroupFormHooks = (
 
   return {
     handleSubmit,
+    control,
     errors,
     onSubmit,
-    setValue,
     createIsMutating,
     updateIsMutating,
     formatRadioValue,
     validateEdit,
-    values,
     groupFormTexts,
   };
 };
