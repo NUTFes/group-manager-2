@@ -139,8 +139,8 @@ export const useVenueMapFormHooks = (
   const {
     handleSubmit,
     formState: { errors: formErrors, isDirty },
+    control,
     setValue,
-    watch,
     reset,
   } = useForm<VenueMapFormData>({
     mode: 'onChange',
@@ -162,8 +162,6 @@ export const useVenueMapFormHooks = (
     venueMap?.pictureName || null
   );
   const { previewUrl, setPreviewUrlFromFile } = useImageObjectUrl();
-
-  const values = watch();
 
   const handleImageUpload = async () => {
     const input = document.createElement('input');
@@ -270,8 +268,7 @@ export const useVenueMapFormHooks = (
   return {
     handleSubmit,
     errors: formErrors,
-    setValue,
-    values,
+    control,
     fileName,
     setFileName,
     previewUrl,
