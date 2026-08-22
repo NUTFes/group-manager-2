@@ -33,7 +33,7 @@ export const useStageFormHooks = (groupId: number) => {
   } = useGetStageOrders(currentGroupId);
 
   // フォーム状態管理
-  const { handleSubmit, formState, updateField, reset } = useStageForm(
+  const { handleSubmit, control, formState, updateField, reset } = useStageForm(
     sunnyOrder,
     rainyOrder
   );
@@ -194,6 +194,7 @@ export const useStageFormHooks = (groupId: number) => {
 
   return {
     formState,
+    control,
     updateField,
     dateOptions,
     filteredSunny1,
