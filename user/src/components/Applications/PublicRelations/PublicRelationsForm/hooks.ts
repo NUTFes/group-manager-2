@@ -144,6 +144,7 @@ export const usePublicRelationsFormHooks = (
   const {
     handleSubmit,
     formState: { errors },
+    control,
     setValue,
     setError,
     watch,
@@ -250,10 +251,6 @@ export const usePublicRelationsFormHooks = (
   };
 
   const announceOptions = publicRelationsFormTexts.options.announce;
-
-  const handleAnnounceChange = (value: string) => {
-    setValue('announce', parseInt(value) === 1 ? 'yes' : 'no');
-  };
 
   // 画像をbase64に変換する関数
   const convertImageToBase64 = (file: File): Promise<string> => {
@@ -366,15 +363,13 @@ export const usePublicRelationsFormHooks = (
   return {
     handleSubmit,
     errors,
-    setValue,
-    values,
+    control,
     fileName,
     previewUrl,
     fetchError: fetchPrError,
     isFetching: isPrFetching,
     isMutating: createPrIsMutating || updatePrIsMutating,
     handleImageUpload,
-    handleAnnounceChange,
     announceOptions,
     onSubmit,
     validateEdit,
