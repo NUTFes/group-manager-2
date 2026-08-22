@@ -60,7 +60,7 @@ export const useStageOptionFormHooks = (
   const onSubmit = async (formData: StageOptionForm) => {
     if (stageOptions) {
       try {
-        await update({ query: formData });
+        await update({ body: formData });
         await revalidateByUrl(
           `/stage_common_options/group/${formData.groupId}`
         );
@@ -73,7 +73,7 @@ export const useStageOptionFormHooks = (
       }
     } else {
       try {
-        await create({ query: formData });
+        await create({ body: formData });
         await revalidateByUrl(
           `/stage_common_options/group/${formData.groupId}`
         );

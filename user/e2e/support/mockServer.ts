@@ -626,13 +626,12 @@ const employeesHandler: MockHandler = async ({
 
 /**
  * ステージオプション申請。
- * 作成/更新は legacyPost/PatchFetcher 経由のため、値は本文ではなく
- * snake_case のクエリ文字列で届く点に注意。
+ * 作成/更新は useAuthenticatedPost/Patch(@/hooks/useApi.ts)経由のため、
+ * 値は JSON ボディ(snakecase-keysで変換)で届く。
  */
 const stageOptionHandler: MockHandler = async ({
   route,
   pathname,
-  query,
   method,
   state,
 }) => {
@@ -647,25 +646,41 @@ const stageOptionHandler: MockHandler = async ({
     return true;
   }
 
-  const stageOptionFromQuery = (id: number): StageOptionRecord => ({
+  const stageOptionFromBody = (
+    body: {
+      group_id?: number;
+      own_equipment?: boolean;
+      bgm?: boolean;
+      camera_permission?: boolean;
+      loud_sound?: boolean;
+    },
+    id: number
+  ): StageOptionRecord => ({
     id,
-    group_id: Number(query.get('group_id') ?? mockGroupId),
-    own_equipment: query.get('own_equipment') === 'true',
-    bgm: query.get('bgm') === 'true',
-    camera_permission: query.get('camera_permission') === 'true',
-    loud_sound: query.get('loud_sound') === 'true',
+    group_id: Number(body.group_id ?? mockGroupId),
+    own_equipment: Boolean(body.own_equipment),
+    bgm: Boolean(body.bgm),
+    camera_permission: Boolean(body.camera_permission),
+    loud_sound: Boolean(body.loud_sound),
   });
 
   if (method === 'POST' && pathname === '/stage_common_options') {
     state.requestedUrls.push(pathname);
-    state.stageOption = stageOptionFromQuery(7001);
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof stageOptionFromBody
+    >[0];
+    state.stageOption = stageOptionFromBody(body, 7001);
     await fulfillJson(route, apiResponse(state.stageOption));
     return true;
   }
 
   if (method === 'PATCH' && /^\/stage_common_options\/\d+$/.test(pathname)) {
     state.requestedUrls.push(pathname);
-    state.stageOption = stageOptionFromQuery(
+    const body = (await route.request().postDataJSON()) as Parameters<
+      typeof stageOptionFromBody
+    >[0];
+    state.stageOption = stageOptionFromBody(
+      body,
       Number(pathname.split('/').at(-1))
     );
     await fulfillJson(route, apiResponse(state.stageOption));

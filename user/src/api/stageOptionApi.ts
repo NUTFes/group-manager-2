@@ -1,6 +1,8 @@
-import useSWRMutation from 'swr/mutation';
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   STAGE_OPTIONS: '/stage_common_options',
@@ -49,12 +51,9 @@ export const useGetStageOptions = (groupId: number | null) => {
 };
 
 export const useCreateStageOptions = () => {
-  return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, legacyPostFetcher);
+  return useAuthenticatedPost(API_ENDPOINTS.STAGE_OPTIONS);
 };
 
 export const useUpdateStageOptions = (id: number) => {
-  return useSWRMutation(
-    `${API_ENDPOINTS.STAGE_OPTIONS}/${id}`,
-    legacyPatchFetcher
-  );
+  return useAuthenticatedPatch(`${API_ENDPOINTS.STAGE_OPTIONS}/${id}`);
 };
