@@ -1,7 +1,11 @@
 // src/api/rentItemsApi.ts
 import { useTranslation } from 'next-i18next';
-import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  useAuthenticatedDeleteWithId,
+  useAuthenticatedGet,
+  useAuthenticatedPatchWithId,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -141,7 +145,16 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
 
 // 物品申請の操作用フック
 export const useMutateRentalOrders = () => {
-  const { remove } = useApiMutations();
+  const { trigger: createRentalOrder } = useAuthenticatedPost(
+    API_ENDPOINTS.RENTAL_ORDERS
+  );
+  const { trigger: updateRentalOrder } = useAuthenticatedPatchWithId(
+    API_ENDPOINTS.RENTAL_ORDERS
+  )();
+  const { trigger: deleteRentalOrder } = useAuthenticatedDeleteWithId(
+    API_ENDPOINTS.RENTAL_ORDERS
+  )();
+
   // 物品申請データを送信
   const submitRentalOrders = async (
     items: Array<{ group_id: number; rental_item_id: number; num: number }>,
@@ -156,32 +169,21 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          legacyPatchFetcher(
-            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-            {
-              arg: { body: items[i] },
-            }
-          )
+          updateRentalOrder({ id: existingItems[i].id, body: items[i] })
         );
       }
 
       // 追加：新データが多い場合、残りを新規作成
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
-          promises.push(
-            legacyPostFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
-              arg: { body: items[i] },
-            })
-          );
+          promises.push(createRentalOrder({ body: items[i] }));
         }
       }
 
       // 削除：既存データが多い場合、余分なものを削除
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
-          promises.push(
-            remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
-          );
+          promises.push(deleteRentalOrder(existingItems[i].id));
         }
       }
 
@@ -208,9 +210,7 @@ export const useMutateRentalOrders = () => {
   // 物品申請を削除
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
-      const promises = itemIds.map((id) =>
-        remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
-      );
+      const promises = itemIds.map((id) => deleteRentalOrder(id));
 
       // 💡 削除側も同様に、複数同時エラーでクラッシュしないよう allSettled に変更
       const results = await Promise.allSettled(promises);
