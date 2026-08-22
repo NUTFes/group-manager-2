@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { ApiResponse } from '@/api/stageOptionApi';
 import { PlaceOrder } from '@/api/venueApplication';
+import { Controller } from 'react-hook-form';
 import { KeyedMutator } from 'swr';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
@@ -25,9 +26,8 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     placesLoading,
     isLoading,
     options,
-    values,
     errors,
-    setValue,
+    control,
     onSubmit,
     handleSubmit,
     disableOptions,
@@ -48,35 +48,59 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col space-y-10"></div>
         <div className="flex w-full flex-col items-center justify-center gap-10">
-          <Selector
-            label={venueApplicationFormTexts.fields.firstChoice}
-            options={options}
-            disableOptions={disableOptions}
-            value={values.first}
-            onChange={(value) => setValue('first', Number(value))}
-            error={errors.first?.message}
+          <Controller
+            control={control}
+            name="first"
+            render={({ field }) => (
+              <Selector
+                label={venueApplicationFormTexts.fields.firstChoice}
+                options={options}
+                disableOptions={disableOptions}
+                value={field.value}
+                onChange={(value) => field.onChange(Number(value))}
+                error={errors.first?.message}
+              />
+            )}
           />
-          <Selector
-            label={venueApplicationFormTexts.fields.secondChoice}
-            options={options}
-            disableOptions={disableOptions}
-            value={values.second}
-            onChange={(value) => setValue('second', Number(value))}
-            error={errors.second?.message}
+          <Controller
+            control={control}
+            name="second"
+            render={({ field }) => (
+              <Selector
+                label={venueApplicationFormTexts.fields.secondChoice}
+                options={options}
+                disableOptions={disableOptions}
+                value={field.value}
+                onChange={(value) => field.onChange(Number(value))}
+                error={errors.second?.message}
+              />
+            )}
           />
-          <Selector
-            label={venueApplicationFormTexts.fields.thirdChoice}
-            options={options}
-            disableOptions={disableOptions}
-            value={values.third}
-            onChange={(value) => setValue('third', Number(value))}
-            error={errors.third?.message}
+          <Controller
+            control={control}
+            name="third"
+            render={({ field }) => (
+              <Selector
+                label={venueApplicationFormTexts.fields.thirdChoice}
+                options={options}
+                disableOptions={disableOptions}
+                value={field.value}
+                onChange={(value) => field.onChange(Number(value))}
+                error={errors.third?.message}
+              />
+            )}
           />
-          <TextArea
-            label={venueApplicationFormTexts.fields.remark}
-            value={values.remark ?? ''}
-            onChange={(value) => setValue('remark', value)}
-            error={errors.remark?.message}
+          <Controller
+            control={control}
+            name="remark"
+            render={({ field }) => (
+              <TextArea
+                label={venueApplicationFormTexts.fields.remark}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                error={errors.remark?.message}
+              />
+            )}
           />
           <div className="mt-10 flex w-full items-center justify-center">
             {placeOrder && handleEditClick && (

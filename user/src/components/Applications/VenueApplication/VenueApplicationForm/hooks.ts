@@ -33,7 +33,7 @@ export const useVenueApplicationFormHooks = (
   const {
     handleSubmit,
     formState: { errors },
-    setValue,
+    control,
     watch,
   } = useForm<VenueApplicationType>({
     mode: 'onChange',
@@ -122,9 +122,8 @@ export const useVenueApplicationFormHooks = (
     placesLoading,
     isLoading,
     options,
-    values,
     errors,
-    setValue,
+    control,
     onSubmit,
     handleSubmit,
     disableOptions,
