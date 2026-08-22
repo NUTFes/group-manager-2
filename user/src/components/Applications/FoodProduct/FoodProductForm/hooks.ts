@@ -166,20 +166,13 @@ export const useFoodProductFormHooks = (
     );
   };
 
-  const handleAlcoholChange = (index: number, value: string) => {
-    const isAlcohol = parseInt(value) === FORM_VALUES.YES;
-    setValue(`products.${index}.isAlcohol`, isAlcohol);
-
+  // isAlcoholがtrueになった場合は、isCookingも強制的にtrueにする副作用。
+  // isAlcohol自体の値はControllerのfield.onChangeで更新されるため、
+  // ここではisCooking側への波及だけを担う。
+  const applyAlcoholSideEffect = (index: number, isAlcohol: boolean) => {
     if (isAlcohol) {
       setValue(`products.${index}.isCooking`, true);
     }
-  };
-
-  const handleHasLicenseChange = (index: number, value: string) => {
-    setValue(
-      `products.${index}.isCooking`,
-      parseInt(value) === FORM_VALUES.YES
-    );
   };
 
   const addProduct = () => {
@@ -232,11 +225,10 @@ export const useFoodProductFormHooks = (
   return {
     handleSubmit,
     errors,
-    setValue,
+    control,
     isFetching: false,
     isMutating: isSubmitting,
-    handleAlcoholChange,
-    handleHasLicenseChange,
+    applyAlcoholSideEffect,
     alcoholOptions,
     licenseOptions,
     onSubmit,

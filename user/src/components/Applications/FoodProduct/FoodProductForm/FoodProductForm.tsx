@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { ApiResponse } from '@/api/api';
+import { Controller } from 'react-hook-form';
 import { KeyedMutator } from 'swr';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -49,11 +50,10 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
   const {
     handleSubmit,
     errors,
-    setValue,
+    control,
     isFetching,
     isMutating,
-    handleAlcoholChange,
-    handleHasLicenseChange,
+    applyAlcoholSideEffect,
     onSubmit,
     addProduct,
     removeProduct,
@@ -177,67 +177,104 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
           })}
         >
           <div className="flex w-full flex-col items-start justify-center gap-10">
-            {products.map((product, index) => (
+            {products.map((_, index) => (
               <FormContainer key={index}>
                 <div className="flex w-full flex-col items-start justify-center gap-6">
                   <div className="relative w-96">
-                    <TextBox
-                      label={foodProductFormTexts.form.fields.name}
-                      value={product.name || ''}
-                      onChange={(value) =>
-                        setValue(`products.${index}.name`, value)
-                      }
-                      required
-                      error={errors.products?.[index]?.name?.message}
+                    <Controller
+                      control={control}
+                      name={`products.${index}.name` as const}
+                      render={({ field }) => (
+                        <TextBox
+                          label={foodProductFormTexts.form.fields.name}
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          required
+                          error={errors.products?.[index]?.name?.message}
+                        />
+                      )}
                     />
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
-                    <Radio
-                      label={foodProductFormTexts.form.radio.alcohol.label}
-                      name={`alcohol_${index}`}
-                      value={product.isAlcohol ? '1' : '0'}
-                      onChange={(value) => handleAlcoholChange(index, value)}
-                      required
-                      note={foodProductFormTexts.form.radio.alcohol.note}
-                      options={alcoholRadioOptions}
-                      error={errors.products?.[index]?.isAlcohol?.message}
+                    <Controller
+                      control={control}
+                      name={`products.${index}.isAlcohol` as const}
+                      render={({ field }) => (
+                        <Radio
+                          label={foodProductFormTexts.form.radio.alcohol.label}
+                          name={`alcohol_${index}`}
+                          value={field.value ? '1' : '0'}
+                          onChange={(value) => {
+                            const isAlcohol = parseInt(value) === 1;
+                            field.onChange(isAlcohol);
+                            applyAlcoholSideEffect(index, isAlcohol);
+                          }}
+                          required
+                          note={foodProductFormTexts.form.radio.alcohol.note}
+                          options={alcoholRadioOptions}
+                          error={errors.products?.[index]?.isAlcohol?.message}
+                        />
+                      )}
                     />
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
-                    <Radio
-                      label={foodProductFormTexts.form.radio.cooking.label}
-                      name={`license_${index}`}
-                      value={product.isCooking ? '1' : '0'}
-                      onChange={(value) => handleHasLicenseChange(index, value)}
-                      required
-                      options={cookingRadioOptions}
-                      error={errors.products?.[index]?.isCooking?.message}
+                    <Controller
+                      control={control}
+                      name={`products.${index}.isCooking` as const}
+                      render={({ field }) => (
+                        <Radio
+                          label={foodProductFormTexts.form.radio.cooking.label}
+                          name={`license_${index}`}
+                          value={field.value ? '1' : '0'}
+                          onChange={(value) =>
+                            field.onChange(parseInt(value) === 1)
+                          }
+                          required
+                          options={cookingRadioOptions}
+                          error={errors.products?.[index]?.isCooking?.message}
+                        />
+                      )}
                     />
                   </div>
                   <div className="relative w-96">
-                    <TextBox
-                      label={foodProductFormTexts.form.fields.day1}
-                      value={product.day1Quantity || ''}
-                      onChange={(value) =>
-                        setValue(`products.${index}.day1Quantity`, value)
-                      }
-                      required
-                      note={foodProductFormTexts.form.notes.quantity}
-                      error={errors.products?.[index]?.day1Quantity?.message}
-                      type="number"
+                    <Controller
+                      control={control}
+                      name={`products.${index}.day1Quantity` as const}
+                      render={({ field }) => (
+                        <TextBox
+                          label={foodProductFormTexts.form.fields.day1}
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          required
+                          note={foodProductFormTexts.form.notes.quantity}
+                          error={
+                            errors.products?.[index]?.day1Quantity?.message
+                          }
+                          type="number"
+                        />
+                      )}
                     />
                   </div>
                   <div className="relative w-96">
-                    <TextBox
-                      label={foodProductFormTexts.form.fields.day2}
-                      value={product.day2Quantity || ''}
-                      onChange={(value) =>
-                        setValue(`products.${index}.day2Quantity`, value)
-                      }
-                      required
-                      note={foodProductFormTexts.form.notes.quantity}
-                      error={errors.products?.[index]?.day2Quantity?.message}
-                      type="number"
+                    <Controller
+                      control={control}
+                      name={`products.${index}.day2Quantity` as const}
+                      render={({ field }) => (
+                        <TextBox
+                          label={foodProductFormTexts.form.fields.day2}
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          required
+                          note={foodProductFormTexts.form.notes.quantity}
+                          error={
+                            errors.products?.[index]?.day2Quantity?.message
+                          }
+                          type="number"
+                        />
+                      )}
                     />
                   </div>
                   {products.length > 1 && (
