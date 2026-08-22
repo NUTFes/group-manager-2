@@ -16,7 +16,7 @@ import {
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
-import { useApiMutations } from '@/hooks/useApi';
+import { useAuthenticatedDeleteWithId } from '@/hooks/useApi';
 import { useEditableSection } from '../shared';
 
 const API_ENDPOINTS = {
@@ -41,7 +41,9 @@ export const useFoodProductHooks = (
   } = useGetFoodProducts(groupId || 0);
 
   const { trigger: upsertFoodProducts, isMutating } = useUpsertFoodProducts();
-  const { remove } = useApiMutations();
+  const { trigger: removeFoodProductById } = useAuthenticatedDeleteWithId(
+    API_ENDPOINTS.FOOD_PRODUCTS
+  )();
 
   const foodProducts: RegisteredProduct[] | null =
     apiFoodProducts?.length > 0
@@ -109,8 +111,7 @@ export const useFoodProductHooks = (
 
       for (const deleteId of toDeleteIds) {
         try {
-          const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${deleteId}`;
-          await remove(deleteEndpoint);
+          await removeFoodProductById(deleteId);
         } catch (deleteError) {
           console.error(`Failed to delete product ${deleteId}:`, deleteError);
         }
@@ -285,21 +286,8 @@ export const useFoodProductHooks = (
       }
 
       const productId = parseInt(id);
-      const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${productId}`;
 
-      const result = await remove(deleteEndpoint);
-
-      if (
-        result &&
-        typeof result === 'object' &&
-        'success' in result &&
-        !result.success
-      ) {
-        throw new Error(
-          result.error?.message ||
-            t('applications.foodProduct.messages.deleteFailed')
-        );
-      }
+      await removeFoodProductById(productId);
 
       await mutateFoodProducts();
       await mutate(
