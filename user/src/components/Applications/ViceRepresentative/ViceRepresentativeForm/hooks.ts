@@ -64,7 +64,7 @@ export const useViceRepresentativeFormHook = (
 
   const {
     handleSubmit,
-    setValue,
+    control,
     getValues,
     formState: { errors, isSubmitting },
     reset,
@@ -142,7 +142,7 @@ export const useViceRepresentativeFormHook = (
     });
 
   return {
-    setValue,
+    control,
     getValues,
     errors,
     reset,
