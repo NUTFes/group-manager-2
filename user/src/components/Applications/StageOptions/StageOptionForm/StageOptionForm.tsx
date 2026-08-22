@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
+import { Controller } from 'react-hook-form';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
@@ -18,15 +19,14 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
 }) => {
   const {
     handleSubmit,
+    control,
     errors,
     onSubmit,
-    setValue,
     createIsMutating,
     updateIsMutating,
     convertToBoolean,
     validateEdit,
     formatRadioValue,
-    values,
     stageOptionFormTexts,
   } = useStageOptionFormHooks(stageOptions, groupId);
 
@@ -45,45 +45,65 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
         className="w-full"
       >
         <div className="flex flex-col space-y-10">
-          <Radio
-            label={stageOptionFormTexts.labels[0]}
-            note={stageOptionFormTexts.notes.select}
-            onChange={(value) =>
-              setValue('ownEquipment', convertToBoolean(value))
-            }
-            options={stageOptionFormTexts.options}
-            required
-            value={formatRadioValue(values.ownEquipment)}
-            error={errors.ownEquipment?.message}
+          <Controller
+            control={control}
+            name="ownEquipment"
+            render={({ field }) => (
+              <Radio
+                label={stageOptionFormTexts.labels[0]}
+                note={stageOptionFormTexts.notes.select}
+                onChange={(value) => field.onChange(convertToBoolean(value))}
+                options={stageOptionFormTexts.options}
+                required
+                value={formatRadioValue(field.value)}
+                error={errors.ownEquipment?.message}
+              />
+            )}
           />
-          <Radio
-            label={stageOptionFormTexts.labels[1]}
-            note={stageOptionFormTexts.notes.select}
-            onChange={(value) => setValue('bgm', convertToBoolean(value))}
-            options={stageOptionFormTexts.options}
-            required
-            value={formatRadioValue(values.bgm)}
-            error={errors.bgm?.message}
+          <Controller
+            control={control}
+            name="bgm"
+            render={({ field }) => (
+              <Radio
+                label={stageOptionFormTexts.labels[1]}
+                note={stageOptionFormTexts.notes.select}
+                onChange={(value) => field.onChange(convertToBoolean(value))}
+                options={stageOptionFormTexts.options}
+                required
+                value={formatRadioValue(field.value)}
+                error={errors.bgm?.message}
+              />
+            )}
           />
-          <Radio
-            label={stageOptionFormTexts.labels[2]}
-            note={stageOptionFormTexts.notes.select}
-            onChange={(value) =>
-              setValue('cameraPermission', convertToBoolean(value))
-            }
-            options={stageOptionFormTexts.options}
-            required
-            value={formatRadioValue(values.cameraPermission)}
-            error={errors.cameraPermission?.message}
+          <Controller
+            control={control}
+            name="cameraPermission"
+            render={({ field }) => (
+              <Radio
+                label={stageOptionFormTexts.labels[2]}
+                note={stageOptionFormTexts.notes.select}
+                onChange={(value) => field.onChange(convertToBoolean(value))}
+                options={stageOptionFormTexts.options}
+                required
+                value={formatRadioValue(field.value)}
+                error={errors.cameraPermission?.message}
+              />
+            )}
           />
-          <Radio
-            label={stageOptionFormTexts.labels[3]}
-            note={stageOptionFormTexts.notes.select}
-            onChange={(value) => setValue('loudSound', convertToBoolean(value))}
-            options={stageOptionFormTexts.options}
-            required
-            value={formatRadioValue(values.loudSound)}
-            error={errors.loudSound?.message}
+          <Controller
+            control={control}
+            name="loudSound"
+            render={({ field }) => (
+              <Radio
+                label={stageOptionFormTexts.labels[3]}
+                note={stageOptionFormTexts.notes.select}
+                onChange={(value) => field.onChange(convertToBoolean(value))}
+                options={stageOptionFormTexts.options}
+                required
+                value={formatRadioValue(field.value)}
+                error={errors.loudSound?.message}
+              />
+            )}
           />
         </div>
         <div className="mt-10 flex w-full items-center justify-center">

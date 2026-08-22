@@ -22,7 +22,7 @@ export const useStageOptionFormHooks = (
   const { t } = useTranslation('common');
   const {
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -122,10 +122,10 @@ export const useStageOptionFormHooks = (
 
   return {
     handleSubmit,
+    control,
     errors,
     stageOptions,
     onSubmit,
-    setValue,
     values,
     createError,
     createIsMutating,
