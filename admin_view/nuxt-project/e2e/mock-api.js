@@ -97,6 +97,15 @@ http
       return;
     }
 
+    if (
+      url.pathname === "/_e2e/assign-rental-items" &&
+      request.method === "DELETE"
+    ) {
+      assignRentalItems = [];
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
     if (url.pathname === "/_e2e/unauthorized" && request.method === "POST") {
       const payload = await readBody(request);
       unauthorizedPaths.add(payload.path);
@@ -322,6 +331,27 @@ http
       return;
     }
 
+    if (url.pathname === "/assign_rental_items" && request.method === "POST") {
+      const payload = await readBody(request);
+      requests.push({ method: "POST", path: url.pathname, payload });
+      const nextId =
+        assignRentalItems.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+      const createdItems = (payload.items || []).map((item, index) => ({
+        id: nextId + index,
+        group_id: Number(item.group_id),
+        rental_item_id: Number(payload.rentalItemId),
+        stocker_place_id: Number(payload.stockerPlaceId),
+        num: Number(item.num),
+        remark: item.remark || null,
+      }));
+      assignRentalItems.push(...createdItems);
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: createdItems,
+      });
+      return;
+    }
+
     if (
       /^\/assign_rental_items\/\d+$/.test(url.pathname) &&
       request.method === "PUT"
@@ -340,6 +370,69 @@ http
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: assignRentalItem,
+      });
+      return;
+    }
+
+    if (
+      url.pathname === "/api/v1/get_refinement_stocker_item" &&
+      request.method === "POST"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: {
+          stocker_place: { id: 1, name: "物品倉庫" },
+          stocker_items: [
+            {
+              rental_item: { id: 1, name: "机" },
+              stocker_item: { id: 1, num: 10 },
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    if (
+      url.pathname === "/api/v1/get_refinement_assign_rental_item" &&
+      request.method === "POST"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: assignRentalItems.map((item) => ({
+          assign_rental_item: item,
+          rental_item: { id: 1, name: "机" },
+          group: { id: 1, name: "テント企画" },
+        })),
+      });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/get_all_rentable_items") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, name: "机" }],
+      });
+      return;
+    }
+
+    if (
+      [
+        "/api/v1/get_inside_shop_rentable_items",
+        "/api/v1/get_outside_shop_rentable_items",
+      ].includes(url.pathname)
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
+    if (url.pathname === "/place_categories") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
       });
       return;
     }
