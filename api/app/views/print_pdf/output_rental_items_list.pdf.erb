@@ -39,11 +39,11 @@
             <td><%= assign_rental_item.rental_item.name %></td>
             <td><%= assign_rental_item.stocker_place.name %></td>
             <td><%= assign_rental_item.num %></td>
-            <td></td>
+            <td><%= assign_rental_item.remark %></td>
             </tr>
           <% end %>
         <% else %>
-          <td colspan="3">なし</td>
+          <td colspan="4">なし</td>
         </tr>
         <% end %>
       <% end %>
