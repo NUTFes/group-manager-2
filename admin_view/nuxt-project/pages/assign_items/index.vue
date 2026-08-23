@@ -205,7 +205,7 @@
                     <input
                       type="text"
                       :aria-label="getItemName(itemId) + 'の備考'"
-                      :disabled="!$role(roleID).assign_items.update || !hasAssignRecord(assign, itemId)"
+                      :disabled="!$role(roleID).assign_items.update"
                       :value="assign.remarks[itemId] || ''"
                       placeholder="番号・名称など"
                       @blur="updateAssignRemark($event, assign, itemId)"
@@ -214,6 +214,14 @@
                     >
                   </div>
                 </div>
+                <button
+                  v-if="assign.pending"
+                  class="btn-save"
+                  type="button"
+                  :disabled="assign.isSaving"
+                  :aria-label="`${getGroupName(assign.groupId)}の割り当てを保存`"
+                  @click="saveNewAssignment(assign)"
+                >{{ assign.isSaving ? '保存中...' : '保存' }}</button>
                 <button v-if="$role(roleID).assign_items.delete" class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
           </div>
@@ -493,7 +501,7 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
-    async handleDropOnStock(e, stock) {
+    handleDropOnStock(e, stock) {
       if (!this.$role(this.roleID).assign_items.update) return;
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP') return;
@@ -515,6 +523,8 @@ export default {
         assigned: {},
         remarks: {},
         dbIds: [],
+        pending: true,
+        isSaving: false,
         baseItemIds: [...this.activeItemIds]
       };
 
@@ -536,42 +546,45 @@ export default {
       });
 
       this.assignments.push(newAssignment);
+    },
 
+    async saveNewAssignment(assign) {
+      if (!assign.pending || assign.isSaving) return;
+
+      const targets = this.activeItemIds.filter(itemId => assign.assigned[itemId] > 0);
+      if (targets.length === 0) {
+        alert('1つ以上の物品に割り当て個数を入力してください。');
+        return;
+      }
+
+      this.$set(assign, 'isSaving', true);
       try {
-        const postRequests = this.activeItemIds.map(itemId => {
-          const assignedNum = newAssignment.assigned[itemId];
-          if (assignedNum > 0) {
-            const payload = {
-              items: [{ group_id: newAssignment.groupId, num: assignedNum, remark: null }],
-              rentalItemId: Number(itemId),
-              stockerPlaceId: newAssignment.stockId
-            };
-            return this.$axios.$post('/assign_rental_items', payload)
-             .then(res => ({ itemId, res: res.data}));
-          }
-        }).filter(p => p !== undefined);
+        const postRequests = targets.map(itemId => {
+          const payload = {
+            items: [{ group_id: assign.groupId, num: assign.assigned[itemId], remark: assign.remarks[itemId] || null }],
+            rentalItemId: Number(itemId),
+            stockerPlaceId: assign.stockId
+          };
+          return this.$axios.$post('/assign_rental_items', payload)
+            .then(res => ({ itemId, res: res.data }));
+        });
 
-        // if (postRequests.length === 0) {
-        // this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
-        // return;
-        // }
-
-                  const results = await Promise.all(postRequests);
-              //バックエンドの作成結果からdbIdsを埋める
-       newAssignment.dbIds = [];
-          results.forEach(({ itemId, res }) => {
-            (Array.isArray(res) ? res : [res]).forEach(record => {
-              if (record && record.id) {
-                newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId) });
-              }
-            });
+        const results = await Promise.all(postRequests);
+        assign.dbIds = [];
+        results.forEach(({ itemId, res }) => {
+          (Array.isArray(res) ? res : [res]).forEach(record => {
+            if (record && record.id) {
+              assign.dbIds.push({ id: record.id, itemId: Number(itemId) });
+            }
           });
-        //temp idから確定idに置き換え
-       newAssignment.id = `${newAssignment.groupId}_${newAssignment.stockId}`;
+        });
+        assign.id = `${assign.groupId}_${assign.stockId}`;
+        this.$set(assign, 'pending', false);
       } catch (error) {
-        // エラー時は再取得して同期
         await this.fetchDataFromDB();
-        this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
+        alert('割り当ての保存に失敗しました。時間をおいて再度お試しください。');
+      } finally {
+        this.$set(assign, 'isSaving', false);
       }
     },
     // 数の手動変更と保存処理
@@ -586,6 +599,8 @@ export default {
       if (newValue === oldValue) return; // 変更がなければ終了
      
       this.$set(assign.assigned, itemId, newValue);
+
+      if (assign.pending) return;
 
       // 編集対象のレコード（dbId）を探す
       const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
@@ -615,7 +630,7 @@ export default {
         } else if (!dbRecord && newValue > 0) {
           // これまで0だったところに新規で数を入力した場合（POST）
           const postPayload = {
-            items: [{ group_id: assign.groupId, num: newValue, remark: null }],
+            items: [{ group_id: assign.groupId, num: newValue, remark: assign.remarks[itemId] || null }],
             rentalItemId: Number(itemId),
             stockerPlaceId: assign.stockId
           };
@@ -641,14 +656,14 @@ export default {
     async updateAssignRemark(e, assign, itemId) {
       if (!this.$role(this.roleID).assign_items.update) return;
 
-      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
-      if (!dbRecord) return;
-
       const newValue = e.target.value.trim();
       const oldValue = assign.remarks[itemId] || '';
       if (newValue === oldValue) return;
 
       this.$set(assign.remarks, itemId, newValue);
+
+      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
+      if (!dbRecord) return;
 
       try {
         await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, {
@@ -870,6 +885,18 @@ export default {
 }
 .btn-delete:hover {
   color: #ef4444;
+}
+.btn-save {
+  background-color: var(--accent-5);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+.btn-save:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 /* モーダル */
