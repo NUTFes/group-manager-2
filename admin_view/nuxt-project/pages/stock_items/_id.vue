@@ -47,7 +47,7 @@
         </Card>
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton v-if="this.$role(roleID).assign_items.create" iconName="add_circle" :on_click="openAssignAddModal">
+            <CommonButton v-if="this.$role(roleID).assign_items.create" class="assign-add-button" iconName="add_circle" :on_click="openAssignAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -68,7 +68,8 @@
                 <td>{{ assignRentalItem.group.name}}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
+                <td>{{ assignRentalItem.assign_rental_item.remark }}</td>
+                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
                 <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
@@ -195,10 +196,22 @@
                   <h3>個数</h3>
                 </div>
                 <input
-                  v-model="assign.num"
+                  v-model.number="assign.num"
                   type="number"
                   placeholder="入力してください"
                   class="assign-item-list-num-input"
+                />
+              </div>
+              <div class="assign-item-list-remark">
+                <div v-if="index === 0" class="assign-item-list-remark-label">
+                  <h3>備考</h3>
+                </div>
+                <input
+                  v-model="assign.remark"
+                  type="text"
+                  placeholder="番号・名称など"
+                  :aria-label="`割当${index + 1}の備考`"
+                  class="assign-item-list-remark-input"
                 />
               </div>
               <!-- 削除ボタン -->
@@ -295,12 +308,16 @@
     <EditModal
       @close="closeAssignEditModal"
       v-if="isOpenAssignEditModal && this.$role(roleID).assign_items.update"
-      title="割当個数の編集"
+      title="割当の編集"
     >
       <template v-slot:form>
         <div>
           <h3>個数</h3>
-          <input v-model="assignItemNum" type="number" placeholder="入力してください" />
+          <input v-model.number="assignItemNum" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="assignItemRemark" type="text" placeholder="番号・名称など" aria-label="割当の備考" />
         </div>
       </template>
       <template v-slot:method>
@@ -365,7 +382,8 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
-      assignItemsNumAndGroup: [{ group: "", num: 0 }], // 物品割当の団体名と個数
+      assignItemRemark: "",
+      assignItemsNumAndGroup: [{ group: "", num: 0, remark: "" }], // 物品割当の団体名と個数・備考
       stockerItemName: "",
       stockerItemNum: null,
       rentableItems: [],
@@ -391,6 +409,7 @@ export default {
         "団体名",
         "物品",
         "個数",
+        "備考",
       ],
       stockItemStatus: [],
       stockItemStatusList: [
@@ -485,7 +504,7 @@ export default {
       stockerItems: stockerItemsRes.data.stocker_items,
       placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
-      groups: groupsRes,
+      groups: groupsRes.data,
       allRentableItems: allRentableItemsRes.data,
       insideRentableItems: insideRentableItemsRes.data,
       outsideRentableItems: outsideRentableItemsRes.data,
@@ -603,7 +622,7 @@ export default {
       return this.assignItemsNumAndGroup.map((assign) => assign.group);
     },
     addAssignItem() {
-      this.assignItemsNumAndGroup.push({ group: "", num: 0 });
+      this.assignItemsNumAndGroup.push({ group: "", num: 0, remark: "" });
     },
     async submitAssign() {
       const assignUrl = "/assign_rental_items";
@@ -632,7 +651,8 @@ export default {
       const payload = {
         items: this.assignItemsNumAndGroup.map(item => ({
           group_id: item.group,
-          num: item.num
+          num: item.num,
+          remark: item.remark || null
         })),
         rentalItemId: this.assignItemName,
         stockerPlaceId: this.id,
@@ -640,7 +660,7 @@ export default {
       const response = await this.$axios.$post(assignUrl, payload);
       console.log(response.data);
       // バリデーションに成功したら、ここでデータをリセット
-      this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
+      this.assignItemsNumAndGroup = [{ group: "", num: 0, remark: "" }];
       this.assignItemName = "";
       this.assignItemNum = null;
       this.id;
@@ -652,14 +672,12 @@ export default {
     },
 
     async editAssign() {
-      const assignUrl =
-        "/assign_rental_items/" +
-        this.assignRentalItemId +
-        "?num=" +
-        this.assignItemNum +
-        "&stocker_place_id=" +
-        this.id;
-      await this.$axios.$put(assignUrl).then((response) => {
+      const assignUrl = "/assign_rental_items/" + this.assignRentalItemId;
+      const payload = {
+        num: this.assignItemNum,
+        remark: this.assignItemRemark || null,
+      };
+      await this.$axios.$put(assignUrl, payload).then((response) => {
         location.reload();
         this.closeAssignEditModal();
       });
@@ -706,9 +724,10 @@ export default {
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal(id, num) {
+    openAssignEditModal(id, num, remark) {
       this.assignRentalItemId = id;
       this.assignItemNum = num;
+      this.assignItemRemark = remark || "";
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },
@@ -833,6 +852,13 @@ export default {
   flex: 2;
   gap: 8px;
 }
+.assign-item-list-remark {
+  display: flex;
+  flex: 3;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
 .assign-item-list-group-select {
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
@@ -842,6 +868,14 @@ export default {
   transition: all 0.5s 0s ease;
 }
 .assign-item-list-num-input {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  transition: all 0.5s 0s ease;
+}
+.assign-item-list-remark-input {
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
   width: 100%;
