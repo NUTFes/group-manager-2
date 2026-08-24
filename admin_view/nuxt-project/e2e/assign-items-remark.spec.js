@@ -28,9 +28,18 @@ test.describe("物品割り当ての備考", () => {
     await expect(
       page.getByRole("heading", { name: "物品割り当て" })
     ).toBeVisible();
+    const assignmentCard = page
+      .locator(".assignment-item")
+      .filter({ hasText: "テント企画" });
+    await expect(assignmentCard.getByText("テント企画")).toBeVisible();
     await expect(
-      page.locator(".assignment-item").getByText("テント企画")
+      assignmentCard
+        .locator(".assignment-actions")
+        .getByRole("button", { name: "テント企画の割り当てを削除" })
     ).toBeVisible();
+    await expect(assignmentCard.locator(".assign-input-group")).toContainText(
+      "机"
+    );
 
     const remarkInput = page.getByLabel("机の備考");
     const numInput = page.getByLabel("机の割り当て個数");
@@ -72,10 +81,27 @@ test.describe("物品割り当ての備考", () => {
 
     await page.locator(".group-card").dragTo(page.locator(".stock-card"));
     const remarkInput = page.getByLabel("机の備考");
+    const assignmentActions = page
+      .locator(".assignment-item")
+      .filter({ hasText: "テント企画" })
+      .locator(".assignment-actions");
+    const saveButton = assignmentActions.getByRole("button", {
+      name: "テント企画の割り当てを保存",
+    });
+    const deleteButton = assignmentActions.getByRole("button", {
+      name: "テント企画の割り当てを削除",
+    });
+    await expect(saveButton).toBeVisible();
+    await expect(deleteButton).toBeVisible();
+
+    const saveBox = await saveButton.boundingBox();
+    const deleteBox = await deleteButton.boundingBox();
+    expect(saveBox).not.toBeNull();
+    expect(deleteBox).not.toBeNull();
+    expect(Math.abs(saveBox.y - deleteBox.y)).toBeLessThan(8);
+
     await remarkInput.fill("長岡高専A");
-    await page
-      .getByRole("button", { name: "テント企画の割り当てを保存" })
-      .click();
+    await saveButton.click();
 
     await expect
       .poll(() =>
@@ -113,6 +139,23 @@ test.describe("物品割り当ての備考", () => {
     const groupSelect = page.locator(".assign-item-list-group-select");
     const numInput = page.locator(".assign-item-list-num-input");
     const remarkInput = page.getByLabel("割当1の備考");
+    const assignRow = page.locator(".assign-item-list");
+    const modalActions = page.locator(".assign-item-add-modal__actions");
+    await expect(assignRow.locator(".assign-item-list-header")).toContainText(
+      "1件目"
+    );
+    await expect(
+      assignRow.getByRole("button", { name: "割当1を削除" })
+    ).toBeVisible();
+    await expect(
+      modalActions.getByRole("button", { name: "団体を追加" })
+    ).toBeVisible();
+    await expect(
+      modalActions.getByRole("button", { name: "キャンセル" })
+    ).toBeVisible();
+    await expect(
+      modalActions.getByRole("button", { name: "登録" })
+    ).toBeVisible();
     await numInput.fill("4");
     await remarkInput.fill("長岡高専A");
 
@@ -125,6 +168,16 @@ test.describe("物品割り当ての備考", () => {
     expect(numBox.x).toBeGreaterThan(groupBox.x);
     expect(remarkBox.x).toBeGreaterThan(numBox.x);
     expect(remarkBox.width).toBeGreaterThan(numBox.width);
+
+    const addButtonBox = await modalActions
+      .getByRole("button", { name: "団体を追加" })
+      .boundingBox();
+    const submitButtonBox = await modalActions
+      .getByRole("button", { name: "登録" })
+      .boundingBox();
+    expect(addButtonBox).not.toBeNull();
+    expect(submitButtonBox).not.toBeNull();
+    expect(Math.abs(addButtonBox.y - submitButtonBox.y)).toBeLessThan(8);
 
     await page.getByRole("button", { name: "登録" }).click();
 
