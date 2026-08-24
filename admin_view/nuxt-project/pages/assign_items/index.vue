@@ -192,26 +192,32 @@
                 <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
                   <span class="input-label">{{ getItemName(itemId) }}</span>
                   <div class="assign-fields">
-                    <input
-                      type="number"
-                      min="0"
-                      :aria-label="getItemName(itemId) + 'の割り当て個数'"
-                      :disabled="!$role(roleID).assign_items.update"
-                      :value="assign.assigned[itemId] || 0"
-                      @blur="updateManualAssign($event, assign, itemId)"
-                      @keyup.enter="$event.target.blur()"
-                      class="num-input highlight"
-                    >
-                    <input
-                      type="text"
-                      :aria-label="getItemName(itemId) + 'の備考'"
-                      :disabled="!$role(roleID).assign_items.update"
-                      :value="assign.remarks[itemId] || ''"
-                      placeholder="番号・名称など"
-                      @blur="updateAssignRemark($event, assign, itemId)"
-                      @keyup.enter="$event.target.blur()"
-                      class="remark-input"
-                    >
+                    <label class="assign-field assign-field-num">
+                      <span class="field-label">個数</span>
+                      <input
+                        type="number"
+                        min="0"
+                        :aria-label="getItemName(itemId) + 'の割り当て個数'"
+                        :disabled="!$role(roleID).assign_items.update"
+                        :value="assign.assigned[itemId] || 0"
+                        @blur="updateManualAssign($event, assign, itemId)"
+                        @keyup.enter="$event.target.blur()"
+                        class="num-input highlight"
+                      >
+                    </label>
+                    <label class="assign-field">
+                      <span class="field-label">備考</span>
+                      <input
+                        type="text"
+                        :aria-label="getItemName(itemId) + 'の備考'"
+                        :disabled="!$role(roleID).assign_items.update"
+                        :value="assign.remarks[itemId] || ''"
+                        placeholder="番号・名称など"
+                        @blur="updateAssignRemark($event, assign, itemId)"
+                        @keyup.enter="$event.target.blur()"
+                        class="remark-input"
+                      >
+                    </label>
                   </div>
                 </div>
                 <button
@@ -1009,7 +1015,9 @@ export default {
   color: #94a3b8;
 }
 .remark-input {
-  width: 140px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 220px;
   padding: 4px 6px;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
@@ -1262,9 +1270,22 @@ export default {
   align-items: center;
 }
 .assign-fields {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr);
   gap: 6px;
+}
+.assign-field {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.assign-field-num .num-input {
+  justify-self: end;
+}
+.field-label {
+  color: #64748b;
+  font-size: 12px;
 }
 .input-label {
   font-size: 12px;
