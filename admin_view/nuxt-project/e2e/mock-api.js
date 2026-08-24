@@ -106,6 +106,16 @@ http
       return;
     }
 
+    if (
+      url.pathname === "/_e2e/assign-rental-items" &&
+      request.method === "PUT"
+    ) {
+      const payload = await readBody(request);
+      assignRentalItems = payload.items || [];
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
     if (url.pathname === "/_e2e/unauthorized" && request.method === "POST") {
       const payload = await readBody(request);
       unauthorizedPaths.add(payload.path);
@@ -287,7 +297,10 @@ http
     if (url.pathname === "/rental_items") {
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
-        data: [{ id: 1, name: "机" }],
+        data: [
+          { id: 1, name: "机" },
+          { id: 2, name: "椅子" },
+        ],
       });
       return;
     }
@@ -307,6 +320,12 @@ http
           {
             id: 1,
             rental_item_id: 1,
+            stocker_place_id: 1,
+            num: 10,
+          },
+          {
+            id: 2,
+            rental_item_id: 2,
             stocker_place_id: 1,
             num: 10,
           },
@@ -370,6 +389,20 @@ http
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: assignRentalItem,
+      });
+      return;
+    }
+
+    if (
+      /^\/assign_rental_items\/\d+$/.test(url.pathname) &&
+      request.method === "DELETE"
+    ) {
+      const id = Number(url.pathname.split("/").pop());
+      requests.push({ method: "DELETE", path: url.pathname, payload: {} });
+      assignRentalItems = assignRentalItems.filter((item) => item.id !== id);
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
       });
       return;
     }
