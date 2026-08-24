@@ -37,9 +37,13 @@ test.describe("物品割り当ての備考", () => {
         .locator(".assignment-actions")
         .getByRole("button", { name: "テント企画の割り当てを削除" })
     ).toBeVisible();
-    await expect(assignmentCard.locator(".assign-input-group")).toContainText(
-      "机"
-    );
+    const saveButton = assignmentCard.getByRole("button", {
+      name: "テント企画の変更を保存",
+    });
+    await expect(saveButton).toBeDisabled();
+    await expect(
+      assignmentCard.locator(".assign-input-group").first()
+    ).toContainText("机");
 
     const remarkInput = page.getByLabel("机の備考");
     const numInput = page.getByLabel("机の割り当て個数");
@@ -54,6 +58,15 @@ test.describe("物品割り当ての備考", () => {
 
     await remarkInput.fill("1、2、長岡高専A");
     await remarkInput.press("Tab");
+    await expect(saveButton).toBeEnabled();
+
+    expect(
+      await page.request
+        .get(`${API_URL}/_e2e/requests`)
+        .then((response) => response.json())
+    ).toEqual([]);
+
+    await saveButton.click();
 
     await expect
       .poll(() =>
@@ -71,6 +84,111 @@ test.describe("物品割り当ての備考", () => {
 
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByLabel("机の備考")).toHaveValue("1、2、長岡高専A");
+  });
+
+  test("未割り当ての物品に備考だけを入力した場合は保存せず警告する", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+
+    await page.getByLabel("椅子の備考").fill("椅子A");
+    let dialogMessage = "";
+    page.once("dialog", async (dialog) => {
+      dialogMessage = dialog.message();
+      await dialog.dismiss();
+    });
+    await page.getByRole("button", { name: "テント企画の変更を保存" }).click();
+    expect(dialogMessage).toContain(
+      "椅子の備考を保存するには、個数を1以上にしてください。"
+    );
+
+    expect(
+      await page.request
+        .get(`${API_URL}/_e2e/requests`)
+        .then((response) => response.json())
+    ).toEqual([]);
+    await expect(page.getByLabel("椅子の備考")).toHaveValue("椅子A");
+  });
+
+  test("新規割り当てで個数0の備考を黙って破棄しない", async ({ page }) => {
+    await page.request.delete(`${API_URL}/_e2e/assign-rental-items`);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+
+    await page.locator(".group-card").dragTo(page.locator(".stock-card"));
+    await page.getByLabel("机の割り当て個数").fill("0");
+    await page.getByLabel("机の備考").fill("机A");
+
+    let dialogMessage = "";
+    page.once("dialog", async (dialog) => {
+      dialogMessage = dialog.message();
+      await dialog.dismiss();
+    });
+    await page
+      .getByRole("button", { name: "テント企画の割り当てを保存" })
+      .click();
+    expect(dialogMessage).toContain(
+      "机の備考を保存するには、個数を1以上にしてください。"
+    );
+
+    expect(
+      await page.request
+        .get(`${API_URL}/_e2e/requests`)
+        .then((response) => response.json())
+    ).toEqual([]);
+    await expect(page.getByLabel("机の備考")).toHaveValue("机A");
+  });
+
+  test("重複レコードでは表示した備考と同じ最小IDを更新する", async ({
+    page,
+  }) => {
+    await page.request.put(`${API_URL}/_e2e/assign-rental-items`, {
+      data: {
+        items: [
+          {
+            id: 9,
+            group_id: 1,
+            rental_item_id: 1,
+            stocker_place_id: 1,
+            num: 3,
+            remark: "後続レコード",
+          },
+          {
+            id: 3,
+            group_id: 1,
+            rental_item_id: 1,
+            stocker_place_id: 1,
+            num: 2,
+            remark: "表示対象レコード",
+          },
+        ],
+      },
+    });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+
+    await expect(page.getByLabel("机の割り当て個数")).toHaveValue("5");
+    await expect(page.getByLabel("机の備考")).toHaveValue("表示対象レコード");
+    await page.getByLabel("机の備考").fill("更新後の備考");
+    await page.getByRole("button", { name: "テント企画の変更を保存" }).click();
+
+    await expect
+      .poll(() =>
+        page.request
+          .get(`${API_URL}/_e2e/requests`)
+          .then((response) => response.json())
+      )
+      .toEqual([
+        {
+          method: "PUT",
+          path: "/assign_rental_items/3",
+          payload: { remark: "更新後の備考" },
+        },
+      ]);
   });
 
   test("新規割り当てで数量と備考を一緒に登録できる", async ({ page }) => {
