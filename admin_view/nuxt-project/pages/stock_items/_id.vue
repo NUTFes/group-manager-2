@@ -833,28 +833,26 @@ export default {
   gap: 8px;
 }
 .assign-item-list-container {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(80px, 0.5fr) minmax(280px, 2fr) 52px;
+  align-items: end;
   width: 100%;
-  gap: 8px;
+  gap: 12px;
 }
 .assign-item-list-group {
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 4;
   gap: 8px;
 }
 .assign-item-list-num {
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 2;
   gap: 8px;
 }
 .assign-item-list-remark {
   display: flex;
-  flex: 3;
   flex-direction: column;
   gap: 8px;
   width: 100%;
@@ -887,8 +885,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 100%;
-  flex: 1;
+  width: 52px;
   gap: 16px;
 }
 .assign-item-list-delete-btn {
