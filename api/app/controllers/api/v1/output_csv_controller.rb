@@ -114,36 +114,43 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_rental_orders_csv
+    groups_scope = Group.preload(
+      :user,
+      :group_category,
+      :fes_year,
+      :assign_rental_items,
+      rental_orders: :rental_item
+    )
+
     if params[:fes_year_id].to_i == 0
-      @rental_orders = Group.preload(:assign_rental_items, :rental_orders).map(&:rental_orders)
+      @groups = groups_scope
       filename_year = '全'
     else
-      @rental_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:assign_rental_items, :rental_orders).map(&:rental_orders)
+      @groups = groups_scope.where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 備考 開催年]
       csv << column_name
-      @rental_orders.each do |group|
-        # データが存在しない場合はスキップする
-        next if group.nil?
+      @groups.each do |group|
+        remarks_by_item_id = group.assign_rental_items.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |item, remarks|
+          remarks[item.rental_item_id] << item.remark if item.remark.present?
+        end
 
-        group.each do |rental_order|
-          # データが存在しない場合はスキップする
-          next if rental_order.nil?
-
+        # rental_orders と assign_rental_items の間に直接の外部キーがないため、
+        # 団体・物品単位に集約した行へ同じ単位の備考を出力する。
+        group.rental_orders.group_by(&:rental_item_id).each_value do |rental_orders|
+          rental_order = rental_orders.min_by(&:id)
           column_values = [
-            rental_order.group.name,
-            rental_order.group.user.name,
-            rental_order.group.user.email,
-            rental_order.group.group_category.name,
+            group.name,
+            group.user.name,
+            group.user.email,
+            group.group_category.name,
             rental_order.rental_item.name,
-            rental_order.num,
-            rental_order.group.assign_rental_items
-                        .select { |item| item.rental_item_id == rental_order.rental_item_id }
-                        .filter_map(&:remark).compact_blank.join("\n"),
-            rental_order.group.fes_year.year_num
+            rental_orders.sum(&:num),
+            remarks_by_item_id[rental_order.rental_item_id].uniq.join("\n"),
+            group.fes_year.year_num
           ]
           csv << column_values
         end
