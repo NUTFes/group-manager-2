@@ -171,13 +171,29 @@
             :key="index"
             class="assign-item-list"
           >
-            <div class="assign-item-list-container">
-              <!-- 団体名のセレクトボックス -->
-              <div class="assign-item-list-group">
-                <div v-if="index === 0" class="assign-item-list-label-group-label">
-                  <h3>団体名</h3>
-                </div>
-                <select v-model="assign.group" class="assign-item-list-group-select">
+            <div class="assign-item-list-header">
+              <div class="assign-item-list-title">
+                <span class="assign-item-list-caption">割り当て</span>
+                <h3>{{ index + 1 }}件目</h3>
+              </div>
+              <button
+                class="assign-item-list-delete-btn delete-btn-effect"
+                type="button"
+                :aria-label="`割当${index + 1}を削除`"
+                @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)"
+              >
+                <span class="material-icons" aria-hidden="true">delete</span>
+                <span>削除</span>
+              </button>
+            </div>
+            <div class="assign-item-list-fields">
+              <label class="assign-item-list-field assign-item-list-group">
+                <span class="assign-item-list-field-label">団体名</span>
+                <select
+                  v-model="assign.group"
+                  class="assign-item-list-group-select"
+                  :aria-label="`割当${index + 1}の団体名`"
+                >
                   <option disabled value="">選択してください</option>
                   <!-- 団体名を重複して選択できないようにする -->
                   <option
@@ -189,23 +205,19 @@
                     {{ group.name }}
                   </option>
                 </select>
-              </div>
-              <!-- 個数の入力ボックス -->
-              <div class="assign-item-list-num">
-                <div v-if="index === 0" class="assign-item-list-num-label">
-                  <h3>個数</h3>
-                </div>
+              </label>
+              <label class="assign-item-list-field assign-item-list-num">
+                <span class="assign-item-list-field-label">個数</span>
                 <input
                   v-model.number="assign.num"
                   type="number"
                   placeholder="入力してください"
+                  :aria-label="`割当${index + 1}の個数`"
                   class="assign-item-list-num-input"
                 />
-              </div>
-              <div class="assign-item-list-remark">
-                <div v-if="index === 0" class="assign-item-list-remark-label">
-                  <h3>備考</h3>
-                </div>
+              </label>
+              <label class="assign-item-list-field assign-item-list-remark">
+                <span class="assign-item-list-field-label">備考</span>
                 <input
                   v-model="assign.remark"
                   type="text"
@@ -213,21 +225,21 @@
                   :aria-label="`割当${index + 1}の備考`"
                   class="assign-item-list-remark-input"
                 />
-              </div>
-              <!-- 削除ボタン -->
-              <div class="assign-item-list-delete">
-                <button class="assign-item-list-delete-btn delete-btn-effect" @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)">
-                  <span class="material-icons"> delete </span>
-                </button>
-              </div>
+              </label>
             </div>
-          </div>
-          <div>
-            <button class="assign-item-list-add-btn add-btn-effect" @click.prevent="addAssignItem">団体を追加</button>
           </div>
         </div>
       </template>
       <template v-slot:method>
+        <button
+          v-if="assignItemName"
+          class="assign-item-list-add-btn add-btn-effect"
+          type="button"
+          @click.prevent="addAssignItem"
+        >
+          <span class="material-icons" aria-hidden="true">group_add</span>
+          <span>団体を追加</span>
+        </button>
         <CommonButton iconName="add_circle" :on_click="submitAssign"
           >登録</CommonButton
         >
@@ -830,79 +842,91 @@ export default {
 .assign-item-list-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-.assign-item-list-container {
-  display: grid;
-  grid-template-columns: minmax(180px, 1.2fr) minmax(80px, 0.5fr) minmax(280px, 2fr) 52px;
-  align-items: end;
-  width: 100%;
   gap: 12px;
 }
-.assign-item-list-group {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 8px;
+.assign-item-list {
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(100, 116, 139, 0.24);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 14px;
 }
-.assign-item-list-num {
+.assign-item-list-header {
+  align-items: center;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.2);
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 8px;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
-.assign-item-list-remark {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.assign-item-list-title {
+  display: grid;
+  gap: 2px;
+}
+.assign-item-list-title h3 {
+  margin: 0;
+}
+.assign-item-list-caption {
+  color: #64748b;
+  font-size: 11px;
+}
+.assign-item-list-fields {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(100px, 0.5fr) minmax(280px, 2fr);
+  gap: 12px;
   width: 100%;
+}
+.assign-item-list-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.assign-item-list-field-label {
+  color: var(--accent-5);
+  font-size: 13px;
+  font-weight: 600;
 }
 .assign-item-list-group-select {
+  box-sizing: border-box;
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   text-align: left;
   transition: all 0.5s 0s ease;
 }
 .assign-item-list-num-input {
+  box-sizing: border-box;
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   text-align: left;
   transition: all 0.5s 0s ease;
 }
 .assign-item-list-remark-input {
+  box-sizing: border-box;
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   text-align: left;
   transition: all 0.5s 0s ease;
 }
-.assign-item-list-delete {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  width: 52px;
-  gap: 16px;
-}
 .assign-item-list-delete-btn {
-  color: var(--accent-7);
-  border: 1px solid var(--accent-5);
-  width: 100%;
-  padding: 15px;
-  text-align: center;
-  transition: all 0.5s 0s ease;
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 8px 12px;
+  position: relative;
 }
 .assign-item-list-add-btn {
-  color: var(--accent-7);
-  border: 1px solid var(--accent-5);
-  /* width: 100%; */
-  padding: 15px;
-  text-align: center;
-  transition: all 0.5s 0s ease;
+  min-height: 40px;
+  padding: 10px 16px;
 }
 .add-btn-effect {
   border-radius: var(--button-radius);
