@@ -78,9 +78,9 @@ export default {
 }
 .assign-item-add-modal__box {
   z-index: 15;
+  box-sizing: border-box;
   display: flex;
-  width:80%;
-  max-width: 600px;
+  width: min(90vw, 900px);
   justify-content: center;
   align-items: center;
   flex-flow: column;
