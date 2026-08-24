@@ -33,8 +33,15 @@ test.describe("物品割り当ての備考", () => {
     ).toBeVisible();
 
     const remarkInput = page.getByLabel("机の備考");
+    const numInput = page.getByLabel("机の割り当て個数");
     await expect(remarkInput).toBeEnabled();
     await expect(remarkInput).toHaveValue("");
+
+    const numBox = await numInput.boundingBox();
+    const remarkBox = await remarkInput.boundingBox();
+    expect(numBox).not.toBeNull();
+    expect(remarkBox).not.toBeNull();
+    expect(remarkBox.y).toBeGreaterThan(numBox.y);
 
     await remarkInput.fill("1、2、長岡高専A");
     await remarkInput.press("Tab");
@@ -103,8 +110,22 @@ test.describe("物品割り当ての備考", () => {
     await page
       .locator(".assign-item-list-group-select")
       .selectOption({ label: "テント企画" });
-    await page.locator(".assign-item-list-num-input").fill("4");
-    await page.getByLabel("割当1の備考").fill("長岡高専A");
+    const groupSelect = page.locator(".assign-item-list-group-select");
+    const numInput = page.locator(".assign-item-list-num-input");
+    const remarkInput = page.getByLabel("割当1の備考");
+    await numInput.fill("4");
+    await remarkInput.fill("長岡高専A");
+
+    const groupBox = await groupSelect.boundingBox();
+    const numBox = await numInput.boundingBox();
+    const remarkBox = await remarkInput.boundingBox();
+    expect(groupBox).not.toBeNull();
+    expect(numBox).not.toBeNull();
+    expect(remarkBox).not.toBeNull();
+    expect(numBox.x).toBeGreaterThan(groupBox.x);
+    expect(remarkBox.x).toBeGreaterThan(numBox.x);
+    expect(remarkBox.width).toBeGreaterThan(numBox.width);
+
     await page.getByRole("button", { name: "登録" }).click();
 
     await expect
