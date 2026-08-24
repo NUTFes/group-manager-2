@@ -99,6 +99,22 @@ table {
   width: 8.5%;
 }
 
+.all-groups-info-items .item-name-column {
+  width: 25%;
+}
+
+.all-groups-info-items .pickup-location-column {
+  width: 25%;
+}
+
+.all-groups-info-items .quantity-column {
+  width: 10%;
+}
+
+.all-groups-info-items .remark-column {
+  width: 40%;
+}
+
 .padding-top{
   padding-top: 20px;
 }
