@@ -187,10 +187,37 @@
               :key="assign.id" 
               class="assignment-item"
             >
-              <div class="assign-group-name">{{ getGroupName(assign.groupId) }}</div>
+              <div class="assignment-item-header">
+                <div class="assignment-item-identity">
+                  <span class="assignment-item-caption">割り当て団体</span>
+                  <div class="assign-group-name">{{ getGroupName(assign.groupId) }}</div>
+                </div>
+                <div class="assignment-actions" aria-label="割り当て操作">
+                  <button
+                    v-if="assign.pending"
+                    class="btn-save"
+                    type="button"
+                    :disabled="assign.isSaving"
+                    :aria-label="`${getGroupName(assign.groupId)}の割り当てを保存`"
+                    @click="saveNewAssignment(assign)"
+                  >{{ assign.isSaving ? '保存中...' : '保存' }}</button>
+                  <button
+                    v-if="$role(roleID).assign_items.delete"
+                    class="btn-delete"
+                    type="button"
+                    :aria-label="`${getGroupName(assign.groupId)}の割り当てを削除`"
+                    @click="openAssignDeleteModal(assign.id)"
+                  >
+                    <span class="material-icons" aria-hidden="true">delete</span>
+                    <span>削除</span>
+                  </button>
+                </div>
+              </div>
               <div class="assign-inputs">
                 <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
-                  <span class="input-label">{{ getItemName(itemId) }}</span>
+                  <div class="assign-input-group-header">
+                    <span class="input-label">{{ getItemName(itemId) }}</span>
+                  </div>
                   <div class="assign-fields">
                     <label class="assign-field assign-field-num">
                       <span class="field-label">個数</span>
@@ -220,15 +247,6 @@
                     </label>
                   </div>
                 </div>
-                <button
-                  v-if="assign.pending"
-                  class="btn-save"
-                  type="button"
-                  :disabled="assign.isSaving"
-                  :aria-label="`${getGroupName(assign.groupId)}の割り当てを保存`"
-                  @click="saveNewAssignment(assign)"
-                >{{ assign.isSaving ? '保存中...' : '保存' }}</button>
-                <button v-if="$role(roleID).assign_items.delete" class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
           </div>
         </div>
@@ -882,23 +900,36 @@ export default {
 
 /* ボタン類 */
 .btn-delete {
-  background: none;
-  border: none;
-  color: #cbd5e1;
-  font-size: 16px;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #b91c1c;
   cursor: pointer;
-  padding: 12px;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 4px;
+  justify-content: center;
+  min-height: 36px;
+  padding: 7px 10px;
 }
 .btn-delete:hover {
-  color: #ef4444;
+  background-color: #fef2f2;
+}
+.btn-delete .material-icons {
+  font-size: 16px;
 }
 .btn-save {
+  align-items: center;
   background-color: var(--accent-5);
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   color: white;
   cursor: pointer;
-  padding: 8px 12px;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 36px;
+  padding: 7px 14px;
 }
 .btn-save:disabled {
   cursor: wait;
@@ -1017,7 +1048,7 @@ export default {
 .remark-input {
   box-sizing: border-box;
   width: 100%;
-  min-width: 220px;
+  min-width: 0;
   padding: 4px 6px;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
@@ -1240,38 +1271,62 @@ export default {
   border-radius: 4px;
 }
 .assignment-item {
-  display: flex;
-  align-items: center;
   background-color: white;
-  padding: 12px;
   border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+.assignment-item-header {
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+.assignment-item-identity {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.assignment-item-caption {
+  color: #94a3b8;
+  font-size: 11px;
 }
 .assign-group-name {
-  flex: 1;
   font-weight: bold;
   font-size: 14px;
   color: #1e293b;
-  padding-left: 12px;
+}
+.assignment-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
 }
 .assign-inputs {
-  display: flex;
-  flex: 1;
-  gap: 8px;
-  margin-right: 12px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 .assign-input-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+.assign-input-group-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 6px;
 }
 .assign-fields {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
 }
 .assign-field {
@@ -1281,15 +1336,16 @@ export default {
   gap: 8px;
 }
 .assign-field-num .num-input {
-  justify-self: end;
+  justify-self: start;
+  width: 80px;
 }
 .field-label {
   color: #64748b;
   font-size: 12px;
 }
 .input-label {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 4px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
 }
 </style>
