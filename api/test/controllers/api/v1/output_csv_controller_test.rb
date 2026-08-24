@@ -42,6 +42,42 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     assert(rows.drop(1).any? { |row| row[remark_index] == '長岡高専A' })
   end
 
+  test 'rental orders CSV aggregates duplicate group and item orders before adding remarks' do
+    rows = download_csv("/api/v1/get_rental_orders_csv/#{groups(:one).fes_year_id}")
+    headers = rows.first
+    target_rows = rows.drop(1).select do |row|
+      row[headers.index('参加団体名')] == groups(:one).name &&
+        row[headers.index('物品名')] == rental_items(:one).name
+    end
+
+    assert_equal 1, target_rows.length
+    assert_equal '2', target_rows.first[headers.index('数')]
+    assert_equal '長岡高専A', target_rows.first[headers.index('備考')]
+  end
+
+  test 'rental orders CSV query count does not grow with duplicate rows' do
+    base_query_count = count_select_queries do
+      download_csv("/api/v1/get_rental_orders_csv/#{groups(:one).fes_year_id}")
+    end
+
+    5.times do |index|
+      RentalOrder.create!(group: groups(:one), rental_item: rental_items(:one), num: 1)
+      AssignRentalItem.create!(
+        group: groups(:one),
+        rental_item: rental_items(:one),
+        stocker_place: stocker_places(:one),
+        num: 1,
+        remark: "追加備考#{index}"
+      )
+    end
+
+    expanded_query_count = count_select_queries do
+      download_csv("/api/v1/get_rental_orders_csv/#{groups(:one).fes_year_id}")
+    end
+
+    assert_operator expanded_query_count, :<=, base_query_count + 1
+  end
+
   test 'assign rental items CSV includes its remark column' do
     rows = download_csv("/api/v1/get_assign_rental_items_csv/#{groups(:one).fes_year_id}")
 
@@ -51,6 +87,16 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def count_select_queries(&)
+    query_count = 0
+    callback = lambda do |_name, _started, _finished, _unique_id, payload|
+      sql = payload[:sql]
+      query_count += 1 if sql.start_with?('SELECT') && !payload[:cached]
+    end
+    ActiveSupport::Notifications.subscribed(callback, 'sql.active_record', &)
+    query_count
+  end
 
   def download_csv(path)
     get path, headers: @admin.create_new_auth_token
