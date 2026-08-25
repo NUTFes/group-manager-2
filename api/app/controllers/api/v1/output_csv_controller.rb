@@ -38,20 +38,23 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_assign_rental_items_csv
-    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, group: :group_category)
+    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place, group: :group_category)
 
     if params[:fes_year_id].to_i == 0
       # 全件選択
       @assign_rental_items = assign_rental_items_scope
       filename_year = '全'
     else
-      @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: params[:fes_year_id] }).references(:groups)
-      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      fes_year = find_fes_year_or_render_not_found
+      return if fes_year.nil?
+
+      @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: fes_year.id }).references(:groups)
+      filename_year = fes_year.year_num
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量 貸出日 返却日 開催年)
-      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量]
+      # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量 貸出日 返却日 開催年)
+      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量]
       csv << column_name
       @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
@@ -64,7 +67,8 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.group.place,
           assign_rental_item.group.sum_power_orders,
           assign_rental_item.rental_item.name,
-          assign_rental_item.stocker_place.name,
+          assign_rental_item.stock_place_name,
+          assign_rental_item.rental_place_name,
           assign_rental_item.num
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).first.date,
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).first.date,
@@ -109,13 +113,18 @@ class Api::V1::OutputCsvController < ApplicationController
     send_data(csv_data, filename: "副代表_#{filename_year}年度.csv")
   end
 
+  # 物品申請一覧CSV。申請(RentalOrder)が元データで、割当前の申請も出力対象に含む。
+  # 物品申請一覧画面の「物品申請一覧_CSV」から使われるため、出力内容を変更しないこと。
   def output_rental_orders_csv
     if params[:fes_year_id].to_i == 0
       @rental_orders = Group.preload(:rental_orders).map(&:rental_orders)
       filename_year = '全'
     else
-      @rental_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:rental_orders).map(&:rental_orders)
-      filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
+      fes_year = find_fes_year_or_render_not_found
+      return if fes_year.nil?
+
+      @rental_orders = Group.where(fes_year_id: fes_year.id).preload(:rental_orders).map(&:rental_orders)
+      filename_year = fes_year.year_num
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
@@ -143,6 +152,48 @@ class Api::V1::OutputCsvController < ApplicationController
       end
     end
     send_data(csv_data, filename: "物品申請_#{filename_year}年度.csv")
+  end
+
+  # 貸出物品リストまとめCSV。在庫場所・貸出場所を出力するため、
+  # 申請(RentalOrder)ではなく割当(AssignRentalItem)を元データにする。
+  # 同名のPDF(print_pdf#output_rental_items_list_pdf)と出力対象をそろえている。
+  def output_rental_items_list_csv
+    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place,
+                                                          group: %i[group_category user fes_year])
+
+    if params[:fes_year_id].to_i == 0
+      @assign_rental_items = assign_rental_items_scope
+      filename_year = '全'
+    else
+      fes_year = find_fes_year_or_render_not_found
+      return if fes_year.nil?
+
+      @assign_rental_items = assign_rental_items_scope.where(groups: { fes_year_id: fes_year.id }).references(:groups)
+      filename_year = fes_year.year_num
+    end
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom.dup) do |csv|
+      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年]
+      csv << column_name
+      @assign_rental_items.each do |assign_rental_item|
+        # データが存在しない場合はスキップする
+        next if assign_rental_item.nil?
+
+        column_values = [
+          assign_rental_item.group.name,
+          assign_rental_item.group.user.name,
+          assign_rental_item.group.user.email,
+          assign_rental_item.group.group_category.name,
+          assign_rental_item.rental_item.name,
+          assign_rental_item.stock_place_name,
+          assign_rental_item.rental_place_name,
+          assign_rental_item.num,
+          assign_rental_item.group.fes_year.year_num
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename: "貸出物品リスト_#{filename_year}年度.csv")
   end
 
   def  output_power_orders_csv
@@ -678,5 +729,20 @@ class Api::V1::OutputCsvController < ApplicationController
       end
     end
     send_data(csv_data, filename: "火気使用申請_#{filename_year}年度.csv")
+  end
+
+  private
+
+  # params[:fes_year_id] の開催年を取得する。
+  # 存在しない開催年IDの場合は、ヘッダーのみのCSVを200で返すのではなく404を返す。
+  # 見つからなかったときはレスポンスを描画済みでnilを返すため、
+  # 呼び出し側は戻り値がnilなら即座にreturnすること。
+  def find_fes_year_or_render_not_found
+    fes_year = FesYear.find_by(id: params[:fes_year_id])
+    return fes_year if fes_year
+
+    render json: fmt(not_found, [], "fes_year_id=#{params[:fes_year_id]} は存在しません"),
+           status: :not_found
+    nil
   end
 end

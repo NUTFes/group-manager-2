@@ -243,9 +243,18 @@ export default {
       this.openSnackBar("従業員リストのCSVをダウンロードしました");
     },
     async downloadRentalItemsCSV() {
-      const endpoint = `/api/v1/get_rental_orders_csv/${this.currentYearID}`;
-      await downloadFile(this.$axios,endpoint, '貸出物品リスト', 'text/csv');
-      this.openSnackBar("貸出物品リストのCSVをダウンロードしました");
+      const endpoint = `/api/v1/get_rental_items_list_csv/${this.currentYearID}`;
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "貸出物品リスト",
+        "text/csv"
+      );
+      this.openSnackBar(
+        succeeded
+          ? "貸出物品リストのCSVをダウンロードしました"
+          : "貸出物品リストのCSVのダウンロードに失敗しました"
+      );
     },
     async downloadFoodProductsCSV() {
       const endpoint = `/api/v1/get_food_products_csv/${this.currentYearID}`;
@@ -264,8 +273,17 @@ export default {
     },
     async downloadRentalItemsAllCSV() {
       const endpoint = `/api/v1/get_assign_rental_items_csv/${this.currentYearID}`;
-      await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ', 'text/csv');
-      this.openSnackBar("物品貸し出し表まとめのCSVをダウンロードしました");
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "物品貸し出し表まとめ",
+        "text/csv"
+      );
+      this.openSnackBar(
+        succeeded
+          ? "物品貸し出し表まとめのCSVをダウンロードしました"
+          : "物品貸し出し表まとめのCSVのダウンロードに失敗しました"
+      );
     },
   },
 };

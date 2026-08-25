@@ -100,13 +100,13 @@
 <table>
   <tr>
     <th>物品名</th>
-    <th>借用場所</th>
+    <th>在庫場所</th>
     <th>数量</th>
   </tr>
   <% group.assign_rental_items.each do |item| %>
   <tr>
     <td><%= item.rental_item.name %></td>
-    <td><%= item.stocker_place.name %></td>
+    <td><%= item.stock_place_name %></td>
     <td><%= item.num %></td>
   </tr>
   <% end %>
