@@ -201,6 +201,45 @@ test.describe('rent items application', () => {
     ).toBeVisible();
   });
 
+  // 会場申請がない場合は、既存の屋内/屋外専用物品から会場タイプを復元する。
+  // API応答はcamelcase-keysで変換されるため、camelCaseのフラグを参照する。
+  test('restores outdoor location from an existing outdoor-only rental order', async ({
+    page,
+  }) => {
+    const state = scenarioState('registration');
+    state.groupCategoryId = 2; // 物品販売（会場タイプを選択する団体）
+    state.rentableItems = [
+      {
+        id: RENTABLE_ITEM_IDS.tent,
+        name: 'E2E 屋外専用テント',
+        is_inside_shop_rentable: false,
+        is_outside_shop_rentable: true,
+        is_stage_rentable: false,
+        created_at: '2026-01-01T00:00:00.000Z',
+        updated_at: '2026-01-01T00:00:00.000Z',
+      },
+    ];
+    state.rentalOrders = [
+      {
+        ...registeredRentalOrder(),
+        rental_item_id: RENTABLE_ITEM_IDS.tent,
+      },
+    ];
+    state.placeOrder = null;
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openRentItems(page);
+
+    await expect(page.getByText('第一希望：屋外')).toBeVisible();
+    await page.getByRole('button', { name: BUTTONS.edit, exact: true }).click();
+    await expect(
+      page.locator(
+        'input[type="radio"][name="' + FIELDS.locationQuestion + '"][value="2"]'
+      )
+    ).toBeChecked();
+  });
+
   // 既存値を変更して保存すると PATCH /rental_orders/:id が呼ばれる。
   // 送信ボタンの文言は hasExisting=true のため「保存」になる。
   test('updates an existing order via the edit form, submit button is labeled save', async ({

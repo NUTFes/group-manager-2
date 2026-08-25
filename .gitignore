@@ -117,6 +117,7 @@ typings/
 /certs/
 
 /user_front/.vite
+/output
 
 
 # cloudflare

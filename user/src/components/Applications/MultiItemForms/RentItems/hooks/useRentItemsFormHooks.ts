@@ -259,11 +259,11 @@ export const useRentItemsFormHooks = (
       data: Array<{
         id: number;
         name: string;
-        is_inside_shop_rentable: boolean;
-        is_outside_shop_rentable: boolean;
-        is_stage_rentable: boolean;
-        created_at: string;
-        updated_at: string;
+        isInsideShopRentable: boolean;
+        isOutsideShopRentable: boolean;
+        isStageRentable: boolean;
+        createdAt: string;
+        updatedAt: string;
       }>;
     }>('/api/v1/get_all_rentable_items');
 
@@ -325,16 +325,13 @@ export const useRentItemsFormHooks = (
             );
             if (item) {
               // 屋内専用の物品
-              if (
-                item.is_inside_shop_rentable &&
-                !item.is_outside_shop_rentable
-              ) {
+              if (item.isInsideShopRentable && !item.isOutsideShopRentable) {
                 insideOnlyCount += order.num;
               }
               // 屋外専用の物品
               else if (
-                !item.is_inside_shop_rentable &&
-                item.is_outside_shop_rentable
+                !item.isInsideShopRentable &&
+                item.isOutsideShopRentable
               ) {
                 outsideOnlyCount += order.num;
               }
