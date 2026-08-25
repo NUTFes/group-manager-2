@@ -367,9 +367,20 @@ export default {
     }
 
     this.fetchDataFromDB();
+    window.addEventListener('beforeunload', this.warnOnUnsavedChanges);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.warnOnUnsavedChanges);
   },
 
   methods: {
+    // ドラッグ&ドロップ直後などDB未反映の変更を残したままページを離れようとした場合に警告する。
+    warnOnUnsavedChanges(e) {
+      if (!this.assignments.some(assign => this.hasUnsavedChanges(assign))) return;
+      e.preventDefault();
+      e.returnValue = '';
+    },
     async fetchDataFromDB() {
       this.isLoading = true;
       try {
@@ -656,13 +667,32 @@ export default {
         });
 
         await Promise.all(requests);
-        await this.fetchDataFromDB();
+        await this.refreshAssignmentsPreservingUnsavedEdits(assign);
       } catch (error) {
-        await this.fetchDataFromDB();
+        console.error("割り当ての保存に失敗しました", error.response ? error.response.data : error);
+        await this.refreshAssignmentsPreservingUnsavedEdits(assign);
         alert('割り当ての保存に失敗しました。時間をおいて再度お試しください。');
       } finally {
         this.$set(assign, 'isSaving', false);
       }
+    },
+    // 保存対象以外のカードに未保存の変更が残っている場合、再取得後もそれを保持する。
+    async refreshAssignmentsPreservingUnsavedEdits(savedAssign) {
+      const unsavedOthers = this.assignments.filter(
+        a => a !== savedAssign && this.hasUnsavedChanges(a)
+      );
+      await this.fetchDataFromDB();
+      unsavedOthers.forEach(prev => {
+        if (prev.pending) {
+          this.assignments.push(prev);
+          return;
+        }
+        const current = this.assignments.find(a => a.id === prev.id);
+        if (current) {
+          current.assigned = { ...prev.assigned };
+          current.remarks = { ...prev.remarks };
+        }
+      });
     },
     // 個数と備考はカード内で編集し、保存ボタンでまとめて反映する。
     updateManualAssign(e, assign, itemId) {
@@ -771,7 +801,7 @@ export default {
         const currentNum = Number(assign.assigned[itemId]) || 0;
         const persistedNum = Number(assign.persistedAssigned[itemId]) || 0;
         const currentRemark = (assign.remarks[itemId] || '').trim();
-        const persistedRemark = assign.persistedRemarks[itemId] || '';
+        const persistedRemark = (assign.persistedRemarks[itemId] || '').trim();
         return currentNum !== persistedNum || currentRemark !== persistedRemark;
       });
     },

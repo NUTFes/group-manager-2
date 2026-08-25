@@ -8,10 +8,10 @@ class Api::V1::OutputCsvController < ApplicationController
   def output_groups_csv
     if params[:fes_year_id].to_i == 0
       # 全件選択
-      @groups = Group.includes(assign_rental_items: :rental_item).all
+      @groups = Group.includes(:user, :group_category, :fes_year, assign_rental_items: :rental_item).all
       filename_year = '全'
     else
-      @groups = Group.includes(assign_rental_items: :rental_item).where(fes_year_id: params[:fes_year_id])
+      @groups = Group.includes(:user, :group_category, :fes_year, assign_rental_items: :rental_item).where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"

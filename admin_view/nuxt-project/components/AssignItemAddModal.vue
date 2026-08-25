@@ -10,13 +10,7 @@
             </form>
           </div>
           <div class="assign-item-add-modal__actions" aria-label="割り当て追加の操作">
-            <button
-              class="assign-item-add-modal__cancel"
-              type="button"
-              @click="$emit('close')"
-            >
-              キャンセル
-            </button>
+            <NoButton class="btn-secondary" iconName="close" :on_click="() => $emit('close')">キャンセル</NoButton>
             <slot name="method"></slot>
           </div>
         </div>
@@ -125,19 +119,6 @@ export default {
   justify-content: flex-end;
   padding-top: 20px;
   width: 100%;
-}
-.assign-item-add-modal__cancel {
-  background-color: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: var(--button-radius);
-  color: #475569;
-  cursor: pointer;
-  font-size: 14px;
-  min-height: 40px;
-  padding: 10px 16px;
-}
-.assign-item-add-modal__cancel:hover {
-  background-color: #f8fafc;
 }
 .fade-enter-active,
 .fade-leave-active {
