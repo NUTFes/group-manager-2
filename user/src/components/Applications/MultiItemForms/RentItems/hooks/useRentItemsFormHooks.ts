@@ -1,9 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  HealthCenterSubmissionStatus,
-  useUpdateSubmissionStatusFor,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
   useAllRentableItems,
@@ -19,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useAuthenticatedGet } from '@/hooks/useApi';
+import { useSubmissionStatusReset } from '../../../shared';
 import {
   ITEM_IDS,
   LOCATION_TYPES,
@@ -150,7 +148,12 @@ export const useRentItemsFormHooks = (
     return DEFAULT_MAX_COUNT;
   };
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'equipment',
+    status,
+    t('applications.rentItems.messages.statusUpdateFailed')
+  );
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
   const isStageGroup = groupCategoryId === GROUP_CATEGORY.STAGE;
@@ -529,18 +532,6 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
-  const updateStatusToUnapproved = async (): Promise<boolean> => {
-    if (status === 'unapproved') return true;
-    try {
-      await updateStatus('unapproved');
-      return true;
-    } catch (e) {
-      console.error(e);
-      toast.error(t('applications.rentItems.messages.statusUpdateFailed'));
-      return false;
-    }
-  };
-
   // 物品申請を行わない場合の登録処理
   const registerNoItems = async () => {
     try {
@@ -584,7 +575,7 @@ export const useRentItemsFormHooks = (
 
       // API更新の通知
       await mutateRentalOrders();
-      const statusUpdated = await updateStatusToUnapproved();
+      const statusUpdated = await resetSubmissionStatus();
       if (!statusUpdated) return false;
       setIsEditMode(false);
       // 成功時のトースト通知
@@ -643,7 +634,7 @@ export const useRentItemsFormHooks = (
         );
 
         await mutateRentalOrders();
-        const statusUpdated = await updateStatusToUnapproved();
+        const statusUpdated = await resetSubmissionStatus();
         if (!statusUpdated) return;
         setIsEditMode(false);
         userChangedLocationType.current = false;
@@ -848,6 +839,5 @@ export const useRentItemsFormHooks = (
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
-    updateStatus,
   };
 };
