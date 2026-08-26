@@ -74,8 +74,8 @@ class Api::V1::RentalOrdersApiController < ApplicationController
 
     @rental_orders = @rental_orders.includes(:rental_item, group: { place_order: { assign_group_places: :stocker_place } })
     assigned_nums = AssignRentalItem.where(group_id: @rental_orders.map(&:group_id), rental_item_id: @rental_orders.map(&:rental_item_id))
-                                     .group(:group_id, :rental_item_id)
-                                     .sum(:num)
+                                    .group(:group_id, :rental_item_id)
+                                    .sum(:num)
 
     output = @rental_orders.filter_map do |rental_order|
       place_order = rental_order.group.place_order
