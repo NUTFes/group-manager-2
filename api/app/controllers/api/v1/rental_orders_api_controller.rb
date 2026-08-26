@@ -67,53 +67,36 @@ class Api::V1::RentalOrdersApiController < ApplicationController
       @rental_orders = RentalOrder.where(rental_item_id: rental_item_id)
     end
 
-    output = []
     if @rental_orders.empty?
       render json: fmt(not_found, [], 'Not found stocker_items')
-    elsif place_id == 0
+      return
+    end
 
-      # place_idが指定なし
-      @rental_orders.each do |rental_order|
-        unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id, rental_item_id: rental_order.rental_item_id).sum(:num)
-        place_order = rental_order.group.place_order
-        assign_places = place_order ? place_order.assign_group_places.map { |assignment| assignment.stocker_place.name } : []
+    @rental_orders = @rental_orders.includes(:rental_item, group: { place_order: { assign_group_places: :stocker_place } })
+    assigned_nums = AssignRentalItem.where(group_id: @rental_orders.map(&:group_id), rental_item_id: @rental_orders.map(&:rental_item_id))
+                                     .group(:group_id, :rental_item_id)
+                                     .sum(:num)
 
-        temp = {
-          id: rental_order.id,
-          group_name: rental_order.group.name,
-          assign_places: assign_places.presence || ['not yet'],
-          rental_item: rental_order.rental_item.name,
-          num: rental_order.num,
-          unassigned_num: unassigned_num
-        }
-        output << temp
-      end
+    output = @rental_orders.filter_map do |rental_order|
+      place_order = rental_order.group.place_order
+      assign_group_places = place_order ? place_order.assign_group_places : []
+      next if place_id != 0 && assign_group_places.none? { |assignment| assignment.stocker_place_id == place_id }
 
+      unassigned_num = rental_order.num - assigned_nums.fetch([rental_order.group_id, rental_order.rental_item_id], 0)
+      {
+        id: rental_order.id,
+        group_name: rental_order.group.name,
+        assign_places: assign_group_places.map { |assignment| assignment.stocker_place.name }.presence || ['not yet'],
+        rental_item: rental_order.rental_item.name,
+        num: rental_order.num,
+        unassigned_num: unassigned_num
+      }
+    end
+
+    if place_id != 0 && output.empty?
+      render json: fmt(not_found, [], 'Not found stocker_items')
+    else
       render json: fmt(ok, output)
-
-      # place_idが指定
-    elsif place_id != 0
-      @rental_orders.each do |rental_order|
-        place_order = rental_order.group.place_order
-        next unless place_order&.assign_group_places&.exists?(stocker_place_id: place_id)
-
-        unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id, rental_item_id: rental_order.rental_item_id).sum(:num)
-        temp = {
-          id: rental_order.id,
-          group_name: rental_order.group.name,
-          assign_places: place_order.assign_group_places.map { |assignment| assignment.stocker_place.name },
-          rental_item: rental_order.rental_item.name,
-          num: rental_order.num,
-          unassigned_num: unassigned_num
-        }
-        output << temp
-      end
-
-      if output.empty?
-        render json: fmt(not_found, [], 'Not found stocker_items')
-      else
-        render json: fmt(ok, output)
-      end
     end
   end
 end
