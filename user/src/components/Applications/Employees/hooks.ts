@@ -22,7 +22,6 @@ import {
 import {
   HealthCenterSubmissionStatus,
   canEditApplication,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
@@ -32,6 +31,7 @@ import {
 import { NEED_APPLICATION } from '@/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
+import { useSubmissionStatusReset } from '../shared';
 import {
   useEmployeesForm,
   useEmployeesFormHandlers,
@@ -392,7 +392,12 @@ export const useEmployeesApplicationHooks = (
     onError: (message: string) => toast.error(message),
   };
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'employee');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'employee',
+    status,
+    t('applications.employees.messages.statusUpdateFailed')
+  );
 
   // ビジネスロジック関連のhooks
   const employeesBusinessHooks = useEmployeesBusinessHooks(
@@ -465,21 +470,6 @@ export const useEmployeesApplicationHooks = (
   };
 
   /**
-   * ステータス更新処理
-   */
-  const updateStatusToUnapproved = async () => {
-    if (status === 'unapproved') return true;
-    try {
-      await updateStatus('unapproved');
-      return true;
-    } catch (e) {
-      console.error(e);
-      toast.error(t('applications.employees.messages.statusUpdateFailed'));
-      return false;
-    }
-  };
-
-  /**
    * 「代表・副代表のみで活動」選択時の登録処理
    */
   const handleNoApplicationClick = async () => {
@@ -487,7 +477,7 @@ export const useEmployeesApplicationHooks = (
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
 
-      if (!(await updateStatusToUnapproved())) return;
+      if (!(await resetSubmissionStatus())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -514,7 +504,7 @@ export const useEmployeesApplicationHooks = (
       }
 
       // 再提出完了時
-      if (!(await updateStatusToUnapproved())) return;
+      if (!(await resetSubmissionStatus())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -613,7 +603,6 @@ export const useEmployeesApplicationHooks = (
     handleEditClick,
     handleNoApplicationClick,
     handleSubmit,
-    updateStatus,
 
     // UI用プロパティ
     isDeadline,
