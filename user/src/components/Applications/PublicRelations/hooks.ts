@@ -54,11 +54,6 @@ export const usePublicRelationsHooks = (
   const isLoading = isSectionLoading;
   const hasError = prError;
 
-  // フォーム送信後にデータを再取得するための関数
-  const refetchData = async () => {
-    await prMutate();
-  };
-
   return {
     publicRelation,
     isLoading,
@@ -66,8 +61,7 @@ export const usePublicRelationsHooks = (
     isEditing,
     toEdit,
     getAnnounceStatus,
-    mutate: refetchData,
-    refetchData,
+    mutate: prMutate,
     publicRelationsTexts,
   };
 };
