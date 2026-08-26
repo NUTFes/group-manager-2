@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
@@ -19,7 +19,11 @@ import {
 } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
-import { isUnchanged, useSubmissionStatusReset } from '../shared';
+import {
+  isUnchanged,
+  useEditableSection,
+  useSubmissionStatusReset,
+} from '../shared';
 import {
   DATE_FORMAT,
   DEFAULT_PURCHASE_ITEM,
@@ -135,16 +139,16 @@ export const usePurchaseListsState = (
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
   const { shops, isLoading: isShopsLoading } = useGetShops();
 
-  // isRegisteredがfalseの場合、つまり未登録の場合は初期状態で編集モードにする
-  const [isEditing, setIsEditing] = useState(!isRegistered);
+  const { isEditing, toEdit } = useEditableSection({
+    isLoading,
+    isRegistered,
+  });
 
   // ショップ情報を取得し、セレクトボックス用のオプションを生成
   const shopOptions = useMemo(
     () => [{ id: 0, name: t('form.validation.select') }, ...shops],
     [shops, t]
   );
-
-  const toggleEdit = useCallback(() => setIsEditing((prev) => !prev), []);
 
   const handleDeleteItem = useCallback(
     async (itemId: number) => {
@@ -157,13 +161,13 @@ export const usePurchaseListsState = (
         await mutatePurchaseLists();
         // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
         if (purchaseLists.length === 1) {
-          setIsEditing(true);
+          toEdit();
         }
       } catch {
         toast.error(t('applications.purchaseLists.messages.itemDeleteFailed'));
       }
     },
-    [purchaseLists, deletePurchaseList, mutatePurchaseLists, t]
+    [purchaseLists, deletePurchaseList, mutatePurchaseLists, t, toEdit]
   );
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
@@ -225,8 +229,8 @@ export const usePurchaseListsState = (
   // フォーム送信成功後は表示モードに切り替え
   const handleFormSuccess = useCallback(() => {
     mutatePurchaseLists();
-    toggleEdit();
-  }, [mutatePurchaseLists, toggleEdit]);
+    toEdit();
+  }, [mutatePurchaseLists, toEdit]);
 
   // フォームの初期値として使用するデータ。APIから取得したデータをフォームの形式に合わせる
   const initialFormData = useMemo(
@@ -245,7 +249,7 @@ export const usePurchaseListsState = (
     isLoading: isLoading || isShopsLoading,
     hasError,
     isEditing,
-    toggleEdit,
+    toggleEdit: toEdit,
     handleDeleteItem,
     formItems,
     foodProductOptions,
