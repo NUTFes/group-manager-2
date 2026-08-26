@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th><%= t('print_pdf.output_all_groups_rental_items.org.category') %></th>
-        <td colspan=2><%= @use_english_name_for_pdf && group.group_category.name_en.present? ? group.group_category.name_en : group.group_category.name %></td>
+        <td colspan=2><%= @pdf_locale == :en && group.group_category.name_en.present? ? group.group_category.name_en : group.group_category.name %></td>
       </tr>
       <tr>
         <th rowspan=2><%= t('print_pdf.output_all_groups_rental_items.org.activity_time') %></th>
@@ -49,7 +49,8 @@
   <table class="items">
     <tr>
       <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.item_name') %></th>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_location') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.stock_location') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.rental_location') %></th>
       <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.quantity') %></th>
       <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_date') %></th>
       <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_date') %></th>
@@ -58,8 +59,9 @@
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= @use_english_name_for_pdf && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
-      <td><%= @use_english_name_for_pdf && assign_rental_item.stocker_place.name_en.present? ? assign_rental_item.stocker_place.name_en : assign_rental_item.stocker_place.name %></td>
+      <td><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
+      <td><%= assign_rental_item.stock_place_name(locale: @pdf_locale) %></td>
+      <td><%= assign_rental_item.rental_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.num %></td>
       <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
       <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>

@@ -6,6 +6,6 @@ one:
   num: 1
 
 two:
-  group: one
-  rental_item: one
+  group: two
+  rental_item: two
   num: 1
