@@ -10,8 +10,8 @@ import { useTranslation } from 'next-i18next';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { stageLabels } from '@/components/Applications/label';
-import { revalidateCheckAllRegistered } from '../../shared';
-import { useStageForm } from './useStageForm';
+import { isUnchanged, revalidateCheckAllRegistered } from '../../shared';
+import { createInitialValues, useStageForm } from './useStageForm';
 import {
   useDateOptions,
   useFilteredStageOptions,
@@ -168,6 +168,31 @@ export const useStageFormHooks = (groupId: number) => {
   const isLoadingAll = isLoadingOrders || isLoadingFormData;
   const isValid = formState.isValid;
 
+  // 新規登録時(sunnyOrder/rainyOrderが無い)はoriginalをundefinedにし、
+  // isUnchangedが常にfalseを返すようにする(新規は「未変更だから押せない」には
+  // ならない)。既存申請の編集時のみ、直前に流し込んだ値との比較で
+  // 「まだ何も変えていない」を検出する。
+  const originalValues = hasExisting
+    ? createInitialValues(sunnyOrder, rainyOrder)
+    : undefined;
+  const isUnchangedFromOriginal = isUnchanged(originalValues, formState, [
+    'date',
+    'sunnyFirstChoice',
+    'sunnySecondChoice',
+    'rainyFirstChoice',
+    'rainySecondChoice',
+    'prepTime',
+    'performTime',
+    'cleanupTime',
+  ]);
+  // 統一ルール#9: isSubmitting || isUnchanged(...) が正。
+  // ただしStageはisValidによる入力検証(totalTimeのsuperRefineを含む)が
+  // 従来から効いているため、無効な入力のまま活性化してしまわないよう
+  // !isValidも維持したうえでisUnchangedを追加する
+  // (編集直後、何も変えていないのに送信できてしまうバグの修正)。
+  const isSubmitDisabled =
+    formState.isSubmitting || !isValid || isUnchangedFromOriginal;
+
   const stageFormTexts = {
     labels: stageLabels.map((key) => t(key)),
     notes: {
@@ -207,6 +232,7 @@ export const useStageFormHooks = (groupId: number) => {
     submitError,
     hasExisting,
     isValid,
+    isSubmitDisabled,
     isSubmitted,
     sunnyStageOptions,
     rainyStageOptions,

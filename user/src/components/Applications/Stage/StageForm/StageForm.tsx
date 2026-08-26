@@ -27,7 +27,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
     hasError,
     submitError,
     hasExisting,
-    isValid,
+    isSubmitDisabled,
     isSubmitted,
     sunnyStageOptions,
     rainyStageOptions,
@@ -304,7 +304,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                   type="submit"
                   size="pc"
                   color="main"
-                  isDisable={!isValid}
+                  isDisable={isSubmitDisabled}
                 >
                   {hasExisting
                     ? stageFormTexts.buttons.save

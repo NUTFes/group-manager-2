@@ -282,10 +282,11 @@ test.describe('stage application', () => {
     expect(rainy).toMatchObject({ use_time_interval: '30分' });
   });
 
-  // useStageForm の送信ボタンは isValid のみで活性判定しており、isDirty は見ていない。
-  // そのため他群(stage-options等)と違い、既存の有効な値のまま修正モードに入った
-  // 時点で、何も変更していなくても送信ボタンは活性のまま。
-  test('enables the submit button on edit entry even before any change', async ({
+  // 修正済み: 以前は useStageForm の送信ボタンが isValid のみで活性判定しており、
+  // 既存の有効な値のまま修正モードに入った時点で、何も変更していなくても
+  // 送信ボタンが活性のままだった(不要な更新リクエストを送れてしまう)。
+  // isUnchanged を足し、直前に流し込んだ値と一致する間は無効にするようにした。
+  test('keeps the submit button disabled on edit entry until a value actually changes', async ({
     page,
   }) => {
     const state = stageScenario('registration');
@@ -300,6 +301,9 @@ test.describe('stage application', () => {
       .click();
 
     await expect(page.getByLabel(FIELDS.sunnyFirst)).toBeVisible();
+    await expect(submitButton(page)).toBeDisabled();
+
+    await page.getByLabel(FIELDS.performTime).fill('30');
     await expect(submitButton(page)).toBeEnabled();
   });
 
