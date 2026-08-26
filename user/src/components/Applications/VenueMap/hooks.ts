@@ -1,13 +1,11 @@
 import {
   HealthCenterSubmissionStatus,
   isResubmissionStatus,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
-import { toast } from 'react-toastify';
 import { venueMapLabels } from '../label';
-import { useEditableSection } from '../shared';
+import { useEditableSection, useSubmissionStatusReset } from '../shared';
 
 export const useVenueMapHooks = (
   groupId: number,
@@ -30,19 +28,16 @@ export const useVenueMapHooks = (
     isLoading: isSectionLoading,
   } = useEditableSection({ isLoading: isFetching, isRegistered });
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'venue_map');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'venue_map',
+    status,
+    t('applications.venueMap.messages.statusUpdateFailed')
+  );
 
   // フォーム送信が成功したら表示モードに切り替え
   const handleFormSubmitted = async () => {
-    if (status !== 'unapproved') {
-      try {
-        await updateStatus('unapproved');
-      } catch (e) {
-        console.error(e);
-        toast.error(t('applications.venueMap.messages.statusUpdateFailed'));
-        return;
-      }
-    }
+    if (!(await resetSubmissionStatus())) return;
 
     if (isEditing) {
       toEdit();
@@ -71,6 +66,5 @@ export const useVenueMapHooks = (
     handleFormSubmitted,
     venueMapTexts,
     isResubmission,
-    updateStatus,
   };
 };
