@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
-import {
-  HealthCenterSubmissionStatus,
-  useUpdateSubmissionStatusFor,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
   useCreatePurchaseList,
   useDeletePurchaseList,
@@ -22,7 +19,7 @@ import {
 } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
-import { isUnchanged } from '../shared';
+import { isUnchanged, useSubmissionStatusReset } from '../shared';
 import {
   DATE_FORMAT,
   DEFAULT_PURCHASE_ITEM,
@@ -297,7 +294,12 @@ export const usePurchaseListsForm = (
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'purchase_list');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'purchase_list',
+    status,
+    t('applications.purchaseLists.messages.statusUpdateFailed')
+  );
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -422,17 +424,7 @@ export const usePurchaseListsForm = (
         }
       }
 
-      if (status !== 'unapproved') {
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.purchaseLists.messages.statusUpdateFailed')
-          );
-          return;
-        }
-      }
+      if (!(await resetSubmissionStatus())) return;
       onSuccess();
       reset(formData); // 送信後もフォーム内容は維持
     } catch {
