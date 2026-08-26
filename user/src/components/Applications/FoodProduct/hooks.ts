@@ -6,7 +6,6 @@ import {
 import {
   HealthCenterSubmissionStatus,
   isResubmissionStatus,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
@@ -17,7 +16,7 @@ import {
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
 import { useAuthenticatedDeleteWithId } from '@/hooks/useApi';
-import { useEditableSection } from '../shared';
+import { useEditableSection, useSubmissionStatusReset } from '../shared';
 
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
@@ -88,7 +87,12 @@ export const useFoodProductHooks = (
     isLoading: isSectionLoading,
   } = useEditableSection({ isLoading, isRegistered });
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'food_product');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'food_product',
+    status,
+    t('applications.foodProduct.messages.statusUpdateFailed')
+  );
 
   // 販売品データを完全に置き換える関数（更新時に使用）
   const mutateCookingProcessOrders = async () => {
@@ -97,6 +101,33 @@ export const useFoodProductHooks = (
         Array.isArray(key) &&
         key[0] === `/cooking_process_orders/group/${groupId}`
     );
+  };
+
+  // upsert後の再検証・再提出ステータス更新・編集モード終了・成功トーストは
+  // 作成/更新のどちらでも同じ処理なので共通化する
+  // (cookingProcessOrdersの再検証だけは更新時のみ必要)。
+  const finishFoodProductSubmit = async (
+    successMessage: string,
+    {
+      revalidateCookingProcessOrders,
+    }: { revalidateCookingProcessOrders: boolean }
+  ) => {
+    await mutateFoodProducts();
+    if (revalidateCookingProcessOrders) {
+      await mutateCookingProcessOrders();
+    }
+
+    // ステータス更新まで成功した時だけビューモードへ戻す
+    if (!(await resetSubmissionStatus())) return;
+
+    if (isEditing) {
+      toEdit();
+    }
+
+    toast.success(successMessage, {
+      position: 'top-right',
+      autoClose: 3000,
+    });
   };
 
   const setFoodProductsData = async (products: ProductInput[]) => {
@@ -131,45 +162,10 @@ export const useFoodProductHooks = (
         body: { food_products: apiProducts },
       });
 
-      await mutateFoodProducts();
-      await mutateCookingProcessOrders();
-
-      setTimeout(async () => {
-        try {
-          await mutateFoodProducts();
-          await mutateCookingProcessOrders();
-        } catch (e) {
-          console.error('再取得エラー:', e);
-        }
-      }, 500);
-
-      const updateStatusToUnapproved = async (): Promise<boolean> => {
-        if (status === 'unapproved') return true;
-
-        try {
-          await updateStatus('unapproved');
-          return true;
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.foodProduct.messages.statusUpdateFailed')
-          );
-          return false;
-        }
-      };
-
-      const statusUpdated = await updateStatusToUnapproved();
-      if (!statusUpdated) return;
-
-      // ステータス更新まで成功した時だけビューモードへ戻す
-      if (isEditing) {
-        toEdit();
-      }
-
-      toast.success(t('applications.foodProduct.messages.updateSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      await finishFoodProductSubmit(
+        t('applications.foodProduct.messages.updateSuccess'),
+        { revalidateCookingProcessOrders: true }
+      );
     } catch (error) {
       console.error('販売品更新エラー:', error);
 
@@ -211,44 +207,10 @@ export const useFoodProductHooks = (
         body: { food_products: apiProducts },
       });
 
-      await mutateFoodProducts();
-      await mutate(
-        (key) =>
-          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
+      await finishFoodProductSubmit(
+        t('applications.foodProduct.messages.createSuccess'),
+        { revalidateCookingProcessOrders: false }
       );
-
-      // 少し待ってからもう一度再取得
-      setTimeout(async () => {
-        await mutateFoodProducts();
-      }, 500);
-
-      const updateStatusToUnapproved = async (): Promise<boolean> => {
-        if (status === 'unapproved') return true;
-
-        try {
-          await updateStatus('unapproved');
-          return true;
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.foodProduct.messages.statusUpdateFailed')
-          );
-          return false;
-        }
-      };
-
-      const statusUpdated = await updateStatusToUnapproved();
-      if (!statusUpdated) return;
-
-      // 成功時のみビューモードに戻す
-      if (isEditing) {
-        toEdit();
-      }
-
-      toast.success(t('applications.foodProduct.messages.createSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
     } catch (error) {
       console.error('販売品登録エラー:', error);
 
@@ -344,10 +306,6 @@ export const useFoodProductHooks = (
 
   const isLoadingWithMutation = isSectionLoading || isMutating;
 
-  const refetchData = async () => {
-    await mutateFoodProducts();
-  };
-
   return {
     foodProducts,
     isLoading: isLoadingWithMutation,
@@ -358,8 +316,7 @@ export const useFoodProductHooks = (
     addFoodProducts,
     removeFoodProduct,
     setFoodProductsData,
-    mutate: refetchData,
-    refetchData,
+    mutate: mutateFoodProducts,
     foodProductViewTexts,
     isResubmission,
   };
