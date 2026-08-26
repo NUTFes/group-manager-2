@@ -7,12 +7,12 @@ import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
   canEditApplication,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useSubmissionStatusReset } from '../shared';
 import {
   CookingProcessOrderSchema,
   cookingProcessOrderSchema,
@@ -145,9 +145,11 @@ export const useCookingProcessOrder = (
     }
   }, [isDataLoading]);
 
-  const updateStatus = useUpdateSubmissionStatusFor(
+  const resetSubmissionStatus = useSubmissionStatusReset(
     groupId,
-    'cooking_process_order'
+    'cooking_process_order',
+    status,
+    t('applications.cookingProcessOrder.messages.statusUpdateFailed')
   );
 
   const handleEditClick = () => {
@@ -174,17 +176,7 @@ export const useCookingProcessOrder = (
       );
 
       // 再提出完了時
-      if (status !== 'unapproved') {
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.cookingProcessOrder.messages.statusUpdateFailed')
-          );
-          return;
-        }
-      }
+      if (!(await resetSubmissionStatus())) return;
       setIsEditing(false);
     } catch (e) {
       console.error(e);
