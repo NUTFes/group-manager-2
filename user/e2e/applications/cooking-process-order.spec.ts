@@ -289,4 +289,38 @@ test.describe('cooking process order application', () => {
     ).toHaveCount(0);
     expect(state.requestedUrls).toHaveLength(0);
   });
+
+  // 未登録かつ締切後: canEditApplication(isDeadline, status) が false になり、
+  // isExist(=未登録)に関わらず一覧表示(未登録の文言)に強制される。
+  // 入力フォームは開かず、修正ボタンも登録ボタンも出ない。
+  //
+  // この組み合わせは isRegistered(未登録)だけを見る他群の初期化ロジックとは
+  // 挙動が異なる(未登録なら通常はフォームが開く)。共通化の可否を判断するために
+  // 現状の挙動をここで凍結する。
+  test('shows the not-registered summary instead of the form when unregistered and past the deadline', async ({
+    page,
+  }) => {
+    const state = scenarioState('closed');
+    state.foodProducts = [cookingTargetFoodProduct()];
+    await mockHomePageApis(page, state);
+
+    await page.goto('/home');
+    await openCookingProcessOrder(page);
+
+    const cookingSection = page
+      .getByText('E2E コーヒー', { exact: true })
+      .locator('xpath=../..');
+    await expect(cookingSection).toBeVisible();
+    await expect(
+      cookingSection.getByText('未登録', { exact: true })
+    ).toBeVisible();
+    await expect(page.getByLabel(LABELS.tent)).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: BUTTONS.edit, exact: true })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: BUTTONS.register, exact: true })
+    ).toHaveCount(0);
+    expect(state.requestedUrls).toHaveLength(0);
+  });
 });
