@@ -64,7 +64,6 @@ export const useFireEquipmentFormHooks = (
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
-    setValue,
     control,
     reset,
   } = useForm<FireEquipmentFormValues>({
@@ -205,7 +204,6 @@ export const useFireEquipmentFormHooks = (
     handleSubmit,
     control,
     errors,
-    setValue,
     isSubmitting,
     items,
     fields,
