@@ -45,7 +45,11 @@ class Group < ApplicationRecord
   has_many :fire_equipment_orders, dependent: :destroy
   has_many :health_center_submission_statuses, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
-  has_secure_token :secret, length: 24
+  has_one :group_secret, dependent: :destroy
+
+  delegate :secret, to: :group_secret, allow_nil: true
+
+  after_create :create_group_secret!
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 

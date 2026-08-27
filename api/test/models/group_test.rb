@@ -60,74 +60,38 @@ class GroupTest < ActiveSupport::TestCase
     assert group.errors[:uses_place].present?
   end
 
-  test 'should generate a 24-character secret on create' do
-    group = Group.create!(
-      name: 'Group One',
-      project_name: 'Project One',
-      activity: 'Activity One',
-      user: @user,
-      group_category: @group_category,
-      fes_year: @fes_year
-    )
+  test 'should create an associated group_secret on create' do
+    group = create_group
+
+    assert_not_nil group.group_secret
     assert_equal 24, group.secret.length
   end
 
-  test 'regenerate_secret should replace the secret with a new value' do
-    group = Group.create!(
-      name: 'Group One',
-      project_name: 'Project One',
-      activity: 'Activity One',
-      user: @user,
-      group_category: @group_category,
-      fes_year: @fes_year
-    )
-    old_secret = group.secret
+  test 'should not include secret in the JSON representation' do
+    group = create_group
 
-    group.regenerate_secret
-
-    assert_equal 24, group.secret.length
-    assert_not_equal old_secret, group.secret
+    assert_not_includes group.as_json.keys, 'secret'
   end
 
-  test 'should raise a not-null violation when secret is cleared at the database level' do
-    group = Group.create!(
-      name: 'Group One',
-      project_name: 'Project One',
-      activity: 'Activity One',
-      user: @user,
-      group_category: @group_category,
-      fes_year: @fes_year
-    )
+  test 'should destroy the associated group_secret when the group is destroyed' do
+    group = create_group
+    group_secret_id = group.group_secret.id
 
-    assert_raises(ActiveRecord::NotNullViolation) do
-      # rubocop:disable Rails/SkipsModelValidations
-      group.update_column(:secret, nil)
-      # rubocop:enable Rails/SkipsModelValidations
-    end
+    group.destroy
+
+    assert_nil GroupSecret.find_by(id: group_secret_id)
   end
 
-  test 'should raise a uniqueness violation when secret duplicates another group at the database level' do
-    group_one = Group.create!(
-      name: 'Group One',
+  private
+
+  def create_group(name: 'Group One')
+    Group.create!(
+      name: name,
       project_name: 'Project One',
       activity: 'Activity One',
       user: @user,
       group_category: @group_category,
       fes_year: @fes_year
     )
-    group_two = Group.create!(
-      name: 'Group Two',
-      project_name: 'Project Two',
-      activity: 'Activity Two',
-      user: @user,
-      group_category: @group_category,
-      fes_year: @fes_year
-    )
-
-    assert_raises(ActiveRecord::RecordNotUnique) do
-      # rubocop:disable Rails/SkipsModelValidations
-      group_two.update_column(:secret, group_one.secret)
-      # rubocop:enable Rails/SkipsModelValidations
-    end
   end
 end

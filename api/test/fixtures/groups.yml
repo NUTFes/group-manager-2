@@ -7,7 +7,6 @@ one:
   user_id: 1
   group_category_id: 1
   fes_year_id: 1
-  secret: fixture_secret_one_00001
 
 two:
   name: MyString
@@ -16,4 +15,3 @@ two:
   user_id: 1
   group_category_id: 1
   fes_year_id: 1
-  secret: fixture_secret_two_00002
