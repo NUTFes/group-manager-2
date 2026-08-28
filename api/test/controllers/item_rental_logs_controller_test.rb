@@ -8,11 +8,20 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     @assign_rental_item = assign_rental_items(:one)
     @stocker_place = stocker_places(:one)
     @group = groups(:one)
-    @headers = { 'Cf-Access-Authenticated-User-Email' => 'recorder@example.com' }
+
+    Role.find_or_create_by!(id: 1) { |role| role.name = 'admin' }
+    Role.find_or_create_by!(id: 2) { |role| role.name = 'staff' }
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'user' }
+    @admin = create_user!(email: 'admin-item-rental-log@example.com', role_id: 1)
+    @staff = create_user!(email: 'staff-item-rental-log@example.com', role_id: 2)
+    @restricted_user = create_user!(email: 'restricted-item-rental-log@example.com', role_id: 3)
+    @headers = auth_headers(@admin)
   end
 
   test 'should get index filtered by rental_place_id and group_id, including planned quantity' do
-    get item_rental_logs_url, params: { rental_place_id: @assign_rental_item.rental_place_id, group_id: @assign_rental_item.group_id }
+    get item_rental_logs_url,
+        params: { rental_place_id: @assign_rental_item.rental_place_id, group_id: @assign_rental_item.group_id },
+        headers: @headers
     assert_response :success
 
     body = response.parsed_body
@@ -41,7 +50,9 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
       recorder_email: 'other@example.com'
     )
 
-    get item_rental_logs_url, params: { rental_place_id: @assign_rental_item.rental_place_id, group_id: @assign_rental_item.group_id }
+    get item_rental_logs_url,
+        params: { rental_place_id: @assign_rental_item.rental_place_id, group_id: @assign_rental_item.group_id },
+        headers: @headers
     assert_response :success
 
     log_ids = response.parsed_body['data']['item_rental_logs'].pluck('id')
@@ -50,7 +61,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index without filters when rental_place_id is absent' do
-    get item_rental_logs_url
+    get item_rental_logs_url, headers: @headers
     assert_response :success
 
     body = response.parsed_body
@@ -59,35 +70,98 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_includes log_ids, item_rental_logs(:two).id
   end
 
-  test 'should create item_rental_log and take recorder_email from header' do
+  test 'index requires authentication' do
+    get item_rental_logs_url
+    assert_response :unauthorized
+  end
+
+  test 'restricted user cannot get index' do
+    get item_rental_logs_url, headers: auth_headers(@restricted_user)
+    assert_response :forbidden
+  end
+
+  test 'should create item_rental_log and take recorder_email from the authenticated staff user' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'new-item-rental-log-uid',
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental',
         quantity: 3
-      }, headers: @headers, as: :json
+      }, headers: auth_headers(@staff), as: :json
     end
 
     assert_response :created
     body = response.parsed_body
-    assert_equal 'recorder@example.com', body['data']['recorder_email']
+    assert_equal @staff.email, body['data']['recorder_email']
     assert_equal @assign_rental_item.rental_item_id, body['data']['rental_item_id']
   end
 
-  test 'should return existing record when uid already exists' do
+  test 'a spoofed Cf-Access header does not override the recorder_email' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'spoofed-header-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: @headers.merge('Cf-Access-Authenticated-User-Email' => 'attacker@example.com'), as: :json
+    end
+
+    assert_response :created
+    assert_equal @admin.email, response.parsed_body['data']['recorder_email']
+  end
+
+  test 'create requires authentication' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'unauthenticated-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, as: :json
+    end
+
+    assert_response :unauthorized
+  end
+
+  test 'restricted user cannot create item_rental_log' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'restricted-user-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: auth_headers(@restricted_user), as: :json
+    end
+
+    assert_response :forbidden
+  end
+
+  test 'should return existing record when uid is resent with the same event data' do
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: @item_rental_log.uid,
-        assign_rental_item_id: @assign_rental_item.id,
-        category: 'rental',
-        quantity: 99
+        assign_rental_item_id: @item_rental_log.assign_rental_item_id,
+        category: @item_rental_log.category,
+        quantity: @item_rental_log.quantity
       }, headers: @headers, as: :json
     end
 
     assert_response :success
     body = response.parsed_body
     assert_equal @item_rental_log.id, body['data']['id']
+  end
+
+  test 'should return conflict when uid is reused with different event data' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: @item_rental_log.uid,
+        assign_rental_item_id: @item_rental_log.assign_rental_item_id,
+        category: @item_rental_log.category,
+        quantity: @item_rental_log.quantity + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :conflict
   end
 
   test 'should reject invalid category' do
@@ -129,16 +203,21 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'should reject a request without recorder email header' do
-    assert_no_difference('ItemRentalLog.count') do
-      post item_rental_logs_url, params: {
-        uid: 'missing-recorder-email-uid',
-        assign_rental_item_id: @assign_rental_item.id,
-        category: 'rental',
-        quantity: 1
-      }, as: :json
-    end
+  private
 
-    assert_response :unprocessable_entity
+  def create_user!(email:, role_id:)
+    User.create!(
+      name: email.split('@').first,
+      email: email,
+      uid: email,
+      provider: 'email',
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: role_id
+    )
+  end
+
+  def auth_headers(user)
+    user.create_new_auth_token
   end
 end

@@ -5,8 +5,19 @@ class AssignRentalItem < ApplicationRecord
   belongs_to :rental_item
   belongs_to :stocker_place, class_name: 'StockerPlace', optional: true
   belongs_to :rental_place, class_name: 'StockerPlace', optional: true
+  has_many :item_rental_logs, dependent: :restrict_with_error
 
   validates :rental_place, presence: true, if: -> { rental_place_id.present? }
+
+  # 在庫場所名（物品が保管されている場所）。未設定の場合は空文字
+  def stock_place_name(locale: :ja)
+    stocker_place&.display_name(locale: locale).to_s
+  end
+
+  # 貸出場所名（当日の受け渡し場所）。貸出場所調整で未設定の場合は空文字
+  def rental_place_name(locale: :ja)
+    rental_place&.display_name(locale: locale).to_s
+  end
 
   def self.with_groups_and_rental_item
     @record = AssignRentalItem.preload(:group)

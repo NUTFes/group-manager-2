@@ -44,8 +44,11 @@ class AssignRentalItemsController < ApplicationController
   # DELETE /assign_rental_items/1
   # DELETE /assign_rental_items/1.json
   def destroy
-    @assign_rental_item.destroy
-    render json: fmt(ok, [], "Deleted assign_rental_item = #{params[:id]}")
+    if @assign_rental_item.destroy
+      render json: fmt(ok, [], "Deleted assign_rental_item = #{params[:id]}")
+    else
+      render json: fmt(conflict, [], @assign_rental_item.errors.full_messages.join(', ')), status: :conflict
+    end
   end
 
   private

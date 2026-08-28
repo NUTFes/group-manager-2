@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class ItemRentalLogsController < ApplicationController
+  before_action :authenticate_api_user!
+  before_action :require_admin!
+
+  IDEMPOTENCY_ATTRIBUTES = %w[
+    assign_rental_item_id rental_item_id stocker_place_id category quantity
+  ].freeze
+
   # GET /item_rental_logs
   def index
     assign_rental_items = AssignRentalItem.where(assign_rental_item_filter_params)
@@ -11,9 +18,6 @@ class ItemRentalLogsController < ApplicationController
 
   # POST /item_rental_logs
   def create
-    existing_log = ItemRentalLog.find_by(uid: params[:uid])
-    return render json: fmt(ok, existing_log) if existing_log
-
     return render_unprocessable_entity('Invalid category') unless valid_category?(params[:category])
 
     assign_rental_item = AssignRentalItem.find_by(id: params[:assign_rental_item_id])
@@ -25,7 +29,10 @@ class ItemRentalLogsController < ApplicationController
         stocker_place_id: assign_rental_item.stocker_place_id
       )
     )
-    item_rental_log.recorder_email = recorder_email
+    item_rental_log.recorder_email = current_api_user.email
+
+    existing_log = ItemRentalLog.find_by(uid: item_rental_log.uid)
+    return render_idempotent_result(existing_log, item_rental_log) if existing_log
 
     if item_rental_log.save
       render json: fmt(created, item_rental_log), status: :created
@@ -33,7 +40,8 @@ class ItemRentalLogsController < ApplicationController
       render_validation_errors(item_rental_log)
     end
   rescue ActiveRecord::RecordNotUnique
-    render json: fmt(ok, ItemRentalLog.find_by!(uid: params[:uid]))
+    existing_log = ItemRentalLog.find_by!(uid: item_rental_log.uid)
+    render_idempotent_result(existing_log, item_rental_log)
   end
 
   private
@@ -53,8 +61,17 @@ class ItemRentalLogsController < ApplicationController
     params.permit(:uid, :assign_rental_item_id, :category, :quantity)
   end
 
-  def recorder_email
-    request.headers['Cf-Access-Authenticated-User-Email']
+  def render_idempotent_result(existing_log, candidate_log)
+    if same_event?(existing_log, candidate_log)
+      render json: fmt(ok, existing_log)
+    else
+      render json: fmt(conflict, [], 'uid already exists with different event data'), status: :conflict
+    end
+  end
+
+  def same_event?(existing_log, candidate_log)
+    existing_log.attributes.slice(*IDEMPOTENCY_ATTRIBUTES) ==
+      candidate_log.attributes.slice(*IDEMPOTENCY_ATTRIBUTES)
   end
 
   def render_unprocessable_entity(message)

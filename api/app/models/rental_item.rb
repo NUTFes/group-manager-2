@@ -5,7 +5,7 @@ class RentalItem < ApplicationRecord
   has_many :rental_orders, dependent: :destroy
   has_many :stocker_items, dependent: :destroy
   has_many :assign_rental_items, dependent: :destroy
-  has_many :item_rental_logs, dependent: :destroy
+  has_many :item_rental_logs, dependent: :restrict_with_error
 
   def to_info_h
     return {

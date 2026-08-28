@@ -29,12 +29,14 @@ table {
 }
 
 
+/* 貸出物品一覧は 物品名・在庫場所・貸出場所・貸出日・返却日 の5列(large)と
+   数量・借用チェック・返却チェック の3列(small)で構成する */
 .small-box {
-  width:5%
+  width: 8%;
 }
 
 .large-box {
-  width:10%
+  width: 15.2%;
 }
 
 .items tr {
@@ -42,7 +44,7 @@ table {
 }
 
 .items td {
-  width: 20%;
+  word-break: break-all;
 }
 
 .padding-top{

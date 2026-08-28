@@ -3,19 +3,32 @@
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
 
+  # 物品貸出関連の帳票（物品貸出表・貸出物品リストまとめ）が参照する関連の一覧。
+  # 各アクションで Group.includes(...) に渡してプリロードする
+  RENTAL_ITEM_PDF_ASSOCIATIONS = [
+    :group_category,
+    :power_orders,
+    { fes_year: :fes_dates },
+    { group_identification: { place_number: :place } },
+    { assign_rental_items: %i[rental_item stocker_place rental_place] }
+  ].freeze
+
   before_action :authenticate_api_user!
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf
-    output_groups('output_rental_items', 'output_rental_items_pdf', '物品貸出表', 'Not Landscape')
+    output_groups('output_rental_items', 'output_rental_items_pdf', '物品貸出表', 'Not Landscape',
+                  RENTAL_ITEM_PDF_ASSOCIATIONS)
   end
 
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
-    @groups = Group.where(fes_year_id: params[:fes_year_id]).order(:group_category_id)
+    @groups = Group.where(fes_year_id: params[:fes_year_id])
+                   .includes(RENTAL_ITEM_PDF_ASSOCIATIONS)
+                   .order(:group_category_id)
     # 今後の実装によってprint_pdfにlocaleの引数を持たせる
     locale = params[:locale].presence&.to_sym || :ja
-    @use_english_name_for_pdf = locale == :en
+    @pdf_locale = locale
     @groups = @groups.where(is_international: true) if locale == :en
     print_pdf('output_all_groups_rental_items', 'output_rental_items_pdf', '物品貸出表', 'Not Landscape')
   end
@@ -43,7 +56,8 @@ class PrintPdfController < ApplicationController
 
   # 貸出物品リスト
   def output_rental_items_list_pdf
-    output_groups_with_categories('output_rental_items_list', 'output_rental_items_list_pdf', '貸出物品リストまとめ', 'Landscape')
+    output_groups_with_categories('output_rental_items_list', 'output_rental_items_list_pdf', '貸出物品リストまとめ',
+                                  'Landscape', RENTAL_ITEM_PDF_ASSOCIATIONS)
   end
 
   # 販売品リスト
@@ -62,9 +76,10 @@ class PrintPdfController < ApplicationController
   end
 
   # 全参加団体用
-  def output_groups(template_name, style_name, output_file_name, type)
+  def output_groups(template_name, style_name, output_file_name, type, associations = nil)
     if Group.exists?(params[:group_id])
-      @group = Group.find(params[:group_id])
+      group_scope = associations ? Group.includes(associations) : Group
+      @group = group_scope.find(params[:group_id])
       print_pdf(template_name, style_name, "#{output_file_name}_#{format('%02d', @group.id)}.#{@group.name}", type)
     # groupが存在しなければNot FoundのHTMLを出力
     else
@@ -95,12 +110,13 @@ class PrintPdfController < ApplicationController
   end
 
   # カテゴリ分けされたもの
-  def output_groups_with_categories(template_name, style_name, output_file_name, type)
+  def output_groups_with_categories(template_name, style_name, output_file_name, type, associations = nil)
     if Group.exists?(fes_year_id: params[:fes_year_id])
-      @groups = Group.where(fes_year_id: params[:fes_year_id])
+      group_scope = associations ? Group.includes(associations) : Group
+      @groups = group_scope.where(fes_year_id: params[:fes_year_id])
       @catgories = []
       (1..6).each do |i|
-        group = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: i)
+        group = group_scope.where(fes_year_id: params[:fes_year_id]).where(group_category_id: i)
         @catgories << group
       end
       print_pdf(template_name, style_name, output_file_name, type)
