@@ -174,6 +174,11 @@ const Content: FC<ContentProps> = ({
                   />
                 )
               )}
+              {employeesApplicationHook.form.fieldArray.fields.length === 0 && (
+                <p className="mx-auto max-w-[400px] break-words text-center text-xs text-[#484848]">
+                  {texts.notes.allDeleted}
+                </p>
+              )}
               <div className="flex justify-center gap-4">
                 <Button
                   type="button"

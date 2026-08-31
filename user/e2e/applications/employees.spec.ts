@@ -217,8 +217,9 @@ test.describe('employees application', () => {
     ]);
   });
 
-  // EmployeesForm の削除ボタンは送信を待たず、即座に DELETE /employees/:id を呼ぶ。
-  test('deletes an existing employee immediately without waiting for submit', async ({
+  // フォーム内の削除ボタンは即APIを呼ばない。フィールドを外すだけで、
+  // DB上の削除は保存を押した時点の差分削除でまとめて確定する。
+  test('removes the field locally and only deletes on submit', async ({
     page,
   }) => {
     const state = scenarioState('registration');
@@ -237,12 +238,33 @@ test.describe('employees application', () => {
       .getByRole('button', { name: BUTTONS.delete, exact: true })
       .click();
 
-    await expect(page.getByText('従業員を削除しました。')).toBeVisible();
-    expect(state.requestedUrls).toContain('/employees/15001');
-    expect(state.employees).toHaveLength(0);
-    // フォーム上の行も即座に消える(まだ送信前で needApplication='yes' のまま)。
+    // まだ何もAPIを呼んでいない。サーバ上のデータは残ったまま。
+    expect(state.requestedUrls).not.toContain('/employees/15001');
+    expect(state.employees).toHaveLength(1);
+
+    // フォーム上の行は0件、保存はdisabled、「追加」への導線メッセージが出る。
     await expect(page.getByLabel(LABELS.name)).toHaveCount(0);
     await expect(submitButton(page)).toBeDisabled();
+    await expect(
+      page.getByText('すべての従業員を削除したため', { exact: false })
+    ).toBeVisible();
+
+    // 保存して初めて削除が確定する(差分削除 + 新規作成)。
+    await page
+      .getByRole('button', { name: LABELS.addEmployee, exact: true })
+      .click();
+    await fillEmployee(page, 0, { name: '差し替え後', studentId: '87654321' });
+    await submitButton(page).click();
+
+    await expect(page.getByText('従業員申請が完了しました。')).toBeVisible();
+    // 差分削除で元の従業員(id=15001)を消してから、新規作成で1件登録する。
+    // モックのPOST /employeesは常にid=15001を割り当てる(登録時のidは
+    // 別テストとも共通の固定値)ため、DELETEが実際に飛んだことは
+    // リクエストURLの記録で確認する。
+    expect(state.requestedUrls).toContain('/employees/15001');
+    expect(state.requestedUrls).toContain('/employees');
+    expect(state.employees).toHaveLength(1);
+    expect(state.employees[0]).toMatchObject({ name: '差し替え後' });
   });
 
   // 未登録の状態で「いいえ」を選ぶと、代表・副代表のみで活動する扱いになり

@@ -200,13 +200,28 @@ export const useEmployeesBusinessHooks = (
 
   /**
    * 従業員申請「いいえ」（従業員を申請する）の場合の送信処理
-   * 従業員数に応じて単一作成/更新または一括処理を選択します
+   * 従業員数に応じて単一作成/更新または一括処理を選択します。
+   *
+   * フォーム上で削除された（＝既存データにはあるが送信データに無い）従業員は
+   * ここで差分検出して削除する。削除ボタンは即時APIを呼ばずローカルで
+   * フィールドを外すだけなので、DB上の削除確定はこの送信処理が担う。
    */
   const handleEmployeeApplicationSubmit = async (data: {
     needApplication: 'yes' | 'no';
     employees: EmployeeFormItem[];
   }) => {
     try {
+      const submittedIds = new Set(
+        data.employees.map((employee) => employee.id).filter(Boolean)
+      );
+      const toDeleteIds = (getEmployeesData ?? [])
+        .map((employee) => employee.id)
+        .filter((id): id is number => !!id && !submittedIds.has(id));
+
+      for (const id of toDeleteIds) {
+        await deleteEmployee(id);
+      }
+
       if (data.employees.length === 1) {
         // 従業員が1人の場合：単一作成または更新
         const employee = data.employees[0];
@@ -215,7 +230,7 @@ export const useEmployeesBusinessHooks = (
         } else {
           await createEmployee(data.employees); // 新規従業員の作成
         }
-      } else {
+      } else if (data.employees.length > 1) {
         // 従業員が複数の場合：一括処理
         await upsertEmployees(data.employees);
       }
@@ -259,22 +274,6 @@ export const useEmployeesBusinessHooks = (
     }
   };
 
-  /**
-   * 従業員個別削除処理（トースト通知付き）
-   * フォーム内での従業員削除時に使用します
-   */
-  const handleEmployeeDeleteWithToast = async (employeeId: number) => {
-    try {
-      await deleteEmployee(employeeId);
-      callbacks.onSuccess?.(t('applications.employees.messages.deleteSuccess'));
-      await mutateEmployees();
-    } catch (error) {
-      console.error('Error deleting employee:', error);
-      callbacks.onError?.(t('applications.employees.messages.deleteFailed'));
-      throw error;
-    }
-  };
-
   return {
     getEmployeesData,
     mutateEmployees,
@@ -282,7 +281,6 @@ export const useEmployeesBusinessHooks = (
     isUpserting,
     handleEmployeeApplicationSubmit,
     handleNoApplicationSubmit,
-    handleEmployeeDeleteWithToast,
   };
 };
 
@@ -424,12 +422,7 @@ export const useEmployeesApplicationHooks = (
   const formState = useEmployeesFormState(form);
 
   // フォーム操作のイベントハンドラ
-  const formHandlers = useEmployeesFormHandlers(form, {
-    onEmployeeDelete: employeesBusinessHooks.handleEmployeeDeleteWithToast,
-    onMutateEmployees: async () => {
-      await employeesBusinessHooks.mutateEmployees();
-    },
-  });
+  const formHandlers = useEmployeesFormHandlers(form);
 
   // ===============================
   // UIイベントハンドラ群
@@ -572,6 +565,9 @@ export const useEmployeesApplicationHooks = (
     },
     buttons: {
       addEmployee: t('applications.employees.buttons.addEmployee'),
+    },
+    notes: {
+      allDeleted: t('applications.employees.notes.allDeleted'),
     },
     formActions: {
       register: t('form.actions.register'),
