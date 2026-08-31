@@ -302,9 +302,12 @@ test.describe('food product application', () => {
     await cookingProcessOrderRefetch;
   });
 
-  // 一覧カードの削除ボタンは setFoodProductsData の差分処理を経由せず、
-  // removeFoodProduct から直接 DELETE /food_products/:id を呼ぶ。
-  test('deletes a food product from the summary card', async ({ page }) => {
+  // 一覧カードの削除ボタンは即APIを呼ばない。対象を除いた編集フォームへ
+  // 切り替わるだけで、実際の削除は保存を押した時点で
+  // setFoodProductsData の差分処理にまとめて反映される。
+  test('opens the edit form with the product removed instead of deleting immediately', async ({
+    page,
+  }) => {
     const state = scenarioState('registration');
     state.foodProducts = [registeredFoodProduct()];
     await mockHomePageApis(page, state);
@@ -316,11 +319,43 @@ test.describe('food product application', () => {
       .getByRole('button', { name: BUTTONS.delete, exact: true })
       .click();
 
+    // まだ何もAPIを呼んでいない。サーバ上のデータは残ったまま。
+    expect(state.requestedUrls).not.toContain(
+      `/food_products/${FOOD_PRODUCT_ID}`
+    );
+    expect(state.requestedUrls).not.toContain('/food_products/upsert');
+    expect(state.foodProducts).toHaveLength(1);
+
+    // 唯一の商品を消した直後なので入力欄は0件、保存はdisabled、
+    // 「追加」への導線メッセージが出る。
+    await expect(page.getByLabel(LABELS.name)).toHaveCount(0);
+    await expect(submitButton(page)).toBeDisabled();
     await expect(
-      page.getByText('「E2E たこ焼き」を削除しました。')
+      page.getByText('すべての販売品を削除したため', { exact: false })
     ).toBeVisible();
+
+    // 保存して初めて削除が確定する。
+    await page
+      .getByRole('button', { name: '販売品の追加', exact: true })
+      .click();
+    await fillFoodProductForm(page, {
+      name: '差し替え後',
+      day1: '1',
+      day2: '1',
+    });
+    await selectFoodProductRadio(page, 0, 'alcohol', 0);
+    await selectFoodProductRadio(page, 0, 'license', 0);
+    await submitButton(page).click();
+
+    await expect(page.getByText('販売品を更新しました。')).toBeVisible();
+    expect(state.requestedUrls).toContain('/food_products/upsert');
+    // 元の商品(id=22001)は差し替えで消えている。
     expect(state.requestedUrls).toContain(`/food_products/${FOOD_PRODUCT_ID}`);
-    expect(state.foodProducts).toHaveLength(0);
+    expect(state.foodProducts).toHaveLength(1);
+    expect(state.foodProducts[0]).toMatchObject({ name: '差し替え後' });
+    expect(state.foodProducts.some((p) => p.id === FOOD_PRODUCT_ID)).toBe(
+      false
+    );
   });
 
   // 締切後は登録件数のサマリー1行のみで、修正ボタンを出さない

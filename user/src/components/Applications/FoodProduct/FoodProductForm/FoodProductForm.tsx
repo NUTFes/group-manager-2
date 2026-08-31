@@ -29,12 +29,16 @@ type FoodProductFormProps = {
   foodProducts?: RegisteredProduct[] | null;
   toEdit: () => void;
   addFoodProducts?: (products: ProductInput[]) => Promise<void>;
-  removeFoodProduct?: (id: string) => Promise<void>;
+  removeFoodProduct?: (id: string) => void;
   setFoodProductsData?: (products: ProductInput[]) => Promise<void>;
   isViewMode?: boolean;
   mutateCheckAllRegisteredGroups?: KeyedMutator<
     ApiResponse<RegistrationStatus>
   >;
+  // 既存申請の編集中かどうか。一覧の削除ボタンから全件をローカル除外して
+  // 0件になった場合でも、新規登録用の空テンプレートや新規登録処理に
+  // 戻さないための区別。
+  hasExistingProducts?: boolean;
 };
 
 const FoodProductForm: FC<FoodProductFormProps> = ({
@@ -46,6 +50,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
   setFoodProductsData,
   isViewMode = false,
   mutateCheckAllRegisteredGroups,
+  hasExistingProducts = false,
 }) => {
   const {
     handleSubmit,
@@ -64,7 +69,8 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
     groupId,
     foodProducts,
     addFoodProducts,
-    setFoodProductsData
+    setFoodProductsData,
+    hasExistingProducts
   );
   const alcoholRadioOptions = foodProductFormTexts.form.radio.alcohol.options;
   const cookingRadioOptions = foodProductFormTexts.form.radio.cooking.options;
@@ -277,23 +283,28 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                       )}
                     />
                   </div>
-                  {products.length > 1 && (
-                    <div className="flex w-full justify-center">
-                      <Button
-                        size="pc"
-                        color="alert"
-                        variant
-                        type="button"
-                        onClick={() => removeProduct(index)}
-                        icon="delete"
-                      >
-                        {foodProductFormTexts.buttons.delete}
-                      </Button>
-                    </div>
-                  )}
+                  {/* 最後の1件も削除可能。0件になったら保存側をdisabledにする
+                      （下記ガイダンス参照）。 */}
+                  <div className="flex w-full justify-center">
+                    <Button
+                      size="pc"
+                      color="alert"
+                      variant
+                      type="button"
+                      onClick={() => removeProduct(index)}
+                      icon="delete"
+                    >
+                      {foodProductFormTexts.buttons.delete}
+                    </Button>
+                  </div>
                 </div>
               </FormContainer>
             ))}
+            {products.length === 0 && (
+              <p className="mx-auto max-w-[400px] break-words text-center text-xs text-[#484848]">
+                {foodProductFormTexts.form.notes.allDeleted}
+              </p>
+            )}
             <div className="mx-auto flex justify-center gap-4">
               <div className="flex w-full justify-center">
                 <Button
@@ -312,7 +323,9 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   size="pc"
                   color="main"
                   type="submit"
-                  isDisable={isMutating || validateEdit()}
+                  isDisable={
+                    isMutating || validateEdit() || products.length === 0
+                  }
                   icon={
                     foodProducts && foodProducts.length > 0 ? 'save' : 'send'
                   }

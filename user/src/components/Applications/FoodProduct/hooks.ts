@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
@@ -57,6 +58,13 @@ export const useFoodProductHooks = (
       : null;
 
   const hasError = !!error;
+
+  // 一覧表示の削除ボタンは即時APIを呼ばない。対象をローカルで除外して
+  // 編集フォームへ切り替え、実際の削除は保存ボタンを押すまで確定しない。
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const editableFoodProducts: RegisteredProduct[] | null = pendingDeleteId
+    ? (foodProducts ?? []).filter((p) => p.id !== pendingDeleteId)
+    : foodProducts;
 
   const foodProductViewTexts = {
     title: t('applications.foodProduct.title'),
@@ -120,6 +128,7 @@ export const useFoodProductHooks = (
     // ステータス更新まで成功した時だけビューモードへ戻す
     if (!(await resetSubmissionStatus())) return;
 
+    setPendingDeleteId(null);
     if (isEditing) {
       toEdit();
     }
@@ -237,77 +246,20 @@ export const useFoodProductHooks = (
     }
   };
 
-  const removeFoodProduct = async (id: string) => {
-    try {
-      const productToRemove = foodProducts?.find(
-        (product) => product.id === id
-      );
-
-      if (!productToRemove) {
-        throw new Error(`削除対象の販売品が見つかりません。ID: ${id}`);
-      }
-
-      const productId = parseInt(id);
-
-      await removeFoodProductById(productId);
-
-      await mutateFoodProducts();
-      await mutate(
-        (key) =>
-          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
-      );
-      await mutateCookingProcessOrders();
-
-      toast.success(
-        t('applications.foodProduct.messages.deleteSuccess', {
-          name: productToRemove.name,
-        }),
-        {
-          position: 'top-right',
-          autoClose: 3000,
-        }
-      );
-    } catch (error) {
-      console.error('販売品削除エラー:', error);
-
-      if (error instanceof Error) {
-        if (
-          error.message.includes('User is not authenticated') ||
-          error.message.includes('認証が必要')
-        ) {
-          toast.error(t('applications.foodProduct.messages.authRequired'), {
-            position: 'top-right',
-            autoClose: 5000,
-          });
-        } else if (error.message.includes('404')) {
-          toast.error(t('applications.foodProduct.messages.deleteNotFound'), {
-            position: 'top-right',
-            autoClose: 5000,
-          });
-        } else {
-          toast.error(
-            t('applications.foodProduct.messages.deleteFailedDetail', {
-              message: error.message,
-            }),
-            {
-              position: 'top-right',
-              autoClose: 5000,
-            }
-          );
-        }
-      } else {
-        toast.error(t('applications.foodProduct.messages.deleteFailed'), {
-          position: 'top-right',
-          autoClose: 5000,
-        });
-      }
-    }
+  // 一覧表示からの削除は即時APIを呼ばない。対象を除いた編集フォームへ
+  // 切り替えるだけで、実際の削除は保存ボタンを押した時点で
+  // setFoodProductsData の差分削除にまとめて反映される。
+  const removeFoodProduct = (id: string) => {
+    setPendingDeleteId(id);
+    toEdit();
   };
 
   const isLoadingWithMutation = isSectionLoading || isMutating;
 
   return {
     foodProducts,
+    editableFoodProducts,
+    hasExistingProducts: !!foodProducts,
     isLoading: isLoadingWithMutation,
     hasError,
     isEditing,

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -22,10 +23,17 @@ export const useFoodProductFormHooks = (
   groupId: number,
   foodProductsProp?: RegisteredProduct[] | null,
   addFoodProducts?: (products: ProductInput[]) => Promise<void>,
-  setFoodProductsData?: (products: ProductInput[]) => Promise<void>
+  setFoodProductsData?: (products: ProductInput[]) => Promise<void>,
+  // 既存申請の編集中かどうか（呼び出し元の hasExistingProducts をそのまま渡す）。
+  // 一覧の削除ボタンから全件をローカル除外して foodProductsProp が空になっても、
+  // これは変わらないので「新規登録」と区別できる。
+  hasExistingProducts = false
 ) => {
   const { t } = useTranslation('common');
-  // 安全なデフォルト値生成関数
+  // 安全なデフォルト値生成関数。
+  // 既存データが1件以上あればそれを使う。0件でも、既存申請の編集中
+  // （＝一覧から全件削除された直後）なら空テンプレートを補わずそのまま0件にする
+  // （保存ボタン側がdisabledになり、確定は保存を押すまで待つ）。
   const createDefaultProducts = (propsData?: RegisteredProduct[] | null) => {
     if (propsData && propsData.length > 0) {
       return propsData.map((product) => ({
@@ -36,6 +44,9 @@ export const useFoodProductFormHooks = (
         day1Quantity: product.day1Quantity || FORM_VALUES.INITIAL_QUANTITY,
         day2Quantity: product.day2Quantity || FORM_VALUES.INITIAL_QUANTITY,
       }));
+    }
+    if (hasExistingProducts) {
+      return [];
     }
     return [
       {
@@ -55,6 +66,7 @@ export const useFoodProductFormHooks = (
     setValue,
     watch,
     control,
+    reset,
   } = useForm<FoodProductFormData>({
     mode: 'onChange',
     resolver: zodResolver(foodProductSchema),
@@ -67,6 +79,29 @@ export const useFoodProductFormHooks = (
     control,
     name: 'products',
   });
+
+  // FoodProductForm はビュー/編集モードの切り替えでコンポーネントが
+  // アンマウントされない。一覧の削除ボタンで foodProductsProp が変わっても
+  // useForm の defaultValues は初回マウント時のまま更新されないため、
+  // 明示的に reset して同期する（FireEquipmentFormと同じパターン）。
+  const prevProductIdsRef = useRef<string>('__initial__');
+  useEffect(() => {
+    const nextIds = (foodProductsProp ?? []).map((p) => p.id).join(',');
+    if (prevProductIdsRef.current !== nextIds) {
+      reset(
+        { products: createDefaultProducts(foodProductsProp) },
+        {
+          keepDirty: false,
+          keepErrors: false,
+          keepDirtyValues: false,
+          keepValues: false,
+          keepDefaultValues: false,
+        }
+      );
+      prevProductIdsRef.current = nextIds;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [foodProductsProp, reset, hasExistingProducts]);
 
   const values = watch();
   const products = values.products || [];
@@ -137,6 +172,7 @@ export const useFoodProductFormHooks = (
       },
       notes: {
         quantity: t('applications.foodProduct.notes.quantity'),
+        allDeleted: t('applications.foodProduct.notes.allDeleted'),
       },
     },
     buttons: {
@@ -186,15 +222,15 @@ export const useFoodProductFormHooks = (
     });
   };
 
+  // 最後の1件も削除できる。0件になった場合は呼び出し側で保存ボタンを
+  // disabledにする（削除の確定は保存を押した時点）。
   const removeProduct = (index: number) => {
-    if (products.length > FORM_VALUES.MIN_PRODUCTS_COUNT) {
-      remove(index);
-    }
+    remove(index);
   };
 
   const onSubmit = async (formData: FoodProductFormData): Promise<boolean> => {
     try {
-      if (foodProductsProp && foodProductsProp.length > 0) {
+      if (hasExistingProducts) {
         // 更新モード
         const productsWithId = formData.products.map((product, index) => ({
           ...product,
