@@ -70,6 +70,15 @@ services:
     volumes: [./user:/app]
     depends_on: [api]
 
+  admin:
+    build: ./admin
+    container_name: "GM3-ADMIN"
+    ports:
+      - "3001:3001"
+    command: pnpm run dev
+    volumes: [./admin:/app]
+    depends_on: [api]
+
 volumes:
   mysql-data:
     driver: local
