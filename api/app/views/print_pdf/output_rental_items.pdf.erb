@@ -47,28 +47,33 @@
   <table class="items individual-items">
     <colgroup>
       <col class="item-name-column">
-      <col class="pickup-location-column">
+      <col class="stock-location-column">
+      <col class="rental-location-column">
       <col class="quantity-column">
-      <col class="remark-column">
       <col class="pickup-date-column">
       <col class="return-date-column">
       <col class="confirmation-column">
     </colgroup>
     <tr>
       <th>物品名</th>
-      <th>借りる場所</th>
+      <th>在庫場所</th>
+      <th>貸出場所</th>
       <th>数量</th>
-      <th>備考</th>
       <th>貸出日</th>
       <th>返却日</th>
       <th>返却チェック</th>
     </tr>
     <% @group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= assign_rental_item.rental_item.name %></td>
-      <td><%= assign_rental_item.stocker_place.name %></td>
+      <td>
+        <div class="item-name"><%= assign_rental_item.rental_item.name %></div>
+        <% if assign_rental_item.remark.present? %>
+          <div class="item-remark"><%= assign_rental_item.remark %></div>
+        <% end %>
+      </td>
+      <td><%= assign_rental_item.stock_place_name %></td>
+      <td><%= assign_rental_item.rental_place_name %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= assign_rental_item.remark %></td>
       <td><span class="date-value"><%= pickup_date %></span><br>(準備日)</td>
       <td><span class="date-value"><%= return_date %></span><br>(片付け日)</td>
       <td></td>

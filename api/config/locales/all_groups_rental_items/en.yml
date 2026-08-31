@@ -17,7 +17,8 @@ en:
       items_table:
         headers:
           item_name: "Item Name"
-          pickup_location: "Pickup Location"
+          stock_location: "Stock Location"
+          rental_location: "Pickup Location"
           quantity: "Quantity"
           remark: "Remarks"
           pickup_date: "Pickup Date"

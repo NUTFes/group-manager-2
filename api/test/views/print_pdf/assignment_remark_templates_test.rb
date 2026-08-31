@@ -5,10 +5,18 @@ require 'test_helper'
 class AssignmentRemarkTemplatesTest < ActiveSupport::TestCase
   self.fixture_table_names = []
 
-  test 'rental items list outputs the assignment remark in the existing remarks cell' do
-    template = Rails.root.join('app/views/print_pdf/output_rental_items_list.pdf.erb').read
+  test 'rental item PDF templates output the remark below the item name' do
+    %w[
+      output_rental_items.pdf.erb
+      output_all_groups_rental_items.pdf.erb
+      output_rental_items_list.pdf.erb
+    ].each do |filename|
+      template = Rails.root.join('app/views/print_pdf', filename).read
 
-    assert_includes template, '<td><%= assign_rental_item.remark %></td>'
+      assert_includes template, 'assign_rental_item.remark.present?'
+      assert_includes template, 'class="item-remark"'
+      assert_includes template, '<%= assign_rental_item.remark %>'
+    end
   end
 
   test 'all groups info adds a remark heading and assignment value' do
@@ -22,9 +30,54 @@ class AssignmentRemarkTemplatesTest < ActiveSupport::TestCase
 
   test 'all groups info rental items columns have widths totaling one hundred percent' do
     stylesheet = Rails.root.join('app/views/print_pdf/output_rental_items_pdf.css').read
-    widths = stylesheet.scan(/\.all-groups-info-items .+? \{\s+width: ([\d.]+)%;\s+\}/).flatten.map(&:to_f)
+    selectors = [
+      '.all-groups-info-items .item-name-column',
+      '.all-groups-info-items .pickup-location-column',
+      '.all-groups-info-items .quantity-column',
+      '.all-groups-info-items .remark-column'
+    ]
 
-    assert_equal 4, widths.length
-    assert_in_delta 100, widths.sum
+    total_width = selectors.sum { |selector| width_for(stylesheet, selector) }
+    assert_in_delta 100, total_width
+  end
+
+  test 'rental item PDF columns have widths totaling one hundred percent' do
+    stylesheet = Rails.root.join('app/views/print_pdf/output_rental_items_pdf.css').read
+    individual_selectors = [
+      '.individual-items .item-name-column',
+      '.individual-items .stock-location-column',
+      '.individual-items .rental-location-column',
+      '.individual-items .quantity-column',
+      '.individual-items .pickup-date-column',
+      '.individual-items .return-date-column',
+      '.individual-items .confirmation-column'
+    ]
+    all_groups_selectors = [
+      '.all-groups-items .item-name-column',
+      '.all-groups-items .stock-location-column',
+      '.all-groups-items .rental-location-column',
+      '.all-groups-items .quantity-column',
+      '.all-groups-items .pickup-date-column',
+      '.all-groups-items .return-date-column',
+      '.all-groups-items .confirmation-column',
+      '.all-groups-items .confirmation-column'
+    ]
+
+    individual_total_width = individual_selectors.sum { |selector| width_for(stylesheet, selector) }
+    all_groups_total_width = all_groups_selectors.sum { |selector| width_for(stylesheet, selector) }
+
+    assert_in_delta 100, individual_total_width
+    assert_in_delta 100, all_groups_total_width
+  end
+
+  private
+
+  def width_for(stylesheet, selector)
+    declaration = stylesheet.scan(/([^{}]+)\{([^{}]+)\}/).find do |selectors, _rules|
+      selectors.split(',').map(&:strip).include?(selector)
+    end
+
+    assert declaration, "Missing CSS declaration for #{selector}"
+    declaration.last[/width:\s*([\d.]+)%/, 1].to_f
   end
 end

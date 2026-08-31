@@ -5,7 +5,9 @@
     <% is_new_page = true %>
 
     <% category.each do |group| %>
-      <% group_items_count = group.assign_rental_items.exists? ? group.assign_rental_items.count : 1 %>
+      <%# exists?/count は常にSQLを発行しプリロードを使わないため、any?/size を使う %>
+      <% assign_rental_items = group.assign_rental_items %>
+      <% group_items_count = assign_rental_items.any? ? assign_rental_items.size : 1 %>
       <% if item_count + group_items_count > page_items_limit || is_new_page %>
         <% if !is_new_page %>
           </table>
@@ -19,10 +21,10 @@
             <th>団体番号</th>
             <th>団体名</th>
             <th>企画名</th>
-            <th>名称</th>
-            <th>借用場所</th>
+            <th>名称・備考</th>
+            <th>在庫場所</th>
+            <th>貸出場所</th>
             <th>個数</th>
-            <th>備考欄</th>
           </tr>
         <% item_count = 0 %>
         <% is_new_page = false %>
@@ -33,13 +35,18 @@
         <td rowspan=<%= group_items_count %>><%= group.number %></td>
         <td rowspan=<%= group_items_count %>><%= group.name %></td>
         <td rowspan=<%= group_items_count %>><%= group.project_name %></td>
-        <% if group.assign_rental_items.exists? %>
-          <% group.assign_rental_items.each_with_index do |assign_rental_item, index| %>
+        <% if assign_rental_items.any? %>
+          <% assign_rental_items.each_with_index do |assign_rental_item, index| %>
             <% if index > 0 %><tr><% end %>
-            <td><%= assign_rental_item.rental_item.name %></td>
-            <td><%= assign_rental_item.stocker_place.name %></td>
+            <td>
+              <div class="item-name"><%= assign_rental_item.rental_item.name %></div>
+              <% if assign_rental_item.remark.present? %>
+                <div class="item-remark"><%= assign_rental_item.remark %></div>
+              <% end %>
+            </td>
+            <td><%= assign_rental_item.stock_place_name %></td>
+            <td><%= assign_rental_item.rental_place_name %></td>
             <td><%= assign_rental_item.num %></td>
-            <td><%= assign_rental_item.remark %></td>
             </tr>
           <% end %>
         <% else %>

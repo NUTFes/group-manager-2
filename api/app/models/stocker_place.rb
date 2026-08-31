@@ -7,6 +7,14 @@ class StockerPlace < ApplicationRecord
   belongs_to :place_category, optional: true
 
   validate :place_category_id_must_be_nil_or_integer
+  # 書類出力用の場所名。
+  # name / name_en はどちらもDB側でNOT NULL制約がなく未登録があり得るため、
+  # 英語版で name_en が空のときは日本語名に、日本語名も空のときは空文字にフォールバックする
+  def display_name(locale: :ja)
+    return name_en if locale.to_s == 'en' && name_en.present?
+
+    name.to_s
+  end
 
   private
 
