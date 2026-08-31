@@ -1,0 +1,38 @@
+services:
+  cloudflare:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare
+    volumes:
+      - ./cloudflare/prod:/home/nonroot/.cloudflared
+    command: tunnel run
+
+  api:
+    image: ghcr.io/nutfes/group-manager/api:${IMAGE_TAG}
+    container_name: prod-api
+    env_file: [.env]
+
+  user:
+    image: ghcr.io/nutfes/group-manager/user:${IMAGE_TAG}
+    container_name: prod-view
+    ports:
+      - "8003:3000"
+    env_file: [.env]
+
+  admin_view:
+    image: ghcr.io/nutfes/group-manager/admin:${IMAGE_TAG}
+    container_name: prod-admin
+    env_file: [.env]
+    ports:
+      - "8000:3000"
+
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: "prod-dozzle-agent"
+    ports: ["7007:7007"]
+    command: agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  default:
+    name: group-manager-default
