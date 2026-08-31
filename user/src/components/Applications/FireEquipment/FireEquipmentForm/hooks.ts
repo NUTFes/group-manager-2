@@ -24,8 +24,13 @@ export const DEFAULT_FIRE_EQUIPMENT_ITEM = (): FireEquipmentItemValues => ({
   remarks: '',
 });
 
+// orders が空/未定義の場合、通常は入力用の空テンプレートを1件出す。
+// ただし allowEmpty（＝既存申請の編集中で、一覧の削除ボタンから全件を
+// ローカルで除外した状態）の時だけは、そのまま0件にする
+// （テンプレートを出さず、保存ボタン側をdisabledにして確定を待つ）。
 const createDefaultItems = (
-  orders?: FireEquipmentResponse[]
+  orders: FireEquipmentResponse[] | undefined,
+  allowEmpty: boolean
 ): FireEquipmentItemValues[] => {
   if (orders && orders.length > 0) {
     return orders.map((o) => ({
@@ -37,6 +42,9 @@ const createDefaultItems = (
       isTakeaway: o.is_takeaway ?? true,
       remarks: o.remark || '',
     }));
+  }
+  if (allowEmpty) {
+    return [];
   }
   return [DEFAULT_FIRE_EQUIPMENT_ITEM()];
 };
@@ -52,14 +60,18 @@ const isItemValid = (item: FireEquipmentItemValues): boolean => {
 export const useFireEquipmentFormHooks = (
   groupId: number,
   existingOrders?: FireEquipmentResponse[],
-  onComplete?: () => Promise<void>
+  onComplete?: () => Promise<void>,
+  // 既存申請の編集中かどうか。呼び出し元(FireEquipment.tsx)の hasExisting
+  // をそのまま渡す。全件削除して0件になってもここは変わらないので、
+  // 新規登録(空テンプレート表示)とは区別できる。
+  isEditingExisting = false
 ) => {
   const { t } = useTranslation('common');
   const { mutateFireEquipmentOrders } =
     useGetFireEquipmentOrdersByGroupId(groupId);
   const { submitFireEquipmentOrders } = useFireEquipmentMutations();
 
-  const isEditing = !!existingOrders && existingOrders.length > 0;
+  const isEditing = isEditingExisting;
 
   const {
     handleSubmit,
@@ -70,7 +82,7 @@ export const useFireEquipmentFormHooks = (
     mode: 'onChange',
     resolver: zodResolver(FireEquipmentFormSchema),
     defaultValues: {
-      items: createDefaultItems(existingOrders),
+      items: createDefaultItems(existingOrders, isEditingExisting),
     },
   });
 
@@ -89,7 +101,7 @@ export const useFireEquipmentFormHooks = (
     const nextIds = (existingOrders ?? []).map((o) => o.id).join(',');
     if (prevOrdersRef.current !== nextIds) {
       reset(
-        { items: createDefaultItems(existingOrders) },
+        { items: createDefaultItems(existingOrders, isEditingExisting) },
         {
           keepDirty: false,
           keepErrors: false,
@@ -100,14 +112,16 @@ export const useFireEquipmentFormHooks = (
       );
       prevOrdersRef.current = nextIds;
     }
-  }, [existingOrders, reset]);
+  }, [existingOrders, reset, isEditingExisting]);
 
   const isFormValid = items.length > 0 && items.every(isItemValid);
 
   const addItem = () => append(DEFAULT_FIRE_EQUIPMENT_ITEM());
 
+  // 最後の1件も削除できる。0件になった場合は isFormValid が false になり
+  // 保存ボタンがdisabledになる（削除の確定は保存を押した時点）。
   const removeItem = (index: number) => {
-    if (items.length > 1) remove(index);
+    remove(index);
   };
 
   const onSubmit = async (
@@ -168,6 +182,7 @@ export const useFireEquipmentFormHooks = (
       takeaway: t('applications.fireEquipment.notes.takeaway'),
       remark: t('applications.fireEquipment.notes.remark'),
       remarkRequired: t('applications.fireEquipment.notes.remarkRequired'),
+      allDeleted: t('applications.fireEquipment.notes.allDeleted'),
     },
     fuelOptions: [
       { id: 0, name: t('form.validation.select'), disabled: true },

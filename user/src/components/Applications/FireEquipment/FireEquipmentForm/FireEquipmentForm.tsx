@@ -19,11 +19,14 @@ type FireEquipmentFormProps = {
   groupId: number;
   existingOrders?: FireEquipmentResponse[];
   onComplete?: () => Promise<void>;
-  onDeleteOrder?: (id: number) => Promise<void>;
+  onDeleteOrder?: (id: number) => void;
   toEdit?: () => void;
   isViewMode?: boolean;
   canAdd?: boolean;
   canEdit?: boolean;
+  // 既存申請の編集中かどうか。一覧の削除ボタンから全件をローカル除外して
+  // 0件になった場合でも、新規登録用の空テンプレートに戻さないための区別。
+  isEditingExisting?: boolean;
 };
 
 const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
@@ -35,6 +38,7 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
   isViewMode = false,
   canAdd = true,
   canEdit = true,
+  isEditingExisting = false,
 }) => {
   const { t } = useTranslation('common');
   const {
@@ -50,7 +54,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
     isEditing,
     isFormValid,
     fireEquipmentFormTexts,
-  } = useFireEquipmentFormHooks(groupId, existingOrders, onComplete);
+  } = useFireEquipmentFormHooks(
+    groupId,
+    existingOrders,
+    onComplete,
+    isEditingExisting
+  );
 
   const getFuelLabel = (fuel: FireEquipmentFuel) => {
     switch (fuel) {
@@ -257,8 +266,9 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
                       />
                     )}
                   />
-                  {/* フォーム内削除ボタン：canEdit で制御 */}
-                  {canEdit && items.length > 1 && (
+                  {/* フォーム内削除ボタン：canEdit で制御。最後の1件も削除可能で、
+                      0件になったら保存ボタン側をdisabledにする（下記ガイダンス参照） */}
+                  {canEdit && (
                     <div className="flex w-full justify-center">
                       <Button
                         size="pc"
@@ -275,6 +285,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
                 </div>
               </FormContainer>
             ))}
+
+            {items.length === 0 && (
+              <p className="max-w-[400px] break-words text-center text-xs text-[#484848]">
+                {fireEquipmentFormTexts.notes.allDeleted}
+              </p>
+            )}
 
             <div className="mx-auto flex justify-center gap-4">
               {/* 追加ボタン：canAdd で制御 */}

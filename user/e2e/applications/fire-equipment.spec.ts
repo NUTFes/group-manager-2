@@ -303,8 +303,11 @@ test.describe('fire equipment application', () => {
     });
   });
 
-  // FormList の削除ボタンから既存の申請を削除できる。
-  test('deletes an existing order from the summary view', async ({ page }) => {
+  // FormList の削除ボタンは即APIを呼ばない。対象を除いた編集フォームへ
+  // 切り替わるだけで、保存ボタンを押すまでサーバのデータは変わらない。
+  test('opens the edit form with the row removed instead of deleting immediately', async ({
+    page,
+  }) => {
     const state = scenarioState('registration');
     state.fireEquipmentOrders = [registeredFireEquipmentOrder()];
     await mockHomePageApis(page, state);
@@ -316,9 +319,37 @@ test.describe('fire equipment application', () => {
       .first()
       .click();
 
-    await expect(page.getByText('火気申請を削除しました')).toBeVisible();
+    // まだ何もAPIを呼んでいない。サーバ上のデータは残ったまま。
+    expect(state.requestedUrls).not.toContain('/fire_equipment_orders/submit');
+    expect(state.fireEquipmentOrders).toHaveLength(1);
+
+    // 唯一の項目を消した直後なので入力欄は0件、保存はdisabled、
+    // 「いいえ」への導線メッセージが出る。
+    await expect(page.getByLabel(FIELDS.name)).toHaveCount(0);
+    await expect(submitButton(page)).toBeDisabled();
+    await expect(
+      page.getByText('すべての項目を削除したため', { exact: false })
+    ).toBeVisible();
+
+    // 保存して初めて削除が確定する。
+    await page.getByRole('button', { name: '追加', exact: true }).click();
+    await fillFireEquipmentForm(page, {
+      name: '差し替え後',
+      quantity: '1',
+      fuelLabel: 'カセットガス',
+      usage: '差し替え後の用途',
+      remark: '',
+    });
+    await submitButton(page).click();
+
+    await expect(page.getByText('火気申請を更新しました。')).toBeVisible();
     expect(state.requestedUrls).toContain('/fire_equipment_orders/submit');
-    expect(state.fireEquipmentOrders).toHaveLength(0);
+    expect(state.fireEquipmentOrders).toHaveLength(1);
+    expect(state.fireEquipmentOrders[0]).toMatchObject({
+      name: '差し替え後',
+    });
+    // 元の id=5001 は差し替えで消えている。
+    expect(state.fireEquipmentOrders.some((o) => o.id === 5001)).toBe(false);
   });
 
   // API が {success:false} を返した場合、失敗トーストは1回だけ出る

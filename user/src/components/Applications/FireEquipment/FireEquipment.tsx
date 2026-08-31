@@ -65,6 +65,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
     hasExisting,
     hasUnregistered,
     fireEquipmentOrders,
+    editableOrders,
     handleRadioChange,
     handleApplyNegative,
     handleDeleteOrder,
@@ -220,10 +221,11 @@ const FireEquipment: FC<FireEquipmentProps> = ({
           </p>
           <FireEquipmentForm
             groupId={groupId}
-            existingOrders={isEditing ? fireEquipmentOrders : undefined}
+            existingOrders={isEditing ? editableOrders : undefined}
             onComplete={handleFormComplete}
             canAdd={canRegisterNewFireEquipmentApplication}
             canEdit={canEditExistingFireEquipmentApplication}
+            isEditingExisting={hasExisting}
           />
         </div>
       );

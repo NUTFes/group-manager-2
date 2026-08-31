@@ -487,7 +487,8 @@
       },
       "notes": {
         "processing": "Processing...",
-        "quantity": "Use half-width numbers."
+        "quantity": "Use half-width numbers.",
+        "allDeleted": "You removed every product, so this can't be saved as is. Add at least one product using \"Add product\"."
       },
       "buttons": {
         "add": "Add product"
@@ -785,6 +786,9 @@
       "buttons": {
         "addEmployee": "Add employee"
       },
+      "notes": {
+        "allDeleted": "You removed every employee, so this can't be saved as is. Add at least one employee using \"Add employee\"."
+      },
       "messages": {
         "applicationSuccess": "Employee information saved.",
         "applicationFailed": "Failed to save the employee information.",
@@ -940,7 +944,8 @@
         "takeaway": "In principle, take fire equipment back with you every day unless you cannot do so.\nLeaving fire equipment inside the tent may cause a fire.",
         "remark": "If you select No, write the reason in the remarks field.",
         "remarkRequired": "Required if you select No",
-        "excludedItems": "Electric hot plates and IH cookers are not included."
+        "excludedItems": "Electric hot plates and IH cookers are not included.",
+        "allDeleted": "You removed every item, so this can't be saved as is. If you don't need fire equipment, choose \"No\" to submit a not-applying request instead."
       },
       "summary": {
         "noApplication": {
