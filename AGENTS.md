@@ -7,9 +7,16 @@ Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成さ
 - `user_front/`: 公開用 Nuxt 3 SPA。実行委員向け旧管理画面は `admin_view/nuxt-project` に残っています。
 - Docker 関連は `Makefile` と `compose*.yml`、各種 Dockerfile にまとまっています。インフラ設定はここで完結させてください。
 
+## ブランチ運用
+- 作業開始前に `git checkout gm3/develop` を実行し、必ず `git pull --ff-only origin gm3/develop` で最新化してから新規ブランチを切ってください。
+- 作業ブランチは `gm3/develop` を起点に作成し、`gm3/develop` へ直接コミットしないでください。
+- コンフリクト解消には `docs/weave.md` を参照し、`.gitattributes` で有効化されているファイルでは `weave` の利用を優先してください。
+- Git 操作は `docker compose run --rm devtools ...` を使い、`weave` を含む merge driver の実行環境を統一してください。
+
 ## ビルド・テスト・開発コマンド
 - `make build-gm3`: 依存関係のインストール、DB 作成、Seed 投入をまとめて実行します。
 - `docker compose up api user user_front admin_view`: 主要サービスを起動します。`-d` でデタッチ実行できます。
+- `docker compose run --rm devtools bash`: Git 操作と `weave` の確認に使う作業用コンテナを起動します。
 - `docker compose run --rm api rails test`: Rails のテストを一括実行。`TEST=` で対象ファイルを限定できます。
 - `docker compose run --rm user pnpm dev`: Next.js 開発サーバーを起動。コミット前に `pnpm run lint` と `pnpm run type-check` を忘れずに。
 - `docker compose run --rm user_front npm run dev` / `docker compose run --rm admin_view npm run dev`: 各 Nuxt アプリのローカルサーバーを起動します。

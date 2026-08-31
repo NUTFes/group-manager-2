@@ -1,0 +1,16 @@
+# Enable weave for file types frequently edited in this repository.
+*.rb merge=weave
+
+*.js merge=weave
+*.jsx merge=weave
+*.mjs merge=weave
+*.ts merge=weave
+*.tsx merge=weave
+
+*.vue merge=weave
+*.erb merge=weave
+
+*.json merge=weave
+*.yml merge=weave
+*.yaml merge=weave
+*.toml merge=weave

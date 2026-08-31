@@ -70,6 +70,21 @@ services:
     volumes: [./user:/app]
     depends_on: [api]
 
+  devtools:
+    build: ./docker/devtools
+    command: bash
+    volumes:
+      - ./:/workspace
+      - ${HOME}/.gitconfig:/tmp/devtools-home/.gitconfig:ro
+      - ${HOME}/.ssh:/tmp/devtools-home/.ssh:ro
+    working_dir: /workspace
+    environment:
+      HOME: /tmp/devtools-home
+      GIT_CONFIG_GLOBAL: /tmp/devtools-home/.gitconfig
+    user: "${UID:-1000}:${GID:-1000}"
+    stdin_open: true
+    tty: true
+
 volumes:
   mysql-data:
     driver: local
