@@ -275,7 +275,7 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
     t.string "model"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "item_url"
+    t.text "item_url"
   end
 
   create_table "public_relations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
