@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm/PublicRelationsForm';
+import AccordionMenu from '@/components/AccordionMenu';
+import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm';
 import { usePublicRelationsHooks } from '@/components/Applications/PublicRelations/hooks';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import ImagePreview from '@/components/ImagePreview';
 

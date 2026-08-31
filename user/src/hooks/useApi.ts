@@ -1,4 +1,5 @@
 import {
+  ApiError,
   authenticatedDeleteFetcher,
   authenticatedDeleteFetcherWithId,
   authenticatedGetFetcher,
@@ -13,12 +14,7 @@ import {
   unauthenticatedPostFetcher,
   unauthenticatedPutFetcher,
 } from '@/api/api';
-// ==========================================
-// 独自実装（将来的に削除予定）
-import { ApiError, deleteData, patchData, postData, putData } from '@/api/api';
 import { Session } from 'next-auth';
-// ==========================================
-
 import { useSession } from 'next-auth/react';
 import useSWR, { Key, SWRConfiguration } from 'swr';
 import useSWRMutation, {
@@ -198,37 +194,3 @@ export const useUnauthenticatedDelete = createMutationHook<
   any,
   string
 >(unauthenticatedDeleteFetcher, (url) => url ?? null);
-
-// ==========================================
-// 独自実装（将来的に削除予定）
-// ==========================================
-
-// データ送信のための関数を返すフック（独自実装）
-export const useApiMutations = () => {
-  const { data: session, status } = useSession();
-
-  // セッションがまだ取得されていない場合や、未認証の場合は、適切にハンドリングする
-  if (status !== 'authenticated') {
-    return {
-      post: async () => {
-        throw new Error('User is not authenticated');
-      },
-      put: async () => {
-        throw new Error('User is not authenticated');
-      },
-      remove: async () => {
-        throw new Error('User is not authenticated');
-      },
-      patch: async () => {
-        throw new Error('User is not authenticated');
-      },
-    };
-  }
-
-  return {
-    post: (url: string, data: any) => postData(url, data, session),
-    put: (url: string, data: any) => putData(url, data, session),
-    remove: (url: string) => deleteData(url, session),
-    patch: (url: string, data: any) => patchData(url, data, session),
-  };
-};

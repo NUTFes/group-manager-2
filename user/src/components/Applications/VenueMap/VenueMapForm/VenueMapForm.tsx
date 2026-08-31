@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { VenueMapResponse } from '@/api/venueMapApi';
-import Button from '@/components/Button/Button';
+import { Controller } from 'react-hook-form';
+import Button from '@/components/Button';
 import Checkbox from '@/components/Form/CheckBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
+import FormContainer from '@/components/FormContainer';
 import ImagePreview from '@/components/ImagePreview';
-import Upload from '@/components/Upload/Upload';
+import Upload from '@/components/Upload';
 import { useVenueMapFormHooks } from './hooks';
 
 type VenueMapFormProps = {
@@ -28,8 +29,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
   const {
     handleSubmit,
     errors,
-    values,
-    setValue,
+    control,
     fileName,
     previewUrl,
     isFetching,
@@ -83,16 +83,20 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
           </div>
 
           {/* 平面図確認事項 */}
-          <Checkbox
-            label={venueMapFormTexts.fields.checklist}
-            options={venueMapFormTexts.checklist.options}
-            value={values.checklist || []}
-            onChange={(newValues) =>
-              setValue('checklist', newValues, { shouldDirty: true })
-            }
-            error={errors.checklist?.message as string | undefined}
-            note={venueMapFormTexts.checklist.note}
-            required
+          <Controller
+            control={control}
+            name="checklist"
+            render={({ field }) => (
+              <Checkbox
+                label={venueMapFormTexts.fields.checklist}
+                options={venueMapFormTexts.checklist.options}
+                value={field.value || []}
+                onChange={field.onChange}
+                error={errors.checklist?.message as string | undefined}
+                note={venueMapFormTexts.checklist.note}
+                required
+              />
+            )}
           />
 
           {/* ボタン */}
@@ -117,7 +121,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
               {isMutating
                 ? venueMapFormTexts.buttons.submitting
                 : venueMap
-                  ? venueMapFormTexts.buttons.edit
+                  ? venueMapFormTexts.buttons.save
                   : venueMapFormTexts.buttons.register}
             </Button>
           </div>

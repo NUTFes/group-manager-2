@@ -74,10 +74,10 @@ export const useStageForm = (
   );
 
   const {
-    register,
     handleSubmit,
     setValue,
-    formState: { errors, isValid, isDirty },
+    control,
+    formState: { errors, isValid, isDirty, isSubmitting },
     reset,
     trigger,
     watch,
@@ -113,13 +113,14 @@ export const useStageForm = (
   const allValues = watch();
 
   return {
-    register,
     handleSubmit,
+    control,
     reset,
     formState: {
       ...allValues,
       errors,
       isValid,
+      isSubmitting,
     },
     updateField,
     trigger,

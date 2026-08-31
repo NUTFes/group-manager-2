@@ -6,9 +6,9 @@ import {
 import { useTranslation } from 'next-i18next';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import FormList from '@/components/FormList/FormList';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import FireEquipmentForm from './FireEquipmentForm';
 import { FireEquipmentApplyOption, useFireEquipmentHooks } from './hooks';
@@ -65,6 +65,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
     hasExisting,
     hasUnregistered,
     fireEquipmentOrders,
+    editableOrders,
     handleRadioChange,
     handleApplyNegative,
     handleDeleteOrder,
@@ -145,7 +146,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
               color="main"
               onClick={handleApplyNegative}
             >
-              {t('form.actions.register')}
+              {t('applications.fireEquipment.buttons.noApplication')}
             </Button>
           </div>
         </div>
@@ -220,10 +221,11 @@ const FireEquipment: FC<FireEquipmentProps> = ({
           </p>
           <FireEquipmentForm
             groupId={groupId}
-            existingOrders={isEditing ? fireEquipmentOrders : undefined}
+            existingOrders={isEditing ? editableOrders : undefined}
             onComplete={handleFormComplete}
             canAdd={canRegisterNewFireEquipmentApplication}
             canEdit={canEditExistingFireEquipmentApplication}
+            isEditingExisting={hasExisting}
           />
         </div>
       );

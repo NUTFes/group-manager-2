@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
@@ -7,7 +7,6 @@ import {
 import {
   HealthCenterSubmissionStatus,
   isResubmissionStatus,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
@@ -17,7 +16,8 @@ import {
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
-import { useApiMutations } from '@/hooks/useApi';
+import { useAuthenticatedDeleteWithId } from '@/hooks/useApi';
+import { useEditableSection, useSubmissionStatusReset } from '../shared';
 
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
@@ -29,9 +29,6 @@ export const useFoodProductHooks = (
   status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const isResubmission = isResubmissionStatus(status);
 
@@ -44,7 +41,9 @@ export const useFoodProductHooks = (
   } = useGetFoodProducts(groupId || 0);
 
   const { trigger: upsertFoodProducts, isMutating } = useUpsertFoodProducts();
-  const { remove } = useApiMutations();
+  const { trigger: removeFoodProductById } = useAuthenticatedDeleteWithId(
+    API_ENDPOINTS.FOOD_PRODUCTS
+  )();
 
   const foodProducts: RegisteredProduct[] | null =
     apiFoodProducts?.length > 0
@@ -59,6 +58,13 @@ export const useFoodProductHooks = (
       : null;
 
   const hasError = !!error;
+
+  // 一覧表示の削除ボタンは即時APIを呼ばない。対象をローカルで除外して
+  // 編集フォームへ切り替え、実際の削除は保存ボタンを押すまで確定しない。
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const editableFoodProducts: RegisteredProduct[] | null = pendingDeleteId
+    ? (foodProducts ?? []).filter((p) => p.id !== pendingDeleteId)
+    : foodProducts;
 
   const foodProductViewTexts = {
     title: t('applications.foodProduct.title'),
@@ -83,11 +89,18 @@ export const useFoodProductHooks = (
     },
   ];
 
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading, isRegistered });
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'food_product');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'food_product',
+    status,
+    t('applications.foodProduct.messages.statusUpdateFailed')
+  );
 
   // 販売品データを完全に置き換える関数（更新時に使用）
   const mutateCookingProcessOrders = async () => {
@@ -96,6 +109,34 @@ export const useFoodProductHooks = (
         Array.isArray(key) &&
         key[0] === `/cooking_process_orders/group/${groupId}`
     );
+  };
+
+  // upsert後の再検証・再提出ステータス更新・編集モード終了・成功トーストは
+  // 作成/更新のどちらでも同じ処理なので共通化する
+  // (cookingProcessOrdersの再検証だけは更新時のみ必要)。
+  const finishFoodProductSubmit = async (
+    successMessage: string,
+    {
+      revalidateCookingProcessOrders,
+    }: { revalidateCookingProcessOrders: boolean }
+  ) => {
+    await mutateFoodProducts();
+    if (revalidateCookingProcessOrders) {
+      await mutateCookingProcessOrders();
+    }
+
+    // ステータス更新まで成功した時だけビューモードへ戻す
+    if (!(await resetSubmissionStatus())) return;
+
+    setPendingDeleteId(null);
+    if (isEditing) {
+      toEdit();
+    }
+
+    toast.success(successMessage, {
+      position: 'top-right',
+      autoClose: 3000,
+    });
   };
 
   const setFoodProductsData = async (products: ProductInput[]) => {
@@ -110,8 +151,7 @@ export const useFoodProductHooks = (
 
       for (const deleteId of toDeleteIds) {
         try {
-          const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${deleteId}`;
-          await remove(deleteEndpoint);
+          await removeFoodProductById(deleteId);
         } catch (deleteError) {
           console.error(`Failed to delete product ${deleteId}:`, deleteError);
         }
@@ -131,43 +171,10 @@ export const useFoodProductHooks = (
         body: { food_products: apiProducts },
       });
 
-      await mutateFoodProducts();
-      await mutateCookingProcessOrders();
-
-      setTimeout(async () => {
-        try {
-          await mutateFoodProducts();
-          await mutateCookingProcessOrders();
-        } catch (e) {
-          console.error('再取得エラー:', e);
-        }
-      }, 500);
-
-      const updateStatusToUnapproved = async (): Promise<boolean> => {
-        if (status === 'unapproved') return true;
-
-        try {
-          await updateStatus('unapproved');
-          return true;
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.foodProduct.messages.statusUpdateFailed')
-          );
-          return false;
-        }
-      };
-
-      const statusUpdated = await updateStatusToUnapproved();
-      if (!statusUpdated) return;
-
-      // ステータス更新まで成功した時だけビューモードへ戻す
-      setIsEditing(false);
-
-      toast.success(t('applications.foodProduct.messages.updateSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      await finishFoodProductSubmit(
+        t('applications.foodProduct.messages.updateSuccess'),
+        { revalidateCookingProcessOrders: true }
+      );
     } catch (error) {
       console.error('販売品更新エラー:', error);
 
@@ -209,42 +216,10 @@ export const useFoodProductHooks = (
         body: { food_products: apiProducts },
       });
 
-      await mutateFoodProducts();
-      await mutate(
-        (key) =>
-          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
+      await finishFoodProductSubmit(
+        t('applications.foodProduct.messages.createSuccess'),
+        { revalidateCookingProcessOrders: false }
       );
-
-      // 少し待ってからもう一度再取得
-      setTimeout(async () => {
-        await mutateFoodProducts();
-      }, 500);
-
-      const updateStatusToUnapproved = async (): Promise<boolean> => {
-        if (status === 'unapproved') return true;
-
-        try {
-          await updateStatus('unapproved');
-          return true;
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.foodProduct.messages.statusUpdateFailed')
-          );
-          return false;
-        }
-      };
-
-      const statusUpdated = await updateStatusToUnapproved();
-      if (!statusUpdated) return;
-
-      // 成功時のみビューモードに戻す
-      setIsEditing(false);
-
-      toast.success(t('applications.foodProduct.messages.createSuccess'), {
-        position: 'top-right',
-        autoClose: 3000,
-      });
     } catch (error) {
       console.error('販売品登録エラー:', error);
 
@@ -271,109 +246,20 @@ export const useFoodProductHooks = (
     }
   };
 
-  const removeFoodProduct = async (id: string) => {
-    try {
-      const productToRemove = foodProducts?.find(
-        (product) => product.id === id
-      );
-
-      if (!productToRemove) {
-        throw new Error(`削除対象の販売品が見つかりません。ID: ${id}`);
-      }
-
-      const productId = parseInt(id);
-      const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${productId}`;
-
-      const result = await remove(deleteEndpoint);
-
-      if (
-        result &&
-        typeof result === 'object' &&
-        'success' in result &&
-        !result.success
-      ) {
-        throw new Error(
-          result.error?.message ||
-            t('applications.foodProduct.messages.deleteFailed')
-        );
-      }
-
-      await mutateFoodProducts();
-      await mutate(
-        (key) =>
-          Array.isArray(key) && key[0] === `/food_products/group/${groupId}`
-      );
-      await mutateCookingProcessOrders();
-
-      toast.success(
-        t('applications.foodProduct.messages.deleteSuccess', {
-          name: productToRemove.name,
-        }),
-        {
-          position: 'top-right',
-          autoClose: 3000,
-        }
-      );
-    } catch (error) {
-      console.error('販売品削除エラー:', error);
-
-      if (error instanceof Error) {
-        if (
-          error.message.includes('User is not authenticated') ||
-          error.message.includes('認証が必要')
-        ) {
-          toast.error(t('applications.foodProduct.messages.authRequired'), {
-            position: 'top-right',
-            autoClose: 5000,
-          });
-        } else if (error.message.includes('404')) {
-          toast.error(t('applications.foodProduct.messages.deleteNotFound'), {
-            position: 'top-right',
-            autoClose: 5000,
-          });
-        } else {
-          toast.error(
-            t('applications.foodProduct.messages.deleteFailedDetail', {
-              message: error.message,
-            }),
-            {
-              position: 'top-right',
-              autoClose: 5000,
-            }
-          );
-        }
-      } else {
-        toast.error(t('applications.foodProduct.messages.deleteFailed'), {
-          position: 'top-right',
-          autoClose: 5000,
-        });
-      }
-    }
+  // 一覧表示からの削除は即時APIを呼ばない。対象を除いた編集フォームへ
+  // 切り替えるだけで、実際の削除は保存ボタンを押した時点で
+  // setFoodProductsData の差分削除にまとめて反映される。
+  const removeFoodProduct = (id: string) => {
+    setPendingDeleteId(id);
+    toEdit();
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (hasInitializedEditing.current || isRegistered === undefined) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered]);
-
-  const isLoadingWithMutation = (isLoading && !hasLoadedOnce) || isMutating;
-
-  const refetchData = async () => {
-    await mutateFoodProducts();
-  };
+  const isLoadingWithMutation = isSectionLoading || isMutating;
 
   return {
     foodProducts,
+    editableFoodProducts,
+    hasExistingProducts: !!foodProducts,
     isLoading: isLoadingWithMutation,
     hasError,
     isEditing,
@@ -382,8 +268,7 @@ export const useFoodProductHooks = (
     addFoodProducts,
     removeFoodProduct,
     setFoodProductsData,
-    mutate: refetchData,
-    refetchData,
+    mutate: mutateFoodProducts,
     foodProductViewTexts,
     isResubmission,
   };

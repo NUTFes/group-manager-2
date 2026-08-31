@@ -7,8 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { stageOptionLabels } from '../../label';
+import {
+  isUnchanged,
+  revalidateByUrl,
+  revalidateCheckAllRegistered,
+} from '../../shared';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
@@ -18,7 +22,7 @@ export const useStageOptionFormHooks = (
   const { t } = useTranslation('common');
   const {
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -56,8 +60,10 @@ export const useStageOptionFormHooks = (
   const onSubmit = async (formData: StageOptionForm) => {
     if (stageOptions) {
       try {
-        await update({ query: formData });
-        mutate(`/stage_common_options/group/${formData.groupId}`);
+        await update({ body: formData });
+        await revalidateByUrl(
+          `/stage_common_options/group/${formData.groupId}`
+        );
 
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
         return true;
@@ -67,9 +73,11 @@ export const useStageOptionFormHooks = (
       }
     } else {
       try {
-        await create({ query: formData });
-        mutate(`/stage_common_options/group/${formData.groupId}`);
-        mutate(`/check_all_registered/${formData.groupId}`);
+        await create({ body: formData });
+        await revalidateByUrl(
+          `/stage_common_options/group/${formData.groupId}`
+        );
+        await revalidateCheckAllRegistered(formData.groupId);
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
         reset();
         return true;
@@ -92,7 +100,7 @@ export const useStageOptionFormHooks = (
     options,
     buttons: {
       cancel: t('form.actions.cancel'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
       register: t('form.actions.register'),
     },
     messages: {
@@ -104,26 +112,20 @@ export const useStageOptionFormHooks = (
     return value === '1' ? true : false;
   };
 
-  const validateEdit = () => {
-    if (stageOptions && values) {
-      if (
-        stageOptions.bgm === values.bgm &&
-        stageOptions.cameraPermission === values.cameraPermission &&
-        stageOptions.loudSound === values.loudSound &&
-        stageOptions.ownEquipment === values.ownEquipment
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const validateEdit = () =>
+    isUnchanged(stageOptions, values, [
+      'ownEquipment',
+      'bgm',
+      'cameraPermission',
+      'loudSound',
+    ]);
 
   return {
     handleSubmit,
+    control,
     errors,
     stageOptions,
     onSubmit,
-    setValue,
     values,
     createError,
     createIsMutating,

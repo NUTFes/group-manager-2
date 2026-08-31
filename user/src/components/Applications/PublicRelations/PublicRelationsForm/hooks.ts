@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   PublicRelationResponse,
   useCreatePublicRelation,
@@ -9,8 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { useImageObjectUrl } from '@/hooks/useImageObjectUrl';
+import { isUnchanged, revalidateCheckAllRegistered } from '../../shared';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -68,7 +68,7 @@ export const usePublicRelationsFormHooks = (
     },
     buttons: {
       cancel: t('form.actions.cancel'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
       register: t('form.actions.register'),
     },
     options: {
@@ -144,11 +144,12 @@ export const usePublicRelationsFormHooks = (
   const {
     handleSubmit,
     formState: { errors },
+    control,
     setValue,
     setError,
     watch,
   } = useForm<PublicRelationsFormData>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     criteriaMode: 'all', // 全フィールド・全ルールを検証
     resolver: resolver,
     defaultValues: {
@@ -168,18 +169,12 @@ export const usePublicRelationsFormHooks = (
   }
 
   // PublicRelation API フック
-  const {
-    trigger: createPr,
-    error: createPrError,
-    isMutating: createPrIsMutating,
-  } = useCreatePublicRelation();
+  const { trigger: createPr, isMutating: createPrIsMutating } =
+    useCreatePublicRelation();
 
   const updatePrId = publicRelation?.id || 0;
-  const {
-    trigger: updatePr,
-    error: updatePrError,
-    isMutating: updatePrIsMutating,
-  } = useUpdatePublicRelation(updatePrId);
+  const { trigger: updatePr, isMutating: updatePrIsMutating } =
+    useUpdatePublicRelation(updatePrId);
 
   // ファイル名はフォームの画像かAPIデータから取得する
   const [fileName, setFileName] = useState<string | null>(
@@ -190,18 +185,20 @@ export const usePublicRelationsFormHooks = (
   const values = watch();
 
   // 変更がある場合のみ送信ボタンを有効化する
-  const validateEdit = () => {
-    if (!publicRelation) return false;
-
-    const hasTextChanged = values.prText !== publicRelation.blurb;
-    // アナウンス選択の変更をチェック
-    const isAnnounceRequested = publicRelation.isAnnouncementRequested || false;
-    const hasAnnounceChanged =
-      (values.announce === 'yes') !== isAnnounceRequested;
-    const hasImageChanged = !!values.image;
-
-    return !(hasTextChanged || hasAnnounceChanged || hasImageChanged);
-  };
+  // image は元データに対応する値がないため、常に undefined と比較する
+  // （values.image が選択されていれば不一致になり「変更あり」を表す）
+  const validateEdit = () =>
+    isUnchanged(
+      publicRelation
+        ? {
+            prText: publicRelation.blurb,
+            announce: publicRelation.isAnnouncementRequested ? 'yes' : 'no',
+            image: undefined,
+          }
+        : undefined,
+      values,
+      ['prText', 'announce', 'image']
+    );
 
   const validateImage = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -255,10 +252,6 @@ export const usePublicRelationsFormHooks = (
 
   const announceOptions = publicRelationsFormTexts.options.announce;
 
-  const handleAnnounceChange = (value: string) => {
-    setValue('announce', parseInt(value) === 1 ? 'yes' : 'no');
-  };
-
   // 画像をbase64に変換する関数
   const convertImageToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -308,12 +301,6 @@ export const usePublicRelationsFormHooks = (
     }
   };
 
-  useEffect(() => {
-    if (createPrError || updatePrError) {
-      toast.error(submitFailedMessage);
-    }
-  }, [createPrError, updatePrError, submitFailedMessage]);
-
   // 更新されたonSubmit実装
   const onSubmit = async (formData: PublicRelationsFormData) => {
     try {
@@ -354,15 +341,15 @@ export const usePublicRelationsFormHooks = (
       // PR関連APIにデータを送信
       if (publicRelation) {
         // 既存データの更新 (PUT)
-        await updatePr({ query: prQueryData });
+        await updatePr({ body: prQueryData });
       } else {
         // 新規作成 (POST)
-        await createPr({ query: prQueryData });
+        await createPr({ body: prQueryData });
       }
 
       // データ更新後、mutateで最新データを取得
       await prMutate();
-      mutate(`check_all_registered/${groupId}`);
+      await revalidateCheckAllRegistered(groupId);
 
       toast.success(submitSuccessMessage);
       return true; // 送信成功を返す
@@ -376,19 +363,15 @@ export const usePublicRelationsFormHooks = (
   return {
     handleSubmit,
     errors,
-    setValue,
-    values,
+    control,
     fileName,
     previewUrl,
     fetchError: fetchPrError,
     isFetching: isPrFetching,
     isMutating: createPrIsMutating || updatePrIsMutating,
     handleImageUpload,
-    handleAnnounceChange,
     announceOptions,
     onSubmit,
-    createError: createPrError,
-    updateError: updatePrError,
     validateEdit,
     publicRelationsFormTexts,
   };

@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import TextArea from '@/components/Form/TextArea/TextArea';
-import FormContainer from '@/components/FormContainer/FormContainer';
+import { Controller } from 'react-hook-form';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import TextArea from '@/components/Form/TextArea';
+import FormContainer from '@/components/FormContainer';
 import ImagePreview from '@/components/ImagePreview';
-import Upload from '@/components/Upload/Upload';
+import Upload from '@/components/Upload';
 import { usePublicRelationsFormHooks } from './hooks';
 
 type PublicRelationsFormProps = {
@@ -22,14 +23,12 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
   const {
     handleSubmit,
     errors,
-    values,
-    setValue,
+    control,
     fileName,
     previewUrl,
     isFetching,
     isMutating,
     handleImageUpload,
-    handleAnnounceChange,
     announceOptions,
     onSubmit,
     validateEdit,
@@ -59,31 +58,45 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
           <div className="flex w-full flex-col items-start justify-center gap-10">
             {/* PR文入力 */}
             <div className="relative h-44 w-96">
-              <TextArea
-                label={publicRelationsFormTexts.fields.text}
-                value={values.prText || ''}
-                onChange={(value) => setValue('prText', value)}
-                required
-                note={publicRelationsFormTexts.notes.text}
-                error={errors.prText?.message}
+              <Controller
+                control={control}
+                name="prText"
+                render={({ field }) => (
+                  <TextArea
+                    label={publicRelationsFormTexts.fields.text}
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    required
+                    note={publicRelationsFormTexts.notes.text}
+                    error={errors.prText?.message}
+                  />
+                )}
               />
             </div>
 
             {/* アナウンス選択 */}
             <div className="flex flex-col items-start justify-start gap-6">
-              <Radio
-                label={publicRelationsFormTexts.fields.announce}
-                value={
-                  values.announce === 'yes'
-                    ? '1'
-                    : values.announce === 'no'
-                      ? '0'
-                      : ''
-                }
-                onChange={handleAnnounceChange}
-                required
-                options={announceOptions}
-                error={errors.announce?.message}
+              <Controller
+                control={control}
+                name="announce"
+                render={({ field }) => (
+                  <Radio
+                    label={publicRelationsFormTexts.fields.announce}
+                    value={
+                      field.value === 'yes'
+                        ? '1'
+                        : field.value === 'no'
+                          ? '0'
+                          : ''
+                    }
+                    onChange={(value) =>
+                      field.onChange(parseInt(value) === 1 ? 'yes' : 'no')
+                    }
+                    required
+                    options={announceOptions}
+                    error={errors.announce?.message}
+                  />
+                )}
               />
             </div>
 
@@ -135,7 +148,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                 isDisable={isMutating || validateEdit()}
               >
                 {publicRelation
-                  ? publicRelationsFormTexts.buttons.edit
+                  ? publicRelationsFormTexts.buttons.save
                   : publicRelationsFormTexts.buttons.register}
               </Button>
             </div>

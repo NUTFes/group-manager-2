@@ -4,13 +4,14 @@ import {
   FireEquipmentResponse,
 } from '@/api/fireEquipmentApi';
 import { useTranslation } from 'next-i18next';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import Selector from '@/components/Form/Selector/Selector';
-import TextArea from '@/components/Form/TextArea/TextArea';
-import TextBox from '@/components/Form/TextBox/TextBox';
-import FormContainer from '@/components/FormContainer/FormContainer';
-import FormList from '@/components/FormList/FormList';
+import { Controller } from 'react-hook-form';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import Selector from '@/components/Form/Selector';
+import TextArea from '@/components/Form/TextArea';
+import TextBox from '@/components/Form/TextBox';
+import FormContainer from '@/components/FormContainer';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { useFireEquipmentFormHooks } from './hooks';
 
@@ -18,11 +19,14 @@ type FireEquipmentFormProps = {
   groupId: number;
   existingOrders?: FireEquipmentResponse[];
   onComplete?: () => Promise<void>;
-  onDeleteOrder?: (id: number) => Promise<void>;
+  onDeleteOrder?: (id: number) => void;
   toEdit?: () => void;
   isViewMode?: boolean;
   canAdd?: boolean;
   canEdit?: boolean;
+  // 既存申請の編集中かどうか。一覧の削除ボタンから全件をローカル除外して
+  // 0件になった場合でも、新規登録用の空テンプレートに戻さないための区別。
+  isEditingExisting?: boolean;
 };
 
 const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
@@ -34,12 +38,13 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
   isViewMode = false,
   canAdd = true,
   canEdit = true,
+  isEditingExisting = false,
 }) => {
   const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
-    setValue,
+    control,
     isSubmitting,
     items,
     fields,
@@ -49,7 +54,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
     isEditing,
     isFormValid,
     fireEquipmentFormTexts,
-  } = useFireEquipmentFormHooks(groupId, existingOrders, onComplete);
+  } = useFireEquipmentFormHooks(
+    groupId,
+    existingOrders,
+    onComplete,
+    isEditingExisting
+  );
 
   const getFuelLabel = (fuel: FireEquipmentFuel) => {
     switch (fuel) {
@@ -144,83 +154,88 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
           })}
         >
           <div className="flex w-full flex-col items-start justify-center gap-10">
-            {fields.map((field, index) => (
-              <FormContainer key={field.id}>
+            {fields.map((formField, index) => (
+              <FormContainer key={formField.id}>
                 <div className="flex w-full flex-col items-start justify-center gap-6 text-[#484848]">
-                  <TextBox
-                    label={fireEquipmentFormTexts.fields.name}
-                    required
-                    value={items[index]?.name || ''}
-                    onChange={(value) =>
-                      setValue(`items.${index}.name`, value, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    error={errors.items?.[index]?.name?.message}
+                  <Controller
+                    control={control}
+                    name={`items.${index}.name` as const}
+                    render={({ field }) => (
+                      <TextBox
+                        label={fireEquipmentFormTexts.fields.name}
+                        required
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        error={errors.items?.[index]?.name?.message}
+                      />
+                    )}
                   />
-                  <TextBox
-                    label={fireEquipmentFormTexts.fields.quantity}
-                    required
-                    type="number"
-                    value={String(items[index]?.quantity || 0)}
-                    note={fireEquipmentFormTexts.notes.quantity}
-                    onChange={(value) =>
-                      setValue(`items.${index}.quantity`, Number(value), {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    error={errors.items?.[index]?.quantity?.message}
+                  <Controller
+                    control={control}
+                    name={`items.${index}.quantity` as const}
+                    render={({ field }) => (
+                      <TextBox
+                        label={fireEquipmentFormTexts.fields.quantity}
+                        required
+                        type="number"
+                        value={String(field.value || 0)}
+                        note={fireEquipmentFormTexts.notes.quantity}
+                        onChange={(value) => field.onChange(Number(value))}
+                        onBlur={field.onBlur}
+                        error={errors.items?.[index]?.quantity?.message}
+                      />
+                    )}
                   />
-                  <Selector
-                    label={fireEquipmentFormTexts.fields.fuel}
-                    required
-                    options={fireEquipmentFormTexts.fuelOptions}
-                    value={items[index]?.fuel}
-                    onChange={(value) =>
-                      setValue(
-                        `items.${index}.fuel`,
-                        Number(value) as FireEquipmentFuel,
-                        {
-                          shouldValidate: true,
-                          shouldDirty: true,
+                  <Controller
+                    control={control}
+                    name={`items.${index}.fuel` as const}
+                    render={({ field }) => (
+                      <Selector
+                        label={fireEquipmentFormTexts.fields.fuel}
+                        required
+                        options={fireEquipmentFormTexts.fuelOptions}
+                        value={field.value}
+                        onChange={(value) =>
+                          field.onChange(Number(value) as FireEquipmentFuel)
                         }
-                      )
-                    }
-                    error={errors.items?.[index]?.fuel?.message}
+                        error={errors.items?.[index]?.fuel?.message}
+                      />
+                    )}
                   />
-                  <TextArea
-                    label={fireEquipmentFormTexts.fields.usage}
-                    required
-                    value={items[index]?.usage || ''}
-                    onChange={(value) =>
-                      setValue(`items.${index}.usage`, value, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    error={errors.items?.[index]?.usage?.message}
+                  <Controller
+                    control={control}
+                    name={`items.${index}.usage` as const}
+                    render={({ field }) => (
+                      <TextArea
+                        label={fireEquipmentFormTexts.fields.usage}
+                        required
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        error={errors.items?.[index]?.usage?.message}
+                      />
+                    )}
                   />
-                  <Radio
-                    label={fireEquipmentFormTexts.fields.isTakeaway}
-                    name={`items.${index}.isTakeaway`}
-                    options={fireEquipmentFormTexts.isTakeawayOptions}
-                    value={
-                      items[index]?.isTakeaway !== undefined
-                        ? items[index].isTakeaway
-                          ? '1'
-                          : '2'
-                        : '1'
-                    }
-                    onChange={(value) =>
-                      setValue(`items.${index}.isTakeaway`, value === '1', {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    required
-                    error={errors.items?.[index]?.isTakeaway?.message}
+                  <Controller
+                    control={control}
+                    name={`items.${index}.isTakeaway` as const}
+                    render={({ field }) => (
+                      <Radio
+                        label={fireEquipmentFormTexts.fields.isTakeaway}
+                        name={`items.${index}.isTakeaway`}
+                        options={fireEquipmentFormTexts.isTakeawayOptions}
+                        value={
+                          field.value !== undefined
+                            ? field.value
+                              ? '1'
+                              : '2'
+                            : '1'
+                        }
+                        onChange={(value) => field.onChange(value === '1')}
+                        required
+                        error={errors.items?.[index]?.isTakeaway?.message}
+                      />
+                    )}
                   />
                   <p className="-mt-10 max-w-[400px] break-words text-xs text-[#484848]">
                     {fireEquipmentFormTexts.notes.takeaway
@@ -235,21 +250,25 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
                   <p className="max-w-[400px] break-words text-xs text-[#484848]">
                     {fireEquipmentFormTexts.notes.remark}
                   </p>
-                  <TextArea
-                    label={fireEquipmentFormTexts.fields.remark}
-                    required
-                    requireMessage={fireEquipmentFormTexts.notes.remarkRequired}
-                    value={items[index]?.remarks || ''}
-                    onChange={(value) =>
-                      setValue(`items.${index}.remarks`, value, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    error={errors.items?.[index]?.remarks?.message}
+                  <Controller
+                    control={control}
+                    name={`items.${index}.remarks` as const}
+                    render={({ field }) => (
+                      <TextArea
+                        label={fireEquipmentFormTexts.fields.remark}
+                        required
+                        requireMessage={
+                          fireEquipmentFormTexts.notes.remarkRequired
+                        }
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        error={errors.items?.[index]?.remarks?.message}
+                      />
+                    )}
                   />
-                  {/* フォーム内削除ボタン：canEdit で制御 */}
-                  {canEdit && items.length > 1 && (
+                  {/* フォーム内削除ボタン：canEdit で制御。最後の1件も削除可能で、
+                      0件になったら保存ボタン側をdisabledにする（下記ガイダンス参照） */}
+                  {canEdit && (
                     <div className="flex w-full justify-center">
                       <Button
                         size="pc"
@@ -266,6 +285,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
                 </div>
               </FormContainer>
             ))}
+
+            {items.length === 0 && (
+              <p className="max-w-[400px] break-words text-center text-xs text-[#484848]">
+                {fireEquipmentFormTexts.notes.allDeleted}
+              </p>
+            )}
 
             <div className="mx-auto flex justify-center gap-4">
               {/* 追加ボタン：canAdd で制御 */}

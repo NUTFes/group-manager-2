@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
 import { POWER_LIMIT } from '../constants';
 import { usePowerFormViewHooks } from '../hooks/usePowerFormViewHooks';
 import { PowerFormViewProps } from '../types';
@@ -19,6 +19,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   showForm,
   submitError,
   onSubmit,
+  hasExisting,
 }) => {
   const { handleSubmit } = formMethods;
   const { powerFormViewTexts } = usePowerFormViewHooks(radioOptions);
@@ -83,7 +84,9 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 color="main"
                 isDisable={!isValid || totalPower > POWER_LIMIT}
               >
-                {powerFormViewTexts.actions.register}
+                {hasExisting
+                  ? powerFormViewTexts.actions.save
+                  : powerFormViewTexts.actions.register}
               </Button>
             </div>
           </div>

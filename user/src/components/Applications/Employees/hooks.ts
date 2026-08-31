@@ -22,7 +22,6 @@ import {
 import {
   HealthCenterSubmissionStatus,
   canEditApplication,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
@@ -32,11 +31,12 @@ import {
 import { NEED_APPLICATION } from '@/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
+import { useSubmissionStatusReset } from '../shared';
 import {
   useEmployeesForm,
   useEmployeesFormHandlers,
   useEmployeesFormState,
-} from './EmployeesFrom/hooks';
+} from './EmployeesForm/hooks';
 import { EmployeeFormItem } from './schema';
 
 /**
@@ -200,13 +200,28 @@ export const useEmployeesBusinessHooks = (
 
   /**
    * 従業員申請「いいえ」（従業員を申請する）の場合の送信処理
-   * 従業員数に応じて単一作成/更新または一括処理を選択します
+   * 従業員数に応じて単一作成/更新または一括処理を選択します。
+   *
+   * フォーム上で削除された（＝既存データにはあるが送信データに無い）従業員は
+   * ここで差分検出して削除する。削除ボタンは即時APIを呼ばずローカルで
+   * フィールドを外すだけなので、DB上の削除確定はこの送信処理が担う。
    */
   const handleEmployeeApplicationSubmit = async (data: {
     needApplication: 'yes' | 'no';
     employees: EmployeeFormItem[];
   }) => {
     try {
+      const submittedIds = new Set(
+        data.employees.map((employee) => employee.id).filter(Boolean)
+      );
+      const toDeleteIds = (getEmployeesData ?? [])
+        .map((employee) => employee.id)
+        .filter((id): id is number => !!id && !submittedIds.has(id));
+
+      for (const id of toDeleteIds) {
+        await deleteEmployee(id);
+      }
+
       if (data.employees.length === 1) {
         // 従業員が1人の場合：単一作成または更新
         const employee = data.employees[0];
@@ -215,7 +230,7 @@ export const useEmployeesBusinessHooks = (
         } else {
           await createEmployee(data.employees); // 新規従業員の作成
         }
-      } else {
+      } else if (data.employees.length > 1) {
         // 従業員が複数の場合：一括処理
         await upsertEmployees(data.employees);
       }
@@ -259,22 +274,6 @@ export const useEmployeesBusinessHooks = (
     }
   };
 
-  /**
-   * 従業員個別削除処理（トースト通知付き）
-   * フォーム内での従業員削除時に使用します
-   */
-  const handleEmployeeDeleteWithToast = async (employeeId: number) => {
-    try {
-      await deleteEmployee(employeeId);
-      callbacks.onSuccess?.(t('applications.employees.messages.deleteSuccess'));
-      await mutateEmployees();
-    } catch (error) {
-      console.error('Error deleting employee:', error);
-      callbacks.onError?.(t('applications.employees.messages.deleteFailed'));
-      throw error;
-    }
-  };
-
   return {
     getEmployeesData,
     mutateEmployees,
@@ -282,7 +281,6 @@ export const useEmployeesBusinessHooks = (
     isUpserting,
     handleEmployeeApplicationSubmit,
     handleNoApplicationSubmit,
-    handleEmployeeDeleteWithToast,
   };
 };
 
@@ -392,7 +390,12 @@ export const useEmployeesApplicationHooks = (
     onError: (message: string) => toast.error(message),
   };
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'employee');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'employee',
+    status,
+    t('applications.employees.messages.statusUpdateFailed')
+  );
 
   // ビジネスロジック関連のhooks
   const employeesBusinessHooks = useEmployeesBusinessHooks(
@@ -419,12 +422,7 @@ export const useEmployeesApplicationHooks = (
   const formState = useEmployeesFormState(form);
 
   // フォーム操作のイベントハンドラ
-  const formHandlers = useEmployeesFormHandlers(form, {
-    onEmployeeDelete: employeesBusinessHooks.handleEmployeeDeleteWithToast,
-    onMutateEmployees: async () => {
-      await employeesBusinessHooks.mutateEmployees();
-    },
-  });
+  const formHandlers = useEmployeesFormHandlers(form);
 
   // ===============================
   // UIイベントハンドラ群
@@ -465,21 +463,6 @@ export const useEmployeesApplicationHooks = (
   };
 
   /**
-   * ステータス更新処理
-   */
-  const updateStatusToUnapproved = async () => {
-    if (status === 'unapproved') return true;
-    try {
-      await updateStatus('unapproved');
-      return true;
-    } catch (e) {
-      console.error(e);
-      toast.error(t('applications.employees.messages.statusUpdateFailed'));
-      return false;
-    }
-  };
-
-  /**
    * 「代表・副代表のみで活動」選択時の登録処理
    */
   const handleNoApplicationClick = async () => {
@@ -487,7 +470,7 @@ export const useEmployeesApplicationHooks = (
       await employeesBusinessHooks.handleNoApplicationSubmit();
       await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
 
-      if (!(await updateStatusToUnapproved())) return;
+      if (!(await resetSubmissionStatus())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -496,6 +479,11 @@ export const useEmployeesApplicationHooks = (
 
   /**
    * フォーム送信時の処理
+   *
+   * 「いいえ」選択時はtype="button"のhandleNoApplicationClickが直接呼ばれ、
+   * <form onSubmit>を経由しない(NEED_APPLICATION.NOのボタンだけtype="button"
+   * になっている)。そのためこのhandleSubmitがdata.needApplication === NO で
+   * 呼ばれることは無く、以前あったNO分岐は到達しないデッドコードだった。
    */
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
@@ -506,14 +494,10 @@ export const useEmployeesApplicationHooks = (
           needApplication: data.needApplication,
           employees: data.employees,
         });
-      } else if (data.needApplication === NEED_APPLICATION.NO) {
-        // 従業員申請なしの場合
-        await employeesBusinessHooks.handleNoApplicationSubmit();
-        await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       }
 
       // 再提出完了時
-      if (!(await updateStatusToUnapproved())) return;
+      if (!(await resetSubmissionStatus())) return;
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -582,8 +566,12 @@ export const useEmployeesApplicationHooks = (
     buttons: {
       addEmployee: t('applications.employees.buttons.addEmployee'),
     },
+    notes: {
+      allDeleted: t('applications.employees.notes.allDeleted'),
+    },
     formActions: {
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
     },
   };
 
@@ -592,6 +580,7 @@ export const useEmployeesApplicationHooks = (
     isUnregisteredGroup,
     isFormListMode,
     isDeadlineMode,
+    isEmployeesData,
     tableData,
     texts,
 
@@ -610,7 +599,6 @@ export const useEmployeesApplicationHooks = (
     handleEditClick,
     handleNoApplicationClick,
     handleSubmit,
-    updateStatus,
 
     // UI用プロパティ
     isDeadline,

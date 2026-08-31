@@ -4,14 +4,14 @@ import {
   canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
+import AccordionMenu from '@/components/AccordionMenu';
+import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm';
 import {
   ProductInput,
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 
 type FoodProductProps = {
@@ -30,8 +30,10 @@ type ContentProps = {
   formItem: FormItem[];
   groupId: number;
   isResubmission: boolean;
+  editableFoodProducts: RegisteredProduct[] | null;
+  hasExistingProducts: boolean;
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
-  removeFoodProduct: (id: string) => Promise<void>;
+  removeFoodProduct: (id: string) => void;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
   foodProductViewTexts: ReturnType<
     typeof useFoodProductHooks
@@ -45,6 +47,8 @@ const Content: FC<ContentProps> = ({
   isEditing,
   toEdit,
   foodProducts,
+  editableFoodProducts,
+  hasExistingProducts,
   formItem,
   groupId,
   addFoodProducts,
@@ -84,7 +88,8 @@ const Content: FC<ContentProps> = ({
       <FoodProductForm
         groupId={groupId}
         toEdit={toEdit}
-        foodProducts={foodProducts}
+        foodProducts={editableFoodProducts}
+        hasExistingProducts={hasExistingProducts}
         addFoodProducts={addFoodProducts}
         removeFoodProduct={removeFoodProduct}
         setFoodProductsData={setFoodProductsData}
@@ -120,7 +125,8 @@ const Content: FC<ContentProps> = ({
       <FoodProductForm
         groupId={groupId}
         toEdit={toEdit}
-        foodProducts={foodProducts}
+        foodProducts={editableFoodProducts}
+        hasExistingProducts={hasExistingProducts}
         addFoodProducts={addFoodProducts}
         removeFoodProduct={removeFoodProduct}
         setFoodProductsData={setFoodProductsData}
@@ -152,6 +158,8 @@ const FoodProduct: FC<FoodProductProps> = ({
     isEditing,
     toEdit,
     foodProducts,
+    editableFoodProducts,
+    hasExistingProducts,
     isLoading,
     hasError,
     addFoodProducts,
@@ -178,6 +186,8 @@ const FoodProduct: FC<FoodProductProps> = ({
         toEdit={toEdit}
         isResubmission={isResubmission}
         foodProducts={foodProducts}
+        editableFoodProducts={editableFoodProducts}
+        hasExistingProducts={hasExistingProducts}
         formItem={formItem}
         groupId={groupId}
         addFoodProducts={addFoodProducts}

@@ -1,9 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
-import {
-  HealthCenterSubmissionStatus,
-  useUpdateSubmissionStatusFor,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
   useCreatePurchaseList,
   useDeletePurchaseList,
@@ -14,9 +11,19 @@ import {
 import { useGetShops } from '@/api/shopApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
-import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
+import {
+  UseFormSetValue,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
+import {
+  isUnchanged,
+  useEditableSection,
+  useSubmissionStatusReset,
+} from '../shared';
 import {
   DATE_FORMAT,
   DEFAULT_PURCHASE_ITEM,
@@ -132,16 +139,16 @@ export const usePurchaseListsState = (
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
   const { shops, isLoading: isShopsLoading } = useGetShops();
 
-  // isRegisteredがfalseの場合、つまり未登録の場合は初期状態で編集モードにする
-  const [isEditing, setIsEditing] = useState(!isRegistered);
+  const { isEditing, toEdit } = useEditableSection({
+    isLoading,
+    isRegistered,
+  });
 
   // ショップ情報を取得し、セレクトボックス用のオプションを生成
   const shopOptions = useMemo(
     () => [{ id: 0, name: t('form.validation.select') }, ...shops],
     [shops, t]
   );
-
-  const toggleEdit = useCallback(() => setIsEditing((prev) => !prev), []);
 
   const handleDeleteItem = useCallback(
     async (itemId: number) => {
@@ -154,13 +161,13 @@ export const usePurchaseListsState = (
         await mutatePurchaseLists();
         // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
         if (purchaseLists.length === 1) {
-          setIsEditing(true);
+          toEdit();
         }
       } catch {
         toast.error(t('applications.purchaseLists.messages.itemDeleteFailed'));
       }
     },
-    [purchaseLists, deletePurchaseList, mutatePurchaseLists, t]
+    [purchaseLists, deletePurchaseList, mutatePurchaseLists, t, toEdit]
   );
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
@@ -222,8 +229,8 @@ export const usePurchaseListsState = (
   // フォーム送信成功後は表示モードに切り替え
   const handleFormSuccess = useCallback(() => {
     mutatePurchaseLists();
-    toggleEdit();
-  }, [mutatePurchaseLists, toggleEdit]);
+    toEdit();
+  }, [mutatePurchaseLists, toEdit]);
 
   // フォームの初期値として使用するデータ。APIから取得したデータをフォームの形式に合わせる
   const initialFormData = useMemo(
@@ -242,7 +249,7 @@ export const usePurchaseListsState = (
     isLoading: isLoading || isShopsLoading,
     hasError,
     isEditing,
-    toggleEdit,
+    toggleEdit: toEdit,
     handleDeleteItem,
     formItems,
     foodProductOptions,
@@ -291,7 +298,12 @@ export const usePurchaseListsForm = (
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'purchase_list');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'purchase_list',
+    status,
+    t('applications.purchaseLists.messages.statusUpdateFailed')
+  );
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -306,6 +318,35 @@ export const usePurchaseListsForm = (
   });
 
   const { control, handleSubmit, formState, reset, setValue } = formMethods;
+
+  const watchedItems = useWatch({ control, name: 'purchaseLists' }) ?? [];
+
+  // 送信ボタンの無効化判定(B-2: isSubmitting || isUnchanged(...)へ統一)。
+  // purchaseListsは配列のため、共有のisUnchanged()をそのままは使えない。
+  // initialDataが実在の登録データ(全項目にidがある)の場合のみ「編集」とみなし、
+  // 件数が一致し、かつ全項目がisUnchanged()となる場合のみ「未変更」とする。
+  // 行の追加・削除で件数が変わった場合や新規登録時は常にfalse(=送信可能)。
+  const hasExistingData = !!(
+    initialData &&
+    initialData.length > 0 &&
+    initialData.every((item) => item.id != null)
+  );
+
+  const validateEdit = () => {
+    if (!hasExistingData || !initialData) return false;
+    if (initialData.length !== watchedItems.length) return false;
+    return initialData.every((original, index) =>
+      isUnchanged(original, watchedItems[index], [
+        'foodProductId',
+        'items',
+        'isFresh',
+        'shopId',
+        'purchaseDate',
+        'url',
+        'remark',
+      ])
+    );
+  };
 
   // initialDataが変更されたら、フォームの値をリセットする
   // 深い比較のためにJSONを使用し、パフォーマンスを考慮してuseRefで前回の値を記録
@@ -387,17 +428,7 @@ export const usePurchaseListsForm = (
         }
       }
 
-      if (status !== 'unapproved') {
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.purchaseLists.messages.statusUpdateFailed')
-          );
-          return;
-        }
-      }
+      if (!(await resetSubmissionStatus())) return;
       onSuccess();
       reset(formData); // 送信後もフォーム内容は維持
     } catch {
@@ -412,6 +443,8 @@ export const usePurchaseListsForm = (
     remove: onRemove,
     triggerSubmit: handleSubmit(handleActualSubmit),
     errors: formState.errors,
+    isSubmitting: formState.isSubmitting,
+    validateEdit,
     setValue,
     reset,
   };
@@ -455,7 +488,7 @@ export const usePurchaseListsFormTexts = () => {
       delete: t('form.actions.delete'),
       addItem: t('applications.purchaseLists.buttons.addItem'),
       register: t('form.actions.register'),
-      edit: t('form.actions.edit'),
+      save: t('form.actions.save'),
     },
     errors: {
       format: translateError,

@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { viceRepresentativeLabels } from '@/components/Applications/label';
+import { isUnchanged } from '../../shared';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
@@ -63,12 +64,13 @@ export const useViceRepresentativeFormHook = (
 
   const {
     handleSubmit,
-    setValue,
+    control,
     getValues,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
   } = useForm<ViceRepresentativeForm>({
+    mode: 'onChange',
     resolver: isIndividual
       ? async (values: ViceRepresentativeForm) => ({
           values,
@@ -88,6 +90,20 @@ export const useViceRepresentativeFormHook = (
 
   const values = watch();
 
+  // 送信ボタンの無効化判定(B-2: isSubmitting || isUnchanged(...)へ統一)。
+  // isIndividualがtrueの間は、name等の項目を変えていなくても
+  // 「一人での参加」への切り替え自体が意味のある変更なので、常に送信可能にする。
+  const validateEdit = () =>
+    !isIndividual &&
+    isUnchanged(viceRepresentative, values, [
+      'name',
+      'studentId',
+      'gradeId',
+      'departmentId',
+      'email',
+      'tel',
+    ]);
+
   const onSubmit = (onSuccess: () => void) =>
     handleSubmit(async (data) => {
       try {
@@ -98,7 +114,7 @@ export const useViceRepresentativeFormHook = (
             await registerUnregisteredGroup(data.groupId);
           }
           // 副代表の削除処理を実行と未登録データのキャッシュ更新
-          await deleteViceRep();
+          await deleteViceRep({});
           await mutateUnregisteredGroup();
         } else {
           // 二人以上の場合
@@ -107,11 +123,11 @@ export const useViceRepresentativeFormHook = (
           await mutateUnregisteredGroup();
           // 副代表が存在する場合の分岐
           if (viceRepresentative) {
-            await update({ query: data });
+            await update({ body: data });
             await mutatedViceRepresentative();
           } else {
             // 副代表が存在しない場合、未登録グループの新規作成処理を実行し、副代表・登録済みのキャッシュを更新
-            await create({ query: data });
+            await create({ body: data });
             await mutatedViceRepresentative();
             await mutateCheckAllRegistered();
           }
@@ -126,12 +142,14 @@ export const useViceRepresentativeFormHook = (
     });
 
   return {
-    setValue,
+    control,
     getValues,
     errors,
     reset,
     watch,
     onSubmit,
+    isSubmitting,
+    validateEdit,
     isIndividual,
     setIsIndividualById,
     values,
@@ -164,6 +182,7 @@ export const useViceRepresentativeFormTexts = () => {
     },
     buttons: {
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
     },
     radioOptions,
     gradeOptions,

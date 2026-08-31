@@ -5,9 +5,9 @@ import {
   isResubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { MdOutlineAccessTime } from 'react-icons/md';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
+import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
-import FormList from '@/components/FormList/FormList';
+import FormList from '@/components/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
 import {
   useFoodProducts,
@@ -59,8 +59,17 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     initialIsRegistered
   );
 
-  const { control, fields, append, remove, triggerSubmit, errors, setValue } =
-    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
+  const {
+    control,
+    fields,
+    append,
+    remove,
+    triggerSubmit,
+    errors,
+    isSubmitting,
+    validateEdit,
+    setValue,
+  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
 
   const updateRowBySelector = usePurchaseListRowUpdater(
     purchaseLists,
@@ -151,6 +160,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          isDisableSubmit={isSubmitting || validateEdit()}
+          hasExisting
         />
       </AccordionMenu>
     );
@@ -195,6 +206,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}
+          isDisableSubmit={isSubmitting || validateEdit()}
+          hasExisting={!!(purchaseLists && purchaseLists.length > 0)}
         />
       </AccordionMenu>
     );

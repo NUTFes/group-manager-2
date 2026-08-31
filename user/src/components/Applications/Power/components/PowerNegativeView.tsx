@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import Button from '@/components/Button/Button';
-import Radio from '@/components/Form/Radio/Radio';
-import FormList from '@/components/FormList/FormList';
+import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
+import FormList from '@/components/FormList';
 import { usePowerNegativeViewHooks } from '../hooks/usePowerNegativeViewHooks';
 import { PowerNegativeViewProps } from '../types';
 

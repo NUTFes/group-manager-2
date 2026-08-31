@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
 import { useGetStageOptions } from '@/api/stageOptionApi';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { stageOptionLabels } from '../label';
+import { useEditableSection } from '../shared';
 
 export const useStageOptionHooks = (
   groupId: number,
@@ -50,32 +50,15 @@ export const useStageOptionHooks = (
     },
   ];
 
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (hasInitializedEditing.current || isRegistered === undefined) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered]);
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading, isRegistered });
 
   return {
     stageOptions,
-    isLoading: isLoading && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     hasError,
     isEditing,
     toEdit,

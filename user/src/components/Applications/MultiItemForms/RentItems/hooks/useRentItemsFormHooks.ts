@@ -1,9 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  HealthCenterSubmissionStatus,
-  useUpdateSubmissionStatusFor,
-} from '@/api/healthCenterSubmissionStatusApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import {
   ORDER_TYPES,
   useAllRentableItems,
@@ -19,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useAuthenticatedGet } from '@/hooks/useApi';
+import { useSubmissionStatusReset } from '../../../shared';
 import {
   ITEM_IDS,
   LOCATION_TYPES,
@@ -98,7 +96,8 @@ export const useRentItemsFormHooks = (
   // React Hook Form初期化 (Zodスキーマ使用)
   const form = useForm<RentItemsFormData>({
     defaultValues: {
-      hasItems: false,
+      // 「はい/いいえ」を選ぶ前は未選択のまま(tri-state)にする。
+      hasItems: undefined,
       // 食品販売団体は強制的に屋外
       locationType: isFoodSellingGroup
         ? LOCATION_TYPES.OUTDOOR
@@ -149,7 +148,12 @@ export const useRentItemsFormHooks = (
     return DEFAULT_MAX_COUNT;
   };
 
-  const updateStatus = useUpdateSubmissionStatusFor(groupId, 'equipment');
+  const resetSubmissionStatus = useSubmissionStatusReset(
+    groupId,
+    'equipment',
+    status,
+    t('applications.rentItems.messages.statusUpdateFailed')
+  );
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
   const isStageGroup = groupCategoryId === GROUP_CATEGORY.STAGE;
@@ -178,8 +182,11 @@ export const useRentItemsFormHooks = (
       // ステージ団体はステージ用物品のみ
       return allItems.filter(
         (item) =>
-          // ステージ用物品のIDリストに含まれるか、is_stage_rentableフラグがある場合
-          STAGE_ITEM_IDS.includes(item.id) || item.is_stage_rentable
+          // ステージ用物品のIDリストに含まれるか、isStageRentableフラグがある場合。
+          // レスポンスはcamelcase-keysでdeep変換されるため、実際のプロパティは
+          // isStageRentable(以前はsnake_caseのis_stage_rentableで読んでおり、
+          // 常にundefinedになってフィルタが機能していなかった)。
+          STAGE_ITEM_IDS.includes(item.id) || item.isStageRentable
       );
     } else if (isFoodSellingGroup || locationType === LOCATION_TYPES.OUTDOOR) {
       // 食品販売団体または屋外団体は屋外用物品のみ
@@ -255,11 +262,11 @@ export const useRentItemsFormHooks = (
       data: Array<{
         id: number;
         name: string;
-        is_inside_shop_rentable: boolean;
-        is_outside_shop_rentable: boolean;
-        is_stage_rentable: boolean;
-        created_at: string;
-        updated_at: string;
+        isInsideShopRentable: boolean;
+        isOutsideShopRentable: boolean;
+        isStageRentable: boolean;
+        createdAt: string;
+        updatedAt: string;
       }>;
     }>('/api/v1/get_all_rentable_items');
 
@@ -321,16 +328,13 @@ export const useRentItemsFormHooks = (
             );
             if (item) {
               // 屋内専用の物品
-              if (
-                item.is_inside_shop_rentable &&
-                !item.is_outside_shop_rentable
-              ) {
+              if (item.isInsideShopRentable && !item.isOutsideShopRentable) {
                 insideOnlyCount += order.num;
               }
               // 屋外専用の物品
               else if (
-                !item.is_inside_shop_rentable &&
-                item.is_outside_shop_rentable
+                !item.isInsideShopRentable &&
+                item.isOutsideShopRentable
               ) {
                 outsideOnlyCount += order.num;
               }
@@ -528,18 +532,6 @@ export const useRentItemsFormHooks = (
     setTimeout(() => trigger(), 0);
   };
 
-  const updateStatusToUnapproved = async (): Promise<boolean> => {
-    if (status === 'unapproved') return true;
-    try {
-      await updateStatus('unapproved');
-      return true;
-    } catch (e) {
-      console.error(e);
-      toast.error(t('applications.rentItems.messages.statusUpdateFailed'));
-      return false;
-    }
-  };
-
   // 物品申請を行わない場合の登録処理
   const registerNoItems = async () => {
     try {
@@ -583,7 +575,7 @@ export const useRentItemsFormHooks = (
 
       // API更新の通知
       await mutateRentalOrders();
-      const statusUpdated = await updateStatusToUnapproved();
+      const statusUpdated = await resetSubmissionStatus();
       if (!statusUpdated) return false;
       setIsEditMode(false);
       // 成功時のトースト通知
@@ -642,7 +634,7 @@ export const useRentItemsFormHooks = (
         );
 
         await mutateRentalOrders();
-        const statusUpdated = await updateStatusToUnapproved();
+        const statusUpdated = await resetSubmissionStatus();
         if (!statusUpdated) return;
         setIsEditMode(false);
         userChangedLocationType.current = false;
@@ -810,6 +802,7 @@ export const useRentItemsFormHooks = (
     buttons: {
       edit: t('form.actions.edit'),
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
       delete: t('form.actions.delete'),
       addItem: t('applications.rentItems.buttons.addItem'),
     },
@@ -846,6 +839,5 @@ export const useRentItemsFormHooks = (
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
     rentItemsFormTexts,
-    updateStatus,
   };
 };

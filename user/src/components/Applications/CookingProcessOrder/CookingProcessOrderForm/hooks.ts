@@ -1,17 +1,11 @@
 import { useTranslation } from 'next-i18next';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 export const useCookingProcessOrderForm = (index: number) => {
   const { t } = useTranslation('common');
   const {
-    control,
     formState: { errors },
   } = useFormContext();
-
-  const values = useWatch({
-    control,
-    name: `cookingProcessOrders.${index}`,
-  });
 
   const kitchenUsageOptions = [
     {
@@ -68,7 +62,6 @@ export const useCookingProcessOrderForm = (index: number) => {
   };
 
   return {
-    values,
     getError,
     cookingProcessOrderFormTexts,
   };
