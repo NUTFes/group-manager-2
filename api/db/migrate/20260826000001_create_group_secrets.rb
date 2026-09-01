@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateGroupSecrets < ActiveRecord::Migration[6.1]
+class CreateGroupSecrets < ActiveRecord::Migration[7.2]
   class MigrationGroup < ActiveRecord::Base
     self.table_name = 'groups'
   end
