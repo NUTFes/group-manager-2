@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class GroupTest < ActiveSupport::TestCase
-  fixtures :group_categories, :fes_years, :places, :stocker_places
+  fixtures :roles, :group_categories, :fes_years, :places, :stocker_places
 
   def setup
     @user = User.create!(
@@ -11,7 +11,7 @@ class GroupTest < ActiveSupport::TestCase
       password: 'password',
       provider: 'email',
       uid: 'test@example.com',
-      role_id: 1
+      role: roles(:one)
     )
     @group_category = group_categories(:one)
     @fes_year = fes_years(:one)

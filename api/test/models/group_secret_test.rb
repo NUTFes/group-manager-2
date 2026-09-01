@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class GroupSecretTest < ActiveSupport::TestCase
-  fixtures :group_categories, :fes_years
+  fixtures :roles, :group_categories, :fes_years
 
   def setup
     @user = User.create!(
@@ -11,7 +11,7 @@ class GroupSecretTest < ActiveSupport::TestCase
       password: 'password',
       provider: 'email',
       uid: 'test@example.com',
-      role_id: 1
+      role: roles(:one)
     )
     @group = create_group
   end
