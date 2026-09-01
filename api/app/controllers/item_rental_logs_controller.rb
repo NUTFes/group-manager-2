@@ -5,7 +5,7 @@ class ItemRentalLogsController < ApplicationController
   before_action :require_admin!
 
   IDEMPOTENCY_ATTRIBUTES = %w[
-    assign_rental_item_id rental_item_id stocker_place_id category quantity
+    assign_rental_item_id rental_item_id stocker_place_id category quantity recorder_email
   ].freeze
 
   # GET /item_rental_logs

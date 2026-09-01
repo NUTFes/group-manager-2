@@ -32,6 +32,11 @@ class ItemRentalLogTest < ActiveSupport::TestCase
     assert_not log.valid?
   end
 
+  test 'invalid without stocker_place' do
+    log = build_log(stocker_place: nil)
+    assert_not log.valid?
+  end
+
   test 'invalid with duplicate uid' do
     build_log(uid: item_rental_logs(:one).uid).save
     duplicate = build_log(uid: item_rental_logs(:one).uid)

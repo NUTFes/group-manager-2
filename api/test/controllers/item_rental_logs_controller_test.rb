@@ -136,19 +136,27 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test 'should return existing record when uid is resent with the same event data' do
+  test 'should return existing record when uid is resent with the same event data by the same user' do
+    post item_rental_logs_url, params: {
+      uid: 'resend-same-user-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 2
+    }, headers: @headers, as: :json
+    assert_response :created
+    original_id = response.parsed_body['data']['id']
+
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
-        uid: @item_rental_log.uid,
-        assign_rental_item_id: @item_rental_log.assign_rental_item_id,
-        category: @item_rental_log.category,
-        quantity: @item_rental_log.quantity
+        uid: 'resend-same-user-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 2
       }, headers: @headers, as: :json
     end
 
     assert_response :success
-    body = response.parsed_body
-    assert_equal @item_rental_log.id, body['data']['id']
+    assert_equal original_id, response.parsed_body['data']['id']
   end
 
   test 'should return conflict when uid is reused with different event data' do
@@ -162,6 +170,48 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :conflict
+  end
+
+  test 'should return conflict when uid is reused by a different recorder' do
+    post item_rental_logs_url, params: {
+      uid: 'resend-different-user-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 2
+    }, headers: @headers, as: :json
+    assert_response :created
+
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'resend-different-user-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 2
+      }, headers: auth_headers(@staff), as: :json
+    end
+
+    assert_response :conflict
+  end
+
+  test 'should reject creating a log when the assignment has no stocker_place' do
+    placeless_assignment = AssignRentalItem.create!(
+      group: @group,
+      rental_item: @assign_rental_item.rental_item,
+      stocker_place: nil,
+      rental_place: nil,
+      num: 1
+    )
+
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'placeless-assignment-uid',
+        assign_rental_item_id: placeless_assignment.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
   end
 
   test 'should reject invalid category' do
