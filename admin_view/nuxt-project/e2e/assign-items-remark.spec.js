@@ -2,6 +2,15 @@ const { expect, test } = require("@playwright/test");
 
 const API_URL = process.env.PLAYWRIGHT_ADMIN_API_URL || "http://127.0.0.1:3201";
 
+const openAssignItems = async (page) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => Boolean(window.$nuxt));
+  await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+  await expect(
+    page.getByRole("heading", { name: "物品割り当て" })
+  ).toBeVisible();
+};
+
 test.describe("物品割り当ての備考", () => {
   test.describe.configure({ timeout: 60_000 });
 
@@ -21,13 +30,7 @@ test.describe("物品割り当ての備考", () => {
   test("割り当てごとの備考を保存し、再読み込み後も表示できる", async ({
     page,
   }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => Boolean(window.$nuxt));
-    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
-
-    await expect(
-      page.getByRole("heading", { name: "物品割り当て" })
-    ).toBeVisible();
+    await openAssignItems(page);
     const assignmentCard = page
       .locator(".assignment-item")
       .filter({ hasText: "テント企画" });
@@ -37,10 +40,9 @@ test.describe("物品割り当ての備考", () => {
         .locator(".assignment-actions")
         .getByRole("button", { name: "テント企画の割り当てを削除" })
     ).toBeVisible();
-    const saveButton = assignmentCard.getByRole("button", {
-      name: "テント企画の変更を保存",
-    });
-    await expect(saveButton).toBeDisabled();
+    await expect(
+      assignmentCard.getByRole("button", { name: /保存/ })
+    ).toHaveCount(0);
     await expect(
       assignmentCard.locator(".assign-input-group").first()
     ).toContainText("机");
@@ -58,15 +60,6 @@ test.describe("物品割り当ての備考", () => {
 
     await remarkInput.fill("1、2、長岡高専A");
     await remarkInput.press("Tab");
-    await expect(saveButton).toBeEnabled();
-
-    expect(
-      await page.request
-        .get(`${API_URL}/_e2e/requests`)
-        .then((response) => response.json())
-    ).toEqual([]);
-
-    await saveButton.click();
 
     await expect
       .poll(() =>
@@ -78,7 +71,7 @@ test.describe("物品割り当ての備考", () => {
         {
           method: "PUT",
           path: "/assign_rental_items/1",
-          payload: { remark: "1、2、長岡高専A" },
+          payload: { num: 2, remark: "1、2、長岡高専A" },
         },
       ]);
 
@@ -89,9 +82,7 @@ test.describe("物品割り当ての備考", () => {
   test("未割り当ての物品に備考だけを入力した場合は保存せず警告する", async ({
     page,
   }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => Boolean(window.$nuxt));
-    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+    await openAssignItems(page);
 
     await page.getByLabel("椅子の備考").fill("椅子A");
     let dialogMessage = "";
@@ -99,7 +90,7 @@ test.describe("物品割り当ての備考", () => {
       dialogMessage = dialog.message();
       await dialog.dismiss();
     });
-    await page.getByRole("button", { name: "テント企画の変更を保存" }).click();
+    await page.getByLabel("椅子の備考").press("Tab");
     expect(dialogMessage).toContain(
       "椅子の備考を保存するには、個数を1以上にしてください。"
     );
@@ -109,37 +100,44 @@ test.describe("物品割り当ての備考", () => {
         .get(`${API_URL}/_e2e/requests`)
         .then((response) => response.json())
     ).toEqual([]);
-    await expect(page.getByLabel("椅子の備考")).toHaveValue("椅子A");
+    await expect(page.getByLabel("椅子の備考")).toHaveValue("");
   });
 
-  test("新規割り当てで個数0の備考を黙って破棄しない", async ({ page }) => {
-    await page.request.delete(`${API_URL}/_e2e/assign-rental-items`);
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => Boolean(window.$nuxt));
-    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+  test("保存済みの値から変更がなければAPIを呼ばない", async ({ page }) => {
+    await openAssignItems(page);
 
-    await page.locator(".group-card").dragTo(page.locator(".stock-card"));
-    await page.getByLabel("机の割り当て個数").fill("0");
-    await page.getByLabel("机の備考").fill("机A");
-
-    let dialogMessage = "";
-    page.once("dialog", async (dialog) => {
-      dialogMessage = dialog.message();
-      await dialog.dismiss();
-    });
-    await page
-      .getByRole("button", { name: "テント企画の割り当てを保存" })
-      .click();
-    expect(dialogMessage).toContain(
-      "机の備考を保存するには、個数を1以上にしてください。"
-    );
+    await page.getByLabel("机の割り当て個数").focus();
+    await page.getByLabel("机の割り当て個数").press("Tab");
+    await page.getByLabel("机の備考").focus();
+    await page.getByLabel("机の備考").press("Tab");
 
     expect(
       await page.request
         .get(`${API_URL}/_e2e/requests`)
         .then((response) => response.json())
     ).toEqual([]);
-    await expect(page.getByLabel("机の備考")).toHaveValue("机A");
+  });
+
+  test("保存に失敗した場合はエラーを表示して保存済みの値へ戻す", async ({
+    page,
+  }) => {
+    await openAssignItems(page);
+    await page.request.post(`${API_URL}/_e2e/failure`, {
+      data: { path: "/assign_rental_items/1" },
+    });
+
+    let dialogMessage = "";
+    page.once("dialog", async (dialog) => {
+      dialogMessage = dialog.message();
+      await dialog.dismiss();
+    });
+    await page.getByLabel("机の備考").fill("保存できない備考");
+    await page.getByLabel("机の備考").press("Tab");
+
+    await expect
+      .poll(() => dialogMessage)
+      .toContain("割り当ての保存に失敗しました");
+    await expect(page.getByLabel("机の備考")).toHaveValue("");
   });
 
   test("重複レコードでは表示した備考と同じ最小IDを更新する", async ({
@@ -167,14 +165,12 @@ test.describe("物品割り当ての備考", () => {
         ],
       },
     });
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => Boolean(window.$nuxt));
-    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+    await openAssignItems(page);
 
     await expect(page.getByLabel("机の割り当て個数")).toHaveValue("5");
     await expect(page.getByLabel("机の備考")).toHaveValue("表示対象レコード");
     await page.getByLabel("机の備考").fill("更新後の備考");
-    await page.getByRole("button", { name: "テント企画の変更を保存" }).click();
+    await page.getByLabel("机の備考").press("Enter");
 
     await expect
       .poll(() =>
@@ -186,16 +182,16 @@ test.describe("物品割り当ての備考", () => {
         {
           method: "PUT",
           path: "/assign_rental_items/3",
-          payload: { remark: "更新後の備考" },
+          payload: { num: 2, remark: "更新後の備考" },
         },
       ]);
   });
 
-  test("新規割り当てで数量と備考を一緒に登録できる", async ({ page }) => {
+  test("新規割り当てはドロップ時に登録し、その後の備考を入力終了時に保存する", async ({
+    page,
+  }) => {
     await page.request.delete(`${API_URL}/_e2e/assign-rental-items`);
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => Boolean(window.$nuxt));
-    await page.evaluate(() => window.$nuxt.$router.push("/assign_items"));
+    await openAssignItems(page);
 
     await page.locator(".group-card").dragTo(page.locator(".stock-card"));
     const remarkInput = page.getByLabel("机の備考");
@@ -203,23 +199,13 @@ test.describe("物品割り当ての備考", () => {
       .locator(".assignment-item")
       .filter({ hasText: "テント企画" })
       .locator(".assignment-actions");
-    const saveButton = assignmentActions.getByRole("button", {
-      name: "テント企画の割り当てを保存",
-    });
     const deleteButton = assignmentActions.getByRole("button", {
       name: "テント企画の割り当てを削除",
     });
-    await expect(saveButton).toBeVisible();
+    await expect(
+      assignmentActions.getByRole("button", { name: /保存/ })
+    ).toHaveCount(0);
     await expect(deleteButton).toBeVisible();
-
-    const saveBox = await saveButton.boundingBox();
-    const deleteBox = await deleteButton.boundingBox();
-    expect(saveBox).not.toBeNull();
-    expect(deleteBox).not.toBeNull();
-    expect(Math.abs(saveBox.y - deleteBox.y)).toBeLessThan(8);
-
-    await remarkInput.fill("長岡高専A");
-    await saveButton.click();
 
     await expect
       .poll(() =>
@@ -227,19 +213,44 @@ test.describe("物品割り当ての備考", () => {
           .get(`${API_URL}/_e2e/requests`)
           .then((response) => response.json())
       )
-      .toContainEqual({
-        method: "POST",
-        path: "/assign_rental_items",
-        payload: {
-          items: [{ group_id: 1, num: 2, remark: "長岡高専A" }],
-          rentalItemId: 1,
-          stockerPlaceId: 1,
+      .toEqual([
+        {
+          method: "POST",
+          path: "/assign_rental_items",
+          payload: {
+            items: [{ group_id: 1, num: 2, remark: null }],
+            rentalItemId: 1,
+            stockerPlaceId: 1,
+          },
         },
-      });
+      ]);
 
-    await expect(
-      page.getByRole("button", { name: "テント企画の割り当てを保存" })
-    ).toHaveCount(0);
+    await expect(remarkInput).toBeEnabled();
+    await remarkInput.fill("長岡高専A");
+    await remarkInput.press("Enter");
+
+    await expect
+      .poll(() =>
+        page.request
+          .get(`${API_URL}/_e2e/requests`)
+          .then((response) => response.json())
+      )
+      .toEqual([
+        {
+          method: "POST",
+          path: "/assign_rental_items",
+          payload: {
+            items: [{ group_id: 1, num: 2, remark: null }],
+            rentalItemId: 1,
+            stockerPlaceId: 1,
+          },
+        },
+        {
+          method: "PUT",
+          path: "/assign_rental_items/1",
+          payload: { num: 2, remark: "長岡高専A" },
+        },
+      ]);
   });
 
   test("在庫登録画面で数量と備考を一緒に登録できる", async ({ page }) => {
