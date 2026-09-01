@@ -46,25 +46,40 @@
 
 <div class="padding-top">
   <h2><%= t('print_pdf.output_all_groups_rental_items.sections.rental_items') %></h2>
-  <table class="items">
+  <table class="items all-groups-items">
+    <colgroup>
+      <col class="item-name-column">
+      <col class="stock-location-column">
+      <col class="rental-location-column">
+      <col class="quantity-column">
+      <col class="pickup-date-column">
+      <col class="return-date-column">
+      <col class="confirmation-column">
+      <col class="confirmation-column">
+    </colgroup>
     <tr>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.item_name') %></th>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.stock_location') %></th>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.rental_location') %></th>
-      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.quantity') %></th>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_date') %></th>
-      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_date') %></th>
-      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_confirmation') %></th>
-      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_confirmation') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.item_name') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.stock_location') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.rental_location') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.quantity') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_date') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_date') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_confirmation') %></th>
+      <th><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_confirmation') %></th>
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
+      <td>
+        <div class="item-name"><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></div>
+        <% if assign_rental_item.remark.present? %>
+          <div class="item-remark"><%= assign_rental_item.remark %></div>
+        <% end %>
+      </td>
       <td><%= assign_rental_item.stock_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.rental_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
-      <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
+      <td><span class="date-value"><%= pickup_date %></span><br><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
+      <td><span class="date-value"><%= return_date %></span><br><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
       <td></td>
       <td></td>
     </tr>

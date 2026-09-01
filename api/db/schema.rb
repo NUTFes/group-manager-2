@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_23_000001) do
+ActiveRecord::Schema.define(version: 2026_08_18_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2026_07_23_000001) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stocker_place_id"
     t.bigint "rental_place_id"
+    t.text "remark"
     t.index ["rental_place_id"], name: "index_assign_rental_items_on_rental_place_id"
   end
 

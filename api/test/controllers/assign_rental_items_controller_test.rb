@@ -10,18 +10,21 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get index' do
     get assign_rental_items_url, as: :json
+
     assert_response :success
+    response_data = response.parsed_body.fetch('data')
+    assert_equal '長岡高専A', response_data.find { |item| item['id'] == @assign_rental_item.id }.fetch('remark')
   end
 
   # createは物品ID・在庫場所IDを1つ受け取り、items配列の団体ごとに割当を作る形式
-  test 'should create assign_rental_item' do
+  test 'should create assign_rental_items with remark' do
     assert_difference('AssignRentalItem.count', 2) do
       post assign_rental_items_url,
            params: {
              rentalItemId: @assign_rental_item.rental_item_id,
              stockerPlaceId: @stocker_place.id,
              items: [
-               { group_id: groups(:one).id, num: 3 },
+               { group_id: groups(:one).id, num: 3, remark: '1、2、長岡高専A' },
                { group_id: groups(:two).id, num: 5 }
              ]
            },
@@ -32,12 +35,13 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.headers['Content-Type'], 'application/json'
     assert_equal 201, response.parsed_body.dig('status', 'code')
 
-    # items配列の各要素が、それぞれ1件の割当として正しい値で作られること
     created = AssignRentalItem.order(:id).last(2)
     assert_equal [groups(:one).id, groups(:two).id], created.map(&:group_id)
     assert_equal [3, 5], created.map(&:num)
     assert_equal [@assign_rental_item.rental_item_id] * 2, created.map(&:rental_item_id)
     assert_equal [@stocker_place.id] * 2, created.map(&:stocker_place_id)
+    assert_equal ['1、2、長岡高専A', nil], created.map(&:remark)
+    assert_equal '1、2、長岡高専A', response.parsed_body.dig('data', 0, 'remark')
   end
 
   # 途中で失敗した場合、それまでに作られた割当も残らないこと（トランザクション）
@@ -48,7 +52,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
              rentalItemId: @assign_rental_item.rental_item_id,
              stockerPlaceId: @stocker_place.id,
              items: [
-               { group_id: groups(:one).id, num: 1 },
+               { group_id: groups(:one).id, num: 1, remark: '保存されない備考' },
                { group_id: unknown_group_id, num: 1 }
              ]
            },
@@ -60,8 +64,10 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should show assign_rental_item' do
     get assign_rental_item_url(@assign_rental_item), as: :json
+
     assert_response :success
     assert_equal 200, response.parsed_body.dig('status', 'code')
+    assert_equal '長岡高専A', response.parsed_body.dig('data', 'remark')
   end
 
   # updateはネストさせず、トップレベルのパラメータを受け取る
@@ -75,6 +81,23 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal new_num, @assign_rental_item.reload.num
     assert_equal groups(:two).id, @assign_rental_item.group_id
+  end
+
+  test 'should update remark' do
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { remark: 'テント1、テント2' },
+          as: :json
+
+    assert_response :ok
+    assert_equal 'テント1、テント2', @assign_rental_item.reload.remark
+    assert_equal 'テント1、テント2', response.parsed_body.dig('data', 'remark')
+  end
+
+  test 'should allow blank remark' do
+    patch assign_rental_item_url(@assign_rental_item), params: { remark: nil }, as: :json
+
+    assert_response :ok
+    assert_nil @assign_rental_item.reload.remark
   end
 
   test 'should destroy assign_rental_item' do

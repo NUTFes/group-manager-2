@@ -13,6 +13,9 @@ components:
           type: integer
         num:
           type: integer
+        remark:
+          type: string
+          nullable: true
         stocker_place_id:
           type: integer
           nullable: true

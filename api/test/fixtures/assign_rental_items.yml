@@ -3,9 +3,13 @@
 one:
   group: one
   rental_item: one
+  stocker_place: one
   num: 1
+  remark: 長岡高専A
 
 two:
   group: two
   rental_item: two
+  stocker_place: two
   num: 1
+  remark:

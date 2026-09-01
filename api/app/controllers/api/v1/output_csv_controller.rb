@@ -8,15 +8,15 @@ class Api::V1::OutputCsvController < ApplicationController
   def output_groups_csv
     if params[:fes_year_id].to_i == 0
       # 全件選択
-      @groups = Group.all
+      @groups = Group.includes(:user, :group_category, :fes_year, assign_rental_items: :rental_item).all
       filename_year = '全'
     else
-      @groups = Group.where(fes_year_id: params[:fes_year_id])
+      @groups = Group.includes(:user, :group_category, :fes_year, assign_rental_items: :rental_item).where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年]
+      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年 物品割り当て備考]
       csv << column_name
       @groups.each do |group|
         # データが存在しない場合はスキップする
@@ -29,7 +29,10 @@ class Api::V1::OutputCsvController < ApplicationController
           group.user.name,
           group.user.email,
           group.group_category.name,
-          group.fes_year.year_num
+          group.fes_year.year_num,
+          group.assign_rental_items.filter_map do |item|
+            "#{item.rental_item.name}: #{item.remark}" if item.remark.present?
+          end.join("\n")
         ]
         csv << column_values
       end
@@ -54,7 +57,7 @@ class Api::V1::OutputCsvController < ApplicationController
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
       # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量 貸出日 返却日 開催年)
-      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量]
+      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量 備考]
       csv << column_name
       @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
@@ -69,7 +72,8 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.rental_item.name,
           assign_rental_item.stock_place_name,
           assign_rental_item.rental_place_name,
-          assign_rental_item.num
+          assign_rental_item.num,
+          assign_rental_item.remark
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).first.date,
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).first.date,
           # assign_rental_item.group.fes_year.year_num
@@ -116,36 +120,46 @@ class Api::V1::OutputCsvController < ApplicationController
   # 物品申請一覧CSV。申請(RentalOrder)が元データで、割当前の申請も出力対象に含む。
   # 物品申請一覧画面の「物品申請一覧_CSV」から使われるため、出力内容を変更しないこと。
   def output_rental_orders_csv
+    groups_scope = Group.preload(
+      :user,
+      :group_category,
+      :fes_year,
+      :assign_rental_items,
+      rental_orders: :rental_item
+    )
+
     if params[:fes_year_id].to_i == 0
-      @rental_orders = Group.preload(:rental_orders).map(&:rental_orders)
+      @groups = groups_scope
       filename_year = '全'
     else
       fes_year = find_fes_year_or_render_not_found
       return if fes_year.nil?
 
-      @rental_orders = Group.where(fes_year_id: fes_year.id).preload(:rental_orders).map(&:rental_orders)
+      @groups = groups_scope.where(fes_year_id: fes_year.id)
       filename_year = fes_year.year_num
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 開催年]
+      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 備考 開催年]
       csv << column_name
-      @rental_orders.each do |group|
-        # データが存在しない場合はスキップする
-        next if group.nil?
+      @groups.each do |group|
+        remarks_by_item_id = group.assign_rental_items.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |item, remarks|
+          remarks[item.rental_item_id] << item.remark if item.remark.present?
+        end
 
-        group.each do |rental_order|
-          # データが存在しない場合はスキップする
-          next if rental_order.nil?
-
+        # rental_orders と assign_rental_items の間に直接の外部キーがないため、
+        # 団体・物品単位に集約した行へ同じ単位の備考を出力する。
+        group.rental_orders.group_by(&:rental_item_id).each_value do |rental_orders|
+          rental_order = rental_orders.min_by(&:id)
           column_values = [
-            rental_order.group.name,
-            rental_order.group.user.name,
-            rental_order.group.user.email,
-            rental_order.group.group_category.name,
+            group.name,
+            group.user.name,
+            group.user.email,
+            group.group_category.name,
             rental_order.rental_item.name,
-            rental_order.num,
-            rental_order.group.fes_year.year_num
+            rental_orders.sum(&:num),
+            remarks_by_item_id[rental_order.rental_item_id].uniq.join("\n"),
+            group.fes_year.year_num
           ]
           csv << column_values
         end
@@ -173,7 +187,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年]
+      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 備考 開催年]
       csv << column_name
       @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
@@ -188,6 +202,7 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.stock_place_name,
           assign_rental_item.rental_place_name,
           assign_rental_item.num,
+          assign_rental_item.remark,
           assign_rental_item.group.fes_year.year_num
         ]
         csv << column_values

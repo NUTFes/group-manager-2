@@ -28,23 +28,96 @@ table {
   width: 40%;
 }
 
-
-/* 貸出物品一覧は 物品名・在庫場所・貸出場所・貸出日・返却日 の5列(large)と
-   数量・借用チェック・返却チェック の3列(small)で構成する */
-.small-box {
-  width: 8%;
-}
-
-.large-box {
-  width: 15.2%;
-}
-
 .items tr {
   height: 40px;
 }
 
+.items {
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.items th,
 .items td {
-  word-break: break-all;
+  padding: 3px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.date-value {
+  white-space: nowrap;
+}
+
+.item-name {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.item-remark {
+  color: #555555;
+  font-size: 9px;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.individual-items .item-name-column {
+  width: 20%;
+}
+
+.individual-items .stock-location-column,
+.individual-items .rental-location-column {
+  width: 13%;
+}
+
+.individual-items .quantity-column {
+  width: 6%;
+}
+
+.individual-items .pickup-date-column,
+.individual-items .return-date-column {
+  width: 17%;
+}
+
+.individual-items .confirmation-column {
+  width: 14%;
+}
+
+.all-groups-items .item-name-column {
+  width: 18%;
+}
+
+.all-groups-items .stock-location-column,
+.all-groups-items .rental-location-column {
+  width: 12%;
+}
+
+.all-groups-items .quantity-column {
+  width: 6%;
+}
+
+.all-groups-items .pickup-date-column,
+.all-groups-items .return-date-column {
+  width: 14%;
+}
+
+.all-groups-items .confirmation-column {
+  width: 12%;
+}
+
+.all-groups-info-items .item-name-column {
+  width: 25%;
+}
+
+.all-groups-info-items .pickup-location-column {
+  width: 25%;
+}
+
+.all-groups-info-items .quantity-column {
+  width: 10%;
+}
+
+.all-groups-info-items .remark-column {
+  width: 40%;
 }
 
 .padding-top{

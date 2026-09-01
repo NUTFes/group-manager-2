@@ -20,6 +20,7 @@ ja:
           stock_location: "在庫場所"
           rental_location: "貸出場所"
           quantity: "数量"
+          remark: "備考"
           pickup_date: "貸出日"
           return_date: "返却日"
           pickup_confirmation: "借用チェック"

@@ -20,6 +20,7 @@ en:
           stock_location: "Stock Location"
           rental_location: "Pickup Location"
           quantity: "Quantity"
+          remark: "Remarks"
           pickup_date: "Pickup Date"
           return_date: "Return Date"
           pickup_confirmation: "Pickup Confirmation"

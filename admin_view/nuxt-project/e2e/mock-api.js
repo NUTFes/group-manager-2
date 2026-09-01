@@ -3,8 +3,21 @@ const http = require("http");
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
 const unauthorizedPaths = new Set();
+const failedPaths = new Set();
 let comments = [];
 let nextCommentId = 1;
+
+const initialAssignRentalItems = () => [
+  {
+    id: 1,
+    group_id: 1,
+    rental_item_id: 1,
+    stocker_place_id: 1,
+    num: 2,
+    remark: null,
+  },
+];
+let assignRentalItems = initialAssignRentalItems();
 
 const commentCreatedAt = (id) =>
   new Date(
@@ -35,7 +48,7 @@ const sendJson = (response, status, body, headers = {}) => {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Methods": "GET,POST,PATCH,DELETE,OPTIONS",
+    "Access-Control-Allow-Methods": "GET,POST,PATCH,PUT,DELETE,OPTIONS",
     ...headers,
   });
   response.end(JSON.stringify(body));
@@ -78,8 +91,29 @@ http
     if (url.pathname === "/_e2e/requests" && request.method === "DELETE") {
       requests.length = 0;
       unauthorizedPaths.clear();
+      failedPaths.clear();
       comments = [];
       nextCommentId = 1;
+      assignRentalItems = initialAssignRentalItems();
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (
+      url.pathname === "/_e2e/assign-rental-items" &&
+      request.method === "DELETE"
+    ) {
+      assignRentalItems = [];
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (
+      url.pathname === "/_e2e/assign-rental-items" &&
+      request.method === "PUT"
+    ) {
+      const payload = await readBody(request);
+      assignRentalItems = payload.items || [];
       sendJson(response, 200, { ok: true });
       return;
     }
@@ -88,6 +122,18 @@ http
       const payload = await readBody(request);
       unauthorizedPaths.add(payload.path);
       sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (url.pathname === "/_e2e/failure" && request.method === "POST") {
+      const payload = await readBody(request);
+      failedPaths.add(payload.path);
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (failedPaths.has(url.pathname)) {
+      sendJson(response, 500, { error: "Internal server error" });
       return;
     }
 
@@ -227,6 +273,221 @@ http
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
         data: { fes_year_id: 1 },
+      });
+      return;
+    }
+
+    if (url.pathname === "/fes_years") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, year_num: 2026 }],
+      });
+      return;
+    }
+
+    if (url.pathname === "/group_categories") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, name: "食品販売" }],
+      });
+      return;
+    }
+
+    if (url.pathname === "/groups") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [
+          {
+            id: 1,
+            name: "テント企画",
+            group_category_id: 1,
+            fes_year_id: 1,
+          },
+        ],
+      });
+      return;
+    }
+
+    if (url.pathname === "/rental_items") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [
+          { id: 1, name: "机" },
+          { id: 2, name: "椅子" },
+        ],
+      });
+      return;
+    }
+
+    if (url.pathname === "/rental_orders") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, group_id: 1, rental_item_id: 1, num: 2 }],
+      });
+      return;
+    }
+
+    if (url.pathname === "/stocker_items") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [
+          {
+            id: 1,
+            rental_item_id: 1,
+            stocker_place_id: 1,
+            num: 10,
+          },
+          {
+            id: 2,
+            rental_item_id: 2,
+            stocker_place_id: 1,
+            num: 10,
+          },
+        ],
+      });
+      return;
+    }
+
+    if (url.pathname === "/stocker_places") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, name: "物品倉庫" }],
+      });
+      return;
+    }
+
+    if (url.pathname === "/assign_rental_items" && request.method === "GET") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: assignRentalItems,
+      });
+      return;
+    }
+
+    if (url.pathname === "/assign_rental_items" && request.method === "POST") {
+      const payload = await readBody(request);
+      requests.push({ method: "POST", path: url.pathname, payload });
+      const nextId =
+        assignRentalItems.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+      const createdItems = (payload.items || []).map((item, index) => ({
+        id: nextId + index,
+        group_id: Number(item.group_id),
+        rental_item_id: Number(payload.rentalItemId),
+        stocker_place_id: Number(payload.stockerPlaceId),
+        num: Number(item.num),
+        remark: item.remark || null,
+      }));
+      assignRentalItems.push(...createdItems);
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: createdItems,
+      });
+      return;
+    }
+
+    if (
+      /^\/assign_rental_items\/\d+$/.test(url.pathname) &&
+      request.method === "PUT"
+    ) {
+      const payload = await readBody(request);
+      requests.push({ method: "PUT", path: url.pathname, payload });
+      const id = Number(url.pathname.split("/").pop());
+      const assignRentalItem = assignRentalItems.find((item) => item.id === id);
+
+      if (!assignRentalItem) {
+        sendJson(response, 404, { error: "Not found" });
+        return;
+      }
+
+      Object.assign(assignRentalItem, payload);
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: assignRentalItem,
+      });
+      return;
+    }
+
+    if (
+      /^\/assign_rental_items\/\d+$/.test(url.pathname) &&
+      request.method === "DELETE"
+    ) {
+      const id = Number(url.pathname.split("/").pop());
+      requests.push({ method: "DELETE", path: url.pathname, payload: {} });
+      assignRentalItems = assignRentalItems.filter((item) => item.id !== id);
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
+    if (
+      url.pathname === "/api/v1/get_refinement_stocker_item" &&
+      request.method === "POST"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: {
+          stocker_place: { id: 1, name: "物品倉庫" },
+          stocker_items: [
+            {
+              rental_item: { id: 1, name: "机" },
+              stocker_item: { id: 1, num: 10 },
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    if (
+      url.pathname === "/api/v1/get_refinement_assign_rental_item" &&
+      request.method === "POST"
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: assignRentalItems.map((item) => ({
+          assign_rental_item: item,
+          rental_item: { id: 1, name: "机" },
+          group: { id: 1, name: "テント企画" },
+        })),
+      });
+      return;
+    }
+
+    if (url.pathname === "/api/v1/get_all_rentable_items") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, name: "机" }],
+      });
+      return;
+    }
+
+    if (
+      [
+        "/api/v1/get_inside_shop_rentable_items",
+        "/api/v1/get_outside_shop_rentable_items",
+      ].includes(url.pathname)
+    ) {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
+    if (url.pathname === "/place_categories") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
+      });
+      return;
+    }
+
+    if (url.pathname === "/rentable_items") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [],
       });
       return;
     }

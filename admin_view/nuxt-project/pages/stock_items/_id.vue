@@ -47,7 +47,7 @@
         </Card>
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton v-if="this.$role(roleID).assign_items.create" iconName="add_circle" :on_click="openAssignAddModal">
+            <CommonButton v-if="this.$role(roleID).assign_items.create" class="assign-add-button" iconName="add_circle" :on_click="openAssignAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -68,7 +68,8 @@
                 <td>{{ assignRentalItem.group.name}}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
+                <td>{{ assignRentalItem.assign_rental_item.remark }}</td>
+                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
                 <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
@@ -170,13 +171,29 @@
             :key="index"
             class="assign-item-list"
           >
-            <div class="assign-item-list-container">
-              <!-- 団体名のセレクトボックス -->
-              <div class="assign-item-list-group">
-                <div v-if="index === 0" class="assign-item-list-label-group-label">
-                  <h3>団体名</h3>
-                </div>
-                <select v-model="assign.group" class="assign-item-list-group-select">
+            <div class="assign-item-list-header">
+              <div class="assign-item-list-title">
+                <span class="assign-item-list-caption">割り当て</span>
+                <h3>{{ index + 1 }}件目</h3>
+              </div>
+              <button
+                class="assign-item-list-delete-btn delete-btn-effect"
+                type="button"
+                :aria-label="`割当${index + 1}を削除`"
+                @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)"
+              >
+                <span class="material-icons" aria-hidden="true">delete</span>
+                <span>削除</span>
+              </button>
+            </div>
+            <div class="assign-item-list-fields">
+              <label class="assign-item-list-field assign-item-list-group">
+                <span class="assign-item-list-field-label">団体名</span>
+                <select
+                  v-model="assign.group"
+                  class="assign-item-list-group-select"
+                  :aria-label="`割当${index + 1}の団体名`"
+                >
                   <option disabled value="">選択してください</option>
                   <!-- 団体名を重複して選択できないようにする -->
                   <option
@@ -188,33 +205,41 @@
                     {{ group.name }}
                   </option>
                 </select>
-              </div>
-              <!-- 個数の入力ボックス -->
-              <div class="assign-item-list-num">
-                <div v-if="index === 0" class="assign-item-list-num-label">
-                  <h3>個数</h3>
-                </div>
+              </label>
+              <label class="assign-item-list-field assign-item-list-num">
+                <span class="assign-item-list-field-label">個数</span>
                 <input
-                  v-model="assign.num"
+                  v-model.number="assign.num"
                   type="number"
                   placeholder="入力してください"
+                  :aria-label="`割当${index + 1}の個数`"
                   class="assign-item-list-num-input"
                 />
-              </div>
-              <!-- 削除ボタン -->
-              <div class="assign-item-list-delete">
-                <button class="assign-item-list-delete-btn delete-btn-effect" @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)">
-                  <span class="material-icons"> delete </span>
-                </button>
-              </div>
+              </label>
+              <label class="assign-item-list-field assign-item-list-remark">
+                <span class="assign-item-list-field-label">備考</span>
+                <input
+                  v-model="assign.remark"
+                  type="text"
+                  placeholder="番号・名称など"
+                  :aria-label="`割当${index + 1}の備考`"
+                  class="assign-item-list-remark-input"
+                />
+              </label>
             </div>
-          </div>
-          <div>
-            <button class="assign-item-list-add-btn add-btn-effect" @click.prevent="addAssignItem">団体を追加</button>
           </div>
         </div>
       </template>
       <template v-slot:method>
+        <button
+          v-if="assignItemName"
+          class="assign-item-list-add-btn add-btn-effect"
+          type="button"
+          @click.prevent="addAssignItem"
+        >
+          <span class="material-icons" aria-hidden="true">group_add</span>
+          <span>団体を追加</span>
+        </button>
         <CommonButton iconName="add_circle" :on_click="submitAssign"
           >登録</CommonButton
         >
@@ -295,12 +320,16 @@
     <EditModal
       @close="closeAssignEditModal"
       v-if="isOpenAssignEditModal && this.$role(roleID).assign_items.update"
-      title="割当個数の編集"
+      title="割当の編集"
     >
       <template v-slot:form>
         <div>
           <h3>個数</h3>
-          <input v-model="assignItemNum" type="number" placeholder="入力してください" />
+          <input v-model.number="assignItemNum" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="assignItemRemark" type="text" placeholder="番号・名称など" aria-label="割当の備考" />
         </div>
       </template>
       <template v-slot:method>
@@ -365,7 +394,8 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
-      assignItemsNumAndGroup: [{ group: "", num: 0 }], // 物品割当の団体名と個数
+      assignItemRemark: "",
+      assignItemsNumAndGroup: [{ group: "", num: 0, remark: "" }], // 物品割当の団体名と個数・備考
       stockerItemName: "",
       stockerItemNum: null,
       rentableItems: [],
@@ -391,6 +421,7 @@ export default {
         "団体名",
         "物品",
         "個数",
+        "備考",
       ],
       stockItemStatus: [],
       stockItemStatusList: [
@@ -485,7 +516,7 @@ export default {
       stockerItems: stockerItemsRes.data.stocker_items,
       placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
-      groups: groupsRes,
+      groups: groupsRes.data,
       allRentableItems: allRentableItemsRes.data,
       insideRentableItems: insideRentableItemsRes.data,
       outsideRentableItems: outsideRentableItemsRes.data,
@@ -603,7 +634,7 @@ export default {
       return this.assignItemsNumAndGroup.map((assign) => assign.group);
     },
     addAssignItem() {
-      this.assignItemsNumAndGroup.push({ group: "", num: 0 });
+      this.assignItemsNumAndGroup.push({ group: "", num: 0, remark: "" });
     },
     async submitAssign() {
       const assignUrl = "/assign_rental_items";
@@ -632,7 +663,8 @@ export default {
       const payload = {
         items: this.assignItemsNumAndGroup.map(item => ({
           group_id: item.group,
-          num: item.num
+          num: item.num,
+          remark: item.remark || null
         })),
         rentalItemId: this.assignItemName,
         stockerPlaceId: this.id,
@@ -640,7 +672,7 @@ export default {
       const response = await this.$axios.$post(assignUrl, payload);
       console.log(response.data);
       // バリデーションに成功したら、ここでデータをリセット
-      this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
+      this.assignItemsNumAndGroup = [{ group: "", num: 0, remark: "" }];
       this.assignItemName = "";
       this.assignItemNum = null;
       this.id;
@@ -652,14 +684,12 @@ export default {
     },
 
     async editAssign() {
-      const assignUrl =
-        "/assign_rental_items/" +
-        this.assignRentalItemId +
-        "?num=" +
-        this.assignItemNum +
-        "&stocker_place_id=" +
-        this.id;
-      await this.$axios.$put(assignUrl).then((response) => {
+      const assignUrl = "/assign_rental_items/" + this.assignRentalItemId;
+      const payload = {
+        num: this.assignItemNum,
+        remark: this.assignItemRemark || null,
+      };
+      await this.$axios.$put(assignUrl, payload).then((response) => {
         location.reload();
         this.closeAssignEditModal();
       });
@@ -706,9 +736,10 @@ export default {
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal(id, num) {
+    openAssignEditModal(id, num, remark) {
       this.assignRentalItemId = id;
       this.assignItemNum = num;
+      this.assignItemRemark = remark || "";
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },
@@ -811,67 +842,91 @@ export default {
 .assign-item-list-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
-.assign-item-list-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 8px;
+.assign-item-list {
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(100, 116, 139, 0.24);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 14px;
 }
-.assign-item-list-group {
+.assign-item-list-header {
+  align-items: center;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.2);
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  flex: 4;
-  gap: 8px;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
-.assign-item-list-num {
-  display: flex;
-  flex-direction: column;
+.assign-item-list-title {
+  display: grid;
+  gap: 2px;
+}
+.assign-item-list-title h3 {
+  margin: 0;
+}
+.assign-item-list-caption {
+  color: #64748b;
+  font-size: 11px;
+}
+.assign-item-list-fields {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(100px, 0.5fr) minmax(280px, 2fr);
+  gap: 12px;
   width: 100%;
-  flex: 2;
+}
+.assign-item-list-field {
+  display: grid;
   gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.assign-item-list-field-label {
+  color: var(--accent-5);
+  font-size: 13px;
+  font-weight: 600;
 }
 .assign-item-list-group-select {
+  box-sizing: border-box;
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   text-align: left;
   transition: all 0.5s 0s ease;
 }
 .assign-item-list-num-input {
+  box-sizing: border-box;
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   text-align: left;
   transition: all 0.5s 0s ease;
 }
-.assign-item-list-delete {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+.assign-item-list-remark-input {
+  box-sizing: border-box;
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  border-radius: 6px;
   width: 100%;
-  flex: 1;
-  gap: 16px;
+  padding: 12px;
+  text-align: left;
+  transition: all 0.5s 0s ease;
 }
 .assign-item-list-delete-btn {
-  color: var(--accent-7);
-  border: 1px solid var(--accent-5);
-  width: 100%;
-  padding: 15px;
-  text-align: center;
-  transition: all 0.5s 0s ease;
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 8px 12px;
+  position: relative;
 }
 .assign-item-list-add-btn {
-  color: var(--accent-7);
-  border: 1px solid var(--accent-5);
-  /* width: 100%; */
-  padding: 15px;
-  text-align: center;
-  transition: all 0.5s 0s ease;
+  min-height: 40px;
+  padding: 10px 16px;
 }
 .add-btn-effect {
   border-radius: var(--button-radius);

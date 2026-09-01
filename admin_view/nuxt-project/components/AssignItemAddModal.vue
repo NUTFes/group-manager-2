@@ -9,7 +9,10 @@
               <slot name="form"></slot>
             </form>
           </div>
-          <slot name="method"></slot>
+          <div class="assign-item-add-modal__actions" aria-label="割り当て追加の操作">
+            <NoButton class="btn-secondary" iconName="close" :on_click="() => $emit('close')">キャンセル</NoButton>
+            <slot name="method"></slot>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +45,7 @@ export default {
 }
 .assign-item-add-modal__box h2 {
   color: var(--accent-5);
+  margin: 0;
 }
 .assign-item-add-modal_content h3 {
   color: var(--accent-5);
@@ -78,13 +82,13 @@ export default {
 }
 .assign-item-add-modal__box {
   z-index: 15;
+  box-sizing: border-box;
   display: flex;
-  width:80%;
-  max-width: 600px;
+  width: min(90vw, 900px);
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   flex-flow: column;
-  padding: 50px 50px;
+  padding: 32px;
   color: #fff;
   background: radial-gradient(
     ellipse at top left,
@@ -92,7 +96,12 @@ export default {
     rgba(251, 251, 251, 0.8)
   );
   backdrop-filter: blur(4px);
-  gap: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+  gap: 24px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 .assign-item-add-modal_content {
   width: 100%;
@@ -100,6 +109,16 @@ export default {
   display: flex;
   flex-flow: column;
   gap: 20px;
+}
+.assign-item-add-modal__actions {
+  align-items: center;
+  border-top: 1px solid rgba(100, 116, 139, 0.24);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  width: 100%;
 }
 .fade-enter-active,
 .fade-leave-active {
