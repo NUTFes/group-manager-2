@@ -195,17 +195,10 @@
                 </div>
                 <div class="assignment-actions" aria-label="割り当て操作">
                   <button
-                    v-if="$role(roleID).assign_items.update"
-                    class="btn-save"
-                    type="button"
-                    :disabled="assign.isSaving || !hasUnsavedChanges(assign)"
-                    :aria-label="`${getGroupName(assign.groupId)}の${assign.pending ? '割り当て' : '変更'}を保存`"
-                    @click="saveAssignment(assign)"
-                  >{{ assign.isSaving ? '保存中...' : '保存' }}</button>
-                  <button
                     v-if="$role(roleID).assign_items.delete"
                     class="btn-delete"
                     type="button"
+                    :disabled="assign.isSaving"
                     :aria-label="`${getGroupName(assign.groupId)}の割り当てを削除`"
                     @click="openAssignDeleteModal(assign.id)"
                   >
@@ -226,10 +219,11 @@
                         type="number"
                         min="0"
                         :aria-label="getItemName(itemId) + 'の割り当て個数'"
-                        :disabled="!$role(roleID).assign_items.update"
+                        :disabled="!$role(roleID).assign_items.update || assign.isSaving"
                         :value="assign.assigned[itemId] || 0"
                         @input="updateManualAssign($event, assign, itemId)"
-                        @keyup.enter="saveAssignment(assign)"
+                        @blur="saveAssignmentItem(assign, itemId)"
+                        @keyup.enter="$event.target.blur()"
                         class="num-input highlight"
                       >
                     </label>
@@ -238,11 +232,12 @@
                       <input
                         type="text"
                         :aria-label="getItemName(itemId) + 'の備考'"
-                        :disabled="!$role(roleID).assign_items.update"
+                        :disabled="!$role(roleID).assign_items.update || assign.isSaving"
                         :value="assign.remarks[itemId] || ''"
                         placeholder="番号・名称など"
                         @input="updateAssignRemark($event, assign, itemId)"
-                        @keyup.enter="saveAssignment(assign)"
+                        @blur="saveAssignmentItem(assign, itemId)"
+                        @keyup.enter="$event.target.blur()"
                         class="remark-input"
                       >
                     </label>
@@ -375,7 +370,7 @@ export default {
   },
 
   methods: {
-    // ドラッグ&ドロップ直後などDB未反映の変更を残したままページを離れようとした場合に警告する。
+    // 入力中の変更を保存する前にページを離れようとした場合に警告する。
     warnOnUnsavedChanges(e) {
       if (!this.assignments.some(assign => this.hasUnsavedChanges(assign))) return;
       e.preventDefault();
@@ -540,7 +535,6 @@ export default {
        assign.dbIds.sort((left, right) => Number(left.id) - Number(right.id));
        assign.persistedAssigned = { ...assign.assigned };
        assign.persistedRemarks = { ...assign.remarks };
-       assign.pending = false;
        assign.isSaving = false;
       });
       return resultList;
@@ -553,7 +547,7 @@ export default {
       e.dataTransfer.setData('groupId', group.id);
     },
 
-    handleDropOnStock(e, stock) {
+    async handleDropOnStock(e, stock) {
       if (!this.$role(this.roleID).assign_items.update) return;
       const type = e.dataTransfer.getData('type');
       if (type !== 'GROUP') return;
@@ -577,8 +571,7 @@ export default {
         persistedAssigned: {},
         persistedRemarks: {},
         dbIds: [],
-        pending: true,
-        isSaving: false,
+        isSaving: true,
         baseItemIds: [...this.activeItemIds]
       };
 
@@ -600,101 +593,39 @@ export default {
       });
 
       this.assignments.push(newAssignment);
-    },
-
-    async saveAssignment(assign) {
-      if (assign.isSaving || !this.hasUnsavedChanges(assign)) return;
-
-      const itemStates = this.activeItemIds.map(itemId => ({
-        itemId: Number(itemId),
-        num: Math.max(0, Number(assign.assigned[itemId]) || 0),
-        remark: (assign.remarks[itemId] || '').trim()
-      }));
-      const itemWithOrphanRemark = itemStates.find(item => item.num === 0 && item.remark);
-      if (itemWithOrphanRemark) {
-        alert(`${this.getItemName(itemWithOrphanRemark.itemId)}の備考を保存するには、個数を1以上にしてください。`);
-        return;
-      }
-      if (itemStates.every(item => item.num === 0)) {
-        alert('1つ以上の物品に割り当て個数を入力してください。');
-        return;
-      }
-
-      this.$set(assign, 'isSaving', true);
       try {
-        const requests = [];
-        itemStates.forEach(({ itemId, num, remark }) => {
-          this.$set(assign.assigned, itemId, num);
-          this.$set(assign.remarks, itemId, remark);
-
-          const records = assign.dbIds
-            .filter(record => Number(record.itemId) === itemId)
-            .sort((left, right) => Number(left.id) - Number(right.id));
-
-          if (records.length === 0) {
-            if (num > 0) {
-              requests.push(this.$axios.$post('/assign_rental_items', {
-                items: [{ group_id: assign.groupId, num, remark: remark || null }],
-                rentalItemId: itemId,
-                stockerPlaceId: assign.stockId
-              }));
-            }
-            return;
-          }
-
-          let remainingNum = num;
-          const targetNums = records.map(record => {
-            const targetNum = Math.min(Number(record.num) || 0, remainingNum);
-            remainingNum -= targetNum;
-            return targetNum;
+        const targets = this.activeItemIds.filter(itemId => Number(newAssignment.assigned[itemId]) > 0);
+        const requests = targets.map(async itemId => {
+          const num = Number(newAssignment.assigned[itemId]);
+          const response = await this.$axios.$post('/assign_rental_items', {
+            items: [{ group_id: newAssignment.groupId, num, remark: null }],
+            rentalItemId: Number(itemId),
+            stockerPlaceId: newAssignment.stockId
           });
-          if (remainingNum > 0) targetNums[0] += remainingNum;
-
-          records.forEach((record, index) => {
-            const targetNum = targetNums[index];
-            if (targetNum === 0) {
-              requests.push(this.$axios.$delete(`/assign_rental_items/${record.id}`));
-              return;
-            }
-
-            const payload = {};
-            if (targetNum !== Number(record.num)) payload.num = targetNum;
-            if (index === 0 && remark !== (record.remark || '')) payload.remark = remark || null;
-            if (Object.keys(payload).length > 0) {
-              requests.push(this.$axios.$put(`/assign_rental_items/${record.id}`, payload));
-            }
-          });
+          return { itemId: Number(itemId), num, response };
         });
 
-        await Promise.all(requests);
-        await this.refreshAssignmentsPreservingUnsavedEdits(assign);
+        const results = await Promise.all(requests);
+        newAssignment.dbIds = [];
+        results.forEach(({ itemId, num, response }) => {
+          const createdItems = Array.isArray(response) ? response : response.data;
+          (Array.isArray(createdItems) ? createdItems : [createdItems]).forEach(record => {
+            if (!record || !record.id) return;
+            newAssignment.dbIds.push({ id: record.id, itemId, num, remark: '' });
+          });
+        });
+        newAssignment.id = `${newAssignment.groupId}_${newAssignment.stockId}`;
+        newAssignment.persistedAssigned = { ...newAssignment.assigned };
+        newAssignment.persistedRemarks = { ...newAssignment.remarks };
       } catch (error) {
-        console.error("割り当ての保存に失敗しました", error.response ? error.response.data : error);
-        await this.refreshAssignmentsPreservingUnsavedEdits(assign);
+        console.error("割り当ての登録に失敗しました", error.response ? error.response.data : error);
+        await this.fetchDataFromDB();
         alert('割り当ての保存に失敗しました。時間をおいて再度お試しください。');
       } finally {
-        this.$set(assign, 'isSaving', false);
+        this.$set(newAssignment, 'isSaving', false);
       }
     },
-    // 保存対象以外のカードに未保存の変更が残っている場合、再取得後もそれを保持する。
-    async refreshAssignmentsPreservingUnsavedEdits(savedAssign) {
-      const unsavedOthers = this.assignments.filter(
-        a => a !== savedAssign && this.hasUnsavedChanges(a)
-      );
-      await this.fetchDataFromDB();
-      unsavedOthers.forEach(prev => {
-        if (prev.pending) {
-          this.assignments.push(prev);
-          return;
-        }
-        const current = this.assignments.find(a => a.id === prev.id);
-        if (current) {
-          current.assigned = { ...prev.assigned };
-          current.remarks = { ...prev.remarks };
-        }
-      });
-    },
-    // 個数と備考はカード内で編集し、保存ボタンでまとめて反映する。
+
     updateManualAssign(e, assign, itemId) {
       if (!this.$role(this.roleID).assign_items.update) return;
       let newValue = parseInt(e.target.value, 10);
@@ -705,6 +636,90 @@ export default {
     updateAssignRemark(e, assign, itemId) {
       if (!this.$role(this.roleID).assign_items.update) return;
       this.$set(assign.remarks, itemId, e.target.value);
+    },
+
+    async saveAssignmentItem(assign, itemId) {
+      if (!this.$role(this.roleID).assign_items.update || assign.isSaving) return;
+
+      const normalizedItemId = Number(itemId);
+      const num = Math.max(0, Number(assign.assigned[normalizedItemId]) || 0);
+      const remark = (assign.remarks[normalizedItemId] || '').trim();
+      const persistedNum = Number(assign.persistedAssigned[normalizedItemId]) || 0;
+      const persistedRemark = (assign.persistedRemarks[normalizedItemId] || '').trim();
+      if (num === persistedNum && remark === persistedRemark) return;
+
+      this.$set(assign.assigned, normalizedItemId, num);
+      this.$set(assign.remarks, normalizedItemId, remark);
+
+      const records = assign.dbIds
+        .filter(record => Number(record.itemId) === normalizedItemId)
+        .sort((left, right) => Number(left.id) - Number(right.id));
+
+      if (records.length === 0 && num === 0) {
+        if (remark) {
+          alert(`${this.getItemName(normalizedItemId)}の備考を保存するには、個数を1以上にしてください。`);
+          await this.fetchDataFromDB();
+        }
+        return;
+      }
+
+      try {
+        if (records.length === 0) {
+          const response = await this.$axios.$post('/assign_rental_items', {
+            items: [{ group_id: assign.groupId, num, remark: remark || null }],
+            rentalItemId: normalizedItemId,
+            stockerPlaceId: assign.stockId
+          });
+          const createdItems = Array.isArray(response) ? response : response.data;
+          (Array.isArray(createdItems) ? createdItems : [createdItems]).forEach(record => {
+            if (!record || !record.id) return;
+            assign.dbIds.push({ id: record.id, itemId: normalizedItemId, num, remark });
+          });
+        } else if (num === 0) {
+          await Promise.all(records.map(record => this.$axios.$delete(`/assign_rental_items/${record.id}`)));
+          assign.dbIds = assign.dbIds.filter(record => Number(record.itemId) !== normalizedItemId);
+          this.$set(assign.remarks, normalizedItemId, '');
+        } else {
+          let remainingNum = num;
+          const targetNums = records.map(record => {
+            const targetNum = Math.min(Number(record.num) || 0, remainingNum);
+            remainingNum -= targetNum;
+            return targetNum;
+          });
+          if (remainingNum > 0) targetNums[0] += remainingNum;
+
+          const requests = [];
+          records.forEach((record, index) => {
+            const targetNum = targetNums[index];
+            if (targetNum === 0) {
+              requests.push(this.$axios.$delete(`/assign_rental_items/${record.id}`));
+              return;
+            }
+
+            const targetRemark = index === 0 ? remark : (record.remark || '');
+            const hasChanges = targetNum !== Number(record.num) || targetRemark !== (record.remark || '');
+            if (!hasChanges) return;
+            requests.push(this.$axios.$put(`/assign_rental_items/${record.id}`, {
+              num: targetNum,
+              remark: targetRemark || null
+            }));
+          });
+          await Promise.all(requests);
+
+          records.forEach((record, index) => {
+            record.num = targetNums[index];
+            if (index === 0) record.remark = remark;
+          });
+          assign.dbIds = assign.dbIds.filter(record => Number(record.num) > 0);
+        }
+
+        this.$set(assign.persistedAssigned, normalizedItemId, num);
+        this.$set(assign.persistedRemarks, normalizedItemId, num === 0 ? '' : remark);
+      } catch (error) {
+        console.error("割り当ての保存に失敗しました", error.response ? error.response.data : error);
+        await this.fetchDataFromDB();
+        alert('割り当ての保存に失敗しました。時間をおいて再度お試しください。');
+      }
     },
 
     // 削除処理
@@ -796,7 +811,6 @@ export default {
       return group ? group.name : '不明';
     },
     hasUnsavedChanges(assign) {
-      if (assign.pending) return true;
       return this.activeItemIds.some(itemId => {
         const currentNum = Number(assign.assigned[itemId]) || 0;
         const persistedNum = Number(assign.persistedAssigned[itemId]) || 0;
@@ -931,23 +945,6 @@ export default {
 .btn-delete .material-icons {
   font-size: 16px;
 }
-.btn-save {
-  align-items: center;
-  background-color: var(--accent-5);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  display: inline-flex;
-  justify-content: center;
-  min-height: 36px;
-  padding: 7px 14px;
-}
-.btn-save:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
 /* モーダル */
 .modal-overlay {
   position: fixed;
