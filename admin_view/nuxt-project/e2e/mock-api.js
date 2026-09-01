@@ -3,6 +3,7 @@ const http = require("http");
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
 const unauthorizedPaths = new Set();
+const failedPaths = new Set();
 let comments = [];
 let nextCommentId = 1;
 
@@ -90,6 +91,7 @@ http
     if (url.pathname === "/_e2e/requests" && request.method === "DELETE") {
       requests.length = 0;
       unauthorizedPaths.clear();
+      failedPaths.clear();
       comments = [];
       nextCommentId = 1;
       assignRentalItems = initialAssignRentalItems();
@@ -120,6 +122,18 @@ http
       const payload = await readBody(request);
       unauthorizedPaths.add(payload.path);
       sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (url.pathname === "/_e2e/failure" && request.method === "POST") {
+      const payload = await readBody(request);
+      failedPaths.add(payload.path);
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (failedPaths.has(url.pathname)) {
+      sendJson(response, 500, { error: "Internal server error" });
       return;
     }
 
