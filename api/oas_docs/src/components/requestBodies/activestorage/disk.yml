@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    activestorage.Disk:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/activestorage.Disk"
