@@ -669,6 +669,30 @@ class Group < ApplicationRecord
     end
   end
 
+  ### confirmed info（ユーザー向け確定情報）
+
+  # 認証なしで公開する確定情報を取得する
+  # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
+  # 認証なしで露出するため、groupは公開してよいidとnameだけに絞る
+  def self.with_confirmed_info(group_id, secret)
+    group = Group.joins(:group_secret)
+                 .includes(assign_rental_items: %i[rental_item stocker_place rental_place])
+                 .find_by(id: group_id, group_secrets: { secret: secret })
+    return nil if group.nil?
+
+    @record = {
+      group: { id: group.id, name: group.name },
+      assign_rental_items: group.assign_rental_items.map do |assign_rental_item|
+        {
+          rental_item_name: assign_rental_item.rental_item.name,
+          stock_place_name: assign_rental_item.stock_place_name,
+          rental_place_name: assign_rental_item.rental_place_name,
+          num: assign_rental_item.num
+        }
+      end
+    }
+  end
+
   ### employee（従業員）
 
   # 全てのgroupとそのemployeeを取得する

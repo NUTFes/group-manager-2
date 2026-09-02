@@ -1,0 +1,33 @@
+---
+paths:
+  "/api/v1/get_confirmed_info_for_user_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_infos_api
+      summary: ユーザー向け確定情報の取得（認証なし）
+      description: group_idとsecretの両方が一致したときだけ確定情報を返す。QRコードで配るURL
+        から呼ばれるため認証を必要としない。
+      responses:
+        '200':
+          description: 確定情報
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedInfosApi"
+        '404':
+          description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
+            団体が存在しない場合をすべて404に統一している
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+      - name: secret
+        in: query
+        description: group_secrets.secret。大文字小文字を区別する
+        required: true
+        schema:
+          type: string

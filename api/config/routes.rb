@@ -308,6 +308,9 @@ Rails.application.routes.draw do
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
+      #---ユーザー向け確定情報閲覧画面（認証なし）
+      get 'get_confirmed_info_for_user_view/:group_id' => 'confirmed_infos_api#get_confirmed_info_for_user_view'
+
       #---CSV出力
       resources :message_templates, only: %i[index show create update] do
         member do
