@@ -102,4 +102,12 @@ class AssignRentalItemTest < ActiveSupport::TestCase
     assert_equal '', assign_rental_item.stock_place_name
     assert_equal '', assign_rental_item.stock_place_name(locale: :en)
   end
+
+  test 'destroy is blocked while item_rental_logs exist' do
+    assign_rental_item = assign_rental_items(:one)
+
+    assert_not assign_rental_item.destroy
+    assert assign_rental_item.errors[:base].present?
+    assert AssignRentalItem.exists?(assign_rental_item.id)
+  end
 end
