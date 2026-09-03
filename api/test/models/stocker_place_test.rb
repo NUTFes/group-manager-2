@@ -5,6 +5,20 @@ require 'test_helper'
 class StockerPlaceTest < ActiveSupport::TestCase
   fixtures :stocker_places
 
+  test 'destroys associated assign_group_places' do
+    stocker_place = StockerPlace.create!(name: '削除確認用会場')
+    assignment = AssignGroupPlace.create!(
+      place_order: place_orders(:one),
+      stocker_place: stocker_place
+    )
+
+    assert_difference('AssignGroupPlace.count', -1) do
+      stocker_place.destroy!
+    end
+
+    assert_not AssignGroupPlace.exists?(assignment.id)
+  end
+
   test 'display_name returns japanese name by default' do
     place = stocker_places(:with_name_en)
     assert_equal '体育館倉庫', place.display_name
