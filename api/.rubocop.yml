@@ -1,0 +1,315 @@
+# ============================================
+# RuboCop 設定ファイル (.rubocop.yml)
+# 目的:
+# - Ruby/Rails プロジェクトの静的解析ルールを一元管理
+# - チームでのコードスタイルを統一
+#
+# 使い方:
+# - 基本ルールはこのファイルで定義
+# - 既存コードの違反を一時的に抑えるための例外は .rubocop_todo.yml に分離
+# - ルールは段階的に厳しくしていく（TODO を徐々に削減）
+# ============================================
+
+# --------------------------------------------
+# 1) 既存違反の一時抑制を取り込む
+#    ※ rubocop --auto-gen-config で生成されたファイル
+# --------------------------------------------
+inherit_from: .rubocop_todo.yml
+
+# --------------------------------------------
+# 2) 使用プラグイン
+#    - Rails: Rails向けのCop
+#    - Performance: パフォーマンスに関するCop
+#    - RSpec / Capybara: テストコード向けCop
+# --------------------------------------------
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-capybara
+
+# --------------------------------------------
+# 3) 全体設定 (AllCops)
+#    - Rubyのターゲットバージョン
+#    - 解析対象外ディレクトリ
+#    - 新しいCopを自動で有効化
+# --------------------------------------------
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+  Exclude:
+    - 'vendor/**/*'
+    - 'lib/tasks/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'bin/*'
+    - 'test/*'
+    - 'node_modules/**/*'
+    - 'config/initializers/**/*'
+    - 'public/**/*'
+    - 'storage/**/*'
+    - 'log/**/*'
+    - 'tmp/**/*'
+    - 'terraform/**/*'
+    - 'openapi/**/*'
+
+# ============================================
+# Rails 関連の設定
+# ============================================
+
+# RailsのHTTPステータスは数値(200等)ではなく定数(:ok等)の利用を推奨。
+# ただし ApplicationController は除外。
+Rails/HttpStatus:
+  Exclude:
+    - 'app/controllers/application_controller.rb'
+
+# バリデーションをスキップする系のメソッドの使用を原則禁止。
+# ただし touch / upsert_all は許可（業務要件を優先）。
+Rails/SkipsModelValidations:
+  AllowedMethods:
+    - 'touch'
+    - 'upsert_all'
+
+# i18n未使用の文言検出を無効化（段階的導入を想定）。
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+# ============================================
+# レイアウト（見た目・改行・空行など）
+# ============================================
+
+# 1行の最大文字数。設定ファイルやspecは除外。
+Layout/LineLength:
+  Max: 1200
+  Exclude:
+    - 'spec/**/*'
+    - 'config/**/*'
+
+# attr_accessor などの前後の空行を揃える
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+# .演算子の前後のスペース調整（method callの可読性向上）
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+# ============================================
+# Lint（バグの温床になりやすいコードの検出）
+# ============================================
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+# ============================================
+# Style（スタイル/可読性の指針）
+#   ※ チームの方針で緩めにしている項目もあります
+# ============================================
+
+# 日本語コメントを許可（日本語プロジェクトのため）
+Style/AsciiComments:
+  Enabled: false
+
+# モジュール/クラスのネスト記法(A::B)を強制しない
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# クラスやモジュールのトップレベルドキュメント必須を解除
+Style/Documentation:
+  Enabled: false
+
+# 空メソッドの書き方（1行/複数行）の統一を求めない
+Style/EmptyMethod:
+  Enabled: false
+
+# 早期return(guard句)の強制をしない（読みやすさ優先のため任意）
+Style/GuardClause:
+  Enabled: false
+
+# 数値比較に zero? などの述語メソッドを強制しない
+Style/NumericPredicate:
+  Enabled: false
+
+# return の冗長さ指摘を無効化（読みやすさを優先）
+Style/RedundantReturn:
+  Enabled: false
+
+# 1000_000 のような桁区切りを強制しない
+Style/NumericLiterals:
+  Enabled: false
+
+# attr_reader 等のグルーピング強制をしない
+Style/AccessorGrouping:
+  Enabled: false
+
+# Array(value) のような配列化スタイルを有効化
+Style/ArrayCoercion:
+  Enabled: true
+
+# attr_accessor を分割して宣言する冗長さを検出
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+# case/when 風の if を推奨（複雑な条件分岐の可読性向上）
+Style/CaseLikeIf:
+  Enabled: true
+
+# 1.0e5 などの指数表記の扱いを統一
+Style/ExponentialNotation:
+  Enabled: true
+
+# each_key/each_value の利用を推奨
+Style/HashEachMethods:
+  Enabled: true
+
+# Hash を case の when で使うスタイルに関する指針
+Style/HashLikeCase:
+  Enabled: true
+
+# Hash#transform_keys/values の活用を推奨
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+
+# 代入の冗長さ（無意味な一時変数など）を検出
+Style/RedundantAssignment:
+  Enabled: true
+
+# Hash#fetch のブロック冗長を検出
+Style/RedundantFetchBlock:
+  Enabled: true
+
+# require 'foo.rb' の .rb 省略を推奨
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+
+# 正規表現の不要な文字クラスやエスケープを検出
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+# range スライスの統一スタイル
+Style/SlicingWithRange:
+  Enabled: true
+
+# フォーマット文字列のトークンスタイル（%{name} 等）を template に統一
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+# 基本はシングルクォートに統一。式展開やエスケープが必要な場合は自動で許容されます
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+# 式展開の中の文字列もシングルクォートに統一
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+
+# rescue 修飾子(式の末尾での rescue)を許可
+Style/RescueModifier:
+  Enabled: false
+
+# ============================================
+# Metrics（複雑さ・サイズ制限）
+#   ※ 既存コードを尊重して多くを無効化/緩和
+# ============================================
+
+# ブロックの行数上限を緩和（25行→100行）。
+# 一部ファイル/ディレクトリは除外。
+Metrics/BlockLength:
+  Max: 100
+  Exclude:
+    - 'spec/**/*'
+    - 'config/**/*'
+    - 'app/views/api/v1/**/*'
+    - 'app/models/order_product.rb' # aasm で長くなりがち
+    - 'app/models/group.rb'         # 業務上の長いブロックが多い
+    - 'app/models/user.rb'          # 同上
+
+# ABC サイズ（代入・分岐・条件の複雑さ）をチェックしない
+Metrics/AbcSize:
+  Enabled: false
+
+# メソッドの行数上限をチェックしない
+Metrics/MethodLength:
+  Enabled: false
+
+# クラスの行数上限をチェックしない
+Metrics/ClassLength:
+  Enabled: false
+
+# 引数の数が多いメソッドの警告を無効化
+Metrics/ParameterLists:
+  Enabled: false
+
+# サイクロマティック複雑度のチェックを無効化
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+# 体感複雑度のチェックを無効化
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# ============================================
+# Performance（パフォーマンス最適化）
+# ============================================
+
+# Array#map { ... }.compact などでの times.map の誤用検出
+# テストコードは除外
+Performance/TimesMap:
+  Exclude:
+    - 'spec/**/*'
+
+# ============================================
+# Naming（命名規則）
+# ============================================
+
+# 変数名に数字を含める制限を無効化（例: user2）
+Naming/VariableNumber:
+  Enabled: false
+
+# アクセサメソッドの命名規則（get_/set_ など）の強制を無効化
+Naming/AccessorMethodName:
+  Enabled: false
+
+# 述語メソッドの接頭辞（is_/has_ など）の命名規則を緩める
+# 注: PredicateName は PredicatePrefix に改名されました
+Naming/PredicatePrefix:
+  Enabled: false
+
+# 述語メソッドの ? 終端の命名規則を無効化
+# 真偽値を返すメソッドに ? を強制しない
+Naming/PredicateMethod:
+  Enabled: false
+
+# ============================================
+# RSpec（テストコード）
+# ============================================
+
+# ネストし過ぎや複数の let/expect などの制約を段階的導入のため無効化
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/LetSetup:
+  Enabled: false
+RSpec/ChangeByZero:
+  Enabled: false

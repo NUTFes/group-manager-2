@@ -27,8 +27,8 @@
             <td>{{ stageOrder.group.name }}</td>
             <td>{{ stageOrder.stage_order.is_sunny }}</td>
             <td>{{ stageOrder.stage_order_info.date }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
             <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
             <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
           </tr>
@@ -48,6 +48,9 @@ export default {
     ...mapState({
       selfRoleId: (state) => state.users.role,
     }),
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     reload: function () {

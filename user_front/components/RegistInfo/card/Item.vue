@@ -13,6 +13,7 @@ interface Props {
   name: string
   num: number
   setting: boolean | null
+  rentalItemIds: number[] | null
 }
 
 interface Emits {
@@ -28,7 +29,8 @@ const item = withDefaults(defineProps<Props>(), {
   regist: null,
   name: '',
   num: 0,
-  setting: null
+  setting: null,
+  rentalItemIds: null
 })
 
 const config = useRuntimeConfig();
@@ -75,6 +77,7 @@ const openDeleteModal = () => {
     :id="regist?.id"
     :item="regist?.rental_item_id"
     :num="regist?.num"
+    :rental-item-ids="rentalItemIds"
     @reload-item="reloadItem"
   />
   <RegistInfoDeleteItem

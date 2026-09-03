@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).employees.read">
     <SubHeader pageTitle="従業員申請">
       <CommonButton v-if="this.$role(roleID).employees.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -108,10 +108,13 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -135,10 +138,14 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
     const url =
       "/api/v1/get_refinement_employees?fes_year_id=" +
       currentYearRes.data.fes_year_id;
@@ -155,13 +162,48 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
-  computed: {
-    ...mapState({
-      roleID: (state) => state.users.role,
-    }),
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    this.fetchFilteredData();
   },
   methods: {
+  async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_employees?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const employeesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.employees = employeesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+
+      this.fetchFilteredData();
+    },
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementEmployees(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
@@ -170,6 +212,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.employees = [];
       const refUrl =
         "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
@@ -177,8 +221,19 @@ export default {
       for (const res of refRes.data) {
         this.employees.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchEmployees();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchEmployees() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.employees = [];
       const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
@@ -234,7 +289,9 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
-      window.open(url, "従業員一覧_CSV");
+      const fname = `従業員一覧_${this.refYearID === 0 ? '全' : this.refYears}年度`;
+      await downloadFile(this.$axios, url, fname, "text/csv");
+      this.openSnackBar("従業員一覧のCSVをダウンロードしました");
     },
   },
 };

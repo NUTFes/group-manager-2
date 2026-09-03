@@ -1,0 +1,9 @@
+---
+components:
+  schemas:
+    FesYear:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

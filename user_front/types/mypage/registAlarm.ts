@@ -70,6 +70,7 @@ export interface Group{
   project_name: string
   updated_at: string
   user_id: number
+  is_external: boolean
 }
 
 

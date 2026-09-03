@@ -1,0 +1,75 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: "DB"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: password
+    command: --default-authentication-plugin=mysql_native_password
+    ports: ["3306:3306"]
+    volumes: [mysql-data:/var/lib/mysql]
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    depends_on:
+      - db
+    ports:
+      - 3307:80
+
+  api:
+    build:
+      context: ./api
+      args:
+        PLATFORM: ${PLATFORM:-default}
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    container_name: "API"
+    volumes: [./api:/myapp]
+    ports: ["3000:3000"]
+    env_file: [webhook.env, ./api/.env]
+    environment:
+      - TZ=Asia/Tokyo
+    depends_on: [db]
+
+  admin_view:
+    build: ./admin_view
+    container_name: "ADMIN-VIEW"
+    ports: ["8000:8000"]
+    command: npm run dev
+    volumes: [./admin_view:/app]
+    environment:
+      - VUE_APP_URL=http://localhost:3000
+      - VUE_APP_API_URL=http://api:3000
+      - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
+
+  user_front:
+    build: ./user_front
+    container_name: "GM2-USER-FRONT"
+    ports:
+      - "8002:8002"
+      - "24678:24678"
+    command: npm run dev
+    volumes: [./user_front:/app]
+    environment:
+      - VUE_APP_URL=http://api:3000
+      - VUE_APP_API_URL=http://localhost:3000
+    depends_on: [api]
+
+  user:
+    build: ./user
+    container_name: "GM3-USER"
+    ports:
+      - "8003:3000"
+    command: pnpm run dev
+    volumes: [./user:/app]
+    depends_on: [api]
+
+volumes:
+  mysql-data:
+    driver: local

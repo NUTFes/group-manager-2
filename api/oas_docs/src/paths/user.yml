@@ -1,0 +1,147 @@
+---
+paths:
+  "/current_user":
+    get:
+      tags:
+      - user
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+  "/users":
+    get:
+      tags:
+      - user
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+  "/users/simply_user_create":
+    post:
+      tags:
+      - user
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/User"
+  "/users/{id}":
+    get:
+      tags:
+      - user
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '404':
+          description: user description
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - user
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: user description
+        '404':
+          description: user description
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/User"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - user
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+        '404':
+          description: user description
+        '422':
+          description: user description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

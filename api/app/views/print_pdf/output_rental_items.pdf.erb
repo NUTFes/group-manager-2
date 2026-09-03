@@ -1,4 +1,9 @@
 <h1>参加団体情報管理表</h1>
+<% fes_dates_by_day_num = @group.fes_year.fes_dates.index_by(&:days_num) %>
+<% day1_date = fes_dates_by_day_num[1]&.date %>
+<% day2_date = fes_dates_by_day_num[2]&.date %>
+<% pickup_date = fes_dates_by_day_num[0]&.date %>
+<% return_date = fes_dates_by_day_num[3]&.date %>
 
 <div class="padding-top">
   <h2>参加団体情報</h2>
@@ -18,11 +23,11 @@
       </tr>
       <tr>
         <th rowspan=2>活動時間</th>
-        <td><%= @group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : @group.fes_year.fes_dates.where(days_num: 1).first.date %>（1日目）</td>
+        <td><%= day1_date %>（1日目）</td>
         <td>10:00～17:00</td>
       </tr>
       <tr>
-        <td><%= @group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : @group.fes_year.fes_dates.where(days_num: 2).first.date %>（2日目）</td>
+        <td><%= day2_date %>（2日目）</td>
         <td>10:00～17:00</td>
       </tr>
       <tr>
@@ -42,7 +47,8 @@
   <table class="items">
     <tr>
       <th>物品名</th>
-      <th>借りる場所</th>
+      <th>在庫場所</th>
+      <th>貸出場所</th>
       <th>数量</th>
       <th>貸出日</th>
       <th>返却日</th>
@@ -51,11 +57,13 @@
     <% @group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
       <td><%= assign_rental_item.rental_item.name %></td>
-      <td><%= assign_rental_item.stocker_place.name %></td>
+      <td><%= assign_rental_item.stock_place_name %></td>
+      <td><%= assign_rental_item.rental_place_name %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= @group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : @group.fes_year.fes_dates.where(days_num: 0).first.date %>(準備日)</td>
-      <td><%= @group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : @group.fes_year.fes_dates.where(days_num: 3).first.date %>(片付け日)</td>
+      <td><%= pickup_date %>(準備日)</td>
+      <td><%= return_date %>(片付け日)</td>
       <td></td>
+
     </tr>
     <% end %>
   </table>

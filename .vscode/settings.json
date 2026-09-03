@@ -1,0 +1,55 @@
+{
+  // biomeを無効化
+  "biome.enabled": false,
+  // 自動保存を有効化
+  "editor.formatOnSave": true,
+  // Prettierをデフォルトのフォーマッタに設定
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // eslintのpathを指定
+  "eslint.workingDirectories": ["./user"],
+    // Prettierの設定ファイルを指定
+  "prettier.configPath": "./user/.prettierrc.json",
+
+  // 自動保存時に実行するアクションを設定
+  "editor.codeActionsOnSave": {
+    // eslintの自動修正を有効化
+    "source.fixAll.eslint": "explicit",
+    // Prettierの自動修正を有効化
+    "source.fixAll.prettier": "explicit",
+    // importの整理を有効化
+    "source.organizeImports": "explicit"
+  },
+
+  // 以下、各拡張子ごとに明示的に設定
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

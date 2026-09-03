@@ -97,11 +97,7 @@ const reset = () => {
 
 <template>
   <Modal
-    :title="
-      groupCategoryId === 1
-        ? $t('Food.editFood')
-        : $t('SaleGoods.editSaleGoods')
-    "
+    :title=" $t('Product.editProduct') "
   >
     <template #close>
       <div class="flex justify-end">
@@ -115,7 +111,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">
-        {{ groupCategoryId === 1 ? $t("Food.name") : $t("SaleGoods.name") }}
+        {{ $t("Product.name")  }}
       </div>
       <input
         class="entry"
@@ -125,14 +121,14 @@ const reset = () => {
       />
       <div class="error_msg">{{ dishNameError }}</div>
       <div v-if="groupCategoryId === 1">
-        <div class="text">{{ $t("Food.cook") }}</div>
+        <div class="text">{{ $t("Product.cook") }}</div>
         <select class="entry" v-model="newIsCooking">
-          <option value="" disabled selected>{{ $t("Food.select") }}</option>
-          <option value="true">{{ $t("Food.yes") }}</option>
-          <option value="false">{{ $t("Food.no") }}</option>
+          <option value="" disabled selected>{{ $t("Product.select") }}</option>
+          <option value="true">{{ $t("Product.yes") }}</option>
+          <option value="false">{{ $t("Product.no") }}</option>
         </select>
       </div>
-      <div class="text">{{ $t("Food.numberFirstDay") }}</div>
+      <div class="text">{{ $t("Product.numberFirstDay") }}</div>
       <input
         type="number"
         class="entry"
@@ -141,7 +137,7 @@ const reset = () => {
         :class="{ error_border: numFirstDayError }"
       />
       <div class="error_msg">{{ numFirstDayError }}</div>
-      <div class="text">{{ $t("Food.numberSecondDay") }}</div>
+      <div class="text">{{ $t("Product.numberSecondDay") }}</div>
       <input
         type="number"
         class="entry"

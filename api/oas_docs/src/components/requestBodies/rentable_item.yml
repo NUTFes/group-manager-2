@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    RentableItem:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/RentableItem"

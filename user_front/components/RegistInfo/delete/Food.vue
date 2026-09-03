@@ -34,7 +34,7 @@ const deleteFood = async () => {
 </script>
 
 <template>
-  <Modal :title="$t('Food.deleteFood')">
+  <Modal :title="$t('Product.deleteProduct')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeDeleteFood()" class="hover:text-black hover:opacity-75">✖</button>

@@ -1,5 +1,6 @@
-class Api::V1::PublicRelationsApiController < ApplicationController
+# frozen_string_literal: true
 
+class Api::V1::PublicRelationsApiController < ApplicationController
   def get_public_relation_for_admin_view
     @groups = Group.with_public_relation(params[:id])
     render json: fmt(ok, @groups)
@@ -7,14 +8,13 @@ class Api::V1::PublicRelationsApiController < ApplicationController
 
   # admin_viewのpublic_relation/indexの形に整える
   def fit_group_index_for_admin_view(groups)
-    groups.map{
-      |group|
+    groups.map do |group|
       {
-        "group": group,
-        "group_category": group.group_category,
-        "fes_year": group.fes_year
+        group: group,
+        group_category: group.group_category,
+        fes_year: group.fes_year
       }
-    }
+    end
   end
 
   # 絞り込み機能
@@ -22,15 +22,15 @@ class Api::V1::PublicRelationsApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     # 両方ともALL
     if fes_year_id == 0
-      @groups = Group.with_public_relations 
-      # fes_year_idだけ指定 
+      @groups = Group.with_public_relations
+      # fes_year_idだけ指定
     elsif fes_year_id != 0
       @groups = Group.with_public_relation_narrow_down_by_fes_year(fes_year_id)
     end
 
-    if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
-    else 
+    if @groups.none?
+      render json: fmt(not_found, [], 'Not found groups')
+    else
       render json: fmt(ok, @groups)
     end
   end
@@ -39,11 +39,10 @@ class Api::V1::PublicRelationsApiController < ApplicationController
   def get_search_public_relations
     word = params[:word]
     @groups = Group.with_public_relation_narrow_down_by_search_word(word)
-    if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+    if @groups.none?
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
     end
   end
-
 end

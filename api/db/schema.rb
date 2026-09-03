@@ -10,20 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_07_061926) do
+ActiveRecord::Schema.define(version: 2026_08_16_000002) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
     t.text "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "status"
   end
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
-    t.integer "place_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "stocker_place_id", null: false
+    t.index ["stocker_place_id"], name: "index_assign_group_places_on_stocker_place_id"
   end
 
   create_table "assign_rental_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -33,6 +35,8 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stocker_place_id"
+    t.bigint "rental_place_id"
+    t.index ["rental_place_id"], name: "index_assign_rental_items_on_rental_place_id"
   end
 
   create_table "assign_stages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -42,6 +46,38 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.string "time_point_end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "mail_delivery_status", default: 0, null: false
+    t.string "subject"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+  end
+
+  create_table "contact_people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "cooking_process_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "pre_open_kitchen", default: false, null: false
+    t.boolean "during_open_kitchen", default: false, null: false
+    t.text "tent"
+    t.bigint "food_product_id", null: false
+    t.text "tent_ja"
+    t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
+    t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
 
   create_table "current_stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -84,6 +120,19 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "fire_equipment_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "quantity", null: false
+    t.integer "fuel", default: 0
+    t.text "usage"
+    t.boolean "is_takeaway"
+    t.text "remark"
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_fire_equipment_orders_on_group_id"
+  end
+
   create_table "food_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
     t.string "name"
@@ -92,6 +141,7 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.integer "second_day_num"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_alcohol"
   end
 
   create_table "grades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -104,6 +154,7 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name_en"
   end
 
   create_table "group_identifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -123,6 +174,19 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
+    t.boolean "is_international"
+    t.boolean "is_external"
+    t.boolean "is_health_center_submission_target", default: true, null: false
+  end
+
+  create_table "health_center_submission_statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "application_type", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id", "application_type"], name: "index_health_center_submission_statuses_on_group_and_type", unique: true
+    t.index ["group_id"], name: "index_health_center_submission_statuses_on_group_id"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -146,6 +210,16 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "message_templates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "locale", null: false
+    t.string "name", null: false
+    t.string "subject", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name", "locale"], name: "index_message_templates_on_name_and_locale", unique: true
+  end
+
   create_table "news", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -159,6 +233,14 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.boolean "enable"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "place_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["parent_id"], name: "index_place_categories_on_parent_id"
   end
 
   create_table "place_numbers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -202,6 +284,8 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.text "blurb"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_announcement_requested", default: false, null: false
+    t.string "imgur_deletehash"
   end
 
   create_table "purchase_lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -214,6 +298,7 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "purchase_date"
     t.string "url"
+    t.string "remark"
   end
 
   create_table "rentable_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -238,6 +323,7 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.boolean "is_stage_rentable"
     t.boolean "is_inside_shop_rentable"
     t.boolean "is_outside_shop_rentable"
+    t.string "name_en"
   end
 
   create_table "rental_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -269,7 +355,6 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.boolean "bgm"
     t.boolean "camera_permission"
     t.boolean "loud_sound"
-    t.text "stage_content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -321,6 +406,9 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stock_item_status"
     t.integer "assign_item_status"
+    t.string "name_en"
+    t.bigint "place_category_id"
+    t.index ["place_category_id"], name: "index_stocker_places_on_place_category_id"
   end
 
   create_table "stool_tests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -339,6 +427,14 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "student_id"
+  end
+
+  create_table "un_registered_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "order_type", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_un_registered_groups_on_group_id"
   end
 
   create_table "user_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -374,6 +470,14 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.integer "fes_year_id"
     t.boolean "is_edit_announcement"
     t.boolean "add_announcement"
+    t.boolean "is_edit_user"
+    t.boolean "is_edit_stage_common_option"
+    t.boolean "is_edit_public_relation"
+    t.boolean "is_edit_venue_map"
+    t.boolean "is_edit_cooking_process"
+    t.boolean "add_stage_order"
+    t.boolean "add_fire_equipment_order", default: true
+    t.boolean "is_edit_fire_equipment_order", default: true
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -411,7 +515,17 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.string "picture_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "imgur_deletehash"
   end
 
+  add_foreign_key "assign_group_places", "stocker_places"
+  add_foreign_key "assign_rental_items", "stocker_places", column: "rental_place_id"
+  add_foreign_key "cooking_process_orders", "food_products"
+  add_foreign_key "cooking_process_orders", "groups"
+  add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "health_center_submission_statuses", "groups"
+  add_foreign_key "place_categories", "place_categories", column: "parent_id"
+  add_foreign_key "stocker_places", "place_categories"
+  add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end

@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    StockerPlace:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/StockerPlace"

@@ -1,38 +1,83 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class SubRepsControllerTest < ActionDispatch::IntegrationTest
+  # NOTE: 一部の既存フィクスチャ（employees, assign_rental_items 等）が
+  # スキーマと乖離しており fixtures :all のままだと setup 時点で読み込みに失敗するため、
+  # このテストに必要なフィクスチャのみに限定する。
+  self.fixture_table_names = %w[groups departments grades sub_reps]
+
   setup do
     @sub_rep = sub_reps(:one)
+    Role.find_or_create_by!(name: 'admin')
+    @user = User.create!(
+      name: 'sub-rep-test-user',
+      email: 'sub-rep-test-user@example.com',
+      uid: 'sub-rep-test-user@example.com',
+      provider: 'email',
+      password: 'password',
+      password_confirmation: 'password',
+      role: Role.find_by(name: 'admin')
+    )
   end
 
-  test "should get index" do
+  def valid_params
+    { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel }
+  end
+
+  def auth_headers
+    @user.create_new_auth_token.merge('Content-Type' => 'application/json')
+  end
+
+  test 'should get index' do
     get sub_reps_url, as: :json
     assert_response :success
   end
 
-  test "should create sub_rep" do
+  test 'should create sub_rep' do
     assert_difference('SubRep.count') do
-      post sub_reps_url, params: { sub_rep: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel } }, as: :json
+      post sub_reps_url, params: valid_params, headers: auth_headers, as: :json
     end
 
-    assert_response 201
+    assert_response :ok
   end
 
-  test "should show sub_rep" do
+  test 'should not create sub_rep with invalid department_id' do
+    assert_no_difference('SubRep.count') do
+      post sub_reps_url, params: valid_params.merge(department_id: 0), headers: auth_headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    body = response.parsed_body
+    assert_includes body['status']['option'], 'Department'
+  end
+
+  test 'should show sub_rep' do
     get sub_rep_url(@sub_rep), as: :json
     assert_response :success
   end
 
-  test "should update sub_rep" do
-    patch sub_rep_url(@sub_rep), params: { sub_rep: { department_id: @sub_rep.department_id, email: @sub_rep.email, grade_id: @sub_rep.grade_id, group_id: @sub_rep.group_id, name: @sub_rep.name, tel: @sub_rep.tel } }, as: :json
-    assert_response 200
+  test 'should update sub_rep' do
+    patch sub_rep_url(@sub_rep), params: valid_params, headers: auth_headers, as: :json
+    assert_response :ok
   end
 
-  test "should destroy sub_rep" do
+  test 'should not update sub_rep with invalid department_id' do
+    patch sub_rep_url(@sub_rep), params: valid_params.merge(department_id: 0), headers: auth_headers, as: :json
+    assert_response :unprocessable_entity
+  end
+
+  test 'should destroy sub_rep' do
     assert_difference('SubRep.count', -1) do
-      delete sub_rep_url(@sub_rep), as: :json
+      delete sub_rep_url(@sub_rep), headers: auth_headers, as: :json
     end
 
-    assert_response 204
+    assert_response :ok
+  end
+
+  test 'create requires authentication' do
+    post sub_reps_url, params: valid_params, as: :json
+    assert_response :unauthorized
   end
 end

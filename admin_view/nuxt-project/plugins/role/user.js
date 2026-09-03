@@ -1,4 +1,10 @@
 export const userRole = {
+  dashboard: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
   employees: {
     read: false,
     create: false,
@@ -168,6 +174,30 @@ export const userRole = {
     delete: false,
   },
   announcements: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  group_identify: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  cooking_process_orders: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  order_status: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  venue_maps: {
     read: false,
     create: false,
     update: false,

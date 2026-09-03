@@ -122,13 +122,14 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+        {{ message }}
+      </SnackBar>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import { mapState } from "vuex";
-import moment from "moment";
+import { downloadFile } from '~/utils/download-file';
 
 export default {
   auth: false,
@@ -175,9 +176,22 @@ export default {
       groupCategories: catRes.data,
       yearList: yearsRes.data,
       groupUrl: groupUrl,
+      message: "",
+      isOpenSnackBar: false,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
+    openSnackBar(message) {
+        this.message = message;
+        this.isOpenSnackBar = true;
+        setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
@@ -235,7 +249,8 @@ export default {
         "/print_pdf/group_info/" +
         this.group.group.id +
         "/output.pdf";
-      window.open(url, this.group.group.name + "_PDF");
+        await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+      this.openSnackBar("参加団体情報のPDFをダウンロードしました");
     },
     async printRentalItemsPDF() {
       const url =
@@ -243,7 +258,8 @@ export default {
         "/print_pdf/group/" +
         this.group.group.id +
         "/output.pdf";
-      window.open(url, this.group.group.name + "_PDF");
+        await downloadFile(this.$axios,url, this.group.group.name+ "_PDF");
+      this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
     },
   },
 };

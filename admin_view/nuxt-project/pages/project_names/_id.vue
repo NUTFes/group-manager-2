@@ -171,6 +171,8 @@ export default {
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     const url = "api/v1/get_group_from_project_name/" + this.$route.params.id;
     this.$axios
       .get(url, {

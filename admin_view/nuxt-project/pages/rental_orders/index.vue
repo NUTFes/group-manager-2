@@ -1,7 +1,7 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).rental_orders.read">
     <SubHeader pageTitle="物品申請一覧">
-      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).rental_orders.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -122,14 +122,19 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
     return {
+      // テンプレートの {{ message }} が参照するため、data() に宣言しておく
+      message: "",
       headers: ["ID", "参加団体", "委員", "貸出物品", "個数"],
       isOpenAddModal: false,
       rentalOrders: [],
@@ -139,16 +144,7 @@ export default {
       refRentalItemID: 0,
       refGroupCategories: "Categories",
       refCategoryID: 0,
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       searchText: "",
       groupID: null,
       rentalItemID: null,
@@ -161,6 +157,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('group_categories');
     const url =
       "/api/v1/get_refinement_rental_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id +
@@ -177,6 +174,7 @@ export default {
       rentalOrders: rentalOrdersRes.data,
       yearList: yearsRes.data,
       rentalItemsList: rentalItemsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
@@ -186,8 +184,48 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedRentalItemID = localStorage.getItem(this.$route.path + 'RefRentalItem');
+    if (storedRentalItemID) {
+      this.refRentalItemID = Number(storedRentalItemID);
+      this.updateFilters(this.refRentalItemID, this.rentalItemsList);
+    } else {
+      this.refRentalItems = 'Items';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Categories';
+    }
+
+    this.fetchFilteredData();
+    
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementRentalOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefRentalItem', this.refRentalItemID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -216,7 +254,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-
+    },
+    async fetchFilteredData() {
       this.rentalOrders = [];
       const refUrl =
         "/api/v1/get_refinement_rental_orders?fes_year_id=" +
@@ -229,8 +268,19 @@ export default {
       for (const res of refRes.data) {
         this.rentalOrders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchRentalOrders();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchRentalOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.rentalOrders = [];
       const searchUrl =
         "/api/v1/get_search_rental_orders?word=" + this.searchText;
@@ -286,7 +336,17 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
-      window.open(url, "物品申請一覧_CSV");
+      const succeeded = await downloadFile(
+        this.$axios,
+        url,
+        "物品申請一覧_CSV",
+        "text/csv"
+      );
+      this.openSnackBar(
+        succeeded
+          ? "物品申請一覧_CSVをダウンロードしました"
+          : "物品申請一覧_CSVのダウンロードに失敗しました"
+      );
     },
   },
 };

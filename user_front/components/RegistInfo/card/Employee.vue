@@ -60,14 +60,14 @@ const openDeleteModal = () => {
     </template>
   </RegistInfoNarrowCard>
   <RegistInfoDeleteEmployee
-    v-if="isEditModal"
-    v-model:delete-employee="isEditModal"
+    v-if="isDeleteModal"
+    v-model:delete-employee="isDeleteModal"
     :id="id"
     @reload-employee="reloadEmployee()"
   />
   <RegistInfoEditEmployee
-    v-if="isDeleteModal"
-    v-model:edit-employee="isDeleteModal"
+    v-if="isEditModal"
+    v-model:edit-employee="isEditModal"
     :id="id"
     :group-id="groupId"
     :name="name"

@@ -49,6 +49,22 @@ export default {
     display: none;
 }
 
+.add-modal input[type="radio"] {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
+.add-modal input[type="radio"] + label {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
 .add-modal_content input:focus,
 .add-modal_content textarea:focus {
   border: 1px solid var(--accent-7);
@@ -84,7 +100,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   flex-flow: column;
   gap: 25px;
@@ -92,7 +108,7 @@ export default {
 
 .add-modal_content div {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-flow: column;
   gap: 10px;

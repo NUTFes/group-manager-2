@@ -1,63 +1,70 @@
 <% @groups.each do |group| %>
+<% fes_dates_by_day_num = group.fes_year.fes_dates.index_by(&:days_num) %>
+<% day1_date = fes_dates_by_day_num[1]&.date %>
+<% day2_date = fes_dates_by_day_num[2]&.date %>
+<% pickup_date = fes_dates_by_day_num[0]&.date %>
+<% return_date = fes_dates_by_day_num[3]&.date %>
 <div class="page-break">
-<h1>物品貸出表</h1>
+<h1><%= t('print_pdf.output_all_groups_rental_items.title') %></h1>
 
 <div class="padding-top">
-  <h2>参加団体情報</h2>
+  <h2><%= t('print_pdf.output_all_groups_rental_items.sections.participating_org') %></h2>
   <table class="info">
     <tbody>
       <tr>
-        <th>識別番号</th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.number') %></th>
         <td colspan=2><%= group.number %></td>
       </tr>
       <tr style="height:60px">
-        <th>団体名</th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.name') %></th>
         <td colspan=2><%= group.name %></td>
       </tr>
       <tr>
-        <th>分類</th>
-        <td colspan=2><%= group.group_category.name %></td>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.category') %></th>
+        <td colspan=2><%= @pdf_locale == :en && group.group_category.name_en.present? ? group.group_category.name_en : group.group_category.name %></td>
       </tr>
       <tr>
-        <th rowspan=2>活動時間</th>
-        <td><%= group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 1).first.date %>（1日目）</td>
-        <td>10:00～17:00</td>
+        <th rowspan=2><%= t('print_pdf.output_all_groups_rental_items.org.activity_time') %></th>
+        <td><%= day1_date %><%= t('print_pdf.output_all_groups_rental_items.org.day1_label') %></td>
+        <td>10:00-17:00</td>
       </tr>
       <tr>
-        <td><%= group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 2).first.date %>（2日目）</td>
-        <td>10:00～16:00</td>
+        <td><%= day2_date %><%= t('print_pdf.output_all_groups_rental_items.org.day2_label') %></td>
+        <td>10:00-16:00</td>
       </tr>
       <tr>
-        <th>場所</th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.location') %></th>
         <td colspan=2><%= group.place %></td>
       </tr>
       <tr>
-        <th>使用電力</th>
-        <td colspan=2><%= group.sum_power_orders %> [w]</td>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.power') %></th>
+        <td colspan=2><%= group.sum_power_orders %> [W]</td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <div class="padding-top">
-  <h2>貸出物品一覧</h2>
+  <h2><%= t('print_pdf.output_all_groups_rental_items.sections.rental_items') %></h2>
   <table class="items">
     <tr>
-      <th class = "large-box">物品名</th>
-      <th class = "large-box">借りる場所</th>
-      <th class = "small-box">数量</th>
-      <th class = "large-box">貸出日</th>
-      <th class = "large-box">返却日</th>
-      <th class = "small-box">借用チェック</th>
-      <th class = "small-box">返却チェック</th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.item_name') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.stock_location') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.rental_location') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.quantity') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_date') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_date') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_confirmation') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_confirmation') %></th>
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= assign_rental_item.rental_item.name %></td>
-      <td><%= assign_rental_item.stocker_place.name %></td>
+      <td><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
+      <td><%= assign_rental_item.stock_place_name(locale: @pdf_locale) %></td>
+      <td><%= assign_rental_item.rental_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 0)&.date %>(準備日)</td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 3)&.date %>(片付け日)</td>
+      <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
+      <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
       <td></td>
       <td></td>
     </tr>
@@ -66,10 +73,10 @@
 
   <br>
   <p>
-  《注意事項》<br><br>
-  ● 物品は借用・返却場所を間違えないようにしてください。<br>
-  ● 借用および返却時は貸出場所にいる実行委員のチェックを受けてください。<br>
-  ● 備品等は絶対に汚さないように使用し、綺麗にしてから返却してください。 
+  <%= t('print_pdf.output_all_groups_rental_items.precautions.title') %><br><br>
+  <% Array(t('print_pdf.output_all_groups_rental_items.precautions.items')).each do |note| %>
+    ● <%= note %><br>
+  <% end %>
   </p>
 </div>
 </div>

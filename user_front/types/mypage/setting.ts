@@ -31,7 +31,8 @@ interface Data{
   is_regist_food_product: boolean
   is_regist_group: boolean
   is_edit_public_relation: boolean
-  is_edit_vanue_map: boolean | undefined
+  is_edit_venue_map: boolean | undefined
+  is_edit_cooking_process: boolean | undefined
   updated_at: string
 }
 

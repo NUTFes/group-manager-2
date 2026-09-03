@@ -1,0 +1,181 @@
+---
+paths:
+  "/groups":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+    post:
+      tags:
+      - group
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Group"
+  "/groups/user/{user_id}":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      parameters:
+      - name: user_id
+        in: path
+        description: user_id
+        required: true
+        schema:
+          type: integer
+  "/groups/{id}":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - group
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: group description
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Group"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - group
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: group description
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Group"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - group
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

@@ -1,0 +1,65 @@
+services:
+  cloudflare:
+    image: cloudflare/cloudflared
+    container_name: cloudflare
+    volumes:
+      - ./cloudflare/prod:/home/nonroot/.cloudflared
+    command: tunnel run
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: prod-api
+    volumes: [./api:/myapp]
+    env_file: [.env]
+    environment:
+      # Spring 4.7.0はconfig.enable_reloadingが無効な環境（production）でも
+      # bin/rails経由で起動しようとして異常終了するため、production実行時は無効化する。
+      DISABLE_SPRING: "1"
+
+  user:
+    build:
+      context: ./user
+      dockerfile: prod.Dockerfile
+      args:
+      - NODE_ENV=${NODE_ENV}
+      - APP_ENV=${APP_ENV}
+      - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
+      - IMGUR_CLIENT_SECRET=${IMGUR_CLIENT_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+    container_name: prod-view
+    ports:
+      - "8003:3000"
+    env_file: [.env]
+
+  # 旧
+  # user_front:
+  #   build: ./user_front
+  #   container_name: "GM2-USER-FRONT"
+  #   command: bash -c "npm run start"
+  #   volumes: [./user_front:/app]
+  #   env_file: [group-manager-2.env]
+  #   depends_on: [api]
+
+  admin_view:
+    build:
+      context: ./admin_view
+      dockerfile: prod.Dockerfile
+      args:
+        - VUE_APP_URL=${VUE_APP_URL}
+        - VUE_APP_API_URL=${VUE_APP_API_URL}
+        - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
+    container_name: prod-admin
+    env_file: [.env]
+    ports:
+      - "8000:3000"
+
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: "prod-dozzle-agent"
+    ports: ["7007:7007"]
+    command: agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

@@ -342,6 +342,7 @@ export default {
   },
   mounted() {
     this.getList();
+    window.scrollTo(0, 0);
   },
   methods: {
     getList() {

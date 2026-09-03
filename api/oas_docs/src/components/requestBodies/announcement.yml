@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    Announcement:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Announcement"

@@ -119,7 +119,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+;
 export default {
   auth: false,
   watchQuery: ["page"],
@@ -191,6 +192,10 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
+
   methods: {
     async refinementGroups(item_id, name_list) {
       // fes_yearで絞り込むとき
@@ -291,7 +296,7 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
-      window.open(url, "参加団体一覧_CSV");
+      await downloadFile(this.$axios,url, "参加団体一覧_CSV", "text/csv");
       this.openSnackBar("参加団体一覧をダウンロードしました");
     },
   },

@@ -151,7 +151,7 @@ img {
     rgba(40, 40, 40, 0.9),
     rgba(40, 40, 40, 0.8)
   );
-  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 1);
 }
 .header-contents {
   width: 100%;
@@ -170,7 +170,7 @@ img {
 .header-option {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex-grow: 1;
   gap: 15px;
 }

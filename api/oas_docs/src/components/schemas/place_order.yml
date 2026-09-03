@@ -1,0 +1,9 @@
+---
+components:
+  schemas:
+    PlaceOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

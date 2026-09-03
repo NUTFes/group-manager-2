@@ -1,55 +1,54 @@
+# frozen_string_literal: true
+
 class StageOrder < ApplicationRecord
-    belongs_to :group
-    belongs_to :fes_date
-    has_one :assign_stage, dependent: :destroy
+  belongs_to :group
+  belongs_to :fes_date
+  has_one :assign_stage, dependent: :destroy
+  belongs_to :first_stage_obj, class_name: 'Stage', foreign_key: 'stage_first', optional: true, inverse_of: false
+  belongs_to :second_stage_obj, class_name: 'Stage', foreign_key: 'stage_second', optional: true, inverse_of: false
 
-    def self.with_groups
-      @record = StageOrder.preload(:group)
-        .map{
-          |stage_order|
-          {
-            "stage_order": stage_order,
-            "stage_order_info": stage_order.to_info_h,
-            "group": stage_order.group
-          }
-        }
-    end
-
-    def self.with_group(stage_order_id)
-      stage_order = StageOrder.find(stage_order_id)
-      return {
-        "stage_order": stage_order,
-        "stage_order_info": stage_order.to_info_h,
-        "group": stage_order.group,
-        "venue_map": stage_order.group.venue_map 
+  def self.with_groups
+    @record = StageOrder.preload(:group, :first_stage_obj, :second_stage_obj)
+                        .map do |stage_order|
+      {
+        stage_order: stage_order,
+        stage_order_info: stage_order.to_info_h,
+        group: stage_order.group
       }
     end
+  end
 
-    def to_info_h
-      return {
-        "stage_order": self.nil? ? nil : self,
-        "is_sunny": self.is_sunny.nil? ,
-        "year": self.fes_date.fes_year.year_num,
-        "date": self.fes_date.date,
-        "day": self.fes_date.day,
-        "day_num": self.fes_date.days_num,
-        "stage_first": self.stage_first.nil? ? nil : _stage_name(self.stage_first),
-        "stage_second": self.stage_second.nil? ? nil : _stage_name(self.stage_second),
-        "use_time_interval": self.use_time_interval,
-        "prepare_time_interval": self.prepare_time_interval,
-        "cleanup_time_interval": self.cleanup_time_interval,
-        "prepare_start_time": self.prepare_start_time,
-        "performance_start_time": self.performance_start_time,
-        "performance_end_time": self.performance_end_time,
-        "cleanup_end_time": self.cleanup_end_time
-      }
-    end
+  def self.with_group(stage_order_id)
+    stage_order = StageOrder.find(stage_order_id)
+    return {
+      stage_order: stage_order,
+      stage_order_info: stage_order.to_info_h,
+      group: stage_order.group
+    }
+  end
 
-    def _stage_name(stage_id)
-      if Stage.where(id: stage_id).empty?
-        return nil
-      else
-        return Stage.find(stage_id).name
-      end
-    end
+  def to_info_h
+    return {
+      id: id,
+      group_id: group_id,
+      fes_date_id: fes_date_id,
+      stage_order: nil? ? nil : self,
+      is_sunny: is_sunny,
+      year: fes_date.fes_year.year_num,
+      date: fes_date.date,
+      day: fes_date.day,
+      day_num: fes_date.days_num,
+      stage_first: stage_first,
+      stage_second: stage_second,
+      stage_first_name: first_stage_obj&.name,
+      stage_second_name: second_stage_obj&.name,
+      use_time_interval: use_time_interval,
+      prepare_time_interval: prepare_time_interval,
+      cleanup_time_interval: cleanup_time_interval,
+      prepare_start_time: prepare_start_time,
+      performance_start_time: performance_start_time,
+      performance_end_time: performance_end_time,
+      cleanup_end_time: cleanup_end_time
+    }
+  end
 end

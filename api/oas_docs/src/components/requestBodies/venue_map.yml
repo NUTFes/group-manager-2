@@ -1,0 +1,15 @@
+---
+components:
+  requestBodies:
+    VenueMap:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/VenueMap"
+            allOf:
+            - "$ref": "#/components/schemas/VenueMap"
+            - type: object
+              properties:
+                imgur_deletehash:
+                  type: string
+                  nullable: true
