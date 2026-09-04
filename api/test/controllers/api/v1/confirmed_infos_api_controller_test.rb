@@ -128,6 +128,26 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  # secretは単一の文字列しか受け付けない。
+  # 配列で渡せると1リクエストで多数の候補を試せてしまい、ハッシュで渡すとクエリ生成時に例外になる。
+  test 'returns 404 when the secret is given as an array' do
+    get confirmed_info_url(@group), params: { secret: %w[a b] }
+
+    assert_response :not_found
+  end
+
+  test 'returns 404 when the correct secret is hidden in an array' do
+    get confirmed_info_url(@group), params: { secret: ['x', @group.secret] }
+
+    assert_response :not_found
+  end
+
+  test 'returns 404 when the secret is given as a hash' do
+    get confirmed_info_url(@group), params: { secret: { x: 'a' } }
+
+    assert_response :not_found
+  end
+
   # group_secrets.secret は utf8mb4_bin なので大文字小文字を区別する。
   # 照合順序が既定に戻ると探索空間が縮むため、API層でも固定しておく。
   test 'returns 404 when the secret differs only in letter case' do
@@ -140,8 +160,12 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
 
   private
 
+  def confirmed_info_url(group)
+    "/api/v1/get_confirmed_info_for_user_view/#{group.id}"
+  end
+
   def confirmed_info_path(group, secret)
-    "/api/v1/get_confirmed_info_for_user_view/#{group.id}?secret=#{CGI.escape(secret.to_s)}"
+    "#{confirmed_info_url(group)}?secret=#{CGI.escape(secret.to_s)}"
   end
 
   def find_assign_rental_item(rental_item_name)
