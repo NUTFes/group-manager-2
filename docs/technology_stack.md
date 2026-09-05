@@ -58,6 +58,23 @@
 
 ---
 
+## 📁 rental/ (貸出・返却記録用フロントエンド)
+
+### Next.js技術スタック
+
+- **Next.js** 16.3.4 (App Router)
+- **React** 19.2.8
+- **TypeScript**
+- **Tailwind CSS** 4.x
+- **pnpm** 10.7.0 (パッケージマネージャー)
+
+### Next.js判断方法 🔍
+
+- **認証**: Cloudflare Zero Trust によるアクセス制御が前提のため、アプリ側にログイン画面・認証コードは持たない
+- その他の判断方法は `user/` と同様(`package.json` の `next` バージョン等)
+
+---
+
 ## 📁 admin_view/nuxt-project/ (管理者向けフロントエンド)
 
 ### Nuxt2技術スタック
@@ -166,6 +183,7 @@
 group-manager-2/
 ├── api/              # Rails API (Ruby 3.0.7, Rails 6.1.3.1)
 ├── user/             # Next.js 15 + React 19 + TypeScript
+├── rental/           # Next.js 16 + React 19 + TypeScript (スタッフ向け貸出・返却記録)
 ├── admin_view/       # Nuxt.js 2 + Vue 2 + Vuetify
 └── user_front/       # Nuxt.js 3 + Vue 3 + TypeScript
 ```
@@ -175,6 +193,7 @@ group-manager-2/
 - **バックエンド**: Rails API (RESTful API)
 - **フロントエンド**:
   - ユーザー向け: Next.js 15 (最新版) と Nuxt.js 3 (2つの実装)
+  - スタッフ向け(貸出・返却記録): Next.js 16。Cloudflare Zero Trust でアクセス制御
   - 管理者向け: Nuxt.js 2 (レガシー)
 
 ---

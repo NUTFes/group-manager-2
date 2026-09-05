@@ -5,6 +5,7 @@ Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成さ
 - `api/`: Rails 6.1 バックエンド。本体コードは `app/`、マイグレーションと Seed は `db/`、OpenAPI の元データは `oas_docs/` にあります。
 - `user/`: 参加団体向け Next.js 15 クライアント。UI は `src/components`、状態管理は `src/hooks`、API 呼び出しは `src/api` に集約します。
 - `user_front/`: 公開用 Nuxt 3 SPA。実行委員向け旧管理画面は `admin_view/nuxt-project` に残っています。
+- `rental/`: 物品の貸出・返却記録用 Next.js クライアント(スタッフ向け)。Cloudflare Zero Trust でアクセス制御する前提のため、アプリ側にログイン画面・認証コードは持たせません。
 - Docker 関連は `Makefile` と `compose*.yml`、各種 Dockerfile にまとまっています。インフラ設定はここで完結させてください。
 
 ## ビルド・テスト・開発コマンド
