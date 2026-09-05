@@ -13,9 +13,13 @@ jobs:
   Code-Check:
     name: Code-Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       # GitHubリポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # pnpm を明示的にセットアップしてから setup-node の cache を使う
       - name: Setup pnpm

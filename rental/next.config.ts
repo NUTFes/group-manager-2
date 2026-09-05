@@ -8,8 +8,8 @@ const apiUrlByEnv: Record<string, string> = {
 
 const APP_ENV = process.env.APP_ENV || "development";
 const NEXT_PUBLIC_API_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  apiUrlByEnv[APP_ENV] ??
+  process.env.NEXT_PUBLIC_API_URL?.trim() ||
+  apiUrlByEnv[APP_ENV] ||
   apiUrlByEnv.development;
 
 const nextConfig: NextConfig = {

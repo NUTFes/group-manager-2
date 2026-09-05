@@ -8,6 +8,10 @@ RUN npm install -g corepack@0.34.0 \
 
 # 作業ディレクトリを設定
 WORKDIR /app
+RUN chown node:node /app
+
+# 非rootユーザーで実行する
+USER node
 
 # コンテナ起動時に実行するデフォルトコマンド
 CMD ["pnpm", "run", "dev"]
