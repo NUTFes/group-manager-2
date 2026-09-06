@@ -664,6 +664,7 @@ paths:
         required: true
         schema:
           type: string
+      security: []
   "/api/v1/get_contact_person_index_for_admin_view":
     get:
       tags:
