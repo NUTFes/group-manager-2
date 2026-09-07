@@ -76,6 +76,29 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 500, response.parsed_body.dig('status', 'code')
   end
 
+  # 同一(団体×在庫場所×物品)の割当が既にある場合は新規作成せず、編集を促す
+  test 'should not create a duplicate assignment and prompts to edit the existing one' do
+    AssignRentalItem.create!(
+      group_id: groups(:one).id,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      num: 2
+    )
+
+    assert_no_difference('AssignRentalItem.count') do
+      post assign_rental_items_url,
+           params: {
+             rentalItemId: @assign_rental_item.rental_item_id,
+             stockerPlaceId: @stocker_place.id,
+             items: [{ group_id: groups(:one).id, num: 5 }]
+           },
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_match(/編集/, response.parsed_body.dig('status', 'option').to_s)
+  end
+
   test 'should show assign_rental_item' do
     get assign_rental_item_url(@assign_rental_item), as: :json
     assert_response :success

@@ -166,6 +166,9 @@
           </select>
         </div>
         <div v-if="assignItemName" class="assign-item-list-wrapper">
+          <p class="assign-item-list-note">
+            ※ この物品に既に割当のある団体は選択肢に出ません。個数・備考の変更は一覧の「編集」から行ってください。
+          </p>
           <div
             v-for="(assign, index) in assignItemsNumAndGroup"
             :key="index"
@@ -179,12 +182,16 @@
                 </div>
                 <select v-model="assign.group" class="assign-item-list-group-select">
                   <option disabled value="">選択してください</option>
-                  <!-- 団体名を重複して選択できないようにする -->
+                  <!-- モーダル内で重複選択した団体・既にDBに割当がある団体は選ばせない -->
                   <option
                     v-for="group in groups"
                     :key="group.id"
                     :value="group.id"
-                    v-if="!getSelectedGroupIds().includes(group.id) || assign.group === group.id"
+                    v-if="
+                      (!getSelectedGroupIds().includes(group.id) &&
+                        !existingAssignedGroupIds().includes(group.id)) ||
+                      assign.group === group.id
+                    "
                   >
                     {{ group.name }}
                   </option>
@@ -621,6 +628,14 @@ export default {
     getSelectedGroupIds() {
       return this.assignItemsNumAndGroup.map((assign) => assign.group);
     },
+    // 選択中の物品について、この在庫場所に既に割当がある団体ID
+    existingAssignedGroupIds() {
+      return this.assignRentalItems
+        .filter(
+          (a) => Number(a.rental_item.id) === Number(this.assignItemName)
+        )
+        .map((a) => a.group.id);
+    },
     addAssignItem() {
       this.assignItemsNumAndGroup.push({ group: "", num: 0, remark: "" });
     },
@@ -668,8 +683,13 @@ export default {
       this.closeAssignAddModal();
     } catch (error) {
       console.error(error);
-      alert('登録処理中にエラーが発生しました。')};
-    },
+      const serverMessage =
+        error.response &&
+        error.response.data &&
+        error.response.data.status &&
+        error.response.data.status.option;
+      alert(serverMessage || '登録処理中にエラーが発生しました。');
+    }},
 
     async editAssign() {
       // 備考は自由記述のためクエリ文字列ではなくJSONボディで送る
@@ -832,6 +852,11 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+.assign-item-list-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--accent-5);
 }
 .assign-item-list-container {
   display: flex;
