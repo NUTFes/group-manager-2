@@ -27,3 +27,9 @@ table, td, th, tr{
 tbody {
   page-break-inside: avoid;
 }
+
+.remark-cell {
+  word-break: break-all;
+  white-space: normal;
+  font-size: 0.85em;
+}

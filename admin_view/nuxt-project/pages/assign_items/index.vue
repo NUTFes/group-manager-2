@@ -181,27 +181,60 @@
             <div v-if="getStockAssignments(stock.id).length === 0" class="empty-state">
               ここにドロップ
             </div>
-            <div 
-              v-else 
+            <div
+              v-else
               v-for="assign in getStockAssignments(stock.id)"
-              :key="assign.id" 
+              :key="assign.id"
               class="assignment-item"
             >
-              <div class="assign-group-name">{{ getGroupName(assign.groupId) }}</div>
+              <div class="assignment-item-header">
+                <div class="assignment-item-identity">
+                  <span class="assignment-item-caption">割り当て団体</span>
+                  <div class="assign-group-name">{{ getGroupName(assign.groupId) }}</div>
+                </div>
+                <button
+                  v-if="$role(roleID).assign_items.delete"
+                  class="btn-delete"
+                  type="button"
+                  :aria-label="`${getGroupName(assign.groupId)}の割り当てを削除`"
+                  @click="openAssignDeleteModal(assign.id)"
+                >
+                  <span class="material-icons" aria-hidden="true">delete</span>
+                  <span>削除</span>
+                </button>
+              </div>
               <div class="assign-inputs">
                 <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
-                  <span class="input-label">{{ getItemName(itemId) }}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    :disabled="!$role(roleID).assign_items.update"
-                    :value="assign.assigned[itemId] || 0"
-                    @blur="updateManualAssign($event, assign, itemId)"
-                    @keyup.enter="$event.target.blur()"
-                    class="num-input highlight"
-                  >
+                  <div class="assign-input-group-header">
+                    <span class="input-label">{{ getItemName(itemId) }}</span>
+                  </div>
+                  <label class="assign-field">
+                    <span class="field-label">個数</span>
+                    <input
+                      type="number"
+                      min="0"
+                      :aria-label="getItemName(itemId) + 'の割り当て個数'"
+                      :disabled="!$role(roleID).assign_items.update"
+                      :value="assign.assigned[itemId] || 0"
+                      @blur="updateManualAssign($event, assign, itemId)"
+                      @keyup.enter="$event.target.blur()"
+                      class="num-input highlight"
+                    >
+                  </label>
+                  <label class="assign-field">
+                    <span class="field-label">備考</span>
+                    <input
+                      type="text"
+                      :aria-label="getItemName(itemId) + 'の備考'"
+                      :disabled="!$role(roleID).assign_items.update"
+                      :value="assign.remarks[itemId] || ''"
+                      placeholder="番号・名称など"
+                      @blur="saveAssignRemark($event, assign, itemId)"
+                      @keyup.enter="$event.target.blur()"
+                      class="remark-input"
+                    >
+                  </label>
                 </div>
-                <button v-if="$role(roleID).assign_items.delete" class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
               </div>
           </div>
         </div>
@@ -442,23 +475,30 @@ export default {
 
         if (!assignMap[key]) {
           const groupInfo = groups.find(g => Number(g.id) === Number(groupId));
-          assignMap[key] = { 
-            id: key, 
-            groupId: Number(groupId), 
-            stockId: Number(stockId), 
+          assignMap[key] = {
+            id: key,
+            groupId: Number(groupId),
+            stockId: Number(stockId),
             groupName: groupInfo ? groupInfo.name : '不明',
             assigned: {},
-            dbIds: [] 
+            remarks: {},
+            dbIds: []
           };
         }
-        
+
         // 数量を加算
         assignMap[key].assigned[itemKey] = (assignMap[key].assigned[itemKey] || 0) + Number(a.num || 0);
+
+        // 備考は物品IDごとに先頭レコードのものを表示・更新対象にする
+        if (!(itemKey in assignMap[key].remarks)) {
+          assignMap[key].remarks[itemKey] = a.remark || '';
+        }
 
         if (a.id) {
           assignMap[key].dbIds.push({
             id: a.id,
-            itemId: itemKey
+            itemId: itemKey,
+            remark: a.remark || ''
           });
         }
       });
@@ -498,6 +538,8 @@ export default {
         groupName: group.name,
         stockId: stock.id,
         assigned: {},
+        remarks: {},
+        dbIds: [],
         baseItemIds: [...this.activeItemIds]
       };
 
@@ -515,6 +557,7 @@ export default {
 
       this.items.forEach(item => {
         if (newAssignment.assigned[item.id] === undefined) newAssignment.assigned[item.id] = 0;
+        newAssignment.remarks[item.id] = '';
       });
 
       this.assignments.push(newAssignment);
@@ -524,7 +567,7 @@ export default {
           const assignedNum = newAssignment.assigned[itemId];
           if (assignedNum > 0) {
             const payload = {
-              items: [{ group_id: newAssignment.groupId, num: assignedNum }],
+              items: [{ group_id: newAssignment.groupId, num: assignedNum, remark: null }],
               rentalItemId: Number(itemId),
               stockerPlaceId: newAssignment.stockId
             };
@@ -544,7 +587,7 @@ export default {
           results.forEach(({ itemId, res }) => {
             (Array.isArray(res) ? res : [res]).forEach(record => {
               if (record && record.id) {
-                newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId) });
+                newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId), remark: '' });
               }
             });
           });
@@ -570,13 +613,16 @@ export default {
       this.$set(assign.assigned, itemId, newValue);
 
       // 編集対象のレコード（dbId）を探す
-      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
+      const dbRecord = (assign.dbIds || []).find(db => Number(db.itemId) === Number(itemId));
+      // 個数だけを変えても備考が消えないよう、現在の備考を一緒に送る
+      const currentRemark = (assign.remarks[itemId] || '').trim();
 
       try {
         if (newValue === 0 && dbRecord) {
           // パターンA: 0になったら割り当て解除（DELETE）
           await this.$axios.$delete(`/assign_rental_items/${dbRecord.id}`);
           assign.dbIds = assign.dbIds.filter(db => db.id !== dbRecord.id);
+          this.$set(assign.remarks, itemId, '');
 
         } else if (dbRecord) {
           // PUT処理
@@ -584,28 +630,26 @@ export default {
             group_id: assign.groupId,
             num: newValue,
             rental_item_id: Number(itemId),
-            stocker_place_id: assign.stockId
+            stocker_place_id: assign.stockId,
+            remark: currentRemark || null
           };
 
-          // 🚨 ここで送信直前のデータをブラウザのコンソールで確認！
-          console.log("PUT URL ID:", dbRecord.id);
-          console.log("PUT Payload:", putPayload);
-
           await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
+          dbRecord.remark = currentRemark;
 
         } else if (!dbRecord && newValue > 0) {
           // これまで0だったところに新規で数を入力した場合（POST）
           const postPayload = {
-            items: [{ group_id: assign.groupId, num: newValue }],
+            items: [{ group_id: assign.groupId, num: newValue, remark: currentRemark || null }],
             rentalItemId: Number(itemId),
             stockerPlaceId: assign.stockId
           };
           const res = await this.$axios.$post('/assign_rental_items', postPayload);
-          
+
           // 新しく生成された dbId を保存
           const resData = Array.isArray(res.data) ? res.data[0] : res.data;
           if (resData && resData.id) {
-            assign.dbIds.push({ id: resData.id, itemId: Number(itemId) });
+            assign.dbIds.push({ id: resData.id, itemId: Number(itemId), remark: currentRemark });
           }
         }
       } catch (error) {
@@ -616,6 +660,59 @@ export default {
         // エラー時は画面の表示を元の数字に戻す
         assign.assigned[itemId] = oldValue;
         alert("更新に失敗しました。在庫数の上限を超えていないか等を確認してください。");
+      }
+    },
+
+    // 備考の変更と保存処理（個数と同じく入力終了時に保存する）
+    async saveAssignRemark(e, assign, itemId) {
+      if (!this.$role(this.roleID).assign_items.update) return;
+
+      const newRemark = (e.target.value || '').trim();
+      const oldRemark = (assign.remarks[itemId] || '').trim();
+      if (newRemark === oldRemark) return; // 変更がなければ終了
+
+      this.$set(assign.remarks, itemId, newRemark);
+
+      if (!assign.dbIds) assign.dbIds = [];
+      const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
+      const currentNum = assign.assigned[itemId] || 0;
+
+      try {
+        if (dbRecord) {
+          const putPayload = {
+            group_id: assign.groupId,
+            num: currentNum,
+            rental_item_id: Number(itemId),
+            stocker_place_id: assign.stockId,
+            remark: newRemark || null
+          };
+          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
+          dbRecord.remark = newRemark;
+
+        } else if (currentNum > 0) {
+          // レコード未作成だが個数が入っている場合は新規作成して備考も保存
+          const postPayload = {
+            items: [{ group_id: assign.groupId, num: currentNum, remark: newRemark || null }],
+            rentalItemId: Number(itemId),
+            stockerPlaceId: assign.stockId
+          };
+          const res = await this.$axios.$post('/assign_rental_items', postPayload);
+          const resData = Array.isArray(res.data) ? res.data[0] : res.data;
+          if (resData && resData.id) {
+            assign.dbIds.push({ id: resData.id, itemId: Number(itemId), remark: newRemark });
+          }
+
+        } else {
+          // 個数が 0 のままでは備考だけを保存できない
+          this.$set(assign.remarks, itemId, oldRemark);
+          e.target.value = oldRemark;
+          alert("備考を保存するには個数を1以上にしてください。");
+        }
+      } catch (error) {
+        console.error("備考の更新に失敗しました", error.response ? error.response.data : error);
+        this.$set(assign.remarks, itemId, oldRemark);
+        e.target.value = oldRemark;
+        alert("備考の更新に失敗しました。時間をおいて再度お試しください。");
       }
     },
 
@@ -814,15 +911,25 @@ export default {
 
 /* ボタン類 */
 .btn-delete {
-  background: none;
-  border: none;
-  color: #cbd5e1;
-  font-size: 16px;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #b91c1c;
   cursor: pointer;
-  padding: 12px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 13px;
+  gap: 4px;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 10px;
 }
 .btn-delete:hover {
-  color: #ef4444;
+  background-color: #fef2f2;
+}
+.btn-delete .material-icons {
+  font-size: 16px;
 }
 
 /* モーダル */
@@ -1148,37 +1255,82 @@ export default {
   border-radius: 4px;
 }
 .assignment-item {
-  display: flex;
-  align-items: center;
+  display: grid;
+  gap: 12px;
   background-color: white;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+.assignment-item-header {
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+.assignment-item-identity {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.assignment-item-caption {
+  color: #94a3b8;
+  font-size: 11px;
+}
 .assign-group-name {
-  flex: 1;
   font-weight: bold;
   font-size: 14px;
   color: #1e293b;
-  padding-left: 12px;
 }
 .assign-inputs {
-  display: flex;
-  flex: 1;
-  gap: 8px;
-  margin-right: 12px;
-  justify-content: flex-end;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 .assign-input-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+.assign-input-group-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 6px;
+}
+.assign-field {
   align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 42px minmax(0, 1fr);
+}
+.assign-field .num-input {
+  justify-self: start;
+  width: 80px;
+}
+.field-label {
+  color: #64748b;
+  font-size: 12px;
 }
 .input-label {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 4px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+.remark-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+.remark-input:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
 }
 </style>

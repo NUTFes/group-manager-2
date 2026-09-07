@@ -86,9 +86,37 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     rows = parse_csv(response.body)
-    assert_equal %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年], rows.first
+    assert_equal %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 備考 開催年], rows.first
     assert_equal '体育館倉庫', rows.second[5]
     assert_equal '第1体育館前', rows.second[6]
+  end
+
+  # 割当ごとの備考(remark)が出力されること
+  test 'rental items list csv outputs remark' do
+    AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
+                             stocker_place: @stocker_place, rental_place: @rental_place,
+                             remark: 'テント1・2（正面入口側）')
+
+    get "/api/v1/get_rental_items_list_csv/#{@fes_year.id}", headers: auth_headers(@user)
+
+    assert_response :success
+    rows = parse_csv(response.body)
+    assert_equal '備考', rows.first[8]
+    assert_equal 'テント1・2（正面入口側）', rows.second[8]
+  end
+
+  # 参加団体情報リストまとめCSVにも備考(remark)列が出力されること
+  test 'assign rental items csv outputs remark' do
+    AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
+                             stocker_place: @stocker_place, rental_place: @rental_place,
+                             remark: '入口1番')
+
+    get "/api/v1/get_assign_rental_items_csv/#{@fes_year.id}", headers: auth_headers(@user)
+
+    assert_response :success
+    rows = parse_csv(response.body)
+    assert_equal '備考', rows.first[9]
+    assert_equal '入口1番', rows.second[9]
   end
 
   # 貸出場所調整で未設定の場合は空欄にする
