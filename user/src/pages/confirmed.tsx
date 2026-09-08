@@ -42,7 +42,9 @@ export default function ConfirmedPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <div className="m-4 flex justify-center lg:m-10">
-        <div className="w-full max-w-[600px]">
+        {/* FormContainer が inline-flex で中身の幅までしか広がらないため、
+            縦方向の flex にして stretch させ、404時も枠が左に寄らないようにする */}
+        <div className="flex w-full max-w-[600px] flex-col">
           <ConfirmedInfo
             isLoading={isLoading}
             hasError={hasError}
