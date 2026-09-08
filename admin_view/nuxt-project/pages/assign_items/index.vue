@@ -155,10 +155,17 @@
       <section class="stock-area">
         <div class="order-group-header">
           <h2>割り当て先</h2>
+          <SearchDropDown
+          :nameList="placeCategoryList"
+          :on_click="refinementPlaces"
+          value="formatted_name"
+        >
+          {{ refPlaces }}
+        </SearchDropDown>
         </div>
       <div class="cards">
         <div 
-          v-for="stock in stocks" 
+          v-for="stock in filteredPlaces" 
           :key="stock.id" 
           @dragover.prevent 
           @drop="handleDropOnStock($event, stock)" 
@@ -170,7 +177,7 @@
             <div class="stock-inventory">
               <div v-for="itemId in activeItemIds" :key="itemId" class="inventory-item">
                 <span class="inventory-label">{{ getItemName(itemId) }}</span>
-                <span  class = "inventory-value" :class="getRemainingStock(stock, itemId) < 0 ? 'text-danger' : 'text-normal'">
+                <span class="inventory-value" :class="getRemainingStock(stock, itemId) < 0 ? 'text-danger' : 'text-normal'">
                   {{ getRemainingStock(stock, itemId) }}<span class="inventory-total">/{{ stock.inventory[itemId] || 0 }}</span>
                 </span>
               </div>
@@ -238,6 +245,7 @@ export default {
       items: [],
       groups: [],
       stocks: [],
+      places: [],
       assignments: [],
       modalSettings: {},
       activeSettings: {},
@@ -249,6 +257,9 @@ export default {
       refYears: "Year",
       refCategoryID: 0,
       refGroupCategories: "ALL",
+      placeCategoryList: [],
+      refPlaceID: 0,
+      refPlaces: "ALL",
       ruleOptions: [
       { id: 'requested', label: '申請数' },
       { id: 'fixed', label: '固定値' }
@@ -260,10 +271,11 @@ export default {
 
  // 初期マスターデータの取得 (年度とカテゴリー)
   async asyncData({ $axios }) {
-    const [currentYearRes, yearsRes, categoryRes] = await Promise.all([
+    const [currentYearRes, yearsRes, categoryRes, placeCategoriesRes] = await Promise.all([
     $axios.$get("/user_page_settings/1"),
     $axios.$get("/fes_years"),
     $axios.$get("/group_categories"),
+    $axios.$get("/place_categories").catch(() => ({ data: [] }))
    ]);
 
     const currentYearData = yearsRes.data.find(
@@ -275,6 +287,9 @@ export default {
       groupCategories: categoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYearData ? currentYearData.year_num : "Year",
+      placeCategoryList: placeCategoriesRes.data || [],
+      refPlaceID: 0,
+      refPlaces: "ALL"
     };
   },
 
@@ -304,7 +319,19 @@ export default {
       }
 
       return result;
-  }
+  },
+  validPlaceCategoryIds() {
+      if (this.refPlaceID === 0) return [];
+      const category = this.placeCategoryList.find(placeCategory => Number(placeCategory.id) === this.refPlaceID);
+      if (!category) return [this.refPlaceID];
+      return [this.refPlaceID, ...(category.descendant_ids || [])].map(Number);
+    },
+    filteredPlaces() {
+      if (this.refPlaceID === 0) return this.stocks;
+      return this.stocks.filter(stock =>
+        this.validPlaceCategoryIds.includes(Number(stock.place_category_id))
+      );
+    },
   },
 
   mounted() {
@@ -359,9 +386,10 @@ export default {
         const assigns = Array.isArray(assignRes) ? assignRes : assignRes.data;
         const rentableItems = Array.isArray(rentableItemRes) ? rentableItemRes : rentableItemRes.data;
 
+        this.places = Array.isArray(places) ? places : [];
         this.groups = this.formatGroups(rawOrders, groupRaw, this.items);
-      this.stocks = this.formatStocks(stockerItems, places, this.items);
-      this.assignments = this.formatAssignments(assigns, rawOrders, rentableItems, this.items, groupRaw);
+        this.stocks = this.formatStocks(stockerItems, this.places, this.items);
+        this.assignments = this.formatAssignments(assigns, rawOrders, rentableItems, this.items, groupRaw);
 
     } catch (error) {
       console.error("データの取得に失敗", error);
@@ -406,8 +434,13 @@ export default {
       stockerItems.forEach(s => {
         const placeId = s.stocker_place_id;
         if (!stockMap[placeId]) {
-          const place = places.find(p => p.id === placeId);
-          stockMap[placeId] = { id: placeId, name: place ? place.name : '不明', inventory: {} };
+          const place = places.find(p => Number(p.id) === Number(placeId));
+          stockMap[placeId] = {
+            id: placeId,
+            name: place ? place.name : '不明',
+            place_category_id: place ? place.place_category_id : null,
+            inventory: {}
+          };
         }
         stockMap[placeId].inventory[s.rental_item_id] = s.num;
       });
@@ -587,10 +620,6 @@ export default {
             stocker_place_id: assign.stockId
           };
 
-          // 🚨 ここで送信直前のデータをブラウザのコンソールで確認！
-          console.log("PUT URL ID:", dbRecord.id);
-          console.log("PUT Payload:", putPayload);
-
           await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
 
         } else if (!dbRecord && newValue > 0) {
@@ -678,13 +707,28 @@ export default {
       this.isModalOpen = false;
     },
 
-    // 絞り込み制御
+    // 団体絞り込み制御
     refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
       localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
       localStorage.setItem(this.$route.path + "RefCategory", this.refCategoryID);
 
       this.fetchDataFromDB(); 
+    },
+    // 場所の絞り込み制御
+    refinementPlaces(item_id, name_list) {
+      if (name_list === this.placeCategoryList) {
+        this.refPlaceID = item_id;
+        const matchedPlace = name_list.find(x => x.id === item_id);
+
+        if (item_id === 0) {
+          this.refPlaces = "ALL";
+        } else if (!matchedPlace) {
+          this.refPlaces = "Place";
+        } else {
+          this.refPlaces = matchedPlace.name;
+        }
+      }
     },
 
     updateFilters(item_id, name_list) {
