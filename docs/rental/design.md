@@ -4,10 +4,10 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 版 | v0.1 |
+| 版 | v0.2（v0.1 からの変更: 全体進捗を団体ベースに、図を整理） |
 | 日付 | 2026-09-09 |
 | 作成 | haruto-kamijo |
-| 状態 | レビュー待ち |
+| 状態 | レビュー中 |
 
 この文書の目的は、体験・機能・API 方針について合意を取ることである。合意後、issue（親1 + フロント F1〜F10 + API A1〜A4）を起票し実装に入る。
 
@@ -63,18 +63,21 @@ Cloudflare Zero Trust（Access）で保護し、アプリ自体はログイン�
 ## 3. ユーザー体験
 
 ```mermaid
-flowchart LR
-  A[Access ログイン] --> S1["① 作業場所選択<br/>区分 + 場所"]
-  S1 --> S2["② 参加団体選択<br/>QR / 手動"]
-  S2 -->|手動| M[団体選択モーダル]
-  M --> S3
-  S2 -->|QR| S3["③ 貸出/返却 登録<br/>数量 + メモ"]
-  S3 -->|送信| S2
-  S3 -.団体変更.-> S2
-  S1 -.ヘッダー.-> S4["④ 進捗確認"]
-  S3 -.ヘッダー.-> S4
-  S4 -->|戻る| S3
+flowchart TD
+  L["Cloudflare Access でログイン"] --> S1
+  subgraph work["作業フロー（団体ごとに繰り返す）"]
+    direction TB
+    S1["① 作業場所選択<br/>区分（貸出 / 返却）と場所を選ぶ"]
+    S2["② 参加団体選択<br/>QR を読む、または手動で選ぶ"]
+    S3["③ 貸出・返却 登録<br/>数量とメモを入力して送信"]
+    S1 --> S2 --> S3
+    S3 -->|送信完了 / 団体変更| S2
+  end
+  work -.->|ヘッダーの「進捗確認」から| S4["④ 進捗確認<br/>全体の進捗と団体別の状況"]
+  S4 -->|戻る| work
 ```
+
+②の「手動で選ぶ」はボトムシートのモーダルで行う（別画面ではなく②の一部）。④はどの画面からでもヘッダーから開け、「戻る」で元の画面に戻る。
 
 ### ① 作業場所選択
 
@@ -90,7 +93,7 @@ flowchart LR
 
 ### ④ 進捗確認
 
-絞り込み（貸出・返却 / 拠点）。全体進捗バー（完了/全体、%）。団体別カード（未着手 / 進行中 / 完了、取りに来たもの・取りに来ていないもの）を表示する。
+絞り込み（貸出・返却 / 拠点）。全体進捗バーは**団体ベース**で、完了した団体数 / 対象団体数と % を表示する（完了=1、進行中・未着手=0 の二値カウント）。当日スタッフの関心は「あと何団体残っているか」なので、アイテム数ではなく団体数で数える。団体別カード（未着手 / 進行中 / 完了、取りに来たもの・取りに来ていないもの）を表示する。
 
 ### 画面イメージ
 
@@ -134,19 +137,38 @@ Figma ver.1 mobile の5画面。左上: 作業場所選択、中上: 参加団�
 
 団体ステータス（場所ごと）: ログ0件なら未着手、一部のアイテムに貸出残があれば進行中、全アイテムの貸出残が0なら完了。返却モードは返却残で同様に判定する。
 
+全体進捗（場所・区分ごと）= 完了した団体数 ÷ 対象団体数。団体ステータスを完了=1、進行中・未着手=0 の二値でカウントする。アイテム数ベースにはしない（「あと何団体残っているか」を見るため）。
+
 冪等性: `uid` はクライアント生成の UUID。再送は同内容なら 200、内容が違えば 409（別端末で記録済みの可能性があるため再取得を促す）を返す。
 
 ## 6. システム構成（API との接続）
 
 ```mermaid
 flowchart LR
-  Bx["スタッフのスマホ<br/>PWA"] -->|HTTPS| CF[Cloudflare Access]
-  CF -->|"Cf-Access-Jwt-Assertion<br/>Cf-Access-Authenticated-User-Email"| R["rental Next.js<br/>Route Handler = BFF"]
-  R -->|"http://api:3000<br/>X-Rental-Api-Token + 記録者メール"| API[Rails API]
-  API --> DB[(MySQL)]
+  subgraph phone["スタッフのスマホ"]
+    PWA["rental PWA"]
+  end
+  subgraph cf["Cloudflare"]
+    ACC["Access<br/>ログインと認可"]
+  end
+  subgraph srv["サーバー（docker compose）"]
+    BFF["rental Next.js<br/>Route Handler（BFF）"]
+    API["Rails API"]
+    DB[("MySQL")]
+  end
+  PWA -->|"① HTTPS"| ACC
+  ACC -->|"② 認証済みリクエスト<br/>＋ ユーザーのメール"| BFF
+  BFF -->|"③ サービストークン<br/>＋ 記録者メール"| API
+  API --> DB
 ```
 
-ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。BFF が JWT を検証し、API には BFF 専用トークンと記録者メールを渡す。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
+| 区間 | 何を渡すか | 補足 |
+| --- | --- | --- |
+| ① スマホ → Access | 通常の HTTPS リクエスト | Access 未ログインならログイン画面へ |
+| ② Access → BFF | `Cf-Access-Jwt-Assertion`、`Cf-Access-Authenticated-User-Email` | BFF が JWT を JWKS で検証する（F9） |
+| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、記録者メール | `http://api:3000` を compose ネットワーク内で呼ぶ（A1） |
+
+ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
 
 ## 7. API 突合せ
 
@@ -202,39 +224,22 @@ flowchart LR
 ## 10. 実装計画
 
 ```mermaid
-graph LR
-  A1 --> F2
-  A1 --> F7
-  A1 --> F9
-  A2 --> F4
-  A2 --> F10
-  A3 --> F2
-  A3 --> F3
-  A3 --> F5
-  A3 --> F6
-  A3 --> F8
-  A4 --> F6
-  A4 --> F7
-  F1 --> F5
-  F1 --> F6
-  F1 --> F8
-  F2 --> F4
-  F2 --> F5
-  F2 --> F6
-  F2 --> F8
-  F6 --> F7
+flowchart LR
+  P1["1. API を整える<br/>A1 認証 / A4 memo<br/>（PR #2171 に反映）"]
+  P2["2. 基盤を並行で<br/>F1 UI 基盤<br/>A2 QR 解決 / A3 名前付き API"]
+  P3["3. つなぐ<br/>F2 API クライアント<br/>F9 Access 検証"]
+  P4["4. 画面を作る<br/>F3 作業場所<br/>F5 手動選択 / F6 登録"]
+  P5["5. 動かす<br/>F7 送信<br/>F8 進捗確認"]
+  P6["6. QR 動線<br/>F4 スキャン<br/>F10 団体側 QR 表示"]
+  P1 --> P2 --> P3 --> P4 --> P5 --> P6
 ```
 
-### 実装順の提案
+各段階は前の段階の成果に依存する。個々の依存関係は 4 章「機能一覧」の「依存」列を参照。
 
-1. A1 + A4 を PR #2171 に反映する
-2. F1 と A3 / A2 を並行して進める
-3. F2, F9 を実装する
-4. F3, F5, F6 を実装する
-5. F7, F8 を実装する
-6. F4, F10 を実装する
-
-環境課題 #2185〜#2189 は並行で消化する。
+- 1 は PR #2171 のマージ前に済ませる（マージ後だと API の差し替えが二度手間になる）
+- 2 は API とフロントを別の人が並行で進められる
+- 6 は QR ペイロード形式の合意（9 章）が前提
+- 環境課題 #2185〜#2189 は並行で消化する
 
 ## 11. 参考リンク
 
