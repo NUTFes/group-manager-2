@@ -34,3 +34,4 @@ nuxt.js<br>
 
 ## 開発メモ
 - [Playwright MCP を Docker で使う](docs/playwright_mcp_docker.md)
+- [貸出・返却記録アプリ(rental/) 設計書](docs/rental/design.md)
