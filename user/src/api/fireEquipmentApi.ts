@@ -1,4 +1,4 @@
-import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
+import { useAuthenticatedGet, useAuthenticatedPut } from '@/hooks/useApi';
 
 export enum FireEquipmentFuel {
   GAS_BOTTLE = 1,
@@ -88,29 +88,29 @@ export const useGetFireEquipmentOrdersByGroupId = (
 };
 
 export const useFireEquipmentMutations = () => {
-  const { put } = useApiMutations();
+  const { trigger: submit } = useAuthenticatedPut(
+    API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS
+  );
 
   const submitFireEquipmentOrders = async (
     items: Partial<FireEquipmentResponse>[],
     groupId: number
   ) => {
     try {
-      const response = await put(API_ENDPOINTS.SUBMIT_FIRE_EQUIPMENT_ORDERS, {
-        group_id: groupId,
-        fire_equipment_orders: items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          fuel: item.fuel,
-          usage: item.usage,
-          is_takeaway: item.is_takeaway,
-          remark: item.remark,
-        })),
+      await submit({
+        body: {
+          group_id: groupId,
+          fire_equipment_orders: items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            fuel: item.fuel,
+            usage: item.usage,
+            is_takeaway: item.is_takeaway,
+            remark: item.remark,
+          })),
+        },
       });
-
-      if (response && 'success' in response && response.success === false) {
-        return { success: false, error: response.error };
-      }
 
       return { success: true };
     } catch (error) {

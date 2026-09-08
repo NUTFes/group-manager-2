@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useGetPlaceOrder, usePlacesData } from '@/api/venueApplication';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
+import { useEditableSection } from '../shared';
 
-export const useVenueApplicationHooks = (groupId: number) => {
+export const useVenueApplicationHooks = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
   const { t } = useTranslation('common');
   const {
     placeOrder,
@@ -46,24 +49,17 @@ export const useVenueApplicationHooks = (groupId: number) => {
         },
       ]
     : [];
-  const [isEditing, setIsEditing] = useState(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-
-  const handleEditClick = () => {
-    setIsEditing((prev) => !prev);
-  };
-
   const isLoading = isPlaceOrderLoading || isPlacesLoading;
 
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
+  const {
+    isEditing,
+    toEdit: handleEditClick,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading, isRegistered });
 
   return {
     placeOrder,
-    isLoading: isLoading && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     hasError,
     isEditing,
     formItem,

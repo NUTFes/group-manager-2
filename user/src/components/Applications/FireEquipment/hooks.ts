@@ -26,6 +26,9 @@ export const useFireEquipmentHooks = (groupId: number) => {
     isEditing: false,
     applyFireEquipment: 'undecided',
   });
+  // 一覧表示の削除ボタンは即時APIを呼ばない。押した行をローカルで除外して
+  // 編集フォームへ切り替え、実際の削除は保存ボタンを押すまで確定しない。
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   const {
     fireEquipmentOrders,
@@ -48,6 +51,11 @@ export const useFireEquipmentHooks = (groupId: number) => {
 
   const isLoading = isOrdersLoading || isUnRegisteredLoading;
   const hasExisting = fireEquipmentOrders.length > 0;
+  // 編集フォームに渡す一覧。pendingDeleteId がある間は該当行を除いた状態で
+  // フォームを開き、保存されるまでサーバ上のデータには手を触れない。
+  const editableOrders = pendingDeleteId
+    ? fireEquipmentOrders.filter((o) => o.id !== pendingDeleteId)
+    : fireEquipmentOrders;
 
   const updateState = (newState: Partial<FireEquipmentState>) =>
     setState((prev) => ({ ...prev, ...newState }));
@@ -87,6 +95,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
   };
 
   const prepareFormForEditing = () => {
+    setPendingDeleteId(null);
     updateState({ isEditing: true });
   };
 
@@ -121,29 +130,11 @@ export const useFireEquipmentHooks = (groupId: number) => {
     }
   };
 
-  const handleDeleteOrder = async (id: number) => {
-    try {
-      const remainingOrders = fireEquipmentOrders.filter((o) => o.id !== id);
-      const result = await submitFireEquipmentOrders(remainingOrders, groupId);
-      await Promise.all([
-        mutateFireEquipmentOrders(),
-        mutateHealthCenterSubmissionStatus(),
-      ]);
-
-      if (!result.success) {
-        toast.error(t('applications.fireEquipment.messages.deleteFailed'));
-        return;
-      }
-
-      toast.success(t('applications.fireEquipment.messages.deleteSuccess'));
-
-      if (remainingOrders.length === 0) {
-        updateState({ applyFireEquipment: 'yes', isEditing: false });
-      }
-    } catch (error) {
-      console.error('火気申請削除エラー:', error);
-      toast.error(t('applications.fireEquipment.messages.deleteFailed'));
-    }
+  // 一覧表示からの削除は即時APIを呼ばない。対象行を除いた編集フォームへ
+  // 切り替えるだけで、実際の削除は保存ボタンを押した時点でまとめて反映される。
+  const handleDeleteOrder = (id: number) => {
+    setPendingDeleteId(id);
+    updateState({ isEditing: true });
   };
 
   const handleCancelUnregistered = async () => {
@@ -163,6 +154,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
   };
 
   const handleFormComplete = async () => {
+    setPendingDeleteId(null);
     await Promise.all([
       mutateFireEquipmentOrders(),
       mutateHealthCenterSubmissionStatus(),
@@ -176,6 +168,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
     hasExisting,
     hasUnregistered,
     fireEquipmentOrders,
+    editableOrders,
     handleRadioChange,
     handleApplyNegative,
     handleDeleteOrder,

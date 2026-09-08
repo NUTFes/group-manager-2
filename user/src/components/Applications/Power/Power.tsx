@@ -3,6 +3,7 @@ import {
   HealthCenterSubmissionStatus,
   canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
+import { MdOutlineAccessTime } from 'react-icons/md';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
@@ -71,7 +72,10 @@ const Power: FC<PowerProps> = ({
           }}
           isSubmitted={isSubmitted}
           submitError={submitError}
-          showRegisterButton={!hasUnregistered}
+          // 未選択(undecided)の間は「申請しない」の登録ボタンを出さない。
+          // 火気使用申請と同様、「いいえ」を明示的に選んでから
+          // (negativeRegister モードへ遷移してから)初めて表示する。
+          showRegisterButton={false}
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={true}
@@ -125,13 +129,30 @@ const Power: FC<PowerProps> = ({
         />
       );
       break;
+    case 'deadlineNoData':
+      content = (
+        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+          <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+            <div className="mb-4">
+              <MdOutlineAccessTime className="mx-auto size-12 text-gray-400" />
+            </div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">
+              {powerAccordionHooks.powerAccordionTexts.deadline.title}
+            </h3>
+            <p className="text-sm text-gray-600">
+              {powerAccordionHooks.powerAccordionTexts.deadline.description}
+            </p>
+          </div>
+        </div>
+      );
+      break;
     case 'summary':
       content = (
         <PowerSummaryView
           devices={devices}
           onEdit={prepareFormForEditing}
           onDeleteDevice={handleDeleteDevice}
-          isDeadline={!isFormLocked}
+          isEditable={!isFormLocked}
         />
       );
       break;
@@ -151,6 +172,7 @@ const Power: FC<PowerProps> = ({
           showForm={applyPower === 'yes'}
           submitError={submitError}
           onSubmit={handleFormSubmit}
+          hasExisting={hasExisting}
         />
       );
   }

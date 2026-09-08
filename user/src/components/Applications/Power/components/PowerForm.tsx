@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Controller, FieldPath } from 'react-hook-form';
-import Button from '@/components/Button/Button';
-import TextBox from '@/components/Form/TextBox/TextBox';
+import Button from '@/components/Button';
+import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
 import { FIELD_NAMES, POWER_LIMIT } from '../constants';
 import { usePowerDeviceFormHooks } from '../hooks/usePowerDeviceFormHooks';

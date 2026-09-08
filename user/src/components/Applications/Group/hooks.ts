@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
 import { useGetGroupCategories, useGetGroups } from '@/api/groupApi';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { groupLabels } from '../label';
+import { useEditableSection } from '../shared';
 
 export const useGroupHooks = (
   groupId: number,
@@ -62,37 +62,20 @@ export const useGroupHooks = (
   ];
 
   // 編集状態の管理
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
-
-  // 初回だけ登録状態に応じて編集モードを決め、再取得時は維持する
-  useEffect(() => {
-    if (
-      hasInitializedEditing.current ||
-      !isGroupResolved ||
-      isRegistered === undefined
-    ) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered, isGroupResolved]);
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({
+    isLoading,
+    isRegistered,
+    isReady: isGroupResolved,
+  });
 
   // 変数と関数を返す
   return {
     groups,
-    isLoading: isLoading && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     hasError,
     isEditing,
     toEdit,

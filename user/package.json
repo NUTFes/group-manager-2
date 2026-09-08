@@ -15,6 +15,7 @@
     "lint-fix": "eslint src e2e playwright.config.ts --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:apps": "playwright test e2e/applications",
     "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
     "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
   },

@@ -1,7 +1,9 @@
 import { useTranslation } from 'next-i18next';
-import useSWRMutation from 'swr/mutation';
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   GROUPS: '/groups',
@@ -113,12 +115,12 @@ export const useGetGroupByUserId = (userId: number | undefined) => {
 
 // 新しい団体申請を作成
 export const useCreateGroups = () => {
-  return useSWRMutation(API_ENDPOINTS.GROUPS, legacyPostFetcher);
+  return useAuthenticatedPost(API_ENDPOINTS.GROUPS);
 };
 
 // 既存の団体申請を更新
 export const useUpdateGroups = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.GROUPS}/${id}`, legacyPatchFetcher);
+  return useAuthenticatedPatch(`${API_ENDPOINTS.GROUPS}/${id}`);
 };
 
 export type GroupInfo = GroupResponse;

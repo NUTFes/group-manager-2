@@ -10,7 +10,7 @@ type Props = {
   onDelete: () => void;
 };
 
-export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
+export const EmployeesForm: FC<Props> = ({ index, onDelete }) => {
   const { control } = useFormContext();
   const employeeFormTexts = useEmployeeFormTexts();
 
@@ -62,4 +62,4 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
   );
 };
 
-export default EmployeeForm;
+export default EmployeesForm;

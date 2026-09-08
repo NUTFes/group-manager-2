@@ -1,0 +1,113 @@
+# Actionの名前
+# 目的：
+#  実際の api（Rails）/ db（MySQL）コンテナを起動し、実APIに対して
+#  Playwright E2E（user/e2e 配下すべて）を実行する。
+#  user-code-quality.yml のモック中心のチェックとは別に、
+#  実DB/実APIを絡めた回帰確認を行うための専用ジョブ。
+# 前提：
+#  - ローカルの `make test-e2e` と同じ docker compose 構成を CI でも使う
+#    （service containers ではなく docker compose を採用。理由は
+#    このファイル冒頭のPRレビューコメント／作業ログを参照）
+name: User E2E (Real API)
+
+permissions:
+  contents: read
+
+on:
+  # 対象のブランチは user-code-quality.yml と同条件
+  pull_request:
+    branches: ["gm3/develop"]
+
+# 同じブランチ（ref）の並行実行を抑止（後から来た実行を優先）
+concurrency:
+  group: user-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  E2E-Real-API:
+    name: E2E (real API + real DB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # GitHubリポジトリのコードをチェックアウト
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Playwright が使う Chromium 本体をキャッシュし、毎回のダウンロードを避ける。
+      # `user` コンテナは compose.yml で ./user:/app にバインドマウントされるため、
+      # PLAYWRIGHT_BROWSERS_PATH=/app/.playwright-browsers でインストールした
+      # ブラウザは実体としてホスト側の user/.playwright-browsers に置かれる。
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: user/.playwright-browsers
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('user/pnpm-lock.yaml') }}
+          restore-keys: |
+            playwright-chromium-${{ runner.os }}-
+
+      # api（Rails）と user（Next.js/Playwright）のイメージをビルド
+      - name: Build api and user images
+        run: docker compose build api user
+
+      # user の依存関係をインストール（node_modules はバインドマウント先の
+      # ホスト側 user/node_modules に作られる。イメージには含めていないため必須）
+      - name: Install user dependencies
+        run: docker compose run --rm user pnpm install --frozen-lockfile
+
+      # db と api を起動
+      - name: Start db and api
+        run: docker compose up -d db api
+
+      # DB作成・マイグレーション・シード投入（CIは毎回まっさらなDBのため、
+      # ローカルの `make build db` 相当を実行してから test-e2e 相当に進む）
+      - name: Prepare database (create, migrate, seed)
+        run: |
+          docker compose exec -T api rails db:create
+          docker compose exec -T api rails db:migrate
+          docker compose exec -T api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
+          docker compose restart api
+
+      # user/e2e 配下すべて（モックの e2e/applications・resubmission-ui に加え、
+      # 実APIを叩く resubmission-real-flow.spec.ts 等）を実行。
+      # api の起動待ちと `pnpm exec playwright install chromium` は
+      # Makefile の test-e2e ターゲットと同じロジック。
+      - name: Run Playwright e2e (user/e2e)
+        run: |
+          docker compose run --rm \
+            -e PLAYWRIGHT_BROWSERS_PATH=/app/.playwright-browsers \
+            -e PLAYWRIGHT_API_BASE_URL=http://api:3000 \
+            -e CI=true \
+            user sh -lc '
+              i=0
+              until node -e "require(\"http\").get(\"http://api:3000\", () => process.exit(0)).on(\"error\", () => process.exit(1))"; do
+                i=$((i + 1))
+                test "$i" -ge 60 && exit 1
+                sleep 1
+              done
+              pnpm exec playwright install chromium
+              pnpm exec playwright test --reporter=list,html
+            '
+
+      # 失敗時のみ、原因調査用に HTML レポートを artifact としてアップロード
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: user/playwright-report
+          retention-days: 7
+
+      # 失敗時のみ、トレース・スクリーンショット等を artifact としてアップロード
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: user/test-results
+          retention-days: 7
+
+      # 後片付け（キャッシュしたボリュームも含めて破棄。ジョブは使い捨てランナーだが明示的に停止する）
+      - name: Stop containers
+        if: always()
+        run: docker compose down -v

@@ -10,7 +10,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
-import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
+import { EmployeesForm } from './EmployeesForm/EmployeesForm';
 import { useEmployeesApplicationHooks } from './hooks';
 
 type EmployeesProps = {
@@ -151,7 +151,9 @@ const Content: FC<ContentProps> = ({
           undefined && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button size="pc" color="main" type="submit" isDisable>
-              {texts.formActions.register}
+              {employeesApplicationHook.isEmployeesData
+                ? texts.formActions.save
+                : texts.formActions.register}
             </Button>
           </div>
         )}
@@ -163,7 +165,7 @@ const Content: FC<ContentProps> = ({
             <div className="flex w-full flex-col gap-10">
               {employeesApplicationHook.form.fieldArray.fields.map(
                 (field, idx) => (
-                  <EmployeeForm
+                  <EmployeesForm
                     key={`${field.fieldId}-${idx}`}
                     index={idx}
                     onDelete={() =>
@@ -171,6 +173,11 @@ const Content: FC<ContentProps> = ({
                     }
                   />
                 )
+              )}
+              {employeesApplicationHook.form.fieldArray.fields.length === 0 && (
+                <p className="mx-auto max-w-[400px] break-words text-center text-xs text-[#484848]">
+                  {texts.notes.allDeleted}
+                </p>
               )}
               <div className="flex justify-center gap-4">
                 <Button
@@ -194,7 +201,9 @@ const Content: FC<ContentProps> = ({
                     employeesApplicationHook.employeesBusinessHooks.isUpserting
                   }
                 >
-                  {texts.formActions.register}
+                  {employeesApplicationHook.isEmployeesData
+                    ? texts.formActions.save
+                    : texts.formActions.register}
                 </Button>
               </div>
             </div>

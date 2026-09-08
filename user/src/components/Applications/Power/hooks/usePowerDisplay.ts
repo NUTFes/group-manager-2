@@ -6,6 +6,7 @@ export type PowerDisplayMode =
   | 'negativeUndecided' // 未登録の状態：ラジオボタン表示
   | 'negativeRegister' // 「はい」→「いいえ」変更後：ラジオボタン+登録ボタン表示
   | 'negativeDisplay' // 「なし」で登録済みの場合：FormListを表示
+  | 'deadlineNoData' // 締切後、一度も登録していない場合：締切案内を表示
   | 'summary' // 「あり」で登録済みの場合：FormListを表示
   | 'form'; // 「はい」選択時または編集中：Formを表示
 
@@ -48,12 +49,16 @@ export const usePowerDisplay = ({
 
   // 締切後は編集不可のFormList表示にする
   if (isDeadline) {
-    if (applyPower === 'no' && !negativeEditMode) {
+    if (hasExisting && !isEditing) {
+      mode = 'summary';
+    } else if (applyPower === 'no' || hasUnregistered) {
       mode = 'negativeDisplay';
-    } else if (hasExisting && !isEditing) {
+    } else if (hasExisting) {
       mode = 'summary';
     } else {
-      mode = hasExisting ? 'summary' : 'negativeDisplay';
+      // 機器も未登録マーカーも無く、一度も回答していない場合は
+      // 「申請不要」ではなく締切案内を表示する。
+      mode = 'deadlineNoData';
     }
   } else {
     // 締切前の通常処理

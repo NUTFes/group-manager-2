@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -8,6 +8,7 @@ import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
+import { useEditableSection } from '../shared';
 
 export const useViceRepresentativeHook = (
   groupId: number,
@@ -87,33 +88,17 @@ export const useViceRepresentativeHook = (
     departmentOptions,
   ]);
 
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const isLoading = isViceRepresentativeLoading || isUnregisteredLoading;
 
-  useEffect(() => {
-    if (!isLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (hasInitializedEditing.current || isRegistered === undefined) {
-      return;
-    }
-
-    setIsEditing(!isRegistered);
-    hasInitializedEditing.current = true;
-  }, [isRegistered]);
-
-  const toEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({ isLoading, isRegistered });
 
   return {
     viceRepresentative,
-    isLoading: isLoading && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     hasError,
     isEditing,
     toEdit,

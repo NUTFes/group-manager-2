@@ -1,6 +1,8 @@
-import useSWRMutation from 'swr/mutation';
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 // リクエスト用の型定義
 export type PublicRelation = {
@@ -72,13 +74,10 @@ export const usePublicRelationData = (groupId: number) => {
 
 // SWR Mutationを使った新規作成用フック
 export const useCreatePublicRelation = () => {
-  return useSWRMutation(API_ENDPOINTS.PUBLIC_RELATIONS, legacyPostFetcher);
+  return useAuthenticatedPost(API_ENDPOINTS.PUBLIC_RELATIONS);
 };
 
 // SWR Mutationを使った更新用フック
 export const useUpdatePublicRelation = (id: number) => {
-  return useSWRMutation(
-    `${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`,
-    legacyPatchFetcher
-  );
+  return useAuthenticatedPatch(`${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`);
 };

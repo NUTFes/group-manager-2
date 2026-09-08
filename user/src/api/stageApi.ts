@@ -1,5 +1,9 @@
 import { addMinutes } from '@/components/Applications/Stage/hooks/useStageForm';
-import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPost,
+  useAuthenticatedPutWithId,
+} from '@/hooks/useApi';
 
 export type FesDate = {
   id: number;
@@ -117,7 +121,12 @@ export const useGetStageOrders = (groupId: number | null) => {
 
 // ステージ申請送信用フック
 export const useMutateStageOrders = () => {
-  const { post, put } = useApiMutations();
+  const { trigger: createStageOrder } = useAuthenticatedPost(
+    API_ENDPOINTS.STAGE_ORDERS
+  );
+  const { trigger: updateStageOrder } = useAuthenticatedPutWithId(
+    API_ENDPOINTS.STAGE_ORDERS
+  )();
 
   const submitStageOrder = async (
     sunnyOrderData: StageOrderData,
@@ -140,24 +149,24 @@ export const useMutateStageOrders = () => {
 
       if (existingSunnyOrder) {
         promises.push(
-          put(
-            `${API_ENDPOINTS.STAGE_ORDERS}/${existingSunnyOrder.id}`,
-            formattedSunnyData
-          )
+          updateStageOrder({
+            id: existingSunnyOrder.id,
+            body: formattedSunnyData,
+          })
         );
       } else {
-        promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedSunnyData));
+        promises.push(createStageOrder({ body: formattedSunnyData }));
       }
 
       if (existingRainyOrder) {
         promises.push(
-          put(
-            `${API_ENDPOINTS.STAGE_ORDERS}/${existingRainyOrder.id}`,
-            formattedRainyData
-          )
+          updateStageOrder({
+            id: existingRainyOrder.id,
+            body: formattedRainyData,
+          })
         );
       } else {
-        promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedRainyData));
+        promises.push(createStageOrder({ body: formattedRainyData }));
       }
 
       await Promise.all(promises);

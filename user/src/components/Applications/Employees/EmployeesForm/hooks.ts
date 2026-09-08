@@ -116,16 +116,15 @@ interface EmployeeDataItem {
  * イベントハンドラをまとめて提供します。DB形式とフォーム形式の
  * データ変換も含まれています。
  *
+ * 従業員の削除は即時APIを呼ばず、フォームから外すだけにしている
+ * （DB上の削除は送信時の差分削除でまとめて確定する）ため、
+ * このフックは外部コールバックを必要としない。
+ *
  * @param form - useEmployeesFormから返されるフォームオブジェクト
- * @param callbacks - 外部処理（従業員削除、データ再取得）のコールバック
  * @returns フォーム操作のイベントハンドラ群
  */
 export const useEmployeesFormHandlers = (
-  form: ReturnType<typeof useEmployeesForm>,
-  callbacks: {
-    onEmployeeDelete?: (employeeId: number) => Promise<void>;
-    onMutateEmployees?: () => Promise<void>;
-  }
+  form: ReturnType<typeof useEmployeesForm>
 ) => {
   /**
    * DB従業員データをフォーム形式に変換するヘルパー関数
@@ -200,21 +199,14 @@ export const useEmployeesFormHandlers = (
 
   /**
    * 従業員削除処理
-   * DB上の従業員データとフォーム上の従業員フィールドの両方を削除します
+   * 即時APIは呼ばない。フォームから該当フィールドを外すだけで、
+   * DB上の削除は保存ボタンを押した時点（送信時の差分削除）でまとめて確定する。
    */
   const handleEmployeeRemove = useCallback(
-    async (field: EmployeeFormItem, index: number) => {
-      // DBに保存済みの従業員を削除（IDがある場合）
-      if (field.id && callbacks.onEmployeeDelete) {
-        await callbacks.onEmployeeDelete(field.id);
-        if (callbacks.onMutateEmployees) {
-          await callbacks.onMutateEmployees(); // データ再取得
-        }
-      }
-      // フォームから該当フィールドを削除
+    (_field: EmployeeFormItem, index: number) => {
       form.fieldArray.remove(index);
     },
-    [form.fieldArray, callbacks]
+    [form.fieldArray]
   );
 
   return {

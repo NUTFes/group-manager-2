@@ -1,6 +1,8 @@
-import useSWRMutation from 'swr/mutation';
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 import { ApiResponse } from './stageOptionApi';
 
 export type FesDate = {
@@ -59,16 +61,12 @@ export const usePlacesData = (group_id: number) => {
 
 // データ送信用フック
 export const usePlacesOrderMutations = () => {
-  const urlPath = API_ENDPOINTS.VENUE_MAPS;
-  return useSWRMutation(urlPath, legacyPostFetcher);
+  return useAuthenticatedPost(API_ENDPOINTS.VENUE_MAPS);
 };
 
 // データ更新用フック
 export const useUpdatePlacesOrderMutations = (id: number) => {
-  return useSWRMutation(
-    `${API_ENDPOINTS.VENUE_MAPS}/${id}`,
-    legacyPatchFetcher
-  );
+  return useAuthenticatedPatch(`${API_ENDPOINTS.VENUE_MAPS}/${id}`);
 };
 
 // 会場申請のデータ取得用フック

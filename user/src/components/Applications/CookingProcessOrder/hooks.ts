@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   useGetCookingProcessOrder,
   useUpsertCookingProcessOrders,
@@ -7,12 +7,12 @@ import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
   HealthCenterSubmissionStatus,
   canEditApplication,
-  useUpdateSubmissionStatusFor,
 } from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useEditableSection, useSubmissionStatusReset } from '../shared';
 import {
   CookingProcessOrderSchema,
   cookingProcessOrderSchema,
@@ -24,8 +24,6 @@ export const useCookingProcessOrder = (
   isRegistered?: boolean,
   status?: HealthCenterSubmissionStatus
 ) => {
-  const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const { t } = useTranslation('common');
 
   const cookingProcessOrderTexts = {
@@ -80,6 +78,7 @@ export const useCookingProcessOrder = (
     useUpsertCookingProcessOrders();
 
   const methods = useForm<CookingProcessOrderSchema>({
+    mode: 'onChange',
     resolver: zodResolver(cookingProcessOrderSchema),
     defaultValues: {
       cookingProcessOrders: [],
@@ -108,6 +107,34 @@ export const useCookingProcessOrder = (
     });
   }, [cookingTargetFoodProducts, cookingProcessOrders]);
 
+  const isDataLoading = isLoadingCookingProcess || isLoadingFoodProducts;
+  const error = errorCookingProcess || errorFoodProducts;
+
+  const isExist = useMemo(
+    () => cookingProcessOrders && cookingProcessOrders.length > 0,
+    [cookingProcessOrders]
+  );
+
+  // 締切後(再提出可能な場合を除く)は isExist に関わらず一覧表示に強制する。
+  // useEditableSection は isRegistered しか見ないため、その判定材料として
+  // 「編集不可なら常に登録済み扱い(=一覧)」を isRegistered 側へ織り込む。
+  const isApplicationEditable = canEditApplication(isDeadline, status);
+  const effectiveIsRegistered = !isApplicationEditable || !!isExist;
+
+  const {
+    isEditing,
+    toEdit,
+    isLoading: isSectionLoading,
+  } = useEditableSection({
+    isLoading: isDataLoading,
+    isRegistered: effectiveIsRegistered,
+    // isRegistered(親から渡されるcheck_all_registeredの値)とローカルのデータ取得の
+    // 両方が解決するまで初期化を待つ。effectiveIsRegisteredは常にboolean(undefinedに
+    // ならない)ため、この追加ゲートが無いと isDataLoading より早く親の解決を待たずに
+    // 初期化されてしまう。
+    isReady: !isDataLoading && isRegistered !== undefined,
+  });
+
   useEffect(() => {
     if (mergedData.length === 0 || isEditing === true) {
       return;
@@ -125,33 +152,17 @@ export const useCookingProcessOrder = (
     replace(newFields);
   }, [mergedData, replace, isEditing]);
 
-  const isDataLoading = isLoadingCookingProcess || isLoadingFoodProducts;
-  const error = errorCookingProcess || errorFoodProducts;
-
-  const isExist = useMemo(
-    () => cookingProcessOrders && cookingProcessOrders.length > 0,
-    [cookingProcessOrders]
-  );
-
   const shouldShowWarning = useMemo(() => {
     if (isLoadingFoodProducts) return false;
     return cookingTargetFoodProducts.length === 0;
   }, [isLoadingFoodProducts, cookingTargetFoodProducts]);
 
-  useEffect(() => {
-    if (!isDataLoading) {
-      setHasLoadedOnce(true);
-    }
-  }, [isDataLoading]);
-
-  const updateStatus = useUpdateSubmissionStatusFor(
+  const resetSubmissionStatus = useSubmissionStatusReset(
     groupId,
-    'cooking_process_order'
+    'cooking_process_order',
+    status,
+    t('applications.cookingProcessOrder.messages.statusUpdateFailed')
   );
-
-  const handleEditClick = () => {
-    setIsEditing((prev) => !prev);
-  };
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
@@ -173,66 +184,23 @@ export const useCookingProcessOrder = (
       );
 
       // 再提出完了時
-      if (status !== 'unapproved') {
-        try {
-          await updateStatus('unapproved');
-        } catch (e) {
-          console.error(e);
-          toast.error(
-            t('applications.cookingProcessOrder.messages.statusUpdateFailed')
-          );
-          return;
-        }
-      }
-      setIsEditing(false);
+      if (!(await resetSubmissionStatus())) return;
+      toEdit();
     } catch (e) {
       console.error(e);
       toast.error(t('applications.cookingProcessOrder.messages.updateFailed'));
     }
   });
 
-  useEffect(() => {
-    if (isRegistered === undefined || isDataLoading) {
-      return;
-    }
-
-    if (cookingTargetFoodProducts.length === 0) {
-      setIsEditing(false);
-      return;
-    }
-
-    if (!canEditApplication(isDeadline, status)) {
-      setIsEditing(false);
-      return;
-    }
-
-    if (!isExist) {
-      setIsEditing(true);
-      return;
-    }
-
-    if (isEditing === null) {
-      setIsEditing(false);
-    }
-  }, [
-    isRegistered,
-    isDataLoading,
-    cookingTargetFoodProducts.length,
-    isDeadline,
-    isExist,
-    isEditing,
-    status,
-  ]);
-
   return {
     methods,
     fields,
-    isLoading: isDataLoading && !hasLoadedOnce,
+    isLoading: isSectionLoading,
     isMutating,
     error,
     isEditing,
     isExist,
-    handleEditClick,
+    handleEditClick: toEdit,
     onSubmit,
     mergedData,
     shouldShowWarning,

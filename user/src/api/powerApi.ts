@@ -1,5 +1,5 @@
 import { Device } from '@/components/Applications/Power/types';
-import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
+import { useAuthenticatedGet, useAuthenticatedPut } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
@@ -89,7 +89,9 @@ export const useGetPowerOrders = (groupId: number | null) => {
  * 電力申請データを操作するフック
  */
 export const useMutatePowerOrders = () => {
-  const { put } = useApiMutations();
+  const { trigger: submit } = useAuthenticatedPut(
+    API_ENDPOINTS.SUBMIT_POWER_ORDERS
+  );
 
   /**
    * 複数デバイスの登録・更新・削除と申請ステータス更新を行う
@@ -100,17 +102,15 @@ export const useMutatePowerOrders = () => {
     usePower: boolean
   ) => {
     try {
-      const response = await put(API_ENDPOINTS.SUBMIT_POWER_ORDERS, {
-        group_id: groupId,
-        use_power: usePower,
-        power_orders: devices.map((device) =>
-          mapDeviceToRequestData(device, groupId)
-        ),
+      await submit({
+        body: {
+          group_id: groupId,
+          use_power: usePower,
+          power_orders: devices.map((device) =>
+            mapDeviceToRequestData(device, groupId)
+          ),
+        },
       });
-
-      if (response && 'success' in response && response.success === false) {
-        return { success: false, error: response.error };
-      }
 
       return { success: true };
     } catch (error) {

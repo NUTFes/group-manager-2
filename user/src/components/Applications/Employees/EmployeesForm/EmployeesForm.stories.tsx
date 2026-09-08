@@ -3,8 +3,8 @@ import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
-import { EmployeesForm } from '../schema';
-import { EmployeeForm } from './EmployeesForm';
+import { EmployeesForm as EmployeesFormValues } from '../schema';
+import { EmployeesForm } from './EmployeesForm';
 
 // ストーリー用のフォームラッパーコンポーネント
 const FormWrapper = ({
@@ -14,7 +14,7 @@ const FormWrapper = ({
   },
 }: {
   children: React.ReactNode;
-  defaultValues?: EmployeesForm;
+  defaultValues?: EmployeesFormValues;
 }) => {
   const form = useForm({
     defaultValues,
@@ -37,7 +37,7 @@ const FormWrapper = ({
  */
 export default {
   title: 'Applications/EmployeesForm',
-  component: EmployeeForm,
+  component: EmployeesForm,
   tags: ['autodocs'],
   decorators: [
     (Story) => (
@@ -105,9 +105,9 @@ export default {
       action: 'deleted',
     },
   },
-} as Meta<typeof EmployeeForm>;
+} as Meta<typeof EmployeesForm>;
 
-type Story = StoryObj<typeof EmployeeForm>;
+type Story = StoryObj<typeof EmployeesForm>;
 
 /**
  * 基本的な従業員フォーム
@@ -120,7 +120,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <FormWrapper>
-      <EmployeeForm {...args} />
+      <EmployeesForm {...args} />
     </FormWrapper>
   ),
   parameters: {
@@ -144,7 +144,7 @@ export const Empty: Story = {
   },
   render: (args) => (
     <FormWrapper defaultValues={{ employees: [{ name: '', studentId: '' }] }}>
-      <EmployeeForm {...args} />
+      <EmployeesForm {...args} />
     </FormWrapper>
   ),
   parameters: {
@@ -183,7 +183,7 @@ export const WithErrors: Story = {
       return (
         <FormProvider {...form}>
           <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-lg">
-            <EmployeeForm {...args} />
+            <EmployeesForm {...args} />
           </div>
         </FormProvider>
       );
@@ -235,7 +235,7 @@ export const Multiple: Story = {
                     従業員 {index + 1}
                   </div>
                   <div className="rounded-lg bg-white p-6 shadow-lg">
-                    <EmployeeForm
+                    <EmployeesForm
                       index={index}
                       onDelete={() => handleDelete(index)}
                     />
@@ -290,7 +290,7 @@ export const Interactive: Story = {
                 インタラクティブフォーム
               </h2>
               <div className="rounded-lg bg-white p-6 shadow-lg">
-                <EmployeeForm index={0} onDelete={handleDelete} />
+                <EmployeesForm index={0} onDelete={handleDelete} />
               </div>
             </div>
 
@@ -345,7 +345,7 @@ export const Showcase: Story = {
           ✨ 入力済みフォーム
         </h2>
         <FormWrapper>
-          <EmployeeForm
+          <EmployeesForm
             index={0}
             onDelete={() => toast.success('入力済みフォームが削除されました')}
           />
@@ -359,7 +359,7 @@ export const Showcase: Story = {
         <FormWrapper
           defaultValues={{ employees: [{ name: '', studentId: '' }] }}
         >
-          <EmployeeForm
+          <EmployeesForm
             index={0}
             onDelete={() => toast.info('空のフォームが削除されました')}
           />
@@ -375,7 +375,7 @@ export const Showcase: Story = {
             employees: [{ name: '長岡 技大', studentId: '20241234' }],
           }}
         >
-          <EmployeeForm
+          <EmployeesForm
             index={0}
             onDelete={() => toast.success('サンプルフォームが削除されました')}
           />

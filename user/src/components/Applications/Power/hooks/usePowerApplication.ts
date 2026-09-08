@@ -10,7 +10,7 @@ import {
 } from '@/api/unRegisteredGroupApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
+import { revalidateCheckAllRegistered } from '../../shared';
 import { PowerApplicationFormData } from '../schema';
 import { Device, PowerApplicationOption } from '../types';
 import { usePowerForm } from './usePowerForm';
@@ -163,7 +163,7 @@ export const usePowerApplication = (
       await mutatePowerOrders();
       await mutateUnregisteredGroup();
       await mutateHealthCenterSubmissionStatus();
-      mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
+      await revalidateCheckAllRegistered(groupId); // 全体登録状態を再取得
       toast.success(t('applications.power.messages.registerNegativeSuccess'));
     } catch {
       const message = t('applications.power.messages.processError');

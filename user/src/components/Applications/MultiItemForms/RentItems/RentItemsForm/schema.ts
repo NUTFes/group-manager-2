@@ -32,7 +32,10 @@ export const LOCATION_TYPES = {
 // 物品申請フォーム全体のスキーマ
 export const rentItemsFormSchema = z
   .object({
-    hasItems: z.boolean(),
+    // 「はい/いいえ」を選ぶ前は未選択(undefined)。選択するまで登録ボタンを
+    // 出さないための tri-state (以前は boolean のみで false と未選択を
+    // 区別できず、未選択のまま「いいえ」の登録ボタンが出てしまうバグがあった)。
+    hasItems: z.boolean().optional(),
     locationType: z
       .string()
       .min(1, { message: 'applications.rentItems.validation.selectLocation' })

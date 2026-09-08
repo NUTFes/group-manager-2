@@ -19,6 +19,7 @@ export const usePowerFormViewHooks = (radioOptions: RadioOption[]) => {
     actions: {
       addDevice: t('applications.power.form.addDevice'),
       register: t('form.actions.register'),
+      save: t('form.actions.save'),
     },
   };
 

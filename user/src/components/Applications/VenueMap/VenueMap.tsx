@@ -3,8 +3,8 @@ import {
   HealthCenterSubmissionStatus,
   canEditApplication,
 } from '@/api/healthCenterSubmissionStatusApi';
-import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import FormList from '@/components/FormList/FormList';
+import AccordionMenu from '@/components/AccordionMenu';
+import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import ImagePreview from '@/components/ImagePreview';
 import VenueMapForm from './VenueMapForm';
@@ -22,7 +22,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline?: boolean;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   venueMapData: ReturnType<typeof useVenueMapHooks>['venueMap'];
   formItems: FormItem[];
@@ -104,7 +104,7 @@ const VenueMap: FC<VenueMapProps> = ({
   isRegistered,
   status,
 }) => {
-  const venueMapHooks = useVenueMapHooks(groupId, status);
+  const venueMapHooks = useVenueMapHooks(groupId, isRegistered, status);
   const {
     venueMap,
     isLoading,
