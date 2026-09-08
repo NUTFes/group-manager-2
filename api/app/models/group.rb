@@ -673,6 +673,10 @@ class Group < ApplicationRecord
   # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
   # 認証なしで露出するため、groupは公開してよいidとnameだけに絞る
   def self.with_confirmed_info(group_id, secret)
+    # secretが空のときは検索する前に弾く。GroupSecretには空文字を禁じる制約が無いため、
+    # 万一空文字のレコードがあるとsecret未指定のリクエストが一致してしまう
+    return nil if secret.blank?
+
     group = Group.joins(:group_secret)
                  .includes(assign_rental_items: %i[rental_item stocker_place rental_place])
                  .find_by(id: group_id, group_secrets: { secret: secret })
