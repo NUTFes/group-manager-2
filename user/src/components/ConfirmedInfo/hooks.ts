@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 
@@ -31,9 +31,10 @@ export const useConfirmedInfoTexts = () => {
 export const useConfirmedInfoActions = () => {
   const { t } = useTranslation('common');
   // 前の共有シートが閉じる前に連打されると navigator.share() が
-  // InvalidStateError を投げるため、実行中はrefで即座にブロックする
+  // InvalidStateError を投げるため、実行中はrefで即座にブロックする。
+  // stateにしてボタンを disabled にはしない: Button の isDisable はラベルを
+  // Loading アイコンに差し替える実装のため、押すたびに幅が変わってしまう
   const isSharingRef = useRef(false);
-  const [isSharing, setIsSharing] = useState(false);
 
   const handleCopy = async (url: string) => {
     try {
@@ -51,7 +52,6 @@ export const useConfirmedInfoActions = () => {
 
     if (navigator.share) {
       isSharingRef.current = true;
-      setIsSharing(true);
       try {
         await navigator.share({ title, url });
       } catch (error) {
@@ -60,12 +60,11 @@ export const useConfirmedInfoActions = () => {
         console.error('Share failed:', error);
       } finally {
         isSharingRef.current = false;
-        setIsSharing(false);
       }
       return;
     }
     await handleCopy(url);
   };
 
-  return { handleCopy, handleShare, isSharing };
+  return { handleCopy, handleShare };
 };

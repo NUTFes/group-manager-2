@@ -19,7 +19,7 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
   shareUrl,
 }) => {
   const texts = useConfirmedInfoTexts();
-  const { handleCopy, handleShare, isSharing } = useConfirmedInfoActions();
+  const { handleCopy, handleShare } = useConfirmedInfoActions();
 
   if (isLoading) {
     return (
@@ -102,7 +102,6 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
             type="button"
             size="mobile"
             color="main"
-            isDisable={isSharing}
             onClick={() => handleShare(shareUrl, group.name)}
           >
             <span className="flex items-center gap-2">
