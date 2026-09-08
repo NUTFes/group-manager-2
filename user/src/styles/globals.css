@@ -33,6 +33,8 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Noto Sans JP';
+  /* Noto Sans JP は配信していないため、フォールバックが無いとブラウザ既定に委ねられ、
+     Chrome（ゴシック）と Safari（明朝）で表示が割れる。ゴシック側に揃える */
+  font-family: 'Noto Sans JP', sans-serif;
   font-weight: 500;
 }
