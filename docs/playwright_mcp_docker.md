@@ -53,6 +53,8 @@ Playwright MCP は、AI エージェントがブラウザを操作するため�
 
 通常の CI / 動作確認は E2E テストを使い、AI に画面操作させたい場合だけ Playwright MCP を使います。
 
+AI 支援で E2E を追加する場合は、先に `docs/e2e-ai/README.md` のワークフローに沿って計画 Markdown を作成してください。
+
 ## 動作確認
 
 Docker イメージが取得でき、MCP サーバーのオプションが確認できれば Docker 版 Playwright MCP の起動準備はできています。
