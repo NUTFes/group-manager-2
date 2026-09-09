@@ -78,9 +78,13 @@ services:
     command: sh -c "pnpm install --frozen-lockfile && pnpm run dev"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3000
-    volumes: [./rental:/app]
+    volumes:
+      - ./rental:/app
+      - rental-node-modules:/app/node_modules
     depends_on: [api]
 
 volumes:
   mysql-data:
+    driver: local
+  rental-node-modules:
     driver: local
