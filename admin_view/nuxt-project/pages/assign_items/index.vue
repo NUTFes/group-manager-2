@@ -601,12 +601,19 @@ export default {
         this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
       }
     },
-    // 同一(カード×物品)の保存を直列化するロック。前段が終わるまで待ち、解放関数を返す。
-    acquireRowLock(key) {
-      const prev = this.rowSaveQueue[key] || Promise.resolve();
-      let release;
-      this.rowSaveQueue[key] = new Promise((resolve) => { release = resolve; });
-      return prev.then(() => release, () => release);
+    // 同一(カード×物品)の保存を直列化する。前段の成否に関わらず順に実行する。
+    enqueueRowSave(rowKey, task) {
+      const prev = this.rowSaveQueue[rowKey] || Promise.resolve();
+      const next = prev.catch(() => {}).then(task);
+      this.rowSaveQueue[rowKey] = next.catch(() => {});
+      return next;
+    },
+
+    // 変更した項目だけを PATCH で部分更新する（直列化つき）。
+    patchAssign(id, rowKey, body) {
+      return this.enqueueRowSave(rowKey, () =>
+        this.$axios.$patch(`/assign_rental_items/${id}`, body)
+      );
     },
 
     // 数の手動変更と保存処理
@@ -622,9 +629,9 @@ export default {
 
       this.$set(assign.assigned, itemId, newValue);
 
-      const release = await this.acquireRowLock(`${assign.id}_${itemId}`);
       // 編集対象のレコード（dbId）を探す
       const dbRecord = (assign.dbIds || []).find(db => Number(db.itemId) === Number(itemId));
+      const rowKey = `${assign.id}_${itemId}`;
 
       try {
         if (newValue === 0 && dbRecord) {
@@ -635,7 +642,7 @@ export default {
 
         } else if (dbRecord) {
           // 個数だけを部分更新する（備考など他項目は送らない）
-          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, { num: newValue });
+          await this.patchAssign(dbRecord.id, rowKey, { num: newValue });
 
         } else if (!dbRecord && newValue > 0) {
           // これまで0だったところに新規で数を入力した場合（POST）
@@ -658,8 +665,6 @@ export default {
         this.$set(assign.assigned, itemId, oldValue);
         e.target.value = oldValue;
         alert("更新に失敗しました。在庫数の上限を超えていないか等を確認してください。");
-      } finally {
-        release();
       }
     },
 
@@ -673,15 +678,15 @@ export default {
 
       this.$set(assign.remarks, itemId, newRemark);
 
-      const release = await this.acquireRowLock(`${assign.id}_${itemId}`);
       if (!assign.dbIds) assign.dbIds = [];
       const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
       const currentNum = assign.assigned[itemId] || 0;
+      const rowKey = `${assign.id}_${itemId}`;
 
       try {
         if (dbRecord) {
           // 備考だけを部分更新する（個数など他項目は送らない）
-          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, { remark: newRemark || null });
+          await this.patchAssign(dbRecord.id, rowKey, { remark: newRemark || null });
           dbRecord.remark = newRemark;
 
         } else if (currentNum > 0) {
@@ -708,8 +713,6 @@ export default {
         this.$set(assign.remarks, itemId, oldRemark);
         e.target.value = oldRemark;
         alert("備考の更新に失敗しました。時間をおいて再度お試しください。");
-      } finally {
-        release();
       }
     },
 
