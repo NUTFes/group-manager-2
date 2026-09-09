@@ -288,6 +288,8 @@ export default {
       ],
       expandedGroupIds: [],
       oldEditingValue: 0,
+      // 同一(カード×物品)の保存を直列化するためのロック置き場
+      rowSaveQueue: {},
     };
   },
 
@@ -599,6 +601,14 @@ export default {
         this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
       }
     },
+    // 同一(カード×物品)の保存を直列化するロック。前段が終わるまで待ち、解放関数を返す。
+    acquireRowLock(key) {
+      const prev = this.rowSaveQueue[key] || Promise.resolve();
+      let release;
+      this.rowSaveQueue[key] = new Promise((resolve) => { release = resolve; });
+      return prev.then(() => release, () => release);
+    },
+
     // 数の手動変更と保存処理
     async updateManualAssign(e, assign, itemId) {
       if (!this.$role(this.roleID).assign_items.update) return;
@@ -609,13 +619,12 @@ export default {
 
       const oldValue = assign.assigned[itemId] || 0;
       if (newValue === oldValue) return; // 変更がなければ終了
-     
+
       this.$set(assign.assigned, itemId, newValue);
 
+      const release = await this.acquireRowLock(`${assign.id}_${itemId}`);
       // 編集対象のレコード（dbId）を探す
       const dbRecord = (assign.dbIds || []).find(db => Number(db.itemId) === Number(itemId));
-      // 個数だけを変えても備考が消えないよう、現在の備考を一緒に送る
-      const currentRemark = (assign.remarks[itemId] || '').trim();
 
       try {
         if (newValue === 0 && dbRecord) {
@@ -625,20 +634,12 @@ export default {
           this.$set(assign.remarks, itemId, '');
 
         } else if (dbRecord) {
-          // PUT処理
-          const putPayload = {
-            group_id: assign.groupId,
-            num: newValue,
-            rental_item_id: Number(itemId),
-            stocker_place_id: assign.stockId,
-            remark: currentRemark || null
-          };
-
-          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
-          dbRecord.remark = currentRemark;
+          // 個数だけを部分更新する（備考など他項目は送らない）
+          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, { num: newValue });
 
         } else if (!dbRecord && newValue > 0) {
           // これまで0だったところに新規で数を入力した場合（POST）
+          const currentRemark = (assign.remarks[itemId] || '').trim();
           const postPayload = {
             items: [{ group_id: assign.groupId, num: newValue, remark: currentRemark || null }],
             rentalItemId: Number(itemId),
@@ -653,13 +654,12 @@ export default {
           }
         }
       } catch (error) {
-        console.error("更新エラー詳細:", error.response ? error.response.data : error);
+        console.error("数の更新に失敗しました", error.response ? error.response.data : error);
         this.$set(assign.assigned, itemId, oldValue);
         e.target.value = oldValue;
-        console.error("数の更新に失敗しました", error);
-        // エラー時は画面の表示を元の数字に戻す
-        assign.assigned[itemId] = oldValue;
         alert("更新に失敗しました。在庫数の上限を超えていないか等を確認してください。");
+      } finally {
+        release();
       }
     },
 
@@ -673,20 +673,15 @@ export default {
 
       this.$set(assign.remarks, itemId, newRemark);
 
+      const release = await this.acquireRowLock(`${assign.id}_${itemId}`);
       if (!assign.dbIds) assign.dbIds = [];
       const dbRecord = assign.dbIds.find(db => Number(db.itemId) === Number(itemId));
       const currentNum = assign.assigned[itemId] || 0;
 
       try {
         if (dbRecord) {
-          const putPayload = {
-            group_id: assign.groupId,
-            num: currentNum,
-            rental_item_id: Number(itemId),
-            stocker_place_id: assign.stockId,
-            remark: newRemark || null
-          };
-          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, putPayload);
+          // 備考だけを部分更新する（個数など他項目は送らない）
+          await this.$axios.$put(`/assign_rental_items/${dbRecord.id}`, { remark: newRemark || null });
           dbRecord.remark = newRemark;
 
         } else if (currentNum > 0) {
@@ -713,6 +708,8 @@ export default {
         this.$set(assign.remarks, itemId, oldRemark);
         e.target.value = oldRemark;
         alert("備考の更新に失敗しました。時間をおいて再度お試しください。");
+      } finally {
+        release();
       }
     },
 

@@ -18,8 +18,9 @@ const jsonBody = (data) =>
   JSON.stringify({ status: { code: 200, message: "Success" }, data });
 
 // 画面が必要とするマスターデータを stub する。assign_rental_items だけは
-// PUT で書き換わった remark を後続の GET へ反映できるよう、状態を閉じ込める。
-const setupAssignItems = async (page) => {
+// PUT で書き換わった値を後続の GET へ反映できるよう、状態を閉じ込める。
+// opts.delayFirstPutMs: 1本目の PUT 応答だけ遅らせ、逆順到着を誘発する。
+const setupAssignItems = async (page, opts = {}) => {
   const state = {
     assigns: [
       {
@@ -33,6 +34,8 @@ const setupAssignItems = async (page) => {
     ],
   };
   const putPayloads = [];
+  const putOrder = []; // 受信順（"num" / "remark"）
+  let putCount = 0;
 
   const routes = {
     "**/fes_years": jsonBody([{ id: 1, year_num: 2026 }]),
@@ -89,11 +92,17 @@ const setupAssignItems = async (page) => {
   await page.route("**/assign_rental_items/1", async (route) => {
     const payload = route.request().postDataJSON();
     putPayloads.push(payload);
-    state.assigns[0] = {
-      ...state.assigns[0],
-      num: payload.num,
-      remark: payload.remark || "",
-    };
+    putOrder.push("num" in payload ? "num" : "remark");
+    putCount += 1;
+
+    if (opts.delayFirstPutMs && putCount === 1) {
+      await new Promise((r) => setTimeout(r, opts.delayFirstPutMs));
+    }
+
+    // 部分更新: 送られてきた項目だけ反映する
+    if ("num" in payload) state.assigns[0].num = payload.num;
+    if ("remark" in payload) state.assigns[0].remark = payload.remark || "";
+
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -101,7 +110,7 @@ const setupAssignItems = async (page) => {
     });
   });
 
-  return { putPayloads };
+  return { putPayloads, putOrder, state };
 };
 
 const expectAssignItemsVisible = (page) =>
@@ -135,15 +144,7 @@ test.describe("物品割り当ての備考", () => {
 
     await expect
       .poll(() => putPayloads)
-      .toEqual([
-        {
-          group_id: 1,
-          num: 2,
-          rental_item_id: 1,
-          stocker_place_id: 1,
-          remark: "テント1・2（正面入口側）",
-        },
-      ]);
+      .toEqual([{ remark: "テント1・2（正面入口側）" }]);
 
     // リロードして再取得しても保存済みの備考が表示されること
     await page.reload({ waitUntil: "domcontentloaded" });
@@ -153,8 +154,10 @@ test.describe("物品割り当ての備考", () => {
     );
   });
 
-  test("個数だけを変更しても備考は一緒に送られる", async ({ page }) => {
-    const { putPayloads } = await setupAssignItems(page);
+  test("個数変更は個数のみ・備考変更は備考のみを部分更新で送る", async ({
+    page,
+  }) => {
+    const { putPayloads, state } = await setupAssignItems(page);
     await openAssignItems(page);
 
     await page.getByLabel("机の備考").fill("入口1番");
@@ -164,16 +167,51 @@ test.describe("物品割り当ての備考", () => {
     const numInput = page.getByLabel("机の割り当て個数");
     await numInput.fill("4");
     await numInput.press("Enter");
+    await expect.poll(() => putPayloads.length).toBe(2);
 
-    await expect
-      .poll(() => putPayloads[putPayloads.length - 1])
-      .toEqual({
-        group_id: 1,
-        num: 4,
-        rental_item_id: 1,
-        stocker_place_id: 1,
-        remark: "入口1番",
-      });
+    // 各保存は変更した項目だけを送る（相手の古い値を相乗りさせない）
+    expect(putPayloads).toEqual([{ remark: "入口1番" }, { num: 4 }]);
+    // どちらの保存も相手の項目を巻き戻していない
+    expect(state.assigns[0]).toMatchObject({ num: 4, remark: "入口1番" });
+  });
+
+  test("応答が逆順で到着しても他方の値を巻き戻さない（部分更新＋直列化）", async ({
+    page,
+  }) => {
+    const { putPayloads, putOrder, state } = await setupAssignItems(page, {
+      delayFirstPutMs: 800,
+    });
+    await openAssignItems(page);
+
+    const numInput = page.getByLabel("机の割り当て個数");
+    const remarkInput = page.getByLabel("机の備考");
+
+    await numInput.fill("4");
+    await numInput.press("Tab"); // PUT#1 { num: 4 }（応答を遅延）
+    await remarkInput.fill("入口1番");
+    await remarkInput.press("Tab"); // PUT#2 { remark: "入口1番" }
+
+    await expect.poll(() => putPayloads.length).toBe(2);
+    // 直列化により、遅延しても受信順は必ず num -> remark
+    expect(putOrder).toEqual(["num", "remark"]);
+    expect(putPayloads).toEqual([{ num: 4 }, { remark: "入口1番" }]);
+    expect(state.assigns[0]).toMatchObject({ num: 4, remark: "入口1番" });
+  });
+
+  test("同じ項目を連続編集しても最後の値が残る（直列化）", async ({ page }) => {
+    const { putPayloads, state } = await setupAssignItems(page, {
+      delayFirstPutMs: 800,
+    });
+    await openAssignItems(page);
+
+    const numInput = page.getByLabel("机の割り当て個数");
+    await numInput.fill("4");
+    await numInput.press("Tab"); // PUT#1 { num: 4 }（応答を遅延）
+    await numInput.fill("5");
+    await numInput.press("Tab"); // PUT#2 { num: 5 }
+
+    await expect.poll(() => putPayloads).toEqual([{ num: 4 }, { num: 5 }]);
+    expect(state.assigns[0].num).toBe(5);
   });
 
   test("保存済みの値から変更がなければ保存しない", async ({ page }) => {
@@ -210,7 +248,10 @@ test.describe("物品割り当ての備考", () => {
       }
     });
     await openAssignItems(page);
-    await page.locator(".group-card").first().dragTo(page.locator(".stock-card").first());
+    await page
+      .locator(".group-card")
+      .first()
+      .dragTo(page.locator(".stock-card").first());
 
     // 椅子は申請が無いため個数0で割り当てられる
     const chairRemark = page.getByLabel("椅子の備考");
