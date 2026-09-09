@@ -81,10 +81,16 @@ services:
     volumes:
       - ./rental:/app
       - rental-node-modules:/app/node_modules
+      - rental-next-cache:/app/.next
+      - rental-pnpm-store:/app/.pnpm-store
     depends_on: [api]
 
 volumes:
   mysql-data:
     driver: local
   rental-node-modules:
+    driver: local
+  rental-next-cache:
+    driver: local
+  rental-pnpm-store:
     driver: local

@@ -10,12 +10,15 @@ RUN npm install -g corepack@0.34.0 \
 
 # 作業ディレクトリを設定
 WORKDIR /app
-# node_modules は named volume として上書きされるため、先に node ユーザー所有で作成しておく
-RUN mkdir -p /app/node_modules \
+# node_modules・.next・.pnpm-store は named volume として上書きされるため、先に node ユーザー所有で作成しておく
+RUN mkdir -p /app/node_modules /app/.next /app/.pnpm-store \
   && chown -R node:node /app
 
-# 非rootユーザーで実行する
-USER node
+# ホスト側チェックアウトの所有者に関わらず node ユーザーで実行できるようにする
+# （entrypoint内でrootとして/appの所有権を修正した後、nodeユーザーへ切り替える）
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 # コンテナ起動時に実行するデフォルトコマンド
 CMD ["pnpm", "run", "dev"]
