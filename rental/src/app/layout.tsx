@@ -34,6 +34,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* crossOrigin="use-credentials" が無いと Access のログインへリダイレクトされインストールできない */}
+        <link
+          rel="manifest"
+          href="/manifest.webmanifest"
+          crossOrigin="use-credentials"
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <RegisterServiceWorker />
         {children}
