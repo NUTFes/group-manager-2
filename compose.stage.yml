@@ -44,6 +44,22 @@ services:
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.stg.env]
 
+  rental:
+    build:
+      context: ./rental
+      dockerfile: prod.Dockerfile
+      # env_file はコンテナ実行時の環境変数にのみ適用され、build args には渡らない。
+      # group-manager-2.stg.env に頼らず、staging向けの値をここに直接指定する。
+      args:
+        - NODE_ENV=production
+        - APP_ENV=staging
+        - NEXT_PUBLIC_API_URL=https://stg-group-manager-api.nutfes.net
+        - SSR_API_URL=https://stg-group-manager-api.nutfes.net
+    container_name: "GM2-RENTAL"
+    ports: ["8004:3000"]
+    env_file: [group-manager-2.stg.env]
+    depends_on: [api]
+
   dozzle-agent:
     image: amir20/dozzle:latest
     container_name: "GM2-DOZZLE-AGENT"

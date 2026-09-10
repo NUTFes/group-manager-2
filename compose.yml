@@ -78,6 +78,7 @@ services:
     command: sh -c "pnpm install --frozen-lockfile && pnpm run dev"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - SSR_API_URL=http://api:3000
     volumes: [./rental:/app]
     depends_on: [api]
 
