@@ -276,6 +276,7 @@ Rails.application.routes.draw do
 
       #---確定情報ページQRコード
       get 'get_confirmed_qrcode_for_admin_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_admin_view'
+      get 'get_confirmed_qrcode_for_user_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_user_view'
 
       #---申請状況一覧
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'

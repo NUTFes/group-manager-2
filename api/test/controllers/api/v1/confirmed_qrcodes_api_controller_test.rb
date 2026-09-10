@@ -62,6 +62,32 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
     assert_response :forbidden
   end
 
+  test 'user view returns qrcode without authentication when secret matches' do
+    get "/api/v1/get_confirmed_qrcode_for_user_view/#{@group.id}", params: { secret: @group.secret }
+
+    assert_response :success
+    qrcode_png = response.parsed_body.dig('data', 'qrcode_png')
+    assert_match(%r{\Adata:image/png;base64,}, qrcode_png)
+  end
+
+  test 'user view returns not found when secret does not match' do
+    get "/api/v1/get_confirmed_qrcode_for_user_view/#{@group.id}", params: { secret: 'wrong-secret' }
+
+    assert_response :not_found
+  end
+
+  test 'user view returns not found when secret is missing' do
+    get "/api/v1/get_confirmed_qrcode_for_user_view/#{@group.id}"
+
+    assert_response :not_found
+  end
+
+  test 'user view returns not found for unknown group' do
+    get "/api/v1/get_confirmed_qrcode_for_user_view/#{@group.id + 1000}", params: { secret: @group.secret }
+
+    assert_response :not_found
+  end
+
   private
 
   def get_confirmed_qrcode
