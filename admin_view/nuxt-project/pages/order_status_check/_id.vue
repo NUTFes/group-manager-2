@@ -137,12 +137,18 @@
                 <h2>確定情報ページ</h2>
               </div>
               <div v-if="confirmedQrcode" class="confirmed-qrcode-section">
-                <img
-                  class="confirmed-qrcode-image"
-                  :src="confirmedQrcode.qrcode_png"
-                  alt="確定情報ページQRコード"
+                <button
+                  type="button"
+                  class="confirmed-qrcode-button"
+                  aria-label="確定情報ページQRコードを新規タブで開く"
                   @click="openQrcodeImage(confirmedQrcode.qrcode_png)"
-                />
+                >
+                  <img
+                    class="confirmed-qrcode-image"
+                    :src="confirmedQrcode.qrcode_png"
+                    alt=""
+                  />
+                </button>
                 <div class="confirmed-qrcode-url-row">
                   <a
                     class="confirmed-qrcode-url"
@@ -1928,11 +1934,21 @@ export default {
   gap: 24px;
   flex-wrap: wrap;
 }
+.confirmed-qrcode-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.confirmed-qrcode-button:focus-visible {
+  outline: 2px solid var(--button-primary);
+  outline-offset: 2px;
+}
 .confirmed-qrcode-image {
   width: 140px;
   height: 140px;
-  flex-shrink: 0;
-  cursor: pointer;
 }
 .confirmed-qrcode-url-row {
   display: flex;
