@@ -5,13 +5,16 @@ class ItemRentalLogsController < ApplicationController
   before_action :require_admin!
 
   IDEMPOTENCY_ATTRIBUTES = %w[
-    assign_rental_item_id rental_item_id stocker_place_id category quantity recorder_email
+    assign_rental_item_id group_id rental_item_id stocker_place_id category quantity recorder_email
   ].freeze
+
+  ASSIGNMENT_CHANGE_CATEGORIES = %w[addition reduction].freeze
 
   # GET /item_rental_logs
   def index
     assign_rental_items = AssignRentalItem.where(assign_rental_item_filter_params)
     item_rental_logs = ItemRentalLog.where(assign_rental_item_id: assign_rental_items.select(:id))
+    item_rental_logs = item_rental_logs.or(ItemRentalLog.where(group_id: params[:group_id])) if params[:group_id].present?
 
     render json: fmt(ok, { item_rental_logs: item_rental_logs, assign_rental_items: assign_rental_items })
   end
@@ -20,15 +23,20 @@ class ItemRentalLogsController < ApplicationController
   def create
     return render_unprocessable_entity('Invalid category') unless valid_category?(params[:category])
 
-    assign_rental_item = AssignRentalItem.find_by(id: params[:assign_rental_item_id])
-    return render_not_found('assign_rental_item not found') unless assign_rental_item
+    if ASSIGNMENT_CHANGE_CATEGORIES.include?(params[:category])
+      item_rental_log = ItemRentalLog.new(item_rental_log_params)
+    else
+      assign_rental_item = AssignRentalItem.find_by(id: params[:assign_rental_item_id])
+      return render_not_found('assign_rental_item not found') unless assign_rental_item
 
-    item_rental_log = ItemRentalLog.new(
-      item_rental_log_params.merge(
-        rental_item_id: assign_rental_item.rental_item_id,
-        stocker_place_id: assign_rental_item.stocker_place_id
+      item_rental_log = ItemRentalLog.new(
+        item_rental_log_params.merge(
+          rental_item_id: assign_rental_item.rental_item_id,
+          stocker_place_id: assign_rental_item.stocker_place_id,
+          group_id: assign_rental_item.group_id
+        )
       )
-    )
+    end
     item_rental_log.recorder_email = current_api_user.email
 
     existing_log = ItemRentalLog.find_by(uid: item_rental_log.uid)
@@ -58,7 +66,7 @@ class ItemRentalLogsController < ApplicationController
   end
 
   def item_rental_log_params
-    params.permit(:uid, :assign_rental_item_id, :category, :quantity)
+    params.permit(:uid, :assign_rental_item_id, :category, :quantity, :group_id, :rental_item_id, :stocker_place_id)
   end
 
   def render_idempotent_result(existing_log, candidate_log)
