@@ -131,6 +131,37 @@
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
+            <!-- 確定情報ページ -->
+            <div style="width: 100%">
+              <div class="section-header">
+                <h2>確定情報ページ</h2>
+              </div>
+              <div v-if="confirmedQrcode" class="confirmed-qrcode-section">
+                <img
+                  class="confirmed-qrcode-image"
+                  :src="confirmedQrcode.qrcode_png"
+                  alt="確定情報ページQRコード"
+                  @click="openQrcodeImage(confirmedQrcode.qrcode_png)"
+                />
+                <div class="confirmed-qrcode-url-row">
+                  <a
+                    class="confirmed-qrcode-url"
+                    :href="confirmedQrcode.confirmed_url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ confirmedQrcode.confirmed_url }}</a
+                  >
+                  <CommonButton
+                    iconName="content_copy"
+                    :on_click="copyConfirmedUrl"
+                    >コピー</CommonButton
+                  >
+                </div>
+              </div>
+              <p v-else>QRコードを読み込めませんでした。</p>
+              <HorizontalRule style="margin-top: 24px" />
+            </div>
+
             <!-- 会場申請 -->
             <div v-if="shouldShow('place_order')" style="width: 100%">
               <div class="section-header">
@@ -1299,6 +1330,7 @@ export default {
       selectedItem: null,
       isOpenEditModal: false,
       submissions: [],
+      confirmedQrcode: null,
       isPreviewModalOpen: false,
       statusOptions: [
         { value: "unapproved", label: "未確認" },
@@ -1348,22 +1380,29 @@ export default {
     async fetchData(silent = false) {
       if (!silent) this.loading = true;
       try {
-        const [orderInfoRes, unregRes, submissionRes] = await Promise.all([
-          this.$axios.$get(
-            `/api/v1/get_order_info_for_admin_view/${this.$route.params.id}`
-          ),
-          this.$axios.$get(
-            `/un_registered_groups?group_id=${this.$route.params.id}`
-          ),
-          this.$axios
-            .$get(
-              `/api/v1/get_health_center_submission_status_show_for_admin_view/${this.$route.params.id}`
-            )
-            .catch(() => ({ data: { submissions: [] } })),
-        ]);
+        const [orderInfoRes, unregRes, submissionRes, confirmedQrcodeRes] =
+          await Promise.all([
+            this.$axios.$get(
+              `/api/v1/get_order_info_for_admin_view/${this.$route.params.id}`
+            ),
+            this.$axios.$get(
+              `/un_registered_groups?group_id=${this.$route.params.id}`
+            ),
+            this.$axios
+              .$get(
+                `/api/v1/get_health_center_submission_status_show_for_admin_view/${this.$route.params.id}`
+              )
+              .catch(() => ({ data: { submissions: [] } })),
+            this.$axios
+              .$get(
+                `/api/v1/get_confirmed_qrcode_for_admin_view/${this.$route.params.id}`
+              )
+              .catch(() => ({ data: null })),
+          ]);
         this.group = orderInfoRes.data;
         this.unregisteredGroups = unregRes.data || [];
         this.submissions = submissionRes.data?.submissions || [];
+        this.confirmedQrcode = confirmedQrcodeRes.data || null;
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push("/");
@@ -1510,6 +1549,41 @@ export default {
     },
     openImage(url) {
       window.open(url, "_blank", "noopener,noreferrer");
+    },
+    // data URIを直接window.openすると一部ブラウザでトップレベルナビゲーションが
+    // 拒否されるため、Blob URLに変換してから新規タブで開く。
+    openQrcodeImage(dataUri) {
+      if (!dataUri) return;
+      try {
+        const [meta, base64] = dataUri.split(",");
+        const mime = meta.match(/data:(.*);base64/)?.[1] || "image/png";
+        const binary = window.atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blobUrl = URL.createObjectURL(
+          new Blob([bytes], { type: mime })
+        );
+        window.open(blobUrl, "_blank", "noopener,noreferrer");
+        // 新規タブでの読み込みが完了する猶予を置いてから解放する
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch (error) {
+        console.error("QRコード画像の表示に失敗しました", error);
+        window.alert("QRコード画像を開けませんでした。");
+      }
+    },
+    async copyConfirmedUrl() {
+      if (!this.confirmedQrcode) return;
+      try {
+        await navigator.clipboard.writeText(
+          this.confirmedQrcode.confirmed_url
+        );
+        window.alert("URLをコピーしました。");
+      } catch (error) {
+        console.error("URLのコピーに失敗しました", error);
+        window.alert("URLのコピーに失敗しました。");
+      }
     },
     async onEditorSaved() {
       await this.clearUnregisteredFlagIfNeeded();
@@ -1846,5 +1920,28 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.confirmed-qrcode-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.confirmed-qrcode-image {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.confirmed-qrcode-url-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.confirmed-qrcode-url {
+  word-break: break-all;
+  color: inherit;
 }
 </style>
