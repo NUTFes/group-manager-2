@@ -274,6 +274,9 @@ Rails.application.routes.draw do
       post 'get_refinement_order_infos' => 'order_infos_api#get_refinement_order_infos'
       post 'get_search_order_infos' => 'order_infos_api#get_search_order_infos'
 
+      #---確定情報ページQRコード
+      get 'get_confirmed_qrcode_for_admin_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_admin_view'
+
       #---申請状況一覧
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
