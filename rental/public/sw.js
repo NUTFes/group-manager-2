@@ -1,6 +1,20 @@
-const CACHE_NAME = "rental-cache-v1";
+const CACHE_NAME = "rental-cache-v2";
 
-self.addEventListener("install", () => {
+const APP_SHELL_URLS = [
+  "/",
+  "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/icon-maskable-512.png",
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL_URLS))
+      .catch(() => {})
+  );
   self.skipWaiting();
 });
 
@@ -19,14 +33,26 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Network-first, falling back to cache when offline. Successful GET
-// responses are cached opportunistically so previously visited pages/assets
-// stay available offline. This is a lightweight runtime cache, not a
-// build-time precache manifest (no bundler plugin is involved).
+function isCacheableRequest(url) {
+  return (
+    url.pathname.startsWith("/_next/static/") ||
+    APP_SHELL_URLS.includes(url.pathname)
+  );
+}
+
+// Network-first, falling back to cache when offline. Caching is limited to
+// build-time static assets and the app shell above: Next.js が no-store で
+// 返す HTML/RSC はここでは扱わないため、Access のセッション終了後に閲覧済みの
+// 画面がキャッシュ経由で残り続けることはない。
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+  const url = new URL(request.url);
 
-  if (request.method !== "GET" || !request.url.startsWith(self.location.origin)) {
+  if (
+    request.method !== "GET" ||
+    url.origin !== self.location.origin ||
+    !isCacheableRequest(url)
+  ) {
     return;
   }
 
