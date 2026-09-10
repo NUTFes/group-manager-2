@@ -107,6 +107,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     ItemRentalLog.create!(
       uid: 'destroy-conflict-uid',
       assign_rental_item: assign_rental_item,
+      group: groups(:two),
       stocker_place: @stocker_place,
       rental_item: assign_rental_item.rental_item,
       category: :rental,

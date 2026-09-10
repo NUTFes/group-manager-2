@@ -7,6 +7,7 @@ class ItemRentalLogTest < ActiveSupport::TestCase
     @stocker_place = stocker_places(:one)
     @rental_item = rental_items(:one)
     @assign_rental_item = assign_rental_items(:one)
+    @group = groups(:one)
   end
 
   def build_log(attrs = {})
@@ -14,6 +15,7 @@ class ItemRentalLogTest < ActiveSupport::TestCase
       {
         uid: 'model-test-uid',
         assign_rental_item: @assign_rental_item,
+        group: @group,
         stocker_place: @stocker_place,
         rental_item: @rental_item,
         category: :rental,
@@ -51,5 +53,26 @@ class ItemRentalLogTest < ActiveSupport::TestCase
 
   test 'invalid with unknown category' do
     assert_raises(ArgumentError) { build_log(category: 'unknown') }
+  end
+
+  test 'valid addition log without assign_rental_item' do
+    log = build_log(assign_rental_item: nil, category: :addition, uid: 'addition-uid')
+    assert log.valid?
+  end
+
+  test 'valid reduction log without assign_rental_item' do
+    log = build_log(assign_rental_item: nil, category: :reduction, uid: 'reduction-uid')
+    assert log.valid?
+  end
+
+  test 'invalid addition log with assign_rental_item present' do
+    log = build_log(category: :addition, uid: 'addition-uid')
+    assert_not log.valid?
+    assert log.errors.of_kind?(:assign_rental_item, :present)
+  end
+
+  test 'invalid without group' do
+    log = build_log(group: nil)
+    assert_not log.valid?
   end
 end

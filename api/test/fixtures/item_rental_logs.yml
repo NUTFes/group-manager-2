@@ -3,6 +3,7 @@
 one:
   uid: item-rental-log-uid-one
   assign_rental_item: one
+  group: one
   stocker_place: one
   rental_item: one
   category: rental
@@ -12,6 +13,7 @@ one:
 two:
   uid: item-rental-log-uid-two
   assign_rental_item: two
+  group: two
   stocker_place: two
   rental_item: two
   category: return

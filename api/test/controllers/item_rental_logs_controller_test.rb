@@ -43,6 +43,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     other_log = ItemRentalLog.create!(
       uid: 'other-assignment-log-uid',
       assign_rental_item: other_assignment,
+      group_id: other_assignment.group_id,
       stocker_place_id: other_assignment.stocker_place_id,
       rental_item_id: other_assignment.rental_item_id,
       category: :rental,
@@ -251,6 +252,114 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+  end
+
+  test 'should create an addition log without assign_rental_item_id' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'addition-uid',
+        group_id: groups(:two).id,
+        rental_item_id: @assign_rental_item.rental_item_id,
+        stocker_place_id: @stocker_place.id,
+        category: 'addition',
+        quantity: 2
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+    body = response.parsed_body['data']
+    assert_nil body['assign_rental_item_id']
+    assert_equal groups(:two).id, body['group_id']
+  end
+
+  test 'should create a reduction log without assign_rental_item_id' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'reduction-uid',
+        group_id: @group.id,
+        rental_item_id: @assign_rental_item.rental_item_id,
+        stocker_place_id: @stocker_place.id,
+        category: 'reduction',
+        quantity: 2
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+    assert_nil response.parsed_body['data']['assign_rental_item_id']
+  end
+
+  test 'should reject an addition log that includes assign_rental_item_id' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'addition-with-assignment-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        group_id: @group.id,
+        rental_item_id: @assign_rental_item.rental_item_id,
+        stocker_place_id: @stocker_place.id,
+        category: 'addition',
+        quantity: 2
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'should reject an addition log without group_id' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'addition-without-group-uid',
+        rental_item_id: @assign_rental_item.rental_item_id,
+        stocker_place_id: @stocker_place.id,
+        category: 'addition',
+        quantity: 2
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'should get index filtered by group_id including addition/reduction logs' do
+    assignment_change_log = ItemRentalLog.create!(
+      uid: 'index-addition-uid',
+      group: @group,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      category: :addition,
+      quantity: 3,
+      recorder_email: 'recorder@example.com'
+    )
+
+    get item_rental_logs_url, params: { group_id: @group.id }, headers: @headers
+    assert_response :success
+
+    log_ids = response.parsed_body['data']['item_rental_logs'].pluck('id')
+    assert_includes log_ids, assignment_change_log.id
+  end
+
+  test 'should create a rental_absolute log' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'rental-absolute-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental_absolute',
+        quantity: 5
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+  end
+
+  test 'should create a return_absolute log' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'return-absolute-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'return_absolute',
+        quantity: 5
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
   end
 
   private
