@@ -44,6 +44,20 @@ services:
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.stg.env]
 
+  rental:
+    build:
+      context: ./rental
+      dockerfile: prod.Dockerfile
+      args:
+        - NODE_ENV=${NODE_ENV}
+        - APP_ENV=${APP_ENV}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - SSR_API_URL=${SSR_API_URL}
+    container_name: "GM2-RENTAL"
+    ports: ["8004:3000"]
+    env_file: [group-manager-2.stg.env]
+    depends_on: [api]
+
   dozzle-agent:
     image: amir20/dozzle:latest
     container_name: "GM2-DOZZLE-AGENT"

@@ -42,6 +42,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - APP_ENV=${APP_ENV}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - SSR_API_URL=${SSR_API_URL}
     container_name: prod-rental
     ports:
       - "8004:3000"
