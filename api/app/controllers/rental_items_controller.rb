@@ -25,8 +25,11 @@ class RentalItemsController < ApplicationController
   end
 
   def destroy
-    @rental_item.destroy
-    render json: fmt(ok, [], "Deleted rental_item = #{params[:id]}")
+    if @rental_item.destroy
+      render json: fmt(ok, [], "Deleted rental_item = #{params[:id]}")
+    else
+      render json: fmt(conflict, [], @rental_item.errors.full_messages.join(', ')), status: :conflict
+    end
   end
 
   def translate

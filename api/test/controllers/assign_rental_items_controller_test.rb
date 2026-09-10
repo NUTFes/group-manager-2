@@ -78,14 +78,48 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should destroy assign_rental_item' do
+    # @assign_rental_item(fixture :one)にはitem_rental_logsが紐づいており削除できないため、
+    # ログを持たない別レコードで検証する
+    assign_rental_item_without_logs = AssignRentalItem.create!(
+      group: groups(:two),
+      rental_item: @assign_rental_item.rental_item,
+      stocker_place: @stocker_place,
+      num: 1
+    )
+
     assert_difference('AssignRentalItem.count', -1) do
-      delete assign_rental_item_url(@assign_rental_item), as: :json
+      delete assign_rental_item_url(assign_rental_item_without_logs), as: :json
     end
 
     # destroyは204ではなく、削除結果をJSONで返す実装になっている
     assert_response :success
     assert_includes response.headers['Content-Type'], 'application/json'
     assert_equal 200, response.parsed_body.dig('status', 'code')
+  end
+
+  test 'should return conflict when destroying an assign_rental_item with item_rental_logs' do
+    assign_rental_item = AssignRentalItem.create!(
+      group: groups(:two),
+      rental_item: @assign_rental_item.rental_item,
+      stocker_place: @stocker_place,
+      num: 1
+    )
+    ItemRentalLog.create!(
+      uid: 'destroy-conflict-uid',
+      assign_rental_item: assign_rental_item,
+      stocker_place: @stocker_place,
+      rental_item: assign_rental_item.rental_item,
+      category: :rental,
+      quantity: 1,
+      recorder_email: 'recorder@example.com'
+    )
+
+    assert_no_difference('AssignRentalItem.count') do
+      delete assign_rental_item_url(assign_rental_item), as: :json
+    end
+
+    assert_response :conflict
+    assert AssignRentalItem.exists?(assign_rental_item.id)
   end
 
   # 存在しないIDの場合、HTTPステータスは200のままレスポンス本文で404を返す実装になっている
