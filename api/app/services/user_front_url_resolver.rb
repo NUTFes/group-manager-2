@@ -14,7 +14,7 @@ class UserFrontUrlResolver
   }.freeze
 
   def self.call
-    @result ||= new.call
+    @call ||= new.call
   end
 
   def call
