@@ -2,8 +2,44 @@ h1 {
   text-align: center;
 }
 
+.print-header {
+  position: relative;
+  min-height: 4cm;
+}
+
+.print-header h1 {
+  margin: 0;
+}
+
+.print-header-qrcode {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  width: 6cm;
+  text-align: center;
+}
+
+.print-header-qrcode img {
+  width: 6cm;
+  height: 6cm;
+}
+
+.print-header-qrcode-caption {
+  font-size: 11px;
+  margin-top: 0;
+}
+
 .page-break {
   page-break-after: always;
+}
+
+/* 強制改ページ後のページは、文書先頭のページと比べて上端の開始位置が
+   微妙にズレることがあるため、全ページで同じ基準点になるよう固定のpadding-topを設ける。
+   .print-header-qrcodeのtop:-20pxはこのpadding-top分を基準に計算される。
+   このCSSは他のPDFテンプレートとも共有しているため、QRコードヘッダーを持つ
+   ページ(output_all_groups_rental_items.pdf.erb)にのみ限定する。 */
+.page-break-with-qrcode {
+  padding-top: 20px;
 }
 
 .page-break:last-child {
