@@ -163,6 +163,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_17_000001) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "group_secrets", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.string "secret", null: false, collation: "utf8mb4_bin"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_secrets_on_group_id", unique: true
+    t.index ["secret"], name: "index_group_secrets_on_secret", unique: true
+  end
+
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "project_name"
@@ -538,6 +547,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_17_000001) do
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "group_secrets", "groups"
   add_foreign_key "health_center_submission_statuses", "groups"
   add_foreign_key "item_rental_logs", "assign_rental_items"
   add_foreign_key "item_rental_logs", "rental_items"

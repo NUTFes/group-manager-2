@@ -70,6 +70,17 @@ services:
     volumes: [./user:/app]
     depends_on: [api]
 
+  rental:
+    build: ./rental
+    container_name: "GM3-RENTAL"
+    ports:
+      - "8004:3000"
+    command: sh -c "pnpm install --frozen-lockfile && pnpm run dev"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    volumes: [./rental:/app]
+    depends_on: [api]
+
 volumes:
   mysql-data:
     driver: local
