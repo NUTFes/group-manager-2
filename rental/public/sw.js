@@ -1,7 +1,8 @@
-const CACHE_NAME = "rental-cache-v2";
+const CACHE_NAME = "rental-cache-v3";
 
+// 認証状態に依存しない静的アセットのみを対象にする。ルートHTML（"/"）は
+// Access のセッション状態によって内容が変わり得るため対象に含めない。
 const APP_SHELL_URLS = [
-  "/",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -40,10 +41,10 @@ function isCacheableRequest(url) {
   );
 }
 
-// Network-first, falling back to cache when offline. Caching is limited to
-// build-time static assets and the app shell above: Next.js が no-store で
-// 返す HTML/RSC はここでは扱わないため、Access のセッション終了後に閲覧済みの
-// 画面がキャッシュ経由で残り続けることはない。
+// Network-first, falling back to cache when offline. キャッシュ対象は
+// ビルド時静的アセット(/_next/static/*)と認証状態に依存しない静的ファイル
+// (manifest・icons)のみ。ページのHTML/RSCはここでは扱わないため、Access
+// のセッション終了後に閲覧済みの画面がキャッシュ経由で残り続けることはない。
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
