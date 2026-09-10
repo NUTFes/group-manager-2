@@ -6,16 +6,10 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
   self.fixture_table_names = []
 
   setup do
-    Role.create!(id: 1, name: 'manager')
-    @manager = User.create!(
-      name: 'confirmed-qrcode-manager',
-      email: 'confirmed-qrcode-manager@example.com',
-      uid: 'confirmed-qrcode-manager@example.com',
-      provider: 'email',
-      password: 'password',
-      password_confirmation: 'password',
-      role_id: 1
-    )
+    Role.create!(id: 1, name: 'admin')
+    Role.create!(id: 3, name: 'user')
+    @manager = create_user!(email: 'confirmed-qrcode-manager@example.com', role_id: 1)
+    @general_user = create_user!(email: 'confirmed-qrcode-user@example.com', role_id: 3)
     category = GroupCategory.create!(name: '食品販売')
     year = FesYear.create!(year_num: 2026)
     @group = Group.create!(
@@ -54,11 +48,37 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
     assert_equal 404, response.parsed_body.dig('status', 'code')
   end
 
+  test 'unauthenticated request cannot get qrcode' do
+    get "/api/v1/get_confirmed_qrcode_for_admin_view/#{@group.id}", as: :json
+
+    assert_response :unauthorized
+  end
+
+  test 'general user cannot get qrcode' do
+    get "/api/v1/get_confirmed_qrcode_for_admin_view/#{@group.id}",
+        headers: @general_user.create_new_auth_token,
+        as: :json
+
+    assert_response :forbidden
+  end
+
   private
 
   def get_confirmed_qrcode
     get "/api/v1/get_confirmed_qrcode_for_admin_view/#{@group.id}",
         headers: @manager.create_new_auth_token,
         as: :json
+  end
+
+  def create_user!(email:, role_id:)
+    User.create!(
+      name: email.split('@').first,
+      email: email,
+      uid: email,
+      provider: 'email',
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: role_id
+    )
   end
 end

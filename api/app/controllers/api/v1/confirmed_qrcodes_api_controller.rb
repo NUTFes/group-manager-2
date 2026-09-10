@@ -2,6 +2,7 @@
 
 class Api::V1::ConfirmedQrcodesApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_confirmed_qrcode_for_admin_view
     group = Group.find(params[:group_id])
