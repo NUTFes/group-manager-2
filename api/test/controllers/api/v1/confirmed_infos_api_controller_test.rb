@@ -148,6 +148,25 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  # group_idはパスパラメータなので必ず文字列で届く。正の整数以外は検索する前に弾く。
+  # 現状のRailsは範囲外の値でクエリを発行せず結果的に404になるが、その内部挙動に依存すると
+  # 将来ActiveModel::RangeErrorが伝播して500になり得るため、常に404であることを固定する。
+  test 'returns 404 when the group id is not a positive integer' do
+    %w[abc 1abc 01 -1 0 1e10].each do |group_id|
+      get "/api/v1/get_confirmed_info_for_user_view/#{group_id}?secret=#{@group.secret}"
+
+      assert_response :not_found, "group_id=#{group_id} で404になっていない"
+    end
+  end
+
+  test 'returns 404 when the group id exceeds the range of the id column' do
+    %w[9223372036854775808 999999999999999999999999999999].each do |group_id|
+      get "/api/v1/get_confirmed_info_for_user_view/#{group_id}?secret=#{@group.secret}"
+
+      assert_response :not_found, "group_id=#{group_id} で404になっていない"
+    end
+  end
+
   # group_secrets.secret は utf8mb4_bin なので大文字小文字を区別する。
   # 照合順序が既定に戻ると探索空間が縮むため、API層でも固定しておく。
   test 'returns 404 when the secret differs only in letter case' do
