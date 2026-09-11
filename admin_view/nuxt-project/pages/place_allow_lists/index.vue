@@ -232,6 +232,8 @@ export default {
     }),
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/places", {

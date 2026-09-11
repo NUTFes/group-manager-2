@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).representatives.read">
     <SubHeader pageTitle="代表者一覧">
       <CommonButton v-if="this.$role(roleID).representatives.create" iconName="add_circle" :on_click="openAddModal">
         副代表追加
@@ -129,54 +129,19 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { departmentList, gradeList } from "~/utils/constants";
 export default {
   watchQuery: ["page"],
   data() {
     return {
       headers: ["ID", "参加団体", "代表者", "副代表"],
-      departmentList: [
-        { id: 1, name: "機械創造工学課程" },
-        { id: 2, name: "電気電子情報工学課程" },
-        { id: 3, name: "物質材料工学課程" },
-        { id: 4, name: "環境社会基盤工学課程" },
-        { id: 5, name: "生物機能工学課程" },
-        { id: 6, name: "情報・経営システム工学課程" },
-        { id: 7, name: "機械創造工学専攻" },
-        { id: 8, name: "電気電子情報工学専攻" },
-        { id: 9, name: "物質材料工学専攻" },
-        { id: 10, name: "環境社会基盤工学専攻" },
-        { id: 11, name: "生物機能工学専攻" },
-        { id: 12, name: "情報・経営システム工学専攻" },
-        { id: 13, name: "原子力システム安全工学専攻" },
-        { id: 14, name: "システム安全専攻" },
-        { id: 15, name: "技術科学イノベーション専攻" },
-        { id: 16, name: "情報・制御工学専攻" },
-        { id: 17, name: "材料工学専攻" },
-        { id: 18, name: "エネルギー・環境工学専攻" },
-        { id: 19, name: "生物統合工学専攻" },
-        { id: 20, name: "その他" },
-      ],
-      gradeList: [
-        { id: 1, name: "B1[学部1年]" },
-        { id: 2, name: "B2[学部2年]" },
-        { id: 3, name: "B3[学部3年]" },
-        { id: 4, name: "B4[学部4年]" },
-        { id: 5, name: "M1[修士1年]" },
-        { id: 6, name: "M2[修士2年]" },
-        { id: 7, name: "D1[博士1年]" },
-        { id: 8, name: "D2[博士2年]" },
-        { id: 9, name: "D3[博士3年]" },
-        { id: 10, name: "GD1[イノベ1年]" },
-        { id: 11, name: "GD2[イノベ2年]" },
-        { id: 12, name: "GD3[イノベ3年]" },
-        { id: 13, name: "GD4[イノベ4年]" },
-        { id: 14, name: "GD4[イノベ5年]" },
-        { id: 15, name: "その他" },
-      ],
+      departmentList,
+      gradeList,
       isOpenAddModal: false,
       isOpenSnackBar: false,
       refYears: "Year",
@@ -192,35 +157,54 @@ export default {
       studentID: null,
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-    // const url = "/api/v1/get_representative_index_for_admin_view";
-
-    const url =
-      "/api/v1/get_refinement_representatives?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    const representativesRes = await $axios.$post(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-    return {
-      representatives: representativesRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num,
-      currentYearID: currentYears,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.fetchInitialData().then(() => {
+    // データ取得後にフィルター処理するの✨
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    }
+  });
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    // 初期データ取得
+    this.fetchInitialData();
+  },
   methods: {
+    async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_representatives?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const representativesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.representatives = representativesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+      this.currentYearID = currentYears;
+      this.fetchFilteredData();
+    },
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementRepresentatives(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
@@ -229,6 +213,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.representatives = [];
       const refUrl =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
@@ -236,8 +222,19 @@ export default {
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchRepresentatives();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchRepresentatives() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.representatives = [];
       const searchUrl =
         "/api/v1/get_search_representatives?word=" + this.searchText;

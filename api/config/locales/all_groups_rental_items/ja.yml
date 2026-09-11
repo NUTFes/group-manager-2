@@ -1,0 +1,34 @@
+ja:
+  print_pdf:
+    output_all_groups_rental_items:
+      title: "物品貸出表"
+      sections:
+        participating_org: "参加団体情報"
+        rental_items: "貸出物品一覧"
+      org:
+        number: "識別番号"
+        name: "団体名"
+        category: "分類"
+        activity_time: "活動時間"
+        day1_label: "（1日目）"
+        day2_label: "（2日目）"
+        location: "場所"
+        power: "使用電力"
+      items_table:
+        headers:
+          item_name: "物品名"
+          stock_location: "在庫場所"
+          rental_location: "貸出場所"
+          quantity: "数量"
+          pickup_date: "貸出日"
+          return_date: "返却日"
+          pickup_confirmation: "借用チェック"
+          return_confirmation: "返却チェック"
+        pickup_day_label: "(準備日)"
+        return_day_label: "(片付け日)"
+      precautions:
+        title: "《注意事項》"
+        items:
+          - "物品は借用・返却場所を間違えないようにしてください。"
+          - "借用および返却時は貸出場所にいる実行委員のチェックを受けてください。"
+          - "備品等は絶対に汚さないように使用し、綺麗にしてから返却してください。"

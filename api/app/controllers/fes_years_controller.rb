@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class FesYearsController < ApplicationController
-  before_action :set_fes_year, only: [:show, :update, :destroy]
+  before_action :set_fes_year, only: %i[show update destroy]
 
   def index
     @fes_years = FesYear.all
@@ -22,21 +24,22 @@ class FesYearsController < ApplicationController
 
   def destroy
     @fes_year.destroy
-    render json: fmt(ok, [], "Deleted fes_year = "+params[:id])
+    render json: fmt(ok, [], "Deleted fes_year = #{params[:id]}")
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_fes_year
-      if FesYear.exists?(params[:id])
-        @fes_year = FesYear.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found fes_year = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def fes_year_params
-      params.permit(:year_num)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_fes_year
+    if FesYear.exists?(params[:id])
+      @fes_year = FesYear.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found fes_year = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def fes_year_params
+    params.permit(:year_num)
+  end
 end

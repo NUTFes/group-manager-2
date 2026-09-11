@@ -78,6 +78,7 @@ export default {
   mounted() {
     this.getList();
     setTimeout(this.handlePrint, 100);
+    window.scrollTo(0, 0);
   },
   methods: {
     getList() {

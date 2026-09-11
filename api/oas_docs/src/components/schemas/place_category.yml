@@ -1,0 +1,32 @@
+---
+components:
+  schemas:
+    PlaceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        parent_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        formatted_name:
+          type: string
+        parent_name:
+          type: string
+        children_count:
+          type: integer
+        descendant_ids:
+          type: array
+          items:
+            type: integer
+        stocker_places_count:
+          type: integer

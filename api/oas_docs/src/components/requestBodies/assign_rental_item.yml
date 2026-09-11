@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    AssignRentalItem:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/AssignRentalItem"

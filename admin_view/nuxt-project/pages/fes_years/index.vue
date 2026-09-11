@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).fes_years.read">
     <SubHeader pageTitle="開催年">
       <CommonButton v-if="this.$role(roleID).fes_years.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -52,6 +52,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -79,7 +80,16 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;

@@ -35,21 +35,21 @@
             <tr>
               <th>会場アナウンス文</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
+                <div v-if='announcement.announcement === null'>未登録</div>
                 <div v-else>{{ announcement.announcement.message }}</div>
               </td>
             </tr>
             <tr>
               <th>登録日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
+                <div v-if='announcement.announcement === null'>未登録</div>
                 <div v-else>{{ announcement.announcement.created_at | formatDate }}</div>
               </td>
             </tr>
             <tr>
               <th>編集日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
+                <div v-if='announcement.announcement === null'>未登録</div>
                 <div v-else>{{ announcement.announcement.updated_at | formatDate }}</div>
               </td>
             </tr>
@@ -65,20 +65,13 @@
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <select v-model="group_id">
-            <option v-for="group in groups" :key="group.id" :value="group.id">
-              {{ group.name }}
-            </option>
-          </select>
-        </div>
-        <div>
           <h3>会場アナウンス文</h3>
           <input v-model="message" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="edit" :on_click="edit" :disabled="isMessageOver">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -121,21 +114,33 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/announcement/", "");
-    const url = "/api/v1/get_announcement_show_for_admin_view/" + routeId;
+    const url = "/api/v1/get_announcement_for_admin_view/" + routeId;
     const res = await $axios.$get(url);
     return {
-      announcement: res.data,
+      announcement: res.data[0],
       route: url,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openEditModal() {
-      this.group_id = this.announcement.announcement.group_id;
-      this.message = this.announcement.announcement.message;
-      this.isOpenEditModal = true;
+      if (this.announcement.announcement) {
+        this.group_id = this.announcement.group.id;
+        this.message = this.announcement.announcement.message;
+        this.isOpenEditModal = true;
+      } else {
+        this.group_id = this.announcement.group.id;
+        this.message = null;
+        this.isOpenEditModal = true;
+      }
     },
     closeEditModal() {
       this.isOpenEditModal = false;
@@ -147,8 +152,8 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    openSnackBar(message) {
-      this.snackMessage = message;
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
       this.isOpenSnackBar = true;
       setTimeout(this.closeSnackBar, 2000);
     },
@@ -156,27 +161,47 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload(id) {
-      const url = "/api/v1/get_announcement_show_for_admin_view/" + id;
+      const url = "/api/v1/get_announcement_for_admin_view/" + id;
       const res = await this.$axios.$get(url);
-      this.announcement = res.data;
+      this.announcement = res.data[0];
     },
     async edit() {
-      const url = 
-      "/announcements/" + 
-      this.announcement.announcement.id + 
-      "?group_id=" + 
-      this.group_id+
-      "&message=" + 
-      this.message;
-      
+      if (!this.message) {
+        this.openSnackBar("会場アナウンス文を入力してください");
+        return;
+      }
+      if (this.announcement.announcement) {
+        const editUrl =
+          "/announcements/" +
+          this.announcement.announcement.id +
+          "?group_id=" +
+          this.group_id+
+          "&message=" +
+          this.message;
 
-      await this.$axios.$put(url).then((res) => {
-        this.openSnackBar("会場アナウンス文を編集しました");
-        this.message = "";
-        this.group_id = "";
-        this.reload(res.data.id);
-        this.closeEditModal();
-      });
+        await this.$axios.$put(editUrl).then((res) => {
+          this.openSnackBar("会場アナウンス文を編集しました");
+          this.group_id = null;
+          this.message = null;
+          this.reload(res.data.group_id);
+          this.closeEditModal();
+        });
+      } else {
+        const postAnnouncementUrl =
+          "/announcements/" +
+          "?group_id=" +
+          this.group_id +
+          "&message=" +
+          this.message;
+
+        await this.$axios.$post(postAnnouncementUrl).then((res) => {
+          this.openSnackBar("会場アナウンス文を登録しました");
+          this.group_id = null;
+          this.message = null;
+          this.reload(res.data.group_id);
+          this.closeEditModal();
+        });
+      }
     },
     async destroy() {
       const delUrl = "/announcements/" + this.announcement.announcement.id;

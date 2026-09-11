@@ -1,1 +1,3 @@
-json.partial! "power_orders/power_order", power_order: @power_order
+# frozen_string_literal: true
+
+json.partial! 'power_orders/power_order', power_order: @power_order

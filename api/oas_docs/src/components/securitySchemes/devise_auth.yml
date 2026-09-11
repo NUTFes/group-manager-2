@@ -1,0 +1,8 @@
+---
+components:
+  securitySchemes:
+    DeviseAuth:
+      type: apiKey
+      in: header
+      name: access-token
+      description: Devise認証用のアクセストークン

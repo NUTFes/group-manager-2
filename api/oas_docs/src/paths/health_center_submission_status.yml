@@ -1,0 +1,117 @@
+---
+paths:
+  "/health_center_submission_statuses":
+    get:
+      tags:
+      - health_center_submission_status
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '404':
+          description: health_center_submission_status description
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: query
+        description: group_id
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+      - health_center_submission_status
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+  "/health_center_submission_statuses/{id}":
+    patch:
+      tags:
+      - health_center_submission_status
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: health_center_submission_status description
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '200':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - health_center_submission_status
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: health_center_submission_status description
+        '404':
+          description: health_center_submission_status description
+        '422':
+          description: health_center_submission_status description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

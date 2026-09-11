@@ -31,3 +31,6 @@ nuxt.js<br>
 
 ## セットアップ
 [git cloneをしたら](https://github.com/NUTFes/group-manager-2/wiki/git-clone-%E3%82%92%E3%81%97%E3%81%9F%E3%82%89)
+
+## 開発メモ
+- [Playwright MCP を Docker で使う](docs/playwright_mcp_docker.md)

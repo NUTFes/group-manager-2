@@ -9,6 +9,8 @@ interface Group {
   updated_at: string;
   project_name: string;
   user_id: number;
+  is_international?: boolean;
+  is_external?: boolean;
 }
 
 export default Group;

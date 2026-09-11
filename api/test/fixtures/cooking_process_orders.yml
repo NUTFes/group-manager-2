@@ -1,0 +1,18 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 1
+  food_product_id: 1
+  pre_open_kitchen: false
+  during_open_kitchen: false
+  tent: Boil noodles.
+  tent_ja: 麺をゆでる。
+
+two:
+  group_id: 1
+  food_product_id: 2
+  pre_open_kitchen: false
+  during_open_kitchen: false
+  tent: Grill vegetables.
+  tent_ja: 野菜を焼く。
+# column: value

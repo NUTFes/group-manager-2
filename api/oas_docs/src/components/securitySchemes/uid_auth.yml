@@ -1,0 +1,8 @@
+---
+components:
+  securitySchemes:
+    UidAuth:
+      type: apiKey
+      in: header
+      name: uid
+      description: Devise認証用のユーザーID

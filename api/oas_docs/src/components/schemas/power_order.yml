@@ -1,0 +1,9 @@
+---
+components:
+  schemas:
+    PowerOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

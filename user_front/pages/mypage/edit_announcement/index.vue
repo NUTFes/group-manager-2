@@ -1,39 +1,53 @@
 <script lang="ts" setup>
 import axios from "axios";
-
-interface Announcement {
-  id: number;
-  group_id: number;
-  message: string;
-  created_at: string;
-  updated_at: string;
-}
+import { useForm, useField } from "vee-validate";
+import { Announcement } from "~~/types/regist/announcement";
+import { announcementSchema } from "~~/utils/validate";
 
 const router = useRouter();
+const config = useRuntimeConfig();
 
 const currentAnnouncement = ref<Announcement>();
-const config = useRuntimeConfig();
-const groupId = ref<number>(0);
-const message = ref<string>("");
+const groupId = Number(localStorage.getItem("group_id"));
+const message = ref<string>();
+const status = ref<string>();
 const isEditAnnouncement = ref<boolean>();
 
-onMounted(async () => {
-  // ログインしていない場合は/welcomeに遷移させる
-  loginCheck();
-  groupId.value = Number(localStorage.getItem("group_id"));
+const { meta, isSubmitting } = useForm({
+  validationSchema: announcementSchema,
+});
 
+const { handleChange: handleChangeAnnouncementStatus, errorMessage: statusError } = useField("status");
+const { handleChange: handleChangeAnnouncementMessage, errorMessage: messageError } = useField("message");
+const handleChangeStatus = () => {
+  handleChangeAnnouncementStatus(status.value);
+};
+const handleChangeMessage = () => {
+  if (status.value === "申請済み") {
+    handleChangeAnnouncementMessage(message.value);
+  } else {
+    handleChangeAnnouncementMessage(" ");
+  }
+};
+
+onMounted(async () => {
+  loginCheck();
   const getAnnouncementUrl = "/announcements";
   axios.get(config.APIURL + getAnnouncementUrl).then((res) => {
-    const announcements = res.data.data;
-    // 同じgroup_idのannouncementを取得
+    const announcements: Announcement[] = res.data.data;
     currentAnnouncement.value = announcements.find(
-      (announcement: Announcement) => announcement.group_id === groupId.value
+      (announcement) => announcement.group_id === groupId
     );
-
-    if (currentAnnouncement.value) {
-      message.value = currentAnnouncement.value.message;
+    message.value = currentAnnouncement.value?.message;
+    status.value = currentAnnouncement.value?.status;
+    handleChangeAnnouncementStatus(currentAnnouncement.value?.status);
+    if (status.value === "申請済み") {
+      handleChangeAnnouncementMessage(currentAnnouncement.value?.message);
+    } else {
+      handleChangeAnnouncementMessage(" ");
     }
   });
+
   const settingUrl = config.APIURL + "/user_page_settings";
   axios
     .get(settingUrl, {
@@ -50,17 +64,17 @@ onMounted(async () => {
 });
 
 const postAnnouncement = () => {
-  if (message.value.length === 0) {
-    alert("会場アナウンス文を入力してください\nPlease enter the text of the venue announcement");
-    return;
+  if (status.value === "申請しない") {
+    message.value = "";
   }
 
   if (currentAnnouncement.value) {
-    const putURl = "/announcements/" + currentAnnouncement.value?.id;
+    const putURL = "/announcements/" + currentAnnouncement.value?.id;
     axios
-      .put(config.APIURL + putURl, {
-        group_id: groupId.value,
+      .put(config.APIURL + putURL, {
+        group_id: groupId,
         message: message.value,
+        status: status.value,
       })
       .then((res) => {
         alert("会場アナウンスを更新しました\nVenue announcements have been updated");
@@ -70,10 +84,11 @@ const postAnnouncement = () => {
         alert("会場アナウンスの更新に失敗しました\nFailed to update venue announcements");
       });
   } else {
-    const postUrl = "/announcements?group_id=" + groupId.value;
+    const postUrl = "/announcements?group_id=" + groupId;
     axios
       .post(config.APIURL + postUrl, {
         message: message.value,
+        status: status.value,
       })
       .then((res) => {
         alert("会場アナウンスを登録しました\nVenue announcements have been registered");
@@ -84,6 +99,15 @@ const postAnnouncement = () => {
       });
   }
 };
+
+
+const buttonDisabled = computed(() => {
+  if (status.value === "申請済み") {
+    return !!(!status.value || !message.value);
+  } else {
+    return !!(!status.value);
+  }
+});
 </script>
 
 <template>
@@ -96,11 +120,28 @@ const postAnnouncement = () => {
       <div class="text-left">
         <span class="text-3xl mr-4">{{ $t("Announcement.text") }}</span>
       </div>
-      <textarea class="border-2 w-[60%]" v-model="message"></textarea>
+      <div class="my-4 flex">
+        <div class="mr-4">
+          <input type="radio" id="apply" name="apply" value="申請済み" v-model="status" @change="handleChangeStatus">
+          <label for="apply">{{ $t('Announcement.apply') }}</label>
+        </div>
+        <div>
+          <input type="radio" id="noApply" name="apply" value="申請しない" v-model="status" @change="handleChangeStatus">
+          <label for="noApply">{{ $t('Announcement.noApply') }}</label>
+        </div>
+      </div>
+      <p class="text-red-500 text-sm" v-if="statusError">
+        {{ statusError }}
+      </p>
+        <textarea v-if="status === '申請済み'" class="border-2 w-[60%]" v-model="message" @change="handleChangeMessage"></textarea>
+        <p class="text-red-500 text-sm" v-if="messageError">
+          {{ messageError }}
+        </p>
       <RegistPageButton
         v-if="isEditAnnouncement"
-        :text="$t('Announcement.edit')"
+        :text="$t('Announcement.regist')"
         @click="postAnnouncement"
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
       ></RegistPageButton>
     </Card>
   </div>

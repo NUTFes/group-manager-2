@@ -1,0 +1,203 @@
+---
+paths:
+  "/cooking_process_orders":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+    post:
+      tags:
+      - cooking_process_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
+  "/cooking_process_orders/group/{group_id}":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/cooking_process_orders/upsert":
+    post:
+      tags:
+      - cooking_process_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
+  "/cooking_process_orders/{id}":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - cooking_process_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: cooking_process_order description
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - cooking_process_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: cooking_process_order description
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - cooking_process_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

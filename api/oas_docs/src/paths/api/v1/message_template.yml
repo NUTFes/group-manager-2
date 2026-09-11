@@ -1,0 +1,153 @@
+---
+paths:
+  "/api/v1/message_templates":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+    post:
+      tags:
+      - api/v1/message_template
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+  "/api/v1/message_templates/{id}":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - api/v1/message_template
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/message_template description
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - api/v1/message_template
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: api/v1/message_template description
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/message_templates/{id}/copy_source":
+    get:
+      tags:
+      - api/v1/message_template
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '404':
+          description: api/v1/message_template description
+        '422':
+          description: api/v1/message_template description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.MessageTemplate"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

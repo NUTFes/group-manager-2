@@ -2,7 +2,7 @@
   "language": "Language",
 
   "Header": {
-    "header": "NUTFES2023",
+    "header": "NUTFES2024",
     "logOut": "Log Out"
   },
 
@@ -28,7 +28,7 @@
     "signUp": "Sign up",
     "toSignUp": "If you are not registered,",
     "overview": "Participation Overview",
-    "overviewDetails": "Date & Time：September 16(Sat), 17(Sun), 2023",
+    "overviewDetails": "Date & Time：September 14(Sat), 15(Sun), 2024",
     "regist": "Registration Process",
     "regist1": "User Information",
     "regist1Details": "Please register the name, student ID number, department, grade, phone number, email address, and password of the representative.",
@@ -38,16 +38,24 @@
     "regist3Details": "Please register the name, student ID number, department, grade, phone number, and email address of the deputy.",
     "regist4": "Venue and Stage",
     "regist4Details": "Please register your organization's first to third choice of stall locations.",
-    "regist5": "Registration of goods",
+    "regist5": "Registration of Goods",
     "regist5Details": "Please register the type and number of items your organization would like to borrow.",
     "regist6": "Electricity Application",
     "regist6Details": "Please register the product name, power consumption, manufacturer, model number, and product URL of the product your organization will use on the day of NUTFES.",
     "regist7": "Employees",
     "regist7Details": "Please register the employee's name and student ID number.",
-    "regist8": "Foods for sale",
+    "regist8": "Foods for Sale",
     "regist8Details": "Please register the name of food sold, cooked or not, and estimated number of products to be sold on Day 1 and Day 2.",
     "regist9": "Purchased Products",
-    "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not."
+    "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not.",
+    "regist10":"PR statement Application",
+    "regist10Details":"Register your organization's PR statement and PR illustration.",
+    "regist11":"Venue announcement text Application",
+    "regist11Details":"Register your organization's announcement text.",
+    "regist12":"Booth map Application",
+    "regist12Details":"Register your organization's mock-up Booth maop.",
+    "regist13":"Cooking Process Application",
+    "regist13Details":"Register your organization's cooking process."
   },
 
   "Mypage": {
@@ -63,6 +71,7 @@
     "editPR": "public relations Edit",
     "editAnnouncemant": "Announcement text edit",
     "regitstVenueMap": "Booth MAP",
+    "editCookingProcess":"Cooking Process Edit",
     "notice": "Notice",
     "updateDate": "update date"
   },
@@ -81,10 +90,13 @@
 
   "Announcement": {
     "regitstAnnouncement": "Registration of venue announcement text",
-    "editAnnouncement": "Editing of venue announcement text",
+    "editAnnouncement": "Edit of venue announcement text",
     "text": "Announcement text at the venue",
     "edit": "editing",
-    "regist": "registing"
+    "regist": "registing",
+    "over": "This announcement text is over 125 words.",
+    "apply": "Apply",
+    "noApply": "Not applied"
   },
 
   "VenueMap": {
@@ -106,9 +118,11 @@
     "item": "Item",
     "employees": "Employees",
     "food": "Food",
-    "saleGoods": "Sale of Goods",
+    "product": "Sale of Goods",
     "purchase": "Purchase",
-    "placeMessage": "Please apply for either outdoor or indoor space only."
+    "placeMessage": "Please apply for either outdoor or indoor space only.",
+    "ItemMessage": "Please apply only for stage, indoor or outdoor groups."
+
   },
 
   "User": {
@@ -126,7 +140,7 @@
     "editUser": "Edit User Information",
     "editName": "full name",
     "editStudentId": "StudentID 8 digits",
-    "editTel": "11or11 single-byte numbers, without -",
+    "editTel": "10or11 single-byte numbers, without -",
     "resetPassword": "Password reset",
     "newPassword": "Enter new password",
     "newPasswordConfirm": "Retype new password (for confirmation)"
@@ -138,7 +152,18 @@
     "groupName": "group name",
     "shopName": "shop name",
     "category": "select category",
-    "activityDetails": "Activity Details"
+    "activityDetails": "Activity Details",
+    "international": "International",
+    "external": "External(region and other Univ.)",
+    "contactPersonName": "contact person name",
+    "contactPersonEmail": "contact person email"
+  },
+
+  "contactPerson": {
+    "registContactPerson": "Registration of contact person",
+    "editContactPerson": "Edit contact person",
+    "name": "name",
+    "mail": "mail adress"
   },
 
   "Stage": {
@@ -242,31 +267,12 @@
     "studentId": "studentId"
   },
 
-  "Food": {
-    "registFood": "Registration of foods for sale",
-    "addFood": "Additional foods for sale",
-    "deleteFood": "Deletion foods for sale",
-    "editFood": "Edit foods for Sale",
-    "name": "Name of food sold",
-    "cook": "Cooked or not",
-    "select": "Please select",
-    "yes": "Cooked",
-    "no": "uncooked",
-    "numberFirstDay": "Estimated number of products to be sold on Day１",
-    "numberSecondDay": "Estimated number of products to be sold on Day２",
-    "firstDay": "Day１",
-    "secondDay": "Day２",
-    "count": "",
-    "sold": "Estimated number",
-    "toBe": "of products to be sold"
-  },
-
-  "SaleGoods": {
-    "registSaleGoods": "Registration of goods for sale",
-    "addSaleGoods": "Additional goods for sale",
-    "deleteSaleGoods": "Deletion goods for sale",
-    "editSaleGoods": "Edit goods for Sale",
-    "name": "Name of goods sold",
+  "Product": {
+    "registProduct": "Registration of products for sale",
+    "addProduct": "Additional products for sale",
+    "deleteProduct": "Deletion products for sale",
+    "editProduct": "Edit products for Sale",
+    "name": "Name of products sold",
     "cook": "Cooked or not",
     "select": "Please select",
     "yes": "Cooked",
@@ -356,5 +362,12 @@
     "materialsScience": "Materials Science",
     "energy": "Energy and Environment Science",
     "IntegratedBio": "Integrated Bioscience and Technology"
+  },
+
+  "Cook": {
+    "cookTitle":"Cooking Process Order",
+    "preOpenKitchen":"Pre-Open Kitchen",
+    "duringOpenKitchen":"During Open Kitchen",
+    "tent":"Activities Inside the Tent"
   }
 }
