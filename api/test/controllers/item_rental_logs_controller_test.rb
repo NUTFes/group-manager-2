@@ -336,6 +336,26 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_includes log_ids, assignment_change_log.id
   end
 
+  test 'should exclude addition/reduction logs of the same group when rental_place_id is also given' do
+    assignment_change_log = ItemRentalLog.create!(
+      uid: 'index-addition-with-rental-place-uid',
+      group: @group,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      category: :addition,
+      quantity: 3,
+      recorder_email: 'recorder@example.com'
+    )
+
+    get item_rental_logs_url,
+        params: { rental_place_id: @assign_rental_item.rental_place_id, group_id: @group.id },
+        headers: @headers
+    assert_response :success
+
+    log_ids = response.parsed_body['data']['item_rental_logs'].pluck('id')
+    assert_not_includes log_ids, assignment_change_log.id
+  end
+
   test 'should create a rental_absolute log' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {

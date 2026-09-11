@@ -16,7 +16,12 @@ class UpdateItemRentalLogsForAdditionAndReduction < ActiveRecord::Migration[6.1]
   end
 
   def down
-    remove_reference :item_rental_logs, :group, foreign_key: true
+    if select_value('SELECT EXISTS(SELECT 1 FROM item_rental_logs WHERE assign_rental_item_id IS NULL)').to_i == 1
+      raise ActiveRecord::IrreversibleMigration,
+            'addition/reduction logs have no assign_rental_item_id to restore'
+    end
+
     change_column_null :item_rental_logs, :assign_rental_item_id, false
+    remove_reference :item_rental_logs, :group, foreign_key: true
   end
 end

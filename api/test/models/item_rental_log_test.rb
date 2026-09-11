@@ -75,4 +75,10 @@ class ItemRentalLogTest < ActiveSupport::TestCase
     log = build_log(group: nil)
     assert_not log.valid?
   end
+
+  test 'invalid to create a new absolute_adjustment log' do
+    log = build_log(category: :absolute_adjustment, uid: 'absolute-adjustment-uid')
+    assert_not log.valid?
+    assert log.errors.of_kind?(:category, :exclusion)
+  end
 end

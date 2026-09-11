@@ -14,7 +14,10 @@ class ItemRentalLogsController < ApplicationController
   def index
     assign_rental_items = AssignRentalItem.where(assign_rental_item_filter_params)
     item_rental_logs = ItemRentalLog.where(assign_rental_item_id: assign_rental_items.select(:id))
-    item_rental_logs = item_rental_logs.or(ItemRentalLog.where(group_id: params[:group_id])) if params[:group_id].present?
+    if params[:group_id].present? && params[:rental_place_id].blank?
+      assignment_change_logs = ItemRentalLog.where(group_id: params[:group_id], assign_rental_item_id: nil)
+      item_rental_logs = item_rental_logs.or(assignment_change_logs)
+    end
 
     render json: fmt(ok, { item_rental_logs: item_rental_logs, assign_rental_items: assign_rental_items })
   end
