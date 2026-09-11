@@ -7,8 +7,10 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
 
   setup do
     Role.create!(id: 1, name: 'admin')
+    Role.create!(id: 2, name: 'staff')
     Role.create!(id: 3, name: 'user')
     @manager = create_user!(email: 'confirmed-qrcode-manager@example.com', role_id: 1)
+    @staff = create_user!(email: 'confirmed-qrcode-staff@example.com', role_id: 2)
     @general_user = create_user!(email: 'confirmed-qrcode-user@example.com', role_id: 3)
     category = GroupCategory.create!(name: '食品販売')
     year = FesYear.create!(year_num: 2026)
@@ -60,6 +62,14 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
         as: :json
 
     assert_response :forbidden
+  end
+
+  test 'staff can get qrcode' do
+    get "/api/v1/get_confirmed_qrcode_for_admin_view/#{@group.id}",
+        headers: @staff.create_new_auth_token,
+        as: :json
+
+    assert_response :success
   end
 
   test 'user view returns qrcode without authentication when secret matches' do

@@ -4,7 +4,7 @@ class Api::V1::ConfirmedQrcodesApiController < ApplicationController
   before_action :authenticate_api_user!, only: :get_confirmed_qrcode_for_admin_view
   before_action :require_admin!, only: :get_confirmed_qrcode_for_admin_view
 
-  # 管理画面向け。管理者権限が必要。
+  # 管理画面向け。manager/staff(role_id: 1, 2)のみ利用可能。
   def get_confirmed_qrcode_for_admin_view
     group = Group.find(params[:group_id])
     render_qrcode(group)
