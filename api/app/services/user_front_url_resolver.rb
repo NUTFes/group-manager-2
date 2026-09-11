@@ -1,37 +1,15 @@
 # frozen_string_literal: true
 
-require 'yaml'
-
-# cloudflareのingress設定(cloudflare/{prod,stage}/config.yaml)を単一の情報源として、
-# userアプリ(http://user:3000)の公開ドメインを解決する。
+# userアプリ(参加団体向け確定情報ページ)の公開ドメインをAPP_ENVから解決する。
+# user/next.config.ts, rental/next.config.tsと同じ「APP_ENVごとの固定マップ」方式に揃えている。
 class UserFrontUrlResolver
-  DEVELOPMENT_URL = 'http://localhost:8003'
-  USER_SERVICE = 'http://user:3000'
-  # compose.prod.ymlのapiサービスで `./cloudflare:/cloudflare:ro` としてマウントされている前提
-  CONFIG_PATHS = {
-    'production' => '/cloudflare/prod/config.yaml',
-    'staging' => '/cloudflare/stage/config.yaml'
+  URLS_BY_ENV = {
+    'development' => 'http://localhost:8003',
+    'staging' => 'https://stg-group-manager.nutfes.net',
+    'production' => 'https://group-manager.nutfes.net'
   }.freeze
 
   def self.call
-    @call ||= new.call
-  end
-
-  def call
-    return DEVELOPMENT_URL if app_env.blank? || !CONFIG_PATHS.key?(app_env)
-
-    "https://#{hostname_from_cloudflare_config}"
-  end
-
-  private
-
-  def app_env
-    ENV.fetch('APP_ENV', nil)
-  end
-
-  def hostname_from_cloudflare_config
-    ingress = YAML.safe_load_file(CONFIG_PATHS.fetch(app_env))['ingress']
-    entry = ingress.find { |rule| rule['service'] == USER_SERVICE }
-    entry.fetch('hostname')
+    URLS_BY_ENV.fetch(ENV.fetch('APP_ENV', 'development'), URLS_BY_ENV.fetch('development'))
   end
 end

@@ -11,7 +11,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     container_name: prod-api
-    volumes: [./api:/myapp, ./cloudflare:/cloudflare:ro]
+    volumes: [./api:/myapp]
     env_file: [.env]
     environment:
       # Spring 4.7.0はconfig.enable_reloadingが無効な環境（production）でも
