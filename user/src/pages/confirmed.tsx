@@ -34,7 +34,11 @@ export default function ConfirmedPage() {
   // router.isReady になるまではクエリが空になるため、それまでは判定を確定させない
   const isLoading = !router.isReady || confirmedInfoLoading;
   const hasError = router.isReady && (!isParamsValid || !!confirmedInfoError);
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  // 共有するURLはレンダリング中には求めない。SSGではサーバ側にwindowが無く、
+  // レンダリング時に読むとサーバとクライアントで別の値を持つことになる。
+  // 実際に必要になるのはボタンが押された瞬間だけなので、関数のまま渡す
+  const getShareUrl = () => window.location.href;
 
   return (
     <>
@@ -53,7 +57,7 @@ export default function ConfirmedPage() {
             isLoading={isLoading}
             hasError={hasError}
             confirmedInfo={confirmedInfo}
-            shareUrl={shareUrl}
+            getShareUrl={getShareUrl}
           />
         </div>
       </div>

@@ -21,7 +21,8 @@ export const Default: Story = {
   args: {
     isLoading: false,
     hasError: false,
-    shareUrl: 'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
+    getShareUrl: () =>
+      'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
     confirmedInfo: {
       group: { id: 1, name: 'nutfes' },
       assignRentalItems: [
@@ -46,7 +47,8 @@ export const Empty: Story = {
   args: {
     isLoading: false,
     hasError: false,
-    shareUrl: 'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
+    getShareUrl: () =>
+      'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
     confirmedInfo: {
       group: { id: 1, name: 'nutfes' },
       assignRentalItems: [],
@@ -58,7 +60,7 @@ export const Loading: Story = {
   args: {
     isLoading: true,
     hasError: false,
-    shareUrl: '',
+    getShareUrl: () => '',
   },
 };
 
@@ -66,6 +68,6 @@ export const Error: Story = {
   args: {
     isLoading: false,
     hasError: true,
-    shareUrl: '',
+    getShareUrl: () => '',
   },
 };

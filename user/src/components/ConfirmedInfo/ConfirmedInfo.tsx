@@ -9,14 +9,15 @@ type ConfirmedInfoProps = {
   isLoading: boolean;
   hasError: boolean;
   confirmedInfo?: ConfirmedInfoData;
-  shareUrl: string;
+  // 共有・コピーの対象URL。押された瞬間に解決するため関数で受け取る
+  getShareUrl: () => string;
 };
 
 const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
   isLoading,
   hasError,
   confirmedInfo,
-  shareUrl,
+  getShareUrl,
 }) => {
   const texts = useConfirmedInfoTexts();
   const { handleCopy, handleShare } = useConfirmedInfoActions();
@@ -92,7 +93,7 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
             size="mobile"
             color="main"
             variant
-            onClick={() => handleCopy(shareUrl)}
+            onClick={() => handleCopy(getShareUrl())}
           >
             <span className="flex items-center gap-2">
               <FiCopy /> {texts.actions.copy}
@@ -102,7 +103,7 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
             type="button"
             size="mobile"
             color="main"
-            onClick={() => handleShare(shareUrl, group.name)}
+            onClick={() => handleShare(getShareUrl(), group.name)}
           >
             <span className="flex items-center gap-2">
               <FiShare2 /> {texts.actions.share}
