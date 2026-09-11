@@ -18,7 +18,6 @@
 }
 .normal-table {
   font-size: 14px;
-  min-width: max-content;
   width: 100%;
   border-collapse: collapse;
 }
