@@ -678,7 +678,10 @@ class Group < ApplicationRecord
                  .find_by(id: group_id, group_secrets: { secret: secret })
     return nil if group.nil?
 
-    @record = {
+    # 他のwith_*に倣って@recordに代入していたが、クラスメソッド内の@recordは
+    # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
+    # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
+    {
       group: { id: group.id, name: group.name },
       assign_rental_items: group.assign_rental_items.map do |assign_rental_item|
         {
