@@ -974,5 +974,31 @@
   },
   "footer": {
     "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  },
+  "confirmedInfo": {
+    "table": {
+      "stockPlace": "在庫場所",
+      "rentalPlace": "貸出場所",
+      "num": "数量"
+    },
+    "labels": {
+      "groupName": "団体名",
+      "unset": "-",
+      "empty": "貸出物品はありません。",
+      "shareNotice": "このリンクを知っている人は誰でも閲覧できます。"
+    },
+    "actions": {
+      "copy": "リンクをコピー",
+      "share": "共有する"
+    },
+    "toasts": {
+      "copySuccess": "リンクをコピーしました",
+      "copyFailed": "コピーに失敗しました"
+    },
+    "error": {
+      "title": "情報を表示できません",
+      "description": "URLが正しいかご確認ください。"
+    },
+    "loading": "読み込み中..."
   }
 }

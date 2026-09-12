@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { isPublicPath } from '@/utils/constants';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CorporateIcon from '../../../public/corporate_logo.svg';
 import ProfileIcon from '../../../public/profile_icon.svg';
@@ -11,9 +12,9 @@ type HeaderProps = {
 };
 
 const Header: FC<HeaderProps> = () => {
-  // ルートパス（"/"）の場合はUserModalを表示しない
+  // 認証なしで閲覧できるページ（トップページ・確定画面）ではUserModalを表示しない
   const router = useRouter();
-  const showUserModal = router.pathname !== '/';
+  const showUserModal = !isPublicPath(router.pathname);
   const [isOpen, setIsOpen] = useState(false);
 
   return (

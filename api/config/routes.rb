@@ -309,7 +309,11 @@ Rails.application.routes.draw do
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
-      #---ユーザー向け確定情報閲覧画面（認証なし）
+      #---ユーザー向け確定情報閲覧画面
+      # 認証なしで公開する。認証の書き忘れではなく意図的な公開で、#2136 の Public 区分にあたる。
+      # 公開であることは OpenAPI の security: [] と、認証ヘッダ無しで200になるテストで固定している。
+      # public サブ名前空間には分けていない。URLを変えると #2182・OpenAPIの生成物・フロント・
+      # QRコードで配るURLまで波及し、#2136 が別の方式を採ったとき作り直しになるため。
       get 'get_confirmed_info_for_user_view/:group_id' => 'confirmed_infos_api#get_confirmed_info_for_user_view'
 
       #---CSV出力
