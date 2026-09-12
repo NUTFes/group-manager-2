@@ -30,8 +30,11 @@ class StockerPlacesController < ApplicationController
   end
 
   def destroy
-    @stocker_place.destroy
-    render json: fmt(ok, [], "Deleted stocker_place = #{params[:id]}")
+    if @stocker_place.destroy
+      render json: fmt(ok, [], "Deleted stocker_place = #{params[:id]}")
+    else
+      render json: fmt(conflict, [], @stocker_place.errors.full_messages.join(', ')), status: :conflict
+    end
   end
 
   private

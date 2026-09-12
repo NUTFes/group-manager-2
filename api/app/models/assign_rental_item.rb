@@ -5,6 +5,7 @@ class AssignRentalItem < ApplicationRecord
   belongs_to :rental_item
   belongs_to :stocker_place, class_name: 'StockerPlace', optional: true
   belongs_to :rental_place, class_name: 'StockerPlace', optional: true
+  has_many :item_rental_logs, dependent: :restrict_with_error
 
   validates :rental_place, presence: true, if: -> { rental_place_id.present? }
 

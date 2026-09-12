@@ -1,0 +1,40 @@
+---
+components:
+  schemas:
+    api.v1.ConfirmedInfosApi:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: object
+          properties:
+            group:
+              type: object
+              description: 認証なしで露出するため、公開してよい項目のみを返す
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                name:
+                  type: string
+            assign_rental_items:
+              type: array
+              items:
+                type: object
+                properties:
+                  rental_item_name:
+                    type: string
+                  stock_place_name:
+                    type: string
+                    description: 在庫場所名。未設定の場合は空文字
+                  rental_place_name:
+                    type: string
+                    description: 貸出場所名。貸出場所調整で未設定の場合は空文字
+                  num:
+                    type: integer

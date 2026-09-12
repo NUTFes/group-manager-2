@@ -3,9 +3,13 @@
 one:
   group: one
   rental_item: one
+  stocker_place: one
+  rental_place: one
   num: 1
 
 two:
   group: two
   rental_item: two
+  stocker_place: two
+  rental_place: two
   num: 1

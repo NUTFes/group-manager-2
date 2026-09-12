@@ -32,6 +32,10 @@ class ApplicationController < ActionController::API
     return { code: 422, message: 'Unprocessable Entity' }
   end
 
+  def conflict
+    return { code: 409, message: 'Conflict' }
+  end
+
   # 出力するAPIのフォーマット
   def fmt(status = undefined, data = [], option = '')
     # メッセージを追加したいときに使う
