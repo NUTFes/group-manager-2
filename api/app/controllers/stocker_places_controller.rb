@@ -13,6 +13,7 @@ class StockerPlacesController < ApplicationController
   end
 
   def create
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
     @stocker_place = StockerPlace.new(stocker_place_params)
     if @stocker_place.save
       render json: fmt(created, @stocker_place)
@@ -22,6 +23,7 @@ class StockerPlacesController < ApplicationController
   end
 
   def update
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
     if @stocker_place.update(stocker_place_params)
       render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
     else
@@ -32,6 +34,11 @@ class StockerPlacesController < ApplicationController
   def destroy
     @stocker_place.destroy
     render json: fmt(ok, [], "Deleted stocker_place = #{params[:id]}")
+  end
+
+  def translate
+    translated = translate_to_en(params[:text])
+    render json: fmt(ok, { name_en: translated })
   end
 
   private

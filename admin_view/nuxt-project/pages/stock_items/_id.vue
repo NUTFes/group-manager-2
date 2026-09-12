@@ -232,6 +232,18 @@
           <input v-model="roomName" placeholder="入力してください" />
         </div>
         <div>
+         <div>
+          <h3>英語名</h3>
+          <CommonButton iconName="translate" 
+           :disabled="isTranslating || !roomName" 
+           :on_click="autoTranslate"
+           >
+           {{ isTranslating ? "翻訳中..." : "自動翻訳" }}
+          </CommonButton>
+         </div>
+          <input v-model="nameEn" placeholder="入力してください" />
+        </div>
+        <div>
           <h3>エリア</h3>
           <select v-model="placeCategoryId">
             <option :value="null">未指定</option>
@@ -272,7 +284,10 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editPlace">編集</CommonButton>
+        <div class="modal-method">
+          <CommonButton iconName="translate" :disabled="isTranslating || !roomName" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton>
+          <CommonButton iconName="edit" :on_click="editPlace">編集</CommonButton>
+        </div>
       </template>
     </EditModal>
 
@@ -440,6 +455,8 @@ export default {
       sort_key_1:"",
       sort_key_2:"",
       sort_asc: true,
+      nameEn: "",
+      isTranslating: false,
     };
   },
 
@@ -531,6 +548,7 @@ export default {
     async editPlace() {
       const payload = {
         name: this.roomName,
+        name_en: this.nameEn,
         stock_item_status: this.stockItemStatus,
         assign_item_status: this.assignItemStatus,
         place_category_id: this.placeCategoryId
@@ -550,6 +568,19 @@ export default {
       const delPlaceUrl = "/stocker_places/" + this.id;
       const delPlaceRes = await this.$axios.$delete(delPlaceUrl);
       this.$router.push("/stock_items");
+    },
+
+    async autoTranslate() {
+      if (!this.name) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/stocker_places/translate", { text: this.name });
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
     },
 
     async submitItem() {
@@ -688,6 +719,7 @@ export default {
     },
     openPlaceEditModal() {
       this.roomName = this.placeName.name
+      this.nameEn = this.placeName.name_en || ""
       this.stockItemStatus = this.placeName.stock_item_status
       this.assignItemStatus = this.placeName.assign_item_status
       this.placeCategoryId = this.placeName.place_category_id || null

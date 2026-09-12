@@ -33,6 +33,7 @@
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
+            <td>{{ stocker_place.name_en }}</td>
             <td>{{ formattedCategoryName(stocker_place.place_category_id) }}</td>
             <td>{{ stocker_place.stock_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
             <td>{{ stocker_place.assign_item_status === 1 ? "未登録" : stocker_place.assign_item_status === 2 ? "登録中" : "登録完了" }}</td>
@@ -50,6 +51,17 @@
         <div>
           <h3>部屋名</h3>
           <input v-model="roomName" placeholder="入力してください" />
+        </div>
+        <div>
+          <div>
+            <h3>英語名</h3>
+            <CommonButton iconName="translate"
+            :disabled="isTranslating || !roomName" 
+            :on_click="autoTranslate">
+            {{ isTranslating ? "翻訳中..." : "自動翻訳" }}
+            </CommonButton>
+          </div>
+          <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
           <h3>エリア</h3>
@@ -92,9 +104,19 @@
         </div> -->
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
-        >
+        <div class="modal-method">
+          <CommonButton iconName="translate" 
+          :disabled="isTranslating || !roomName" 
+          :on_click="autoTranslate"
+          >
+           {{ isTranslating ? "翻訳中..." : "自動翻訳" }}
+          </CommonButton>
+          <CommonButton iconName="add_circle" 
+          :on_click="submit"
+          >
+            登録
+          </CommonButton>
+        </div>
       </template>
     </AddModal>
   </div>
@@ -110,6 +132,7 @@ export default {
           headers: [
               "ID",
               "部屋名",
+              "英語名",
               "エリア",
               "在庫登録",
               "割当",
@@ -135,6 +158,8 @@ export default {
             { id: 2, name: "登録中" },
             { id: 3, name: "登録完了" },
           ],
+          nameEn: "",
+          isTranslating: false,
       };
   },
 
@@ -179,13 +204,14 @@ export default {
     },
     openAddModal() {
       this.placeCategoryId = null;
+      this.nameEn = "";
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload(id) {
+    reload(id) { 
       const url = "/stocker_places/" + id;
       this.$axios.$get(url).then((response) => {
         this.allStockerPlaces.push(response.data);
@@ -198,9 +224,22 @@ export default {
       })
       ;
     },
+    async autoTranslate() {
+      if (!this.roomName) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/stocker_places/translate", { text: this.roomName });
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
+    },
     async submit() {
       const payload = {
         name: this.roomName,
+        name_en: this.nameEn,
         stock_item_status: 1,
         assign_item_status: 1,
         place_category_id: this.placeCategoryId
@@ -209,6 +248,7 @@ export default {
 
       this.$axios.$post(url, payload).then((response) => {
         this.roomName = "";
+        this.nameEn = "";
         this.stockItemStatus = "";
         this.assignItemStatus = "";
         this.reload(response.data.id);
@@ -240,3 +280,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.modal-method {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px;
+  justify-content: center;
+}
+</style>
