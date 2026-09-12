@@ -98,6 +98,12 @@ class Api::V1::ConfirmedQrcodesApiControllerTest < ActionDispatch::IntegrationTe
     assert_response :not_found
   end
 
+  test 'sets Referrer-Policy header to no-referrer' do
+    get_confirmed_qrcode
+
+    assert_equal 'no-referrer', response.headers['Referrer-Policy']
+  end
+
   private
 
   def get_confirmed_qrcode

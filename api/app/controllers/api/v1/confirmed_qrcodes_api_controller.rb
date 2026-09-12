@@ -3,6 +3,11 @@
 class Api::V1::ConfirmedQrcodesApiController < ApplicationController
   before_action :authenticate_api_user!, only: :get_confirmed_qrcode_for_admin_view
   before_action :require_admin!, only: :get_confirmed_qrcode_for_admin_view
+  # レスポンスにsecretを含むconfirmed_urlが載るため、念のためこのAPI自体にも
+  # Referrer-Policyを設定しておく。ただしJSON APIレスポンス自体が第三者に
+  # 遷移することは想定しづらく、本質的な対策はconfirmed_urlが指す
+  # /confirmedページ(#2183)側に同様のヘッダーを設定することである。
+  after_action -> { response.headers['Referrer-Policy'] = 'no-referrer' }
 
   # 管理画面向け。manager/staff(role_id: 1, 2)のみ利用可能。
   def get_confirmed_qrcode_for_admin_view
