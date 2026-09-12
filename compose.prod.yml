@@ -17,7 +17,7 @@ services:
       # Spring 4.7.0はconfig.enable_reloadingが無効な環境（production）でも
       # bin/rails経由で起動しようとして異常終了するため、production実行時は無効化する。
       DISABLE_SPRING: "1"
-      APP_ENV: ${APP_ENV}
+      APP_ENV: ${APP_ENV:?APP_ENV must be set}
 
   user:
     build:
