@@ -137,38 +137,38 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
               </div>
             ))
           )}
-
-          {/* コピー・共有ボタンとその注意書きは一つの操作単位としてまとめる */}
-          <div className="flex w-full flex-col items-center gap-3">
-            <p className="text-center text-sm text-gray-600">
-              {texts.labels.shareNotice}
-            </p>
-            <div className="flex w-full flex-wrap items-center justify-center gap-4">
-              <Button
-                type="button"
-                size="mobile"
-                color="main"
-                variant
-                onClick={() => handleCopy(getShareUrl())}
-              >
-                <span className="flex items-center gap-2">
-                  <FiCopy /> {texts.actions.copy}
-                </span>
-              </Button>
-              <Button
-                type="button"
-                size="mobile"
-                color="main"
-                onClick={() => handleShare(getShareUrl(), group.name)}
-              >
-                <span className="flex items-center gap-2">
-                  <FiShare2 /> {texts.actions.share}
-                </span>
-              </Button>
-            </div>
-          </div>
         </div>
       </FormContainer>
+
+      {/* 共有・コピーはページ全体に対する操作なので、用途別に分けたどちらのカードにも入れない */}
+      <div className="flex w-full flex-col items-center gap-3">
+        <p className="text-center text-sm text-gray-600">
+          {texts.labels.shareNotice}
+        </p>
+        <div className="flex w-full flex-wrap items-center justify-center gap-4">
+          <Button
+            type="button"
+            size="mobile"
+            color="main"
+            variant
+            onClick={() => handleCopy(getShareUrl())}
+          >
+            <span className="flex items-center gap-2">
+              <FiCopy /> {texts.actions.copy}
+            </span>
+          </Button>
+          <Button
+            type="button"
+            size="mobile"
+            color="main"
+            onClick={() => handleShare(getShareUrl(), group.name)}
+          >
+            <span className="flex items-center gap-2">
+              <FiShare2 /> {texts.actions.share}
+            </span>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
