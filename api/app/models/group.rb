@@ -671,14 +671,17 @@ class Group < ApplicationRecord
 
   # 認証なしで公開する確定情報を取得する
   # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
-  # 認証なしで露出するため、groupは公開してよいidとnameだけに絞る
+  # 認証なしで露出するため、groupは公開してよい項目だけに絞る
   def self.with_confirmed_info(group_id, secret)
     # secretが空のときは検索する前に弾く。GroupSecretには空文字を禁じる制約が無いため、
     # 万一空文字のレコードがあるとsecret未指定のリクエストが一致してしまう
     return nil if secret.blank?
 
     group = Group.joins(:group_secret)
-                 .includes(assign_rental_items: %i[rental_item stocker_place rental_place])
+                 .includes(
+                   { assign_rental_items: %i[rental_item stocker_place rental_place] },
+                   { place_order: { assign_group_places: :stocker_place } }
+                 )
                  .find_by(id: group_id, group_secrets: { secret: secret })
     return nil if group.nil?
 
@@ -686,16 +689,35 @@ class Group < ApplicationRecord
     # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
     # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
     {
-      group: { id: group.id, name: group.name },
-      assign_rental_items: group.assign_rental_items.map do |assign_rental_item|
+      group: {
+        id: group.id,
+        name: group.name,
+        project_name: group.project_name,
+        places: group.confirmed_place_names
+      },
+      rental_items: group.confirmed_rental_items
+    }
+  end
+
+  # 確定した会場名。place_orderに紐づく割り当てを名前にして返す
+  def confirmed_place_names
+    place_order&.assign_group_places.to_a.filter_map { |assign| assign.stocker_place&.display_name.presence }
+  end
+
+  # 貸出物品を (物品, 貸出場所) ごとにまとめて返す
+  # 貸出場所は種類ごとに1つという運用だが、DBでは一意性が保証されていない。
+  # 組でまとめれば、割れている場合でも見出しの貸出場所が必ず1つに定まる
+  def confirmed_rental_items
+    assign_rental_items
+      .sort_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name, assign.stock_place_name] }
+      .group_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name] }
+      .map do |(rental_item_name, rental_place_name), assigns|
         {
-          rental_item_name: assign_rental_item.rental_item.name,
-          stock_place_name: assign_rental_item.stock_place_name,
-          rental_place_name: assign_rental_item.rental_place_name,
-          num: assign_rental_item.num
+          rental_item_name: rental_item_name,
+          rental_place_name: rental_place_name,
+          stocks: assigns.map { |assign| { stock_place_name: assign.stock_place_name, num: assign.num } }
         }
       end
-    }
   end
 
   ### employee（従業員）

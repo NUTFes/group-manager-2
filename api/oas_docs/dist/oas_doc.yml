@@ -11795,21 +11795,36 @@ components:
                   format: int64
                 name:
                   type: string
-            assign_rental_items:
+                project_name:
+                  type: string
+                  description: 企画名
+                places:
+                  type: array
+                  description: 確定した会場名。割り当てが無い場合は空配列
+                  items:
+                    type: string
+            rental_items:
               type: array
+              description: 貸出物品。(物品, 貸出場所) ごとにまとめ、物品名・貸出場所・在庫場所の順に整列する
               items:
                 type: object
                 properties:
                   rental_item_name:
                     type: string
-                  stock_place_name:
-                    type: string
-                    description: 在庫場所名。未設定の場合は空文字
                   rental_place_name:
                     type: string
                     description: 貸出場所名。貸出場所調整で未設定の場合は空文字
-                  num:
-                    type: integer
+                  stocks:
+                    type: array
+                    description: 同じ物品を複数の在庫場所から貸し出す場合は複数件になる
+                    items:
+                      type: object
+                      properties:
+                        stock_place_name:
+                          type: string
+                          description: 在庫場所名。未設定の場合は空文字
+                        num:
+                          type: integer
     api.v1.ContactPersonsApi:
       type: object
       properties:
