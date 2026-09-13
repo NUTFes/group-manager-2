@@ -110,6 +110,16 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  # GroupSecretには空文字を禁じる検証もDB制約も無い。万一空文字のレコードが残っても、
+  # secretを指定しないリクエストが一致しないことを固定する。
+  test 'returns 404 when the stored secret is a blank string' do
+    @group.group_secret.update!(secret: '')
+
+    get confirmed_info_path(@group, '')
+
+    assert_response :not_found
+  end
+
   test 'returns 404 when the secret does not match' do
     get confirmed_info_path(@group, 'wrongsecretwrongsecret01')
 

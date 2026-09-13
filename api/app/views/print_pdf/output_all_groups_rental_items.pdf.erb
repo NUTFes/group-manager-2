@@ -59,7 +59,10 @@
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
-      <td><%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
+      <td>
+        <%= @pdf_locale == :en && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %>
+        <% if assign_rental_item.remark.present? %><br><span class="remark-note"><%= assign_rental_item.remark %></span><% end %>
+      </td>
       <td><%= assign_rental_item.stock_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.rental_place_name(locale: @pdf_locale) %></td>
       <td><%= assign_rental_item.num %></td>

@@ -6,17 +6,18 @@ class Api::V1::OutputCsvController < ApplicationController
   include ApplicationHelper
 
   def output_groups_csv
+    groups_scope = Group.includes(assign_rental_items: :rental_item)
     if params[:fes_year_id].to_i == 0
       # 全件選択
-      @groups = Group.all
+      @groups = groups_scope
       filename_year = '全'
     else
-      @groups = Group.where(fes_year_id: params[:fes_year_id])
+      @groups = groups_scope.where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年]
+      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 備考 開催年]
       csv << column_name
       @groups.each do |group|
         # データが存在しない場合はスキップする
@@ -29,6 +30,11 @@ class Api::V1::OutputCsvController < ApplicationController
           group.user.name,
           group.user.email,
           group.group_category.name,
+          # 割当は1行1備考のため、団体単位のCSVでは「物品名：備考」を連結して出力する
+          group.assign_rental_items
+               .select { |ari| ari.remark.present? }
+               .map { |ari| "#{ari.rental_item.name}：#{ari.remark}" }
+               .join(' / '),
           group.fes_year.year_num
         ]
         csv << column_values
@@ -54,7 +60,7 @@ class Api::V1::OutputCsvController < ApplicationController
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
       # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量 貸出日 返却日 開催年)
-      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量]
+      column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 在庫場所 貸出場所 数量 備考]
       csv << column_name
       @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
@@ -69,7 +75,8 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.rental_item.name,
           assign_rental_item.stock_place_name,
           assign_rental_item.rental_place_name,
-          assign_rental_item.num
+          assign_rental_item.num,
+          assign_rental_item.remark
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).first.date,
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).first.date,
           # assign_rental_item.group.fes_year.year_num
@@ -173,7 +180,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年]
+      column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 備考 開催年]
       csv << column_name
       @assign_rental_items.each do |assign_rental_item|
         # データが存在しない場合はスキップする
@@ -188,6 +195,7 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.stock_place_name,
           assign_rental_item.rental_place_name,
           assign_rental_item.num,
+          assign_rental_item.remark,
           assign_rental_item.group.fes_year.year_num
         ]
         csv << column_values
