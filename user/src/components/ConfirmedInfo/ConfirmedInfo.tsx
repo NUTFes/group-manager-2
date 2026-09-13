@@ -112,25 +112,22 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
                 </p>
                 <table className="w-full table-fixed border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-[#b2b2b2]">
-                      <th className="py-2 pr-2 text-xs font-normal text-gray-500">
+                    <tr className="bg-gray-50">
+                      <th className="border border-[#b2b2b2] px-3 py-2 text-xs font-normal text-gray-500">
                         {texts.headers.stockPlace}
                       </th>
-                      <th className="w-20 py-2 text-right text-xs font-normal text-gray-500">
+                      <th className="w-24 border border-[#b2b2b2] px-3 py-2 text-right text-xs font-normal text-gray-500">
                         {texts.headers.num}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {item.stocks.map((stock) => (
-                      <tr
-                        key={stock.stockPlaceName}
-                        className="border-b border-[#e5e5e5] last:border-none"
-                      >
-                        <td className="break-words py-2 pr-2 text-base font-medium text-font">
+                      <tr key={stock.stockPlaceName}>
+                        <td className="break-words border border-[#b2b2b2] px-3 py-2 text-base font-medium text-font">
                           {stock.stockPlaceName || texts.labels.unset}
                         </td>
-                        <td className="py-2 text-right text-base font-medium text-font">
+                        <td className="border border-[#b2b2b2] px-3 py-2 text-right text-base font-medium text-font">
                           {stock.num}
                         </td>
                       </tr>
