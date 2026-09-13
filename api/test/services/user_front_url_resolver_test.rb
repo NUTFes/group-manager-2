@@ -3,9 +3,23 @@
 require 'test_helper'
 
 class UserFrontUrlResolverTest < ActiveSupport::TestCase
-  test 'resolves development url when APP_ENV is unset' do
-    with_app_env(nil) do
+  test 'resolves development url when APP_ENV is development' do
+    with_app_env('development') do
       assert_equal 'http://localhost:8003', UserFrontUrlResolver.call
+    end
+  end
+
+  test 'raises when APP_ENV is unset' do
+    with_app_env(nil) do
+      error = assert_raises(RuntimeError) { UserFrontUrlResolver.call }
+      assert_equal 'APP_ENV must be set', error.message
+    end
+  end
+
+  test 'raises when APP_ENV is blank' do
+    with_app_env('') do
+      error = assert_raises(RuntimeError) { UserFrontUrlResolver.call }
+      assert_equal 'APP_ENV must be set', error.message
     end
   end
 

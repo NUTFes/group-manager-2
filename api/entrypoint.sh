@@ -2,13 +2,18 @@
 set -e
 
 # APP_ENVはUserFrontUrlResolverが確定情報URLのドメイン解決に使う。
-# 未知の値だと開発用URLへのフォールバックが発生しQRコードが壊れるため、
-# 起動時に許容値かどうかを検証してfail-fastさせる。
-app_env="${APP_ENV:-development}"
-case "$app_env" in
+# 未設定・未知の値だと開発用URLへのフォールバックが発生しQRコードが
+# 壊れるため、起動時に許容値かどうかを検証してfail-fastさせる。
+# ローカル開発でもcompose.ymlのapiサービスでAPP_ENV=developmentを
+# 明示的に設定しており、ここで暗黙のデフォルト値は使わない。
+if [ -z "${APP_ENV:-}" ]; then
+  echo "APP_ENV must be set" >&2
+  exit 1
+fi
+case "$APP_ENV" in
   development|staging|production) ;;
   *)
-    echo "Unsupported APP_ENV: $app_env" >&2
+    echo "Unsupported APP_ENV: $APP_ENV" >&2
     exit 1
     ;;
 esac

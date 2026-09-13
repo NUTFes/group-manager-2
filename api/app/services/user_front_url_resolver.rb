@@ -10,7 +10,9 @@ class UserFrontUrlResolver
   }.freeze
 
   def self.call
-    app_env = ENV.fetch('APP_ENV', 'development')
+    app_env = ENV.fetch('APP_ENV', nil)
+    raise 'APP_ENV must be set' if app_env.blank?
+
     URLS_BY_ENV.fetch(app_env) do
       raise "Unsupported APP_ENV: #{app_env}"
     end
