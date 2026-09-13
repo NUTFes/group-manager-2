@@ -35,6 +35,7 @@ services:
     env_file: [webhook.env, ./api/.env]
     environment:
       - TZ=Asia/Tokyo
+      - APP_ENV=development
     depends_on: [db]
 
   admin_view:

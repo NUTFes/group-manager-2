@@ -2,6 +2,7 @@ en:
   print_pdf:
     output_all_groups_rental_items:
       title: "Rental Items List"
+      qrcode_caption: "Scan this QR code to view rental item information."
       sections:
         participating_org: "Participating Organizations"
         rental_items: "Rental Items List"

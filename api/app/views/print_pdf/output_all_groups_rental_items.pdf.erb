@@ -4,8 +4,14 @@
 <% day2_date = fes_dates_by_day_num[2]&.date %>
 <% pickup_date = fes_dates_by_day_num[0]&.date %>
 <% return_date = fes_dates_by_day_num[3]&.date %>
-<div class="page-break">
-<h1><%= t('print_pdf.output_all_groups_rental_items.title') %></h1>
+<div class="page-break page-break-with-qrcode">
+<div class="print-header">
+  <h1><%= t('print_pdf.output_all_groups_rental_items.title') %></h1>
+  <div class="print-header-qrcode">
+    <img src="<%= QrcodePngDataUri.call(group.confirmed_info_url) %>" alt="<%= t('print_pdf.output_all_groups_rental_items.title') %>QRコード">
+    <div class="print-header-qrcode-caption"><%= t('print_pdf.output_all_groups_rental_items.qrcode_caption') %></div>
+  </div>
+</div>
 
 <div class="padding-top">
   <h2><%= t('print_pdf.output_all_groups_rental_items.sections.participating_org') %></h2>

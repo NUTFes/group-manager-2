@@ -2,6 +2,7 @@ ja:
   print_pdf:
     output_all_groups_rental_items:
       title: "物品貸出表"
+      qrcode_caption: "このQRコードから貸出物品などの情報が閲覧できます"
       sections:
         participating_org: "参加団体情報"
         rental_items: "貸出物品一覧"
