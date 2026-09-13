@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { ConfirmedInfo as ConfirmedInfoData } from '@/api/confirmedInfoApi';
 import { FiCopy, FiShare2 } from 'react-icons/fi';
 import Button from '@/components/Button';
@@ -12,6 +12,19 @@ type ConfirmedInfoProps = {
   // 共有・コピーの対象URL。押された瞬間に解決するため関数で受け取る
   getShareUrl: () => string;
 };
+
+type LabeledValueProps = {
+  label: string;
+  children: ReactNode;
+};
+
+// 団体情報カードの1項目。ラベルと値の組を縦に積む
+const LabeledValue: FC<LabeledValueProps> = ({ label, children }) => (
+  <div className="flex w-full flex-col gap-1">
+    <p className="text-xs text-gray-500">{label}</p>
+    {children}
+  </div>
+);
 
 const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
   isLoading,
@@ -41,77 +54,125 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
     );
   }
 
-  const { group, assignRentalItems } = confirmedInfo;
+  const { group, rentalItems } = confirmedInfo;
 
   return (
-    <FormContainer>
-      {/* 共有されたリンクを開いた最初の一目で「自分の団体の情報か」を確認できるようにする */}
-      <div className="flex w-full flex-col gap-1">
-        <p className="text-xs text-gray-500">{texts.labels.groupName}</p>
-        <p className="text-2xl font-bold text-font md:text-3xl">{group.name}</p>
-      </div>
-
-      {/* このページの本題: 貸出物品ごとに、物品名を主見出し・詳細を副情報として並べる */}
-      {assignRentalItems.length === 0 ? (
-        <p className="text-base text-font">{texts.labels.empty}</p>
-      ) : (
+    <div className="flex w-full flex-col gap-6">
+      {/* 団体情報。共有されたリンクを開いた最初の一目で自分の団体か確認できるようにする */}
+      <FormContainer>
         <div className="flex w-full flex-col gap-4">
-          {assignRentalItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex w-full flex-col gap-2 border-b border-[#b2b2b2] pb-4 last:border-none last:pb-0"
-            >
-              <p className="text-lg font-bold text-font">
-                {item.rentalItemName}
+          <LabeledValue label={texts.labels.groupName}>
+            <p className="text-2xl font-bold text-font md:text-3xl">
+              {group.name}
+            </p>
+          </LabeledValue>
+          <LabeledValue label={texts.labels.projectName}>
+            <p className="text-base font-medium text-font">
+              {group.projectName || texts.labels.unset}
+            </p>
+          </LabeledValue>
+          {/* 会場は has_many なので複数割り当てられていることがある */}
+          <LabeledValue label={texts.labels.places}>
+            {group.places.length === 0 ? (
+              <p className="text-base font-medium text-font">
+                {texts.labels.unset}
               </p>
-              <div className="flex flex-col gap-1 text-base font-medium text-font">
-                <span>
-                  {texts.headers.stockPlace}:{' '}
-                  {item.stockPlaceName || texts.labels.unset}
-                </span>
-                <span>
+            ) : (
+              group.places.map((place) => (
+                <p key={place} className="text-base font-medium text-font">
+                  {place}
+                </p>
+              ))
+            )}
+          </LabeledValue>
+        </div>
+      </FormContainer>
+
+      {/* 貸出物品。APIが (物品, 貸出場所) ごとにまとめ、並び順も固定して返している */}
+      <FormContainer>
+        <div className="flex w-full flex-col gap-6">
+          <p className="text-xl font-bold text-font">
+            {texts.labels.rentalItems}
+          </p>
+
+          {rentalItems.length === 0 ? (
+            <p className="text-base text-font">{texts.labels.empty}</p>
+          ) : (
+            rentalItems.map((item) => (
+              <div
+                key={`${item.rentalItemName}-${item.rentalPlaceName}`}
+                className="flex w-full flex-col gap-2"
+              >
+                <p className="text-lg font-bold text-font">
+                  {item.rentalItemName}
+                </p>
+                <p className="text-sm text-gray-600">
                   {texts.headers.rentalPlace}:{' '}
                   {item.rentalPlaceName || texts.labels.unset}
-                </span>
-                <span>
-                  {texts.headers.num}: {item.num}
-                </span>
+                </p>
+                <table className="w-full table-fixed border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-[#b2b2b2]">
+                      <th className="py-2 pr-2 text-xs font-normal text-gray-500">
+                        {texts.headers.stockPlace}
+                      </th>
+                      <th className="w-20 py-2 text-right text-xs font-normal text-gray-500">
+                        {texts.headers.num}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.stocks.map((stock) => (
+                      <tr
+                        key={stock.stockPlaceName}
+                        className="border-b border-[#e5e5e5] last:border-none"
+                      >
+                        <td className="break-words py-2 pr-2 text-base font-medium text-font">
+                          {stock.stockPlaceName || texts.labels.unset}
+                        </td>
+                        <td className="py-2 text-right text-base font-medium text-font">
+                          {stock.num}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))
+          )}
 
-      {/* コピー・共有ボタンとその注意書きは一つの操作単位としてまとめる */}
-      <div className="flex w-full flex-col items-center gap-3">
-        <p className="text-center text-sm text-gray-600">
-          {texts.labels.shareNotice}
-        </p>
-        <div className="flex w-full flex-wrap items-center justify-center gap-4">
-          <Button
-            type="button"
-            size="mobile"
-            color="main"
-            variant
-            onClick={() => handleCopy(getShareUrl())}
-          >
-            <span className="flex items-center gap-2">
-              <FiCopy /> {texts.actions.copy}
-            </span>
-          </Button>
-          <Button
-            type="button"
-            size="mobile"
-            color="main"
-            onClick={() => handleShare(getShareUrl(), group.name)}
-          >
-            <span className="flex items-center gap-2">
-              <FiShare2 /> {texts.actions.share}
-            </span>
-          </Button>
+          {/* コピー・共有ボタンとその注意書きは一つの操作単位としてまとめる */}
+          <div className="flex w-full flex-col items-center gap-3">
+            <p className="text-center text-sm text-gray-600">
+              {texts.labels.shareNotice}
+            </p>
+            <div className="flex w-full flex-wrap items-center justify-center gap-4">
+              <Button
+                type="button"
+                size="mobile"
+                color="main"
+                variant
+                onClick={() => handleCopy(getShareUrl())}
+              >
+                <span className="flex items-center gap-2">
+                  <FiCopy /> {texts.actions.copy}
+                </span>
+              </Button>
+              <Button
+                type="button"
+                size="mobile"
+                color="main"
+                onClick={() => handleShare(getShareUrl(), group.name)}
+              >
+                <span className="flex items-center gap-2">
+                  <FiShare2 /> {texts.actions.share}
+                </span>
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-    </FormContainer>
+      </FormContainer>
+    </div>
   );
 };
 

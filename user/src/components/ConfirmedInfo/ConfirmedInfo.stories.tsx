@@ -24,19 +24,46 @@ export const Default: Story = {
     getShareUrl: () =>
       'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
     confirmedInfo: {
-      group: { id: 1, name: 'nutfes' },
-      assignRentalItems: [
+      group: {
+        id: 1,
+        name: 'nutfes',
+        projectName: '〇〇カフェ',
+        places: ['講義棟103'],
+      },
+      rentalItems: [
         {
           rentalItemName: '机',
-          stockPlaceName: 'AL1',
-          rentalPlaceName: '',
-          num: 1,
+          rentalPlaceName: '講義棟103',
+          // 同じ物品を複数の在庫場所から借りるケース
+          stocks: [
+            { stockPlaceName: '講義棟103', num: 10 },
+            { stockPlaceName: '講義棟104', num: 3 },
+          ],
         },
         {
           rentalItemName: '椅子',
-          stockPlaceName: 'AL2',
-          rentalPlaceName: 'AL2',
-          num: 4,
+          rentalPlaceName: '講義棟103',
+          stocks: [{ stockPlaceName: '講義棟103', num: 20 }],
+        },
+      ],
+    },
+  },
+};
+
+// 会場・企画名・貸出場所がいずれも未設定の状態
+export const Unassigned: Story = {
+  args: {
+    isLoading: false,
+    hasError: false,
+    getShareUrl: () =>
+      'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
+    confirmedInfo: {
+      group: { id: 1, name: 'nutfes', projectName: null, places: [] },
+      rentalItems: [
+        {
+          rentalItemName: '長机',
+          rentalPlaceName: '',
+          stocks: [{ stockPlaceName: '体育館倉庫', num: 1 }],
         },
       ],
     },
@@ -50,8 +77,13 @@ export const Empty: Story = {
     getShareUrl: () =>
       'https://example.com/confirmed?group_id=1&secret=xxxxxxxx',
     confirmedInfo: {
-      group: { id: 1, name: 'nutfes' },
-      assignRentalItems: [],
+      group: {
+        id: 1,
+        name: 'nutfes',
+        projectName: '〇〇カフェ',
+        places: ['講義棟103'],
+      },
+      rentalItems: [],
     },
   },
 };

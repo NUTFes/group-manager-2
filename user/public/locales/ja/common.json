@@ -985,7 +985,10 @@
       "groupName": "団体名",
       "unset": "-",
       "empty": "貸出物品はありません。",
-      "shareNotice": "このリンクを知っている人は誰でも閲覧できます。"
+      "shareNotice": "このリンクを知っている人は誰でも閲覧できます。",
+      "projectName": "企画名",
+      "places": "会場",
+      "rentalItems": "貸出物品"
     },
     "actions": {
       "copy": "リンクをコピー",

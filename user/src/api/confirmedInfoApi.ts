@@ -17,12 +17,18 @@ export type ConfirmedInfo = {
   group: {
     id: number;
     name: string;
+    projectName: string | null;
+    // 確定した会場名。割り当てが無い場合は空配列
+    places: string[];
   };
-  assignRentalItems: {
+  // (物品, 貸出場所) ごとにまとめ済み。並び順もAPI側で固定されている
+  rentalItems: {
     rentalItemName: string;
-    stockPlaceName: string;
     rentalPlaceName: string;
-    num: number;
+    stocks: {
+      stockPlaceName: string;
+      num: number;
+    }[];
   }[];
 };
 

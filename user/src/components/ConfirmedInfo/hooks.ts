@@ -12,6 +12,9 @@ export const useConfirmedInfoTexts = () => {
     },
     labels: {
       groupName: t('confirmedInfo.labels.groupName'),
+      projectName: t('confirmedInfo.labels.projectName'),
+      places: t('confirmedInfo.labels.places'),
+      rentalItems: t('confirmedInfo.labels.rentalItems'),
       unset: t('confirmedInfo.labels.unset'),
       empty: t('confirmedInfo.labels.empty'),
       shareNotice: t('confirmedInfo.labels.shareNotice'),
