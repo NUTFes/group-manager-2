@@ -10,6 +10,9 @@ class UserFrontUrlResolver
   }.freeze
 
   def self.call
-    URLS_BY_ENV.fetch(ENV.fetch('APP_ENV', 'development'), URLS_BY_ENV.fetch('development'))
+    app_env = ENV.fetch('APP_ENV', 'development')
+    URLS_BY_ENV.fetch(app_env) do
+      raise "Unsupported APP_ENV: #{app_env}"
+    end
   end
 end

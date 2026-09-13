@@ -21,9 +21,10 @@ class UserFrontUrlResolverTest < ActiveSupport::TestCase
     end
   end
 
-  test 'falls back to development url for an unknown APP_ENV' do
+  test 'raises for an unknown APP_ENV instead of silently falling back' do
     with_app_env('unknown') do
-      assert_equal 'http://localhost:8003', UserFrontUrlResolver.call
+      error = assert_raises(RuntimeError) { UserFrontUrlResolver.call }
+      assert_equal 'Unsupported APP_ENV: unknown', error.message
     end
   end
 
