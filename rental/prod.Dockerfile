@@ -32,6 +32,13 @@ WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/group-manager-2"
 ENV NODE_ENV=production
 
+# SSR_API_URL はサーバー実行時に process.env から読む値のため、builder ステージの
+# ENV は runner に引き継がれない。ビルド引数を runner でも ENV にしておくことで、
+# env_file に SSR_API_URL を持たない環境（compose.stage.yml）でもサーバー側から
+# 参照できる。実行時に env_file / environment で上書きすることも可能。
+ARG SSR_API_URL
+ENV SSR_API_URL=${SSR_API_URL}
+
 COPY --from=builder --chown=65532:65532 /app/.next/standalone /app/
 COPY --from=builder --chown=65532:65532 /app/.next/static /app/.next/static
 COPY --from=builder --chown=65532:65532 /app/public /app/public
