@@ -311,40 +311,47 @@ export default {
       const groupId = Number(e.dataTransfer.getData('groupId'));
       if (!groupId) return;
 
-      // Groupに紐づくPlaceOrderを探す
-      const placeOrderId = this.getPlaceOrderIdByGroupId(groupId);
-      if (!placeOrderId) {
-        alert("この団体は会場申請を行っていないため、割り当てできません。");
-        return;
-      }
-
-      // すでにその部屋に割り当てられている場合はスキップ
-      const isAlreadyAssigned = this.assignGroupPlaces.some(
-        a => Number(a.place_order_id) === placeOrderId && Number(a.stocker_place_id) === Number(place.id)
-      );
-      if (isAlreadyAssigned) return;
-
       if (this.updatingRelations) return;
       this.updatingRelations = true;
 
       try {
-        // バックエンドが要求するストロングパラメータに合わせた送信形式
+        // 1. 団体の place_order_id を取得
+        let placeOrderId = this.getPlaceOrderIdByGroupId(groupId);
+
+        // 2. 会場未申請の団体の場合、自動で place_order を新規作成
+        if (!placeOrderId) {
+          const newPoRes = await this.$axios.$post('/place_orders', {
+            place_order: { group_id: groupId }
+          });
+          const newPo = newPoRes.data || newPoRes;
+          
+          // フロントの配列に追加して placeOrderId を更新
+          this.placeOrders.push(newPo);
+          placeOrderId = newPo.id || (newPo.place_order && newPo.place_order.id);
+        }
+
+        // 3. 重複割り当てのチェック
+        const isAlreadyAssigned = this.assignGroupPlaces.some(
+          a => Number(a.place_order_id) === Number(placeOrderId) && Number(a.stocker_place_id) === Number(place.id)
+        );
+        if (isAlreadyAssigned) return;
+
+        // 4. 会場割り当てを保存
         const response = await this.$axios.$post('/assign_group_places', {
           assign_group_place: {
             place_order_id: placeOrderId,
             stocker_place_id: place.id
           }
-        });
-        
-        // 追加成功したらフロントの配列にも追加
-        this.assignGroupPlaces.push(response.data || response);
-      } catch (error) {
-        alert("会場の割り当てに失敗しました。");
-        console.error(error);
-      } finally {
-        this.updatingRelations = false;
-      }
-    },
+    });
+    
+    this.assignGroupPlaces.push(response.data || response);
+  } catch (error) {
+    alert("会場の割り当てに失敗しました。");
+    console.error(error);
+  } finally {
+    this.updatingRelations = false;
+  }
+},
 
     // ----------------------------
     // 削除確認モーダルの制御 (API連動)
