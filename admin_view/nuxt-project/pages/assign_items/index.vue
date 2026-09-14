@@ -726,7 +726,7 @@ export default {
         } else if (!matchedPlace) {
           this.refPlaces = "Place";
         } else {
-          this.refPlaces = matchedPlace.name;
+          this.refPlaces = matchedPlace.formatted_name;
         }
       }
     },
