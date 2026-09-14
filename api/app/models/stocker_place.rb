@@ -4,6 +4,7 @@ class StockerPlace < ApplicationRecord
   has_many :stocker_items, dependent: :destroy
   has_many :rentable_items, dependent: :destroy
   has_many :assign_rental_items, dependent: :destroy
+  has_many :item_rental_logs, dependent: :restrict_with_error
   has_many :assign_group_places, dependent: :destroy
   belongs_to :place_category, optional: true
 

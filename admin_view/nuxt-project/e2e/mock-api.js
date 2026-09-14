@@ -231,6 +231,23 @@ http
       return;
     }
 
+    // 物品割り当て画面などの asyncData が参照するマスターデータ
+    if (url.pathname === "/fes_years") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, year_num: 2026 }],
+      });
+      return;
+    }
+
+    if (url.pathname === "/group_categories") {
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: [{ id: 1, name: "一般企画" }],
+      });
+      return;
+    }
+
     if (
       url.pathname ===
       "/api/v1/get_health_center_submission_status_index_for_admin_view"
