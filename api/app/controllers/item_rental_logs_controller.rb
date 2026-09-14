@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class ItemRentalLogsController < ApplicationController
-  before_action :authenticate_api_user!
-  before_action :require_admin!
+  include RentalBffAuthenticatable
+
+  # 人の認証はCloudflare Accessが行い、ここではBFFからの呼び出しであることを検証する。
+  # 記録者を残す作成時のみ、BFFが転送するメールアドレスを必須にする。
+  before_action :authenticate_rental_bff!
+  before_action :require_rental_recorder_email!, only: %i[create]
 
   IDEMPOTENCY_ATTRIBUTES = %w[
     assign_rental_item_id group_id rental_item_id stocker_place_id category quantity recorder_email
@@ -40,7 +44,9 @@ class ItemRentalLogsController < ApplicationController
         )
       )
     end
-    item_rental_log.recorder_email = current_api_user.email
+    # 記録者はリクエストパラメータではなく、Cloudflare Accessが付与しBFFが転送した
+    # メールアドレスを使う。クライアントが偽装した値を信用しない。
+    item_rental_log.recorder_email = rental_recorder_email
 
     existing_log = ItemRentalLog.find_by(uid: item_rental_log.uid)
     return render_idempotent_result(existing_log, item_rental_log) if existing_log

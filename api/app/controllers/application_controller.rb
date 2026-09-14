@@ -36,6 +36,10 @@ class ApplicationController < ActionController::API
     return { code: 409, message: 'Conflict' }
   end
 
+  def unauthorized
+    return { code: 401, message: 'Unauthorized' }
+  end
+
   # 出力するAPIのフォーマット
   def fmt(status = undefined, data = [], option = '')
     # メッセージを追加したいときに使う

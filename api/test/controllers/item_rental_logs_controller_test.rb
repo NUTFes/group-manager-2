@@ -3,19 +3,18 @@
 require 'test_helper'
 
 class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
+  API_TOKEN = 'test-rental-api-token'
+
   setup do
     @item_rental_log = item_rental_logs(:one)
     @assign_rental_item = assign_rental_items(:one)
     @stocker_place = stocker_places(:one)
     @group = groups(:one)
 
-    Role.find_or_create_by!(id: 1) { |role| role.name = 'admin' }
-    Role.find_or_create_by!(id: 2) { |role| role.name = 'staff' }
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'user' }
-    @admin = create_user!(email: 'admin-item-rental-log@example.com', role_id: 1)
-    @staff = create_user!(email: 'staff-item-rental-log@example.com', role_id: 2)
-    @restricted_user = create_user!(email: 'restricted-item-rental-log@example.com', role_id: 3)
-    @headers = auth_headers(@admin)
+    ENV['RENTAL_API_TOKEN'] = API_TOKEN
+    @recorder_email = 'recorder-one@example.com'
+    @other_recorder_email = 'recorder-two@example.com'
+    @headers = bff_headers(@recorder_email)
   end
 
   test 'should get index filtered by rental_place_id and group_id, including planned quantity' do
@@ -71,47 +70,62 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_includes log_ids, item_rental_logs(:two).id
   end
 
-  test 'index requires authentication' do
+  test 'index requires the rental BFF token' do
     get item_rental_logs_url
     assert_response :unauthorized
   end
 
-  test 'restricted user cannot get index' do
-    get item_rental_logs_url, headers: auth_headers(@restricted_user)
-    assert_response :forbidden
+  test 'index rejects an invalid rental BFF token' do
+    get item_rental_logs_url, headers: { RentalBffAuthenticatable::API_TOKEN_HEADER => 'wrong-token' }
+    assert_response :unauthorized
   end
 
-  test 'should create item_rental_log and take recorder_email from the authenticated staff user' do
+  test 'index does not require the recorder email' do
+    get item_rental_logs_url,
+        headers: { RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN }
+    assert_response :success
+  end
+
+  test 'index is rejected when RENTAL_API_TOKEN is not configured' do
+    ENV['RENTAL_API_TOKEN'] = ''
+    get item_rental_logs_url, headers: @headers
+    assert_response :unauthorized
+  ensure
+    ENV['RENTAL_API_TOKEN'] = API_TOKEN
+  end
+
+  test 'should create item_rental_log and take recorder_email from the Cf-Access header' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'new-item-rental-log-uid',
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental',
         quantity: 3
-      }, headers: auth_headers(@staff), as: :json
+      }, headers: bff_headers(@other_recorder_email), as: :json
     end
 
     assert_response :created
     body = response.parsed_body
-    assert_equal @staff.email, body['data']['recorder_email']
+    assert_equal @other_recorder_email, body['data']['recorder_email']
     assert_equal @assign_rental_item.rental_item_id, body['data']['rental_item_id']
   end
 
-  test 'a spoofed Cf-Access header does not override the recorder_email' do
+  test 'a recorder_email parameter does not override the Cf-Access header' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
-        uid: 'spoofed-header-uid',
+        uid: 'spoofed-param-uid',
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental',
-        quantity: 1
-      }, headers: @headers.merge('Cf-Access-Authenticated-User-Email' => 'attacker@example.com'), as: :json
+        quantity: 1,
+        recorder_email: 'attacker@example.com'
+      }, headers: @headers, as: :json
     end
 
     assert_response :created
-    assert_equal @admin.email, response.parsed_body['data']['recorder_email']
+    assert_equal @recorder_email, response.parsed_body['data']['recorder_email']
   end
 
-  test 'create requires authentication' do
+  test 'create requires the rental BFF token' do
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'unauthenticated-uid',
@@ -124,17 +138,32 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'restricted user cannot create item_rental_log' do
+  test 'create is rejected when the recorder email is missing' do
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
-        uid: 'restricted-user-uid',
+        uid: 'missing-recorder-uid',
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental',
         quantity: 1
-      }, headers: auth_headers(@restricted_user), as: :json
+      }, headers: { RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN }, as: :json
     end
 
-    assert_response :forbidden
+    assert_response :unauthorized
+  end
+
+  test 'create is rejected with an invalid rental BFF token' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'invalid-token-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: bff_headers(@recorder_email).merge(
+        RentalBffAuthenticatable::API_TOKEN_HEADER => 'wrong-token'
+      ), as: :json
+    end
+
+    assert_response :unauthorized
   end
 
   test 'should return existing record when uid is resent with the same event data by the same user' do
@@ -188,7 +217,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental',
         quantity: 2
-      }, headers: auth_headers(@staff), as: :json
+      }, headers: bff_headers(@other_recorder_email), as: :json
     end
 
     assert_response :conflict
@@ -384,19 +413,12 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_user!(email:, role_id:)
-    User.create!(
-      name: email.split('@').first,
-      email: email,
-      uid: email,
-      provider: 'email',
-      password: 'password',
-      password_confirmation: 'password',
-      role_id: role_id
-    )
-  end
-
-  def auth_headers(user)
-    user.create_new_auth_token
+  # BFFからの呼び出しを模したヘッダー。トークンで呼び出し元を、
+  # Cf-Access-Authenticated-User-Email で記録者を表す。
+  def bff_headers(recorder_email)
+    {
+      RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN,
+      RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => recorder_email
+    }
   end
 end
