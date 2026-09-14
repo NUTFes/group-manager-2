@@ -4,8 +4,8 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 版 | v0.6（v0.5 からの変更: Figma に追加された訂正モーダルを反映、A2 を PR #2182 の流用に、QR は PR #2183 の URL に統一） |
-| 日付 | 2026-09-09 |
+| 版 | v0.7（v0.6 からの変更: マージ済み実装に追従。A2/A5/F10 完了、カテゴリは6値、A1/A3/A4 が残ギャップ） |
+| 日付 | 2026-09-14（初版 2026-09-09） |
 | 作成 | haruto-kamijo |
 | 状態 | レビュー中 |
 
@@ -41,7 +41,7 @@
 
 ver.1 mobile の6画面を対象とする（作業場所選択 / 参加団体選択 / 団体選択モーダル / 貸出・返却登録 / 訂正モーダル / 進捗確認）。
 
-スコープ外: PC レイアウト、オフライン時の送信キュー、管理画面（admin_view）側の閲覧機能、メモの全件履歴表示、緊急時の割当変更（倉庫→参加団体）。団体側アプリの QR 表示は別 issue F10 として `user/` 側に切り出す。
+スコープ外: PC レイアウト、オフライン時の送信キュー、管理画面（admin_view）側の閲覧機能、メモの全件履歴表示、緊急時の割当変更（倉庫→参加団体）。団体側アプリの QR 表示は別 issue F10 として `user/` 側に切り出した（#2202 で実装済み）。
 
 技大祭までに必要最低限の機能を出すことを優先する。緊急時の割当変更は第一段階の完成後、デザイン修正と API 追加を経て実装する。
 
@@ -50,6 +50,8 @@ ver.1 mobile の6画面を対象とする（作業場所選択 / 参加団体選
 ### 前提
 
 Cloudflare Zero Trust（Access）で保護し、アプリ自体はログイン画面を持たない。API キー・.env は settings リポジトリで管理する。技術構成は Next.js 16 / React 19 / Tailwind 4 / pnpm、PWA。
+
+環境構築（#2181）とその残課題（#2185〜#2189）はすべてマージ済みである。
 
 ## 2. 利用者と用語
 
@@ -61,7 +63,8 @@ Cloudflare Zero Trust（Access）で保護し、アプリ自体はログイン�
 | 在庫場所 | 物が保管されている場所 | `assign_rental_items.stocker_place_id` → `stocker_places` |
 | 参加団体 | 今年度 = `UserPageSetting.first.fes_year` | `groups` |
 | 割当 | 団体×物品×在庫場所。`num`=渡す予定数、`remark`=実行委員の備考（PR #2184） | `assign_rental_items` |
-| 記録 | 当日の事実。`uid` 冪等キー、`category`=rental/return/rental_adjustment/return_adjustment、`quantity`、`recorder_email`、追加予定 `memo`（PR #2171） | `item_rental_logs` |
+| 記録 | 当日の事実。`uid` 冪等キー、`category`=rental/return/rental_absolute/return_absolute/addition/reduction の6値（`absolute_adjustment` は廃止値として残存、新規作成は 422）、`quantity`、`recorder_email`、`group_id`。`addition`/`reduction` は `assign_rental_item_id` が NULL。`memo` は未実装（A4） | `item_rental_logs` |
+| 割当変更 | 団体間で割当を追加・削減した記録 | `item_rental_logs` の `addition`/`reduction` |
 | 団体 QR | 24桁、全団体に自動生成 | `group_secrets.secret` |
 
 ## 3. ユーザー体験
@@ -116,7 +119,7 @@ flowchart TD
 - **訂正する物品**: セレクターで選ぶ。候補はこの作業場所の処理対象アイテム
 - **訂正後の貸出済数**: 正しい累計を直接入力する（差分ではない）。右上に「貸出予定数: 20」を参照表示し、入力欄のプレースホルダに「現在の貸出済数: 7」を出す
 - **バリデーション**: 「※ 0〜貸出予定数の間で入力してください。」。上限はその割当の `num`、下限は 0
-- **訂正内容を送信**: モードに応じて `rental_adjustment` / `return_adjustment` を1件記録する
+- **訂正内容を送信**: モードに応じて `rental_absolute` / `return_absolute` を1件記録する
 
 返却モードでは「訂正後の返却済数」を入力し、上限は貸出済数になる（返却モードの画面はデザイン未整備。9 章を参照）。
 
@@ -149,31 +152,32 @@ Figma ver.1 mobile の6画面。左上: 作業場所選択、中上: 参加団�
 | F1 | デザインシステム基盤と UI コンポーネント | Tailwind 4 `@theme` トークン、Noto Sans JP。Header / Badge / Button / Selector / AccordionCard / ItemCard / QuantityControl / BottomSheetModal / ProgressBar。`user/` の慣習（components/\<Name\>/{tsx,stories,index}、scaffdog、Storybook、Prettier import 順）を移植する。 | — |
 | F2 | BFF 経由の API クライアントと型 | Route Handler が `SSR_API_URL` へ転送、camelCase 変換、`ApiResponse<T>`、SWR。 | A1, A3 |
 | F3 | 作業場所選択と作業セッション | 画面①。localStorage 永続化、ヘッダー反映。 | A3 |
-| F4 | QR スキャンによる団体選択 | `BarcodeDetector`（非対応時は zxing 等）、権限拒否時の導線。 | A2, F2 |
+| F4 | QR スキャンによる団体選択 | `BarcodeDetector`（非対応時は zxing 等）、権限拒否時の導線。団体 QR は `/confirmed?group_id=&secret=` の URL（#2193 がサーバー側で生成）。スキャン結果の URL から `group_id` と `secret` を取り出し、#2182 のエンドポイントで照合する。 | F2 |
 | F5 | 手動の団体選択モーダル | 検索 + 一覧。 | F1, F2, A3 |
-| F6 | 貸出・返却登録画面 | 画面③。 | F1, F2, A3, A4 |
+| F6 | 貸出・返却登録画面 | 画面③。割当変更の取得には `group_id` のみのクエリが別途必要（5 章参照）。 | F1, F2, A3, A4 |
 | F7 | 送信処理 | uid 生成、冪等 POST、部分失敗の再送、409 の扱い。 | F6, A1, A4 |
-| F8 | 進捗確認 | クライアント集計。 | F1, F2, A3 |
+| F8 | 進捗確認 | クライアント集計。割当変更の取得には `group_id` のみのクエリが別途必要（5 章参照）。 | F1, F2, A3 |
 | F9 | Route Handler での Access 認証情報の検証・転送 | `Cf-Access-Jwt-Assertion` を JWKS で検証し、メールを転送する。 | A1, #2188 |
-| F10 | `user/` の確定画面に団体 QR を表示（gm3_user） | PR #2183 の `/confirmed?group_id=&secret=` を QR にする。#2157/#2158 の担当と調整する。 | PR #2183 |
-| F11 | 記録の訂正モーダル | 「訂正する」ボタンから開くモーダル。物品を選び、正しい累計を入力して `rental_adjustment` / `return_adjustment` で記録する。上限は割当の `num`。 | F6, F7, A5 |
+| F10 | `user/` の確定画面に団体 QR を表示（gm3_user） | **実装済み（#2202）**。PR #2183 の `/confirmed?group_id=&secret=` を QR コードで表示する。 | 完了 |
+| F11 | 記録の訂正モーダル | 「訂正する」ボタンから開くモーダル。物品を選び、正しい累計を入力して `rental_absolute` / `return_absolute` で記録する。上限は割当の `num`。 | F6, F7 |
 
 ## 5. データと集計ルール
 
-送信 = 今回渡した・返した数を `rental` / `return` で1ログ記録する。カード1枚（`assign_rental_item` 1件）につき、1回の送信で最大1ログ。訂正は `rental_adjustment` / `return_adjustment` を使う。
+送信 = 今回渡した・返した数を `rental` / `return` で1ログ記録する。カード1枚（`assign_rental_item` 1件）につき、1回の送信で最大1ログ。訂正は `rental_absolute` / `return_absolute` を使う。
 
-`category` は貸出・返却それぞれに通常記録と訂正を持つ4値とする。
+`category` は貸出・返却それぞれに通常記録と訂正を持つ6値とする。旧 `absolute_adjustment` は廃止値として enum に残っているが、新規作成は 422 になる。
 
 ```
-category: rental | return | rental_adjustment | return_adjustment
+category: rental | return | rental_absolute | return_absolute | addition | reduction
 ```
 
-- **貸出済** = 直近の `rental_adjustment` の値 + それより後の Σ rental（`rental_adjustment` が無ければ Σ rental）
-- **貸出残** = `num − 貸出済`
-- **返却済** = 直近の `return_adjustment` の値 + それより後の Σ return（`return_adjustment` が無ければ Σ return）
-- **返却残** = `貸出済 − 返却済`
+- **貸出済** = 直近の `rental_absolute` の値 + それより後の Σ rental（`rental_absolute` が無ければ Σ rental）
+- **返却済** = 直近の `return_absolute` の値 + それより後の Σ return（`return_absolute` が無ければ Σ return）
+- **実効割当数（提案）** = `assign_rental_items.num` + Σ addition − Σ reduction。割当変更をどう集計に織り込むかは 9 章の要合意事項
+- **貸出残** = 実効割当数 − 貸出済
+- **返却残** = 貸出済 − 返却済
 
-貸出と返却で式が対称になる。`*_adjustment` は累計そのものを上書きする。差分ではない。上書き後の通常記録はその値に加算する。ログの順序は `created_at`（同時刻は `id`）で判定する。
+貸出と返却で式が対称になる。`*_absolute` は累計そのものを上書きする。差分ではない。上書き後の通常記録はその値に加算する。ログの順序は `created_at`（同時刻は `id`）で判定する。
 
 ③画面は貸出モードと返却モードで分岐しているため、訂正時に送るカテゴリはモードから一意に決まる。対象区分を別のフィールドで持たせる必要はない。
 
@@ -183,9 +187,9 @@ category: rental | return | rental_adjustment | return_adjustment
 | --- | --- | --- | --- |
 | 1 | rental +3 | 3 | 0 + 3 |
 | 2 | rental +2 | 5 | 3 + 2 |
-| 3 | rental_adjustment = 4 | 4 | 上書き |
+| 3 | rental_absolute = 4 | 4 | 上書き |
 | 4 | rental +1 | 5 | 4 + 1 |
-| 5 | rental_adjustment = 10 | 10 | 上書き |
+| 5 | rental_absolute = 10 | 10 | 上書き |
 | 6 | rental +1 | 11 | 10 + 1 |
 
 ### 訂正方式の選択
@@ -204,6 +208,12 @@ category: rental | return | rental_adjustment | return_adjustment
 全体進捗（場所・区分ごと）= 完了した団体数 ÷ 対象団体数。団体ステータスを完了=1、進行中・未着手=0 の二値でカウントする。アイテム数ベースにはしない（「あと何団体残っているか」を見るため）。
 
 冪等性: `uid` はクライアント生成の UUID。再送は同内容なら 200、内容が違えば 409（別端末で記録済みの可能性があるため再取得を促す）を返す。
+
+### 割当変更（addition / reduction）の扱い
+
+API では `addition` / `reduction` として記録できるようになった（#2198）が、**v1 の UI スコープ外**とする（緊急時の割当変更は第二段階で対応する）。
+
+`addition` / `reduction` は `rental_place_id`（貸出場所）を持たないため、`GET /item_rental_logs?rental_place_id=` では返らない。そのため F6 / F8 は「作業場所で絞ったクエリ」と「`group_id` のみのクエリ」の2回取得して突き合わせる必要がある。あるいは API 側で `addition` / `reduction` にも `rental_place_id` を持たせる。どちらを採るかは 9 章の要合意事項。
 
 ## 6. システム構成（API との接続）
 
@@ -236,7 +246,7 @@ flowchart LR
 
 ## 7. API 突合せ
 
-**実装予定 API = PR #2171**（approve 済み・未マージ）。`item_rental_logs` テーブル、`POST /item_rental_logs`（uid 冪等、422/404/409）、`GET /item_rental_logs?rental_place_id=&group_id=` → logs + assign_rental_items（id のみ）を追加する。
+**#2171 と #2198 がマージ済み**。`item_rental_logs` テーブルは `uid`（unique）、`stocker_place_id`（NOT NULL）、`rental_item_id`（NOT NULL）、`assign_rental_item_id`（nullable）、`category`（NOT NULL）、`quantity`（NOT NULL）、`recorder_email`（NOT NULL）、`group_id`（NOT NULL）を持つ。`memo` カラムは無い。`category` は `rental` / `return` / `rental_absolute` / `return_absolute` / `addition` / `reduction` の6値（旧 `absolute_adjustment` は廃止値、新規作成は 422）。`POST /item_rental_logs`（uid 冪等、422/404/409）、`GET /item_rental_logs?rental_place_id=&group_id=`（logs + assign_rental_items（id のみ）、`addition`/`reduction` は `group_id` のみ指定時だけ含まれる）がある。
 
 ### 揃っているもの
 
@@ -245,17 +255,23 @@ flowchart LR
 - `GET /rental_items`
 - `GET /groups`
 - `GET /api/v1/get_groups_refinemented_by_current_fes_year`
-- PR #2184 の `remark`
+- `assign_rental_items.remark`（#2184 マージ済み）
+- `GET /api/v1/get_confirmed_info_for_user_view`（#2182 マージ済み）
+- `GET /api/v1/get_confirmed_qrcode_for_user_view`（#2193 マージ済み）
+- `POST /item_rental_logs` / `GET /item_rental_logs`（#2171/#2198 マージ済み）
+
+解消したギャップ:
+
+- A2 → #2182 の `get_confirmed_info_for_user_view` を流用すれば足りるため、新規エンドポイントは不要
+- A5 → #2198 で実装済み。ただし設計時の4値案ではなく6値（+ 廃止値1）になった
 
 ### ギャップ
 
 | ID | 内容 | 影響 | 対応 |
 | --- | --- | --- | --- |
-| A1 | 認証の不整合（最重要） | PR #2171 のコントローラは `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）で記録者を `current_api_user.email` から取る。PR 説明の Cf-Access ヘッダ方式と食い違い、ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
-| A2 | QR → 団体解決 API が無い | `group_secrets` は develop にあるが読む API が無い。 | **PR #2182（approve 済み・未マージ）の `GET /api/v1/get_confirmed_info_for_user_view/:group_id?secret=` を流用できる。** 戻り値に `group: {id, name}` が含まれ、不一致は一律 404、`:secret` の filter_parameters 追加も済んでいる。新規エンドポイントは不要と判断。 |
-| A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・remark・団体名が無い。 | 名前を含めた rental 向けエンドポイントを追加（+ この場所に割当がある今年度団体一覧 + 作業場所候補）。今年度に限定する。 |
-| A4 | メモの保存先が無い | 当日のスタッフメモを保存する列が無い。 | `item_rental_logs.memo`（text, null 可）を PR #2171 に追加。remark は上書きしない。 |
-| A5 | 返却の訂正ができない | `category` が `absolute_adjustment` の1値のため、貸出・返却どちらの訂正か判別できない。 | `category` を `rental` / `return` / `rental_adjustment` / `return_adjustment` の4値にする。未マージなので `absolute_adjustment:2` → `rental_adjustment:2` のリネームと `return_adjustment:3` の追加で済む。 |
+| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
+| A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・団体名・remark が無い。 | rental 向けの名前付きエンドポイント、この場所に割当がある今年度団体一覧、作業場所候補の3つを追加する。今年度に限定する。 |
+| A4 | メモの保存先が無い | `item_rental_logs` に `memo` が無く、当日のスタッフメモを保存できない。 | `item_rental_logs.memo`（text, null 可）を追加する。remark は上書きしない。 |
 
 ### 軽微な補足
 
@@ -270,47 +286,47 @@ flowchart LR
 | --- | --- | --- |
 | 認証 = BFF + サービストークン | 理由: Access の識別を API に運ぶ唯一の現実的な経路。CORS 不要。user/ と衝突しない。 | **決定済み** |
 | 数量 = 差分ログ、訂正は累計の上書き | 理由: ログを追記のみに保てる。比較は 5 章「訂正方式の選択」。 | **決定済み** |
-| カテゴリは4値 | `rental` / `return` / `rental_adjustment` / `return_adjustment`。理由: 貸出・返却で集計式が対称になり、区分フィールドを足すより実装が単純。訂正時のカテゴリは③画面のモードから一意に決まる。 | **決定済み** |
-| メモ = item_rental_logs.memo を追加 | 理由: Figma で備考表示とメモ入力は別行。remark は実行委員の情報で当日の事実とは別。表示は直近1件（3 章③）。 | **決定済み** |
+| カテゴリは6値 | `rental` / `return` / `rental_absolute` / `return_absolute` / `addition` / `reduction`。理由: 貸出・返却で集計式が対称になり、割当変更も同じログに記録できる。#2198 で実装済み。 | **決定済み** |
+| メモ = item_rental_logs.memo を追加 | 理由: Figma で備考表示とメモ入力は別行。remark は実行委員の情報で当日の事実とは別。表示は直近1件（3 章③）。実装は未了（A4）。 | **決定済み** |
 | ステッパーは選択で残数を流し込む | 未選択は `0/13`、選択で `13/13`。理由: 「全部渡す」が大半なので選択だけで数量が決まり、Figma の `isEdit` 2状態と対応する。 | **決定済み** |
 | 訂正はモーダルで累計を直接入力 | 「訂正する」ボタン → 物品を選び「訂正後の貸出済数」を入力。上限は割当の `num`、下限は 0。デザインは Figma に追加済み（3 章⑤）。 | **決定済み** |
+| QR ペイロード形式 | 団体 QR は `/confirmed?group_id=&secret=` の URL。#2193 がサーバー側で生成し #2202 が表示するため実装済み。rental はスキャンした URL から `group_id` と `secret` を取り出す。 | **決定済み** |
 | issue は機能単位 | 親1 + F1〜F11 + A1〜A5 で起票する。 | **決定済み** |
 
 ## 9. 合意を求める事項
 
 | 事項 | 内容 | 提案 | 状態 |
 | --- | --- | --- | --- |
+| 割当変更（addition / reduction）の集計方法 | `addition` / `reduction` は `rental_place_id` を持たないため作業場所で絞ったクエリに現れない。また実効割当数の式が未定義。 | 実効割当数 = `num` + Σaddition − Σreduction とし、F6 / F8 は `group_id` のみのクエリを追加で発行して突き合わせる。将来 API 側で `rental_place_id` を持たせる案もある。 | **要合意** |
 | 作業場所候補の定義 | — | `assign_rental_items.rental_place_id` の distinct（今年度）。 | **要合意** |
 | 返却フローの詳細 | 返却残の扱い、貸出していない物の返却（想定外）をどう扱うか。 | v1 は返却残の範囲内のみとする。 | **要合意** |
 | 返却モードの訂正モーダル | 訂正モーダルは貸出モードのデザインのみ。返却モードでは「訂正後の返却済数」を入力し、上限が貸出済数になる。 | 貸出モードのデザインを踏襲し、ラベルと上限だけ差し替える。デザイン追加は不要と判断してよいか確認したい。 | **要合意** |
-| QR ペイロード形式 → PR #2183 との統一 | PR #2183（#2157）が `GET /confirmed?group_id=&secret=` という URL を QR で配る設計で実装済み。 | 団体 QR はこの URL に統一し、rental はスキャン結果の URL から `group_id` と `secret` を取り出す。団体は1つの QR で「確定情報を見る」「窓口で提示する」の両方ができる。 | **要合意** |
 | 緊急時の割当変更（倉庫→参加団体） | 当日、予定より多く渡す場合の割当変更。 | 第一段階の完成後に、デザイン修正と API 追加を経て実装する（v1 スコープ外）。v1 は admin_view で割当を直す運用で回す。 | **暫定合意** |
 | オフライン時の扱い | — | v1 は送信失敗を明示し再送ボタンを出す。キューは持たない。 | **要合意** |
 | 進捗集計のサーバ移行時期 | — | 団体数×物品数が数千を超えたら検討する。 | **要合意** |
-| PR #2171 の取り込み順 | — | A1（認証差し替え）、A4（memo）、A5（カテゴリ4値）を PR #2171 に含めてからマージ。A2/A3 は別 PR とする。 | **要合意** |
-| F10（user/ 側 QR）の担当 | #2157/#2158 の担当者と調整が必要。 | — | **要合意** |
+| A1 / A4 の実装順 | — | A1（BFF 認証）を最優先で別 PR に。A4（memo）は F6 実装前までに入れる。 | **要合意** |
 
 ## 10. 実装計画
 
 ```mermaid
 flowchart LR
-  P1["1. API を整える<br/>A1 認証 / A4 memo / A5 カテゴリ4値<br/>（PR #2171 に反映）"]
-  P2["2. 基盤を並行で<br/>F1 UI 基盤<br/>A2 QR 解決 / A3 名前付き API"]
+  P1["1. API を整える<br/>A1 認証 / A4 memo"]
+  P2["2. 基盤を並行で<br/>F1 UI 基盤<br/>A3 名前付き API"]
   P3["3. つなぐ<br/>F2 API クライアント<br/>F9 Access 検証"]
   P4["4. 画面を作る<br/>F3 作業場所<br/>F5 手動選択 / F6 登録"]
   P5["5. 動かす<br/>F7 送信<br/>F8 進捗確認"]
-  P6["6. QR 動線<br/>F4 スキャン<br/>F10 団体側 QR 表示"]
+  P6["6. QR 動線<br/>F4 スキャン"]
   P1 --> P2 --> P3 --> P4 --> P5 --> P6
 ```
 
 各段階は前の段階の成果に依存する。個々の依存関係は 4 章「機能一覧」の「依存」列を参照。
 
-- 1 は PR #2171 のマージ前に済ませる（マージ後だと API の差し替えが二度手間になる）
+- A1 が唯一の実装ブロッカーなので最優先
 - 2 は API とフロントを別の人が並行で進められる
-- 6 は QR ペイロード形式の合意（9 章）が前提
+- 6 は QR ペイロード形式が決定済み（8 章）なので着手できる
 - F11（訂正モーダル）はデザインが確定したので、5 の後に着手する
-- A2 は PR #2182 のエンドポイント流用で済む見込みなので、2 の作業量は当初想定より小さい
-- 環境課題 #2185〜#2189 は並行で消化する
+- A2 は #2182 のマージで解消済み
+- 環境課題 #2185〜#2189 はすべて完了済み
 
 ## 11. 参考リンク
 
@@ -321,19 +337,25 @@ flowchart LR
 
 ### PR / ブランチ
 
-- PR #2181 環境構築（approve 済み）
-- PR #2171 item_rental_logs API
+すべてマージ済み。
+
+- PR #2181 環境構築
+- PR #2192 / #2194 / #2195 / #2196 環境課題の対応（#2185〜#2189）
+- PR #2171 + #2198 item_rental_logs API
 - PR #2184 assign_rental_items.remark
-- PR #2182 確定情報 API（approve 済み・未マージ、A2 で流用）
-- PR #2183 確定情報のユーザー向け画面（QR で配る URL `/confirmed?group_id=&secret=`）
-- PR #2192 rental/ のローカル開発環境の修正（#2185 の対応）
+- PR #2182 確定情報 API
+- PR #2193 確定情報の QR コード API
+- PR #2183 確定情報のユーザー向け画面（`/confirmed?group_id=&secret=`）
+- PR #2202 確定画面への QR コード表示
 
 ### Issue
 
-- #2168（API）
-- #2177（環境）
-- #2185〜#2189（環境の残課題）
-- #2157/#2158（確定画面）
+- #2168（item_rental_logs API、完了）
+- #2177（環境構築、完了）
+- #2185〜#2189（環境の残課題、すべて完了）
+- #2197（カテゴリ拡張・割当変更、完了）
+- #2157 / #2158（確定画面）
+- #2201（確定画面の QR 表示、完了）
 
 ### リポジトリ
 
