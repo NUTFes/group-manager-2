@@ -65,3 +65,16 @@ export type CreateLogParams = {
 /** 記録を1件作成する。同じ uid の再送は API 側が冪等に扱う */
 export const createItemRentalLog = (params: CreateLogParams) =>
   postToBff<{ id: number; uid: string }>("/api/rental/logs", params);
+
+export type ExcessLendingParams = {
+  uid: string;
+  rentalItemId: number;
+  stockerPlaceId: number;
+  toGroupId: number;
+  fromGroupId: number;
+  quantity: number;
+};
+
+/** 超過貸出。渡す団体に addition、元の団体に reduction を対で記録する */
+export const createExcessLending = (params: ExcessLendingParams) =>
+  postToBff<{ id: number; uid: string }>("/api/rental/excess-lending", params);

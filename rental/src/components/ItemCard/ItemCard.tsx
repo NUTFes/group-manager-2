@@ -27,7 +27,9 @@ type ItemCardProps = {
 
 // Figma: item card (node-id=5133-6834)。isEdit=false（未選択）/ true（選択）/ memo
 //
-// 未選択のカードは分子0で送信対象外。タップすると残数が流し込まれる（onSelect）。
+// 未選択のカードは分子0で送信対象外。見出しをタップすると残数が流し込まれる。
+// 「選べる」ことが分かるよう、Figma の枠線変化に加えてチェックボックスを置き、
+// 選択中は見出しを主色に反転させている。
 const ItemCard: FC<ItemCardProps> = ({
   itemName,
   stockPlaceName,
@@ -53,9 +55,27 @@ const ItemCard: FC<ItemCardProps> = ({
       onClick={onSelect}
       disabled={disabled}
       aria-pressed={selected}
-      className="w-full bg-card-head px-3 py-3 text-left disabled:cursor-not-allowed"
+      className={`flex w-full items-center gap-3 px-3 py-3 text-left disabled:cursor-not-allowed ${
+        selected ? "bg-main text-white" : "bg-card-head text-font"
+      }`}
     >
-      <span className="text-h3 text-font">{itemName}</span>
+      <span
+        aria-hidden
+        className={`flex size-6 shrink-0 items-center justify-center rounded border text-caption font-bold ${
+          selected
+            ? "border-white bg-white text-main"
+            : "border-main bg-white text-transparent"
+        }`}
+      >
+        ✓
+      </span>
+      <span className="min-w-0 flex-1 truncate text-h3">{itemName}</span>
+      {!selected && !disabled && (
+        <span className="shrink-0 text-caption text-main">タップで選択</span>
+      )}
+      {disabled && (
+        <span className="shrink-0 text-caption text-sub">残数なし</span>
+      )}
     </button>
 
     <dl className="divide-y divide-line border-t border-line">
@@ -63,7 +83,7 @@ const ItemCard: FC<ItemCardProps> = ({
         <dt className="text-caption text-font">在庫場所</dt>
         <dd className="text-caption text-font">{quantityLabel}</dd>
       </div>
-      <div className="flex items-center justify-between gap-3 px-3 py-2">
+      <div className="flex items-center justify-between gap-2 px-3 py-2">
         <dt className="min-w-0 truncate text-body text-font">
           {stockPlaceName || "未設定"}
         </dt>
