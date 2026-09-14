@@ -4,7 +4,7 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 版 | v0.7（v0.6 からの変更: マージ済み実装に追従。A2/A5/F10 完了、カテゴリは6値、A1/A3/A4 が残ギャップ） |
+| 版 | v0.8（v0.7 からの変更: 認証の3層整理と却下案、残ギャップ A1/A3/A4 の実装方針を追記） |
 | 日付 | 2026-09-14（初版 2026-09-09） |
 | 作成 | haruto-kamijo |
 | 状態 | レビュー中 |
@@ -244,6 +244,25 @@ flowchart LR
 
 ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
 
+### 認証は3層に分かれる
+
+**A1 はログインの実装ではない。** 「人が誰か」を確かめるのは Cloudflare Access の役割で、A1 が担うのは「Access が済ませた認証結果を API まで運ぶ経路」と「運び手が正当かを API 側で確かめる手段」である。
+
+| 層 | 何を確かめるか | 手段 | 状態 |
+| --- | --- | --- | --- |
+| ① 人（スタッフ） | 誰がアプリを開いているか | Cloudflare Access。アプリ側にログイン画面は持たない | Access ポリシー設定待ち |
+| ② アプリ → API | 呼び出し元が rental の BFF か | 共有トークン `X-Rental-Api-Token`（A1） | 未実装 |
+| ③ 記録者の特定 | 誰が記録したか | Access が付けた `Cf-Access-Authenticated-User-Email` を BFF が転送し `recorder_email` に入れる（A1） | 未実装 |
+
+既存 API（`user/` と `admin_view/` が使う devise_token_auth の経路）には手を入れない。rental 向けのエンドポイントにのみ別の認証を足す。
+
+**却下した案**: rental 用のサービスアカウントを作り、devise_token_auth でログインさせる方式。理由は2つ。
+
+1. `recorder_email` がサービスアカウントのメールになり、「誰が渡したか」が残らない。当日のトラブル対応で必要になる情報が失われる
+2. `token_lifespan` が2週間のため、期限切れ時の再ログイン処理を BFF に実装することになる
+
+共有トークン + メール転送なら、認証の主体は Access のままで、API は「正当な BFF からの呼び出しか」だけを見れば済む。
+
 ## 7. API 突合せ
 
 **#2171 と #2198 がマージ済み**。`item_rental_logs` テーブルは `uid`（unique）、`stocker_place_id`（NOT NULL）、`rental_item_id`（NOT NULL）、`assign_rental_item_id`（nullable）、`category`（NOT NULL）、`quantity`（NOT NULL）、`recorder_email`（NOT NULL）、`group_id`（NOT NULL）を持つ。`memo` カラムは無い。`category` は `rental` / `return` / `rental_absolute` / `return_absolute` / `addition` / `reduction` の6値（旧 `absolute_adjustment` は廃止値、新規作成は 422）。`POST /item_rental_logs`（uid 冪等、422/404/409）、`GET /item_rental_logs?rental_place_id=&group_id=`（logs + assign_rental_items（id のみ）、`addition`/`reduction` は `group_id` のみ指定時だけ含まれる）がある。
@@ -272,6 +291,36 @@ flowchart LR
 | A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
 | A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・団体名・remark が無い。 | rental 向けの名前付きエンドポイント、この場所に割当がある今年度団体一覧、作業場所候補の3つを追加する。今年度に限定する。 |
 | A4 | メモの保存先が無い | `item_rental_logs` に `memo` が無く、当日のスタッフメモを保存できない。 | `item_rental_logs.memo`（text, null 可）を追加する。remark は上書きしない。 |
+
+### 残ギャップの実装方針
+
+3件とも方針は決まっている。未実装なだけで、設計上の選択は残っていない（`memo` の冪等判定のみ提案）。
+
+**A1: BFF 認証**
+
+- `api/app/controllers/concerns/` に BFF 認証の concern を追加し、`ItemRentalLogsController` と A3 で追加するエンドポイントに適用する
+- `X-Rental-Api-Token` を `ENV['RENTAL_API_TOKEN']` と `ActiveSupport::SecurityUtils.secure_compare` で比較する。不一致・欠落は 401
+- 記録者は BFF が転送する `Cf-Access-Authenticated-User-Email` から取得する。欠落は 401。`current_api_user.email` は使わない
+- `ItemRentalLogsController` から `authenticate_api_user!` / `require_admin!` を外す
+- 既存の devise_token_auth 経路（`user/` / `admin_view/`）には影響させない
+- 認証の位置づけは 6 章「認証は3層に分かれる」を参照
+
+**A3: rental 向けの読み取りエンドポイント（3つ）**
+
+1. **割当 + 記録**（`rental_place_id` と `group_id` で絞る）: 各割当に `assign_rental_item_id` / `rental_item_name` / `stock_place_name` / `rental_place_name` / `num` / `remark` / `group_name` と、その割当の `item_rental_logs`（`category` / `quantity` / `recorder_email` / `created_at`、A4 後は `memo`）を含める
+2. **この作業場所に割当がある今年度団体の一覧**（`id` / `name`）
+3. **作業場所（`rental_place`）候補の一覧**（`id` / `name`）
+
+- 今年度に限定する（`groups.fes_year_id` = `UserPageSetting.first.fes_year_id`）
+- 既存の `AssignRentalItem#stock_place_name(locale)` / `#rental_place_name(locale)` を流用する
+- `addition` / `reduction` を含めるかは 9 章「割当変更の集計方法」の結論に従う
+
+**A4: memo**
+
+- `item_rental_logs` に `memo`（text, null 可）を追加するマイグレーションを足す
+- `POST /item_rental_logs` の `params.permit` に `memo` を追加する
+- `IDEMPOTENCY_ATTRIBUTES` には**含めない**（提案）。同じ `uid` でメモだけ異なる再送を 409 にせず、最初の記録を正とするため
+- 表示は直近1件（3 章③）
 
 ### 軽微な補足
 
