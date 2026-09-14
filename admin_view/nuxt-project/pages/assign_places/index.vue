@@ -59,6 +59,19 @@
                   電力申請なし
                 </div>
               </div>
+
+              <!-- 会場申請（希望エリア）の表示 -->
+              <div class="place-preferences-container">
+                <div class="assign-result">会場申請希望</div>
+                <div v-if="getGroupPlaceOrder(group.id)" class="place-preferences-list">
+                  <span class="pref-tag first-pref">第1: {{ getPlaceNameById(getGroupPlaceOrder(group.id).first) }}</span>
+                  <span class="pref-tag">第2: {{ getPlaceNameById(getGroupPlaceOrder(group.id).second) }}</span>
+                  <span class="pref-tag">第3: {{ getPlaceNameById(getGroupPlaceOrder(group.id).third) }}</span>
+                </div>
+                <div v-else class="place-preferences-list">
+                  <span class="pref-tag no-pref">未申請</span>
+                </div>
+              </div>
               
               <!-- 現在割り当てられている場所の表示 -->
               <div class="assign-result-container" v-if="getGroupAssignedPlaces(group.id).length > 0">
@@ -133,6 +146,7 @@ export default {
       
       groups: [],
       places: [],
+      placeOptions: [],
       powerOrders: [],       
       placeOrders: [],       // New: 会場申請データ
       assignGroupPlaces: [], // 会場割り当てデータ
@@ -220,12 +234,13 @@ export default {
     async fetchDataFromDB() {
       this.isLoading = true;
       try {
-        const [groupsRes, placesRes, powerRes, assignRes, placeOrdersRes] = await Promise.all([
+        const [groupsRes, placesRes, powerRes, assignRes, placeOrdersRes, areaRes] = await Promise.all([
           this.$axios.$get('/groups').catch(() => ({ data: [] })),
           this.$axios.$get('/stocker_places').catch(() => ({ data: [] })),
           this.$axios.$get('/power_orders').catch(() => ({ data: [] })),
           this.$axios.$get('/assign_group_places').catch(() => ({ data: [] })),
-          this.$axios.$get('/place_orders').catch(() => ({ data: [] })) // 会場申請取得用
+          this.$axios.$get('/place_orders').catch(() => ({ data: [] })), // 会場申請取得用
+          this.$axios.$get('/places').catch(() => ({ data: [] })) // 希望エリア判定用
         ]);
 
         this.groups = Array.isArray(groupsRes) ? groupsRes : groupsRes.data || [];
@@ -233,6 +248,7 @@ export default {
         this.powerOrders = Array.isArray(powerRes) ? powerRes : powerRes.data || [];
         this.assignGroupPlaces = Array.isArray(assignRes) ? assignRes : assignRes.data || [];
         this.placeOrders = Array.isArray(placeOrdersRes) ? placeOrdersRes : placeOrdersRes.data || [];
+        this.placeOptions = Array.isArray(areaRes) ? areaRes : areaRes.data || [];
       } catch (error) {
         console.error("データの取得に失敗しました", error);
       } finally {
@@ -293,6 +309,24 @@ export default {
       const placeOrderId = this.getPlaceOrderIdByGroupId(groupId);
       if (!placeOrderId) return false;
       return this.assignGroupPlaces.some(a => Number(a.place_order_id) === Number(placeOrderId));
+    },
+
+    // ----------------------------
+    // 希望エリア（会場申請）表示用メソッド
+    // ----------------------------
+    getPlaceNameById(placeId) {
+      if (!placeId) return 'なし';
+      const place = this.placeOptions.find(p => Number(p.id) === Number(placeId));
+      return place ? place.name : '未設定';
+    },
+
+    getGroupPlaceOrder(groupId) {
+      const po = this.placeOrders.find(p => {
+        const gId = p.place_order ? p.place_order.group_id : p.group_id;
+        return Number(gId) === Number(groupId);
+      });
+      // ネストされている場合は中身を、そうでない場合はそのまま返す
+      return po ? (po.place_order ? po.place_order : po) : null;
     },
 
     // ----------------------------
@@ -463,4 +497,41 @@ export default {
 .assign-group-name { flex: 1; font-weight: bold; font-size: 14px; color: #1e293b; }
 .assign-inputs { display: flex; gap: 8px; margin-right: 12px; }
 .input-label { font-size: 12px; background-color: #fee2e2; padding: 4px 8px; border-radius: 12px; color: #b91c1c; font-weight: bold; }
+
+<style scoped>
+/* 既存のCSSの下に追加 */
+
+.place-preferences-container {
+  margin-top: 8px;
+  background-color: #f8f9fa;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.place-preferences-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.pref-tag {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  background-color: #e2e8f0;
+  color: #4a5568;
+  border-radius: 12px;
+}
+
+.pref-tag.first-pref {
+  background-color: #bee3f8; /* 第1希望を目立たせる */
+  color: #2b6cb0;
+  font-weight: bold;
+}
+
+.pref-tag.no-pref {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+</style>
 </style>
