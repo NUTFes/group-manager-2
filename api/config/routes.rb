@@ -317,6 +317,12 @@ Rails.application.routes.draw do
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
+      #---貸出・返却記録アプリ(rental/)向け
+      # 認証はBFF専用トークン(X-Rental-Api-Token)で行う。人の認証はCloudflare Accessが担う。
+      get 'get_rental_places_for_rental_view' => 'rental_records_api#get_rental_places_for_rental_view'
+      get 'get_groups_for_rental_view' => 'rental_records_api#get_groups_for_rental_view'
+      get 'get_assign_rental_items_for_rental_view' => 'rental_records_api#get_assign_rental_items_for_rental_view'
+
       #---ユーザー向け確定情報閲覧画面
       # 認証なしで公開する。認証の書き忘れではなく意図的な公開で、#2136 の Public 区分にあたる。
       # 公開であることは OpenAPI の security: [] と、認証ヘッダ無しで200になるテストで固定している。
