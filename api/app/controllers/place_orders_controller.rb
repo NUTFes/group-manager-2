@@ -72,6 +72,6 @@ class PlaceOrdersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def place_order_params
-    params.permit(:group_id, :first, :second, :third, :remark)
+    params.require(:place_order).permit(:group_id, :first, :second, :third, :remark)
   end
 end
