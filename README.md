@@ -34,3 +34,4 @@ nuxt.js<br>
 
 ## 開発メモ
 - [Playwright MCP を Docker で使う](docs/playwright_mcp_docker.md)
+- [AI 支援 Playwright E2E 設計](docs/e2e-ai/README.md)
