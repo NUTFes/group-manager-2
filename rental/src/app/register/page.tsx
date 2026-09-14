@@ -6,9 +6,18 @@ import AccordionCard from "@/components/AccordionCard";
 import Button from "@/components/Button";
 import CorrectionModal from "@/components/CorrectionModal";
 import type { CorrectionTarget } from "@/components/CorrectionModal";
+import ExceptionSheet from "@/components/ExceptionSheet";
+import ExcessLendingSheet from "@/components/ExcessLendingSheet";
+import type { ExcessLendingInput } from "@/components/ExcessLendingSheet";
+import GroupSelectSheet from "@/components/GroupSelectSheet";
 import Header from "@/components/Header";
 import ItemCard from "@/components/ItemCard";
-import { createItemRentalLog, useAssignments } from "@/hooks/useRentalApi";
+import {
+  createExcessLending,
+  createItemRentalLog,
+  useAssignments,
+  useRentalGroups,
+} from "@/hooks/useRentalApi";
 import { useWorkSession } from "@/hooks/useWorkSession";
 import { summarize } from "@/lib/aggregate";
 
@@ -41,6 +50,9 @@ function RegisterContent() {
   // 送信のたびに作り直す冪等キー。再送では同じキーを使う
   const [uidSeed, setUidSeed] = useState(() => crypto.randomUUID());
   const [isCorrectionOpen, setIsCorrectionOpen] = useState(false);
+  const [isExceptionOpen, setIsExceptionOpen] = useState(false);
+  const [isExcessOpen, setIsExcessOpen] = useState(false);
+  const [isGroupSheetOpen, setIsGroupSheetOpen] = useState(false);
 
   useEffect(() => {
     if (!isSessionLoading && !session) router.replace("/select-place");
@@ -52,6 +64,9 @@ function RegisterContent() {
   }, [groupId, router]);
 
   const mode = session?.mode ?? "rental";
+  const { data: groups, isLoading: isGroupsLoading } = useRentalGroups(
+    session?.placeId ?? null
+  );
   const changeLogs = useMemo(
     () => data?.assignmentChangeLogs ?? [],
     [data?.assignmentChangeLogs]
@@ -180,6 +195,15 @@ function RegisterContent() {
     await mutate();
   };
 
+  const handleExcessLending = async (input: ExcessLendingInput) => {
+    await createExcessLending({
+      uid: crypto.randomUUID(),
+      toGroupId: groupId,
+      ...input,
+    });
+    await mutate();
+  };
+
   if (!session) return null;
 
   const quantityLabel = mode === "rental" ? "数量/貸出残" : "数量/返却残";
@@ -197,7 +221,7 @@ function RegisterContent() {
           <h1 className="min-w-0 truncate text-h3 text-font">
             {groupName || "参加団体"}
           </h1>
-          <Button variant="sub" onClick={() => router.push("/select-group")}>
+          <Button variant="sub" onClick={() => setIsGroupSheetOpen(true)}>
             団体変更
           </Button>
         </div>
@@ -245,8 +269,8 @@ function RegisterContent() {
             <span aria-hidden>📦</span>処理対象アイテム
           </h2>
           {targets.length > 0 && (
-            <Button variant="sub" onClick={() => setIsCorrectionOpen(true)}>
-              訂正する
+            <Button variant="sub" onClick={() => setIsExceptionOpen(true)}>
+              例外対応
             </Button>
           )}
         </div>
@@ -293,12 +317,50 @@ function RegisterContent() {
         )}
       </main>
 
+      <ExceptionSheet
+        open={isExceptionOpen}
+        onClose={() => setIsExceptionOpen(false)}
+        onSelectCorrection={() => {
+          setIsExceptionOpen(false);
+          setIsCorrectionOpen(true);
+        }}
+        onSelectExcessLending={() => {
+          setIsExceptionOpen(false);
+          setIsExcessOpen(true);
+        }}
+      />
+
       <CorrectionModal
         open={isCorrectionOpen}
         mode={mode}
         targets={correctionTargets}
         onClose={() => setIsCorrectionOpen(false)}
         onSubmit={handleCorrection}
+      />
+
+      <ExcessLendingSheet
+        open={isExcessOpen}
+        assignments={targets}
+        groups={groups ?? []}
+        currentGroupId={groupId}
+        onClose={() => setIsExcessOpen(false)}
+        onSubmit={handleExcessLending}
+      />
+
+      <GroupSelectSheet
+        open={isGroupSheetOpen}
+        groups={groups ?? []}
+        isLoading={isGroupsLoading}
+        currentGroupId={groupId}
+        onClose={() => setIsGroupSheetOpen(false)}
+        onSelect={(group) => {
+          setIsGroupSheetOpen(false);
+          // 画面遷移せず、同じページのまま対象団体を切り替える
+          setDrafts({});
+          setSubmitState({ phase: "idle" });
+          setUidSeed(crypto.randomUUID());
+          router.replace(`/register?groupId=${group.id}`);
+        }}
       />
 
       <div className="fixed inset-x-0 bottom-0 flex justify-center border-t border-line bg-white/95 px-4 py-3">
