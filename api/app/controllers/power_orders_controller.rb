@@ -8,7 +8,7 @@ class PowerOrdersController < ApplicationController
   # GET /power_orders
   # GET /power_orders.json
   def index
-    @power_orders = PowerOrder.where(group_id: current_api_user.groups.select(:id))
+    @power_orders = PowerOrder.includes(:group).all
     render json: fmt(ok, @power_orders)
   end
 
