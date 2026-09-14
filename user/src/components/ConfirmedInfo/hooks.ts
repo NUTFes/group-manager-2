@@ -18,6 +18,7 @@ export const useConfirmedInfoTexts = () => {
       unset: t('confirmedInfo.labels.unset'),
       empty: t('confirmedInfo.labels.empty'),
       shareNotice: t('confirmedInfo.labels.shareNotice'),
+      qrcodeAlt: t('confirmedInfo.labels.qrcodeAlt'),
     },
     actions: {
       copy: t('confirmedInfo.actions.copy'),

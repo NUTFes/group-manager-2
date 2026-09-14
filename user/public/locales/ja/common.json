@@ -988,7 +988,8 @@
       "shareNotice": "このリンクを知っている人は誰でも閲覧できます。",
       "projectName": "企画名",
       "places": "会場",
-      "rentalItems": "貸出物品"
+      "rentalItems": "貸出物品",
+      "qrcodeAlt": "このページのQRコード"
     },
     "actions": {
       "copy": "リンクをコピー",

@@ -2,6 +2,7 @@ import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useGetConfirmedInfo } from '@/api/confirmedInfoApi';
+import { useGetConfirmedQrcode } from '@/api/confirmedQrcodeApi';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ConfirmedInfo from '@/components/ConfirmedInfo';
 
@@ -31,6 +32,13 @@ export default function ConfirmedPage() {
       router.isReady && isParamsValid ? secret : null
     );
 
+  // QRコードは確定情報とは別のAPIから取る。取得できなくても確定情報の表示は
+  // 成立するため、ローディングにもエラー判定にも混ぜずQRの領域だけを出さない
+  const { confirmedQrcode } = useGetConfirmedQrcode(
+    router.isReady && isParamsValid ? groupId : null,
+    router.isReady && isParamsValid ? secret : null
+  );
+
   // router.isReady になるまではクエリが空になるため、それまでは判定を確定させない
   const isLoading = !router.isReady || confirmedInfoLoading;
   const hasError = router.isReady && (!isParamsValid || !!confirmedInfoError);
@@ -58,6 +66,7 @@ export default function ConfirmedPage() {
             hasError={hasError}
             confirmedInfo={confirmedInfo}
             getShareUrl={getShareUrl}
+            qrcodePng={confirmedQrcode?.qrcodePng}
           />
         </div>
       </div>

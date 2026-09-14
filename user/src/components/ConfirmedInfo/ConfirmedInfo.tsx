@@ -3,6 +3,7 @@ import { ConfirmedInfo as ConfirmedInfoData } from '@/api/confirmedInfoApi';
 import { FiCopy, FiShare2 } from 'react-icons/fi';
 import Button from '@/components/Button';
 import FormContainer from '@/components/FormContainer';
+import ImagePreview from '@/components/ImagePreview';
 import { useConfirmedInfoActions, useConfirmedInfoTexts } from './hooks';
 
 type ConfirmedInfoProps = {
@@ -11,6 +12,9 @@ type ConfirmedInfoProps = {
   confirmedInfo?: ConfirmedInfoData;
   // 共有・コピーの対象URL。押された瞬間に解決するため関数で受け取る
   getShareUrl: () => string;
+  // このページのQRコード（data URI）。確定情報とは別のAPIから取るため、
+  // 取得できていない間や失敗した場合は undefined になり、QRの領域だけが出ない
+  qrcodePng?: string;
 };
 
 type LabeledValueProps = {
@@ -31,6 +35,7 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
   hasError,
   confirmedInfo,
   getShareUrl,
+  qrcodePng,
 }) => {
   const texts = useConfirmedInfoTexts();
   const { handleCopy, handleShare } = useConfirmedInfoActions();
@@ -142,6 +147,16 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
 
       {/* 共有・コピーはページ全体に対する操作なので、用途別に分けたどちらのカードにも入れない */}
       <div className="flex w-full flex-col items-center gap-3">
+        {/* QRコードは data URI なので next/image の最適化を通せない。
+            ImagePreview がタップでの拡大表示も持っているため、そのまま使う */}
+        {qrcodePng && (
+          <ImagePreview
+            src={qrcodePng}
+            alt={texts.labels.qrcodeAlt}
+            thumbnailClassName="h-40 w-40"
+            unoptimized
+          />
+        )}
         <p className="text-center text-sm text-gray-600">
           {texts.labels.shareNotice}
         </p>
