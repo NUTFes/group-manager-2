@@ -125,6 +125,63 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @recorder_email, response.parsed_body['data']['recorder_email']
   end
 
+  test 'should save memo when it is sent' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'memo-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1,
+        memo: '長机の脚が1本ゆるい'
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+    assert_equal '長机の脚が1本ゆるい', response.parsed_body['data']['memo']
+  end
+
+  test 'memo is optional' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'without-memo-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+    assert_nil response.parsed_body['data']['memo']
+  end
+
+  test 'resending the same uid with a different memo returns the existing record instead of a conflict' do
+    post item_rental_logs_url, params: {
+      uid: 'memo-resend-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 2,
+      memo: '最初のメモ'
+    }, headers: @headers, as: :json
+    assert_response :created
+    created_id = response.parsed_body['data']['id']
+
+    # memoは冪等性の判定に含めないため、メモだけ違う再送は409にせず既存を返す
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'memo-resend-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 2,
+        memo: '違うメモ'
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :success
+    body = response.parsed_body
+    assert_equal created_id, body['data']['id']
+    assert_equal '最初のメモ', body['data']['memo']
+  end
+
   test 'create requires the rental BFF token' do
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
