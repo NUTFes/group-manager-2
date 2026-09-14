@@ -683,25 +683,33 @@ class Group < ApplicationRecord
                    { place_order: { assign_group_places: :stocker_place } }
                  )
                  .find_by(id: group_id, group_secrets: { secret: secret })
-    return nil if group.nil?
 
-    # 他のwith_*に倣って@recordに代入していたが、クラスメソッド内の@recordは
-    # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
-    # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
+    group&.to_confirmed_info_h
+  end
+
+  # 確定情報を整形して返す。他のモデルの to_*_h と同じ役割
+  # 他のwith_*に倣って@recordに代入していたが、クラスメソッド内の@recordは
+  # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
+  # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
+  def to_confirmed_info_h
     {
       group: {
-        id: group.id,
-        name: group.name,
-        project_name: group.project_name,
-        places: group.confirmed_place_names
+        id: id,
+        name: name,
+        project_name: project_name,
+        places: confirmed_place_names
       },
-      rental_items: group.confirmed_rental_items
+      rental_items: confirmed_rental_items
     }
   end
 
   # 確定した会場名。place_orderに紐づく割り当てを名前にして返す
+  # 表示順が取得順まかせにならないよう、物品と同じく名前で並べる
   def confirmed_place_names
-    place_order&.assign_group_places.to_a.filter_map { |assign| assign.stocker_place&.display_name.presence }
+    place_order&.assign_group_places
+               .to_a
+               .filter_map { |assign| assign.stocker_place&.display_name.presence }
+               .sort
   end
 
   # 貸出物品を (物品, 貸出場所) ごとにまとめて返す
@@ -719,6 +727,11 @@ class Group < ApplicationRecord
         }
       end
   end
+
+  # to_confirmed_info_h の組み立て専用。外から呼ぶ用途は無い。
+  # このファイルには後続に公開インスタンスメソッドがあるため、
+  # private セクションを切らずにメソッド単位で指定する
+  private :confirmed_place_names, :confirmed_rental_items
 
   ### employee（従業員）
 

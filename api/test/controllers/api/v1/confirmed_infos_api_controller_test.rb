@@ -56,13 +56,15 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
 
   # 会場は place_order -> assign_group_places -> stocker_place から引く。
   # has_many なので複数あり得る
-  test 'returns the assigned places of the group' do
-    assign_places!(@group, [@venue, @other_venue])
+  # 割り当て順ではなく名前順で返す。取得順まかせだと表示順が不定になるため、
+  # 逆順で割り当てて並べ替えが効いていることを確かめる
+  test 'returns the assigned places of the group sorted by name' do
+    assign_places!(@group, [@other_venue, @venue])
 
     get confirmed_info_path(@group, @group.secret)
 
     assert_response :success
-    assert_equal %w[講義棟101 講義棟102], response.parsed_body.dig('data', 'group', 'places').sort
+    assert_equal %w[講義棟101 講義棟102], response.parsed_body.dig('data', 'group', 'places')
   end
 
   test 'returns an empty array when no place is assigned' do
