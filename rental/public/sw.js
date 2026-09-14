@@ -60,7 +60,11 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        if (response.ok) {
+        // Access のセッションが切れているとログイン画面へリダイレクトされ、
+        // 静的アセットのURLに対して 200 のHTMLが返る。これをキャッシュすると
+        // オフライン時にJSやアイコンの代わりにログイン画面を返してしまうため、
+        // リダイレクトを経た応答はキャッシュしない。
+        if (response.ok && !response.redirected) {
           const clone = response.clone();
           event.waitUntil(
             caches
