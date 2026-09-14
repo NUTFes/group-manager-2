@@ -5,6 +5,20 @@ require 'test_helper'
 class StockerPlaceTest < ActiveSupport::TestCase
   fixtures :stocker_places
 
+  test 'destroys associated assign_group_places' do
+    stocker_place = StockerPlace.create!(name: '削除確認用会場')
+    assignment = AssignGroupPlace.create!(
+      place_order: place_orders(:one),
+      stocker_place: stocker_place
+    )
+
+    assert_difference('AssignGroupPlace.count', -1) do
+      stocker_place.destroy!
+    end
+
+    assert_not AssignGroupPlace.exists?(assignment.id)
+  end
+
   test 'display_name returns japanese name by default' do
     place = stocker_places(:with_name_en)
     assert_equal '体育館倉庫', place.display_name
@@ -30,5 +44,16 @@ class StockerPlaceTest < ActiveSupport::TestCase
     place = StockerPlace.new(name: nil)
     assert_equal '', place.display_name
     assert_equal '', place.display_name(locale: :en)
+  end
+
+  # StockerPlaceの直接のitem_rental_logsだけでなく、
+  # dependent: :destroyで連鎖するassign_rental_itemsがitem_rental_logsを持つ場合も削除できないこと
+  test 'destroy is blocked while a dependent assign_rental_item has item_rental_logs' do
+    place = stocker_places(:one)
+    assign_rental_item = assign_rental_items(:one)
+
+    assert_not place.destroy
+    assert StockerPlace.exists?(place.id)
+    assert AssignRentalItem.exists?(assign_rental_item.id)
   end
 end

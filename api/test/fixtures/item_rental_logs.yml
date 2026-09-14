@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: item-rental-log-uid-one
+  assign_rental_item: one
+  stocker_place: one
+  rental_item: one
+  category: rental
+  quantity: 1
+  recorder_email: recorder-one@example.com
+
+two:
+  uid: item-rental-log-uid-two
+  assign_rental_item: two
+  stocker_place: two
+  rental_item: two
+  category: return
+  quantity: 2
+  recorder_email: recorder-two@example.com

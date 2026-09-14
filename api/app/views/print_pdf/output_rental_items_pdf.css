@@ -47,6 +47,14 @@ table {
   word-break: break-all;
 }
 
+/* 備考は列を増やさず物品名セル内に小さめの文字で添える */
+.remark-note {
+  display: block;
+  font-size: 0.8em;
+  color: #555555;
+  word-break: break-all;
+}
+
 .padding-top{
   padding-top: 20px;
 }
