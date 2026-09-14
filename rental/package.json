@@ -11,9 +11,12 @@
     "fmt": "prettier --write ."
   },
   "dependencies": {
+    "camelcase-keys": "^9",
+    "jose": "^6",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "swr": "^2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
