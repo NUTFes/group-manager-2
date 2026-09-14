@@ -62,6 +62,9 @@ export const useConfirmedInfoActions = () => {
         // ユーザーが共有シートを閉じた場合は AbortError が発生するため、エラー扱いしない
         if (error instanceof Error && error.name === 'AbortError') return;
         console.error('Share failed:', error);
+        // 共有が失敗したまま何も起きないとボタンが壊れて見えるため、
+        // navigator.share が無い場合と同じくコピーに落とす
+        await handleCopy(url);
       } finally {
         isSharingRef.current = false;
       }
