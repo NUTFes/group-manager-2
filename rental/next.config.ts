@@ -19,6 +19,10 @@ const NEXT_PUBLIC_API_URL =
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // 開発時にスマホ実機から確認するため、Cloudflare の quick tunnel 経由の
+  // アクセスを許可する。Next は既定で dev サーバーへの別オリジンからの
+  // リクエストをブロックする（本番ビルドには影響しない）。
+  allowedDevOrigins: ["*.trycloudflare.com"],
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_API_URL,
