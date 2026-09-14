@@ -80,9 +80,19 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3000
       - SSR_API_URL=http://api:3000
-    volumes: [./rental:/app]
+    volumes:
+      - ./rental:/app
+      - rental-node-modules:/app/node_modules
+      - rental-next-cache:/app/.next
+      - rental-pnpm-store:/app/.pnpm-store
     depends_on: [api]
 
 volumes:
   mysql-data:
+    driver: local
+  rental-node-modules:
+    driver: local
+  rental-next-cache:
+    driver: local
+  rental-pnpm-store:
     driver: local
