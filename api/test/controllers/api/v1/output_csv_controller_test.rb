@@ -86,9 +86,59 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     rows = parse_csv(response.body)
-    assert_equal %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 開催年], rows.first
+    assert_equal %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 在庫場所 貸出場所 数 備考 開催年], rows.first
     assert_equal '体育館倉庫', rows.second[5]
     assert_equal '第1体育館前', rows.second[6]
+  end
+
+  # 割当ごとの備考(remark)が出力されること
+  test 'rental items list csv outputs remark' do
+    AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
+                             stocker_place: @stocker_place, rental_place: @rental_place,
+                             remark: 'テント1・2（正面入口側）')
+
+    get "/api/v1/get_rental_items_list_csv/#{@fes_year.id}", headers: auth_headers(@user)
+
+    assert_response :success
+    rows = parse_csv(response.body)
+    assert_equal '備考', rows.first[8]
+    assert_equal 'テント1・2（正面入口側）', rows.second[8]
+  end
+
+  # 物品貸出表CSV(get_assign_rental_items_csv)にも備考(remark)列が出力されること
+  # ※このエンドポイントは印刷画面の「物品貸出表」CSVボタンから呼ばれる
+  test 'assign rental items csv outputs remark' do
+    AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
+                             stocker_place: @stocker_place, rental_place: @rental_place,
+                             remark: '入口1番')
+
+    get "/api/v1/get_assign_rental_items_csv/#{@fes_year.id}", headers: auth_headers(@user)
+
+    assert_response :success
+    rows = parse_csv(response.body)
+    assert_equal '備考', rows.first[9]
+    assert_equal '入口1番', rows.second[9]
+  end
+
+  # 参加団体情報リストまとめCSV(get_groups_csv)にも備考(remark)列が出力されること
+  # ※印刷画面の「参加団体情報リストまとめ」CSVボタンから呼ばれるのはこちら
+  test 'groups csv outputs remark joined per rental item' do
+    chair = RentalItem.create!(name: 'パイプ椅子')
+    other_place = StockerPlace.create!(name: '第2倉庫')
+    AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
+                             stocker_place: @stocker_place, remark: 'テント1・2')
+    AssignRentalItem.create!(group: @group, rental_item: chair, num: 4,
+                             stocker_place: @stocker_place, remark: '予備')
+    # 備考なしの割当は連結対象に含めない（一意制約に触れないよう別在庫場所にする）
+    AssignRentalItem.create!(group: @group, rental_item: chair, num: 1,
+                             stocker_place: other_place)
+
+    get "/api/v1/get_groups_csv/#{@fes_year.id}", headers: auth_headers(@user)
+
+    assert_response :success
+    rows = parse_csv(response.body)
+    assert_equal '備考', rows.first[6]
+    assert_equal '長机：テント1・2 / パイプ椅子：予備', rows.second[6]
   end
 
   # 貸出場所調整で未設定の場合は空欄にする

@@ -35,6 +35,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_10_080827) do
     t.datetime "updated_at", null: false
     t.integer "stocker_place_id"
     t.bigint "rental_place_id"
+    t.text "remark"
+    t.index ["group_id", "stocker_place_id", "rental_item_id"], name: "index_assign_rental_items_on_group_place_item", unique: true
     t.index ["rental_place_id"], name: "index_assign_rental_items_on_rental_place_id"
   end
 

@@ -68,7 +68,8 @@
                 <td>{{ assignRentalItem.group.name}}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
+                <td>{{ assignRentalItem.assign_rental_item.remark }}</td>
+                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
                 <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
@@ -165,6 +166,9 @@
           </select>
         </div>
         <div v-if="assignItemName" class="assign-item-list-wrapper">
+          <p class="assign-item-list-note">
+            ※ この物品に既に割当のある団体は選択肢に出ません。個数・備考の変更は一覧の「編集」から行ってください。
+          </p>
           <div
             v-for="(assign, index) in assignItemsNumAndGroup"
             :key="index"
@@ -178,12 +182,16 @@
                 </div>
                 <select v-model="assign.group" class="assign-item-list-group-select">
                   <option disabled value="">選択してください</option>
-                  <!-- 団体名を重複して選択できないようにする -->
+                  <!-- モーダル内で重複選択した団体・既にDBに割当がある団体は選ばせない -->
                   <option
                     v-for="group in groups"
                     :key="group.id"
                     :value="group.id"
-                    v-if="!getSelectedGroupIds().includes(group.id) || assign.group === group.id"
+                    v-if="
+                      (!getSelectedGroupIds().includes(group.id) &&
+                        !existingAssignedGroupIds().includes(group.id)) ||
+                      assign.group === group.id
+                    "
                   >
                     {{ group.name }}
                   </option>
@@ -199,6 +207,18 @@
                   type="number"
                   placeholder="入力してください"
                   class="assign-item-list-num-input"
+                />
+              </div>
+              <!-- 備考の入力ボックス -->
+              <div class="assign-item-list-remark">
+                <div v-if="index === 0" class="assign-item-list-remark-label">
+                  <h3>備考</h3>
+                </div>
+                <input
+                  v-model="assign.remark"
+                  type="text"
+                  placeholder="番号・名称など"
+                  class="assign-item-list-remark-input"
                 />
               </div>
               <!-- 削除ボタン -->
@@ -230,6 +250,18 @@
         <div>
           <h3>部屋名</h3>
           <input v-model="roomName" placeholder="入力してください" />
+        </div>
+        <div>
+         <div>
+          <h3>英語名</h3>
+          <CommonButton iconName="translate" 
+           :disabled="isTranslating || !roomName" 
+           :on_click="autoTranslate"
+           >
+           {{ isTranslating ? "翻訳中..." : "自動翻訳" }}
+          </CommonButton>
+         </div>
+          <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
           <h3>エリア</h3>
@@ -272,7 +304,10 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editPlace">編集</CommonButton>
+        <div class="modal-method">
+          <CommonButton iconName="translate" :disabled="isTranslating || !roomName" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton>
+          <CommonButton iconName="edit" :on_click="editPlace">編集</CommonButton>
+        </div>
       </template>
     </EditModal>
 
@@ -295,12 +330,16 @@
     <EditModal
       @close="closeAssignEditModal"
       v-if="isOpenAssignEditModal && this.$role(roleID).assign_items.update"
-      title="割当個数の編集"
+      title="割当の編集"
     >
       <template v-slot:form>
         <div>
           <h3>個数</h3>
           <input v-model="assignItemNum" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="assignItemRemark" type="text" placeholder="番号・名称など" />
         </div>
       </template>
       <template v-slot:method>
@@ -347,6 +386,10 @@
       </template>
     </DeleteModal>
 
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ snackMessage }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -365,7 +408,8 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
-      assignItemsNumAndGroup: [{ group: "", num: 0 }], // 物品割当の団体名と個数
+      assignItemRemark: "",
+      assignItemsNumAndGroup: [{ group: "", num: 0, remark: "" }], // 物品割当の団体名・個数・備考
       stockerItemName: "",
       stockerItemNum: null,
       rentableItems: [],
@@ -391,6 +435,7 @@ export default {
         "団体名",
         "物品",
         "個数",
+        "備考",
       ],
       stockItemStatus: [],
       stockItemStatusList: [
@@ -412,6 +457,8 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
+      isOpenSnackBar: false,
+      snackMessage: "",
       roomName: [],
       stock_item_status: [],
       assign_item_status: [],
@@ -440,6 +487,8 @@ export default {
       sort_key_1:"",
       sort_key_2:"",
       sort_asc: true,
+      nameEn: "",
+      isTranslating: false,
     };
   },
 
@@ -531,6 +580,7 @@ export default {
     async editPlace() {
       const payload = {
         name: this.roomName,
+        name_en: this.nameEn,
         stock_item_status: this.stockItemStatus,
         assign_item_status: this.assignItemStatus,
         place_category_id: this.placeCategoryId
@@ -550,6 +600,19 @@ export default {
       const delPlaceUrl = "/stocker_places/" + this.id;
       const delPlaceRes = await this.$axios.$delete(delPlaceUrl);
       this.$router.push("/stock_items");
+    },
+
+    async autoTranslate() {
+      if (!this.roomName) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/stocker_places/translate", { text: this.roomName });
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
     },
 
     async submitItem() {
@@ -602,8 +665,16 @@ export default {
     getSelectedGroupIds() {
       return this.assignItemsNumAndGroup.map((assign) => assign.group);
     },
+    // 選択中の物品について、この在庫場所に既に割当がある団体ID
+    existingAssignedGroupIds() {
+      return this.assignRentalItems
+        .filter(
+          (a) => Number(a.rental_item.id) === Number(this.assignItemName)
+        )
+        .map((a) => a.group.id);
+    },
     addAssignItem() {
-      this.assignItemsNumAndGroup.push({ group: "", num: 0 });
+      this.assignItemsNumAndGroup.push({ group: "", num: 0, remark: "" });
     },
     async submitAssign() {
       const assignUrl = "/assign_rental_items";
@@ -632,7 +703,8 @@ export default {
       const payload = {
         items: this.assignItemsNumAndGroup.map(item => ({
           group_id: item.group,
-          num: item.num
+          num: item.num,
+          remark: (item.remark || "").trim() || null
         })),
         rentalItemId: this.assignItemName,
         stockerPlaceId: this.id,
@@ -640,7 +712,7 @@ export default {
       const response = await this.$axios.$post(assignUrl, payload);
       console.log(response.data);
       // バリデーションに成功したら、ここでデータをリセット
-      this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
+      this.assignItemsNumAndGroup = [{ group: "", num: 0, remark: "" }];
       this.assignItemName = "";
       this.assignItemNum = null;
       this.id;
@@ -648,18 +720,22 @@ export default {
       this.closeAssignAddModal();
     } catch (error) {
       console.error(error);
-      alert('登録処理中にエラーが発生しました。')};
-    },
+      const serverMessage =
+        error.response &&
+        error.response.data &&
+        error.response.data.status &&
+        error.response.data.status.option;
+      alert(serverMessage || '登録処理中にエラーが発生しました。');
+    }},
 
     async editAssign() {
-      const assignUrl =
-        "/assign_rental_items/" +
-        this.assignRentalItemId +
-        "?num=" +
-        this.assignItemNum +
-        "&stocker_place_id=" +
-        this.id;
-      await this.$axios.$put(assignUrl).then((response) => {
+      // 備考は自由記述のためクエリ文字列ではなくJSONボディで送る
+      const assignUrl = "/assign_rental_items/" + this.assignRentalItemId;
+      const payload = {
+        num: this.assignItemNum,
+        remark: (this.assignItemRemark || "").trim() || null,
+      };
+      await this.$axios.$put(assignUrl, payload).then((response) => {
         location.reload();
         this.closeAssignEditModal();
       });
@@ -688,6 +764,7 @@ export default {
     },
     openPlaceEditModal() {
       this.roomName = this.placeName.name
+      this.nameEn = this.placeName.name_en || ""
       this.stockItemStatus = this.placeName.stock_item_status
       this.assignItemStatus = this.placeName.assign_item_status
       this.placeCategoryId = this.placeName.place_category_id || null
@@ -706,9 +783,10 @@ export default {
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal(id, num) {
+    openAssignEditModal(id, num, remark) {
       this.assignRentalItemId = id;
       this.assignItemNum = num;
+      this.assignItemRemark = remark || "";
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },
@@ -737,6 +815,14 @@ export default {
     },
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
+    },
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
 
     sorted_assignRentalItems(index) {
@@ -813,6 +899,11 @@ export default {
   flex-direction: column;
   gap: 8px;
 }
+.assign-item-list-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--accent-5);
+}
 .assign-item-list-container {
   display: flex;
   flex-direction: row;
@@ -832,6 +923,21 @@ export default {
   width: 100%;
   flex: 2;
   gap: 8px;
+}
+.assign-item-list-remark {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 3;
+  gap: 8px;
+}
+.assign-item-list-remark-input {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  transition: all 0.5s 0s ease;
 }
 .assign-item-list-group-select {
   color: var(--accent-7);
