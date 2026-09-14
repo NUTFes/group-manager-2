@@ -119,6 +119,11 @@
         </div>
       </template>
     </AddModal>
+
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ snackMessage }}
+    </SnackBar>
+
   </div>
   <h1 v-else>閲覧権限がありません</h1>
 </template>
@@ -160,6 +165,8 @@ export default {
           ],
           nameEn: "",
           isTranslating: false,
+          isOpenSnackBar: false,
+          snackMessage: "",
       };
   },
 
@@ -210,6 +217,14 @@ export default {
     },
     closeAddModal() {
       this.isOpenAddModal = false;
+    },
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
     reload(id) { 
       const url = "/stocker_places/" + id;

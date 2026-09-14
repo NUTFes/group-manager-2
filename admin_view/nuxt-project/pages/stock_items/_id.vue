@@ -362,6 +362,10 @@
       </template>
     </DeleteModal>
 
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ snackMessage }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -427,6 +431,8 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
+      isOpenSnackBar: false,
+      snackMessage: "",
       roomName: [],
       stock_item_status: [],
       assign_item_status: [],
@@ -571,10 +577,10 @@ export default {
     },
 
     async autoTranslate() {
-      if (!this.name) return;
+      if (!this.roomName) return;
       this.isTranslating = true;
       try {
-        const response = await this.$axios.$post("/stocker_places/translate", { text: this.name });
+        const response = await this.$axios.$post("/stocker_places/translate", { text: this.roomName });
         this.nameEn = response.data.name_en;
       } catch (e) {
         this.openSnackBar("自動翻訳に失敗しました");
@@ -769,6 +775,14 @@ export default {
     },
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
+    },
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
 
     sorted_assignRentalItems(index) {
