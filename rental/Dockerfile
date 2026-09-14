@@ -14,8 +14,8 @@ WORKDIR /app
 RUN mkdir -p /app/node_modules /app/.next /app/.pnpm-store \
   && chown -R node:node /app
 
-# ホスト側チェックアウトの所有者に関わらず node ユーザーで実行できるようにする
-# （entrypoint内でrootとして/appの所有権を修正した後、nodeユーザーへ切り替える）
+# ホスト側チェックアウトの所有者に関わらず書き込めるようにする
+# （entrypoint内でrootとしてvolumeの所有権を直した後、ホスト側の所有者へ切り替える）
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
