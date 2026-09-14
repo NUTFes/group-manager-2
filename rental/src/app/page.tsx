@@ -1,20 +1,23 @@
-import Header from "@/components/Header";
+"use client";
 
-// 作業場所選択ページは F3 (#2206) で実装する。
-// ここではデザイントークンとヘッダーが効いていることが分かる最小限の内容にしている。
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useWorkSession } from "@/hooks/useWorkSession";
+
+// 入口。作業セッションが残っていれば団体選択から再開し、無ければ作業場所選択へ。
+// スタッフは同じ場所で一日作業するため、毎回選び直さずに済むようにしている。
 export default function Home() {
+  const router = useRouter();
+  const { session, isLoading } = useWorkSession();
+
+  useEffect(() => {
+    if (isLoading) return;
+    router.replace(session ? "/select-group" : "/select-place");
+  }, [isLoading, session, router]);
+
   return (
-    <>
-      <Header />
-      <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-        <h1 className="text-h1 text-main">GM Rental</h1>
-        <p className="text-body text-font">
-          物品の貸出・返却を記録するスタッフ向けアプリです。
-        </p>
-        <p className="text-caption text-sub">
-          作業場所の選択画面は準備中です（#2206）。
-        </p>
-      </main>
-    </>
+    <main className="flex flex-1 items-center justify-center">
+      <p className="text-body text-sub">読み込み中...</p>
+    </main>
   );
 }
