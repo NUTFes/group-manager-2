@@ -1,0 +1,58 @@
+// BFF（/api/rental/*）を叩くクライアント。APIのURLやトークンはサーバー側に
+// 隠れているため、ここではブラウザから見える相対パスだけを扱う。
+import camelcaseKeys from "camelcase-keys";
+import type { ApiResponse } from "@/types/rental";
+
+export type ApiError = Error & {
+  status?: number;
+};
+
+async function parseError(response: Response): Promise<ApiError> {
+  const error = new Error(
+    `リクエストに失敗しました (${response.status})`
+  ) as ApiError;
+  error.status = response.status;
+
+  try {
+    const body = (await response.json()) as {
+      status?: { message?: string; option?: string };
+    };
+    const message = body.status?.option || body.status?.message;
+    if (message) error.message = message;
+  } catch {
+    // JSONでない応答（502のHTMLなど）はステータスだけで十分
+  }
+
+  return error;
+}
+
+/** GET。レスポンスの data を camelCase に変換して返す */
+export async function getFromBff<T>(path: string): Promise<T> {
+  const response = await fetch(path, {
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) throw await parseError(response);
+
+  const body = (await response.json()) as ApiResponse<unknown>;
+  return camelcaseKeys(body.data as Record<string, unknown>, {
+    deep: true,
+  }) as T;
+}
+
+/** POST。送るボディは呼び出し側で組み立てた形をそのまま渡す */
+export async function postToBff<T>(path: string, body: unknown): Promise<T> {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) throw await parseError(response);
+
+  const parsed = (await response.json()) as ApiResponse<unknown>;
+  return camelcaseKeys(parsed.data as Record<string, unknown>, {
+    deep: true,
+  }) as T;
+}
+
+/** SWR 用の fetcher */
+export const bffFetcher = <T>(path: string) => getFromBff<T>(path);
