@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       post :translate
     end
   end
+  resources :item_rental_logs, only: %i[index create]
   resources :place_categories
   resources :rental_orders do
     collection do
@@ -277,6 +278,10 @@ Rails.application.routes.draw do
       post 'get_refinement_order_infos' => 'order_infos_api#get_refinement_order_infos'
       post 'get_search_order_infos' => 'order_infos_api#get_search_order_infos'
 
+      #---確定情報ページQRコード
+      get 'get_confirmed_qrcode_for_admin_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_admin_view'
+      get 'get_confirmed_qrcode_for_user_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_user_view'
+
       #---申請状況一覧
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
@@ -311,6 +316,9 @@ Rails.application.routes.draw do
       get 'get_inside_shop_rentable_items' => 'rental_items_api#get_inside_shop_rentable_items'
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
+
+      #---ユーザー向け確定情報閲覧画面（認証なし）
+      get 'get_confirmed_info_for_user_view/:group_id' => 'confirmed_infos_api#get_confirmed_info_for_user_view'
 
       #---CSV出力
       resources :message_templates, only: %i[index show create update] do

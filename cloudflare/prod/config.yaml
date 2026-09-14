@@ -9,4 +9,6 @@ ingress:
     service: http://admin_view:8000
   - hostname: group-manager-api.nutfes.net
     service: http://api:3000
+  - hostname: group-manager-rental.nutfes.net
+    service: http://rental:3000
   - service: http_status:404

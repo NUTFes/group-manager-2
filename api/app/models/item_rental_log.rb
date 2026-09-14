@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+class ItemRentalLog < ApplicationRecord
+  belongs_to :stocker_place
+  belongs_to :rental_item
+  belongs_to :assign_rental_item
+
+  enum :category, {
+    rental: 0,
+    return: 1,
+    absolute_adjustment: 2
+  }
+
+  validates :uid, presence: true, uniqueness: true
+  validates :category, presence: true
+  validates :quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :recorder_email, presence: true
+end

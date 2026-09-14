@@ -24,9 +24,7 @@ class Group < ApplicationRecord
   belongs_to :user
   belongs_to :fes_year
   belongs_to :group_category
-  belongs_to :uses_place, class_name: 'StockerPlace', optional: true
 
-  validates :uses_place, presence: true, if: -> { uses_place_id.present? }
   has_one :stage_common_option, dependent: :destroy
   has_many :power_orders, dependent: :destroy
   has_one :sub_rep, dependent: :destroy
@@ -45,8 +43,18 @@ class Group < ApplicationRecord
   has_many :fire_equipment_orders, dependent: :destroy
   has_many :health_center_submission_statuses, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
+  has_one :group_secret, dependent: :destroy
+
+  delegate :secret, to: :group_secret, allow_nil: true
+
+  after_create :create_group_secret!
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
+
+  # 参加団体向けの確定情報ページURL（QRコードで配布する）
+  def confirmed_info_url
+    "#{UserFrontUrlResolver.call}/confirmed?group_id=#{id}&secret=#{secret}"
+  end
 
   ### group_category (参加団体カテゴリ)
 
@@ -662,6 +670,34 @@ class Group < ApplicationRecord
                        end
       }
     end
+  end
+
+  ### confirmed info（ユーザー向け確定情報）
+
+  # 認証なしで公開する確定情報を取得する
+  # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
+  # 認証なしで露出するため、groupは公開してよいidとnameだけに絞る
+  def self.with_confirmed_info(group_id, secret)
+    # secretが空のときは検索する前に弾く。GroupSecretには空文字を禁じる制約が無いため、
+    # 万一空文字のレコードがあるとsecret未指定のリクエストが一致してしまう
+    return nil if secret.blank?
+
+    group = Group.joins(:group_secret)
+                 .includes(assign_rental_items: %i[rental_item stocker_place rental_place])
+                 .find_by(id: group_id, group_secrets: { secret: secret })
+    return nil if group.nil?
+
+    @record = {
+      group: { id: group.id, name: group.name },
+      assign_rental_items: group.assign_rental_items.map do |assign_rental_item|
+        {
+          rental_item_name: assign_rental_item.rental_item.name,
+          stock_place_name: assign_rental_item.stock_place_name,
+          rental_place_name: assign_rental_item.rental_place_name,
+          num: assign_rental_item.num
+        }
+      end
+    }
   end
 
   ### employee（従業員）
