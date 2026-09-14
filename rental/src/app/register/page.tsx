@@ -4,6 +4,8 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AccordionCard from "@/components/AccordionCard";
 import Button from "@/components/Button";
+import CorrectionModal from "@/components/CorrectionModal";
+import type { CorrectionTarget } from "@/components/CorrectionModal";
 import Header from "@/components/Header";
 import ItemCard from "@/components/ItemCard";
 import { createItemRentalLog, useAssignments } from "@/hooks/useRentalApi";
@@ -38,6 +40,7 @@ function RegisterContent() {
   });
   // 送信のたびに作り直す冪等キー。再送では同じキーを使う
   const [uidSeed, setUidSeed] = useState(() => crypto.randomUUID());
+  const [isCorrectionOpen, setIsCorrectionOpen] = useState(false);
 
   useEffect(() => {
     if (!isSessionLoading && !session) router.replace("/select-place");
@@ -152,6 +155,31 @@ function RegisterContent() {
     router.push("/select-group");
   };
 
+  // 訂正は「訂正後の累計」を直接記録する（設計書5章の合算上書き方式）
+  const correctionTargets: CorrectionTarget[] = targets.map((assignment) => {
+    const summary = summarize(assignment, changeLogs, mode);
+    return {
+      assignRentalItemId: assignment.id,
+      itemName: assignment.rentalItemName,
+      currentTotal: mode === "rental" ? summary.lent : summary.returned,
+      // 貸出の上限は実効割当数、返却の上限は貸出済数
+      maxTotal: mode === "rental" ? summary.num : summary.lent,
+    };
+  });
+
+  const handleCorrection = async (
+    target: CorrectionTarget,
+    correctedTotal: number
+  ) => {
+    await createItemRentalLog({
+      uid: crypto.randomUUID(),
+      assignRentalItemId: target.assignRentalItemId,
+      category: mode === "rental" ? "rental_absolute" : "return_absolute",
+      quantity: correctedTotal,
+    });
+    await mutate();
+  };
+
   if (!session) return null;
 
   const quantityLabel = mode === "rental" ? "数量/貸出残" : "数量/返却残";
@@ -212,9 +240,16 @@ function RegisterContent() {
           </AccordionCard>
         )}
 
-        <h2 className="flex items-center gap-2 text-body font-bold text-font">
-          <span aria-hidden>📦</span>処理対象アイテム
-        </h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="flex items-center gap-2 text-body font-bold text-font">
+            <span aria-hidden>📦</span>処理対象アイテム
+          </h2>
+          {targets.length > 0 && (
+            <Button variant="sub" onClick={() => setIsCorrectionOpen(true)}>
+              訂正する
+            </Button>
+          )}
+        </div>
 
         {!isLoading && targets.length === 0 && (
           <p className="text-body text-sub">
@@ -257,6 +292,14 @@ function RegisterContent() {
           </p>
         )}
       </main>
+
+      <CorrectionModal
+        open={isCorrectionOpen}
+        mode={mode}
+        targets={correctionTargets}
+        onClose={() => setIsCorrectionOpen(false)}
+        onSubmit={handleCorrection}
+      />
 
       <div className="fixed inset-x-0 bottom-0 flex justify-center border-t border-line bg-white/95 px-4 py-3">
         <Button
