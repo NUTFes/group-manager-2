@@ -40,6 +40,24 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [@stocker_place.id] * 2, created.map(&:stocker_place_id)
   end
 
+  # items配列の各要素で備考(remark)を受け取り、割当に保存できること
+  test 'should save remark on create' do
+    post assign_rental_items_url,
+         params: {
+           rentalItemId: @assign_rental_item.rental_item_id,
+           stockerPlaceId: @stocker_place.id,
+           items: [
+             { group_id: groups(:one).id, num: 3, remark: 'テント1・2（正面入口側）' },
+             { group_id: groups(:two).id, num: 5, remark: nil }
+           ]
+         },
+         as: :json
+
+    assert_response :success
+    created = AssignRentalItem.order(:id).last(2)
+    assert_equal ['テント1・2（正面入口側）', nil], created.map(&:remark)
+  end
+
   # 途中で失敗した場合、それまでに作られた割当も残らないこと（トランザクション）
   test 'should not create any assign_rental_item when one of the items is invalid' do
     assert_no_difference('AssignRentalItem.count') do
@@ -56,6 +74,29 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal 500, response.parsed_body.dig('status', 'code')
+  end
+
+  # 同一(団体×在庫場所×物品)の割当が既にある場合は新規作成せず、編集を促す
+  test 'should not create a duplicate assignment and prompts to edit the existing one' do
+    AssignRentalItem.create!(
+      group_id: groups(:one).id,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      num: 2
+    )
+
+    assert_no_difference('AssignRentalItem.count') do
+      post assign_rental_items_url,
+           params: {
+             rentalItemId: @assign_rental_item.rental_item_id,
+             stockerPlaceId: @stocker_place.id,
+             items: [{ group_id: groups(:one).id, num: 5 }]
+           },
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_match(/編集/, response.parsed_body.dig('status', 'option').to_s)
   end
 
   test 'should show assign_rental_item' do
@@ -77,15 +118,65 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal groups(:two).id, @assign_rental_item.group_id
   end
 
+  # updateで備考(remark)も更新でき、空文字を送ると消えること
+  test 'should update remark' do
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { num: @assign_rental_item.num, remark: '入口1番' },
+          as: :json
+    assert_response :ok
+    assert_equal '入口1番', @assign_rental_item.reload.remark
+
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { num: @assign_rental_item.num, remark: '' },
+          as: :json
+    assert_response :ok
+    assert_equal '', @assign_rental_item.reload.remark
+  end
+
   test 'should destroy assign_rental_item' do
+    # @assign_rental_item(fixture :one)にはitem_rental_logsが紐づいており削除できないため、
+    # ログを持たない別レコードで検証する
+    assign_rental_item_without_logs = AssignRentalItem.create!(
+      group: groups(:two),
+      rental_item: @assign_rental_item.rental_item,
+      stocker_place: @stocker_place,
+      num: 1
+    )
+
     assert_difference('AssignRentalItem.count', -1) do
-      delete assign_rental_item_url(@assign_rental_item), as: :json
+      delete assign_rental_item_url(assign_rental_item_without_logs), as: :json
     end
 
     # destroyは204ではなく、削除結果をJSONで返す実装になっている
     assert_response :success
     assert_includes response.headers['Content-Type'], 'application/json'
     assert_equal 200, response.parsed_body.dig('status', 'code')
+  end
+
+  test 'should return conflict when destroying an assign_rental_item with item_rental_logs' do
+    assign_rental_item = AssignRentalItem.create!(
+      group: groups(:two),
+      rental_item: @assign_rental_item.rental_item,
+      stocker_place: @stocker_place,
+      num: 1
+    )
+    ItemRentalLog.create!(
+      uid: 'destroy-conflict-uid',
+      assign_rental_item: assign_rental_item,
+      group: groups(:two),
+      stocker_place: @stocker_place,
+      rental_item: assign_rental_item.rental_item,
+      category: :rental,
+      quantity: 1,
+      recorder_email: 'recorder@example.com'
+    )
+
+    assert_no_difference('AssignRentalItem.count') do
+      delete assign_rental_item_url(assign_rental_item), as: :json
+    end
+
+    assert_response :conflict
+    assert AssignRentalItem.exists?(assign_rental_item.id)
   end
 
   # 存在しないIDの場合、HTTPステータスは200のままレスポンス本文で404を返す実装になっている

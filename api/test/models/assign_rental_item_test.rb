@@ -11,6 +11,21 @@ class AssignRentalItemTest < ActiveSupport::TestCase
     @stocker_place = stocker_places(:one)
   end
 
+  # 同一(group_id, stocker_place_id, rental_item_id)の重複はDBの一意インデックスで弾く
+  test 'db rejects a duplicate group / stocker_place / rental_item combination' do
+    attrs = {
+      group: @group,
+      rental_item: @rental_item,
+      stocker_place: stocker_places(:with_name_en),
+      num: 1
+    }
+    AssignRentalItem.create!(attrs)
+
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      AssignRentalItem.create!(attrs.merge(num: 2))
+    end
+  end
+
   test 'should be valid with a valid rental_place' do
     assign_rental_item = AssignRentalItem.new(
       group: @group,
@@ -101,5 +116,13 @@ class AssignRentalItemTest < ActiveSupport::TestCase
     )
     assert_equal '', assign_rental_item.stock_place_name
     assert_equal '', assign_rental_item.stock_place_name(locale: :en)
+  end
+
+  test 'destroy is blocked while item_rental_logs exist' do
+    assign_rental_item = assign_rental_items(:one)
+
+    assert_not assign_rental_item.destroy
+    assert assign_rental_item.errors[:base].present?
+    assert AssignRentalItem.exists?(assign_rental_item.id)
   end
 end
