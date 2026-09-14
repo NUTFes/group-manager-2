@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_10_080827) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_15_000001) do
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
     t.text "message"
@@ -224,6 +224,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_10_080827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "group_id", null: false
+    t.text "memo"
     t.index ["assign_rental_item_id"], name: "index_item_rental_logs_on_assign_rental_item_id"
     t.index ["group_id"], name: "index_item_rental_logs_on_group_id"
     t.index ["rental_item_id"], name: "index_item_rental_logs_on_rental_item_id"

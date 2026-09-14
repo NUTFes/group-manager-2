@@ -8,6 +8,8 @@ class ItemRentalLogsController < ApplicationController
   before_action :authenticate_rental_bff!
   before_action :require_rental_recorder_email!, only: %i[create]
 
+  # 同じuidでの再送が同一イベントかを判定する属性。memoは含めない。
+  # 送信失敗時の再送でメモだけ変わっていても409にせず、最初の記録を正とする。
   IDEMPOTENCY_ATTRIBUTES = %w[
     assign_rental_item_id group_id rental_item_id stocker_place_id category quantity recorder_email
   ].freeze
@@ -75,7 +77,8 @@ class ItemRentalLogsController < ApplicationController
   end
 
   def item_rental_log_params
-    params.permit(:uid, :assign_rental_item_id, :category, :quantity, :group_id, :rental_item_id, :stocker_place_id)
+    params.permit(:uid, :assign_rental_item_id, :category, :quantity, :group_id, :rental_item_id,
+                  :stocker_place_id, :memo)
   end
 
   def render_idempotent_result(existing_log, candidate_log)
