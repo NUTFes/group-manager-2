@@ -51,6 +51,11 @@ class Group < ApplicationRecord
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 
+  # 参加団体向けの確定情報ページURL（QRコードで配布する）
+  def confirmed_info_url
+    "#{UserFrontUrlResolver.call}/confirmed?group_id=#{id}&secret=#{secret}"
+  end
+
   ### group_category (参加団体カテゴリ)
 
   # 全てのgroupとそのgroup_categoryを取得する
