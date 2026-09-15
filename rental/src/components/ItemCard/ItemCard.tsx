@@ -110,15 +110,16 @@ const ItemCard: FC<ItemCardProps> = ({
       )}
     </dl>
 
+    {/* メモは数量を入れていなくても記入できる。数量0でもメモだけ記録できるよう、
+        送信側（登録画面）がメモのあるカードを対象に含める */}
     <div className="border-t border-line bg-white px-3 py-2">
       <input
         type="text"
         value={memo}
         onChange={(event) => onMemoChange(event.target.value)}
-        disabled={disabled || !selected}
         placeholder="メモを記入"
         aria-label={`${itemName}のメモ`}
-        className="w-full bg-transparent text-body text-font placeholder:text-sub disabled:placeholder:text-line"
+        className="w-full bg-transparent text-body text-font placeholder:text-sub"
       />
     </div>
   </section>

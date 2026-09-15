@@ -96,8 +96,10 @@ function RegisterContent() {
     [targets, changeLogs, mode]
   );
 
-  const selectedIds = Object.entries(drafts)
-    .filter(([, draft]) => draft.quantity > 0)
+  // 数量が入っているカードに加え、メモだけ書かれたカードも送信対象にする。
+  // 「来たが受け取らなかった」等をメモだけで残せるようにするため（quantity 0 で記録）。
+  const submittableIds = Object.entries(drafts)
+    .filter(([, draft]) => draft.quantity > 0 || draft.memo.trim() !== "")
     .map(([id]) => Number(id));
 
   const handleSelect = (assignmentId: number) => {
@@ -105,13 +107,16 @@ function RegisterContent() {
     if (remaining === 0) return;
 
     setDrafts((prev) => {
-      // 選択済みならクリア、未選択なら残数を流し込む（設計書3章③）
-      if (prev[assignmentId]) {
-        const next = { ...prev };
-        delete next[assignmentId];
-        return next;
-      }
-      return { ...prev, [assignmentId]: { quantity: remaining, memo: "" } };
+      const current = prev[assignmentId] ?? { quantity: 0, memo: "" };
+      // 選択済みなら数量を0に戻し、未選択なら残数を流し込む（設計書3章③）。
+      // メモは選択状態に関係なく保持する
+      return {
+        ...prev,
+        [assignmentId]: {
+          ...current,
+          quantity: current.quantity > 0 ? 0 : remaining,
+        },
+      };
     });
   };
 
@@ -127,7 +132,7 @@ function RegisterContent() {
   const handleSubmit = async () => {
     const category = mode === "rental" ? "rental" : "return";
     const ids =
-      submitState.phase === "error" ? submitState.failedIds : selectedIds;
+      submitState.phase === "error" ? submitState.failedIds : submittableIds;
     if (ids.length === 0) return;
 
     setSubmitState({ phase: "sending" });
@@ -213,7 +218,11 @@ function RegisterContent() {
       <Header
         mode={session.mode}
         placeName={session.placeName}
-        onProgressClick={() => router.push("/progress")}
+        onProgressClick={() =>
+          router.push(
+            `/progress?from=${encodeURIComponent(`/register?groupId=${groupId}`)}`
+          )
+        }
       />
 
       <main className="flex flex-1 flex-col gap-4 px-4 pb-28 pt-4">
@@ -296,7 +305,7 @@ function RegisterContent() {
                 remark={assignment.remark}
                 latestMemo={summary?.latestMemo}
                 memo={draft?.memo ?? ""}
-                selected={Boolean(draft)}
+                selected={(draft?.quantity ?? 0) > 0}
                 disabled={(summary?.remaining ?? 0) === 0}
                 quantityLabel={quantityLabel}
                 onSelect={() => handleSelect(assignment.id)}
@@ -366,7 +375,9 @@ function RegisterContent() {
       <div className="fixed inset-x-0 bottom-0 flex justify-center border-t border-line bg-white/95 px-4 py-3">
         <Button
           onClick={handleSubmit}
-          disabled={selectedIds.length === 0 || submitState.phase === "sending"}
+          disabled={
+            submittableIds.length === 0 || submitState.phase === "sending"
+          }
           icon={<span aria-hidden>➤</span>}
         >
           {submitState.phase === "sending" ? "送信中..." : "送信"}

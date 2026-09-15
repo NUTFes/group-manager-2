@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -21,8 +21,9 @@ type GroupRow = {
 };
 
 // 画面④（Figma: 進捗確認ページ node-id=5046-640）
-export default function ProgressPage() {
+function ProgressContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { session } = useWorkSession();
   const { data: places } = useRentalPlaces();
 
@@ -78,6 +79,12 @@ export default function ProgressPage() {
   // 全体進捗は団体ベース（完了=1、進行中・未着手=0 の二値カウント）。設計書5章
   const doneCount = rows.filter((row) => row.status === "done").length;
   const percentage = rows.length ? (doneCount / rows.length) * 100 : 0;
+  // 遷移元。外部URLへ飛ばされないよう、アプリ内の絶対パスだけを受け付ける
+  const fromParam = searchParams.get("from") ?? "";
+  const backTo =
+    fromParam.startsWith("/") && !fromParam.startsWith("//")
+      ? fromParam
+      : "/select-group";
   const placeName =
     places?.find((place) => place.id === placeId)?.name ??
     session?.placeName ??
@@ -193,11 +200,27 @@ export default function ProgressPage() {
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-line bg-white/95 px-4 py-3">
-        <Button variant="main" onClick={() => router.back()}>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-4 py-3">
+        {/* router.back() は直接この画面を開いた場合に戻れないため、
+            遷移元をクエリで受け取って明示的に戻る */}
+        <Button variant="main" onClick={() => router.push(backTo)}>
           ← 戻る
         </Button>
       </div>
     </>
+  );
+}
+
+export default function ProgressPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex flex-1 items-center justify-center">
+          <p className="text-body text-sub">読み込み中...</p>
+        </main>
+      }
+    >
+      <ProgressContent />
+    </Suspense>
   );
 }

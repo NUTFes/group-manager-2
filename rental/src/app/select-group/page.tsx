@@ -65,7 +65,7 @@ export default function SelectGroupPage() {
       <Header
         mode={session.mode}
         placeName={session.placeName}
-        onProgressClick={() => router.push("/progress")}
+        onProgressClick={() => router.push("/progress?from=/select-group")}
       />
 
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-10">

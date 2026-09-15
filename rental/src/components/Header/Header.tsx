@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import Link from "next/link";
 
 export type WorkMode = "rental" | "return";
 
@@ -6,6 +7,7 @@ type HeaderProps = {
   // 作業セッション未確定のときは null（Figma の status=null）
   mode?: WorkMode | null;
   placeName?: string | null;
+  // 進捗確認へ遷移する。戻り先を渡せるよう、遷移は呼び出し側に任せる
   onProgressClick?: () => void;
 };
 
@@ -18,9 +20,14 @@ const MODE_LABELS: Record<WorkMode, string> = {
 const Header: FC<HeaderProps> = ({ mode, placeName, onProgressClick }) => (
   <header className="flex h-20 shrink-0 items-center justify-between gap-3 bg-main px-4 text-white">
     <div className="flex min-w-0 items-center gap-3">
-      <span className="flex size-12 shrink-0 items-center justify-center rounded bg-white text-caption font-bold text-main">
+      {/* ロゴからトップへ戻れるようにする（トップは作業状況に応じて振り分ける） */}
+      <Link
+        href="/"
+        aria-label="トップへ戻る"
+        className="flex size-12 shrink-0 items-center justify-center rounded bg-white text-caption font-bold text-main active:opacity-80"
+      >
         logo
-      </span>
+      </Link>
       <div className="flex min-w-0 flex-col gap-1">
         {mode && (
           <span className="w-fit rounded-full bg-card-head px-3 text-caption font-bold text-main">

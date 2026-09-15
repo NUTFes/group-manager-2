@@ -16,6 +16,9 @@ importers:
       next:
         specifier: 16.3.4
         version: 16.3.4(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      qr-scanner:
+        specifier: ^1.4
+        version: 1.4.2
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -898,6 +901,12 @@ packages:
     resolution:
       {
         integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==,
+      }
+
+  "@types/offscreencanvas@2019.7.3":
+    resolution:
+      {
+        integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==,
       }
 
   "@types/react-dom@19.2.6":
@@ -2904,6 +2913,12 @@ packages:
       }
     engines: { node: ">=6" }
 
+  qr-scanner@1.4.2:
+    resolution:
+      {
+        integrity: sha512-kV1yQUe2FENvn59tMZW6mOVfpq9mGxGf8l6+EGaXUOd4RBOLg7tRC83OrirM5AtDvZRpdjdlXURsHreAOSPOUw==,
+      }
+
   queue-microtask@1.2.3:
     resolution:
       {
@@ -3918,6 +3933,8 @@ snapshots:
   "@types/node@20.19.43":
     dependencies:
       undici-types: 6.21.0
+
+  "@types/offscreencanvas@2019.7.3": {}
 
   "@types/react-dom@19.2.6(@types/react@19.2.18)":
     dependencies:
@@ -5250,6 +5267,10 @@ snapshots:
       react-is: 16.13.1
 
   punycode@2.3.1: {}
+
+  qr-scanner@1.4.2:
+    dependencies:
+      "@types/offscreencanvas": 2019.7.3
 
   queue-microtask@1.2.3: {}
 
