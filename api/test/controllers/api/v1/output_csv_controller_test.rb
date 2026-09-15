@@ -120,9 +120,10 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     assert_equal '入口1番', rows.second[9]
   end
 
-  # 参加団体情報リストまとめCSV(get_groups_csv)にも備考(remark)列が出力されること
+  # 参加団体情報リストまとめCSV(get_groups_csv)には会場(assigned_venue_names)と
+  # 備考(remark)の両列が出力されること
   # ※印刷画面の「参加団体情報リストまとめ」CSVボタンから呼ばれるのはこちら
-  test 'groups csv outputs remark joined per rental item' do
+  test 'groups csv outputs assigned venue and remark joined per rental item' do
     chair = RentalItem.create!(name: 'パイプ椅子')
     other_place = StockerPlace.create!(name: '第2倉庫')
     AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
@@ -133,10 +134,16 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     AssignRentalItem.create!(group: @group, rental_item: chair, num: 1,
                              stocker_place: other_place)
 
+    place_order = PlaceOrder.create!(group: @group, first: 1, second: 1, third: 1)
+    venue = StockerPlace.create!(name: 'AL1')
+    AssignGroupPlace.create!(place_order: place_order, stocker_place: venue)
+
     get "/api/v1/get_groups_csv/#{@fes_year.id}", headers: auth_headers(@user)
 
     assert_response :success
     rows = parse_csv(response.body)
+    assert_equal '会場', rows.first[6]
+    assert_equal 'AL1', rows.second[6]
     assert_equal '備考', rows.first[7]
     assert_equal '長机：テント1・2 / パイプ椅子：予備', rows.second[7]
   end
