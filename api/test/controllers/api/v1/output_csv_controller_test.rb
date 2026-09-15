@@ -158,6 +158,16 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  # 全団体分の活動場所(会場割り当て)を含むため、参加団体ユーザーには公開しない
+  test 'assign rental items csv is forbidden for non-admin users' do
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'user' }
+    restricted_user = create_user!(email: 'restricted-assign-rental-items-csv@example.com', role_id: 3)
+
+    get "/api/v1/get_assign_rental_items_csv/#{@fes_year.id}", headers: auth_headers(restricted_user)
+
+    assert_response :forbidden
+  end
+
   # 貸出場所調整で未設定の場合は空欄にする
   test 'rental items list csv leaves rental place blank when it is not assigned' do
     AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,

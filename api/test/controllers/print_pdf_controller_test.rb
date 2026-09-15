@@ -14,7 +14,7 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
     @general_user = create_user!(email: 'print-pdf-user@example.com', role_id: 3)
     category = GroupCategory.create!(name: '食品販売')
     @year = FesYear.create!(year_num: 2026)
-    Group.create!(
+    @group = Group.create!(
       name: 'PDF発行団体',
       project_name: 'PDF発行企画',
       activity: '活動内容',
@@ -71,6 +71,32 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  test 'admin can get single group rental items pdf' do
+    get_rental_items_pdf(@admin)
+
+    assert_response :success
+    assert_equal 'application/pdf', response.media_type
+  end
+
+  test 'general user cannot get single group rental items pdf' do
+    get_rental_items_pdf(@general_user)
+
+    assert_response :forbidden
+  end
+
+  test 'admin can get single group info pdf' do
+    get_group_info_pdf(@admin)
+
+    assert_response :success
+    assert_equal 'application/pdf', response.media_type
+  end
+
+  test 'general user cannot get single group info pdf' do
+    get_group_info_pdf(@general_user)
+
+    assert_response :forbidden
+  end
+
   private
 
   def get_all_groups_rental_items_pdf(user)
@@ -81,6 +107,18 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
 
   def get_all_groups_info_pdf(user)
     get "/print_pdf/all_groups_info/#{@year.id}/output",
+        params: { format: :pdf },
+        headers: user.create_new_auth_token
+  end
+
+  def get_rental_items_pdf(user)
+    get "/print_pdf/group/#{@group.id}/output",
+        params: { format: :pdf },
+        headers: user.create_new_auth_token
+  end
+
+  def get_group_info_pdf(user)
+    get "/print_pdf/group_info/#{@group.id}/output",
         params: { format: :pdf },
         headers: user.create_new_auth_token
   end

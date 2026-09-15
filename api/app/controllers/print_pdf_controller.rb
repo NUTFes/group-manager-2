@@ -16,10 +16,14 @@ class PrintPdfController < ApplicationController
   ].freeze
 
   before_action :authenticate_api_user!
-  # output_all_groups_rental_items_pdfは団体ごとのsecretを含むQRコードを埋め込むため、
-  # manager/staff(role_id: 1, 2)以外がsecretを収集できないよう権限を絞る。
-  # output_all_groups_info_pdfも全団体分の会場割り当て等を含むため同様に絞る。
-  before_action :require_admin!, only: %i[output_all_groups_rental_items_pdf output_all_groups_info_pdf]
+  # 管理画面からのみ利用され、団体ごとのsecretを含むQRコードや会場割り当てなど
+  # 他団体には見せられない情報を含むため、管理者(role_id: 1, 2)に限定する。
+  before_action :require_admin!, only: %i[
+    output_rental_items_pdf
+    output_group_info_pdf
+    output_all_groups_rental_items_pdf
+    output_all_groups_info_pdf
+  ]
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf
