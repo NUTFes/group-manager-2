@@ -2,6 +2,7 @@
 
 class PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!, only: [:index]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
