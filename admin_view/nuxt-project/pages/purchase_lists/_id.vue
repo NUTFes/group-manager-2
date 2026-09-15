@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader
       v-bind:pageTitle="purchaseList.purchase_list.items"
-      pageSubTitle="購入食品申請一覧"
+      pageSubTitle="購入品申請一覧"
       class="item"
     >
       <CommonButton
@@ -40,7 +40,7 @@
             <td>{{ purchaseList.purchase_list.purchase_date }}</td>
           </tr>
           <tr>
-            <th>調理品目</th>
+            <th>販売品名</th>
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
           </tr>
           <tr>
@@ -49,7 +49,8 @@
           </tr>
           <tr>
             <th>なまもの</th>
-            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">〇</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">×</td>
           </tr>
           <tr>
             <th>購入店</th>
@@ -58,6 +59,10 @@
           <tr>
             <th>URL</th>
             <td>{{ purchaseList.purchase_list.url }}</td>
+          </tr>
+          <tr>
+            <th>備考</th>
+            <td>{{ purchaseList.purchase_list.remark }}</td>
           </tr>
           <tr>
             <th>登録日時</th>
@@ -71,51 +76,13 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsPurchaseListEditModal
       v-if="isOpenEditModal"
-      title="購入品申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>品名</h3>
-          <input v-model="items" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>購入店</h3>
-          <select v-model="shopID">
-            <option disabled value="">選択してください</option>
-            <option v-for="list in shopList" :key="list.id" :value="list.id">
-              {{ list.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>購入日</h3>
-          <input v-model="purchase_date" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>なまものか</h3>
-          <select v-model="isFresh">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in isFreshList"
-              :key="list.id"
-              :value="list.value"
-            >
-              {{ list.text }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>ネットで買った場合はURLを記入してください</h3>
-          <input v-model="url" placeholder="入力してください" />
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
-      </template>
-    </EditModal>
+      :purchase-list="purchaseList"
+      :shops="shopList"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"
@@ -156,22 +123,36 @@ export default {
       fesDatesList: [],
       purchase_date: null,
       url: null,
+      remark: null,
     };
   },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/purchase_lists/", "");
-    const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      purchaseList: response.data,
-      route: url,
-      routeId: routeId,
-    };
+  async asyncData({ $axios, route, error }) {
+    try {
+      const routeId = route.params.id;
+      const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
+      const response = await $axios.$get(url);
+
+      if (!response.data) {
+        throw new Error('データが見つかりません');
+      }
+
+      return {
+        purchaseList: response.data,
+        route: url,
+        routeId: routeId,
+      };
+    } catch (err) {
+      console.error('データ取得エラー:', err);
+      error({ statusCode: 404, message: '購入品申請が見つかりません' });
+    }
   },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     async openEditModal() {
@@ -187,6 +168,7 @@ export default {
       this.isFresh = this.purchaseList.purchase_list.isFresh;
       this.purchase_date = this.purchaseList.purchase_list.purchase_date;
       this.url = this.purchaseList.purchase_list.url;
+      this.remark = this.purchaseList.purchase_list.remark;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -228,7 +210,9 @@ export default {
         "&is_fresh=" +
         this.isFresh +
         "&url=" +
-        this.url;
+        this.url +
+        "&remark=" +
+        this.remark;
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.items + "を編集しました");
@@ -237,6 +221,7 @@ export default {
         this.shopID = null;
         this.isFresh = null;
         this.url = null;
+        this.remark = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });

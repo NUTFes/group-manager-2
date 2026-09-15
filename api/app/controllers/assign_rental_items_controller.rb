@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AssignRentalItemsController < ApplicationController
-  before_action :set_assign_rental_item, only: [:show, :update, :destroy]
+  before_action :set_assign_rental_item, only: %i[show update destroy]
 
   # GET /assign_rental_items
   # GET /assign_rental_items.json
@@ -17,47 +19,84 @@ class AssignRentalItemsController < ApplicationController
   # POST /assign_rental_items
   # POST /assign_rental_items.json
   def create
+    rental_item_id = assign_rental_items_params[:rentalItemId]
+    stocker_place_id = assign_rental_items_params[:stockerPlaceId]
+
+    # 同一(団体×在庫場所×物品)の割当は1行に統一する。
+    # 既にあれば新規作成せず、既存の割当を編集するよう促す。
+    duplicated_group_ids = assign_rental_items_params[:items].filter_map do |item_params|
+      next unless AssignRentalItem.exists?(
+        group_id: item_params[:group_id],
+        stocker_place_id: stocker_place_id,
+        rental_item_id: rental_item_id
+      )
+
+      item_params[:group_id]
+    end
+    return render_duplicate_assignment_error(duplicated_group_ids, rental_item_id) if duplicated_group_ids.any?
+
     ActiveRecord::Base.transaction do
       @assign_rental_items = assign_rental_items_params[:items].map do |item_params|
         AssignRentalItem.create!(
           group_id: item_params[:group_id],
-          rental_item_id: assign_rental_items_params[:rentalItemId],
+          rental_item_id: rental_item_id,
           num: item_params[:num],
-          stocker_place_id: assign_rental_items_params[:stockerPlaceId]
+          stocker_place_id: stocker_place_id,
+          remark: item_params[:remark]
         )
       end
     end
     render json: fmt(created, @assign_rental_items)
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(internal_server_error, [], e.message)
+  rescue ActiveRecord::RecordNotUnique
+    render_duplicate_assignment_error([], assign_rental_items_params[:rentalItemId])
   end
 
   # PATCH/PUT /assign_rental_items/1
   # PATCH/PUT /assign_rental_items/1.json
   def update
     @assign_rental_item.update(assign_rental_item_params)
-    render json: fmt(created, @assign_rental_item, "Updated assign_rental_item id = "+params[:id])
+    render json: fmt(ok, @assign_rental_item, "Updated assign_rental_item id = #{params[:id]}")
   end
 
   # DELETE /assign_rental_items/1
   # DELETE /assign_rental_items/1.json
   def destroy
-    @assign_rental_item.destroy
-    render json: fmt(ok, [], "Deleted assign_rental_item = "+params[:id])
+    if @assign_rental_item.destroy
+      render json: fmt(ok, [], "Deleted assign_rental_item = #{params[:id]}")
+    else
+      render json: fmt(conflict, [], @assign_rental_item.errors.full_messages.join(', ')), status: :conflict
+    end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_assign_rental_item
-      if AssignRentalItem.exists?(params[:id])
-        @assign_rental_item = AssignRentalItem.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found assign_rental_item = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def assign_rental_items_params
-      params.permit(:rentalItemId, :stockerPlaceId, items: [:group_id, :num])
+  # 重複割当を作成しようとしたときのエラーレスポンス（HTTP 422）
+  def render_duplicate_assignment_error(group_ids, rental_item_id)
+    group_names = Group.where(id: group_ids).pluck(:name).join('、')
+    item_name = RentalItem.find_by(id: rental_item_id)&.name
+    subject = group_names.presence || 'この団体'
+    message = "#{subject} は既に「#{item_name}」の割当があります。既存の割当を編集してください。"
+    render json: fmt(unprocessable_entity, [], message), status: :unprocessable_entity
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_assign_rental_item
+    if AssignRentalItem.exists?(params[:id])
+      @assign_rental_item = AssignRentalItem.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found assign_rental_item = #{params[:id]}")
     end
   end
+
+  # Only allow a list of trusted parameters through.
+  def assign_rental_items_params
+    params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num remark])
+  end
+
+  # update用のストロングパラメータ (単数形)
+  def assign_rental_item_params
+    params.permit(:group_id, :rentalItemId, :num, :stockerPlaceId, :rental_place_id, :remark)
+  end
+end

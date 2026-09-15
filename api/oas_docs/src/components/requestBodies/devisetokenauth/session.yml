@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    devisetokenauth.Session:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/devisetokenauth.Session"

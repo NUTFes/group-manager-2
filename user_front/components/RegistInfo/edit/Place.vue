@@ -46,14 +46,14 @@ const { handleChange: handleRemark, errorMessage: remarkError } =
   useField("remark");
 
 const EATING_AREA = [
-  "'希望なし'",
+  "希望なし",
   "事務棟エリア（講義室は含まない。)",
-  "電気棟エリア",
   "図書館エリア",
   "電気棟エリア",
   "メインステージエリア（情報処理センター前）",
   "機械・建設棟エリア",
-  "その他の場所"
+  "生物棟エリア(電力使用不可)",
+  "環境棟エリア",
 ];
 const isEatingArea = (place: string) => {
   return EATING_AREA.includes(place);
@@ -68,9 +68,9 @@ const groupCategoryId = ref<number>();
 const group_id = ref();
 const isOverlapPlace = computed(() => {
   if (
-    newFirst.value === 1 && newSecond.value === 1 ||
-    newFirst.value === 1 && newThird.value === 1 ||
-    newSecond.value === 1 && newThird.value === 1
+    (newFirst.value === 1 && newSecond.value === 1) ||
+    (newFirst.value === 1 && newThird.value === 1) ||
+    (newSecond.value === 1 && newThird.value === 1)
   )
     return false;
   else if (
@@ -113,8 +113,7 @@ onMounted(async () => {
       }
     });
   });
-  group_id.value=Number(localStorage.getItem("group_id"))
-  console.log(placeList.value)
+  group_id.value = Number(localStorage.getItem("group_id"));
 });
 
 const editPlace = async () => {
@@ -218,7 +217,10 @@ const reset = () => {
         {{ $t("Place.overlapPlace") }}
       </p>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton
+          :text="$t('Button.reset')"
+          @click="reset()"
+        ></RegistPageButton>
         <RegistPageButton
           :disabled="!meta.valid || isSubmitting || isOverlapPlace"
           :text="$t('Button.edit')"

@@ -9,19 +9,32 @@ interface Regist {
   id: number | null;
   item: number | null;
   num: number | null;
+  rentalItemIds: number[] | null;
 }
+
+type RentableItem = {
+    created_at: string;
+    id: number;
+    is_inside_shop_rentable: boolean;
+    is_outside_shop_rentable: boolean;
+    is_stage_rentable: boolean;
+    name: string;
+    updated_at: string;
+};
 
 const props = withDefaults(defineProps<Regist>(), {
   groupId: null,
   id: null,
   item: null,
   num: null,
+  rentalItemIds: null,
 });
 const { meta, isSubmitting } = useForm({
   validationSchema: editItemSchema,
   initialValues: {
     itemNameId: props.item,
     itemNum: props.num,
+    rentalItemIds: props.rentalItemIds,
   },
 });
 const { handleChange: handleName, errorMessage: nameError } =
@@ -51,7 +64,7 @@ const newItem = ref<Regist["item"]>(props.item);
 const newNum = ref<Regist["num"]>(props.num);
 
 // 場所と物品を制限するための変数
-const selectedLocation = ref<string>("屋内団体");
+const selectedLocation = ref<string>("屋外団体");
 const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
@@ -81,15 +94,88 @@ onMounted(async () => {
   }
 });
 
+const updateSelectedLocation = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  switch (target.value) {
+    case "屋内団体":
+      selectableItemList.value = [];
+      insideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+    case "屋外団体":
+      selectableItemList.value = [];
+      outsideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+  }
+};
+
+// 共通のフィルタリング関数を定義
+const filterItems = (itemList: RentableItem[], rentalItemIds: number[]): RentableItem[] => {
+    return itemList.filter(item => !rentalItemIds.includes(item.id));
+};
+
+// バリデーションに合わせてリストを作っておく
+// groupCategoryId=1の場合(食品販売)
+const outsideRentableItemList_Id_1 = computed(() => {
+  const foodRentableItemList = outsideRentableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
+  return filterItems(foodRentableItemList, props.rentalItemIds ?? []);
+});
+
+// groupCategoryId=3の場合(ステージ)
+const stageRentableItemList_Id_3 = computed(() => {
+  const stageRentableItemList = selectableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
+  return filterItems(stageRentableItemList, props.rentalItemIds ?? []);
+});
+
+// groupCategoryId=2,4,5,7の場合(物品販売、展示・体験、研究室、その他)
+// かつ、屋外なのか、屋外なのかを分けたリスト
+const outsideRentableItemList_Id_in = computed(() => {
+  const validIds = [1, 3, 4, 5, 6];  // 表示したいIDのリスト
+  const outsideRentableItemList_in = outsideRentableItemList.value.filter(item => validIds.includes(item.id));
+  return filterItems(outsideRentableItemList_in, props.rentalItemIds ?? []);
+});
+const outsideRentableItemList_Id_out = computed(() => {
+  const outsideRentableItemList_out = outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 2);
+  return filterItems(outsideRentableItemList_out, props.rentalItemIds ?? []);
+});
+
 const editItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
   const itemNum = newNum.value as number;
-  if (getMaxValueByItemId(itemId) < itemNum) {
+  // ９９個以上は申請させない
+  if (itemNum > 99) {
     alert(
-      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+      "貸し出し数が上限を超えています。少なくしてください。\nThe number of loans has exceeded the limit. Please reduce the number."
     );
     return;
+  }
+  // 机の入力バリデーション
+  if (itemId === 1 && itemNum > 20 && selectedLocation.value  === '屋外団体') {
+    alert(
+      "机の貸し出し数が上限を超えています。20以下にしてください。\The number of desks available for rent has exceeded the limit; please reduce it to 20 or less."
+    );
+    return;
+  }
+  // 椅子の入力バリデーション
+  if (itemId === 3 && itemNum > 20 && selectedLocation.value  === '屋外団体') {
+    alert(
+      "椅子の貸し出し数が上限を超えています。20以下にしてください。\nThe number of chairs available for rent has exceeded the limit; please reduce it to 20 or less."
+    );
+    return;
+  }
+  // テント、小テントのバリデーション
+  if (itemId === 7 || itemId === 8){
+    // 1つ以上の申請があるとき
+    if(itemNum > 1){
+      alert(
+      "テントが複数選択されています。1つにしてください。\Multiple tents have been selected, please select one."
+    );
+    return;
+    }
   }
 
   if (props.id === null) {
@@ -122,40 +208,7 @@ const reset = () => {
   handleNum(newNum.value);
 };
 
-// 物品のidから物品の情報を取得し、物品の貸し出し可能数を返す
-const getMaxValueByItemId = (id: number) => {
-  const items = selectableItemList.value.find((item) => item.id === id);
 
-  let maxValue = 0;
-  if (items?.name === "テント") {
-    maxValue = 1;
-  } else if (
-    (items?.name === "机" || items?.name === "椅子")
-  ) {
-    maxValue = 20;
-  } else {
-    maxValue = 99;
-  }
-  return maxValue;
-};
-
-const updateSelectedLocation = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  switch (target.value) {
-    case "屋内団体":
-      selectableItemList.value = [];
-      insideRentableItemList.value.forEach((item) => {
-        selectableItemList.value.push(item);
-      });
-      break;
-    case "屋外団体":
-      selectableItemList.value = [];
-      outsideRentableItemList.value.forEach((item) => {
-        selectableItemList.value.push(item);
-      });
-      break;
-  }
-};
 </script>
 
 <template>
@@ -171,7 +224,11 @@ const updateSelectedLocation = (event: Event) => {
       </div>
     </template>
     <template #form>
-      <div class="flex mt-4 gap-3 justify-end">
+      <!-- 屋内団体、屋外団体、ステージ団体を選ぶinputの部分 -->
+      <div class="flex flex-col mt-4 gap-3 justify-end">
+        <div class="text-xl flex gap-3">
+          <p class="text-red-500">{{ $t("RegistInfo.ItemMessage") }}</p>
+        </div>
         <div v-if="Number(groupCategoryId) !== 1 && Number(groupCategoryId) !== 3">
           <label class="mr-2">
             <input
@@ -194,7 +251,7 @@ const updateSelectedLocation = (event: Event) => {
             {{ $t("Item.outsideGroup") }}
           </label>
         </div>
-        <div v-if="Number(groupCategoryId) === 3">
+        <div v-else-if="Number(groupCategoryId) === 3">
           <label>
             <input
               type="radio"
@@ -208,7 +265,44 @@ const updateSelectedLocation = (event: Event) => {
         </div>
       </div>
       <div class="text">{{ $t("Item.item") }}</div>
+      <!-- 食品販売 -->
       <div v-if="Number(groupCategoryId) === 1">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :checked="selectedLocation === '屋外団体'"
+          :class="{ error_border: nameError }"
+        >
+        <!-- ここで！ユーザーの団体カテゴリでバリデーションをする -->
+          <option
+            v-for="list in outsideRentableItemList_Id_1"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <!-- ステージ団体のバリデーション -->
+      <div v-else-if="Number(groupCategoryId) === 3">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :class="{ error_border: nameError }"
+        >
+          <option
+            v-for="list in stageRentableItemList_Id_3"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <!-- 実行委員 -->
+      <div v-else-if="Number(groupCategoryId) === 6">
         <select
           class="entry"
           v-model="newItem"
@@ -224,15 +318,37 @@ const updateSelectedLocation = (event: Event) => {
           </option>
         </select>
       </div>
-      <div v-else>
+      <!--　物品販売、展示・体験、研究室、その他  -->
+      <!-- 屋外団体 -->
+      <div v-else-if="selectedLocation === '屋外団体'">
         <select
           class="entry"
           v-model="newItem"
           @change="handleName"
+          :checked="selectedLocation === '屋外団体'"
           :class="{ error_border: nameError }"
         >
           <option
-            v-for="list in selectableItemList"
+            v-for="list in outsideRentableItemList_Id_out"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <!-- 屋内団体 -->
+      <div v-else-if="selectedLocation === '屋内団体'">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :checked="selectedLocation === '屋内団体'"
+
+          :class="{ error_border: nameError }"
+        >
+          <option
+            v-for="list in outsideRentableItemList_Id_in"
             :key="list.id"
             :value="list.id"
           >

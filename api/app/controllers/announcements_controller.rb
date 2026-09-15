@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AnnouncementsController < ApplicationController
-  before_action :set_announcement, only: [:show, :update, :destroy]
+  before_action :set_announcement, only: %i[show update destroy]
 
   # GET /announcements
   # GET /announcements.json
@@ -25,28 +27,29 @@ class AnnouncementsController < ApplicationController
   # PATCH/PUT /announcements/1.json
   def update
     @announcement.update(announcement_params)
-    render json: fmt(created, @announcement, "Updated announcement id = "+params[:id])
+    render json: fmt(created, @announcement, "Updated announcement id = #{params[:id]}")
   end
 
   # DELETE /announcements/1
   # DELETE /announcements/1.json
   def destroy
     @announcement.destroy
-    render json: fmt(ok, [], "Deleted announcement = "+params[:id])
+    render json: fmt(ok, [], "Deleted announcement = #{params[:id]}")
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_announcement
-      if Announcement.exists?(params[:id])
-        @announcement = Announcement.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found announcement = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def announcement_params
-      params.permit(:group_id, :message)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_announcement
+    if Announcement.exists?(params[:id])
+      @announcement = Announcement.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found announcement = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def announcement_params
+    params.permit(:group_id, :message, :status, :id)
+  end
 end

@@ -1,0 +1,9 @@
+---
+components:
+  schemas:
+    api.v1.CurrentUserApi:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

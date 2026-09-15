@@ -5,3 +5,13 @@ one:
 
 two:
   name: MyString
+
+# 英語名が登録されている在庫場所
+with_name_en:
+  name: 体育館倉庫
+  name_en: Gymnasium Storage
+
+# 英語名が未登録の在庫場所（日本語名へのフォールバック確認用）
+without_name_en:
+  name: 第1体育館前
+  name_en:

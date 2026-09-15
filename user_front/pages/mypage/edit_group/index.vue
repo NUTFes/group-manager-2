@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
-import { groupCategoryList } from "~~/utils/list";
-import { groupSchema } from "~~/utils/validate";
+import { GroupCategory } from '@/types/regist/groupCategory';
 
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -12,13 +11,14 @@ const projectName = ref<string>("");
 const groupCategoryId = ref<number>();
 const activity = ref<string>("");
 const user = ref("");
-const setting = ref("");
 const isEditGroup = ref<boolean>();
 const userId = ref<number>();
+const international = ref<boolean>();
+const external = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 
-const { meta } = useForm({
+const { meta, isSubmitting } = useForm({
   validationSchema: groupSchema,
 });
 
@@ -41,6 +41,12 @@ onMounted(() => {
     groupCategoryId.value = response.data.data.group_category_id;
     activity.value = response.data.data.activity;
     groupName.value = response.data.data.name;
+    international.value = response.data.data.is_international;
+    external.value = response.data.data.is_external;
+    handleChangeGroupName(response.data.data.name);
+    handleChangeProjectName(response.data.data.project_name);
+    handleChangeActivity(response.data.data.activity);
+    handleChangeCategory(response.data.data.group_category_id);
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -66,7 +72,6 @@ onMounted(() => {
       },
     })
     .then((response) => {
-      setting.value = response.data.data[0];
       isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
@@ -84,6 +89,8 @@ const register = () => {
         user_id: userId.value,
         group_category_id: groupCategoryId.value,
         fes_year_id: fesYearId.value,
+        is_international: international.value,
+        is_external: external.value,
       },
       {
         headers: {
@@ -110,12 +117,13 @@ const register = () => {
     );
 };
 
+const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_categories");
+
 const buttonDisabled = computed(() => {
   return !!(
-    groupNameError.value ||
-    projectNameError.value ||
-    categoryError.value ||
-    activityError.value
+    !groupName.value ||
+    !projectName.value ||
+    !activity.value
   );
 });
 </script>
@@ -170,7 +178,7 @@ const buttonDisabled = computed(() => {
           @change="handleChangeCategory"
         >
           <option
-            v-for="item in groupCategoryList"
+            v-for="item in groupCategoryList.data"
             :value="item.id"
             :key="item.id"
           >
@@ -181,6 +189,21 @@ const buttonDisabled = computed(() => {
           {{ categoryError }}
         </p>
       </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.international") }}
+        </div>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international">
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.external") }}
+        </div>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="external">
+      </div>
+
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Group.activityDetails") }}
@@ -197,16 +220,20 @@ const buttonDisabled = computed(() => {
         </p>
       </div>
     </div>
-    <div class="w-fit ml-auto mt-4 mb-12">
-      <!-- styleタグないを参考にグラデーションをかける -->
-      <button
+    <div class="regist-button">
+      <RegistPageButton
         v-if="isEditGroup"
         @click="register"
-        class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
-        :disabled="buttonDisabled"
-      >
-        {{ $t("Button.edit") }}
-      </button>
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
+        :text="$t('Button.register')"
+      ></RegistPageButton>
     </div>
   </div>
 </template>
+
+<style scoped>
+.regist-button {
+  @apply text-right
+    mb-8;
+}
+</style>

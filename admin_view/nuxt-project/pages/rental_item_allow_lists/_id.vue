@@ -107,9 +107,7 @@
       <v-col></v-col>
     </v-row>
 
-    </v-col>
     <v-col cols="1"></v-col>
-    </v-row>
 
     <!-- 編集ダイアログ -->
 
@@ -267,6 +265,8 @@ export default {
     })
   },
   mounted() {
+    window.scrollTo(0, 0);
+
     this.$store.dispatch("users/getUser")
     this.$axios.get('/group_categories', {
       headers: { 

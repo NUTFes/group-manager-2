@@ -249,7 +249,10 @@ export default {
       selfRoleId: (state) => state.users.role,
     }),
   },
+  
   mounted() {
+    window.scrollTo(0, 0);
+    
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/stocker_places", {

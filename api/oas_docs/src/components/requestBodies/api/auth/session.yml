@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    api.auth.Session:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/api.auth.Session"

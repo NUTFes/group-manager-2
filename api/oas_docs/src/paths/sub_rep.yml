@@ -1,0 +1,181 @@
+---
+paths:
+  "/sub_reps":
+    get:
+      tags:
+      - sub_rep
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+    post:
+      tags:
+      - sub_rep
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/SubRep"
+  "/sub_reps/group/{group_id}":
+    get:
+      tags:
+      - sub_rep
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/sub_reps/{id}":
+    get:
+      tags:
+      - sub_rep
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - sub_rep
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: sub_rep description
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/SubRep"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - sub_rep
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: sub_rep description
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/SubRep"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - sub_rep
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
