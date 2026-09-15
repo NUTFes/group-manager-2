@@ -129,6 +129,12 @@ const editPlace = async () => {
           remark: newRemark.value,
         },
       },
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
+      },
     });
   } else {
     await useFetch(config.APIURL + "/place_orders/" + props.id, {
@@ -141,6 +147,12 @@ const editPlace = async () => {
           third: newThird.value,
           remark: newRemark.value,
         },
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
       },
     });
   }
