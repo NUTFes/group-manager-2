@@ -20,10 +20,10 @@ const MODE_LABELS: Record<WorkMode, string> = {
 const Header: FC<HeaderProps> = ({ mode, placeName, onProgressClick }) => (
   <header className="flex h-20 shrink-0 items-center justify-between gap-3 bg-main px-4 text-white">
     <div className="flex min-w-0 items-center gap-3">
-      {/* ロゴからトップへ戻れるようにする（トップは作業状況に応じて振り分ける） */}
+      {/* ロゴから最初の画面（取扱区分・作業場所の選択）へ戻る */}
       <Link
-        href="/"
-        aria-label="トップへ戻る"
+        href="/select-place"
+        aria-label="取扱区分・作業場所の選択へ戻る"
         className="flex size-12 shrink-0 items-center justify-center rounded bg-white text-caption font-bold text-main active:opacity-80"
       >
         logo

@@ -9,7 +9,6 @@ import type { CorrectionTarget } from "@/components/CorrectionModal";
 import ExceptionSheet from "@/components/ExceptionSheet";
 import ExcessLendingSheet from "@/components/ExcessLendingSheet";
 import type { ExcessLendingInput } from "@/components/ExcessLendingSheet";
-import GroupSelectSheet from "@/components/GroupSelectSheet";
 import Header from "@/components/Header";
 import ItemCard from "@/components/ItemCard";
 import {
@@ -52,7 +51,6 @@ function RegisterContent() {
   const [isCorrectionOpen, setIsCorrectionOpen] = useState(false);
   const [isExceptionOpen, setIsExceptionOpen] = useState(false);
   const [isExcessOpen, setIsExcessOpen] = useState(false);
-  const [isGroupSheetOpen, setIsGroupSheetOpen] = useState(false);
 
   useEffect(() => {
     if (!isSessionLoading && !session) router.replace("/select-place");
@@ -64,9 +62,8 @@ function RegisterContent() {
   }, [groupId, router]);
 
   const mode = session?.mode ?? "rental";
-  const { data: groups, isLoading: isGroupsLoading } = useRentalGroups(
-    session?.placeId ?? null
-  );
+  // 超過貸出の「元の貸出先団体」の候補に使う
+  const { data: groups } = useRentalGroups(session?.placeId ?? null);
   const changeLogs = useMemo(
     () => data?.assignmentChangeLogs ?? [],
     [data?.assignmentChangeLogs]
@@ -230,7 +227,8 @@ function RegisterContent() {
           <h1 className="min-w-0 truncate text-h3 text-font">
             {groupName || "参加団体"}
           </h1>
-          <Button variant="sub" onClick={() => setIsGroupSheetOpen(true)}>
+          {/* 次の団体はQRで読むのが通常の流れなので、カメラのある画面へ戻す */}
+          <Button variant="sub" onClick={() => router.push("/select-group")}>
             団体変更
           </Button>
         </div>
@@ -354,22 +352,6 @@ function RegisterContent() {
         currentGroupId={groupId}
         onClose={() => setIsExcessOpen(false)}
         onSubmit={handleExcessLending}
-      />
-
-      <GroupSelectSheet
-        open={isGroupSheetOpen}
-        groups={groups ?? []}
-        isLoading={isGroupsLoading}
-        currentGroupId={groupId}
-        onClose={() => setIsGroupSheetOpen(false)}
-        onSelect={(group) => {
-          setIsGroupSheetOpen(false);
-          // 画面遷移せず、同じページのまま対象団体を切り替える
-          setDrafts({});
-          setSubmitState({ phase: "idle" });
-          setUidSeed(crypto.randomUUID());
-          router.replace(`/register?groupId=${group.id}`);
-        }}
       />
 
       <div className="fixed inset-x-0 bottom-0 flex justify-center border-t border-line bg-white/95 px-4 py-3">
