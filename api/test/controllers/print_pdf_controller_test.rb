@@ -22,6 +22,14 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
       group_category: category,
       fes_year: @year
     )
+    # output_all_groups_info_pdfが代表者情報(user_detail)を参照するため作成する
+    UserDetail.create!(
+      user: @admin,
+      department: Department.create!(name: '情報学部'),
+      grade: Grade.create!(name: '4年'),
+      student_id: '12345678',
+      tel: '0000000000'
+    )
   end
 
   test 'admin can get all groups rental items pdf' do
@@ -50,10 +58,29 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'admin can get all groups info pdf' do
+    get_all_groups_info_pdf(@admin)
+
+    assert_response :success
+    assert_equal 'application/pdf', response.media_type
+  end
+
+  test 'general user cannot get all groups info pdf' do
+    get_all_groups_info_pdf(@general_user)
+
+    assert_response :forbidden
+  end
+
   private
 
   def get_all_groups_rental_items_pdf(user)
     get "/print_pdf/group_all/#{@year.id}/output",
+        params: { format: :pdf },
+        headers: user.create_new_auth_token
+  end
+
+  def get_all_groups_info_pdf(user)
+    get "/print_pdf/all_groups_info/#{@year.id}/output",
         params: { format: :pdf },
         headers: user.create_new_auth_token
   end

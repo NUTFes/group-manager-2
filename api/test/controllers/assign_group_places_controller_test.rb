@@ -63,6 +63,16 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'index is forbidden for non-admin users' do
+    get assign_group_places_url, headers: auth_headers(@restricted_user), as: :json
+    assert_response :forbidden
+  end
+
+  test 'show is forbidden for non-admin users' do
+    get assign_group_place_url(@assign_group_place), headers: auth_headers(@restricted_user), as: :json
+    assert_response :forbidden
+  end
+
   def create_user!(email:, role_id:)
     User.create!(
       name: email.split('@').first,

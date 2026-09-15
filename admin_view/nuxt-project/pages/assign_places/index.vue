@@ -171,15 +171,23 @@ export default {
   },
 
   async asyncData({ $axios }) {
-    const [yearsRes, categoriesRes, placeCategoriesRes] = await Promise.all([
+    const [yearsRes, categoriesRes, placeCategoriesRes, currentYearRes] = await Promise.all([
       $axios.$get("/fes_years").catch(() => ({ data: [] })),
       $axios.$get("/group_categories").catch(() => ({ data: [] })),
-      $axios.$get("/place_categories").catch(() => ({ data: [] }))
+      $axios.$get("/place_categories").catch(() => ({ data: [] })),
+      // 初期表示を現在の開催年度に絞るため、他画面と同様にuser_page_settingsから取得する
+      $axios.$get("/user_page_settings/1").catch(() => ({ data: null })),
     ]);
+    const years = yearsRes.data || [];
+    const currentFesYearId = currentYearRes.data ? currentYearRes.data.fes_year_id : null;
+    const currentYear = years.find(year => Number(year.id) === Number(currentFesYearId));
+
     return {
-      yearList: yearsRes.data || [],
+      yearList: years,
       groupCategoryList: categoriesRes.data || [],
       placeCategoryList: placeCategoriesRes.data || [],
+      refYearID: currentYear ? Number(currentFesYearId) : 0,
+      refYears: currentYear ? currentYear.year_num : "ALL",
     };
   },
 

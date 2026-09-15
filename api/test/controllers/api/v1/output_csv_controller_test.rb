@@ -148,6 +148,16 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     assert_equal '長机：テント1・2 / パイプ椅子：予備', rows.second[7]
   end
 
+  # 全団体分のメールアドレス・会場・備考を含むため、参加団体ユーザーには公開しない
+  test 'groups csv is forbidden for non-admin users' do
+    Role.find_or_create_by!(id: 3) { |role| role.name = 'user' }
+    restricted_user = create_user!(email: 'restricted-groups-csv@example.com', role_id: 3)
+
+    get "/api/v1/get_groups_csv/#{@fes_year.id}", headers: auth_headers(restricted_user)
+
+    assert_response :forbidden
+  end
+
   # 貸出場所調整で未設定の場合は空欄にする
   test 'rental items list csv leaves rental place blank when it is not assigned' do
     AssignRentalItem.create!(group: @group, rental_item: @rental_item, num: 2,
@@ -178,7 +188,7 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
     FesYear.maximum(:id).to_i + 1000
   end
 
-  def create_user!(email: 'output-csv-user@example.com')
+  def create_user!(email: 'output-csv-user@example.com', role_id: 1)
     User.create!(
       name: email.split('@').first,
       email: email,
@@ -186,7 +196,7 @@ class Api::V1::OutputCsvControllerTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role_id: 1
+      role_id: role_id
     )
   end
 

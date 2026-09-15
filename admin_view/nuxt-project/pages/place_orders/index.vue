@@ -353,20 +353,17 @@ export default {
       });
     },
     async submitPlaceOrder() {
-      const postPlaceOrderUrl =
-        "/place_orders/" +
-        "?group_id=" +
-        this.appGroup +
-        "&first=" +
-        this.firstPlaceOrder +
-        "&second=" +
-        this.secondPlaceOrder +
-        "&third=" +
-        this.thirdPlaceOrder +
-        "&remark=" +
-        this.remark;
+      const data = {
+        place_order: {
+          group_id: this.appGroup,
+          first: this.firstPlaceOrder,
+          second: this.secondPlaceOrder,
+          third: this.thirdPlaceOrder,
+          remark: this.remark,
+        },
+      };
 
-      this.$axios.$post(postPlaceOrderUrl).then((response) => {
+      this.$axios.$post("/place_orders/", data).then((response) => {
         this.openSnackBar("会場の申請を追加しました");
         this.appGroup = "";
         this.firstPlaceOrder = "";
