@@ -88,11 +88,13 @@ export default {
     async edit() {
       const po = this.getPlaceOrder();
       const data = {
-        group_id: String(this.groupId ?? this.$route.params.id),
-        first: String(this.first ?? ""),
-        second: String(this.second ?? ""),
-        third: String(this.third ?? ""),
-        remark: this.remark ?? "",
+        place_order: {
+          group_id: String(this.groupId ?? this.$route.params.id),
+          first: String(this.first ?? ""),
+          second: String(this.second ?? ""),
+          third: String(this.third ?? ""),
+          remark: this.remark ?? "",
+        },
       };
       await saveEditModal({
         emit: this.$emit.bind(this),

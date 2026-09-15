@@ -120,23 +120,27 @@ const editPlace = async () => {
   if (props.id === null) {
     await useFetch(config.APIURL + "/place_orders", {
       method: "POST",
-      params: {
-        group_id: group_id.value,
-        first: newFirst.value,
-        second: newSecond.value,
-        third: newThird.value,
-        remark: newRemark.value,
+      body: {
+        place_order: {
+          group_id: group_id.value,
+          first: newFirst.value,
+          second: newSecond.value,
+          third: newThird.value,
+          remark: newRemark.value,
+        },
       },
     });
   } else {
     await useFetch(config.APIURL + "/place_orders/" + props.id, {
       method: "PUT",
-      params: {
-        group_id: group_id.value,
-        first: newFirst.value,
-        second: newSecond.value,
-        third: newThird.value,
-        remark: newRemark.value,
+      body: {
+        place_order: {
+          group_id: group_id.value,
+          first: newFirst.value,
+          second: newSecond.value,
+          third: newThird.value,
+          remark: newRemark.value,
+        },
       },
     });
   }

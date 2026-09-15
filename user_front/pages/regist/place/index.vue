@@ -91,12 +91,14 @@ const registerPlace = async () => {
 
   await $fetch<Place>(config.APIURL + "/place_orders", {
     method: "POST",
-    params: {
-      group_id: registerParams.groupId,
-      first: registerParams.first,
-      second: registerParams.second,
-      third: registerParams.third,
-      remark: registerParams.remark,
+    body: {
+      place_order: {
+        group_id: registerParams.groupId,
+        first: registerParams.first,
+        second: registerParams.second,
+        third: registerParams.third,
+        remark: registerParams.remark,
+      },
     },
     headers: {
       "Content-Type": "application/json",
