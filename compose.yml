@@ -35,6 +35,9 @@ services:
     env_file: [webhook.env, ./api/.env]
     environment:
       - TZ=Asia/Tokyo
+      # rental/ のBFFからの呼び出しを認証するトークン。rentalサービスと同じ値にする。
+      # 本番・stagingの値は settings リポジトリの .env で管理する。
+      - RENTAL_API_TOKEN=${RENTAL_API_TOKEN:-local-dev-rental-token}
       - APP_ENV=development
     depends_on: [db]
 
@@ -80,6 +83,8 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3000
       - SSR_API_URL=http://api:3000
+      # API側と同じ値を渡す（api サービスの RENTAL_API_TOKEN と一致させる）
+      - RENTAL_API_TOKEN=${RENTAL_API_TOKEN:-local-dev-rental-token}
     volumes:
       - ./rental:/app
       - rental-node-modules:/app/node_modules
