@@ -972,6 +972,13 @@ class Group < ApplicationRecord
     return group_identification.nil? || group_identification.place_number.nil? ? nil : group_identification.place_number.place.name
   end
 
+  # 会場割り当て画面（assign_places）で割り当てられた会場名。複数割り当てられている場合は「、」区切り
+  def assigned_venue_names(locale: :ja)
+    return '' if place_order.nil?
+
+    place_order.assign_group_places.map { |assign_group_place| assign_group_place.stocker_place.display_name(locale: locale) }.join('、')
+  end
+
   # 識別番号取得
   def number
     return group_identification&.number

@@ -183,20 +183,17 @@ export default {
   },
   methods: {
     edit() {
-      const url =
-        "/place_orders/" +
-        this.routeId +
-        "?group_id=" +
-        this.placeOrder.group.id +
-        "&first=" +
-        this.firstPlaceOrder +
-        "&second=" +
-        this.secondPlaceOrder +
-        "&third=" +
-        this.thirdPlaceOrder +
-        "&remark=" +
-        this.remark;
-      this.$axios.$put(url).then((response) => {
+      const url = "/place_orders/" + this.routeId;
+      const data = {
+        place_order: {
+          group_id: this.placeOrder.group.id,
+          first: this.firstPlaceOrder,
+          second: this.secondPlaceOrder,
+          third: this.thirdPlaceOrder,
+          remark: this.remark,
+        },
+      };
+      this.$axios.$put(url, data).then((response) => {
         this.openSnackBar("申請情報を編集しました");
         this.reload(response.data.id);
         this.closeEditModal();
