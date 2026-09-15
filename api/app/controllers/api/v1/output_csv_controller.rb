@@ -6,17 +6,18 @@ class Api::V1::OutputCsvController < ApplicationController
   include ApplicationHelper
 
   def output_groups_csv
+    groups_scope = Group.includes(place_order: { assign_group_places: :stocker_place })
     if params[:fes_year_id].to_i == 0
       # 全件選択
-      @groups = Group.all
+      @groups = groups_scope
       filename_year = '全'
     else
-      @groups = Group.where(fes_year_id: params[:fes_year_id])
+      @groups = groups_scope.where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id])&.year_num || params[:fes_year_id].to_s
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom.dup) do |csv|
-      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年]
+      column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 会場 開催年]
       csv << column_name
       @groups.each do |group|
         # データが存在しない場合はスキップする
@@ -29,6 +30,7 @@ class Api::V1::OutputCsvController < ApplicationController
           group.user.name,
           group.user.email,
           group.group_category.name,
+          group.assigned_venue_names,
           group.fes_year.year_num
         ]
         csv << column_values
@@ -38,7 +40,8 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_assign_rental_items_csv
-    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place, group: :group_category)
+    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place,
+                                                          group: [:group_category, { place_order: { assign_group_places: :stocker_place } }])
 
     if params[:fes_year_id].to_i == 0
       # 全件選択
@@ -64,7 +67,7 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.group.number,
           assign_rental_item.group.name,
           assign_rental_item.group.group_category.name,
-          assign_rental_item.group.place,
+          assign_rental_item.group.assigned_venue_names,
           assign_rental_item.group.sum_power_orders,
           assign_rental_item.rental_item.name,
           assign_rental_item.stock_place_name,

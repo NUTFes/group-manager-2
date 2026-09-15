@@ -16,6 +16,10 @@
     <th>カテゴリ</th>
     <td><%= @group.group_category.name %>
   </tr>
+  <tr>
+    <th>会場</th>
+    <td><%= @group.assigned_venue_names %>
+  </tr>
 </table>
 
 <p>代表者情報</p>
@@ -111,14 +115,6 @@
 </table>
 
 <% if @group.group_category_id == 1 %>
-<p>会場情報</p>
-<table>
-  <tr>
-    <th>会場</th>
-    <td><%= @group.place %></td>
-  </tr>
-</table>
-
 <p>販売品</p>
 <table>
   <tr>
@@ -169,13 +165,5 @@
   </tr>
   <% end %>
   <% end %>
-</table>
-<% elsif @group.group_category_id == 3 %>
-<% else %>
-<table>
-  <tr>
-    <th>会場</th>
-    <td><%= @group.place %></td>
-  </tr>
 </table>
 <% end %>

@@ -34,7 +34,7 @@
       </tr>
       <tr>
         <th><%= t('print_pdf.output_all_groups_rental_items.org.location') %></th>
-        <td colspan=2><%= group.place %></td>
+        <td colspan=2><%= group.assigned_venue_names(locale: @pdf_locale) %></td>
       </tr>
       <tr>
         <th><%= t('print_pdf.output_all_groups_rental_items.org.power') %></th>

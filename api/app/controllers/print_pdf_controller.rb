@@ -10,7 +10,8 @@ class PrintPdfController < ApplicationController
     :power_orders,
     { fes_year: :fes_dates },
     { group_identification: { place_number: :place } },
-    { assign_rental_items: %i[rental_item stocker_place rental_place] }
+    { assign_rental_items: %i[rental_item stocker_place rental_place] },
+    { place_order: { assign_group_places: :stocker_place } }
   ].freeze
 
   before_action :authenticate_api_user!
@@ -41,6 +42,7 @@ class PrintPdfController < ApplicationController
   # 参加団体情報リストをまとめて出力
   def output_all_groups_info_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id])
+                   .includes(place_order: { assign_group_places: :stocker_place })
     print_pdf('output_all_groups_info', 'output_rental_items_pdf', '参加団体情報リストまとめ', 'Not Landscape')
   end
 
