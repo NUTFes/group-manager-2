@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PlaceOrdersController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_place_order, only: %i[show update destroy]
   before_action :set_place_order_by_group_id, only: [:get_by_group_id]
 

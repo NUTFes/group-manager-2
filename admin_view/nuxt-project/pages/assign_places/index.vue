@@ -27,6 +27,10 @@
       <p>読み込み中...</p>
     </div>
 
+    <div v-else-if="loadError" class="loading-area">
+      <p>関係データを取得できませんでした。再読み込みしてください。</p>
+    </div>
+
     <main v-else class="main-layout">
       <!-- 左側：申請団体リスト -->
       <aside class="order-group">
@@ -141,6 +145,7 @@ export default {
   data() {
     return {
       isLoading: true,
+      loadError: false,
       isDeleteModalOpen: false,
       targetDeleteAssignId: null, // 削除用のID (assign_group_place.id)
       
@@ -233,13 +238,14 @@ export default {
   methods: {
     async fetchDataFromDB() {
       this.isLoading = true;
+      this.loadError = false;
       try {
         const [groupsRes, placesRes, powerRes, assignRes, placeOrdersRes, areaRes] = await Promise.all([
           this.$axios.$get('/groups').catch(() => ({ data: [] })),
           this.$axios.$get('/stocker_places').catch(() => ({ data: [] })),
           this.$axios.$get('/power_orders').catch(() => ({ data: [] })),
-          this.$axios.$get('/assign_group_places').catch(() => ({ data: [] })),
-          this.$axios.$get('/place_orders').catch(() => ({ data: [] })), // 会場申請取得用
+          this.$axios.$get('/assign_group_places'),
+          this.$axios.$get('/place_orders'), // 会場申請取得用
           this.$axios.$get('/places').catch(() => ({ data: [] })) // 希望エリア判定用
         ]);
 
@@ -251,6 +257,7 @@ export default {
         this.placeOptions = Array.isArray(areaRes) ? areaRes : areaRes.data || [];
       } catch (error) {
         console.error("データの取得に失敗しました", error);
+        this.loadError = true;
       } finally {
         this.isLoading = false;
       }
@@ -294,7 +301,11 @@ export default {
       const assigns = this.assignmentsByPlaceId.get(Number(placeId)) || [];
       const placeOrderIds = assigns.map(a => Number(a.place_order_id));
       const groupIds = placeOrderIds.map(poId => this.getGroupIdByPlaceOrderId(poId)).filter(id => id !== null);
-      return this.groups.filter(g => groupIds.includes(Number(g.id)));
+      return this.groups.filter(g => {
+        if (!groupIds.includes(Number(g.id))) return false;
+        if (this.refYearID !== 0 && Number(g.fes_year_id) !== this.refYearID) return false;
+        return true;
+      });
     },
     getGroupAssignedPlaces(groupId) {
       const placeOrderId = this.getPlaceOrderIdByGroupId(groupId);
