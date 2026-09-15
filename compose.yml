@@ -69,6 +69,9 @@ services:
       - "8003:3000"
     command: pnpm run dev
     volumes: [./user:/app]
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - SSR_API_URL=http://api:3000
     depends_on: [api]
 
   rental:
