@@ -7,20 +7,16 @@ const { i18n } = require('./next-i18next.config');
 
 const apiConfig: {
   [key: string]: {
-    SSR_API_URL: string;
     NEXT_PUBLIC_API_URL: string;
   };
 } = {
   development: {
-    SSR_API_URL: 'http://api:3000',
     NEXT_PUBLIC_API_URL: 'http://localhost:3000',
   },
   staging: {
-    SSR_API_URL: 'https://stg-group-manager-api.nutfes.net',
     NEXT_PUBLIC_API_URL: 'https://stg-group-manager-api.nutfes.net',
   },
   production: {
-    SSR_API_URL: 'https://group-manager-api.nutfes.net',
     NEXT_PUBLIC_API_URL: 'https://group-manager-api.nutfes.net',
   },
 };
@@ -28,7 +24,6 @@ const apiConfig: {
 const APP_ENV = process.env.APP_ENV || 'development';
 
 const configuredApi = apiConfig[APP_ENV] || apiConfig.development;
-const SSR_API_URL = process.env.SSR_API_URL ?? configuredApi.SSR_API_URL;
 const NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? configuredApi.NEXT_PUBLIC_API_URL;
 
@@ -45,7 +40,6 @@ const nextConfig: NextConfig = {
   },
 
   env: {
-    SSR_API_URL,
     NEXT_PUBLIC_API_URL,
   },
   i18n,
