@@ -18,6 +18,8 @@ type QrScannerProps = {
   active?: boolean;
 };
 
+type Status = "starting" | "scanning" | "denied";
+
 const DETECT_INTERVAL_MS = 400;
 
 function getDetectorConstructor(): BarcodeDetectorConstructor | null {
@@ -27,29 +29,28 @@ function getDetectorConstructor(): BarcodeDetectorConstructor | null {
   return candidate ?? null;
 }
 
-// 対応状況はブラウザ由来の値なので、サーバー描画との差を出さないために
+// カメラが使えるかはブラウザ由来の値なので、サーバー描画との差を出さないために
 // useSyncExternalStore で読む（初回は false → ハイドレーション後に確定）
 const subscribeNothing = () => () => {};
-const isSupportedOnClient = () =>
-  Boolean(getDetectorConstructor() && navigator.mediaDevices?.getUserMedia);
-const isSupportedOnServer = () => false;
+const hasCameraOnClient = () => Boolean(navigator.mediaDevices?.getUserMedia);
+const hasCameraOnServer = () => false;
 
 /**
- * カメラでQRを読む。BarcodeDetector があるブラウザ（Android Chrome など）で動作する。
- * 非対応のブラウザ（iOS Safari は未対応）では手動選択に誘導する。
- * 追加ライブラリを入れずに済ませ、PoCの依存を増やさない判断。
+ * カメラでQRを読む。
+ *
+ * BarcodeDetector があるブラウザ（Android Chrome など）はそれを使い、
+ * 無い場合（iOS Safari）は qr-scanner（jsQR をWorkerで動かすライブラリ）に
+ * フォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
  */
 const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const onScanRef = useRef(onScan);
-  const [status, setStatus] = useState<"starting" | "scanning" | "denied">(
-    "starting"
-  );
+  const [status, setStatus] = useState<Status>("starting");
 
-  const isSupported = useSyncExternalStore(
+  const hasCamera = useSyncExternalStore(
     subscribeNothing,
-    isSupportedOnClient,
-    isSupportedOnServer
+    hasCameraOnClient,
+    hasCameraOnServer
   );
 
   // onScan の参照が変わってもカメラを開き直さないよう、refに逃がす
@@ -58,18 +59,16 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
   }, [onScan]);
 
   useEffect(() => {
-    if (!active || !isSupported) return;
+    if (!active || !hasCamera) return;
 
     let stopped = false;
     let stream: MediaStream | null = null;
     let timer: number | null = null;
-    // cleanup時に参照が変わっている可能性があるため、この時点の要素を掴んでおく
+    let fallbackScanner: { destroy: () => void } | null = null;
     const videoElement = videoRef.current;
 
-    const start = async () => {
-      const Detector = getDetectorConstructor();
-      if (!Detector) return;
-
+    // BarcodeDetector が使える場合はブラウザ内蔵の実装を使う
+    const startWithDetector = async (Detector: BarcodeDetectorConstructor) => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           // 背面カメラを優先する
@@ -80,21 +79,20 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
         return;
       }
 
-      const video = videoElement;
-      if (stopped || !video) {
+      if (stopped || !videoElement) {
         stream?.getTracks().forEach((track) => track.stop());
         return;
       }
 
-      video.srcObject = stream;
-      await video.play().catch(() => {});
+      videoElement.srcObject = stream;
+      await videoElement.play().catch(() => {});
       if (stopped) return;
       setStatus("scanning");
 
       const detector = new Detector({ formats: ["qr_code"] });
       timer = window.setInterval(async () => {
         try {
-          const results = await detector.detect(video);
+          const results = await detector.detect(videoElement);
           const value = results[0]?.rawValue;
           if (value) onScanRef.current(value);
         } catch {
@@ -103,15 +101,55 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
       }, DETECT_INTERVAL_MS);
     };
 
+    // iOS Safari など BarcodeDetector が無い環境用。ライブラリ側が
+    // getUserMedia と描画まで面倒を見るため、video要素を渡すだけで済む
+    const startWithFallback = async () => {
+      if (!videoElement) return;
+
+      const { default: LibQrScanner } = await import("qr-scanner");
+      if (stopped) return;
+
+      const scanner = new LibQrScanner(
+        videoElement,
+        (result) => onScanRef.current(result.data),
+        {
+          returnDetailedScanResult: true,
+          preferredCamera: "environment",
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+          maxScansPerSecond: 3,
+        }
+      );
+      fallbackScanner = scanner;
+
+      try {
+        await scanner.start();
+        if (stopped) return;
+        setStatus("scanning");
+      } catch {
+        if (!stopped) setStatus("denied");
+      }
+    };
+
+    const start = async () => {
+      const Detector = getDetectorConstructor();
+      if (Detector) {
+        await startWithDetector(Detector);
+        return;
+      }
+      await startWithFallback();
+    };
+
     void start();
 
     return () => {
       stopped = true;
       if (timer !== null) window.clearInterval(timer);
+      fallbackScanner?.destroy();
       stream?.getTracks().forEach((track) => track.stop());
       if (videoElement) videoElement.srcObject = null;
     };
-  }, [active, isSupported]);
+  }, [active, hasCamera]);
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -122,11 +160,11 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
           playsInline
           className="size-full object-cover"
         />
-        {(!isSupported || status !== "scanning") && (
+        {(!hasCamera || status !== "scanning") && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
-            {!isSupported ? (
+            {!hasCamera ? (
               <span className="text-caption text-sub">
-                このブラウザはQR読み取りに対応していません。下の「手動で参加団体を選択」をお使いください。
+                このブラウザではカメラを使えません。下の「手動で参加団体を選択」をお使いください。
               </span>
             ) : status === "denied" ? (
               <span className="text-caption text-alert">
@@ -140,7 +178,7 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
           </div>
         )}
       </div>
-      {isSupported && status === "scanning" && (
+      {hasCamera && status === "scanning" && (
         <p className="text-caption text-sub">
           団体のQRコードを枠内に写してください
         </p>

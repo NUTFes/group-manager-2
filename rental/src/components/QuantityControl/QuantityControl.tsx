@@ -15,11 +15,12 @@ const clamp = (value: number, max: number) =>
   Math.min(max, Math.max(0, Math.trunc(value)));
 
 /**
- * 数量の入力。数値を直接入力でき、＋－で微調整もできる。
+ * 数量の入力。0〜残数のプルダウンで選び、＋－で微調整もできる。
  *
  * Figma のカードは `13/13 ⇅` の上下ボタンのみだが、13個渡すのに13回タップする
- * ことになり当日の運用に耐えないため、Figma の「数量入力フィールド」
- * （node-id=5360-2600）と同じ直接入力を取り入れ、＋－はタップ領域44pxにした。
+ * ことになり当日の運用に耐えない。プルダウンにするとスマホでは OS のピッカーが
+ * 出るため、数字キーボードを開かずに一度で選べる。＋－はタップ領域44pxで、
+ * ±1の微調整をピッカーを開かずに行うために残している。
  */
 const QuantityControl: FC<QuantityControlProps> = ({
   value,
@@ -27,10 +28,8 @@ const QuantityControl: FC<QuantityControlProps> = ({
   onChange,
   disabled = false,
 }) => {
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    const next = Number(event.target.value);
-    onChange(Number.isFinite(next) ? clamp(next, max) : 0);
-  };
+  const handleSelect = (event: ChangeEvent<HTMLSelectElement>) =>
+    onChange(clamp(Number(event.target.value), max));
 
   return (
     <div className="flex items-center gap-1">
@@ -43,17 +42,19 @@ const QuantityControl: FC<QuantityControlProps> = ({
       >
         −
       </button>
-      <input
-        type="number"
-        inputMode="numeric"
-        min={0}
-        max={max}
+      <select
         value={value}
-        onChange={handleInput}
+        onChange={handleSelect}
         disabled={disabled}
         aria-label="今回の数量"
-        className="tabular h-11 w-14 rounded-lg border border-main bg-white text-center text-body font-bold text-font disabled:border-sub disabled:bg-transparent disabled:text-sub"
-      />
+        className="tabular h-11 rounded-lg border border-main bg-white px-2 text-center text-body font-bold text-font disabled:border-sub disabled:bg-transparent disabled:text-sub"
+      >
+        {Array.from({ length: max + 1 }, (_, index) => (
+          <option key={index} value={index}>
+            {index}
+          </option>
+        ))}
+      </select>
       <span className="tabular shrink-0 text-body text-font">/{max}</span>
       <button
         type="button"
