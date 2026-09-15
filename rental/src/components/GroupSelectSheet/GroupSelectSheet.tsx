@@ -9,21 +9,17 @@ type GroupSelectSheetProps = {
   open: boolean;
   groups: RentalGroup[];
   isLoading?: boolean;
-  // 選択中の団体。登録画面から開いたときに現在の団体を示す
-  currentGroupId?: number | null;
   onClose: () => void;
   onSelect: (group: RentalGroup) => void;
 };
 
 // Figma: 参加団体選択モーダル (node-id=5101-6756)
 //
-// 団体選択ページと登録画面の「団体変更」で同じものを使う。登録画面では
-// 画面遷移せずにこのシートで切り替えられるようにしている。
+// 参加団体選択ページで、QRが読めないときの手動選択に使う。
 const GroupSelectSheet: FC<GroupSelectSheetProps> = ({
   open,
   groups,
   isLoading = false,
-  currentGroupId,
   onClose,
   onSelect,
 }) => {
@@ -57,31 +53,22 @@ const GroupSelectSheet: FC<GroupSelectSheetProps> = ({
       )}
 
       <ul className="divide-y divide-line">
-        {filtered.map((group) => {
-          const isCurrent = group.id === currentGroupId;
-
-          return (
-            <li key={group.id}>
-              <button
-                type="button"
-                onClick={() => onSelect(group)}
-                className="flex w-full items-center justify-between gap-3 py-4 text-left"
-              >
-                <span
-                  className={`min-w-0 truncate text-body font-bold ${isCurrent ? "text-main" : "text-font"}`}
-                >
-                  {group.name}
-                  {isCurrent && (
-                    <span className="ml-2 text-caption text-main">選択中</span>
-                  )}
-                </span>
-                <span aria-hidden className="shrink-0 text-main">
-                  ›
-                </span>
-              </button>
-            </li>
-          );
-        })}
+        {filtered.map((group) => (
+          <li key={group.id}>
+            <button
+              type="button"
+              onClick={() => onSelect(group)}
+              className="flex w-full items-center justify-between gap-3 py-4 text-left"
+            >
+              <span className="min-w-0 truncate text-body font-bold text-font">
+                {group.name}
+              </span>
+              <span aria-hidden className="shrink-0 text-main">
+                ›
+              </span>
+            </button>
+          </li>
+        ))}
       </ul>
     </BottomSheetModal>
   );

@@ -5,6 +5,8 @@ import type { FC } from "react";
 import BottomSheetModal from "@/components/BottomSheetModal";
 import Button from "@/components/Button";
 import Selector from "@/components/Selector";
+import { useAssignments } from "@/hooks/useRentalApi";
+import { summarize } from "@/lib/aggregate";
 import type { AssignRentalItem, RentalGroup } from "@/types/rental";
 
 export type ExcessLendingInput = {
@@ -29,6 +31,9 @@ type ExcessLendingSheetProps = {
 //
 // 在庫予定を超えて渡すとき、どの団体の割当から回すかを指定する。
 // 送信すると渡す団体に addition、元の団体に reduction を対で記録する。
+//
+// 数量の上限は元の団体の**未貸出数**（実効割当数 − 貸出済数）。既に渡した分は
+// 手元に無いので動かせない。12個予定で3個渡した団体からは9個までしか回せない。
 const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
   open,
   assignments,
@@ -74,16 +79,58 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
     .filter((group) => group.id !== currentGroupId)
     .map((group) => ({ value: String(group.id), label: group.name }));
 
+  // 元の団体の未貸出数を出すため、その団体の割当と記録を取る。
+  // 貸出場所では絞らない（同じ物品が別の場所に割り当てられていることがある）
+  const { data: fromGroupData, isLoading: isFromGroupLoading } = useAssignments(
+    null,
+    fromGroupId === "" ? null : Number(fromGroupId)
+  );
+
+  // 未貸出数 = Σ（実効割当数 − 貸出済数）。物品と在庫場所が一致する割当だけを見る
+  const available = useMemo(() => {
+    if (!fromGroupData || itemId === "" || placeId === "") return null;
+
+    const matched = fromGroupData.assignRentalItems.filter(
+      (assignment) =>
+        assignment.rentalItemId === Number(itemId) &&
+        assignment.stockerPlaceId === Number(placeId)
+    );
+
+    return matched.reduce(
+      (sum, assignment) =>
+        sum +
+        summarize(assignment, fromGroupData.assignmentChangeLogs, "rental")
+          .lentRemaining,
+      0
+    );
+  }, [fromGroupData, itemId, placeId]);
+
   const parsedQuantity = quantity === "" ? null : Number(quantity);
   const isQuantityInvalid =
     parsedQuantity !== null &&
-    (!Number.isInteger(parsedQuantity) || parsedQuantity <= 0);
+    (!Number.isInteger(parsedQuantity) ||
+      parsedQuantity <= 0 ||
+      (available !== null && parsedQuantity > available));
   const canSubmit =
     itemId !== "" &&
     placeId !== "" &&
     fromGroupId !== "" &&
+    available !== null &&
+    available > 0 &&
     parsedQuantity !== null &&
     !isQuantityInvalid;
+
+  // 上限の根拠が分かるようにメッセージを出し分ける
+  const quantityHint = (() => {
+    if (fromGroupId === "") return "※ 先に元の貸出先団体を選んでください";
+    if (itemId === "" || placeId === "")
+      return "※ 先に物品と在庫場所を選んでください";
+    if (isFromGroupLoading) return "元の団体の未貸出数を確認しています...";
+    if (available === null) return "※ 元の団体の未貸出数を取得できませんでした";
+    if (available === 0)
+      return "※ この団体にはこの物品の未貸出分が残っていません。別の団体を選んでください";
+    return `※ 1〜${available}（元の団体の未貸出数）の範囲で入力してください`;
+  })();
 
   const handleSubmit = async () => {
     if (!canSubmit || parsedQuantity === null) return;
@@ -137,28 +184,41 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
         <Selector
           label="元の貸出先団体"
           value={fromGroupId}
-          onChange={setFromGroupId}
+          onChange={(value) => {
+            setFromGroupId(value);
+            // 団体が変われば上限も変わるため入れ直してもらう
+            setQuantity("");
+          }}
           placeholder="選択してください"
           options={groupOptions}
         />
 
         <div className="flex flex-col gap-1">
-          <span className="text-body font-bold text-font">その数量</span>
+          <div className="flex items-end justify-between gap-2">
+            <span className="text-body font-bold text-font">その数量</span>
+            {available !== null && (
+              <span className="tabular text-caption text-sub">
+                元の団体の未貸出数: {available}
+              </span>
+            )}
+          </div>
           <input
             type="number"
             inputMode="numeric"
             min={1}
+            max={available ?? undefined}
             value={quantity}
             onChange={(event) => setQuantity(event.target.value)}
+            disabled={available === null || available === 0}
             aria-label="その数量"
-            className={`h-11 w-full rounded-lg border bg-white px-3 text-body text-font ${
+            className={`h-11 w-full rounded-lg border bg-white px-3 text-body text-font disabled:border-sub disabled:bg-transparent ${
               isQuantityInvalid ? "border-alert" : "border-main"
             }`}
           />
           <p
             className={`text-caption ${isQuantityInvalid ? "text-alert" : "text-sub"}`}
           >
-            ※ 1以上の数を入力してください
+            {quantityHint}
           </p>
         </div>
 
