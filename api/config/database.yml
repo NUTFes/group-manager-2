@@ -55,5 +55,5 @@ production:
   database: <%= ENV.fetch("NUTMEG_MYSQL_DBNAME", "myapp_production") %>
   username: <%= ENV.fetch("NUTMEG_MYSQL_USERNAME", "username") %>
   password: <%= ENV.fetch("NUTMEG_MYSQL_PASSWORD", "password") %>
-  socket:   /var/run/mysqld/mysqld.sock # sudo apt install mysql-client
+  port:     <%= ENV.fetch("NUTMEG_MYSQL_PORT", "3306") %>
   host:     <%= ENV.fetch("NUTMEG_MYSQL_HOST", "db") %>
