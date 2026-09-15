@@ -45,8 +45,10 @@ COPY --from=builder --chown=65532:65532 /app/.next/static /app/.next/static
 COPY --from=builder --chown=65532:65532 /app/public /app/public
 
 ARG PORT=3000
+ARG SSR_API_URL
 ENV HOSTNAME=0.0.0.0
 ENV PORT=${PORT}
+ENV SSR_API_URL=${SSR_API_URL}
 EXPOSE ${PORT}
 
 ENTRYPOINT [ "/nodejs/bin/node", "server.js" ]
