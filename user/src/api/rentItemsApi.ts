@@ -1,7 +1,8 @@
 // src/api/rentItemsApi.ts
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -139,12 +140,17 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
 // 物品申請の操作用フック
 export const useMutateRentalOrders = () => {
   const { remove } = useApiMutations();
+  const { data: session, status } = useSession();
   // 物品申請データを送信
   const submitRentalOrders = async (
     items: Array<{ group_id: number; rental_item_id: number; num: number }>,
     existingItems: RentalOrder[] = []
   ) => {
     try {
+      if (status !== 'authenticated' || !session) {
+        throw new Error('User is not authenticated');
+      }
+
       const promises = [];
 
       // 既存データと新データの長さを比較
@@ -153,8 +159,8 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          legacyPatchFetcher(
-            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+          authenticatedPatchFetcher(
+            [`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`, session],
             {
               arg: { body: items[i] },
             }
@@ -166,7 +172,7 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            legacyPostFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+            authenticatedPostFetcher([API_ENDPOINTS.RENTAL_ORDERS, session], {
               arg: { body: items[i] },
             })
           );

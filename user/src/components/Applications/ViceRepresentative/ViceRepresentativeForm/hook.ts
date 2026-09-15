@@ -98,7 +98,7 @@ export const useViceRepresentativeFormHook = (
             await registerUnregisteredGroup(data.groupId);
           }
           // 副代表の削除処理を実行と未登録データのキャッシュ更新
-          await deleteViceRep();
+          await deleteViceRep({});
           await mutateUnregisteredGroup();
         } else {
           // 二人以上の場合
