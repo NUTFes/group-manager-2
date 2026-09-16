@@ -39,6 +39,21 @@ class AssignRentalItem < ApplicationRecord
     end
   end
 
+  # 同じ(団体×物品×在庫場所)の実効割当数の合計。割当が複数あっても実態と食い違わないよう、
+  # unlent_quantity_for と同じく合算する（割当変更ログは共通なので1回だけ引く）。
+  def self.effective_num_for(group_id:, rental_item_id:, stocker_place_id:)
+    assignments = where(group_id: group_id, rental_item_id: rental_item_id,
+                        stocker_place_id: stocker_place_id).to_a
+    return 0 if assignments.empty?
+
+    change_logs = ItemRentalLog.where(
+      group_id: group_id, rental_item_id: rental_item_id, stocker_place_id: stocker_place_id,
+      assign_rental_item_id: nil, category: ItemRentalLog::ASSIGNMENT_CHANGE_CATEGORIES
+    ).to_a
+
+    assignments.sum { |assignment| assignment.effective_num(change_logs: change_logs) }
+  end
+
   # 団体間の割当変更（addition / reduction）。assign_rental_item に紐づかないので
   # 団体・物品・在庫場所の3つで突き合わせる。
   def assignment_change_logs

@@ -24,8 +24,14 @@ import type { ApiError } from "@/lib/apiClient";
 
 type DraftState = Record<number, { quantity: number; memo: string }>;
 
-/** 実際に送った内容。再送で同じ uid に別の内容を送らないよう控えておく */
-type SentPayloads = Record<number, { quantity: number; memo: string | null }>;
+/**
+ * 実際に送った内容と、そのときの冪等キー。
+ * 中身を変えずに送り直すときは同じ uid を使い、編集されたら取り直す。
+ */
+type SentPayloads = Record<
+  number,
+  { uid: string; quantity: number; memo: string | null }
+>;
 
 type SubmitState =
   | { phase: "idle" }
@@ -86,6 +92,8 @@ function RegisterContent() {
   // 送信のたびに作り直す冪等キー。再送では同じキーを使う
   const [uidSeed, setUidSeed] = useState(() => crypto.randomUUID());
   const [sentPayloads, setSentPayloads] = useState<SentPayloads>({});
+  // 編集後の送り直しで uid を変えるための連番
+  const [nextAttempt, setNextAttempt] = useState(0);
   const [isCorrectionOpen, setIsCorrectionOpen] = useState(false);
   const [isExceptionOpen, setIsExceptionOpen] = useState(false);
   const [isExcessOpen, setIsExcessOpen] = useState(false);
@@ -182,19 +190,33 @@ function RegisterContent() {
     const ids = retrying ? submitState.failedIds : submittableIds;
     if (ids.length === 0) return;
 
-    // 再送は1回目と同じ内容で送る。mutate 後に残数が減って数量が丸められると、
-    // 同じ uid で別の内容になり API が 409 を返して抜け出せなくなるため
-    const payloads = retrying
-      ? sentPayloads
-      : Object.fromEntries(
-          ids.map((assignmentId) => [
-            assignmentId,
-            {
-              quantity: effectiveDrafts[assignmentId]?.quantity ?? 0,
-              memo: effectiveDrafts[assignmentId]?.memo?.trim() || null,
-            },
-          ])
-        );
+    // 送る内容と冪等キーを組み立てる。
+    //
+    // 中身を変えずに送り直すとき（通信エラーの再送）は1回目と同じ uid を使う。
+    // そうしないと、mutate 後に残数が減って数量が丸められた場合に同じ uid で
+    // 別の内容になり、API が 409 を返して抜け出せなくなる。
+    // 逆にカードを編集したときは「別の操作」なので uid を取り直す。そうしないと
+    // 編集が反映されないまま同じ内容を送り続けることになる。
+    const payloads: SentPayloads = Object.fromEntries(
+      ids.map((assignmentId) => {
+        const current = {
+          quantity: effectiveDrafts[assignmentId]?.quantity ?? 0,
+          memo: effectiveDrafts[assignmentId]?.memo?.trim() || null,
+        };
+        const sent = retrying ? sentPayloads[assignmentId] : undefined;
+        const unchanged =
+          sent &&
+          sent.quantity === current.quantity &&
+          sent.memo === current.memo;
+
+        return [
+          assignmentId,
+          unchanged
+            ? sent
+            : { ...current, uid: `${uidSeed}-${assignmentId}-${nextAttempt}` },
+        ];
+      })
+    );
 
     setSentPayloads(payloads);
     setSubmitState({ phase: "sending" });
@@ -202,44 +224,48 @@ function RegisterContent() {
     const results = await Promise.allSettled(
       ids.map((assignmentId) =>
         createItemRentalLog({
-          // 同じ送信では同じ uid を使い、再送でも重複記録にならないようにする
-          uid: `${uidSeed}-${assignmentId}`,
+          uid: payloads[assignmentId].uid,
           assignRentalItemId: assignmentId,
           category,
-          quantity: payloads[assignmentId]?.quantity ?? 0,
-          memo: payloads[assignmentId]?.memo ?? null,
+          quantity: payloads[assignmentId].quantity,
+          memo: payloads[assignmentId].memo,
         }).then(() => assignmentId)
       )
     );
 
-    // 409 は「同じ uid が別の内容で既にある」= サーバー側には記録済みなので、
-    // 未送信として数えない（数えると同じ内容を送り続けて永久に失敗する）
-    const failedIds = ids.filter((_, index) => {
-      const result = results[index];
-      if (result.status !== "rejected") return false;
-      return (result.reason as ApiError)?.status !== 409;
-    });
+    const failedIds = ids.filter(
+      (_, index) => results[index].status === "rejected"
+    );
 
     await mutate();
 
     if (failedIds.length > 0) {
+      // 編集すれば uid を取り直して送り直せるよう、次の試行に備えて番号を進める
+      setNextAttempt((attempt) => attempt + 1);
       const firstError = results.find(
         (result, index) =>
           result.status === "rejected" && failedIds.includes(ids[index])
       );
+      const reason =
+        firstError && firstError.status === "rejected"
+          ? (firstError.reason as ApiError)
+          : null;
       setSubmitState({
         phase: "error",
         failedIds,
+        // 409 は「同じ操作が別の内容で記録済み」。同じ内容を送り直しても解けないので、
+        // 最新の状況を見て入れ直してもらう
         message:
-          firstError && firstError.status === "rejected"
-            ? String((firstError.reason as Error).message)
-            : "送信に失敗しました",
+          reason?.status === 409
+            ? "同じ操作が別の内容で記録済みです。最新の残数を確認して数量を入れ直してください"
+            : (reason?.message ?? "送信に失敗しました"),
       });
       return;
     }
 
     setDrafts({});
     setSentPayloads({});
+    setNextAttempt(0);
     setUidSeed(crypto.randomUUID());
     setSubmitState({ phase: "idle" });
     // 送信できたことが次の画面でも分かるよう、団体名を添えて戻る。

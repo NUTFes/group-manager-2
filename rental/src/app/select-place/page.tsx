@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -60,8 +61,16 @@ export default function SelectPlacePage() {
       <Header />
       <main className="flex flex-1 flex-col items-center gap-8 px-6 py-12">
         <div className="flex items-center gap-4">
-          <span className="flex size-16 items-center justify-center rounded border border-line text-caption text-sub">
-            logo
+          {/* 白抜きを含むシンボルマークなので、ヘッダーと同じく主色の地に乗せる */}
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-main p-2">
+            <Image
+              src="/symbol-mark.svg"
+              alt=""
+              width={132}
+              height={120}
+              unoptimized
+              className="size-full object-contain"
+            />
           </span>
           <h1 className="text-h1 text-font">GM Rental</h1>
         </div>

@@ -51,7 +51,8 @@ class ItemRentalLog < ApplicationRecord
     limit = quantity_limit
     return if limit.nil? || quantity <= limit
 
-    errors.add(:quantity, "は#{limit}以下にしてください（#{quantity_limit_label}）")
+    # full_messages が属性名を前置しない :base に載せ、当日そのまま読める文にする
+    errors.add(:base, "#{quantity_limit_label}（#{limit}）を超えています。最新の状況を確認してください")
   end
 
   def quantity_limit

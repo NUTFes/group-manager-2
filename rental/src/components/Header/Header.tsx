@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 export type WorkMode = "rental" | "return";
@@ -24,9 +25,17 @@ const Header: FC<HeaderProps> = ({ mode, placeName, onProgressClick }) => (
       <Link
         href="/select-place"
         aria-label="取扱区分・作業場所の選択へ戻る"
-        className="flex size-12 shrink-0 items-center justify-center rounded bg-white text-caption font-bold text-main active:opacity-80"
+        className="flex size-12 shrink-0 items-center justify-center active:opacity-80"
       >
-        logo
+        {/* admin_view と同じシンボルマーク。白抜きの部分が主色の地に乗る想定 */}
+        <Image
+          src="/symbol-mark.svg"
+          alt=""
+          width={132}
+          height={120}
+          unoptimized
+          className="size-full object-contain"
+        />
       </Link>
       <div className="flex min-w-0 flex-col gap-1">
         {mode && (

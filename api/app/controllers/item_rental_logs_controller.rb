@@ -99,7 +99,7 @@ class ItemRentalLogsController < ApplicationController
     # 再送は既にある対をそのまま返す。記録は動かないのでSlackにも流さない
     return render json: fmt(ok, transfer_payload(existing)) if existing.size == logs.size
 
-    effective_nums_before = transfer_effective_nums
+    effective_nums_before = nil
 
     # 片方だけ既にある状態（過去の部分的な記録）でも、足りない方だけを補って対にする
     ItemRentalLog.transaction do
@@ -109,6 +109,10 @@ class ItemRentalLogsController < ApplicationController
         available = source_unlent_quantity(lock: true)
         raise TransferLimitExceeded, available if params[:quantity].to_i > available
       end
+
+      # Slackに出す「変更前」はロックを取った後に読む。先に読むと、ほぼ同時の
+      # transfer があったときに古い値を変更前として通知してしまう
+      effective_nums_before = transfer_effective_nums
 
       # 渡す先にこの物品の割当が無いと、addition を足す先も、渡した分を記録する先も
       # 無い（記録は assign_rental_item に紐づく）。予定外の物品を渡す場合に備えて
@@ -216,11 +220,11 @@ class ItemRentalLogsController < ApplicationController
   end
 
   def effective_num_for(group_id)
-    AssignRentalItem.find_by(
+    AssignRentalItem.effective_num_for(
       group_id: group_id,
       rental_item_id: params[:rental_item_id],
       stocker_place_id: params[:stocker_place_id]
-    )&.effective_num || 0
+    )
   end
 
   # 割当を人手で動かした事実は当日の判断材料になるため、記録できたらSlackへ流す。
