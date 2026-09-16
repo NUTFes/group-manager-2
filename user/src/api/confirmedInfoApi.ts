@@ -26,8 +26,12 @@ export type ConfirmedInfo = {
     rentalItemName: string;
     rentalPlaceName: string;
     stocks: {
+      // assign_rental_items.id。同名の在庫場所があり得るため、行の識別にはこれを使う
+      id: number;
       stockPlaceName: string;
       num: number;
+      // 物品割り当ての備考。未入力の場合はnull
+      remark: string | null;
     }[];
   }[];
 };

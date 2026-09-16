@@ -49,9 +49,67 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal(
       [{ 'rental_item_name' => '長机', 'rental_place_name' => '第1体育館前',
-         'stocks' => [{ 'stock_place_name' => '体育館倉庫', 'num' => 3 }] }],
+         'stocks' => [{ 'id' => @group.assign_rental_items.sole.id, 'stock_place_name' => '体育館倉庫',
+                        'num' => 3, 'remark' => nil }] }],
       data['rental_items']
     )
+  end
+
+  # 備考は割り当て1件ごとに付くため、在庫場所ごとの行に対応する
+  test 'returns the remark of each rental item assignment' do
+    @group.assign_rental_items.sole.update!(remark: '脚の折れているものが含まれます')
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal '脚の折れているものが含まれます',
+                 find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  test 'returns null as the remark when it is not filled in' do
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_nil find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  # remarkに空文字を禁じる制約が無いため、備考なしがnilと空文字の2通りになり得る。
+  # CSV・PDFがpresent?で同一に扱っているのに合わせ、APIもnullに寄せる
+  test 'returns null as the remark when it is stored as a blank string' do
+    @group.assign_rental_items.sole.update!(remark: '')
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_nil find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  # stocker_places.name には UNIQUE も NOT NULL も無く、同名の在庫場所を作れる。
+  # そのため在庫場所名は同一stocks内で重複し得るので、行の識別にidを返す。
+  # 画面側はこのidをReactのkeyに使っており、重複すると行の対応付けが壊れる
+  test 'returns a distinct id for each stock even when the place names are the same' do
+    same_name_place = StockerPlace.create!(name: @stocker_place.name)
+    AssignRentalItem.create!(
+      group: @group, rental_item: @rental_item, stocker_place: same_name_place,
+      rental_place: @rental_place, num: 5
+    )
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    stocks = find_rental_item('長机')['stocks']
+    assert_equal [@stocker_place.name] * 2, stocks.pluck('stock_place_name')
+    assert_equal 2, stocks.pluck('id').uniq.size, 'stocksのidが一意になっていない'
+  end
+
+  # groupと同じく、認証なしで露出するstocksの公開範囲も明示的に固定する。
+  # assign_rental_itemsに列が追加されても勝手に公開されないことを担保する
+  test 'exposes only the intended attributes of a stock' do
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal %w[id num remark stock_place_name],
+                 find_rental_item('長机')['stocks'].sole.keys.sort
   end
 
   # 会場は place_order -> assign_group_places -> stocker_place から引く。
