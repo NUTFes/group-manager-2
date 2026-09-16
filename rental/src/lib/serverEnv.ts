@@ -15,6 +15,10 @@ export const APP_ENV = process.env.APP_ENV || "development";
 
 export const isProduction = APP_ENV === "production";
 
+// Access を通さずに動かしてよいのはローカル開発だけ。staging も本番同様に
+// Access の設定を要求する（設定漏れで記録者を偽装できる状態にしないため）
+export const isDevelopment = APP_ENV === "development";
+
 // 環境変数が未設定でも動くよう APP_ENV ごとの既定値を持つ。
 // NEXT_PUBLIC_API_URL と対称にするための措置（#2196 のレビューより）。
 export const SSR_API_URL =

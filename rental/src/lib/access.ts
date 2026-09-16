@@ -12,7 +12,7 @@ import {
   CF_ACCESS_AUD,
   CF_ACCESS_TEAM_DOMAIN,
   DEV_RECORDER_EMAIL,
-  isProduction,
+  isDevelopment,
 } from "./serverEnv";
 
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
@@ -37,10 +37,12 @@ export async function resolveRecorderEmail(
   const token = request.headers.get(ACCESS_JWT_HEADER);
   const keySet = getJwks();
 
-  // Access の設定が無い環境（ローカル開発）では検証できないため、
-  // 本番以外に限り固定のメールで動かす。本番では必ず設定を要求する。
+  // Access の設定が無い環境では検証できない。ローカル開発だけ固定のメールで動かし、
+  // それ以外（staging / production）は設定を要求して閉じる。
+  // 設定漏れのまま検証なしでヘッダーを信用すると、BFFに直接到達できた人が
+  // 記録者を偽装できてしまうため、黙って劣化させない。
   if (!keySet || !CF_ACCESS_AUD) {
-    if (isProduction) {
+    if (!isDevelopment) {
       return {
         ok: false,
         reason: "CF_ACCESS_TEAM_DOMAIN / CF_ACCESS_AUD が未設定です",

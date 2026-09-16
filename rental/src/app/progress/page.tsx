@@ -8,9 +8,21 @@ import Header from "@/components/Header";
 import ProgressBar from "@/components/ProgressBar";
 import Selector from "@/components/Selector";
 import { useAssignments, useRentalPlaces } from "@/hooks/useRentalApi";
-import { useWorkSession } from "@/hooks/useWorkSession";
-import { groupStatus, summarize } from "@/lib/aggregate";
+import { ALL_PLACES_NAME, useWorkSession } from "@/hooks/useWorkSession";
+import { groupStatus, hasAnyAllocation, summarize } from "@/lib/aggregate";
 import type { AssignRentalItem, WorkMode } from "@/types/rental";
+
+// 貸出場所で絞らずに全体を見るときの選択値
+const ALL_PLACES_VALUE = "all";
+
+// 戻り先として受け付けるアプリ内のパス。文字列の先頭だけを見る判定では
+// `/\evil.com` のような値が同一オリジンの判定をすり抜けるため、行き先を列挙する
+const BACK_PATHS = ["/select-group", "/register"];
+
+function resolveBackTo(fromParam: string): string {
+  const [path] = fromParam.split("?");
+  return BACK_PATHS.includes(path) ? fromParam : "/select-group";
+}
 
 type GroupRow = {
   groupId: number;
@@ -31,9 +43,12 @@ function ProgressContent() {
   const [modeInput, setModeInput] = useState<string | null>(null);
   const [placeInput, setPlaceInput] = useState<string | null>(null);
   const mode = (modeInput ?? session?.mode ?? "rental") as WorkMode;
-  const placeId = Number(placeInput ?? session?.placeId ?? 0);
+  // 作業セッションが「すべての場所」なら既定も全体表示にする
+  const placeValue =
+    placeInput ?? session?.placeId?.toString() ?? ALL_PLACES_VALUE;
+  const placeId = placeValue === ALL_PLACES_VALUE ? null : Number(placeValue);
 
-  const { data, error, isLoading } = useAssignments(placeId || null, null);
+  const { data, error, isLoading } = useAssignments(placeId, null);
 
   const rows = useMemo<GroupRow[]>(() => {
     const assignments = data?.assignRentalItems ?? [];
@@ -47,48 +62,52 @@ function ProgressContent() {
       byGroup.set(assignment.groupId, list);
     }
 
-    return [...byGroup.entries()]
-      .map(([groupId, groupAssignments]) => {
-        const handed: string[] = [];
-        const notHanded: string[] = [];
+    return (
+      [...byGroup.entries()]
+        // 実効割当数が0の団体（在庫を全部他団体へ回した等）は渡す物が無いので数えない
+        .filter(([, groupAssignments]) =>
+          hasAnyAllocation(groupAssignments, changeLogs)
+        )
+        .map(([groupId, groupAssignments]) => {
+          const handed: string[] = [];
+          const notHanded: string[] = [];
 
-        for (const assignment of groupAssignments) {
-          const summary = summarize(assignment, changeLogs, mode);
-          const done = mode === "rental" ? summary.lent : summary.returned;
-          if (done > 0) {
-            handed.push(`${assignment.rentalItemName} x${done}`);
+          for (const assignment of groupAssignments) {
+            const summary = summarize(assignment, changeLogs, mode);
+            const done = mode === "rental" ? summary.lent : summary.returned;
+            if (done > 0) {
+              handed.push(`${assignment.rentalItemName} x${done}`);
+            }
+            if (summary.remaining > 0) {
+              notHanded.push(
+                `${assignment.rentalItemName} x${summary.remaining}`
+              );
+            }
           }
-          if (summary.remaining > 0) {
-            notHanded.push(
-              `${assignment.rentalItemName} x${summary.remaining}`
-            );
-          }
-        }
 
-        return {
-          groupId,
-          groupName: groupAssignments[0]?.groupName ?? "",
-          status: groupStatus(groupAssignments, changeLogs, mode),
-          handed,
-          notHanded,
-        };
-      })
-      .sort((a, b) => a.groupId - b.groupId);
+          return {
+            groupId,
+            groupName: groupAssignments[0]?.groupName ?? "",
+            status: groupStatus(groupAssignments, changeLogs, mode),
+            handed,
+            notHanded,
+          };
+        })
+        .sort((a, b) => a.groupId - b.groupId)
+    );
   }, [data?.assignRentalItems, data?.assignmentChangeLogs, mode]);
 
   // 全体進捗は団体ベース（完了=1、進行中・未着手=0 の二値カウント）。設計書5章
   const doneCount = rows.filter((row) => row.status === "done").length;
   const percentage = rows.length ? (doneCount / rows.length) * 100 : 0;
-  // 遷移元。外部URLへ飛ばされないよう、アプリ内の絶対パスだけを受け付ける
-  const fromParam = searchParams.get("from") ?? "";
-  const backTo =
-    fromParam.startsWith("/") && !fromParam.startsWith("//")
-      ? fromParam
-      : "/select-group";
+  // 遷移元。外部URLへ飛ばされないよう、行き先を列挙して照合する
+  const backTo = resolveBackTo(searchParams.get("from") ?? "");
   const placeName =
-    places?.find((place) => place.id === placeId)?.name ??
-    session?.placeName ??
-    "";
+    placeId === null
+      ? ALL_PLACES_NAME
+      : (places?.find((place) => place.id === placeId)?.name ??
+        session?.placeName ??
+        "");
 
   return (
     <>
@@ -115,13 +134,16 @@ function ProgressContent() {
           <div className="flex-1">
             <Selector
               compact
-              value={String(placeId || "")}
+              value={placeValue}
               onChange={setPlaceInput}
               placeholder="拠点を選択"
-              options={(places ?? []).map((place) => ({
-                value: String(place.id),
-                label: place.name,
-              }))}
+              options={[
+                { value: ALL_PLACES_VALUE, label: ALL_PLACES_NAME },
+                ...(places ?? []).map((place) => ({
+                  value: String(place.id),
+                  label: place.name,
+                })),
+              ]}
             />
           </div>
         </div>
@@ -158,7 +180,9 @@ function ProgressContent() {
         )}
         {!isLoading && !error && rows.length === 0 && (
           <p className="text-body text-sub">
-            この拠点に割当がある団体がありません。
+            {placeId === null
+              ? "割当がある団体がありません。"
+              : "この拠点に割当がある団体がありません。"}
           </p>
         )}
 

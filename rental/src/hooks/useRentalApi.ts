@@ -22,27 +22,34 @@ const SWR_OPTIONS = {
 export const useRentalPlaces = () =>
   useSWR<RentalPlace[]>("/api/rental/places", bffFetcher, SWR_OPTIONS);
 
-/** その作業場所に割当がある今年度の団体 */
+/** 今年度の団体。作業場所を渡すとその場所に割当がある団体だけに絞る（null なら全団体） */
 export const useRentalGroups = (rentalPlaceId: number | null) =>
   useSWR<RentalGroup[]>(
-    rentalPlaceId ? `/api/rental/groups?rentalPlaceId=${rentalPlaceId}` : null,
+    rentalPlaceId
+      ? `/api/rental/groups?rentalPlaceId=${rentalPlaceId}`
+      : "/api/rental/groups",
     bffFetcher,
     SWR_OPTIONS
   );
 
-/** 割当（名前付き）と記録。団体未指定なら作業場所全体を取る */
+/**
+ * 割当（名前付き）と記録。
+ *
+ * rentalPlaceId / groupId は null で「絞らない」を表す。両方 null なら全件になるため、
+ * 取得の要否は enabled で明示する（遷移中に全件を引かないようにするため）。
+ */
 export const useAssignments = (
   rentalPlaceId: number | null,
-  groupId: number | null
+  groupId: number | null,
+  enabled = true
 ) => {
   const params = new URLSearchParams();
   if (rentalPlaceId) params.set("rentalPlaceId", String(rentalPlaceId));
   if (groupId) params.set("groupId", String(groupId));
+  const query = params.toString();
 
   return useSWR<AssignmentsResponse>(
-    rentalPlaceId || groupId
-      ? `/api/rental/assignments?${params.toString()}`
-      : null,
+    enabled ? `/api/rental/assignments${query ? `?${query}` : ""}` : null,
     bffFetcher,
     SWR_OPTIONS
   );
@@ -73,6 +80,8 @@ export type ExcessLendingParams = {
   toGroupId: number;
   fromGroupId: number;
   quantity: number;
+  // 渡す作業を行っている場所。渡す先に割当が無いときの貸出場所になる
+  rentalPlaceId: number | null;
 };
 
 /**

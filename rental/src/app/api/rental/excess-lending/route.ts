@@ -1,7 +1,4 @@
-import camelcaseKeys from "camelcase-keys";
-import { summarize } from "@/lib/aggregate";
 import { forwardToApi, jsonError } from "@/lib/bff";
-import type { AssignmentsResponse } from "@/types/rental";
 
 type ExcessLendingBody = {
   uid?: string;
@@ -12,80 +9,10 @@ type ExcessLendingBody = {
   // その在庫がもともと割り当てられていた団体（割当を減らす）
   fromGroupId?: number;
   quantity?: number;
+  // 渡す作業を行っている場所。渡す先に割当が無いときの貸出場所になる
+  rentalPlaceId?: number | null;
   memo?: string | null;
 };
-
-/**
- * 元の団体の未貸出数 = Σ（実効割当数 − 貸出済数）。
- *
- * 既に渡した分は手元に無いので他へ回せない。画面側でも同じ上限を出しているが、
- * 別端末の記録で残数が変わることがあるため送信時にも確かめる。
- * 読み取りに失敗したときは null を返し、判定を諦めて記録を通す（記録できない方が
- * 当日の運用では困るため）。
- *
- * この uid の reduction が既にある場合（＝同じ操作の再送）は、その分を戻して
- * 「この操作を行う前の未貸出数」で判定する。そうしないと1回目で減った結果に
- * 引っかかり、冪等なはずの再送が 422 になる。
- */
-async function fetchUnlentQuantity(
-  request: Request,
-  {
-    uid,
-    groupId,
-    rentalItemId,
-    stockerPlaceId,
-  }: {
-    uid: string;
-    groupId: number;
-    rentalItemId: number;
-    stockerPlaceId: number;
-  }
-): Promise<number | null> {
-  const response = await forwardToApi(request, {
-    path: "api/v1/get_assign_rental_items_for_rental_view",
-    query: { group_id: String(groupId) },
-  });
-  if (!response.ok) return null;
-
-  try {
-    const payload = (await response.json()) as {
-      data?: Record<string, unknown>;
-    };
-    if (!payload.data) return null;
-
-    const data = camelcaseKeys(payload.data, {
-      deep: true,
-    }) as unknown as AssignmentsResponse;
-
-    const unlent = data.assignRentalItems
-      .filter(
-        (assignment) =>
-          assignment.rentalItemId === rentalItemId &&
-          assignment.stockerPlaceId === stockerPlaceId
-      )
-      .reduce(
-        (sum, assignment) =>
-          sum +
-          summarize(assignment, data.assignmentChangeLogs, "rental")
-            .lentRemaining,
-        0
-      );
-
-    // 再送なら、1回目に自分が減らした分を戻してから判定する
-    const alreadyReduced = data.assignmentChangeLogs
-      .filter(
-        (log) =>
-          log.uid === `${uid}-reduction` &&
-          log.rentalItemId === rentalItemId &&
-          log.stockerPlaceId === stockerPlaceId
-      )
-      .reduce((sum, log) => sum + log.quantity, 0);
-
-    return unlent + alreadyReduced;
-  } catch {
-    return null;
-  }
-}
 
 // POST /api/rental/excess-lending
 //
@@ -93,6 +20,10 @@ async function fetchUnlentQuantity(
 // 対で記録する（#2198 のカテゴリ）。2件を別々に POST すると片方だけ成功したときに
 // 元の団体の在庫が消えたまま残るため、API 側の transfer で1トランザクションにまとめて
 // 記録する。uid で冪等なので、同じ uid の再送は既存の対をそのまま返す。
+//
+// 上限（提供元の未貸出数）と uid・数量・団体の検証は API 側の transfer が行い、
+// 超過は 422 で返る。ここで先回りして確かめると、同じ規則の写しが増えるうえに
+// 往復が1回増えるだけで保証は変わらないため、そのまま転送する。
 export async function POST(request: Request) {
   let body: ExcessLendingBody;
   try {
@@ -108,6 +39,7 @@ export async function POST(request: Request) {
     toGroupId,
     fromGroupId,
     quantity,
+    rentalPlaceId,
   } = body;
 
   if (
@@ -123,25 +55,6 @@ export async function POST(request: Request) {
       "uid / rentalItemId / stockerPlaceId / toGroupId / fromGroupId / quantity は必須です"
     );
   }
-  if (!Number.isInteger(quantity) || quantity <= 0) {
-    return jsonError(400, "quantity は1以上の整数で指定してください");
-  }
-  if (toGroupId === fromGroupId) {
-    return jsonError(400, "元の貸出先団体には別の団体を指定してください");
-  }
-
-  const available = await fetchUnlentQuantity(request, {
-    uid,
-    groupId: fromGroupId,
-    rentalItemId,
-    stockerPlaceId,
-  });
-  if (available !== null && quantity > available) {
-    return jsonError(
-      422,
-      `元の団体の未貸出数（${available}）を超えています。最新の状況を確認してください`
-    );
-  }
 
   return forwardToApi(request, {
     path: "item_rental_logs/transfer",
@@ -153,6 +66,7 @@ export async function POST(request: Request) {
       from_group_id: fromGroupId,
       to_group_id: toGroupId,
       quantity,
+      rental_place_id: rentalPlaceId ?? null,
       memo: body.memo ?? null,
     },
     withRecorderEmail: true,

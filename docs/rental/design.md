@@ -160,7 +160,7 @@ Figma ver.1 mobile の6画面。左上: 作業場所選択、中上: 参加団�
 | --- | --- | --- | --- |
 | F1 | デザインシステム基盤と UI コンポーネント | Tailwind 4 `@theme` トークン、Noto Sans JP。Header / Badge / Button / Selector / AccordionCard / ItemCard / QuantityControl / BottomSheetModal / ProgressBar。`user/` の慣習（components/\<Name\>/{tsx,stories,index}、scaffdog、Storybook、Prettier import 順）を移植する。 | — |
 | F2 | BFF 経由の API クライアントと型 | Route Handler が `SSR_API_URL` へ転送、camelCase 変換、`ApiResponse<T>`、SWR。 | A1, A3 |
-| F3 | 作業場所選択と作業セッション | 画面①。localStorage 永続化、ヘッダー反映。 | A3 |
+| F3 | 作業場所選択と作業セッション | 画面①。localStorage 永続化、ヘッダー反映。作業場所には「すべての場所」を選べる（倉庫をまたいで対応する係や例外対応をまとめて行う場合に使う。`placeId` は null）。 | A3 |
 | F4 | QR スキャンによる団体選択 | `BarcodeDetector`（非対応時は zxing 等）、権限拒否時の導線。団体 QR は `/confirmed?group_id=&secret=` の URL（#2193 がサーバー側で生成）。スキャン結果の URL から `group_id` と `secret` を取り出し、#2182 のエンドポイントで照合する。 | F2 |
 | F5 | 手動の団体選択モーダル | 検索 + 一覧。 | F1, F2, A3 |
 | F6 | 貸出・返却登録画面 | 画面③。割当変更の取得には `group_id` のみのクエリが別途必要（5 章参照）。 | F1, F2, A3, A4 |
@@ -222,9 +222,15 @@ category: rental | return | rental_absolute | return_absolute | addition | reduc
 
 API では `addition` / `reduction` として記録できる（#2198）。UI は登録画面の「例外対応」→「超過貸出」で、提供元の団体・物品・数量を選び、提供元に `reduction`、対象団体に `addition` を1件ずつ記録する（#2225 で実装済み）。2件は `uid` を `<uid>-reduction` / `<uid>-addition` として同じ操作から生成し、冪等性を保つ。
 
-**上限はサーバー側でも確かめる。** 画面と BFF だけで制限していると、BFF 用のトークンさえあれば API を直接叩いて上限を無視した記録ができてしまう。`rental/src/lib/aggregate.ts` と同じ式を `AssignRentalItem`（`effective_num` / `lent_quantity` / `lent_remaining` / `return_remaining`）に持たせ、`ItemRentalLog` の作成時に検証する（#2224 のレビュー反映）。上限は `rental` = 貸出残、`return` = 返却残、`rental_absolute` = 実効割当数、`return_absolute` = 貸出済数。超過貸出は割当1件では上限が決まらないため、`transfer` が提供元の未貸出数を確かめる。
+**上限はサーバー側でも確かめる。行ロックつきで。** 画面と BFF だけで制限していると、BFF 用のトークンさえあれば API を直接叩いて上限を無視した記録ができてしまう。`rental/src/lib/aggregate.ts` と同じ式を `AssignRentalItem`（`effective_num` / `lent_quantity` / `lent_remaining` / `return_remaining`）に持たせ、`ItemRentalLog` の作成時に検証する（#2224 のレビュー反映）。上限は `rental` = 貸出残、`return` = 返却残、`rental_absolute` = 実効割当数、`return_absolute` = 貸出済数。超過貸出は割当1件では上限が決まらないため、`transfer` が提供元の未貸出数を確かめる。
+
+検証は確認してから書くまでの間に別の端末が書き込めるため、**割当行を `FOR UPDATE` で押さえてから**行う（`create` は対象の割当、`transfer` は提供元の割当）。押さえないと、残り5個に対する5個の記録が2件同時に通って10個貸し出した記録になる。`addition` / `reduction` は単独では上限が決まらないうえ、片方だけ残ると在庫が消えたように見えるため、`POST /item_rental_logs` では受け付けず `transfer` 専用にしている。
 
 **2件は必ず対で書く。** BFF から `POST /item_rental_logs` を2回呼ぶ形だと、`reduction` の後に `addition` が失敗したときに提供元の割当だけが減ったまま残り、在庫が消えたように見える。`POST /item_rental_logs/transfer` が1トランザクションで2件を作るようにし、片方でも失敗すれば何も残さない（#2230）。同じ `uid` の再送は既存の対をそのまま返し、内容が違えば 409。画面側も送信のたびに `uid` を作り直さず、入力が同じ間は同じ `uid` を使う（再送で割当を二重に動かさないため）。
+
+**貸出場所では絞らない。** 当日は「この倉庫の分だけ」では回らないため、例外対応は提供元の団体を先に選び、その団体が持つ割当（全場所）から物品と在庫場所を出す。提供元に実在する組み合わせだけが候補になり、上限も必ず出せる。余り在庫を持たせた団体（「余り」等）から別の倉庫の物品を回すこともできる。
+
+**渡す先に割当が無くても渡せる。** もともと申請していない物品を渡す場合、`addition` を足す先も、渡した分を記録する先（記録は `assign_rental_item` に紐づく）も無い。`transfer` が渡す先の割当を `num` 0・貸出場所は作業中の場所で作り、実効割当数が `addition` のぶんだけ増えるようにする。既にある割当には手を入れない。
 
 **回せる数量の上限 = 提供元の未貸出数**（`Σ（実効割当数 − 貸出済数）`、物品と在庫場所が一致する割当の合計）。既に渡した分は提供元の手元に無いので動かせない。12個予定で3個渡した団体からは9個までしか回せない。画面に「元の団体の未貸出数」を出して入力を制限し、別端末の記録で残数が変わっている場合に備えて BFF（`/api/rental/excess-lending`）でも送信時に同じ上限を確かめ、超えていれば 422 を返す。
 
@@ -411,6 +417,7 @@ PoC のフロント・API はすべて実装済み。統合ブランチ `feat/ka
 | 9 | チームレビュー反映2: 団体変更は②へ遷移（ボトムシートを廃止）・ロゴは①へ・超過貸出の上限を提供元の未貸出数に制限（#2229） | 完了 |
 | 10 | チームレビュー反映3: 超過貸出を1トランザクション化・超過貸出の再送を冪等に・残数の再クランプ・QRのオリジン検証・スキャンの多重検知防止（#2230） | 完了 |
 | 11 | チームレビュー反映4: 記録の上限をAPI側でも検証・割当の団体変更の一意制約違反/重複メッセージ・置き場所の部分更新で英語名を保持・数量0削除を保存キューに載せる（#2224 へ直接反映） | 完了 |
+| 12 | 監査反映: 場所の「すべて」選択・例外対応を貸出場所非依存に・渡す先の割当を自動作成・進捗の割当変更反映・再送の409詰まり・上限の行ロック・Access設定漏れのfail-closed（#2224 へ直接反映） | 完了 |
 
 **QR 読み取りの2経路**: `BarcodeDetector` があるブラウザ（Android Chrome など）はブラウザ内蔵の実装を使い、無い場合（iOS Safari）は `qr-scanner`（jsQR ベース）に動的インポートでフォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
 

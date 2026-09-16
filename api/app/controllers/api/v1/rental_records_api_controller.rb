@@ -46,7 +46,7 @@ class Api::V1::RentalRecordsApiController < ApplicationController
                        assign_rental_items: assign_rental_items.map do |assign_rental_item|
                          assign_rental_item_h(assign_rental_item, logs_by_assign_id)
                        end,
-                       assignment_change_logs: assignment_change_logs.map { |log| log_h(log) }
+                       assignment_change_logs: assignment_change_logs(assign_rental_items).map { |log| log_h(log) }
                      })
   end
 
@@ -78,11 +78,14 @@ class Api::V1::RentalRecordsApiController < ApplicationController
     scope.order(:id)
   end
 
-  # 割当変更ログ。団体単位の記録なので、団体が指定されたときだけ返す。
-  def assignment_change_logs
-    return ItemRentalLog.none if params[:group_id].blank?
+  # 割当変更ログ。団体単位の記録で assign_rental_item に紐づかないため、返す割当に
+  # 出てくる団体の分をまとめて返す。団体を指定していない進捗確認でも実効割当数を
+  # 正しく出せるようにするため（指定時はその団体だけで足りる）。
+  def assignment_change_logs(assign_rental_items)
+    group_ids = params[:group_id].presence || assign_rental_items.map(&:group_id).uniq
+    return ItemRentalLog.none if group_ids.blank?
 
-    ItemRentalLog.where(group_id: params[:group_id], assign_rental_item_id: nil)
+    ItemRentalLog.where(group_id: group_ids, assign_rental_item_id: nil)
                  .order(:created_at, :id)
   end
 

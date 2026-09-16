@@ -144,8 +144,10 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
     assert_equal @assign_rental_item.stocker_place_id, change_logs.first['stocker_place_id']
   end
 
-  test 'assignment change logs are empty when no group is specified' do
-    ItemRentalLog.create!(
+  # 進捗確認は団体を指定せず場所だけで問い合わせる。割当変更を返さないと実効割当数が
+  # 生の num のままになり、超過貸出をした団体が永久に「未受取」になってしまう。
+  test 'assignment change logs of the listed groups are returned even without a group filter' do
+    reduction = ItemRentalLog.create!(
       uid: 'rental-view-reduction-uid',
       group: @group,
       rental_item: @assign_rental_item.rental_item,
@@ -159,7 +161,26 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
         params: { rental_place_id: @assign_rental_item.rental_place_id }, headers: @headers
 
     assert_response :success
-    assert_empty response.parsed_body['data']['assignment_change_logs']
+    assert_includes response.parsed_body['data']['assignment_change_logs'].pluck('id'), reduction.id
+  end
+
+  # 返す割当に出てこない団体の割当変更までは返さない
+  test 'assignment change logs of unrelated groups are not returned' do
+    unrelated = ItemRentalLog.create!(
+      uid: 'rental-view-unrelated-change-uid',
+      group: @other_assign_rental_item.group,
+      rental_item: @other_assign_rental_item.rental_item,
+      stocker_place: @other_assign_rental_item.stocker_place,
+      category: :addition,
+      quantity: 1,
+      recorder_email: 'recorder@example.com'
+    )
+
+    get api_v1_get_assign_rental_items_for_rental_view_url,
+        params: { group_id: @group.id }, headers: @headers
+
+    assert_response :success
+    assert_not_includes response.parsed_body['data']['assignment_change_logs'].pluck('id'), unrelated.id
   end
 
   test 'should not include logs from a different assignment' do

@@ -67,13 +67,20 @@ export type AssignmentsResponse = {
   assignmentChangeLogs: ItemRentalLog[];
 };
 
-/** QRから団体を特定したときにAPIが返す確定情報 */
+/**
+ * QRから団体を特定したときにAPIが返す確定情報
+ * （Group#to_confirmed_info_h。rental では団体の特定にしか使っていない）
+ */
 export type ConfirmedInfo = {
-  group: { id: number; name: string };
-  assignRentalItems: {
+  group: {
+    id: number;
+    name: string;
+    projectName: string | null;
+    places: string[];
+  };
+  rentalItems: {
     rentalItemName: string;
-    stockPlaceName: string;
     rentalPlaceName: string;
-    num: number;
+    stocks: { stockPlaceName: string; num: number }[];
   }[];
 };

@@ -340,8 +340,10 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'should create an addition log without assign_rental_item_id' do
-    assert_difference('ItemRentalLog.count') do
+  # 単独の addition / reduction は対の片方だけを残してしまうため create では受け付けない。
+  # 上限（提供元の未貸出数）も割当1件では決まらないので transfer 専用にしている。
+  test 'create rejects an addition log and points at transfer' do
+    assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'addition-uid',
         group_id: groups(:two).id,
@@ -352,52 +354,19 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
       }, headers: @headers, as: :json
     end
 
-    assert_response :created
-    body = response.parsed_body['data']
-    assert_nil body['assign_rental_item_id']
-    assert_equal groups(:two).id, body['group_id']
+    assert_response :unprocessable_entity
+    assert_match(/transfer/, response.parsed_body.dig('status', 'option').to_s)
   end
 
-  test 'should create a reduction log without assign_rental_item_id' do
-    assert_difference('ItemRentalLog.count') do
+  test 'create rejects a reduction log even when it would exceed the assignment' do
+    assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'reduction-uid',
         group_id: @group.id,
         rental_item_id: @assign_rental_item.rental_item_id,
         stocker_place_id: @stocker_place.id,
         category: 'reduction',
-        quantity: 2
-      }, headers: @headers, as: :json
-    end
-
-    assert_response :created
-    assert_nil response.parsed_body['data']['assign_rental_item_id']
-  end
-
-  test 'should reject an addition log that includes assign_rental_item_id' do
-    assert_no_difference('ItemRentalLog.count') do
-      post item_rental_logs_url, params: {
-        uid: 'addition-with-assignment-uid',
-        assign_rental_item_id: @assign_rental_item.id,
-        group_id: @group.id,
-        rental_item_id: @assign_rental_item.rental_item_id,
-        stocker_place_id: @stocker_place.id,
-        category: 'addition',
-        quantity: 2
-      }, headers: @headers, as: :json
-    end
-
-    assert_response :unprocessable_entity
-  end
-
-  test 'should reject an addition log without group_id' do
-    assert_no_difference('ItemRentalLog.count') do
-      post item_rental_logs_url, params: {
-        uid: 'addition-without-group-uid',
-        rental_item_id: @assign_rental_item.rental_item_id,
-        stocker_place_id: @stocker_place.id,
-        category: 'addition',
-        quantity: 2
+        quantity: 999
       }, headers: @headers, as: :json
     end
 
@@ -697,6 +666,58 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
+  end
+
+  # もともとその物品を申請していない団体にも渡せること。
+  # 渡す先に割当が無いと addition を足す先も、渡した分を記録する先も無いため、
+  # transfer が num 0 の割当を用意する。
+  test 'transfer creates the destination assignment when the group has none' do
+    destination = groups(:two)
+    attributes = {
+      group_id: destination.id,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @assign_rental_item.stocker_place_id
+    }
+    assert_nil AssignRentalItem.find_by(attributes)
+
+    assert_difference('AssignRentalItem.count') do
+      post transfer_item_rental_logs_url,
+           params: transfer_params(uid: 'transfer-new-assignment-uid', quantity: 2,
+                                   rental_place_id: @assign_rental_item.rental_place_id),
+           headers: @headers, as: :json
+    end
+    assert_response :created
+
+    created = AssignRentalItem.find_by(attributes)
+    assert_equal 0, created.num
+    assert_equal @assign_rental_item.rental_place_id, created.rental_place_id
+    # 実効割当数は addition のぶんだけ増え、その数まで貸し出せる
+    assert_equal 2, created.effective_num
+    assert_equal 2, created.lent_remaining
+  end
+
+  # 既にある割当には手を入れない（貸出場所を上書きしない）
+  test 'transfer keeps an existing destination assignment as it is' do
+    destination = AssignRentalItem.create!(
+      group_id: groups(:two).id,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @assign_rental_item.stocker_place_id,
+      rental_place_id: @assign_rental_item.rental_place_id,
+      num: 3
+    )
+
+    assert_no_difference('AssignRentalItem.count') do
+      post transfer_item_rental_logs_url,
+           params: transfer_params(uid: 'transfer-existing-assignment-uid', quantity: 2,
+                                   rental_place_id: stocker_places(:two).id),
+           headers: @headers, as: :json
+    end
+    assert_response :created
+
+    destination.reload
+    assert_equal 3, destination.num
+    assert_equal @assign_rental_item.rental_place_id, destination.rental_place_id
+    assert_equal 5, destination.effective_num
   end
 
   private

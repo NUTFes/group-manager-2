@@ -20,8 +20,12 @@ import {
 import { useWorkSession } from "@/hooks/useWorkSession";
 import { summarize } from "@/lib/aggregate";
 import type { AssignmentSummary } from "@/lib/aggregate";
+import type { ApiError } from "@/lib/apiClient";
 
 type DraftState = Record<number, { quantity: number; memo: string }>;
+
+/** 実際に送った内容。再送で同じ uid に別の内容を送らないよう控えておく */
+type SentPayloads = Record<number, { quantity: number; memo: string | null }>;
 
 type SubmitState =
   | { phase: "idle" }
@@ -66,9 +70,13 @@ function RegisterContent() {
   const groupId = Number(searchParams.get("groupId"));
   const { session, isLoading: isSessionLoading } = useWorkSession();
 
+  // 「団体全体の貸出予定一覧」は全作業場所分を見せる必要があるため、貸出場所では
+  // 絞らずに団体単位で取り、この場所の対象は下の targets でクライアント側に絞る
+  const hasValidGroup = Number.isFinite(groupId) && groupId > 0;
   const { data, error, isLoading, mutate } = useAssignments(
-    session?.placeId ?? null,
-    Number.isFinite(groupId) && groupId > 0 ? groupId : null
+    null,
+    hasValidGroup ? groupId : null,
+    hasValidGroup
   );
 
   const [drafts, setDrafts] = useState<DraftState>({});
@@ -77,6 +85,7 @@ function RegisterContent() {
   });
   // 送信のたびに作り直す冪等キー。再送では同じキーを使う
   const [uidSeed, setUidSeed] = useState(() => crypto.randomUUID());
+  const [sentPayloads, setSentPayloads] = useState<SentPayloads>({});
   const [isCorrectionOpen, setIsCorrectionOpen] = useState(false);
   const [isExceptionOpen, setIsExceptionOpen] = useState(false);
   const [isExcessOpen, setIsExcessOpen] = useState(false);
@@ -86,26 +95,29 @@ function RegisterContent() {
   }, [isSessionLoading, session, router]);
 
   useEffect(() => {
-    if (!Number.isFinite(groupId) || groupId <= 0)
-      router.replace("/select-group");
-  }, [groupId, router]);
+    if (!hasValidGroup) router.replace("/select-group");
+  }, [hasValidGroup, router]);
 
   const mode = session?.mode ?? "rental";
-  // 超過貸出の「元の貸出先団体」の候補に使う
-  const { data: groups } = useRentalGroups(session?.placeId ?? null);
+  // 超過貸出の「元の貸出先団体」の候補。例外対応は貸出場所に関わらず行えるよう、
+  // 作業場所では絞らずに今年度の全団体を出す
+  const { data: groups } = useRentalGroups(null);
   const changeLogs = useMemo(
     () => data?.assignmentChangeLogs ?? [],
     [data?.assignmentChangeLogs]
   );
 
-  // この作業場所で扱う割当（処理対象アイテム）
-  const targets = useMemo(
-    () =>
-      (data?.assignRentalItems ?? []).filter(
-        (assignment) => assignment.rentalPlaceId === session?.placeId
-      ),
-    [data?.assignRentalItems, session?.placeId]
-  );
+  // この作業場所で扱う割当（処理対象アイテム）。
+  // 作業場所が「すべての場所」なら絞らない
+  const targets = useMemo(() => {
+    const assignments = data?.assignRentalItems ?? [];
+    const placeId = session?.placeId ?? null;
+    if (placeId === null) return assignments;
+
+    return assignments.filter(
+      (assignment) => assignment.rentalPlaceId === placeId
+    );
+  }, [data?.assignRentalItems, session?.placeId]);
 
   // 団体全体の貸出予定一覧は全作業場所分を見せる（設計書3章③）
   const allAssignments = data?.assignRentalItems ?? [];
@@ -166,10 +178,25 @@ function RegisterContent() {
 
   const handleSubmit = async () => {
     const category = mode === "rental" ? "rental" : "return";
-    const ids =
-      submitState.phase === "error" ? submitState.failedIds : submittableIds;
+    const retrying = submitState.phase === "error";
+    const ids = retrying ? submitState.failedIds : submittableIds;
     if (ids.length === 0) return;
 
+    // 再送は1回目と同じ内容で送る。mutate 後に残数が減って数量が丸められると、
+    // 同じ uid で別の内容になり API が 409 を返して抜け出せなくなるため
+    const payloads = retrying
+      ? sentPayloads
+      : Object.fromEntries(
+          ids.map((assignmentId) => [
+            assignmentId,
+            {
+              quantity: effectiveDrafts[assignmentId]?.quantity ?? 0,
+              memo: effectiveDrafts[assignmentId]?.memo?.trim() || null,
+            },
+          ])
+        );
+
+    setSentPayloads(payloads);
     setSubmitState({ phase: "sending" });
 
     const results = await Promise.allSettled(
@@ -179,20 +206,27 @@ function RegisterContent() {
           uid: `${uidSeed}-${assignmentId}`,
           assignRentalItemId: assignmentId,
           category,
-          quantity: effectiveDrafts[assignmentId]?.quantity ?? 0,
-          memo: effectiveDrafts[assignmentId]?.memo?.trim() || null,
+          quantity: payloads[assignmentId]?.quantity ?? 0,
+          memo: payloads[assignmentId]?.memo ?? null,
         }).then(() => assignmentId)
       )
     );
 
-    const failedIds = ids.filter(
-      (_, index) => results[index].status === "rejected"
-    );
+    // 409 は「同じ uid が別の内容で既にある」= サーバー側には記録済みなので、
+    // 未送信として数えない（数えると同じ内容を送り続けて永久に失敗する）
+    const failedIds = ids.filter((_, index) => {
+      const result = results[index];
+      if (result.status !== "rejected") return false;
+      return (result.reason as ApiError)?.status !== 409;
+    });
 
     await mutate();
 
     if (failedIds.length > 0) {
-      const firstError = results.find((result) => result.status === "rejected");
+      const firstError = results.find(
+        (result, index) =>
+          result.status === "rejected" && failedIds.includes(ids[index])
+      );
       setSubmitState({
         phase: "error",
         failedIds,
@@ -205,22 +239,31 @@ function RegisterContent() {
     }
 
     setDrafts({});
+    setSentPayloads({});
     setUidSeed(crypto.randomUUID());
     setSubmitState({ phase: "idle" });
     router.push("/select-group");
   };
 
   // 訂正は「訂正後の累計」を直接記録する（設計書5章の合算上書き方式）
-  const correctionTargets: CorrectionTarget[] = targets.map((assignment) => {
-    const summary = summarize(assignment, changeLogs, mode);
-    return {
-      assignRentalItemId: assignment.id,
-      itemName: assignment.rentalItemName,
-      currentTotal: mode === "rental" ? summary.lent : summary.returned,
-      // 貸出の上限は実効割当数、返却の上限は貸出済数
-      maxTotal: mode === "rental" ? summary.num : summary.lent,
-    };
-  });
+  const correctionTargets: CorrectionTarget[] = useMemo(
+    () =>
+      targets.flatMap((assignment) => {
+        const summary = summaries.get(assignment.id);
+        if (!summary) return [];
+
+        return [
+          {
+            assignRentalItemId: assignment.id,
+            itemName: assignment.rentalItemName,
+            currentTotal: mode === "rental" ? summary.lent : summary.returned,
+            // 貸出の上限は実効割当数、返却の上限は貸出済数
+            maxTotal: mode === "rental" ? summary.num : summary.lent,
+          },
+        ];
+      }),
+    [targets, summaries, mode]
+  );
 
   const handleCorrection = async (
     target: CorrectionTarget,
@@ -235,9 +278,14 @@ function RegisterContent() {
     await mutate();
   };
 
-  // uid はシート側が持つ。再送では同じ uid を使い、二重に割当を動かさない
+  // uid はシート側が持つ。再送では同じ uid を使い、二重に割当を動かさない。
+  // 渡す先にこの物品の割当が無い場合、API がこの作業場所で割当を作る
   const handleExcessLending = async (input: ExcessLendingInput) => {
-    await createExcessLending({ toGroupId: groupId, ...input });
+    await createExcessLending({
+      toGroupId: groupId,
+      rentalPlaceId: session?.placeId ?? null,
+      ...input,
+    });
     await mutate();
   };
 
@@ -388,7 +436,6 @@ function RegisterContent() {
 
       <ExcessLendingSheet
         open={isExcessOpen}
-        assignments={targets}
         groups={groups ?? []}
         currentGroupId={groupId}
         onClose={() => setIsExcessOpen(false)}

@@ -6,8 +6,12 @@ import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Selector from "@/components/Selector";
 import { useRentalPlaces } from "@/hooks/useRentalApi";
-import { useWorkSession } from "@/hooks/useWorkSession";
+import { ALL_PLACES_NAME, useWorkSession } from "@/hooks/useWorkSession";
 import type { WorkMode } from "@/types/rental";
+
+// 貸出場所で絞らずに作業する場合の選択値。倉庫をまたいで対応する係や、
+// 例外対応をまとめて行う場合に使う
+const ALL_PLACES_VALUE = "all";
 
 // 画面①（Figma: 作業場所選択ページ node-id=5024-6657）
 export default function SelectPlacePage() {
@@ -20,13 +24,28 @@ export default function SelectPlacePage() {
   const [modeInput, setModeInput] = useState<string | null>(null);
   const [placeInput, setPlaceInput] = useState<string | null>(null);
   const mode = modeInput ?? session?.mode ?? "";
-  const placeId = placeInput ?? (session ? String(session.placeId) : "");
+  const savedPlaceValue = session
+    ? (session.placeId?.toString() ?? ALL_PLACES_VALUE)
+    : "";
+  const placeId = placeInput ?? savedPlaceValue;
 
   const canStart = mode !== "" && placeId !== "";
 
   const handleStart = () => {
+    if (mode !== "rental" && mode !== "return") return;
+
+    if (placeId === ALL_PLACES_VALUE) {
+      saveSession({
+        mode: mode as WorkMode,
+        placeId: null,
+        placeName: ALL_PLACES_NAME,
+      });
+      router.push("/select-group");
+      return;
+    }
+
     const place = places?.find((candidate) => String(candidate.id) === placeId);
-    if (!place || (mode !== "rental" && mode !== "return")) return;
+    if (!place) return;
 
     saveSession({
       mode: mode as WorkMode,
@@ -67,10 +86,13 @@ export default function SelectPlacePage() {
             onChange={setPlaceInput}
             placeholder={isLoading ? "読み込み中..." : "選択してください"}
             disabled={isLoading || !!error}
-            options={(places ?? []).map((place) => ({
-              value: String(place.id),
-              label: place.name,
-            }))}
+            options={[
+              { value: ALL_PLACES_VALUE, label: ALL_PLACES_NAME },
+              ...(places ?? []).map((place) => ({
+                value: String(place.id),
+                label: place.name,
+              })),
+            ]}
           />
 
           {error && (
@@ -80,7 +102,8 @@ export default function SelectPlacePage() {
           )}
           {!error && !isLoading && (places?.length ?? 0) === 0 && (
             <p className="text-caption text-alert">
-              貸出場所が設定された割当がありません。管理画面で物品割り当ての貸出場所を設定してください。
+              貸出場所が設定された割当がありません。管理画面で物品割り当ての貸出場所を設定するか、「
+              {ALL_PLACES_NAME}」を選んでください。
             </p>
           )}
 

@@ -108,6 +108,22 @@ export function summarize(
   };
 }
 
+/**
+ * その団体にこのモードで扱う分が残っているか。
+ *
+ * 実効割当数が全て0の団体（在庫を全部他団体へ回した・割当が0）は、渡す物も
+ * 返る物も無いので進捗の対象にしない。数えると永久に「未着手」のまま分母に
+ * 残り、進捗が100%にならない。
+ */
+export function hasAnyAllocation(
+  assignments: AssignRentalItem[],
+  changeLogs: ItemRentalLog[]
+): boolean {
+  return assignments.some(
+    (assignment) => effectiveNum(assignment, changeLogs) > 0
+  );
+}
+
 export type GroupStatus = "notStarted" | "inProgress" | "done";
 
 /**

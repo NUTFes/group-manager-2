@@ -7,9 +7,13 @@ const STORAGE_KEY = "rental-work-session";
 
 export type WorkSession = {
   mode: WorkMode;
-  placeId: number;
+  // すべての場所を対象にする場合は null（貸出場所で絞らない）
+  placeId: number | null;
   placeName: string;
 };
+
+/** placeId が null のときに画面へ出す名前 */
+export const ALL_PLACES_NAME = "すべての場所";
 
 // 他のタブでの変更と、このタブでの保存の両方を購読する
 const listeners = new Set<() => void>();
@@ -49,7 +53,7 @@ function parseSession(raw: string | null): WorkSession | null {
     const parsed = JSON.parse(raw) as Partial<WorkSession>;
     if (
       (parsed.mode !== "rental" && parsed.mode !== "return") ||
-      typeof parsed.placeId !== "number" ||
+      (typeof parsed.placeId !== "number" && parsed.placeId !== null) ||
       typeof parsed.placeName !== "string"
     ) {
       return null;
