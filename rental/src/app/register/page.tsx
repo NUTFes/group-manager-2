@@ -242,7 +242,11 @@ function RegisterContent() {
     setSentPayloads({});
     setUidSeed(crypto.randomUUID());
     setSubmitState({ phase: "idle" });
-    router.push("/select-group");
+    // 送信できたことが次の画面でも分かるよう、団体名を添えて戻る。
+    // 失敗時はこの画面に留まってエラーを出すので、遷移＝成功と区別できる
+    const params = new URLSearchParams({ registered: "1" });
+    if (groupName) params.set("group", groupName);
+    router.push(`/select-group?${params.toString()}`);
   };
 
   // 訂正は「訂正後の累計」を直接記録する（設計書5章の合算上書き方式）

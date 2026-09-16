@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
 import GroupSelectSheet from "@/components/GroupSelectSheet";
 import Header from "@/components/Header";
@@ -15,8 +15,16 @@ import { parseGroupQr } from "@/lib/qr";
 //
 // QRスキャンは F4(#2207) で実装する。ここでは手動選択（F5）を作り、
 // スキャン領域はプレースホルダとして置いている。
-export default function SelectGroupPage() {
+//
+// useSearchParams を使う部分は Suspense で包む必要がある
+// （Next のドキュメント: missing-suspense-with-csr-bailout）。
+function SelectGroupContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // 登録画面は送信できたときだけこの画面へ戻る。失敗時は向こうに留まるので、
+  // 「送ったつもりで送れていない」と取り違えないようここで完了を知らせる
+  const isRegistered = searchParams.get("registered") === "1";
+  const registeredGroup = searchParams.get("group");
   const { session, isLoading: isSessionLoading } = useWorkSession();
   const {
     data: groups,
@@ -73,6 +81,25 @@ export default function SelectGroupPage() {
       />
 
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-10">
+        {isRegistered && (
+          <div className="flex w-full items-start gap-2 rounded-lg border border-main bg-card px-3 py-2">
+            <span aria-hidden>✅</span>
+            <p className="min-w-0 flex-1 text-body text-main" role="status">
+              {registeredGroup
+                ? `${registeredGroup} の登録が完了しました`
+                : "登録が完了しました"}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.replace("/select-group")}
+              aria-label="この通知を閉じる"
+              className="shrink-0 px-1 text-body text-main active:opacity-60"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         <QrScanner onScan={handleScan} active={!isModalOpen && !isResolving} />
 
         {isResolving && (
@@ -110,5 +137,19 @@ export default function SelectGroupPage() {
         onSelect={(group) => router.push(`/register?groupId=${group.id}`)}
       />
     </>
+  );
+}
+
+export default function SelectGroupPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex flex-1 items-center justify-center">
+          <p className="text-body text-sub">読み込み中...</p>
+        </main>
+      }
+    >
+      <SelectGroupContent />
+    </Suspense>
   );
 }
