@@ -228,7 +228,7 @@ API では `addition` / `reduction` として記録できる（#2198）。UI は
 
 **2件は必ず対で書く。** BFF から `POST /item_rental_logs` を2回呼ぶ形だと、`reduction` の後に `addition` が失敗したときに提供元の割当だけが減ったまま残り、在庫が消えたように見える。`POST /item_rental_logs/transfer` が1トランザクションで2件を作るようにし、片方でも失敗すれば何も残さない（#2230）。同じ `uid` の再送は既存の対をそのまま返し、内容が違えば 409。画面側も送信のたびに `uid` を作り直さず、入力が同じ間は同じ `uid` を使う（再送で割当を二重に動かさないため）。
 
-**貸出場所では絞らない。** 当日は「この倉庫の分だけ」では回らないため、例外対応は提供元の団体を先に選び、その団体が持つ割当（全場所）から物品と在庫場所を出す。提供元に実在する組み合わせだけが候補になり、上限も必ず出せる。余り在庫を持たせた団体（「余り」等）から別の倉庫の物品を回すこともできる。
+**物品・在庫場所・団体はいずれもマスタの全件から選ぶ。** 当日は「この倉庫の分だけ」「予定していた物品だけ」では回らないため、例外対応は貸出場所でも割当でも絞らない（`get_rental_items_for_rental_view` / `get_stocker_places_for_rental_view` / `get_groups_for_rental_view`）。講義棟103で作業していても、余り在庫を持たせた団体（「余り」等）の講義棟104の机を選べる。選んだ組み合わせを提供元が持っていなければ未貸出数が0になり、その旨を画面に出して送信を止める。
 
 **渡す先に割当が無くても渡せる。** もともと申請していない物品を渡す場合、`addition` を足す先も、渡した分を記録する先（記録は `assign_rental_item` に紐づく）も無い。`transfer` が渡す先の割当を `num` 0・貸出場所は作業中の場所で作り、実効割当数が `addition` のぶんだけ増えるようにする。既にある割当には手を入れない。
 
@@ -300,6 +300,7 @@ flowchart LR
 - `GET /api/v1/get_confirmed_qrcode_for_user_view`（#2193 マージ済み）
 - `POST /item_rental_logs` / `GET /item_rental_logs`（#2171/#2198 マージ済み）
 - `POST /item_rental_logs/transfer`（超過貸出。`reduction` と `addition` を1トランザクションで対にする。#2230）
+- `GET /api/v1/get_rental_items_for_rental_view` / `GET /api/v1/get_stocker_places_for_rental_view`（例外対応の候補に使う物品・在庫場所のマスタ）
 
 解消したギャップ:
 

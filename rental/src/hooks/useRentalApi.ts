@@ -7,6 +7,7 @@ import type {
   ConfirmedInfo,
   LogCategory,
   RentalGroup,
+  RentalItem,
   RentalPlace,
 } from "@/types/rental";
 
@@ -21,6 +22,14 @@ const SWR_OPTIONS = {
 /** 作業場所（貸出場所）の候補 */
 export const useRentalPlaces = () =>
   useSWR<RentalPlace[]>("/api/rental/places", bffFetcher, SWR_OPTIONS);
+
+/** 物品のマスタ。例外対応では予定に無い物品も渡せるため全件から選ぶ */
+export const useRentalItems = () =>
+  useSWR<RentalItem[]>("/api/rental/rental-items", bffFetcher, SWR_OPTIONS);
+
+/** 在庫場所のマスタ。例外対応では全ての場所から選ぶ */
+export const useStockerPlaces = () =>
+  useSWR<RentalPlace[]>("/api/rental/stocker-places", bffFetcher, SWR_OPTIONS);
 
 /** 今年度の団体。作業場所を渡すとその場所に割当がある団体だけに絞る（null なら全団体） */
 export const useRentalGroups = (rentalPlaceId: number | null) =>

@@ -144,6 +144,34 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
     assert_equal @assign_rental_item.stocker_place_id, change_logs.first['stocker_place_id']
   end
 
+  # 例外対応は予定に無い物品・在庫場所も選べる必要があるため、割当ではなくマスタ全件を返す
+  test 'should get all rental items for the rental view' do
+    get api_v1_get_rental_items_for_rental_view_url, headers: @headers
+    assert_response :success
+
+    ids = response.parsed_body['data'].pluck('id')
+    assert_equal RentalItem.count, ids.size
+    assert_includes ids, @assign_rental_item.rental_item_id
+  end
+
+  test 'should get all stocker places for the rental view' do
+    get api_v1_get_stocker_places_for_rental_view_url, headers: @headers
+    assert_response :success
+
+    body = response.parsed_body['data']
+    assert_equal StockerPlace.count, body.size
+    assert_includes body.pluck('id'), @assign_rental_item.stocker_place_id
+    assert(body.all? { |place| place['name'].present? })
+  end
+
+  test 'the rental item and stocker place masters require the rental BFF token' do
+    get api_v1_get_rental_items_for_rental_view_url
+    assert_response :unauthorized
+
+    get api_v1_get_stocker_places_for_rental_view_url
+    assert_response :unauthorized
+  end
+
   # 進捗確認は団体を指定せず場所だけで問い合わせる。割当変更を返さないと実効割当数が
   # 生の num のままになり、超過貸出をした団体が永久に「未受取」になってしまう。
   test 'assignment change logs of the listed groups are returned even without a group filter' do

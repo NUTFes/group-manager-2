@@ -327,6 +327,8 @@ Rails.application.routes.draw do
       get 'get_rental_places_for_rental_view' => 'rental_records_api#get_rental_places_for_rental_view'
       get 'get_groups_for_rental_view' => 'rental_records_api#get_groups_for_rental_view'
       get 'get_assign_rental_items_for_rental_view' => 'rental_records_api#get_assign_rental_items_for_rental_view'
+      get 'get_rental_items_for_rental_view' => 'rental_records_api#get_rental_items_for_rental_view'
+      get 'get_stocker_places_for_rental_view' => 'rental_records_api#get_stocker_places_for_rental_view'
 
       #---ユーザー向け確定情報閲覧画面
       # 認証なしで公開する。認証の書き忘れではなく意図的な公開で、#2136 の Public 区分にあたる。

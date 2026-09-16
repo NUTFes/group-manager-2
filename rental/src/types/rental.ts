@@ -32,6 +32,12 @@ export type RentalGroup = {
   name: string;
 };
 
+/** 物品のマスタ */
+export type RentalItem = {
+  id: number;
+  name: string;
+};
+
 export type ItemRentalLog = {
   id: number;
   uid: string;

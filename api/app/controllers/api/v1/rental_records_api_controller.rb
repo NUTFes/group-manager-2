@@ -30,6 +30,23 @@ class Api::V1::RentalRecordsApiController < ApplicationController
     render json: fmt(ok, groups.map { |group| { id: group.id, name: group.name } })
   end
 
+  # GET /api/v1/get_rental_items_for_rental_view
+  # 物品のマスタ。例外対応（超過貸出）は予定に無い物品も渡せるため、割当からではなく
+  # マスタ全件を候補にする。
+  def get_rental_items_for_rental_view
+    rental_items = RentalItem.order(:id)
+
+    render json: fmt(ok, rental_items.map { |item| { id: item.id, name: item.name.to_s } })
+  end
+
+  # GET /api/v1/get_stocker_places_for_rental_view
+  # 在庫場所のマスタ。こちらも例外対応で全ての場所から選べるようにするため全件返す。
+  def get_stocker_places_for_rental_view
+    places = StockerPlace.order(:id)
+
+    render json: fmt(ok, places.map { |place| { id: place.id, name: place.display_name } })
+  end
+
   # GET /api/v1/get_assign_rental_items_for_rental_view?rental_place_id=&group_id=
   # 登録画面・進捗確認画面が使う本体。割当に名前を添え、それぞれの記録を同梱する。
   #
