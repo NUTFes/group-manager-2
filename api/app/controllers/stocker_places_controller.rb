@@ -23,7 +23,9 @@ class StockerPlacesController < ApplicationController
   end
 
   def update
-    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
+    # name を伴わない部分更新（stock_item_status だけの変更など）では name_en に触らない。
+    # translate_to_en(nil) の nil をそのまま入れると既存の英語名が黙って消えるため。
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank? && params[:name].present?
     if @stocker_place.update(stocker_place_params)
       render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
     else

@@ -635,8 +635,13 @@ export default {
 
       try {
         if (newValue === 0 && dbRecord) {
-          // パターンA: 0になったら割り当て解除（DELETE）
-          await this.$axios.$delete(`/assign_rental_items/${dbRecord.id}`);
+          // パターンA: 0になったら割り当て解除（DELETE）。
+          // 備考のPATCHと同じキューに載せる。直接投げると、備考の送信中に数量を0にした
+          // ときに先にレコードが消え、後から届いたPATCHが404になって備考編集だけが
+          // 失敗したように見えてしまう。
+          await this.enqueueRowSave(rowKey, () =>
+            this.$axios.$delete(`/assign_rental_items/${dbRecord.id}`)
+          );
           assign.dbIds = assign.dbIds.filter(db => db.id !== dbRecord.id);
           this.$set(assign.remarks, itemId, '');
 

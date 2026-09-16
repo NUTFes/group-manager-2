@@ -78,6 +78,13 @@ class ItemRentalLogsController < ApplicationController
     return render_transfer_conflict unless transfer_logs_match?(logs, existing)
     return render json: fmt(ok, transfer_payload(existing)) if existing.size == logs.size
 
+    # 既に reduction がある再送では、その分だけ提供元が減った後の値になるので確かめない
+    unless existing.key?(transfer_uid(:reduction))
+      available = source_unlent_quantity
+      return render_unprocessable_entity("quantity exceeds the source group's unlent quantity (#{available})") if
+        params[:quantity].to_i > available
+    end
+
     # 片方だけ既にある状態（過去の部分的な記録）でも、足りない方だけを補って対にする
     ItemRentalLog.transaction do
       logs.each { |log| log.save! unless existing.key?(log.uid) }
@@ -156,6 +163,16 @@ class ItemRentalLogsController < ApplicationController
       ItemRentalLog.new(common.merge(uid: transfer_uid(:addition), category: :addition,
                                      group_id: params[:to_group_id]))
     ]
+  end
+
+  # 提供元の未貸出数 = Σ（実効割当数 − 貸出済数）。既に渡した分は手元に無いので回せない。
+  # 同じ物品・在庫場所の割当が複数あることがあるため合計する（設計書5章）。
+  def source_unlent_quantity
+    AssignRentalItem.where(
+      group_id: params[:from_group_id],
+      rental_item_id: params[:rental_item_id],
+      stocker_place_id: params[:stocker_place_id]
+    ).sum(&:lent_remaining)
   end
 
   # 既に記録済みのuidが、今回と同じ操作を指しているか

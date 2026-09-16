@@ -118,6 +118,37 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal groups(:two).id, @assign_rental_item.group_id
   end
 
+  # 変更先の団体に同一(団体×在庫場所×物品)の割当が既にあると一意制約に当たる。
+  # 生の500（SQLエラー本文つき）ではなく、createと同じ422の案内を返すこと
+  test 'should not return a raw 500 when the group is changed onto an existing assignment' do
+    AssignRentalItem.create!(
+      group_id: groups(:two).id,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @assign_rental_item.stocker_place_id,
+      num: 2
+    )
+
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { group_id: groups(:two).id },
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_match(/編集/, response.parsed_body.dig('status', 'option').to_s)
+    assert_match(groups(:two).name, response.parsed_body.dig('status', 'option').to_s)
+    # 変更は反映されない
+    assert_equal groups(:one).id, @assign_rental_item.reload.group_id
+  end
+
+  # 保存に失敗したら200ではなく422で返すこと
+  test 'should return unprocessable entity when the update is invalid' do
+    patch assign_rental_item_url(@assign_rental_item),
+          params: { group_id: unknown_group_id },
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_equal groups(:one).id, @assign_rental_item.reload.group_id
+  end
+
   # updateで備考(remark)も更新でき、空文字を送ると消えること
   test 'should update remark' do
     patch assign_rental_item_url(@assign_rental_item),

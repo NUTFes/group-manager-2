@@ -578,6 +578,127 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  # --- 上限チェック（BFF用トークンでAPIを直接叩かれても超過できないこと）---
+
+  test 'should reject a rental beyond the lent remaining' do
+    remaining = @assign_rental_item.lent_remaining
+
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'over-lent-remaining-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: remaining + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body.dig('status', 'option').to_s, remaining.to_s
+  end
+
+  test 'should allow a rental exactly at the lent remaining' do
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'exact-lent-remaining-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: @assign_rental_item.lent_remaining
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+  end
+
+  test 'should reject a return beyond the quantity already lent out' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'over-return-remaining-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'return',
+        quantity: @assign_rental_item.return_remaining + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'should reject a rental_absolute beyond the effective assigned quantity' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'over-effective-num-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental_absolute',
+        quantity: @assign_rental_item.effective_num + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'should reject a return_absolute beyond the quantity already lent out' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'over-lent-quantity-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'return_absolute',
+        quantity: @assign_rental_item.lent_quantity + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  # 実効割当数は addition / reduction を織り込む（設計書5章）
+  test 'an addition log raises the limit of the rental it allows' do
+    over_limit = @assign_rental_item.lent_remaining + 3
+    ItemRentalLog.create!(
+      uid: 'limit-raising-addition-uid',
+      group: @group,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @assign_rental_item.stocker_place_id,
+      category: :addition,
+      quantity: 3,
+      recorder_email: @recorder_email
+    )
+
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'rental-after-addition-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: over_limit
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :created
+  end
+
+  test 'transfer rejects a quantity beyond the source unlent quantity' do
+    over_limit = @assign_rental_item.lent_remaining + 1
+
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url,
+           params: transfer_params(uid: 'transfer-over-limit-uid', quantity: over_limit),
+           headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  # 1回目で提供元が減るため、再送では上限を確かめ直さない（確かめると必ず超過になる）
+  test 'transfer resend is not blocked by the limit it consumed itself' do
+    params = transfer_params(uid: 'transfer-limit-resend-uid', quantity: @assign_rental_item.lent_remaining)
+
+    post transfer_item_rental_logs_url, params: params, headers: @headers, as: :json
+    assert_response :created
+
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: params, headers: @headers, as: :json
+    end
+
+    assert_response :success
+  end
+
   private
 
   def transfer_params(overrides = {})

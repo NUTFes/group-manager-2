@@ -24,15 +24,7 @@ class AssignRentalItemsController < ApplicationController
 
     # 同一(団体×在庫場所×物品)の割当は1行に統一する。
     # 既にあれば新規作成せず、既存の割当を編集するよう促す。
-    duplicated_group_ids = assign_rental_items_params[:items].filter_map do |item_params|
-      next unless AssignRentalItem.exists?(
-        group_id: item_params[:group_id],
-        stocker_place_id: stocker_place_id,
-        rental_item_id: rental_item_id
-      )
-
-      item_params[:group_id]
-    end
+    duplicated_group_ids = existing_group_ids(rental_item_id, stocker_place_id)
     return render_duplicate_assignment_error(duplicated_group_ids, rental_item_id) if duplicated_group_ids.any?
 
     ActiveRecord::Base.transaction do
@@ -50,14 +42,29 @@ class AssignRentalItemsController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(internal_server_error, [], e.message)
   rescue ActiveRecord::RecordNotUnique
-    render_duplicate_assignment_error([], assign_rental_items_params[:rentalItemId])
+    # 上の exists? はトランザクション外なので、同じ内容が同時に来ると両方が通過して
+    # 負けた方がここに来る。衝突した団体名を出せるよう、この時点で作り直して調べる。
+    render_duplicate_assignment_error(
+      existing_group_ids(rental_item_id, stocker_place_id), rental_item_id
+    )
   end
 
   # PATCH/PUT /assign_rental_items/1
   # PATCH/PUT /assign_rental_items/1.json
   def update
-    @assign_rental_item.update(assign_rental_item_params)
-    render json: fmt(ok, @assign_rental_item, "Updated assign_rental_item id = #{params[:id]}")
+    if @assign_rental_item.update(assign_rental_item_params)
+      render json: fmt(ok, @assign_rental_item, "Updated assign_rental_item id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @assign_rental_item.errors.full_messages.join(', ')),
+             status: :unprocessable_entity
+    end
+  rescue ActiveRecord::RecordNotUnique
+    # 団体の変更先に同じ(団体×在庫場所×物品)の割当が既にあると一意制約に当たる。
+    # 生の500（SQLエラーの本文つき）を返さず、createと同じ案内にする。
+    render_duplicate_assignment_error(
+      [assign_rental_item_params[:group_id] || @assign_rental_item.group_id],
+      assign_rental_item_params[:rentalItemId] || @assign_rental_item.rental_item_id
+    )
   end
 
   # DELETE /assign_rental_items/1
@@ -71,6 +78,15 @@ class AssignRentalItemsController < ApplicationController
   end
 
   private
+
+  # 送られてきた団体のうち、既に同一(団体×在庫場所×物品)の割当を持つもの
+  def existing_group_ids(rental_item_id, stocker_place_id)
+    group_ids = assign_rental_items_params[:items].pluck(:group_id)
+
+    AssignRentalItem.where(
+      group_id: group_ids, stocker_place_id: stocker_place_id, rental_item_id: rental_item_id
+    ).pluck(:group_id)
+  end
 
   # 重複割当を作成しようとしたときのエラーレスポンス（HTTP 422）
   def render_duplicate_assignment_error(group_ids, rental_item_id)
