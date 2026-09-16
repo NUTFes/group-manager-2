@@ -49,9 +49,38 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal(
       [{ 'rental_item_name' => '長机', 'rental_place_name' => '第1体育館前',
-         'stocks' => [{ 'stock_place_name' => '体育館倉庫', 'num' => 3 }] }],
+         'stocks' => [{ 'stock_place_name' => '体育館倉庫', 'num' => 3, 'remark' => nil }] }],
       data['rental_items']
     )
+  end
+
+  # 備考は割り当て1件ごとに付くため、在庫場所ごとの行に対応する
+  test 'returns the remark of each rental item assignment' do
+    @group.assign_rental_items.sole.update!(remark: '脚の折れているものが含まれます')
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal '脚の折れているものが含まれます',
+                 find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  # 未入力を空文字に潰すと「空欄」と「未入力」が区別できなくなるためnullのまま返す
+  test 'returns null as the remark when it is not filled in' do
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_nil find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  # groupと同じく、認証なしで露出するstocksの公開範囲も明示的に固定する。
+  # assign_rental_itemsに列が追加されても勝手に公開されないことを担保する
+  test 'exposes only the intended attributes of a stock' do
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal %w[num remark stock_place_name],
+                 find_rental_item('長机')['stocks'].sole.keys.sort
   end
 
   # 会場は place_order -> assign_group_places -> stocker_place から引く。

@@ -131,6 +131,14 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
                       <tr key={stock.stockPlaceName}>
                         <td className="break-words border border-[#b2b2b2] px-3 py-2 text-base font-medium text-font">
                           {stock.stockPlaceName || texts.labels.unset}
+                          {/* 備考は物品貸出表に倣い、列を増やさずセル内に小さめの文字で添える。
+                              確定画面は物品ごとにまとめており物品名が見出しになるため、
+                              割り当て単位で対応が付く在庫場所のセルに置く */}
+                          {stock.remark && (
+                            <span className="mt-1 block text-sm font-normal text-gray-600">
+                              {stock.remark}
+                            </span>
+                          )}
                         </td>
                         <td className="border border-[#b2b2b2] px-3 py-2 text-right text-base font-medium text-font">
                           {stock.num}

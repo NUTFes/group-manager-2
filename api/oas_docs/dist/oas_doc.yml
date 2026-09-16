@@ -11882,6 +11882,10 @@ components:
                           description: 在庫場所名。未設定の場合は空文字
                         num:
                           type: integer
+                        remark:
+                          type: string
+                          nullable: true
+                          description: 物品割り当ての備考。未入力の場合はnull
     api.v1.ConfirmedQrcodesApi:
       type: object
       properties:

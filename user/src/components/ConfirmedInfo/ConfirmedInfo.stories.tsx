@@ -41,14 +41,24 @@ export const Default: Story = {
           rentalPlaceName: '講義棟103',
           // 同じ物品を複数の在庫場所から借りるケース
           stocks: [
-            { stockPlaceName: '講義棟103', num: 10 },
-            { stockPlaceName: '講義棟104', num: 3 },
+            {
+              stockPlaceName: '講義棟103',
+              num: 10,
+              remark: '脚が折れているものが1台含まれます',
+            },
+            // 備考が長い場合にセル内で折り返ること
+            {
+              stockPlaceName: '講義棟104',
+              num: 3,
+              remark:
+                '天板に汚れあり。使用前に確認してください。返却時も同様にご確認をお願いします',
+            },
           ],
         },
         {
           rentalItemName: '椅子',
           rentalPlaceName: '講義棟103',
-          stocks: [{ stockPlaceName: '講義棟103', num: 20 }],
+          stocks: [{ stockPlaceName: '講義棟103', num: 20, remark: null }],
         },
       ],
     },
@@ -69,7 +79,7 @@ export const Unassigned: Story = {
         {
           rentalItemName: '長机',
           rentalPlaceName: '',
-          stocks: [{ stockPlaceName: '体育館倉庫', num: 1 }],
+          stocks: [{ stockPlaceName: '体育館倉庫', num: 1, remark: null }],
         },
       ],
     },

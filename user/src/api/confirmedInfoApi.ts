@@ -28,6 +28,8 @@ export type ConfirmedInfo = {
     stocks: {
       stockPlaceName: string;
       num: number;
+      // 物品割り当ての備考。未入力の場合はnull
+      remark: string | null;
     }[];
   }[];
 };

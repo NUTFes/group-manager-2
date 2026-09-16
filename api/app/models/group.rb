@@ -728,7 +728,9 @@ class Group < ApplicationRecord
         {
           rental_item_name: rental_item_name,
           rental_place_name: rental_place_name,
-          stocks: assigns.map { |assign| { stock_place_name: assign.stock_place_name, num: assign.num } }
+          stocks: assigns.map do |assign|
+            { stock_place_name: assign.stock_place_name, num: assign.num, remark: assign.remark }
+          end
         }
       end
   end
