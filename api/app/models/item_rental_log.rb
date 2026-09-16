@@ -58,8 +58,9 @@ class ItemRentalLog < ApplicationRecord
     case category
     when 'rental' then assign_rental_item.lent_remaining
     when 'return' then assign_rental_item.return_remaining
-    # 訂正は「訂正後の累計」を入れるので、上限は累計そのものの上限になる
-    when 'rental_absolute' then assign_rental_item.effective_num
+    # 訂正は「訂正後の累計」を入れるので、上限は累計そのものの上限になる。
+    # 返却された分はまた貸し出せるため、貸出済の累計は実効割当数＋返却済まで伸びる
+    when 'rental_absolute' then assign_rental_item.effective_num + assign_rental_item.returned_quantity
     when 'return_absolute' then assign_rental_item.lent_quantity
     end
   end

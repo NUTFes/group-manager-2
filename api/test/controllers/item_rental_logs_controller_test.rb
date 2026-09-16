@@ -547,6 +547,46 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  # 返した物はまた貸し出せる（同じ物が戻ってくるため、貸出残に戻す）
+  test 'returning lent items makes them lendable again' do
+    remaining = @assign_rental_item.lent_remaining
+
+    post item_rental_logs_url, params: {
+      uid: 'relend-rental-uid', assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental', quantity: remaining
+    }, headers: @headers, as: :json
+    assert_response :created
+    assert_equal 0, @assign_rental_item.reload.lent_remaining
+
+    # 全部返すと、貸出前と同じだけ貸し出せる状態に戻る
+    post item_rental_logs_url, params: {
+      uid: 'relend-return-uid', assign_rental_item_id: @assign_rental_item.id,
+      category: 'return', quantity: remaining
+    }, headers: @headers, as: :json
+    assert_response :created
+    assert_equal remaining, @assign_rental_item.reload.lent_remaining
+
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'relend-again-uid', assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental', quantity: remaining
+      }, headers: @headers, as: :json
+    end
+    assert_response :created
+  end
+
+  # 返却の上限は「いま貸している数」のままで、返しすぎは通らない
+  test 'returning more than what is currently lent out is still rejected' do
+    assert_no_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'over-return-after-relend-uid', assign_rental_item_id: @assign_rental_item.id,
+        category: 'return', quantity: @assign_rental_item.return_remaining + 1
+      }, headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   # --- 上限チェック（BFF用トークンでAPIを直接叩かれても超過できないこと）---
 
   test 'should reject a rental beyond the lent remaining' do
@@ -592,12 +632,14 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should reject a rental_absolute beyond the effective assigned quantity' do
+    limit = @assign_rental_item.effective_num + @assign_rental_item.returned_quantity
+
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'over-effective-num-uid',
         assign_rental_item_id: @assign_rental_item.id,
         category: 'rental_absolute',
-        quantity: @assign_rental_item.effective_num + 1
+        quantity: limit + 1
       }, headers: @headers, as: :json
     end
 
@@ -738,7 +780,9 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
   def bff_headers(recorder_email)
     {
       RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN,
-      RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => recorder_email
+      RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => recorder_email,
+      # 超過貸出はSlackへ流すため、テストでは止める
+      'X-Skip-Slack-Notification' => 'true'
     }
   end
 end

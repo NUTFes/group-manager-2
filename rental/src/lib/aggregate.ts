@@ -74,7 +74,7 @@ export type AssignmentSummary = {
   num: number;
   lent: number;
   returned: number;
-  /** 貸出残 = 実効割当数 − 貸出済 */
+  /** 貸出残 = 実効割当数 − 貸出中（貸出済 − 返却済） */
   lentRemaining: number;
   /** 返却残 = 貸出済 − 返却済 */
   returnRemaining: number;
@@ -91,7 +91,8 @@ export function summarize(
   const num = effectiveNum(assignment, changeLogs);
   const lent = lentQuantity(assignment.itemRentalLogs);
   const returned = returnedQuantity(assignment.itemRentalLogs);
-  const lentRemaining = Math.max(0, num - lent);
+  // 返ってきた物はまた貸し出せるので、返却済のぶんは貸出残に戻す
+  const lentRemaining = Math.max(0, num - lent + returned);
   const returnRemaining = Math.max(0, lent - returned);
   const withMemo = sortLogs(assignment.itemRentalLogs).filter(
     (log) => log.memo

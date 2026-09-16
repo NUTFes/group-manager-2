@@ -96,7 +96,10 @@ class ItemRentalLogsController < ApplicationController
     logs = build_transfer_logs
     existing = existing_transfer_logs
     return render_transfer_conflict unless transfer_logs_match?(logs, existing)
+    # 再送は既にある対をそのまま返す。記録は動かないのでSlackにも流さない
     return render json: fmt(ok, transfer_payload(existing)) if existing.size == logs.size
+
+    effective_nums_before = transfer_effective_nums
 
     # 片方だけ既にある状態（過去の部分的な記録）でも、足りない方だけを補って対にする
     ItemRentalLog.transaction do
@@ -114,6 +117,7 @@ class ItemRentalLogsController < ApplicationController
 
       logs.each { |log| log.save! unless existing.key?(log.uid) }
     end
+    notify_transfer_to_slack(effective_nums_before)
     render json: fmt(created, transfer_payload(existing_transfer_logs)), status: :created
   rescue TransferLimitExceeded => e
     render_unprocessable_entity(e.message)
@@ -201,6 +205,53 @@ class ItemRentalLogsController < ApplicationController
       stocker_place_id: params[:stocker_place_id],
       lock: lock
     )
+  end
+
+  # 超過貸出の前後で、両団体の実効割当数がどう変わったかを見るための値
+  def transfer_effective_nums
+    {
+      from: effective_num_for(params[:from_group_id]),
+      to: effective_num_for(params[:to_group_id])
+    }
+  end
+
+  def effective_num_for(group_id)
+    AssignRentalItem.find_by(
+      group_id: group_id,
+      rental_item_id: params[:rental_item_id],
+      stocker_place_id: params[:stocker_place_id]
+    )&.effective_num || 0
+  end
+
+  # 割当を人手で動かした事実は当日の判断材料になるため、記録できたらSlackへ流す。
+  # 通知に失敗しても記録は成立させる（記録できない方が当日の運用では困る）。
+  def notify_transfer_to_slack(effective_nums_before)
+    return if Current.skip_slack_notification
+
+    after = transfer_effective_nums
+    message = <<~MSG
+      超過貸出が記録されました
+      ーーーーーーーーーーーーーーーー
+      物品：#{RentalItem.find_by(id: params[:rental_item_id])&.name}
+      在庫場所：#{StockerPlace.find_by(id: params[:stocker_place_id])&.display_name}
+      数量：#{params[:quantity]}
+
+      貸出元：#{Group.find_by(id: params[:from_group_id])&.name}
+      　割当数 #{effective_nums_before[:from]} → #{after[:from]}
+      貸出先：#{Group.find_by(id: params[:to_group_id])&.name}
+      　割当数 #{effective_nums_before[:to]} → #{after[:to]}
+
+      記録者：#{rental_recorder_email}
+      ーーーーーーーーーーーーーーーー
+    MSG
+
+    Slack::Web::Client.new.chat_postMessage(
+      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+      channel: "##{ENV.fetch('CHANNEL', nil)}",
+      text: message
+    )
+  rescue StandardError => e
+    Rails.logger.error("超過貸出のSlack通知に失敗しました: #{e.message}")
   end
 
   # 渡す先の割当。無ければ num 0 で作る（もともと申請していない物品も渡せるように）。

@@ -183,8 +183,11 @@ category: rental | return | rental_absolute | return_absolute | addition | reduc
 - **貸出済** = 直近の `rental_absolute` の値 + それより後の Σ rental（`rental_absolute` が無ければ Σ rental）
 - **返却済** = 直近の `return_absolute` の値 + それより後の Σ return（`return_absolute` が無ければ Σ return）
 - **実効割当数（提案）** = `assign_rental_items.num` + Σ addition − Σ reduction。割当変更をどう集計に織り込むかは 9 章の要合意事項
-- **貸出残** = 実効割当数 − 貸出済
-- **返却残** = 貸出済 − 返却済
+- **貸出中** = 貸出済 − 返却済
+- **貸出残** = 実効割当数 − 貸出中（= 実効割当数 − 貸出済 + 返却済）
+- **返却残** = 貸出中（= 貸出済 − 返却済）
+
+**返した物はまた貸し出せる。** 同じ物が戻ってくるため、返却済のぶんは貸出残に戻す。5個の割当を5個渡して5個返してもらったら、また5個渡せる。貸出済・返却済は累計なので、この場合 貸出済10 / 返却済5 まで伸びうる（`rental_absolute` の上限も 実効割当数 ＋ 返却済 になる）。
 
 貸出と返却で式が対称になる。`*_absolute` は累計そのものを上書きする。差分ではない。上書き後の通常記録はその値に加算する。ログの順序は `created_at`（同時刻は `id`）で判定する。
 
@@ -222,7 +225,7 @@ category: rental | return | rental_absolute | return_absolute | addition | reduc
 
 API では `addition` / `reduction` として記録できる（#2198）。UI は登録画面の「例外対応」→「超過貸出」で、提供元の団体・物品・数量を選び、提供元に `reduction`、対象団体に `addition` を1件ずつ記録する（#2225 で実装済み）。2件は `uid` を `<uid>-reduction` / `<uid>-addition` として同じ操作から生成し、冪等性を保つ。
 
-**上限はサーバー側でも確かめる。行ロックつきで。** 画面と BFF だけで制限していると、BFF 用のトークンさえあれば API を直接叩いて上限を無視した記録ができてしまう。`rental/src/lib/aggregate.ts` と同じ式を `AssignRentalItem`（`effective_num` / `lent_quantity` / `lent_remaining` / `return_remaining`）に持たせ、`ItemRentalLog` の作成時に検証する（#2224 のレビュー反映）。上限は `rental` = 貸出残、`return` = 返却残、`rental_absolute` = 実効割当数、`return_absolute` = 貸出済数。超過貸出は割当1件では上限が決まらないため、`transfer` が提供元の未貸出数を確かめる。
+**上限はサーバー側でも確かめる。行ロックつきで。** 画面と BFF だけで制限していると、BFF 用のトークンさえあれば API を直接叩いて上限を無視した記録ができてしまう。`rental/src/lib/aggregate.ts` と同じ式を `AssignRentalItem`（`effective_num` / `lent_quantity` / `lent_remaining` / `return_remaining`）に持たせ、`ItemRentalLog` の作成時に検証する（#2224 のレビュー反映）。上限は `rental` = 貸出残、`return` = 返却残、`rental_absolute` = 実効割当数＋返却済、`return_absolute` = 貸出済数。超過貸出は割当1件では上限が決まらないため、`transfer` が提供元の未貸出数を確かめる。
 
 検証は確認してから書くまでの間に別の端末が書き込めるため、**割当行を `FOR UPDATE` で押さえてから**行う（`create` は対象の割当、`transfer` は提供元の割当）。押さえないと、残り5個に対する5個の記録が2件同時に通って10個貸し出した記録になる。`addition` / `reduction` は単独では上限が決まらないうえ、片方だけ残ると在庫が消えたように見えるため、`POST /item_rental_logs` では受け付けず `transfer` 専用にしている。
 
@@ -233,6 +236,8 @@ API では `addition` / `reduction` として記録できる（#2198）。UI は
 **渡す先に割当が無くても渡せる。** もともと申請していない物品を渡す場合、`addition` を足す先も、渡した分を記録する先（記録は `assign_rental_item` に紐づく）も無い。`transfer` が渡す先の割当を `num` 0・貸出場所は作業中の場所で作り、実効割当数が `addition` のぶんだけ増えるようにする。既にある割当には手を入れない。
 
 **回せる数量の上限 = 提供元の未貸出数**（`Σ（実効割当数 − 貸出済数）`、物品と在庫場所が一致する割当の合計）。既に渡した分は提供元の手元に無いので動かせない。12個予定で3個渡した団体からは9個までしか回せない。画面に「元の団体の未貸出数」を出して入力を制限し、別端末の記録で残数が変わっている場合に備えて BFF（`/api/rental/excess-lending`）でも送信時に同じ上限を確かめ、超えていれば 422 を返す。
+
+**記録できたら Slack に流す。** 割当を人手で動かした事実は当日の判断材料になるため、`transfer` が成功したときに 物品 / 在庫場所 / 数量 / 貸出元・貸出先の団体名と割当数の変化（元の数 → 変更後の数）/ 記録者 を投稿する（既存の `Slack::Web::Client` と `BOT_USER_ACCESS_TOKEN` / `CHANNEL` をそのまま使う）。同じ uid の再送では記録が動かないため投稿しない。通知に失敗しても記録は成立させる。
 
 `addition` / `reduction` は `rental_place_id`（貸出場所）を持たないため、貸出場所で絞ったクエリでは返らない。A3 の読み取り API が対象団体の割当変更ログを `assignment_change_logs` として同じ応答に同梱することで解決した（9 章）。
 
@@ -419,6 +424,7 @@ PoC のフロント・API はすべて実装済み。統合ブランチ `feat/ka
 | 10 | チームレビュー反映3: 超過貸出を1トランザクション化・超過貸出の再送を冪等に・残数の再クランプ・QRのオリジン検証・スキャンの多重検知防止（#2230） | 完了 |
 | 11 | チームレビュー反映4: 記録の上限をAPI側でも検証・割当の団体変更の一意制約違反/重複メッセージ・置き場所の部分更新で英語名を保持・数量0削除を保存キューに載せる（#2224 へ直接反映） | 完了 |
 | 12 | 監査反映: 場所の「すべて」選択・例外対応を貸出場所非依存に・渡す先の割当を自動作成・進捗の割当変更反映・再送の409詰まり・上限の行ロック・Access設定漏れのfail-closed（#2224 へ直接反映） | 完了 |
+| 13 | 追加要件: 例外対応の候補をマスタ全件に・超過貸出のSlack通知・返却した物品を再度貸出可能に（#2224 へ直接反映） | 完了 |
 
 **QR 読み取りの2経路**: `BarcodeDetector` があるブラウザ（Android Chrome など）はブラウザ内蔵の実装を使い、無い場合（iOS Safari）は `qr-scanner`（jsQR ベース）に動的インポートでフォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
 

@@ -73,9 +73,10 @@ class AssignRentalItem < ApplicationRecord
     accumulated_quantity('return', 'return_absolute', logs)
   end
 
-  # 貸出残 = 実効割当数 − 貸出済
+  # 貸出残 = 実効割当数 − 貸出中（貸出済 − 返却済）。
+  # 返ってきた物はまた貸し出せるので、返却済のぶんは残数に戻す。
   def lent_remaining(change_logs: nil, logs: nil)
-    [effective_num(change_logs: change_logs) - lent_quantity(logs: logs), 0].max
+    [effective_num(change_logs: change_logs) - lent_quantity(logs: logs) + returned_quantity(logs: logs), 0].max
   end
 
   # 返却残 = 貸出済 − 返却済

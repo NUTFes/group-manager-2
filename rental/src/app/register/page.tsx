@@ -261,8 +261,10 @@ function RegisterContent() {
             assignRentalItemId: assignment.id,
             itemName: assignment.rentalItemName,
             currentTotal: mode === "rental" ? summary.lent : summary.returned,
-            // 貸出の上限は実効割当数、返却の上限は貸出済数
-            maxTotal: mode === "rental" ? summary.num : summary.lent,
+            // 貸出の上限は実効割当数＋返却済（返った分はまた貸せる）、
+            // 返却の上限は貸出済数
+            maxTotal:
+              mode === "rental" ? summary.num + summary.returned : summary.lent,
           },
         ];
       }),
