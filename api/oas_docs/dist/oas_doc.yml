@@ -11877,6 +11877,10 @@ components:
                     items:
                       type: object
                       properties:
+                        id:
+                          type: integer
+                          format: int64
+                          description: assign_rental_items.id。画面側が行を一意に識別するために使う
                         stock_place_name:
                           type: string
                           description: 在庫場所名。未設定の場合は空文字

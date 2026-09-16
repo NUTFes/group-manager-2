@@ -128,7 +128,9 @@ const ConfirmedInfo: FC<ConfirmedInfoProps> = ({
                   </thead>
                   <tbody>
                     {item.stocks.map((stock) => (
-                      <tr key={stock.stockPlaceName}>
+                      // 在庫場所名は一意とは限らない（同名のstocker_placeを作れる）ため、
+                      // 割り当てのidをkeyにする
+                      <tr key={stock.id}>
                         <td className="break-words border border-[#b2b2b2] px-3 py-2 text-base font-medium text-font">
                           {stock.stockPlaceName || texts.labels.unset}
                           {/* 備考は物品貸出表に倣い、列を増やさずセル内に小さめの文字で添える。
