@@ -729,7 +729,9 @@ class Group < ApplicationRecord
           rental_item_name: rental_item_name,
           rental_place_name: rental_place_name,
           stocks: assigns.map do |assign|
-            { stock_place_name: assign.stock_place_name, num: assign.num, remark: assign.remark }
+            # remarkに空文字を禁じる制約が無く、備考なしがnilと空文字の2通りになる。
+            # CSV・PDFがpresent?で同一に扱っているのに合わせ、ここでnilに寄せる
+            { stock_place_name: assign.stock_place_name, num: assign.num, remark: assign.remark.presence }
           end
         }
       end

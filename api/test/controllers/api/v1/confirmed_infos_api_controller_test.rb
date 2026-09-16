@@ -65,8 +65,18 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
                  find_rental_item('長机')['stocks'].sole['remark']
   end
 
-  # 未入力を空文字に潰すと「空欄」と「未入力」が区別できなくなるためnullのまま返す
   test 'returns null as the remark when it is not filled in' do
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_nil find_rental_item('長机')['stocks'].sole['remark']
+  end
+
+  # remarkに空文字を禁じる制約が無いため、備考なしがnilと空文字の2通りになり得る。
+  # CSV・PDFがpresent?で同一に扱っているのに合わせ、APIもnullに寄せる
+  test 'returns null as the remark when it is stored as a blank string' do
+    @group.assign_rental_items.sole.update!(remark: '')
+
     get confirmed_info_path(@group, @group.secret)
 
     assert_response :success
