@@ -34,4 +34,23 @@ class RentalItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 'Long Desk', @rental_item.reload.name_en
   end
+
+  # 保存の成否を見るようにした後も、成功時の応答が変わっていないこと
+  test 'should create rental_item' do
+    assert_difference('RentalItem.count') do
+      post rental_items_url, params: { name: 'パイプ椅子', name_en: 'Folding Chair' }, as: :json
+    end
+
+    assert_response :success
+    assert_equal 201, response.parsed_body.dig('status', 'code')
+    assert_equal 'Folding Chair', RentalItem.order(:id).last.name_en
+  end
+
+  test 'should update rental_item' do
+    patch rental_item_url(@rental_item), params: { name: '長机（大）', name_en: 'Long Table L' }, as: :json
+
+    assert_response :success
+    assert_equal 201, response.parsed_body.dig('status', 'code')
+    assert_equal '長机（大）', @rental_item.reload.name
+  end
 end

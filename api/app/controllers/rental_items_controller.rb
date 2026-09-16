@@ -14,16 +14,23 @@ class RentalItemsController < ApplicationController
 
   def create
     params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
-    @rental_item = RentalItem.create(rental_item_params)
-    render json: fmt(created, @rental_item)
+    @rental_item = RentalItem.new(rental_item_params)
+    if @rental_item.save
+      render json: fmt(created, @rental_item)
+    else
+      render_rental_item_errors
+    end
   end
 
   def update
     # name を伴わない部分更新（貸出可否フラグだけの変更など）では name_en に触らない。
     # translate_to_en(nil) の nil をそのまま入れると既存の英語名が黙って消えるため。
     params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank? && params[:name].present?
-    @rental_item.update(rental_item_params)
-    render json: fmt(created, @rental_item, "Updated rental_item id = #{params[:id]}")
+    if @rental_item.update(rental_item_params)
+      render json: fmt(created, @rental_item, "Updated rental_item id = #{params[:id]}")
+    else
+      render_rental_item_errors
+    end
   end
 
   def destroy
@@ -40,6 +47,12 @@ class RentalItemsController < ApplicationController
   end
 
   private
+
+  # 保存に失敗したときは成功扱い（201）で返さず、理由を添えて422にする
+  def render_rental_item_errors
+    render json: fmt(unprocessable_entity, [], @rental_item.errors.full_messages.join(', ')),
+           status: :unprocessable_entity
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rental_item
