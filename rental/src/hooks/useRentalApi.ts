@@ -75,6 +75,13 @@ export type ExcessLendingParams = {
   quantity: number;
 };
 
-/** 超過貸出。渡す団体に addition、元の団体に reduction を対で記録する */
+/**
+ * 超過貸出。渡す団体に addition、元の団体に reduction を対で記録する。
+ * API 側が1トランザクションで2件書くため、片方だけ残ることはない。
+ * 同じ uid の再送は既存の対をそのまま返す。
+ */
 export const createExcessLending = (params: ExcessLendingParams) =>
-  postToBff<{ id: number; uid: string }>("/api/rental/excess-lending", params);
+  postToBff<{
+    reduction: { id: number; uid: string };
+    addition: { id: number; uid: string };
+  }>("/api/rental/excess-lending", params);

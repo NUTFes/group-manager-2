@@ -19,6 +19,7 @@ import {
 } from "@/hooks/useRentalApi";
 import { useWorkSession } from "@/hooks/useWorkSession";
 import { summarize } from "@/lib/aggregate";
+import type { AssignmentSummary } from "@/lib/aggregate";
 
 type DraftState = Record<number, { quantity: number; memo: string }>;
 
@@ -26,6 +27,34 @@ type SubmitState =
   | { phase: "idle" }
   | { phase: "sending" }
   | { phase: "error"; failedIds: number[]; message: string };
+
+/**
+ * 入力済みの数量を最新の残数に丸める。変化が無ければ元のオブジェクトを返す。
+ *
+ * 割当は画面復帰時に取り直す（useRentalApi の revalidateOnFocus）ため、別の端末の
+ * 記録で残数が減っていることがある。古い（今より大きい）数量のまま送らないよう、
+ * 表示にも送信にも丸めた後の値を使う。
+ */
+function clampDrafts(
+  drafts: DraftState,
+  summaries: Map<number, AssignmentSummary>
+): DraftState {
+  let changed = false;
+  const clamped: DraftState = {};
+
+  for (const [key, draft] of Object.entries(drafts)) {
+    const assignmentId = Number(key);
+    const quantity = Math.min(
+      draft.quantity,
+      summaries.get(assignmentId)?.remaining ?? 0
+    );
+    if (quantity !== draft.quantity) changed = true;
+    clamped[assignmentId] =
+      quantity === draft.quantity ? draft : { ...draft, quantity };
+  }
+
+  return changed ? clamped : drafts;
+}
 
 // 画面③（Figma: 貸出-登録ページ node-id=5032-6817）。送信処理は F7(#2210)。
 //
@@ -93,9 +122,17 @@ function RegisterContent() {
     [targets, changeLogs, mode]
   );
 
+  // 最新の残数に丸めた入力。表示・送信はこちらを使う
+  const effectiveDrafts = useMemo(
+    () => clampDrafts(drafts, summaries),
+    [drafts, summaries]
+  );
+  // 丸めが起きている間は、入力した値と違うものを送ることを画面で知らせる
+  const isClamped = effectiveDrafts !== drafts;
+
   // 数量が入っているカードに加え、メモだけ書かれたカードも送信対象にする。
   // 「来たが受け取らなかった」等をメモだけで残せるようにするため（quantity 0 で記録）。
-  const submittableIds = Object.entries(drafts)
+  const submittableIds = Object.entries(effectiveDrafts)
     .filter(([, draft]) => draft.quantity > 0 || draft.memo.trim() !== "")
     .map(([id]) => Number(id));
 
@@ -120,11 +157,12 @@ function RegisterContent() {
   const updateDraft = (
     assignmentId: number,
     patch: Partial<{ quantity: number; memo: string }>
-  ) =>
+  ) => {
     setDrafts((prev) => {
       const current = prev[assignmentId] ?? { quantity: 0, memo: "" };
       return { ...prev, [assignmentId]: { ...current, ...patch } };
     });
+  };
 
   const handleSubmit = async () => {
     const category = mode === "rental" ? "rental" : "return";
@@ -141,8 +179,8 @@ function RegisterContent() {
           uid: `${uidSeed}-${assignmentId}`,
           assignRentalItemId: assignmentId,
           category,
-          quantity: drafts[assignmentId]?.quantity ?? 0,
-          memo: drafts[assignmentId]?.memo?.trim() || null,
+          quantity: effectiveDrafts[assignmentId]?.quantity ?? 0,
+          memo: effectiveDrafts[assignmentId]?.memo?.trim() || null,
         }).then(() => assignmentId)
       )
     );
@@ -197,12 +235,9 @@ function RegisterContent() {
     await mutate();
   };
 
+  // uid はシート側が持つ。再送では同じ uid を使い、二重に割当を動かさない
   const handleExcessLending = async (input: ExcessLendingInput) => {
-    await createExcessLending({
-      uid: crypto.randomUUID(),
-      toGroupId: groupId,
-      ...input,
-    });
+    await createExcessLending({ toGroupId: groupId, ...input });
     await mutate();
   };
 
@@ -291,7 +326,7 @@ function RegisterContent() {
         <div className="flex flex-col gap-4">
           {targets.map((assignment) => {
             const summary = summaries.get(assignment.id);
-            const draft = drafts[assignment.id];
+            const draft = effectiveDrafts[assignment.id];
 
             return (
               <ItemCard
@@ -315,6 +350,12 @@ function RegisterContent() {
             );
           })}
         </div>
+
+        {isClamped && (
+          <p className="text-body text-alert">
+            他の端末の記録で残数が減ったため、入力済みの数量を最新の残数に合わせました。内容を確認してから送信してください。
+          </p>
+        )}
 
         {submitState.phase === "error" && (
           <p className="text-body text-alert">

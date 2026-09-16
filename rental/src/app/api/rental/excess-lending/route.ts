@@ -22,14 +22,24 @@ type ExcessLendingBody = {
  * 別端末の記録で残数が変わることがあるため送信時にも確かめる。
  * 読み取りに失敗したときは null を返し、判定を諦めて記録を通す（記録できない方が
  * 当日の運用では困るため）。
+ *
+ * この uid の reduction が既にある場合（＝同じ操作の再送）は、その分を戻して
+ * 「この操作を行う前の未貸出数」で判定する。そうしないと1回目で減った結果に
+ * 引っかかり、冪等なはずの再送が 422 になる。
  */
 async function fetchUnlentQuantity(
   request: Request,
   {
+    uid,
     groupId,
     rentalItemId,
     stockerPlaceId,
-  }: { groupId: number; rentalItemId: number; stockerPlaceId: number }
+  }: {
+    uid: string;
+    groupId: number;
+    rentalItemId: number;
+    stockerPlaceId: number;
+  }
 ): Promise<number | null> {
   const response = await forwardToApi(request, {
     path: "api/v1/get_assign_rental_items_for_rental_view",
@@ -47,7 +57,7 @@ async function fetchUnlentQuantity(
       deep: true,
     }) as unknown as AssignmentsResponse;
 
-    return data.assignRentalItems
+    const unlent = data.assignRentalItems
       .filter(
         (assignment) =>
           assignment.rentalItemId === rentalItemId &&
@@ -60,6 +70,18 @@ async function fetchUnlentQuantity(
             .lentRemaining,
         0
       );
+
+    // 再送なら、1回目に自分が減らした分を戻してから判定する
+    const alreadyReduced = data.assignmentChangeLogs
+      .filter(
+        (log) =>
+          log.uid === `${uid}-reduction` &&
+          log.rentalItemId === rentalItemId &&
+          log.stockerPlaceId === stockerPlaceId
+      )
+      .reduce((sum, log) => sum + log.quantity, 0);
+
+    return unlent + alreadyReduced;
   } catch {
     return null;
   }
@@ -68,8 +90,9 @@ async function fetchUnlentQuantity(
 // POST /api/rental/excess-lending
 //
 // 在庫予定を超えて貸し出す操作。渡す団体に addition、元の貸出先団体に reduction を
-// 対で記録する（#2198 のカテゴリ）。どちらも uid で冪等なので、片方だけ成功した
-// 状態で再送しても二重記録にならない。
+// 対で記録する（#2198 のカテゴリ）。2件を別々に POST すると片方だけ成功したときに
+// 元の団体の在庫が消えたまま残るため、API 側の transfer で1トランザクションにまとめて
+// 記録する。uid で冪等なので、同じ uid の再送は既存の対をそのまま返す。
 export async function POST(request: Request) {
   let body: ExcessLendingBody;
   try {
@@ -108,6 +131,7 @@ export async function POST(request: Request) {
   }
 
   const available = await fetchUnlentQuantity(request, {
+    uid,
     groupId: fromGroupId,
     rentalItemId,
     stockerPlaceId,
@@ -119,34 +143,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const common = {
-    rental_item_id: rentalItemId,
-    stocker_place_id: stockerPlaceId,
-    quantity,
-  };
-
-  // 元の団体の割当を減らす。こちらが失敗した場合は渡す側を記録しない
-  const reduction = await forwardToApi(request, {
-    path: "item_rental_logs",
-    method: "POST",
-    body: {
-      ...common,
-      uid: `${uid}-reduction`,
-      category: "reduction",
-      group_id: fromGroupId,
-    },
-    withRecorderEmail: true,
-  });
-  if (!reduction.ok) return reduction;
-
   return forwardToApi(request, {
-    path: "item_rental_logs",
+    path: "item_rental_logs/transfer",
     method: "POST",
     body: {
-      ...common,
-      uid: `${uid}-addition`,
-      category: "addition",
-      group_id: toGroupId,
+      uid,
+      rental_item_id: rentalItemId,
+      stocker_place_id: stockerPlaceId,
+      from_group_id: fromGroupId,
+      to_group_id: toGroupId,
+      quantity,
+      memo: body.memo ?? null,
     },
     withRecorderEmail: true,
   });

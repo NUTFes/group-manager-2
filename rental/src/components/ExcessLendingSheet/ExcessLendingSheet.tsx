@@ -10,6 +10,8 @@ import { summarize } from "@/lib/aggregate";
 import type { AssignRentalItem, RentalGroup } from "@/types/rental";
 
 export type ExcessLendingInput = {
+  // 再送でも同じ値を使う冪等キー。入力を変えたら別の操作なので取り直す
+  uid: string;
   rentalItemId: number;
   stockerPlaceId: number;
   fromGroupId: number;
@@ -48,6 +50,11 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
   const [quantity, setQuantity] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // 送信失敗後にそのまま押し直したときは同じ uid を使い、API 側の冪等判定を効かせる。
+  // 入力を変えたら中身の違う別の操作になるため、uid も取り直す（同じ uid で
+  // 違う内容を送ると 409 になる）
+  const [uid, setUid] = useState(() => crypto.randomUUID());
+  const renewUid = () => setUid(crypto.randomUUID());
 
   // 物品は重複を除いて出す
   const itemOptions = useMemo(() => {
@@ -139,6 +146,7 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
     setErrorMessage(null);
     try {
       await onSubmit({
+        uid,
         rentalItemId: Number(itemId),
         stockerPlaceId: Number(placeId),
         fromGroupId: Number(fromGroupId),
@@ -148,6 +156,7 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
       setPlaceId("");
       setFromGroupId("");
       setQuantity("");
+      renewUid();
       onClose();
     } catch (error) {
       setErrorMessage(
@@ -167,6 +176,7 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
           onChange={(value) => {
             setItemId(value);
             setPlaceId("");
+            renewUid();
           }}
           placeholder="選択してください"
           options={itemOptions}
@@ -175,7 +185,10 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
         <Selector
           label="在庫場所(もともとの保管場所)"
           value={placeId}
-          onChange={setPlaceId}
+          onChange={(value) => {
+            setPlaceId(value);
+            renewUid();
+          }}
           placeholder={itemId ? "選択してください" : "先に物品を選んでください"}
           disabled={!itemId}
           options={placeOptions}
@@ -188,6 +201,7 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
             setFromGroupId(value);
             // 団体が変われば上限も変わるため入れ直してもらう
             setQuantity("");
+            renewUid();
           }}
           placeholder="選択してください"
           options={groupOptions}
@@ -208,7 +222,10 @@ const ExcessLendingSheet: FC<ExcessLendingSheetProps> = ({
             min={1}
             max={available ?? undefined}
             value={quantity}
-            onChange={(event) => setQuantity(event.target.value)}
+            onChange={(event) => {
+              setQuantity(event.target.value);
+              renewUid();
+            }}
             disabled={available === null || available === 0}
             aria-label="その数量"
             className={`h-11 w-full rounded-lg border bg-white px-3 text-body text-font disabled:border-sub disabled:bg-transparent ${
