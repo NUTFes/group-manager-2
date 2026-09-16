@@ -19,7 +19,9 @@ class RentalItemsController < ApplicationController
   end
 
   def update
-    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
+    # name を伴わない部分更新（貸出可否フラグだけの変更など）では name_en に触らない。
+    # translate_to_en(nil) の nil をそのまま入れると既存の英語名が黙って消えるため。
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank? && params[:name].present?
     @rental_item.update(rental_item_params)
     render json: fmt(created, @rental_item, "Updated rental_item id = #{params[:id]}")
   end
