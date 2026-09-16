@@ -2,13 +2,14 @@
 
 class PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!, only: [:index]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /power_orders
   # GET /power_orders.json
   def index
-    @power_orders = PowerOrder.where(group_id: current_api_user.groups.select(:id))
+    @power_orders = PowerOrder.includes(:group).all
     render json: fmt(ok, @power_orders)
   end
 
