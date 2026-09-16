@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import GroupSelectSheet from "@/components/GroupSelectSheet";
@@ -25,8 +25,10 @@ export default function SelectGroupPage() {
   } = useRentalGroups(session?.placeId ?? null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // 読み取り直後は多重に処理しないよう停止させる
+  // 読み取り直後は多重に処理しないよう停止させる。
+  // state の反映は次の描画までかかるので、判定そのものは ref で即座に閉じる
   const [isResolving, setIsResolving] = useState(false);
+  const isResolvingRef = useRef(false);
   const [scanError, setScanError] = useState<string | null>(null);
 
   // 作業場所が決まっていなければ選択画面へ戻す
@@ -36,7 +38,7 @@ export default function SelectGroupPage() {
 
   // QRは確定画面のURL。group_id と secret を取り出し、APIで照合してから遷移する
   const handleScan = async (rawValue: string) => {
-    if (isResolving) return;
+    if (isResolvingRef.current) return;
 
     const parsed = parseGroupQr(rawValue);
     if (!parsed) {
@@ -44,6 +46,7 @@ export default function SelectGroupPage() {
       return;
     }
 
+    isResolvingRef.current = true;
     setIsResolving(true);
     setScanError(null);
     try {
@@ -54,6 +57,7 @@ export default function SelectGroupPage() {
       setScanError(
         "団体を特定できませんでした。QRコードが最新か確認するか、手動で選択してください。"
       );
+      isResolvingRef.current = false;
       setIsResolving(false);
     }
   };

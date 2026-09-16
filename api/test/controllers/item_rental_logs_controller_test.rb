@@ -468,7 +468,128 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_response :created
   end
 
+  test 'transfer should create the reduction/addition pair in one request' do
+    assert_difference('ItemRentalLog.count', 2) do
+      post transfer_item_rental_logs_url, params: transfer_params, headers: @headers, as: :json
+    end
+
+    assert_response :created
+    body = response.parsed_body['data']
+    assert_equal @group.id, body['reduction']['group_id']
+    assert_equal groups(:two).id, body['addition']['group_id']
+    assert_equal 'transfer-uid-reduction', body['reduction']['uid']
+    assert_equal 'transfer-uid-addition', body['addition']['uid']
+    assert_equal @recorder_email, body['reduction']['recorder_email']
+  end
+
+  # 片方だけ記録が残ると提供元の在庫が消えたままになるため、両方が成立しないなら何も残さない
+  test 'transfer should not leave the reduction behind when the addition is invalid' do
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url,
+           params: transfer_params(uid: 'transfer-rollback-uid', to_group_id: 0),
+           headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_nil ItemRentalLog.find_by(uid: 'transfer-rollback-uid-reduction')
+  end
+
+  test 'transfer is idempotent when the same uid is resent' do
+    post transfer_item_rental_logs_url, params: transfer_params(uid: 'transfer-resend-uid'),
+                                        headers: @headers, as: :json
+    assert_response :created
+    created_ids = response.parsed_body['data'].values.pluck('id')
+
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params(uid: 'transfer-resend-uid'),
+                                          headers: @headers, as: :json
+    end
+
+    assert_response :success
+    assert_equal created_ids, response.parsed_body['data'].values.pluck('id')
+  end
+
+  # 旧実装がreductionだけ残した状態からでも、足りない方を補って対にできる
+  test 'transfer completes a pair that is only half recorded' do
+    ItemRentalLog.create!(
+      uid: 'transfer-half-uid-reduction',
+      group: @group,
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      category: :reduction,
+      quantity: 2,
+      recorder_email: @recorder_email
+    )
+
+    assert_difference('ItemRentalLog.count', 1) do
+      post transfer_item_rental_logs_url, params: transfer_params(uid: 'transfer-half-uid'),
+                                          headers: @headers, as: :json
+    end
+
+    assert_response :created
+    assert_equal groups(:two).id, response.parsed_body['data']['addition']['group_id']
+  end
+
+  test 'transfer returns conflict when the same uid is reused with a different quantity' do
+    post transfer_item_rental_logs_url, params: transfer_params(uid: 'transfer-conflict-uid'),
+                                        headers: @headers, as: :json
+    assert_response :created
+
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params(uid: 'transfer-conflict-uid', quantity: 5),
+                                          headers: @headers, as: :json
+    end
+
+    assert_response :conflict
+  end
+
+  test 'transfer rejects the same group on both sides' do
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params(to_group_id: @group.id),
+                                          headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'transfer rejects a non-positive quantity' do
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params(quantity: 0), headers: @headers, as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'transfer requires the recorder email' do
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params,
+                                          headers: { RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN },
+                                          as: :json
+    end
+
+    assert_response :unauthorized
+  end
+
+  test 'transfer requires the rental BFF token' do
+    assert_no_difference('ItemRentalLog.count') do
+      post transfer_item_rental_logs_url, params: transfer_params, as: :json
+    end
+
+    assert_response :unauthorized
+  end
+
   private
+
+  def transfer_params(overrides = {})
+    {
+      uid: 'transfer-uid',
+      rental_item_id: @assign_rental_item.rental_item_id,
+      stocker_place_id: @stocker_place.id,
+      from_group_id: @group.id,
+      to_group_id: groups(:two).id,
+      quantity: 2
+    }.merge(overrides)
+  end
 
   # BFFからの呼び出しを模したヘッダー。トークンで呼び出し元を、
   # Cf-Access-Authenticated-User-Email で記録者を表す。

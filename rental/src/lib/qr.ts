@@ -7,9 +7,28 @@ export type ScannedGroup = {
   secret: string;
 };
 
+const CONFIRMED_PATH = "/confirmed";
+
+/**
+ * 団体QRが指してよいオリジン。next.config.ts が APP_ENV ごとの user アプリの
+ * URL を埋め込む（カンマ区切りで複数指定できる）。
+ * 未設定なら候補なし = すべて拒否する（設定漏れを黙って通さない）。
+ */
+const ALLOWED_ORIGINS: string[] = (process.env.NEXT_PUBLIC_USER_FRONT_URL ?? "")
+  .split(",")
+  .map((value) => {
+    try {
+      return new URL(value.trim()).origin;
+    } catch {
+      return null;
+    }
+  })
+  .filter((origin): origin is string => origin !== null);
+
 /**
  * スキャンした文字列から group_id と secret を取り出す。
- * URL以外・パスが /confirmed でない・必要なクエリが無いものは受け付けない。
+ * URL以外・user アプリ以外のオリジン・パスが /confirmed でない・必要なクエリが
+ * 無いものは受け付けない。
  */
 export function parseGroupQr(raw: string): ScannedGroup | null {
   const trimmed = raw.trim();
@@ -22,8 +41,10 @@ export function parseGroupQr(raw: string): ScannedGroup | null {
     return null;
   }
 
-  // 別サイトのQRを読んでもAPIへ問い合わせないよう、パスを確認する
-  if (!url.pathname.endsWith("/confirmed")) return null;
+  // 別サイトのQRを読んでもAPIへ問い合わせないよう、オリジンとパスの両方を確認する。
+  // パスだけでは https://example.com/confirmed のような別ドメインのQRを通してしまう
+  if (!ALLOWED_ORIGINS.includes(url.origin)) return null;
+  if (url.pathname.replace(/\/$/, "") !== CONFIRMED_PATH) return null;
 
   const groupId = url.searchParams.get("group_id");
   const secret = url.searchParams.get("secret");

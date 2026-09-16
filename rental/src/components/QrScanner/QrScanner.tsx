@@ -13,7 +13,8 @@ type BarcodeDetectorConstructor = new (options?: {
 }) => BarcodeDetectorLike;
 
 type QrScannerProps = {
-  onScan: (rawValue: string) => void;
+  // 非同期の処理を返すと、それが終わるまで次の検知を始めない
+  onScan: (rawValue: string) => void | Promise<void>;
   // 読み取り後に一時停止したいときに false にする
   active?: boolean;
 };
@@ -67,6 +68,23 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
     let fallbackScanner: { destroy: () => void } | null = null;
     const videoElement = videoRef.current;
 
+    // 検知と、その結果の処理が終わるまで次の検知を始めない。
+    // 端末が遅く detect() が周期より長引くと、連続するティックの両方が検知に成功し、
+    // 呼び出し側のガードが反映される前に onScan が2回走ってしまうため
+    let isHandling = false;
+    const handleScan = async (run: () => Promise<string | undefined>) => {
+      if (isHandling || stopped) return;
+      isHandling = true;
+      try {
+        const value = await run();
+        if (value && !stopped) await onScanRef.current(value);
+      } catch {
+        // フレームが未準備のときなどは次の周期で拾う
+      } finally {
+        isHandling = false;
+      }
+    };
+
     // BarcodeDetector が使える場合はブラウザ内蔵の実装を使う
     const startWithDetector = async (Detector: BarcodeDetectorConstructor) => {
       try {
@@ -90,14 +108,11 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
       setStatus("scanning");
 
       const detector = new Detector({ formats: ["qr_code"] });
-      timer = window.setInterval(async () => {
-        try {
+      timer = window.setInterval(() => {
+        void handleScan(async () => {
           const results = await detector.detect(videoElement);
-          const value = results[0]?.rawValue;
-          if (value) onScanRef.current(value);
-        } catch {
-          // フレームが未準備のときなどは次の周期で拾う
-        }
+          return results[0]?.rawValue;
+        });
       }, DETECT_INTERVAL_MS);
     };
 
@@ -111,7 +126,8 @@ const QrScanner: FC<QrScannerProps> = ({ onScan, active = true }) => {
 
       const scanner = new LibQrScanner(
         videoElement,
-        (result) => onScanRef.current(result.data),
+        // ライブラリ側も連続で呼んでくるため、検知側と同じガードを通す
+        (result) => void handleScan(async () => result.data),
         {
           returnDetailedScanResult: true,
           preferredCamera: "environment",

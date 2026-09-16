@@ -66,7 +66,12 @@ Rails.application.routes.draw do
       post :translate
     end
   end
-  resources :item_rental_logs, only: %i[index create]
+  resources :item_rental_logs, only: %i[index create] do
+    collection do
+      # 超過貸出。reductionとadditionを1トランザクションで対にして記録する
+      post :transfer
+    end
+  end
   resources :place_categories
   resources :rental_orders do
     collection do
