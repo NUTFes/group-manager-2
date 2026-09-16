@@ -21,6 +21,13 @@ class ItemRentalLog < ApplicationRecord
 
   ASSIGNMENT_CHANGE_CATEGORIES = %w[addition reduction].freeze
   DEPRECATED_CATEGORIES = %w[absolute_adjustment].freeze
+  # 上限を超えたときのメッセージに出す、上限の呼び名
+  QUANTITY_LIMIT_LABELS = {
+    'rental' => '貸出残',
+    'return' => '返却残',
+    'rental_absolute' => '実効割当数',
+    'return_absolute' => '貸出済数'
+  }.freeze
 
   validates :uid, presence: true, uniqueness: true
   validates :category, presence: true
@@ -29,4 +36,37 @@ class ItemRentalLog < ApplicationRecord
   validates :recorder_email, presence: true
   validates :assign_rental_item, presence: true, unless: -> { category.in?(ASSIGNMENT_CHANGE_CATEGORIES) }
   validates :assign_rental_item, absence: true, if: -> { category.in?(ASSIGNMENT_CHANGE_CATEGORIES) }
+  validate :quantity_within_limit, on: :create
+
+  private
+
+  # 当日の記録は上限を超えられない（設計書5章）。画面とBFFでも制限しているが、
+  # BFF用のトークンさえあればAPIを直接叩けるため、保存時にもここで確かめる。
+  #
+  # addition / reduction は割当に紐づかず、上限（提供元の未貸出数）も割当1件では
+  # 決まらないため、超過貸出のエンドポイント側で確かめる。
+  def quantity_within_limit
+    return if quantity.nil? || assign_rental_item.nil?
+
+    limit = quantity_limit
+    return if limit.nil? || quantity <= limit
+
+    # full_messages が属性名を前置しない :base に載せ、当日そのまま読める文にする
+    errors.add(:base, "#{quantity_limit_label}（#{limit}）を超えています。最新の状況を確認してください")
+  end
+
+  def quantity_limit
+    case category
+    when 'rental' then assign_rental_item.lent_remaining
+    when 'return' then assign_rental_item.return_remaining
+    # 訂正は「訂正後の累計」を入れるので、上限は累計そのものの上限になる。
+    # 返却された分はまた貸し出せるため、貸出済の累計は実効割当数＋返却済まで伸びる
+    when 'rental_absolute' then assign_rental_item.effective_num + assign_rental_item.returned_quantity
+    when 'return_absolute' then assign_rental_item.lent_quantity
+    end
+  end
+
+  def quantity_limit_label
+    QUANTITY_LIMIT_LABELS[category]
+  end
 end

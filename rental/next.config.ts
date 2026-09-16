@@ -11,17 +11,36 @@ const apiUrlByEnv: Record<string, string> = {
   production: "https://group-manager-api.nutfes.net",
 };
 
+// 団体QRが指す user アプリ（確定情報ページ）の公開URL。api 側で QR を作る
+// UserFrontUrlResolver と同じ表にしている。スキャンしたQRのオリジンがここと
+// 一致するかを確かめ、別サイトのQRでAPIを叩かせないために使う（src/lib/qr.ts）。
+// トンネル経由での実機確認など、複数のオリジンを許可したいときはカンマ区切りで指定する。
+const userFrontUrlByEnv: Record<string, string> = {
+  development: "http://localhost:8003",
+  staging: "https://stg-group-manager.nutfes.net",
+  production: "https://group-manager.nutfes.net",
+};
+
 const APP_ENV = process.env.APP_ENV || "development";
 const NEXT_PUBLIC_API_URL =
   process.env.NEXT_PUBLIC_API_URL?.trim() ||
   apiUrlByEnv[APP_ENV] ||
   apiUrlByEnv.development;
+const NEXT_PUBLIC_USER_FRONT_URL =
+  process.env.NEXT_PUBLIC_USER_FRONT_URL?.trim() ||
+  userFrontUrlByEnv[APP_ENV] ||
+  userFrontUrlByEnv.development;
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // 開発時にスマホ実機から確認するため、Cloudflare の quick tunnel 経由の
+  // アクセスを許可する。Next は既定で dev サーバーへの別オリジンからの
+  // リクエストをブロックする（本番ビルドには影響しない）。
+  allowedDevOrigins: ["*.trycloudflare.com"],
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_USER_FRONT_URL,
   },
 };
 

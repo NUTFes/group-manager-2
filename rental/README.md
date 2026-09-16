@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# rental（貸出・返却記録アプリ）
 
-## Getting Started
+学園祭当日、物品の貸出場所に立つ実行委員スタッフが、参加団体に物品を渡した・返してもらった事実をスマホで記録するアプリです。
 
-First, run the development server:
+- 設計書: [`docs/rental/design.md`](../docs/rental/design.md)
+- デザイン: Figma `2026.8_GM_RentalFrontDesign`（ページ `ver.1 mobile`）
+
+## 前提
+
+- 認証は Cloudflare Zero Trust（Access）で行い、**アプリ側にログイン画面は持ちません**
+- API は直接呼ばず、Next.js の Route Handler（BFF）経由で呼びます
+- API キーなどの秘匿値は settings リポジトリの `.env` で管理します
+
+## 開発
+
+リポジトリルートで次を実行します。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up api rental
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- rental: http://localhost:8004
+- API: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+コミット前に実行してください。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose run --rm rental pnpm run lint
+docker compose run --rm rental pnpm run type-check
+docker compose run --rm rental pnpm run fmt
+```
 
-## Learn More
+## 技術構成
 
-To learn more about Next.js, take a look at the following resources:
+Next.js 16（App Router） / React 19 / TypeScript / Tailwind CSS 4 / pnpm 10.7.0、PWA 対応。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+デザイントークン（色・タイポスケール）は `src/app/globals.css` の `@theme` にあります。色名は `user/` と揃えています。

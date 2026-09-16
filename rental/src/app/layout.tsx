@@ -1,17 +1,15 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import RegisterServiceWorker from "./register-service-worker";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Figma の指定フォント。見出しに 700、本文に 500、補足に 300 を使う
+const notoSansJp = Noto_Sans_JP({
+  variable: "--font-noto-sans-jp",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,15 +23,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#111827",
+  themeColor: "#590556",
+  // スタッフが片手で操作するため、意図しないズームでレイアウトが崩れないようにする
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="ja" className={`${notoSansJp.variable} h-full antialiased`}>
       <head>
         {/* crossOrigin="use-credentials" が無いと Access のログインへリダイレクトされインストールできない */}
         <link
@@ -42,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           crossOrigin="use-credentials"
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col bg-white font-sans text-body text-font">
         <RegisterServiceWorker />
         {children}
       </body>

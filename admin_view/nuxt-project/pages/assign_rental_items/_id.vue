@@ -354,6 +354,16 @@ export default {
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
+        })
+        .catch((error) => {
+          // 変更先に同じ(団体×在庫場所×物品)の割当が既にある場合などは422が返る。
+          // 受け取らないとダイアログが開いたままになり操作できなくなる
+          const message =
+            error.response?.data?.status?.option ||
+            "更新に失敗しました。時間をおいて再度お試しください。";
+          console.error("割当の更新に失敗しました", error.response?.data ?? error);
+          this.edit_dialog = false;
+          alert(message);
         });
     },
     delete_yes: function () {

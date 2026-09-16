@@ -7,7 +7,7 @@ one:
   stocker_place: one
   rental_item: one
   category: rental
-  quantity: 1
+  quantity: 10
   recorder_email: recorder-one@example.com
 
 two:

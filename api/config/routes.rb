@@ -66,7 +66,12 @@ Rails.application.routes.draw do
       post :translate
     end
   end
-  resources :item_rental_logs, only: %i[index create]
+  resources :item_rental_logs, only: %i[index create] do
+    collection do
+      # 超過貸出。reductionとadditionを1トランザクションで対にして記録する
+      post :transfer
+    end
+  end
   resources :place_categories
   resources :rental_orders do
     collection do
@@ -316,6 +321,14 @@ Rails.application.routes.draw do
       get 'get_inside_shop_rentable_items' => 'rental_items_api#get_inside_shop_rentable_items'
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
+
+      #---貸出・返却記録アプリ(rental/)向け
+      # 認証はBFF専用トークン(X-Rental-Api-Token)で行う。人の認証はCloudflare Accessが担う。
+      get 'get_rental_places_for_rental_view' => 'rental_records_api#get_rental_places_for_rental_view'
+      get 'get_groups_for_rental_view' => 'rental_records_api#get_groups_for_rental_view'
+      get 'get_assign_rental_items_for_rental_view' => 'rental_records_api#get_assign_rental_items_for_rental_view'
+      get 'get_rental_items_for_rental_view' => 'rental_records_api#get_rental_items_for_rental_view'
+      get 'get_stocker_places_for_rental_view' => 'rental_records_api#get_stocker_places_for_rental_view'
 
       #---ユーザー向け確定情報閲覧画面
       # 認証なしで公開する。認証の書き忘れではなく意図的な公開で、#2136 の Public 区分にあたる。
