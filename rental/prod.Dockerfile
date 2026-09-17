@@ -32,10 +32,16 @@ WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/group-manager-2"
 ENV NODE_ENV=production
 
-# SSR_API_URL はサーバー実行時に process.env から読む値のため、builder ステージの
-# ENV は runner に引き継がれない。ビルド引数を runner でも ENV にしておくことで、
-# env_file に SSR_API_URL を持たない環境（compose.stage.yml）でもサーバー側から
+# APP_ENV / SSR_API_URL はサーバー実行時に process.env から読む値のため、builder
+# ステージの ENV は runner に引き継がれない。ビルド引数を runner でも ENV にして
+# おくことで、env_file にこれらを持たない環境（compose.stage.yml）でもサーバー側から
 # 参照できる。実行時に env_file / environment で上書きすることも可能。
+#
+# 特に APP_ENV は、未設定だと serverEnv.ts が "development" とみなし、Cloudflare
+# Access の検証を飛ばして Cf-Access-Authenticated-User-Email を無検証で信用して
+# しまう（記録者を偽装できる）。本番・staging では必ず値が入るようにする。
+ARG APP_ENV=production
+ENV APP_ENV=${APP_ENV}
 ARG SSR_API_URL
 ENV SSR_API_URL=${SSR_API_URL}
 
