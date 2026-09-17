@@ -265,6 +265,4 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
     get api_v1_get_assign_rental_items_for_rental_view_url, params: { group_id: @group.id }
     assert_response :unauthorized
   end
-
-  private
 end
