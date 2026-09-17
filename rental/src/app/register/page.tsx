@@ -21,6 +21,7 @@ import { useWorkSession } from "@/hooks/useWorkSession";
 import { summarize } from "@/lib/aggregate";
 import type { AssignmentSummary } from "@/lib/aggregate";
 import type { ApiError } from "@/lib/apiClient";
+import { buildItemLabels } from "@/lib/itemLabel";
 
 type DraftState = Record<number, { quantity: number; memo: string }>;
 
@@ -140,6 +141,14 @@ function RegisterContent() {
         ])
       ),
     [targets, changeLogs, mode]
+  );
+
+  // 「余り」団体のように同じ物品が在庫場所ちがいで複数あるとき用の表示名。
+  // 処理対象アイテムと団体全体の一覧は範囲が違うので別々に作る
+  const itemLabels = useMemo(() => buildItemLabels(targets), [targets]);
+  const allItemLabels = useMemo(
+    () => buildItemLabels(data?.assignRentalItems ?? []),
+    [data?.assignRentalItems]
   );
 
   // 最新の残数に丸めた入力。表示・送信はこちらを使う
@@ -285,7 +294,8 @@ function RegisterContent() {
         return [
           {
             assignRentalItemId: assignment.id,
-            itemName: assignment.rentalItemName,
+            itemName:
+              itemLabels.get(assignment.id) ?? assignment.rentalItemName,
             currentTotal: mode === "rental" ? summary.lent : summary.returned,
             // 貸出の上限は実効割当数＋返却済（返った分はまた貸せる）、
             // 返却の上限は貸出済数
@@ -294,7 +304,7 @@ function RegisterContent() {
           },
         ];
       }),
-    [targets, summaries, mode]
+    [targets, summaries, mode, itemLabels]
   );
 
   const handleCorrection = async (
@@ -375,7 +385,10 @@ function RegisterContent() {
                     <td className="max-w-24 truncate py-1">
                       {assignment.rentalPlaceName || "未設定"}
                     </td>
-                    <td className="py-1">{assignment.rentalItemName}</td>
+                    <td className="py-1">
+                      {allItemLabels.get(assignment.id) ??
+                        assignment.rentalItemName}
+                    </td>
                     <td className="tabular py-1 text-right">
                       {assignment.num}
                     </td>
@@ -411,7 +424,9 @@ function RegisterContent() {
             return (
               <ItemCard
                 key={assignment.id}
-                itemName={assignment.rentalItemName}
+                itemName={
+                  itemLabels.get(assignment.id) ?? assignment.rentalItemName
+                }
                 stockPlaceName={assignment.stockPlaceName}
                 quantity={draft?.quantity ?? 0}
                 remaining={summary?.remaining ?? 0}
