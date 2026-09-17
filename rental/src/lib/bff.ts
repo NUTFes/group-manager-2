@@ -6,7 +6,11 @@ import { resolveRecorderEmail } from "./access";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
 
 const API_TOKEN_HEADER = "X-Rental-Api-Token";
-const RECORDER_EMAIL_HEADER = "Cf-Access-Authenticated-User-Email";
+// 記録者のヘッダーに Cf-Access-* をそのまま使わない。SSR_API_URL が公開URLだと
+// この区間が Cloudflare を通り、クライアント由来の Cf- ヘッダーは偽装防止のため
+// 削除されてしまう（本番で記録のPOSTだけ401になっていた原因）。
+// 値は下の resolveRecorderEmail が Access のJWTを検証して取り出したもの。
+const RECORDER_EMAIL_HEADER = "X-Rental-Recorder-Email";
 
 type ForwardOptions = {
   path: string;

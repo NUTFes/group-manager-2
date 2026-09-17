@@ -8,7 +8,12 @@
 # 受けるための認証で、次の2つを分けて扱う。
 #
 #   - 呼び出し元が正当なBFFか  … X-Rental-Api-Token を ENV['RENTAL_API_TOKEN'] と比較
-#   - 記録者が誰か             … BFFが転送する Cf-Access-Authenticated-User-Email を使う
+#   - 記録者が誰か             … BFFが検証済みのメールを X-Rental-Recorder-Email で転送する
+#
+# 記録者のヘッダーに Cf-Access-Authenticated-User-Email をそのまま使わないのは、
+# BFFからAPIへの経路がCloudflareを通る構成（SSR_API_URLが公開URL）だと、
+# クライアント由来の Cf- ヘッダーが偽装防止のため削除されてしまうため。
+# このヘッダーはBFFがAccessのJWTを検証した結果で、区間はサービストークンで守る。
 #
 # 人の認証はAccessが行うため、ここでdevise_token_authのログインは要求しない。
 # 既存の管理画面・ユーザー画面向けAPIには影響させない（このconcernをincludeした
@@ -17,7 +22,7 @@ module RentalBffAuthenticatable
   extend ActiveSupport::Concern
 
   API_TOKEN_HEADER = 'X-Rental-Api-Token'
-  RECORDER_EMAIL_HEADER = 'Cf-Access-Authenticated-User-Email'
+  RECORDER_EMAIL_HEADER = 'X-Rental-Recorder-Email'
 
   private
 
