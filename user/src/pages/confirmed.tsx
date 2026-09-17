@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useGetConfirmedInfo } from '@/api/confirmedInfoApi';
 import { useGetConfirmedQrcode } from '@/api/confirmedQrcodeApi';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ConfirmedInfo from '@/components/ConfirmedInfo';
 
@@ -22,14 +23,18 @@ const parseSecret = (value: string | string[] | undefined): string | null => {
 
 export default function ConfirmedPage() {
   const router = useRouter();
+  const { t } = useTranslation('common');
   const groupId = parseGroupId(router.query.group_id);
   const secret = parseSecret(router.query.secret);
   const isParamsValid = groupId !== null && secret !== null;
 
+  // 物品名・場所名はAPIが出し分けるため、表示中の言語を渡す。
+  // 静的ルートでもロケールはURLから決まるため router.isReady を待たずに参照できる
   const { confirmedInfo, confirmedInfoError, confirmedInfoLoading } =
     useGetConfirmedInfo(
       router.isReady && isParamsValid ? groupId : null,
-      router.isReady && isParamsValid ? secret : null
+      router.isReady && isParamsValid ? secret : null,
+      router.locale ?? 'ja'
     );
 
   // QRコードは確定情報とは別のAPIから取る。取得できなくても確定情報の表示は
@@ -51,7 +56,7 @@ export default function ConfirmedPage() {
   return (
     <>
       <Head>
-        <title>確定情報 | Group Manager</title>
+        <title>{t('confirmedInfo.pageTitle')}</title>
         {/* secretを含むURLが第三者に共有されても検索エンジンに登録されないようにする */}
         <meta name="robots" content="noindex, nofollow" />
         {/* secret入りのURLがRefererヘッダーに乗って外部やAPIのアクセスログに残らないようにする */}

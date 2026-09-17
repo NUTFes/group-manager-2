@@ -974,5 +974,36 @@
   },
   "footer": {
     "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  },
+  "confirmedInfo": {
+    "table": {
+      "stockPlace": "Stock Location",
+      "rentalPlace": "Pickup Location",
+      "num": "Quantity"
+    },
+    "labels": {
+      "groupName": "Organization Name",
+      "unset": "-",
+      "empty": "There are no rental items.",
+      "shareNotice": "Anyone who knows this link can view this page.",
+      "projectName": "Project Name",
+      "places": "Location",
+      "rentalItems": "Rental Items",
+      "qrcodeAlt": "QR code for this page"
+    },
+    "actions": {
+      "copy": "Copy Link",
+      "share": "Share"
+    },
+    "toasts": {
+      "copySuccess": "Link copied",
+      "copyFailed": "Failed to copy the link"
+    },
+    "error": {
+      "title": "Unable to display the information",
+      "description": "Please check that the URL is correct."
+    },
+    "loading": "Loading...",
+    "pageTitle": "Confirmed Information | Group Manager"
   }
 }

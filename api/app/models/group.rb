@@ -677,7 +677,7 @@ class Group < ApplicationRecord
   # 認証なしで公開する確定情報を取得する
   # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
   # 認証なしで露出するため、groupは公開してよい項目だけに絞る
-  def self.with_confirmed_info(group_id, secret)
+  def self.with_confirmed_info(group_id, secret, locale: :ja)
     # secretが空のときは検索する前に弾く。GroupSecretには空文字を禁じる制約が無いため、
     # 万一空文字のレコードがあるとsecret未指定のリクエストが一致してしまう
     return nil if secret.blank?
@@ -689,41 +689,50 @@ class Group < ApplicationRecord
                  )
                  .find_by(id: group_id, group_secrets: { secret: secret })
 
-    group&.to_confirmed_info_h
+    group&.to_confirmed_info_h(locale: locale)
   end
 
   # 確定情報を整形して返す。他のモデルの to_*_h と同じ役割
   # 他のwith_*に倣って@recordに代入していたが、クラスメソッド内の@recordは
   # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
   # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
-  def to_confirmed_info_h
+  # 物品名・場所名はlocaleで出し分ける。団体名と企画名はユーザーが入力する値で
+  # 英語版を持たないため、そのまま返す
+  def to_confirmed_info_h(locale: :ja)
     {
       group: {
         id: id,
         name: name,
         project_name: project_name,
-        places: confirmed_place_names
+        places: confirmed_place_names(locale: locale)
       },
-      rental_items: confirmed_rental_items
+      rental_items: confirmed_rental_items(locale: locale)
     }
   end
 
   # 確定した会場名。place_orderに紐づく割り当てを名前にして返す
   # 表示順が取得順まかせにならないよう、物品と同じく名前で並べる
-  def confirmed_place_names
+  def confirmed_place_names(locale: :ja)
     place_order&.assign_group_places
                .to_a
-               .filter_map { |assign| assign.stocker_place&.display_name.presence }
+               .filter_map { |assign| assign.stocker_place&.display_name(locale: locale).presence }
                .sort
   end
 
   # 貸出物品を (物品, 貸出場所) ごとにまとめて返す
   # 貸出場所は種類ごとに1つという運用だが、DBでは一意性が保証されていない。
   # 組でまとめれば、割れている場合でも見出しの貸出場所が必ず1つに定まる
-  def confirmed_rental_items
-    assign_rental_items
-      .sort_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name, assign.stock_place_name] }
-      .group_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name] }
+  # 並び順とグルーピングは表示名に対して行う。表示する言語と別の言語で並べると、
+  # 画面上の並びが名前順に見えなくなる
+  def confirmed_rental_items(locale: :ja)
+    sorted = assign_rental_items.sort_by do |assign|
+      [assign.rental_item.display_name(locale: locale),
+       assign.rental_place_name(locale: locale),
+       assign.stock_place_name(locale: locale)]
+    end
+
+    sorted
+      .group_by { |assign| [assign.rental_item.display_name(locale: locale), assign.rental_place_name(locale: locale)] }
       .map do |(rental_item_name, rental_place_name), assigns|
         {
           rental_item_name: rental_item_name,
@@ -737,7 +746,7 @@ class Group < ApplicationRecord
             # CSV・PDFがpresent?で同一に扱っているのに合わせ、ここでnilに寄せる
             {
               id: assign.id,
-              stock_place_name: assign.stock_place_name,
+              stock_place_name: assign.stock_place_name(locale: locale),
               num: assign.num,
               remark: assign.remark.presence
             }
