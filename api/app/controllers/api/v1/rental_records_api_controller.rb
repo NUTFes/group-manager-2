@@ -22,12 +22,19 @@ class Api::V1::RentalRecordsApiController < ApplicationController
   end
 
   # GET /api/v1/get_groups_for_rental_view?rental_place_id=
-  # この作業場所に割当がある今年度の団体一覧。手動での団体選択に使う。
+  # 手動での団体選択と、例外対応の提供元の候補に使う。
+  #
+  # 作業場所を指定したときは、その場所に割当がある団体だけ（そこで渡す相手はそれだけ）。
+  # 指定しないとき（作業場所が「すべての場所」）は**今年度の全団体**を返す。割当が
+  # 1件も無い団体でも、例外対応で予定に無い物品を渡すことがあるため選べる必要がある。
   def get_groups_for_rental_view
-    group_ids = place_filtered_assign_rental_items.distinct.select(:group_id)
-    groups = Group.where(id: group_ids).order(:id)
+    groups = if params[:rental_place_id].present?
+               Group.where(id: place_filtered_assign_rental_items.distinct.select(:group_id))
+             else
+               Group.where(fes_year_id: current_fes_year_id)
+             end
 
-    render json: fmt(ok, groups.map { |group| { id: group.id, name: group.name } })
+    render json: fmt(ok, groups.order(:id).map { |group| { id: group.id, name: group.name } })
   end
 
   # GET /api/v1/get_rental_items_for_rental_view

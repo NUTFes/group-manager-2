@@ -58,6 +58,35 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes ids, @other_assign_rental_item.group_id
   end
 
+  # 作業場所が「すべての場所」のときは、割当が1件も無い団体も選べる必要がある
+  # （例外対応で予定に無い物品を渡すことがあるため）
+  test 'should get every group of the current year when no place is given' do
+    # 割当を1件も持たない今年度の団体を用意する
+    without_assignment = @other_assign_rental_item.group
+    @other_assign_rental_item.destroy!
+
+    get api_v1_get_groups_for_rental_view_url, headers: @headers
+
+    assert_response :success
+    ids = response.parsed_body['data'].pluck('id')
+    assert_includes ids, @group.id
+    assert_includes ids, without_assignment.id
+  end
+
+  # 作業場所を指定したときは、そこに割当がある団体だけに絞る
+  test 'should only get groups assigned to the given place' do
+    without_assignment = @other_assign_rental_item.group
+    @other_assign_rental_item.destroy!
+
+    get api_v1_get_groups_for_rental_view_url,
+        params: { rental_place_id: @assign_rental_item.rental_place_id }, headers: @headers
+
+    assert_response :success
+    ids = response.parsed_body['data'].pluck('id')
+    assert_includes ids, @group.id
+    assert_not_includes ids, without_assignment.id
+  end
+
   test 'should exclude groups from other fes years' do
     # 団体側のfes_yearを書き換えるとbelongs_to(user/group_category)の検証に
     # 引っかかるため、現在年度の設定を別年度に向けて「今年度以外」を再現する
@@ -236,4 +265,6 @@ class Api::V1::RentalRecordsApiControllerTest < ActionDispatch::IntegrationTest
     get api_v1_get_assign_rental_items_for_rental_view_url, params: { group_id: @group.id }
     assert_response :unauthorized
   end
+
+  private
 end
