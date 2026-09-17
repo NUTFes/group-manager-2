@@ -16,6 +16,14 @@ import type { AssignRentalItem, WorkMode } from "@/types/rental";
 // 貸出場所で絞らずに全体を見るときの選択値
 const ALL_PLACES_VALUE = "all";
 
+// 「まだ終わっていないところを一括で見たい」ため、未着手を先頭に置く
+const STATUS_ORDER = ["notStarted", "inProgress", "done"] as const;
+const STATUS_HEADINGS: Record<(typeof STATUS_ORDER)[number], string> = {
+  notStarted: "未着手",
+  inProgress: "進行中",
+  done: "完了",
+};
+
 // 戻り先として受け付けるアプリ内のパス。文字列の先頭だけを見る判定では
 // `/\evil.com` のような値が同一オリジンの判定をすり抜けるため、行き先を列挙する
 const BACK_PATHS = ["/select-group", "/register"];
@@ -99,6 +107,16 @@ function ProgressContent() {
         .sort((a, b) => a.groupId - b.groupId)
     );
   }, [data?.assignRentalItems, data?.assignmentChangeLogs, mode]);
+
+  // ステータスごとにまとめて出す。1件も無いステータスは見出しごと出さない
+  const groupedRows = useMemo(
+    () =>
+      STATUS_ORDER.map((status) => ({
+        status,
+        rows: rows.filter((row) => row.status === status),
+      })).filter((section) => section.rows.length > 0),
+    [rows]
+  );
 
   // 全体進捗は団体ベース（完了=1、進行中・未着手=0 の二値カウント）。設計書5章
   const doneCount = rows.filter((row) => row.status === "done").length;
@@ -189,40 +207,54 @@ function ProgressContent() {
           </p>
         )}
 
-        <div className="flex flex-col gap-3">
-          {rows.map((row) => (
-            <section
-              key={row.groupId}
-              className="overflow-hidden rounded-lg border border-main bg-white"
-            >
-              <div className="flex items-center justify-between gap-2 bg-card-head px-4 py-3">
-                <h3 className="min-w-0 truncate text-body font-bold text-font">
-                  {row.groupName}
+        <div className="flex flex-col gap-6">
+          {groupedRows.map((section) => (
+            <div key={section.status} className="flex flex-col gap-3">
+              {/* 見出しにも件数を出し、まだ終わっていない数が一目で分かるようにする */}
+              <div className="flex items-baseline gap-2 border-b border-line pb-1">
+                <h3 className="text-body font-bold text-font">
+                  {STATUS_HEADINGS[section.status]}
                 </h3>
-                <Badge state={row.status} />
+                <span className="tabular text-caption text-sub">
+                  {section.rows.length}団体
+                </span>
               </div>
-              <div className="flex flex-col gap-3 px-4 py-3">
-                <div>
-                  <p className="text-caption font-bold text-main">
-                    ✓ {mode === "rental" ? "取りに来たもの" : "返したもの"}
-                  </p>
-                  <p className="text-caption text-font">
-                    {row.handed.length ? row.handed.join("、") : "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-caption font-bold text-alert">
-                    ⚠{" "}
-                    {mode === "rental"
-                      ? "取りに来ていないもの"
-                      : "返していないもの"}
-                  </p>
-                  <p className="text-caption text-font">
-                    {row.notHanded.length ? row.notHanded.join("、") : "—"}
-                  </p>
-                </div>
-              </div>
-            </section>
+
+              {section.rows.map((row) => (
+                <section
+                  key={row.groupId}
+                  className="overflow-hidden rounded-lg border border-main bg-white"
+                >
+                  <div className="flex items-center justify-between gap-2 bg-card-head px-4 py-3">
+                    <h4 className="min-w-0 truncate text-body font-bold text-font">
+                      {row.groupName}
+                    </h4>
+                    <Badge state={row.status} />
+                  </div>
+                  <div className="flex flex-col gap-3 px-4 py-3">
+                    <div>
+                      <p className="text-caption font-bold text-main">
+                        ✓ {mode === "rental" ? "取りに来たもの" : "返したもの"}
+                      </p>
+                      <p className="text-caption text-font">
+                        {row.handed.length ? row.handed.join("、") : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-caption font-bold text-alert">
+                        ⚠{" "}
+                        {mode === "rental"
+                          ? "取りに来ていないもの"
+                          : "返していないもの"}
+                      </p>
+                      <p className="text-caption text-font">
+                        {row.notHanded.length ? row.notHanded.join("、") : "—"}
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              ))}
+            </div>
           ))}
         </div>
       </main>
