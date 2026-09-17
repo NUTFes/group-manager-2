@@ -428,7 +428,7 @@ PoC のフロント・API はすべて実装済み。統合ブランチ `feat/ka
 
 **QR 読み取りの2経路**: `BarcodeDetector` があるブラウザ（Android Chrome など）はブラウザ内蔵の実装を使い、無い場合（iOS Safari）は `qr-scanner`（jsQR ベース）に動的インポートでフォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
 
-残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
+残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`。**`RENTAL_API_TOKEN` は api / rental の両方が同じ `.env` から読むので、値を足したら両方のコンテナを再起動する**）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
 
 ## 11. 参考リンク
 
