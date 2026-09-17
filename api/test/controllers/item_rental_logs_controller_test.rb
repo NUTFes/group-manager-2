@@ -94,7 +94,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     ENV['RENTAL_API_TOKEN'] = API_TOKEN
   end
 
-  test 'should create item_rental_log and take recorder_email from the Cf-Access header' do
+  test 'should create item_rental_log and take recorder_email from the recorder header' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'new-item-rental-log-uid',
@@ -110,7 +110,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @assign_rental_item.rental_item_id, body['data']['rental_item_id']
   end
 
-  test 'a recorder_email parameter does not override the Cf-Access header' do
+  test 'a recorder_email parameter does not override the recorder header' do
     assert_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {
         uid: 'spoofed-param-uid',
@@ -180,6 +180,44 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     body = response.parsed_body
     assert_equal created_id, body['data']['id']
     assert_equal '最初のメモ', body['data']['memo']
+  end
+
+  # BFFとAPIを同時に入れ替えられなかった場合に備え、旧ヘッダーでも記録者を受け取る
+  test 'should fall back to the legacy recorder header when the new one is absent' do
+    legacy_headers = {
+      RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN,
+      RentalBffAuthenticatable::LEGACY_RECORDER_EMAIL_HEADER => @other_recorder_email,
+      'X-Skip-Slack-Notification' => 'true'
+    }
+
+    assert_difference('ItemRentalLog.count') do
+      post item_rental_logs_url, params: {
+        uid: 'legacy-recorder-header-uid',
+        assign_rental_item_id: @assign_rental_item.id,
+        category: 'rental',
+        quantity: 1
+      }, headers: legacy_headers, as: :json
+    end
+
+    assert_response :created
+    assert_equal @other_recorder_email, response.parsed_body['data']['recorder_email']
+  end
+
+  # 新しいヘッダーがあればそちらを使う（旧ヘッダーは見ない）
+  test 'the new recorder header takes precedence over the legacy one' do
+    headers = bff_headers(@recorder_email).merge(
+      RentalBffAuthenticatable::LEGACY_RECORDER_EMAIL_HEADER => @other_recorder_email
+    )
+
+    post item_rental_logs_url, params: {
+      uid: 'recorder-header-precedence-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 1
+    }, headers: headers, as: :json
+
+    assert_response :created
+    assert_equal @recorder_email, response.parsed_body['data']['recorder_email']
   end
 
   test 'create requires the rental BFF token' do
@@ -776,7 +814,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # BFFからの呼び出しを模したヘッダー。トークンで呼び出し元を、
-  # Cf-Access-Authenticated-User-Email で記録者を表す。
+  # X-Rental-Recorder-Email で記録者を表す。
   def bff_headers(recorder_email)
     {
       RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN,

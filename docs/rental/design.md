@@ -266,9 +266,15 @@ flowchart LR
 | --- | --- | --- |
 | ① スマホ → Access | 通常の HTTPS リクエスト | Access 未ログインならログイン画面へ |
 | ② Access → BFF | `Cf-Access-Jwt-Assertion`、`Cf-Access-Authenticated-User-Email` | BFF が JWT を JWKS で検証する（F9） |
-| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、記録者メール | `http://api:3000` を compose ネットワーク内で呼ぶ（A1） |
+| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、`X-Rental-Recorder-Email`（記録者） | `SSR_API_URL` 宛て。既定は compose ネットワーク内の `http://api:3000`（A1） |
 
 ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
+
+**③ で `Cf-Access-*` をそのまま転送しない。** `SSR_API_URL` に公開 URL（`https://group-manager-api.nutfes.net`）を設定した構成では、この区間が一度 Cloudflare を通る。Cloudflare は偽装防止のためクライアント由来の `Cf-` ヘッダーを削除するため、記録者メールが API に届かず**記録の POST だけが 401（`Missing recorder email`）になる**。読み取りは記録者を要求しないので通ってしまい、切り分けを難しくする。経路に依存しないよう、記録者は自前の `X-Rental-Recorder-Email` で運ぶ（値は BFF が Access の JWT を JWKS で検証して取り出したもの、区間の保護は `X-Rental-Api-Token`）。API 側は移行期間のみ、新ヘッダーが無いときに限り旧 `Cf-Access-Authenticated-User-Email` も見る。
+
+**`APP_ENV` は必ず実行時に入れる。** 未設定だと `serverEnv.ts` が `"development"` とみなし、Access の検証を飛ばしてヘッダーを無検証で信用する（記録者を偽装できる）。`prod.Dockerfile` の runner で ENV にし、`compose.prod.yml` のビルド引数にも `:?` ガードを置く（Compose は未設定の変数を空文字として明示的に渡すため、`ARG` の既定値では埋まらない）。
+
+**設定エラーの文言は画面に出さない。** BFF は内部の設定名を含む理由をサーバー側のログに残し、画面には `access_not_configured` のような短いコードだけを返す。現地ではコードを読み上げてもらい、原因はログで確かめる。
 
 ### 認証は3層に分かれる
 
@@ -278,7 +284,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | ① 人（スタッフ） | 誰がアプリを開いているか | Cloudflare Access。アプリ側にログイン画面は持たない | Access ポリシー設定待ち |
 | ② アプリ → API | 呼び出し元が rental の BFF か | 共有トークン `X-Rental-Api-Token`（A1） | 未実装 |
-| ③ 記録者の特定 | 誰が記録したか | Access が付けた `Cf-Access-Authenticated-User-Email` を BFF が転送し `recorder_email` に入れる（A1） | 未実装 |
+| ③ 記録者の特定 | 誰が記録したか | BFF が Access の JWT を検証して取り出したメールを `X-Rental-Recorder-Email` で転送し `recorder_email` に入れる（A1） | 未実装 |
 
 既存 API（`user/` と `admin_view/` が使う devise_token_auth の経路）には手を入れない。rental 向けのエンドポイントにのみ別の認証を足す。
 
@@ -316,7 +322,7 @@ flowchart LR
 
 | ID | 内容 | 影響 | 対応 |
 | --- | --- | --- | --- |
-| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
+| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは BFF が転送する `X-Rental-Recorder-Email` から取得する。 |
 | A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・団体名・remark が無い。 | rental 向けの名前付きエンドポイント、この場所に割当がある今年度団体一覧、作業場所候補の3つを追加する。今年度に限定する。 |
 | A4 | メモの保存先が無い | `item_rental_logs` に `memo` が無く、当日のスタッフメモを保存できない。 | `item_rental_logs.memo`（text, null 可）を追加する。remark は上書きしない。 |
 
@@ -328,7 +334,7 @@ flowchart LR
 
 - `api/app/controllers/concerns/` に BFF 認証の concern を追加し、`ItemRentalLogsController` と A3 で追加するエンドポイントに適用する
 - `X-Rental-Api-Token` を `ENV['RENTAL_API_TOKEN']` と `ActiveSupport::SecurityUtils.secure_compare` で比較する。不一致・欠落は 401
-- 記録者は BFF が転送する `Cf-Access-Authenticated-User-Email` から取得する。欠落は 401。`current_api_user.email` は使わない
+- 記録者は BFF が転送する `X-Rental-Recorder-Email` から取得する。欠落は 401。`current_api_user.email` は使わない。**`Cf-Access-*` をそのまま転送しない**のは、`SSR_API_URL` が公開URLだとこの区間が Cloudflare を通り、クライアント由来の `Cf-` ヘッダーが偽装防止のため削除されるため（本番で記録のPOSTだけ401になった）
 - `ItemRentalLogsController` から `authenticate_api_user!` / `require_admin!` を外す
 - 既存の devise_token_auth 経路（`user/` / `admin_view/`）には影響させない
 - 認証の位置づけは 6 章「認証は3層に分かれる」を参照
@@ -428,7 +434,7 @@ PoC のフロント・API はすべて実装済み。統合ブランチ `feat/ka
 
 **QR 読み取りの2経路**: `BarcodeDetector` があるブラウザ（Android Chrome など）はブラウザ内蔵の実装を使い、無い場合（iOS Safari）は `qr-scanner`（jsQR ベース）に動的インポートでフォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
 
-残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
+残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`。**`RENTAL_API_TOKEN` は api / rental の両方が同じ `.env` から読むので、値を足したら両方のコンテナを再起動する**）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
 
 ## 11. 参考リンク
 

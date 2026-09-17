@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Selector from "@/components/Selector";
 import { useRentalPlaces } from "@/hooks/useRentalApi";
 import { ALL_PLACES_NAME, useWorkSession } from "@/hooks/useWorkSession";
+import type { ApiError } from "@/lib/apiClient";
 import type { WorkMode } from "@/types/rental";
 
 // 貸出場所で絞らずに作業する場合の選択値。倉庫をまたいで対応する係や、
@@ -107,6 +108,15 @@ export default function SelectPlacePage() {
           {error && (
             <p className="text-caption text-alert">
               作業場所を取得できませんでした。通信状況を確認してください。
+              {/* 現地で切り分けられるよう、APIが返したステータスとコードを添える。
+                  内部の設定名は含めない（詳細はサーバー側のログに出る） */}
+              <br />
+              {(() => {
+                const apiError = error as ApiError;
+                return apiError.status
+                  ? `(${apiError.status}) ${apiError.message}`
+                  : apiError.message;
+              })()}
             </p>
           )}
           {!error && !isLoading && (places?.length ?? 0) === 0 && (
