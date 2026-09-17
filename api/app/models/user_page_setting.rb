@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserPageSetting < ApplicationRecord
   belongs_to :fes_year
 end

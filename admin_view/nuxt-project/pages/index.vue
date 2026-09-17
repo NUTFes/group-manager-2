@@ -3,7 +3,7 @@
     <div class="body"></div>
     <div class="grad"></div>
     <div class="header">
-      <div>Group<span> Manager</span> 2</div>
+      <div><img :src="image_src" alt="Group Manager" class="logo-image" /></div>
     </div>
     <br />
     <div class="login">
@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      image_src: require("@/assets/homepic.png"),
+      image_src: require("@/assets/logo-type.png"),
       password: "",
       email: "",
       show_pass: true,
@@ -90,7 +90,7 @@ export default {
               "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
             );
           });
-      
+
     },
   },
 };
@@ -146,7 +146,7 @@ body {
 .header {
   position: absolute;
   top: calc(50% - 35px);
-  left: calc(45% - 255px);
+  left: calc(50% - 500px);
   z-index: 2;
 }
 
@@ -160,6 +160,12 @@ body {
 
 .header div span {
   color: #5379fa !important;
+}
+
+.logo-image {
+  height: 60px;
+  width: auto;
+  display: block;
 }
 
 .login {

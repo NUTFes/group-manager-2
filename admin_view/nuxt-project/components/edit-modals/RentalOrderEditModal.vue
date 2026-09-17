@@ -1,0 +1,104 @@
+<template>
+  <EditModal @close="$emit('close')" title="物品申請の編集">
+    <template v-slot:form>
+      <div>
+        <h3>物品</h3>
+        <select v-model="rentalItemID">
+          <option disabled value="">選択してください</option>
+          <option
+            v-for="item in rentableItemList"
+            :key="item.id"
+            :value="item.id"
+          >
+            {{ item.name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <h3>個数</h3>
+        <input v-model="num" type="number" placeholder="入力してください" />
+      </div>
+    </template>
+    <template v-slot:method>
+      <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+    </template>
+  </EditModal>
+</template>
+
+<script>
+import { saveEditModal } from "~/utils/edit-modal-save";
+
+export default {
+  props: {
+    rentalOrder: {
+      type: Object,
+      required: true,
+    },
+    rentalItems: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+      rentalItemID: "",
+      num: null,
+      rentableItemList: [],
+    };
+  },
+  watch: {
+    rentalOrder: {
+      immediate: true,
+      handler() {
+        const rentalOrder = this.getRentalOrder();
+        this.rentalItemID = rentalOrder.rental_item_id ?? "";
+        this.num = rentalOrder.num ?? null;
+      },
+    },
+    rentalItems: {
+      immediate: true,
+      handler(value) {
+        this.rentableItemList = value;
+      },
+    },
+  },
+  mounted() {
+    if (this.rentableItemList.length === 0) {
+      this.fetchRentableItems();
+    }
+  },
+  methods: {
+    getRentalOrder() {
+      return (
+        this.rentalOrder?.rental_order ||
+        this.rentalOrder?.rental_item?.rental_item ||
+        this.rentalOrder ||
+        {}
+      );
+    },
+    async fetchRentableItems() {
+      const resRentableItems = await this.$axios.$get(
+        "/api/v1/get_all_rentable_items"
+      );
+      this.rentableItemList = resRentableItems.data || [];
+    },
+    async edit() {
+      const rentalOrder = this.getRentalOrder();
+      const groupId = rentalOrder.group_id || this.$route.params.id;
+      const data = {
+        group_id: groupId,
+        rental_item_id: this.rentalItemID,
+        num: this.num,
+      };
+      await saveEditModal({
+        emit: this.$emit.bind(this),
+        label: "物品申請",
+        request: () =>
+          rentalOrder.id
+            ? this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
+            : this.$axios.$post(`/rental_orders`, data),
+      });
+    },
+  },
+};
+</script>

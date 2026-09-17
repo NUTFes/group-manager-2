@@ -2,8 +2,12 @@
 
 one:
   name: MyString
-  is_rentable: false
+  is_stage_rentable: false
+  is_inside_shop_rentable: false
+  is_outside_shop_rentable: false
 
 two:
   name: MyString
-  is_rentable: false
+  is_stage_rentable: false
+  is_inside_shop_rentable: false
+  is_outside_shop_rentable: false

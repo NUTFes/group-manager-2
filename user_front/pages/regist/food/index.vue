@@ -119,11 +119,7 @@ const decrement = (idx: number) => {
   <div class="mx-[20%] my-[5%]">
     <Card>
       <h1 class="text-3xl">
-        {{
-          state.groupCategoryId === 1
-            ? $t("Food.registFood")
-            : $t("SaleGoods.registSaleGoods")
-        }}
+        {{ $t("Product.registProduct") }}
       </h1>
       <Card border="none" align="center">
         <div
@@ -133,11 +129,7 @@ const decrement = (idx: number) => {
         >
           <div class="grid grid-cols-2 gap-y-2">
             <p class="label">
-              {{
-                state.groupCategoryId === 1
-                  ? $t("Food.name")
-                  : $t("SaleGoods.name")
-              }}
+              {{ $t("Product.name") }}
             </p>
             <div class="flex flex-col">
               <Field
@@ -152,7 +144,7 @@ const decrement = (idx: number) => {
               />
             </div>
             <p v-if="state.groupCategoryId === 1" class="label">
-              {{ $t("Food.cook") }}
+              {{ $t("Product.cook") }}
             </p>
             <div v-if="state.groupCategoryId === 1" class="flex flex-col">
               <select
@@ -160,11 +152,11 @@ const decrement = (idx: number) => {
                 v-model="registerParams[idx].isCooking"
               >
                 <option value="" selected disabled></option>
-                <option value="true">{{ $t("Food.yes") }}</option>
-                <option value="false">{{ $t("Food.no") }}</option>
+                <option value="true">{{ $t("Product.yes") }}</option>
+                <option value="false">{{ $t("Product.no") }}</option>
               </select>
             </div>
-            <p class="label">{{ $t("Food.numberFirstDay") }}</p>
+            <p class="label">{{ $t("Product.numberFirstDay") }}</p>
             <div class="flex flex-col">
               <Field
                 :id="`numFirstDay${idx}`"
@@ -178,7 +170,7 @@ const decrement = (idx: number) => {
                 :name="`foods[${idx}].numFirstDay`"
               />
             </div>
-            <p class="label">{{ $t("Food.numberSecondDay") }}</p>
+            <p class="label">{{ $t("Product.numberSecondDay") }}</p>
             <div class="flex flex-col">
               <Field
                 :id="`numSecondDay${idx}`"

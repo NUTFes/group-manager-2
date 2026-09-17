@@ -31,12 +31,12 @@ export const groupSchema = object({
 
 // subRep登録のバリデーション
 export const subRepSchema = object({
-  name: string().required("入力してください\nPlease enter"),
+  name: string().required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる氏名を入力してください"),
   department: string().required("入力してください\nPlease enter"),
   grade: string().required("入力してください\nPlease enter"),
-  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください\nPlease enter 8 single-byte numbers").required("入力してください\nPlease enter"),
-  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter"),
-  tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください\nPlease enter 10 or 11 half-digits").required("入力してください\nPlease enter")
+  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください\nPlease enter 8 single-byte numbers").required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる学籍番号を入力してください"),
+  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なるメールアドレスを入力してください"),
+  tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください\nPlease enter 10 or 11 half-digits").required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる電話番号を入力してください"),
 });
 
 // place登録のバリデーション
@@ -171,7 +171,6 @@ export const stageOptionSchema = object({
   isMusic: boolean().required("入力してください\nPlease enter"),
   isCamera: boolean().required("入力してください\nPlease enter"),
   isNoise: boolean().required("入力してください\nPlease enter"),
-  stageContent: string().required("入力してください\nPlease enter"),
 });
 
 // item登録のバリデーション
@@ -180,13 +179,13 @@ export const itemSchema = object({
     .of(
       object().shape({
         itemNameId: number().typeError('入力してください\nPlease enter').required("入力してください\nPlease enter"),
-        itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0分以上で入力してください\nPlease enter more than 0 minutes"),
+        itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter 1 or more."),
       })
     ).strict(),
 });
 export const editItemSchema = object({
   itemNameId: number().typeError('入力してください\nPlease enter').required("入力してください\nPlease enter"),
-  itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0分以上で入力してください\nPlease enter more than 0 minutes"),
+  itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter 1 or more."),
 });
 
 // power登録のバリデーション
@@ -265,4 +264,33 @@ export const editFoodSchema = object({
 export const passwordResetSchema = object({
   password: string().required("入力してください\nPlease enter").min(8, "8桁以上入力してください\nPlease enter at least 8 digits"),
   passwordConfirm: string().required("パスワードを再入力してください\nPlease re-enter your password").oneOf([ref("password")], "パスワードが一致しませんでした\nPassword did not match")
+});
+
+// contactPerson登録のバリデーション
+export const contactPersonSchema = object({
+  name: string().required("入力してください\nPlease enter"),
+  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter")
+});
+
+// cookingProcess登録のバリデーション
+export const cookingProcessOrderSchema = object({
+  preOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  duringOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  tent: string().required("入力してください\nPlease enter"),
+});
+
+// announcement登録のバリデーション
+export const announcementSchema = object({
+  message: string().required("入力してください\nPlease enter")
+    .test('is-valid-length', '日本語の場合は300字未満、英語の場合は125words未満で入力してください\nPlease enter less than 300 characters for Japanese and less than 125 words for English', (value) => {
+      if (!value) return true;
+      const isJapanese = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ーa-zA-Z0-9ａ-ｚＡ-Ｚ０-９々〆〤]/u.test(value);
+      if (isJapanese) {
+        return value.length <= 300;
+      } else {
+        const wordCount = value.split(' ').length;
+        return wordCount <= 125;
+      }
+    }),
+  status: string().required("選択してください\nPlease select"),
 });

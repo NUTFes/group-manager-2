@@ -1,0 +1,50 @@
+---
+paths:
+  "/api/v1/output_pdf/power_orders":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+      deprecated: false
+  "/api/v1/output_pdf/rental_items":
+    get:
+      tags:
+      - api/v1/print_pdf
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: api/v1/print_pdf description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PrintPdf"
+      deprecated: false

@@ -51,20 +51,6 @@
               <td>{{ placeOrder.place_order_name.third }}</td>
             </tr>
             <tr>
-              <th>会場配置図</th>
-              <td>
-                <div v-if="placeOrder.venue_map === null">
-                  未登録
-                </div>
-                <div v-else>
-                  <img
-                    :src="placeOrder.venue_map.picture_path"
-                    style="width: 80%; height: 80%"
-                  />
-                </div>
-              </td>
-            </tr>
-            <tr>
               <th>備考</th>
               <td>{{ placeOrder.place_order.remark }}</td>
             </tr>
@@ -192,22 +178,22 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     edit() {
-      const url =
-        "/place_orders/" +
-        this.routeId +
-        "?group_id=" +
-        this.placeOrder.group.id +
-        "&first=" +
-        this.firstPlaceOrder +
-        "&second=" +
-        this.secondPlaceOrder +
-        "&third=" +
-        this.thirdPlaceOrder +
-        "&remark=" +
-        this.remark;
-      this.$axios.$put(url).then((response) => {
+      const url = "/place_orders/" + this.routeId;
+      const data = {
+        place_order: {
+          group_id: this.placeOrder.group.id,
+          first: this.firstPlaceOrder,
+          second: this.secondPlaceOrder,
+          third: this.thirdPlaceOrder,
+          remark: this.remark,
+        },
+      };
+      this.$axios.$put(url, data).then((response) => {
         this.openSnackBar("申請情報を編集しました");
         this.reload(response.data.id);
         this.closeEditModal();

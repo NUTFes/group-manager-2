@@ -1,11 +1,17 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# num は当日の記録の上限（貸出残・返却残）の元になる。
+# 記録を作るテストが上限に当たらないよう、余裕のある値にしている。
 one:
-  rental_order_id: 1
-  rentable_item_id: 1
-  num: 1
+  group: one
+  rental_item: one
+  stocker_place: one
+  rental_place: one
+  num: 20
 
 two:
-  rental_order_id: 1
-  rentable_item_id: 1
-  num: 1
+  group: two
+  rental_item: two
+  stocker_place: two
+  rental_place: two
+  num: 20

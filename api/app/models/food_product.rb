@@ -1,33 +1,50 @@
+# frozen_string_literal: true
+
 class FoodProduct < ApplicationRecord
-    belongs_to :group
-    has_many :purchase_lists, dependent: :destroy
+  belongs_to :group
+  has_many :purchase_lists, dependent: :destroy
+  has_one :cooking_process_order, dependent: :destroy
 
-    def self.with_groups
-      @record = FoodProduct.preload(:group)
-        .map{
-          |food_product|
-          {
-            "food_product": food_product,
-            "group": food_product.group
-          }
-        }
-    end
+  after_create :ensure_health_center_submission_status
 
-    def self.with_group(food_product_id)
-      food_product = FoodProduct.find(food_product_id)
+  def self.with_groups
+    @record = FoodProduct.preload(:group)
+                         .map do |food_product|
       {
-        "food_product": food_product,
-        "group": food_product.group
+        food_product: food_product,
+        group: food_product.group
       }
     end
+  end
 
-    def to_info_h
-      return {
-        "id": self.id,
-        "name": self.name,
-        "is_cooking": self.is_cooking,
-        "first_day_num": self.first_day_num,
-        "second_day_num": self.second_day_num
-      }
-    end
+  def self.with_group(food_product_id)
+    food_product = FoodProduct.find(food_product_id)
+    {
+      food_product: food_product,
+      group: food_product.group
+    }
+  end
+
+  def to_info_h
+    return {
+      id: id,
+      group_id: group_id,
+      name: name,
+      is_cooking: is_cooking,
+      first_day_num: first_day_num,
+      second_day_num: second_day_num
+    }
+  end
+
+  private
+
+  def ensure_health_center_submission_status
+    return unless Group.exists?(group_id)
+
+    HealthCenterSubmissionStatus.insert_default_for_group_and_application_type!(
+      group_id: group_id,
+      application_type: :food_product,
+      status: :unapproved
+    )
+  end
 end
