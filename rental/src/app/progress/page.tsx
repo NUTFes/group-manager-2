@@ -10,6 +10,7 @@ import Selector from "@/components/Selector";
 import { useAssignments, useRentalPlaces } from "@/hooks/useRentalApi";
 import { ALL_PLACES_NAME, useWorkSession } from "@/hooks/useWorkSession";
 import { groupStatus, hasAnyAllocation, summarize } from "@/lib/aggregate";
+import { buildItemLabels } from "@/lib/itemLabel";
 import type { AssignRentalItem, WorkMode } from "@/types/rental";
 
 // 貸出場所で絞らずに全体を見るときの選択値
@@ -71,17 +72,19 @@ function ProgressContent() {
         .map(([groupId, groupAssignments]) => {
           const handed: string[] = [];
           const notHanded: string[] = [];
+          // 同じ物品が在庫場所ちがいで複数ある団体（「余り」など）は場所を添える
+          const itemLabels = buildItemLabels(groupAssignments);
 
           for (const assignment of groupAssignments) {
             const summary = summarize(assignment, changeLogs, mode);
             const done = mode === "rental" ? summary.lent : summary.returned;
+            const label =
+              itemLabels.get(assignment.id) ?? assignment.rentalItemName;
             if (done > 0) {
-              handed.push(`${assignment.rentalItemName} x${done}`);
+              handed.push(`${label} x${done}`);
             }
             if (summary.remaining > 0) {
-              notHanded.push(
-                `${assignment.rentalItemName} x${summary.remaining}`
-              );
+              notHanded.push(`${label} x${summary.remaining}`);
             }
           }
 
