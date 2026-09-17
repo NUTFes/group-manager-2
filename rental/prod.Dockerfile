@@ -32,18 +32,14 @@ WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/group-manager-2"
 ENV NODE_ENV=production
 
-# APP_ENV / SSR_API_URL はサーバー実行時に process.env から読む値のため、builder
-# ステージの ENV は runner に引き継がれない。ビルド引数を runner でも ENV にして
-# おくことで、env_file にこれらを持たない環境（compose.stage.yml）でもサーバー側から
-# 参照できる。実行時に env_file / environment で上書きすることも可能。
-#
-# 特に APP_ENV は、未設定だと serverEnv.ts が "development" とみなし、Cloudflare
-# Access の検証を飛ばして Cf-Access-Authenticated-User-Email を無検証で信用して
-# しまう（記録者を偽装できる）。本番・staging では必ず値が入るようにする。
+# サーバー実行時に process.env から読む値。builder ステージの ENV は runner に
+# 引き継がれないため、ビルド引数を runner でも ENV にしておく（env_file にこれらを
+# 持たない環境でも参照できる。実行時に env_file / environment で上書き可能）。
+# APP_ENV が未設定だと Access の検証を飛ばしてしまう: docs/rental/design.md 6章。
 ARG APP_ENV=production
-ENV APP_ENV=${APP_ENV}
 ARG SSR_API_URL
-ENV SSR_API_URL=${SSR_API_URL}
+ENV APP_ENV=${APP_ENV} \
+    SSR_API_URL=${SSR_API_URL}
 
 COPY --from=builder --chown=65532:65532 /app/.next/standalone /app/
 COPY --from=builder --chown=65532:65532 /app/.next/static /app/.next/static

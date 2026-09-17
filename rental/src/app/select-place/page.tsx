@@ -108,12 +108,15 @@ export default function SelectPlacePage() {
           {error && (
             <p className="text-caption text-alert">
               作業場所を取得できませんでした。通信状況を確認してください。
-              {/* 設定漏れ（Access・トークン）か通信かを現地で切り分けられるよう、
-                  APIが返した理由をそのまま出す */}
+              {/* 現地で切り分けられるよう、APIが返したステータスとコードを添える。
+                  内部の設定名は含めない（詳細はサーバー側のログに出る） */}
               <br />
-              {(error as ApiError).status
-                ? `(${(error as ApiError).status}) ${(error as Error).message}`
-                : (error as Error).message}
+              {(() => {
+                const apiError = error as ApiError;
+                return apiError.status
+                  ? `(${apiError.status}) ${apiError.message}`
+                  : apiError.message;
+              })()}
             </p>
           )}
           {!error && !isLoading && (places?.length ?? 0) === 0 && (

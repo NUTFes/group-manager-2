@@ -266,9 +266,15 @@ flowchart LR
 | --- | --- | --- |
 | ① スマホ → Access | 通常の HTTPS リクエスト | Access 未ログインならログイン画面へ |
 | ② Access → BFF | `Cf-Access-Jwt-Assertion`、`Cf-Access-Authenticated-User-Email` | BFF が JWT を JWKS で検証する（F9） |
-| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、記録者メール | `http://api:3000` を compose ネットワーク内で呼ぶ（A1） |
+| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、`X-Rental-Recorder-Email`（記録者） | `SSR_API_URL` 宛て。既定は compose ネットワーク内の `http://api:3000`（A1） |
 
 ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
+
+**③ で `Cf-Access-*` をそのまま転送しない。** `SSR_API_URL` に公開 URL（`https://group-manager-api.nutfes.net`）を設定した構成では、この区間が一度 Cloudflare を通る。Cloudflare は偽装防止のためクライアント由来の `Cf-` ヘッダーを削除するため、記録者メールが API に届かず**記録の POST だけが 401（`Missing recorder email`）になる**。読み取りは記録者を要求しないので通ってしまい、切り分けを難しくする。経路に依存しないよう、記録者は自前の `X-Rental-Recorder-Email` で運ぶ（値は BFF が Access の JWT を JWKS で検証して取り出したもの、区間の保護は `X-Rental-Api-Token`）。API 側は移行期間のみ、新ヘッダーが無いときに限り旧 `Cf-Access-Authenticated-User-Email` も見る。
+
+**`APP_ENV` は必ず実行時に入れる。** 未設定だと `serverEnv.ts` が `"development"` とみなし、Access の検証を飛ばしてヘッダーを無検証で信用する（記録者を偽装できる）。`prod.Dockerfile` の runner で ENV にし、`compose.prod.yml` のビルド引数にも `:?` ガードを置く（Compose は未設定の変数を空文字として明示的に渡すため、`ARG` の既定値では埋まらない）。
+
+**設定エラーの文言は画面に出さない。** BFF は内部の設定名を含む理由をサーバー側のログに残し、画面には `access_not_configured` のような短いコードだけを返す。現地ではコードを読み上げてもらい、原因はログで確かめる。
 
 ### 認証は3層に分かれる
 

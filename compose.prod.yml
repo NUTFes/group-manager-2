@@ -25,7 +25,7 @@ services:
       dockerfile: prod.Dockerfile
       args:
       - NODE_ENV=${NODE_ENV}
-      - APP_ENV=${APP_ENV}
+      - APP_ENV=${APP_ENV:?APP_ENV must be set}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
       - SSR_API_URL=${SSR_API_URL}
       - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
@@ -43,7 +43,7 @@ services:
       dockerfile: prod.Dockerfile
       args:
       - NODE_ENV=${NODE_ENV}
-      - APP_ENV=${APP_ENV}
+      - APP_ENV=${APP_ENV:?APP_ENV must be set}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
       - SSR_API_URL=${SSR_API_URL}
     container_name: prod-rental

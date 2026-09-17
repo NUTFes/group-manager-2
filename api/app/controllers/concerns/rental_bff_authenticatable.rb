@@ -10,10 +10,7 @@
 #   - 呼び出し元が正当なBFFか  … X-Rental-Api-Token を ENV['RENTAL_API_TOKEN'] と比較
 #   - 記録者が誰か             … BFFが検証済みのメールを X-Rental-Recorder-Email で転送する
 #
-# 記録者のヘッダーに Cf-Access-Authenticated-User-Email をそのまま使わないのは、
-# BFFからAPIへの経路がCloudflareを通る構成（SSR_API_URLが公開URL）だと、
-# クライアント由来の Cf- ヘッダーが偽装防止のため削除されてしまうため。
-# このヘッダーはBFFがAccessのJWTを検証した結果で、区間はサービストークンで守る。
+# 記録者のヘッダーに Cf-Access-* を使わない理由は docs/rental/design.md 6章を参照。
 #
 # 人の認証はAccessが行うため、ここでdevise_token_authのログインは要求しない。
 # 既存の管理画面・ユーザー画面向けAPIには影響させない（このconcernをincludeした
@@ -23,6 +20,9 @@ module RentalBffAuthenticatable
 
   API_TOKEN_HEADER = 'X-Rental-Api-Token'
   RECORDER_EMAIL_HEADER = 'X-Rental-Recorder-Email'
+  # 旧ヘッダー。BFFとAPIを同時に入れ替えられなかった場合に備えた移行用の受け口で、
+  # 新しいヘッダーが無いときだけ見る。BFFの入れ替えが行き渡ったら消してよい。
+  LEGACY_RECORDER_EMAIL_HEADER = 'Cf-Access-Authenticated-User-Email'
 
   private
 
@@ -41,7 +41,10 @@ module RentalBffAuthenticatable
   end
 
   def rental_recorder_email
-    request.headers[RECORDER_EMAIL_HEADER].to_s.strip
+    email = request.headers[RECORDER_EMAIL_HEADER].to_s.strip
+    return email if email.present?
+
+    request.headers[LEGACY_RECORDER_EMAIL_HEADER].to_s.strip
   end
 
   def valid_rental_bff_token?

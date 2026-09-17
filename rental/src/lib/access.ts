@@ -29,7 +29,9 @@ function getJwks() {
 }
 
 export type AccessResult =
-  { ok: true; email: string } | { ok: false; reason: string };
+  | { ok: true; email: string }
+  // code は画面に出してよい短い識別子。detail は内部の設定名を含むためログ専用。
+  | { ok: false; code: string; detail: string };
 
 export async function resolveRecorderEmail(
   request: Request
@@ -45,7 +47,8 @@ export async function resolveRecorderEmail(
     if (!isDevelopment) {
       return {
         ok: false,
-        reason: "CF_ACCESS_TEAM_DOMAIN / CF_ACCESS_AUD が未設定です",
+        code: "access_not_configured",
+        detail: "CF_ACCESS_TEAM_DOMAIN / CF_ACCESS_AUD が未設定です",
       };
     }
     const devEmail =
@@ -54,7 +57,11 @@ export async function resolveRecorderEmail(
   }
 
   if (!token) {
-    return { ok: false, reason: "Cf-Access-Jwt-Assertion がありません" };
+    return {
+      ok: false,
+      code: "access_token_missing",
+      detail: "Cf-Access-Jwt-Assertion がありません",
+    };
   }
 
   try {
@@ -63,11 +70,19 @@ export async function resolveRecorderEmail(
     });
     const email = typeof payload.email === "string" ? payload.email : "";
     if (!email) {
-      return { ok: false, reason: "トークンにメールが含まれていません" };
+      return {
+        ok: false,
+        code: "access_email_missing",
+        detail: "トークンにメールが含まれていません",
+      };
     }
     return { ok: true, email };
   } catch {
     // 失敗理由（期限切れ・署名不一致など）は攻撃者に手がかりを与えるため返さない
-    return { ok: false, reason: "アクセストークンを検証できませんでした" };
+    return {
+      ok: false,
+      code: "access_token_invalid",
+      detail: "アクセストークンを検証できませんでした",
+    };
   }
 }

@@ -6,10 +6,7 @@ import { resolveRecorderEmail } from "./access";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
 
 const API_TOKEN_HEADER = "X-Rental-Api-Token";
-// 記録者のヘッダーに Cf-Access-* をそのまま使わない。SSR_API_URL が公開URLだと
-// この区間が Cloudflare を通り、クライアント由来の Cf- ヘッダーは偽装防止のため
-// 削除されてしまう（本番で記録のPOSTだけ401になっていた原因）。
-// 値は下の resolveRecorderEmail が Access のJWTを検証して取り出したもの。
+// 記録者のヘッダーに Cf-Access-* を使わない理由は docs/rental/design.md 6章を参照
 const RECORDER_EMAIL_HEADER = "X-Rental-Recorder-Email";
 
 type ForwardOptions = {
@@ -49,12 +46,17 @@ export async function forwardToApi(
 ): Promise<Response> {
   const access = await resolveRecorderEmail(request);
   if (!access.ok) {
-    return jsonError(401, access.reason);
+    // 内部の設定名は画面に出さない。現地では画面のコードを、原因はログを見る
+    console.error(
+      `[rental] access check failed: ${access.code}: ${access.detail}`
+    );
+    return jsonError(401, `認証情報を確認できませんでした (${access.code})`);
   }
 
   if (!RENTAL_API_TOKEN) {
     // 設定漏れを黙って200で返さない。settingsリポジトリの.envに追加が必要。
-    return jsonError(500, "RENTAL_API_TOKEN が設定されていません");
+    console.error("[rental] RENTAL_API_TOKEN が設定されていません");
+    return jsonError(500, "サーバーの設定が不足しています (api_token_missing)");
   }
 
   const headers: Record<string, string> = {
