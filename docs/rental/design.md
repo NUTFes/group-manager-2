@@ -278,7 +278,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | ① 人（スタッフ） | 誰がアプリを開いているか | Cloudflare Access。アプリ側にログイン画面は持たない | Access ポリシー設定待ち |
 | ② アプリ → API | 呼び出し元が rental の BFF か | 共有トークン `X-Rental-Api-Token`（A1） | 未実装 |
-| ③ 記録者の特定 | 誰が記録したか | Access が付けた `Cf-Access-Authenticated-User-Email` を BFF が転送し `recorder_email` に入れる（A1） | 未実装 |
+| ③ 記録者の特定 | 誰が記録したか | BFF が Access の JWT を検証して取り出したメールを `X-Rental-Recorder-Email` で転送し `recorder_email` に入れる（A1） | 未実装 |
 
 既存 API（`user/` と `admin_view/` が使う devise_token_auth の経路）には手を入れない。rental 向けのエンドポイントにのみ別の認証を足す。
 
@@ -316,7 +316,7 @@ flowchart LR
 
 | ID | 内容 | 影響 | 対応 |
 | --- | --- | --- | --- |
-| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
+| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは BFF が転送する `X-Rental-Recorder-Email` から取得する。 |
 | A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・団体名・remark が無い。 | rental 向けの名前付きエンドポイント、この場所に割当がある今年度団体一覧、作業場所候補の3つを追加する。今年度に限定する。 |
 | A4 | メモの保存先が無い | `item_rental_logs` に `memo` が無く、当日のスタッフメモを保存できない。 | `item_rental_logs.memo`（text, null 可）を追加する。remark は上書きしない。 |
 
@@ -328,7 +328,7 @@ flowchart LR
 
 - `api/app/controllers/concerns/` に BFF 認証の concern を追加し、`ItemRentalLogsController` と A3 で追加するエンドポイントに適用する
 - `X-Rental-Api-Token` を `ENV['RENTAL_API_TOKEN']` と `ActiveSupport::SecurityUtils.secure_compare` で比較する。不一致・欠落は 401
-- 記録者は BFF が転送する `Cf-Access-Authenticated-User-Email` から取得する。欠落は 401。`current_api_user.email` は使わない
+- 記録者は BFF が転送する `X-Rental-Recorder-Email` から取得する。欠落は 401。`current_api_user.email` は使わない。**`Cf-Access-*` をそのまま転送しない**のは、`SSR_API_URL` が公開URLだとこの区間が Cloudflare を通り、クライアント由来の `Cf-` ヘッダーが偽装防止のため削除されるため（本番で記録のPOSTだけ401になった）
 - `ItemRentalLogsController` から `authenticate_api_user!` / `require_admin!` を外す
 - 既存の devise_token_auth 経路（`user/` / `admin_view/`）には影響させない
 - 認証の位置づけは 6 章「認証は3層に分かれる」を参照

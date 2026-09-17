@@ -776,7 +776,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # BFFからの呼び出しを模したヘッダー。トークンで呼び出し元を、
-  # Cf-Access-Authenticated-User-Email で記録者を表す。
+  # X-Rental-Recorder-Email で記録者を表す。
   def bff_headers(recorder_email)
     {
       RentalBffAuthenticatable::API_TOKEN_HEADER => API_TOKEN,
