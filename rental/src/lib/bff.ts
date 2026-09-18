@@ -64,7 +64,17 @@ export async function forwardToApi(
     [API_TOKEN_HEADER]: RENTAL_API_TOKEN,
   };
   if (withRecorderEmail) {
-    headers[RECORDER_EMAIL_HEADER] = access.email;
+    // 合言葉の構成では記録者が担当者名の自己申告になる。作業場所の選択からやり直せば
+    // 入り直せるので、足りないことをコードで伝える
+    if (!access.email) {
+      return jsonError(
+        401,
+        "担当者名が設定されていません (staff_name_missing)"
+      );
+    }
+    // 担当者名は日本語のことがある。HTTPヘッダーにそのまま載せられないため
+    // URLエンコードして渡し、API 側で戻す
+    headers[RECORDER_EMAIL_HEADER] = encodeURIComponent(access.email);
   }
 
   try {

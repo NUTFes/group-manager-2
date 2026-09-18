@@ -220,6 +220,40 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @recorder_email, response.parsed_body['data']['recorder_email']
   end
 
+  # 合言葉の構成では記録者が担当者名になる。日本語が入るためBFFはURLエンコードして送る
+  test 'should decode a url encoded recorder name' do
+    headers = bff_headers(@recorder_email).merge(
+      RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => CGI.escape('上條')
+    )
+
+    post item_rental_logs_url, params: {
+      uid: 'encoded-recorder-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 1
+    }, headers: headers, as: :json
+
+    assert_response :created
+    assert_equal '上條', response.parsed_body['data']['recorder_email']
+  end
+
+  # メールに含まれうる + が壊れないこと（encodeURIComponent は + も %2B にする）
+  test 'should keep a plus sign in the recorder email' do
+    headers = bff_headers(@recorder_email).merge(
+      RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => CGI.escape('staff+rental@example.com')
+    )
+
+    post item_rental_logs_url, params: {
+      uid: 'plus-recorder-uid',
+      assign_rental_item_id: @assign_rental_item.id,
+      category: 'rental',
+      quantity: 1
+    }, headers: headers, as: :json
+
+    assert_response :created
+    assert_equal 'staff+rental@example.com', response.parsed_body['data']['recorder_email']
+  end
+
   test 'create requires the rental BFF token' do
     assert_no_difference('ItemRentalLog.count') do
       post item_rental_logs_url, params: {

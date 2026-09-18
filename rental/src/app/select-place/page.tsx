@@ -25,13 +25,15 @@ export default function SelectPlacePage() {
   // effect で setState すると描画が連鎖するため、派生値として扱う。
   const [modeInput, setModeInput] = useState<string | null>(null);
   const [placeInput, setPlaceInput] = useState<string | null>(null);
+  const [staffNameInput, setStaffNameInput] = useState<string | null>(null);
   const mode = modeInput ?? session?.mode ?? "";
   const savedPlaceValue = session
     ? (session.placeId?.toString() ?? ALL_PLACES_VALUE)
     : "";
   const placeId = placeInput ?? savedPlaceValue;
+  const staffName = staffNameInput ?? session?.staffName ?? "";
 
-  const canStart = mode !== "" && placeId !== "";
+  const canStart = mode !== "" && placeId !== "" && staffName.trim() !== "";
 
   const handleStart = () => {
     if (mode !== "rental" && mode !== "return") return;
@@ -41,6 +43,7 @@ export default function SelectPlacePage() {
         mode: mode as WorkMode,
         placeId: null,
         placeName: ALL_PLACES_NAME,
+        staffName: staffName.trim(),
       });
       router.push("/select-group");
       return;
@@ -53,6 +56,7 @@ export default function SelectPlacePage() {
       mode: mode as WorkMode,
       placeId: place.id,
       placeName: place.name,
+      staffName: staffName.trim(),
     });
     router.push("/select-group");
   };
@@ -104,6 +108,26 @@ export default function SelectPlacePage() {
               })),
             ]}
           />
+
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="staff-name"
+              className="text-body font-bold text-font after:ml-1 after:text-alert after:content-['*']"
+            >
+              担当者名
+            </label>
+            <input
+              id="staff-name"
+              type="text"
+              value={staffName}
+              onChange={(event) => setStaffNameInput(event.target.value)}
+              placeholder="例: 上條"
+              className="h-11 w-full rounded-lg border border-main bg-white px-3 text-body text-font placeholder:text-sub"
+            />
+            <p className="text-caption text-sub">
+              ※ 記録に残ります。この端末に保存されるので次回から入力は不要です
+            </p>
+          </div>
 
           {error && (
             <p className="text-caption text-alert">

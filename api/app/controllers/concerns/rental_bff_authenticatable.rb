@@ -40,11 +40,23 @@ module RentalBffAuthenticatable
     render_rental_unauthorized('Missing recorder email')
   end
 
+  # 記録者。担当者名が日本語のことがあるためBFFはURLエンコードして送ってくる。
+  # 素の値（Accessのメールなど）はエスケープを含まないので、戻しても変わらない。
   def rental_recorder_email
-    email = request.headers[RECORDER_EMAIL_HEADER].to_s.strip
-    return email if email.present?
+    recorder = decode_recorder(request.headers[RECORDER_EMAIL_HEADER])
+    return recorder if recorder.present?
 
-    request.headers[LEGACY_RECORDER_EMAIL_HEADER].to_s.strip
+    decode_recorder(request.headers[LEGACY_RECORDER_EMAIL_HEADER])
+  end
+
+  def decode_recorder(value)
+    raw = value.to_s
+    return '' if raw.blank?
+
+    CGI.unescape(raw).strip
+  rescue ArgumentError
+    # 不正なパーセントエンコードはそのまま扱う
+    raw.strip
   end
 
   def valid_rental_bff_token?

@@ -1,7 +1,17 @@
 // BFF（/api/rental/*）を叩くクライアント。APIのURLやトークンはサーバー側に
 // 隠れているため、ここではブラウザから見える相対パスだけを扱う。
 import camelcaseKeys from "camelcase-keys";
+import { readStoredStaffName } from "@/hooks/useWorkSession";
 import type { ApiResponse } from "@/types/rental";
+
+// 記録者の担当者名。Access が無い構成ではこれが recorder になる（設計書6章）。
+// 日本語をそのままヘッダーに載せられないため encodeURIComponent する
+const STAFF_NAME_HEADER = "X-Rental-Staff-Name";
+
+function staffHeaders(): Record<string, string> {
+  const name = readStoredStaffName();
+  return name ? { [STAFF_NAME_HEADER]: encodeURIComponent(name) } : {};
+}
 
 export type ApiError = Error & {
   status?: number;
@@ -29,7 +39,7 @@ async function parseError(response: Response): Promise<ApiError> {
 /** GET。レスポンスの data を camelCase に変換して返す */
 export async function getFromBff<T>(path: string): Promise<T> {
   const response = await fetch(path, {
-    headers: { Accept: "application/json" },
+    headers: { Accept: "application/json", ...staffHeaders() },
   });
   if (!response.ok) throw await parseError(response);
 
@@ -43,7 +53,11 @@ export async function getFromBff<T>(path: string): Promise<T> {
 export async function postToBff<T>(path: string, body: unknown): Promise<T> {
   const response = await fetch(path, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...staffHeaders(),
+    },
     body: JSON.stringify(body),
   });
   if (!response.ok) throw await parseError(response);

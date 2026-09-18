@@ -33,6 +33,10 @@ export const CF_ACCESS_TEAM_DOMAIN =
 
 export const CF_ACCESS_AUD = process.env.CF_ACCESS_AUD?.trim() || "";
 
+// 合言葉。設定すると Cloudflare Access の代わりに入口を守る（設計書6章）。
+// Access が設定されていればそちらが優先で、こちらは使わない。
+export const RENTAL_PASSCODE = process.env.RENTAL_PASSCODE?.trim() || "";
+
 // Access を通さないローカル開発用の記録者メール。本番では使わない。
 export const DEV_RECORDER_EMAIL =
   process.env.DEV_RECORDER_EMAIL?.trim() || "dev@example.com";

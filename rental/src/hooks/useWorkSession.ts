@@ -10,6 +10,8 @@ export type WorkSession = {
   // すべての場所を対象にする場合は null（貸出場所で絞らない）
   placeId: number | null;
   placeName: string;
+  // 記録者。Access が無い構成ではこれが recorder になる（設計書6章）
+  staffName: string;
 };
 
 /** placeId が null のときに画面へ出す名前 */
@@ -54,7 +56,10 @@ function parseSession(raw: string | null): WorkSession | null {
     if (
       (parsed.mode !== "rental" && parsed.mode !== "return") ||
       (typeof parsed.placeId !== "number" && parsed.placeId !== null) ||
-      typeof parsed.placeName !== "string"
+      typeof parsed.placeName !== "string" ||
+      // 担当者名が無い古い保存は作り直してもらう（記録者が空だと記録できない）
+      typeof parsed.staffName !== "string" ||
+      parsed.staffName.trim() === ""
     ) {
       return null;
     }
@@ -62,10 +67,16 @@ function parseSession(raw: string | null): WorkSession | null {
       mode: parsed.mode,
       placeId: parsed.placeId,
       placeName: parsed.placeName,
+      staffName: parsed.staffName.trim(),
     };
   } catch {
     return null;
   }
+}
+
+/** React の外から読むための口。API クライアントが記録者を添えるのに使う */
+export function readStoredStaffName(): string {
+  return parseSession(getSnapshot())?.staffName ?? "";
 }
 
 /**
