@@ -1,16 +1,16 @@
 // BFF（/api/rental/*）を叩くクライアント。APIのURLやトークンはサーバー側に
 // 隠れているため、ここではブラウザから見える相対パスだけを扱う。
 import camelcaseKeys from "camelcase-keys";
-import { readStoredStaffName } from "@/hooks/useWorkSession";
+import { readStoredRecorder } from "@/hooks/useWorkSession";
 import type { ApiResponse } from "@/types/rental";
 
-// 記録者の担当者名。Access が無い構成ではこれが recorder になる（設計書6章）。
+// 記録者（局名 担当者名）。Access が無い構成ではこれが recorder になる（設計書6章）。
 // 日本語をそのままヘッダーに載せられないため encodeURIComponent する
 const STAFF_NAME_HEADER = "X-Rental-Staff-Name";
 
 function staffHeaders(): Record<string, string> {
-  const name = readStoredStaffName();
-  return name ? { [STAFF_NAME_HEADER]: encodeURIComponent(name) } : {};
+  const recorder = readStoredRecorder();
+  return recorder ? { [STAFF_NAME_HEADER]: encodeURIComponent(recorder) } : {};
 }
 
 export type ApiError = Error & {

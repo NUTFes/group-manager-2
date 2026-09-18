@@ -15,6 +15,18 @@ import type { WorkMode } from "@/types/rental";
 // 例外対応をまとめて行う場合に使う
 const ALL_PLACES_VALUE = "all";
 
+// 記録に残す局名の候補。実行委員会の局に合わせる
+const BUREAUS = [
+  "総務局",
+  "企画局",
+  "制作局",
+  "情報局",
+  "財務局",
+  "渉外局",
+  "産学局",
+  "その他",
+];
+
 // 画面①（Figma: 作業場所選択ページ node-id=5024-6657）
 export default function SelectPlacePage() {
   const router = useRouter();
@@ -25,15 +37,18 @@ export default function SelectPlacePage() {
   // effect で setState すると描画が連鎖するため、派生値として扱う。
   const [modeInput, setModeInput] = useState<string | null>(null);
   const [placeInput, setPlaceInput] = useState<string | null>(null);
+  const [bureauInput, setBureauInput] = useState<string | null>(null);
   const [staffNameInput, setStaffNameInput] = useState<string | null>(null);
   const mode = modeInput ?? session?.mode ?? "";
   const savedPlaceValue = session
     ? (session.placeId?.toString() ?? ALL_PLACES_VALUE)
     : "";
   const placeId = placeInput ?? savedPlaceValue;
+  const bureau = bureauInput ?? session?.bureau ?? "";
   const staffName = staffNameInput ?? session?.staffName ?? "";
 
-  const canStart = mode !== "" && placeId !== "" && staffName.trim() !== "";
+  const canStart =
+    mode !== "" && placeId !== "" && bureau !== "" && staffName.trim() !== "";
 
   const handleStart = () => {
     if (mode !== "rental" && mode !== "return") return;
@@ -43,6 +58,7 @@ export default function SelectPlacePage() {
         mode: mode as WorkMode,
         placeId: null,
         placeName: ALL_PLACES_NAME,
+        bureau,
         staffName: staffName.trim(),
       });
       router.push("/select-group");
@@ -56,6 +72,7 @@ export default function SelectPlacePage() {
       mode: mode as WorkMode,
       placeId: place.id,
       placeName: place.name,
+      bureau,
       staffName: staffName.trim(),
     });
     router.push("/select-group");
@@ -109,6 +126,15 @@ export default function SelectPlacePage() {
             ]}
           />
 
+          <Selector
+            label="局名"
+            required
+            value={bureau}
+            onChange={setBureauInput}
+            placeholder="選択してください"
+            options={BUREAUS.map((name) => ({ value: name, label: name }))}
+          />
+
           <div className="flex flex-col gap-1">
             <label
               htmlFor="staff-name"
@@ -125,7 +151,8 @@ export default function SelectPlacePage() {
               className="h-11 w-full rounded-lg border border-main bg-white px-3 text-body text-font placeholder:text-sub"
             />
             <p className="text-caption text-sub">
-              ※ 記録に残ります。この端末に保存されるので次回から入力は不要です
+              ※ 「局名
+              担当者名」として記録に残ります。この端末に保存されるので次回から入力は不要です
             </p>
           </div>
 
