@@ -52,19 +52,32 @@ export async function resolveRecorderEmail(
   const token = request.headers.get(ACCESS_JWT_HEADER);
   const keySet = getJwks();
 
-  // Access の設定が無い環境では検証できない。代わりの守り方がある場合だけ通す。
+  // Access の検証ができないときは、代わりの守り方がある場合だけ通す。
   //
   //   合言葉あり … proxy.ts が入口を守っている。記録者は担当者名の自己申告
   //   ローカル開発 … 固定のメールで動かす
   //
   // どちらでもないときは閉じる。設定漏れのまま検証なしでヘッダーを信用すると、
   // BFFに直接到達できた人が記録者を偽装できてしまうため、黙って劣化させない。
-  if (!keySet || !CF_ACCESS_AUD) {
+  //
+  // Access の設定が残っていてもトークンが来ない場合（Access のポリシーを Bypass に
+  // した構成）も同じ扱いにする。こうしておくと、席数が戻ったときにポリシーを
+  // 戻すだけでよく、CF_ACCESS_* を消したり入れ直したりしなくて済む。
+  if (!keySet || CF_ACCESS_AUD === "" || !token) {
     if (isPasscodeEnabled()) {
       // 入口は proxy.ts の合言葉が守っている。記録者は担当者名の自己申告で、
       // まだ名前を決めていない最初の画面（作業場所の取得）もあるため空を許す。
       // 記録するときに名前が要ることは forwardToApi 側で確かめる。
       return { ok: true, email: staffName(request) };
+    }
+
+    // Access は設定されているのにトークンだけ来ていない（合言葉も無い）なら閉じる
+    if (keySet && CF_ACCESS_AUD !== "") {
+      return {
+        ok: false,
+        code: "access_token_missing",
+        detail: "Cf-Access-Jwt-Assertion がありません",
+      };
     }
 
     if (!isDevelopment) {
@@ -78,14 +91,6 @@ export async function resolveRecorderEmail(
     const devEmail =
       request.headers.get(ACCESS_EMAIL_HEADER) || DEV_RECORDER_EMAIL;
     return { ok: true, email: devEmail };
-  }
-
-  if (!token) {
-    return {
-      ok: false,
-      code: "access_token_missing",
-      detail: "Cf-Access-Jwt-Assertion がありません",
-    };
   }
 
   try {
