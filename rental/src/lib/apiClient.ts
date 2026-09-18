@@ -4,7 +4,7 @@ import camelcaseKeys from "camelcase-keys";
 import { readStoredRecorder } from "@/hooks/useWorkSession";
 import type { ApiResponse } from "@/types/rental";
 
-// 記録者（局名 担当者名）。Access が無い構成ではこれが recorder になる（設計書6章）。
+// 記録者（局名_担当者名）。Access が無い構成ではこれが recorder になる（設計書6章）。
 // 日本語をそのままヘッダーに載せられないため encodeURIComponent する
 const STAFF_NAME_HEADER = "X-Rental-Staff-Name";
 

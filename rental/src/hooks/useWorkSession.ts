@@ -10,7 +10,7 @@ export type WorkSession = {
   // すべての場所を対象にする場合は null（貸出場所で絞らない）
   placeId: number | null;
   placeName: string;
-  // 記録者。Access が無い構成では「局名 担当者名」が recorder になる（設計書6章）
+  // 記録者。Access が無い構成では「局名_担当者名」が recorder になる（設計書6章）
   bureau: string;
   staffName: string;
 };
@@ -80,13 +80,13 @@ function parseSession(raw: string | null): WorkSession | null {
 
 /**
  * React の外から読むための口。API クライアントが記録者を添えるのに使う。
- * 記録には「局名 担当者名」の形で残す（同姓の人を区別できるようにするため）。
+ * 記録には「局名_担当者名」の形で残す（同姓の人を区別できるようにするため）。
  */
 export function readStoredRecorder(): string {
   const session = parseSession(getSnapshot());
   if (!session) return "";
 
-  return [session.bureau, session.staffName].filter(Boolean).join(" ");
+  return [session.bureau, session.staffName].filter(Boolean).join("_");
 }
 
 /**
