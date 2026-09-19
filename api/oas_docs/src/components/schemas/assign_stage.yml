@@ -1,0 +1,9 @@
+---
+components:
+  schemas:
+    AssignStage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

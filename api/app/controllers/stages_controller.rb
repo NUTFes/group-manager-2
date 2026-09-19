@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class StagesController < ApplicationController
-  before_action :set_stage, only: [:show, :update, :destroy]
+  before_action :set_stage, only: %i[show update destroy]
 
   def index
     @stages = Stage.all
@@ -7,7 +9,7 @@ class StagesController < ApplicationController
   end
 
   def show
-     render json: fmt(ok, @stage)
+    render json: fmt(ok, @stage)
   end
 
   def show_sunny
@@ -27,26 +29,27 @@ class StagesController < ApplicationController
 
   def update
     @stage.update(stage_params)
-    render json: fmt(created, @stage, "Updated stage id = "+params[:id])
+    render json: fmt(created, @stage, "Updated stage id = #{params[:id]}")
   end
 
   def destroy
     @stage.destroy
-    render json: fmt(ok, [], "Deleted stage = "+params[:id])
+    render json: fmt(ok, [], "Deleted stage = #{params[:id]}")
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stage
-      if Stage.exists?(params[:id])
-        @stage = Stage.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found stage = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def stage_params
-      params.permit(:name, :enable_sunny, :enable_rainy)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stage
+    if Stage.exists?(params[:id])
+      @stage = Stage.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found stage = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def stage_params
+    params.permit(:name, :enable_sunny, :enable_rainy)
+  end
 end

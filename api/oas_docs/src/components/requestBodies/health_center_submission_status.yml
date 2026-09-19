@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    HealthCenterSubmissionStatus:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/HealthCenterSubmissionStatus"

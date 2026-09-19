@@ -1,10 +1,6 @@
 <script lang="ts" setup>
-import { loginCheck } from "@/utils/methods";
 import { useForm, useField } from "vee-validate";
-import { userDetailSchema } from "~~/utils/validate";
-import { User, UserDetail, EditUser, CurrentUser } from "~~/types/currentUser";
-import { gradeList, GradeWithDepartmentList } from "~/utils/list";
-import { NoScript } from '../../../.nuxt/components';
+import { User, UserDetail, CurrentUser } from "~~/types/currentUser";
 import { Setting } from "~~/types";
 
 const config = useRuntimeConfig();

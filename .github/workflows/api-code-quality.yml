@@ -1,0 +1,89 @@
+# ============================================
+# API側のコード品質チェック（RuboCop自動修正）
+# 目的：
+#  1) push / PR 時に RuboCop を実行
+#  2) 自動修正できる箇所はその場でコミット＆push
+#  3) 最後に通常チェックで残違反のみを赤字にする
+# 前提：
+#  - Ruby は GitHub Actions 上でセットアップ（Docker 不要）
+#  - /api 配下に Gemfile, .rubocop.yml が存在
+# ============================================
+name: API Code Quality
+
+# 自動コミット（push）を行うために必要
+permissions:
+  contents: write
+
+on:
+  # すべてのブランチへの push で発火（※ api/ 配下の変更のみ。paths で限定）
+  push:
+    branches: ["*"]
+    paths:
+      - "api/**"
+  # 指定ブランチへの PR 作成/更新でも発火（※ api/ 配下の変更のみ）
+  pull_request:
+    branches: ["gm3/develop"]
+    paths:
+      - "api/**"
+
+# 同じブランチ（ref）の並行実行を抑止（後から来た実行を優先）
+concurrency:
+  group: rubocop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  RuboCop-Check:
+    name: RuboCop Auto Fix
+    runs-on: ubuntu-latest
+
+    # bot の自動コミットで再トリガーされた実行を自動スキップ（無限ループ防止）
+    if: github.actor != 'github-actions[bot]'
+
+    # /api の Gemfile を使うための設定（ジョブ内の全ステップに適用）
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/api/Gemfile
+
+    steps:
+      # リポジトリを取得（履歴が必要な場合に備え fetch-depth: 0）
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      # Ruby をセットアップ（bundler-cache: true で Gem をキャッシュ）
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          # api/.ruby-version と同じバージョンを指定する
+          ruby-version: '3.3.12'
+          bundler-cache: true
+
+      # ① 自動修正（-A）
+      #  - --no-server: サーバーモードを使わず単発実行
+      #  - || true: ここでは失敗させず、残違反は後段の最終チェックで検出
+      - name: Auto fix RuboCop issues
+        working-directory: ./api
+        run: bundle exec rubocop -A --no-server || true
+
+      # ② 自動修正の差分があればコミット＆push
+      #  - push のとき：そのまま
+      #  - PR のとき：同一リポのブランチ（フォーク以外）のみ push 許可
+      #  - [skip ci]: そのコミットで再度 CI を走らせない抑制用タグ
+      - name: Commit auto-fixed files
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.repository == github.event.pull_request.head.repo.full_name)
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions[bot]
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: "chore(rubocop): auto fix (-A) [skip ci]"
+          add: "api/"
+          push: true
+
+      # ③ 最終チェック
+      #  - --parallel: 並列化で高速化
+      #  - --format github: PR の差分行にアノテーション（違反内容）を表示
+      #  - ここで違反が残っていればジョブは失敗（＝人手で直すべき箇所）
+      - name: Check remaining RuboCop violations
+        working-directory: ./api
+        run: bundle exec rubocop --parallel --format progress --format github

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class FoodProductsControllerTest < ActionDispatch::IntegrationTest
@@ -5,34 +7,34 @@ class FoodProductsControllerTest < ActionDispatch::IntegrationTest
     @food_product = food_products(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get food_products_url, as: :json
     assert_response :success
   end
 
-  test "should create food_product" do
+  test 'should create food_product' do
     assert_difference('FoodProduct.count') do
       post food_products_url, params: { food_product: { first_day_num: @food_product.first_day_num, group_id: @food_product.group_id, is_cooking: @food_product.is_cooking, name: @food_product.name, second_day_num: @food_product.second_day_num } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
-  test "should show food_product" do
+  test 'should show food_product' do
     get food_product_url(@food_product), as: :json
     assert_response :success
   end
 
-  test "should update food_product" do
+  test 'should update food_product' do
     patch food_product_url(@food_product), params: { food_product: { first_day_num: @food_product.first_day_num, group_id: @food_product.group_id, is_cooking: @food_product.is_cooking, name: @food_product.name, second_day_num: @food_product.second_day_num } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
-  test "should destroy food_product" do
+  test 'should destroy food_product' do
     assert_difference('FoodProduct.count', -1) do
       delete food_product_url(@food_product), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

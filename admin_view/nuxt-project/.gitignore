@@ -71,6 +71,10 @@ typings/
 # Nuxt generate
 dist
 
+# Playwright
+playwright-report
+test-results
+
 # vuepress build output
 .vuepress/dist
 

@@ -22,12 +22,11 @@
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
+# *.sw*
 
 # See https://help.github.com/articles/ignoring-files for more about ignoring files.
 #
@@ -123,3 +122,6 @@ typings/
 # cloudflare
 cloudflare/**/*.json
 cloudflare/**/cert.pem
+
+# phpmyadmin
+/phpmyadmin

@@ -316,6 +316,8 @@ export default {
   },
 
   mounted() {
+    window.scrollTo(0, 0);
+    
     this.$axios
       .get("api/v1/current_user/get_user_detail_raw", {
         headers: {
