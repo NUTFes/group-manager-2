@@ -74,6 +74,11 @@ export async function forwardToApi(
     }
     // 担当者名は日本語のことがある。HTTPヘッダーにそのまま載せられないため
     // URLエンコードして渡し、API 側で戻す
+    // TODO: access.ts の staffName() が X-Rental-Staff-Name を一度
+    // decodeURIComponent で平文に戻し、ここで再び encodeURIComponent している。
+    // 素通しさせるだけの値をわざわざ decode → re-encode しており、
+    // 途中のどちらかの実装だけ変えると他ホップ（ブラウザ側の encodeURIComponent、
+    // Rails 側の CGI.unescape）と静かにずれる。
     headers[RECORDER_EMAIL_HEADER] = encodeURIComponent(access.email);
   }
 

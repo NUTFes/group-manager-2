@@ -42,6 +42,12 @@ module RentalBffAuthenticatable
 
   # 記録者。担当者名が日本語のことがあるためBFFはURLエンコードして送ってくる。
   # 素の値（Accessのメールなど）はエスケープを含まないので、戻しても変わらない。
+  #
+  # FIXME: 上記は誤り。CGI.unescape はリテラルの '+' をスペースに変換するため、
+  # URLエンコードされていない LEGACY_RECORDER_EMAIL_HEADER（Cloudflareが生の値の
+  # まま付与するヘッダー）に '+' を含むメール（例: staff+rental@example.com の
+  # ようなプラスアドレッシング）が来ると "staff rental@example.com" に化けて
+  # 記録者が壊れる。decode_recorder をこのヘッダーにも一律適用すべきではない。
   def rental_recorder_email
     recorder = decode_recorder(request.headers[RECORDER_EMAIL_HEADER])
     return recorder if recorder.present?

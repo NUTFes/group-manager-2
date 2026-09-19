@@ -3,6 +3,11 @@
 // Cloudflare Access の席数上限に達した場合など、Access を前段に置けないときに使う。
 // 人の識別はしないので「誰が記録したか」は担当者名の自己申告になる（設計書6章）。
 // URL を知っているだけの人やクローラからの書き込みを防ぐのが目的。
+//
+// TODO: ユーザーから「合言葉」ではなく「パスワード」という表現に変えたい旨の
+// 指摘あり。この変更は本ファイル・docs/rental/design.md・画面文言
+// （unlock/page.tsx, select-place/page.tsx 等）・環境変数名/コメントなど
+// 広範囲に及ぶため、まとめて対応する。
 import { createHash, timingSafeEqual } from "node:crypto";
 import { RENTAL_PASSCODE } from "./serverEnv";
 

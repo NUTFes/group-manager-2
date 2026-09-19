@@ -24,6 +24,9 @@ export function proxy(request: NextRequest) {
   }
 
   // BFF は JSON で返す。ここでHTMLに飛ばすと fetch がログイン画面を受け取ってしまう
+  // TODO: この `{ status: { code, message } }` は bff.ts が export している
+  // jsonError() と同じ形を手組みしている。route.ts の /api/rental/unlock も
+  // 同様なので、共通ヘルパーとして揃えた方がよい。
   if (pathname.startsWith("/api/")) {
     return NextResponse.json(
       {

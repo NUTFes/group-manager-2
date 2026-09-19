@@ -19,6 +19,9 @@ import {
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 const ACCESS_EMAIL_HEADER = "cf-access-authenticated-user-email";
 // 合言葉で入った場合の記録者。ブラウザが自己申告する担当者名
+// TODO: 同じヘッダー名が rental/src/lib/apiClient.ts にも独立した文字列
+// リテラルとして定義されている。共有定数にしないと、片方だけ変更したときに
+// 気づけない（ヘッダー名は大文字小文字を無視して比較されるため型エラーにもならない）。
 const STAFF_NAME_HEADER = "x-rental-staff-name";
 
 function staffName(request: Request): string {

@@ -11,6 +11,10 @@ import { isProduction } from "@/lib/serverEnv";
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 // POST /api/rental/unlock … 合言葉の照合
+//
+// TODO: ここと proxy.ts の JSON エラーが `{ status: { code, message } }` を
+// 手組みしている。bff.ts が同じ形を作る jsonError(status, message) を export
+// 済みなので、そちらを再利用した方が形がずれる心配がない。
 export async function POST(request: Request) {
   if (!isPasscodeEnabled()) {
     return NextResponse.json(
