@@ -220,7 +220,7 @@ class ItemRentalLogsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @recorder_email, response.parsed_body['data']['recorder_email']
   end
 
-  # 合言葉の構成では記録者が担当者名になる。日本語が入るためBFFはURLエンコードして送る
+  # パスワードの構成では記録者が担当者名になる。日本語が入るためBFFはURLエンコードして送る
   test 'should decode a url encoded recorder name' do
     headers = bff_headers(@recorder_email).merge(
       RentalBffAuthenticatable::RECORDER_EMAIL_HEADER => CGI.escape('上條')

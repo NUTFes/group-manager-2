@@ -3,7 +3,7 @@
 // Cloudflare Access を前段に置ける構成では RENTAL_PASSCODE を設定せず、ここは素通しになる。
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { apiErrorBody } from "@/lib/apiContract";
+import { apiStatusBody } from "@/lib/apiContract";
 import {
   PASSCODE_COOKIE,
   isPasscodeEnabled,
@@ -16,9 +16,17 @@ const UNLOCK_API_PATH = "/api/rental/unlock";
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 
 // Access が設定されていてトークンも来ているなら、そちらを優先して通す。
-// トークンの検証は後段の BFF（lib/access.ts）が JWKS で行うため、ここを通しても
-// 守りは緩まない。こうしないと、Access とパスワードの両方を設定した移行期間に
-// Access で認証済みの人までパスワードを求められてしまう。
+// こうしないと、Access とパスワードの両方を設定した移行期間に、Access で
+// 認証済みの人までパスワードを求められてしまう。
+//
+// ここでは**ヘッダーがあるかどうかしか見ない**。値の検証は後段の BFF
+// （lib/access.ts）が JWKS で行う。そのため次の前提が要る。
+//
+//   /api/rental/* の Route Handler は、必ず forwardToApi を通すこと。
+//
+// 通さないものを足すと、偽のヘッダーを付けるだけでパスワード無しに到達できて
+// しまう。認証を持たない /api/rental/unlock だけが例外で、これは下で先に
+// 素通しさせている（パスワードの照合そのものを行う入口のため）。
 function hasAccessToken(request: NextRequest): boolean {
   const isAccessConfigured =
     CF_ACCESS_TEAM_DOMAIN !== "" && CF_ACCESS_AUD !== "";
@@ -42,7 +50,7 @@ export function proxy(request: NextRequest) {
   // BFF は JSON で返す。ここでHTMLに飛ばすと fetch がログイン画面を受け取ってしまう
   if (pathname.startsWith("/api/")) {
     return NextResponse.json(
-      apiErrorBody(401, "パスワードが必要です (passcode_required)"),
+      apiStatusBody(401, "パスワードが必要です (passcode_required)"),
       { status: 401 }
     );
   }

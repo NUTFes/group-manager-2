@@ -7,7 +7,6 @@ import { STAFF_NAME_HEADER } from "./apiContract";
 
 // 記録者（局名_担当者名）。Access が無い構成ではこれが recorder になる（設計書6章）。
 // 日本語をそのままヘッダーに載せられないため encodeURIComponent する
-
 function staffHeaders(): Record<string, string> {
   const recorder = readStoredRecorder();
   return recorder ? { [STAFF_NAME_HEADER]: encodeURIComponent(recorder) } : {};

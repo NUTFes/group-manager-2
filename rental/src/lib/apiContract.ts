@@ -12,15 +12,15 @@ export const RECORDER_EMAIL_HEADER = "X-Rental-Recorder-Email";
 /** BFF → API。呼び出し元がBFFであることを示すサービストークン */
 export const API_TOKEN_HEADER = "X-Rental-Api-Token";
 
-/** API のエラー応答（ApplicationController#fmt と同じ形） */
-export type ApiErrorBody = {
+/** API の応答の封筒（ApplicationController#fmt と同じ形）。成功にもエラーにも使う */
+export type ApiStatusBody = {
   status: { code: number; message: string };
 };
 
 /**
- * エラー応答の本体。Response と NextResponse のどちらで包むかは呼び出し側に任せる
+ * 応答の本体。Response と NextResponse のどちらで包むかは呼び出し側に任せる
  * （proxy は NextResponse、Route Handler は Response を使う）。
  */
-export function apiErrorBody(code: number, message: string): ApiErrorBody {
+export function apiStatusBody(code: number, message: string): ApiStatusBody {
   return { status: { code, message } };
 }

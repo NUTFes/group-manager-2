@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { apiErrorBody } from "@/lib/apiContract";
+import { apiStatusBody } from "@/lib/apiContract";
 import {
   PASSCODE_COOKIE,
   isPasscodeEnabled,
@@ -14,7 +14,7 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 // POST /api/rental/unlock … パスワードの照合
 export async function POST(request: Request) {
   if (!isPasscodeEnabled()) {
-    return NextResponse.json(apiErrorBody(404, "パスワードは使いません"), {
+    return NextResponse.json(apiStatusBody(404, "パスワードは使いません"), {
       status: 404,
     });
   }
@@ -28,12 +28,12 @@ export async function POST(request: Request) {
   }
 
   if (!matchesPasscode(passcode)) {
-    return NextResponse.json(apiErrorBody(401, "パスワードが違います"), {
+    return NextResponse.json(apiStatusBody(401, "パスワードが違います"), {
       status: 401,
     });
   }
 
-  const response = NextResponse.json(apiErrorBody(200, "OK"));
+  const response = NextResponse.json(apiStatusBody(200, "OK"));
   response.cookies.set({
     name: PASSCODE_COOKIE,
     value: passcodeCookieValue(),

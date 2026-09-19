@@ -6,7 +6,7 @@ import { resolveRecorderEmail } from "./access";
 import {
   API_TOKEN_HEADER,
   RECORDER_EMAIL_HEADER,
-  apiErrorBody,
+  apiStatusBody,
 } from "./apiContract";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
 
@@ -29,7 +29,7 @@ function buildUrl(path: string, query: ForwardOptions["query"]): string {
 }
 
 function jsonError(status: number, message: string) {
-  return Response.json(apiErrorBody(status, message), { status });
+  return Response.json(apiStatusBody(status, message), { status });
 }
 
 /**
