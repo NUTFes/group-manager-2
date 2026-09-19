@@ -8,12 +8,27 @@ import {
   isPasscodeEnabled,
   matchesPasscodeCookie,
 } from "@/lib/passcode";
+import { CF_ACCESS_AUD, CF_ACCESS_TEAM_DOMAIN } from "@/lib/serverEnv";
 
 const UNLOCK_PATH = "/unlock";
 const UNLOCK_API_PATH = "/api/rental/unlock";
+const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
+
+// Access が設定されていてトークンも来ているなら、そちらを優先して通す。
+// トークンの検証は後段の BFF（lib/access.ts）が JWKS で行うため、ここを通しても
+// 守りは緩まない。こうしないと、Access と合言葉の両方を設定した移行期間に
+// Access で認証済みの人まで合言葉を求められてしまう。
+function hasAccessToken(request: NextRequest): boolean {
+  const isAccessConfigured =
+    CF_ACCESS_TEAM_DOMAIN !== "" && CF_ACCESS_AUD !== "";
+
+  return isAccessConfigured && request.headers.get(ACCESS_JWT_HEADER) !== null;
+}
 
 export function proxy(request: NextRequest) {
   if (!isPasscodeEnabled()) return NextResponse.next();
+
+  if (hasAccessToken(request)) return NextResponse.next();
 
   const { pathname } = request.nextUrl;
   if (pathname === UNLOCK_PATH || pathname === UNLOCK_API_PATH) {

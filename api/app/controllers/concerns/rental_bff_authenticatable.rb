@@ -40,19 +40,15 @@ module RentalBffAuthenticatable
     render_rental_unauthorized('Missing recorder email')
   end
 
-  # 記録者。担当者名が日本語のことがあるためBFFはURLエンコードして送ってくる。
-  # 素の値（Accessのメールなど）はエスケープを含まないので、戻しても変わらない。
+  # 記録者。担当者名が日本語のことがあるため、BFFは新ヘッダーをURLエンコードして送る。
   #
-  # FIXME: 上記は誤り。CGI.unescape はリテラルの '+' をスペースに変換するため、
-  # URLエンコードされていない LEGACY_RECORDER_EMAIL_HEADER（Cloudflareが生の値の
-  # まま付与するヘッダー）に '+' を含むメール（例: staff+rental@example.com の
-  # ようなプラスアドレッシング）が来ると "staff rental@example.com" に化けて
-  # 記録者が壊れる。decode_recorder をこのヘッダーにも一律適用すべきではない。
+  # 旧ヘッダーはCloudflareが付ける生の値なのでデコードしない。CGI.unescape は生の
+  # `+` を空白に変えるため、staff+rental@example.com が壊れてしまう。
   def rental_recorder_email
     recorder = decode_recorder(request.headers[RECORDER_EMAIL_HEADER])
     return recorder if recorder.present?
 
-    decode_recorder(request.headers[LEGACY_RECORDER_EMAIL_HEADER])
+    request.headers[LEGACY_RECORDER_EMAIL_HEADER].to_s.strip
   end
 
   def decode_recorder(value)

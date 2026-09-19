@@ -151,8 +151,8 @@ export default function SelectPlacePage() {
               className="h-11 w-full rounded-lg border border-main bg-white px-3 text-body text-font placeholder:text-sub"
             />
             <p className="text-caption text-sub">
-              ※ 「局名
-              担当者名」として記録に残ります。この端末に保存されるので次回から入力は不要です
+              {"※ 「局名_担当者名」として記録に残ります。"}
+              {"この端末に保存されるので次回から入力は不要です"}
             </p>
           </div>
 
