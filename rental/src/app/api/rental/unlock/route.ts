@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorBody } from "@/lib/apiContract";
 import {
   PASSCODE_COOKIE,
   isPasscodeEnabled,
@@ -7,20 +8,15 @@ import {
 } from "@/lib/passcode";
 import { isProduction } from "@/lib/serverEnv";
 
-// 合言葉が正しければ Cookie を発行する。当日は一度入れたら使い続けられるよう長めに保つ
+// パスワードが正しければ Cookie を発行する。当日は一度入れたら使い続けられるよう長めに保つ
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
-// POST /api/rental/unlock … 合言葉の照合
-//
-// TODO: ここと proxy.ts の JSON エラーが `{ status: { code, message } }` を
-// 手組みしている。bff.ts が同じ形を作る jsonError(status, message) を export
-// 済みなので、そちらを再利用した方が形がずれる心配がない。
+// POST /api/rental/unlock … パスワードの照合
 export async function POST(request: Request) {
   if (!isPasscodeEnabled()) {
-    return NextResponse.json(
-      { status: { code: 404, message: "合言葉は使いません" } },
-      { status: 404 }
-    );
+    return NextResponse.json(apiErrorBody(404, "パスワードは使いません"), {
+      status: 404,
+    });
   }
 
   let passcode = "";
@@ -32,13 +28,12 @@ export async function POST(request: Request) {
   }
 
   if (!matchesPasscode(passcode)) {
-    return NextResponse.json(
-      { status: { code: 401, message: "合言葉が違います" } },
-      { status: 401 }
-    );
+    return NextResponse.json(apiErrorBody(401, "パスワードが違います"), {
+      status: 401,
+    });
   }
 
-  const response = NextResponse.json({ status: { code: 200, message: "OK" } });
+  const response = NextResponse.json(apiErrorBody(200, "OK"));
   response.cookies.set({
     name: PASSCODE_COOKIE,
     value: passcodeCookieValue(),

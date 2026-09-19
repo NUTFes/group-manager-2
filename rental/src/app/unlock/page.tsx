@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 
-// 合言葉の入力画面。Cloudflare Access を前段に置けない構成でだけ通る（設計書6章）。
+// パスワードの入力画面。Cloudflare Access を前段に置けない構成でだけ通る（設計書6章）。
 // 正しければ Cookie が発行され、以降は素通しで使える。
 export default function UnlockPage() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function UnlockPage() {
         body: JSON.stringify({ passcode }),
       });
       if (!response.ok) {
-        setErrorMessage("合言葉が違います。担当に確認してください。");
+        setErrorMessage("パスワードが違います。担当に確認してください。");
         return;
       }
       // 戻り先は受け取らず、必ず最初の画面へ送る（外部URLへ飛ばされる余地を作らない）
@@ -68,7 +68,7 @@ export default function UnlockPage() {
               htmlFor="passcode"
               className="text-body font-bold text-font after:ml-1 after:text-alert after:content-['*']"
             >
-              合言葉
+              パスワード
             </label>
             <input
               id="passcode"
@@ -80,7 +80,7 @@ export default function UnlockPage() {
               className="h-11 w-full rounded-lg border border-main bg-white px-3 text-body text-font"
             />
             <p className="text-caption text-sub">
-              ※ 実行委員から共有された合言葉を入れてください
+              ※ 実行委員から共有されたパスワードを入れてください
             </p>
           </div>
 

@@ -3,11 +3,12 @@
 // ブラウザはAPIを直接呼ばない。Access のCookieはrentalのドメインにしか無く、
 // APIへ識別情報を運べないため、ここでサーバー側から呼ぶ（設計書6章）。
 import { resolveRecorderEmail } from "./access";
+import {
+  API_TOKEN_HEADER,
+  RECORDER_EMAIL_HEADER,
+  apiErrorBody,
+} from "./apiContract";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
-
-const API_TOKEN_HEADER = "X-Rental-Api-Token";
-// 記録者のヘッダーに Cf-Access-* を使わない理由は docs/rental/design.md 6章を参照
-const RECORDER_EMAIL_HEADER = "X-Rental-Recorder-Email";
 
 type ForwardOptions = {
   path: string;
@@ -28,7 +29,7 @@ function buildUrl(path: string, query: ForwardOptions["query"]): string {
 }
 
 function jsonError(status: number, message: string) {
-  return Response.json({ status: { code: status, message } }, { status });
+  return Response.json(apiErrorBody(status, message), { status });
 }
 
 /**
@@ -64,7 +65,7 @@ export async function forwardToApi(
     [API_TOKEN_HEADER]: RENTAL_API_TOKEN,
   };
   if (withRecorderEmail) {
-    // 合言葉の構成では記録者が担当者名の自己申告になる。作業場所の選択からやり直せば
+    // パスワードの構成では記録者が担当者名の自己申告になる。作業場所の選択からやり直せば
     // 入り直せるので、足りないことをコードで伝える
     if (!access.email) {
       return jsonError(
@@ -72,13 +73,9 @@ export async function forwardToApi(
         "担当者名が設定されていません (staff_name_missing)"
       );
     }
-    // 担当者名は日本語のことがある。HTTPヘッダーにそのまま載せられないため
-    // URLエンコードして渡し、API 側で戻す
-    // TODO: access.ts の staffName() が X-Rental-Staff-Name を一度
-    // decodeURIComponent で平文に戻し、ここで再び encodeURIComponent している。
-    // 素通しさせるだけの値をわざわざ decode → re-encode しており、
-    // 途中のどちらかの実装だけ変えると他ホップ（ブラウザ側の encodeURIComponent、
-    // Rails 側の CGI.unescape）と静かにずれる。
+    // 記録者はアプリの中では平文で扱い、ホップごとに必要な形へ包む。
+    // Access のメールと担当者名を同じ型で扱えるようにするためで、HTTPヘッダーには
+    // 日本語をそのまま載せられないのでここでURLエンコードする（API側で戻す）
     headers[RECORDER_EMAIL_HEADER] = encodeURIComponent(access.email);
   }
 

@@ -33,7 +33,7 @@ export const CF_ACCESS_TEAM_DOMAIN =
 
 export const CF_ACCESS_AUD = process.env.CF_ACCESS_AUD?.trim() || "";
 
-// 合言葉。設定すると Cloudflare Access の代わりに入口を守る（設計書6章）。
+// パスワード。設定すると Cloudflare Access の代わりに入口を守る（設計書6章）。
 // Access が設定されていて JWT も来ているときはそちらが優先。Access のポリシーを
 // Bypass にした構成では JWT が来ないため、こちらで守る。
 export const RENTAL_PASSCODE = process.env.RENTAL_PASSCODE?.trim() || "";

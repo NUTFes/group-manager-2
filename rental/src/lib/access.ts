@@ -8,6 +8,7 @@
 // 記録者を偽装できてしまう。そのためJWTをCloudflareのJWKSで検証し、
 // 検証済みのクレームからメールを取り出す。
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { STAFF_NAME_HEADER } from "./apiContract";
 import { isPasscodeEnabled } from "./passcode";
 import {
   CF_ACCESS_AUD,
@@ -18,12 +19,6 @@ import {
 
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 const ACCESS_EMAIL_HEADER = "cf-access-authenticated-user-email";
-// 合言葉で入った場合の記録者。ブラウザが自己申告する担当者名
-// TODO: 同じヘッダー名が rental/src/lib/apiClient.ts にも独立した文字列
-// リテラルとして定義されている。共有定数にしないと、片方だけ変更したときに
-// 気づけない（ヘッダー名は大文字小文字を無視して比較されるため型エラーにもならない）。
-const STAFF_NAME_HEADER = "x-rental-staff-name";
-
 function staffName(request: Request): string {
   const raw = request.headers.get(STAFF_NAME_HEADER);
   if (!raw) return "";
@@ -57,7 +52,7 @@ export async function resolveRecorderEmail(
 
   // Access の検証ができないときは、代わりの守り方がある場合だけ通す。
   //
-  //   合言葉あり … proxy.ts が入口を守っている。記録者は担当者名の自己申告
+  //   パスワードあり … proxy.ts が入口を守っている。記録者は担当者名の自己申告
   //   ローカル開発 … 固定のメールで動かす
   //
   // どちらでもないときは閉じる。設定漏れのまま検証なしでヘッダーを信用すると、
@@ -68,13 +63,13 @@ export async function resolveRecorderEmail(
   // 戻すだけでよく、CF_ACCESS_* を消したり入れ直したりしなくて済む。
   if (!keySet || CF_ACCESS_AUD === "" || !token) {
     if (isPasscodeEnabled()) {
-      // 入口は proxy.ts の合言葉が守っている。記録者は担当者名の自己申告で、
+      // 入口は proxy.ts のパスワードが守っている。記録者は担当者名の自己申告で、
       // まだ名前を決めていない最初の画面（作業場所の取得）もあるため空を許す。
       // 記録するときに名前が要ることは forwardToApi 側で確かめる。
       return { ok: true, email: staffName(request) };
     }
 
-    // Access は設定されているのにトークンだけ来ていない（合言葉も無い）なら閉じる
+    // Access は設定されているのにトークンだけ来ていない（パスワードも無い）なら閉じる
     if (keySet && CF_ACCESS_AUD !== "") {
       return {
         ok: false,

@@ -3,17 +3,11 @@
 import camelcaseKeys from "camelcase-keys";
 import { readStoredRecorder } from "@/hooks/useWorkSession";
 import type { ApiResponse } from "@/types/rental";
+import { STAFF_NAME_HEADER } from "./apiContract";
 
 // 記録者（局名_担当者名）。Access が無い構成ではこれが recorder になる（設計書6章）。
 // 日本語をそのままヘッダーに載せられないため encodeURIComponent する
-// TODO: 同じヘッダー名が rental/src/lib/access.ts にも独立した文字列リテラル
-// として定義されている。共有定数に揃えた方がよい。
-const STAFF_NAME_HEADER = "X-Rental-Staff-Name";
 
-// TODO: getFromBff / postToBff の両方から毎回呼ばれるため、記録者メールが
-// 不要な GET（進捗確認や場所一覧の取得など）でも毎回 localStorage の読み出しと
-// JSON.parse・セッション形式の検証が走る。呼び出し側は useWorkSession() で
-// 既にメモ化済みの session を持っているので、そちらを渡す形にできれば無駄がない。
 function staffHeaders(): Record<string, string> {
   const recorder = readStoredRecorder();
   return recorder ? { [STAFF_NAME_HEADER]: encodeURIComponent(recorder) } : {};

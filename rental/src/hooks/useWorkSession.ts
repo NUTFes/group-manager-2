@@ -49,7 +49,20 @@ function getServerSnapshot(): string | null {
   return null;
 }
 
+// 直近のパース結果。API クライアントが呼び出しのたびに読むため、生の文字列が
+// 変わっていないあいだは JSON.parse と検証をやり直さない
+let lastRaw: string | null = null;
+let lastSession: WorkSession | null = null;
+
 function parseSession(raw: string | null): WorkSession | null {
+  if (raw === lastRaw) return lastSession;
+
+  lastRaw = raw;
+  lastSession = parseSessionUncached(raw);
+  return lastSession;
+}
+
+function parseSessionUncached(raw: string | null): WorkSession | null {
   if (!raw) return null;
 
   try {
@@ -80,6 +93,7 @@ function parseSession(raw: string | null): WorkSession | null {
 
 /**
  * React の外から読むための口。API クライアントが記録者を添えるのに使う。
+ * 呼び出しのたびに localStorage を読むが、内容が同じならパースは省く。
  * 記録には「局名_担当者名」の形で残す（同姓の人を区別できるようにするため）。
  */
 export function readStoredRecorder(): string {

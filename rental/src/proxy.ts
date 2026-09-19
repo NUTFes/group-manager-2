@@ -1,8 +1,9 @@
-// 合言葉を設定している環境で、入口を守る（Next 16 では middleware ではなく proxy）。
+// パスワードを設定している環境で、入口を守る（Next 16 では middleware ではなく proxy）。
 //
 // Cloudflare Access を前段に置ける構成では RENTAL_PASSCODE を設定せず、ここは素通しになる。
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { apiErrorBody } from "@/lib/apiContract";
 import {
   PASSCODE_COOKIE,
   isPasscodeEnabled,
@@ -16,8 +17,8 @@ const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 
 // Access が設定されていてトークンも来ているなら、そちらを優先して通す。
 // トークンの検証は後段の BFF（lib/access.ts）が JWKS で行うため、ここを通しても
-// 守りは緩まない。こうしないと、Access と合言葉の両方を設定した移行期間に
-// Access で認証済みの人まで合言葉を求められてしまう。
+// 守りは緩まない。こうしないと、Access とパスワードの両方を設定した移行期間に
+// Access で認証済みの人までパスワードを求められてしまう。
 function hasAccessToken(request: NextRequest): boolean {
   const isAccessConfigured =
     CF_ACCESS_TEAM_DOMAIN !== "" && CF_ACCESS_AUD !== "";
@@ -39,14 +40,9 @@ export function proxy(request: NextRequest) {
   }
 
   // BFF は JSON で返す。ここでHTMLに飛ばすと fetch がログイン画面を受け取ってしまう
-  // TODO: この `{ status: { code, message } }` は bff.ts が export している
-  // jsonError() と同じ形を手組みしている。route.ts の /api/rental/unlock も
-  // 同様なので、共通ヘルパーとして揃えた方がよい。
   if (pathname.startsWith("/api/")) {
     return NextResponse.json(
-      {
-        status: { code: 401, message: "合言葉が必要です (passcode_required)" },
-      },
+      apiErrorBody(401, "パスワードが必要です (passcode_required)"),
       { status: 401 }
     );
   }
@@ -60,7 +56,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // 静的アセットとPWAの資材は素通しにする（合言葉の画面自体が壊れるため）
+  // 静的アセットとPWAの資材は素通しにする（パスワードの画面自体が壊れるため）
   matcher: [
     "/((?!_next/static|_next/image|icons/|favicon.ico|manifest.webmanifest|sw.js|symbol-mark.svg|apple-icon.png).*)",
   ],
