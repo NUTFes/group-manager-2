@@ -3,11 +3,12 @@
 // ブラウザはAPIを直接呼ばない。Access のCookieはrentalのドメインにしか無く、
 // APIへ識別情報を運べないため、ここでサーバー側から呼ぶ（設計書6章）。
 import { resolveRecorderEmail } from "./access";
+import {
+  API_TOKEN_HEADER,
+  RECORDER_EMAIL_HEADER,
+  apiStatusBody,
+} from "./apiContract";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
-
-const API_TOKEN_HEADER = "X-Rental-Api-Token";
-// 記録者のヘッダーに Cf-Access-* を使わない理由は docs/rental/design.md 6章を参照
-const RECORDER_EMAIL_HEADER = "X-Rental-Recorder-Email";
 
 type ForwardOptions = {
   path: string;
@@ -28,7 +29,7 @@ function buildUrl(path: string, query: ForwardOptions["query"]): string {
 }
 
 function jsonError(status: number, message: string) {
-  return Response.json({ status: { code: status, message } }, { status });
+  return Response.json(apiStatusBody(status, message), { status });
 }
 
 /**
@@ -64,7 +65,18 @@ export async function forwardToApi(
     [API_TOKEN_HEADER]: RENTAL_API_TOKEN,
   };
   if (withRecorderEmail) {
-    headers[RECORDER_EMAIL_HEADER] = access.email;
+    // パスワードの構成では記録者が担当者名の自己申告になる。作業場所の選択からやり直せば
+    // 入り直せるので、足りないことをコードで伝える
+    if (!access.email) {
+      return jsonError(
+        401,
+        "担当者名が設定されていません (staff_name_missing)"
+      );
+    }
+    // 記録者はアプリの中では平文で扱い、ホップごとに必要な形へ包む。
+    // Access のメールと担当者名を同じ型で扱えるようにするためで、HTTPヘッダーには
+    // 日本語をそのまま載せられないのでここでURLエンコードする（API側で戻す）
+    headers[RECORDER_EMAIL_HEADER] = encodeURIComponent(access.email);
   }
 
   try {

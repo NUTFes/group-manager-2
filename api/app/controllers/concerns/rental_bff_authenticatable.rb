@@ -40,11 +40,25 @@ module RentalBffAuthenticatable
     render_rental_unauthorized('Missing recorder email')
   end
 
+  # 記録者。担当者名が日本語のことがあるため、BFFは新ヘッダーをURLエンコードして送る。
+  #
+  # 旧ヘッダーはCloudflareが付ける生の値なのでデコードしない。CGI.unescape は生の
+  # `+` を空白に変えるため、staff+rental@example.com が壊れてしまう。
   def rental_recorder_email
-    email = request.headers[RECORDER_EMAIL_HEADER].to_s.strip
-    return email if email.present?
+    recorder = decode_recorder(request.headers[RECORDER_EMAIL_HEADER])
+    return recorder if recorder.present?
 
     request.headers[LEGACY_RECORDER_EMAIL_HEADER].to_s.strip
+  end
+
+  def decode_recorder(value)
+    raw = value.to_s
+    return '' if raw.blank?
+
+    CGI.unescape(raw).strip
+  rescue ArgumentError
+    # 不正なパーセントエンコードはそのまま扱う
+    raw.strip
   end
 
   def valid_rental_bff_token?
