@@ -10,6 +10,9 @@ export type WorkSession = {
   // すべての場所を対象にする場合は null（貸出場所で絞らない）
   placeId: number | null;
   placeName: string;
+  // 記録者。Access が無い構成では「局名_担当者名」が recorder になる（設計書6章）
+  bureau: string;
+  staffName: string;
 };
 
 /** placeId が null のときに画面へ出す名前 */
@@ -46,7 +49,20 @@ function getServerSnapshot(): string | null {
   return null;
 }
 
+// 直近のパース結果。API クライアントが呼び出しのたびに読むため、生の文字列が
+// 変わっていないあいだは JSON.parse と検証をやり直さない
+let lastRaw: string | null = null;
+let lastSession: WorkSession | null = null;
+
 function parseSession(raw: string | null): WorkSession | null {
+  if (raw === lastRaw) return lastSession;
+
+  lastRaw = raw;
+  lastSession = parseSessionUncached(raw);
+  return lastSession;
+}
+
+function parseSessionUncached(raw: string | null): WorkSession | null {
   if (!raw) return null;
 
   try {
@@ -54,7 +70,12 @@ function parseSession(raw: string | null): WorkSession | null {
     if (
       (parsed.mode !== "rental" && parsed.mode !== "return") ||
       (typeof parsed.placeId !== "number" && parsed.placeId !== null) ||
-      typeof parsed.placeName !== "string"
+      typeof parsed.placeName !== "string" ||
+      // 局名・担当者名が無い古い保存は作り直してもらう（記録者が空だと記録できない）
+      typeof parsed.bureau !== "string" ||
+      parsed.bureau.trim() === "" ||
+      typeof parsed.staffName !== "string" ||
+      parsed.staffName.trim() === ""
     ) {
       return null;
     }
@@ -62,10 +83,24 @@ function parseSession(raw: string | null): WorkSession | null {
       mode: parsed.mode,
       placeId: parsed.placeId,
       placeName: parsed.placeName,
+      bureau: parsed.bureau.trim(),
+      staffName: parsed.staffName.trim(),
     };
   } catch {
     return null;
   }
+}
+
+/**
+ * React の外から読むための口。API クライアントが記録者を添えるのに使う。
+ * 呼び出しのたびに localStorage を読むが、内容が同じならパースは省く。
+ * 記録には「局名_担当者名」の形で残す（同姓の人を区別できるようにするため）。
+ */
+export function readStoredRecorder(): string {
+  const session = parseSession(getSnapshot());
+  if (!session) return "";
+
+  return [session.bureau, session.staffName].filter(Boolean).join("_");
 }
 
 /**
