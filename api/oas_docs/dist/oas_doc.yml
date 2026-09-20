@@ -11545,8 +11545,12 @@ paths:
       summary: patch summary
       description: patch description
       responses:
-        '204':
-          description: user_page_setting description
+        '200':
+          description: Updated user page setting
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSetting"
         '404':
           description: user_page_setting description
         '422':
@@ -11571,8 +11575,12 @@ paths:
       summary: put summary
       description: put description
       responses:
-        '204':
-          description: user_page_setting description
+        '200':
+          description: Updated user page setting
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSetting"
         '404':
           description: user_page_setting description
         '422':

@@ -2,7 +2,7 @@
   <div class="main-content" v-if="this.$role(roleID).user_page_setting.read">
     <SubHeader pageTitle="ユーザー画面制御"></SubHeader>
     <Card width="100%">
-      <VerticalTable>
+      <VerticalTable v-if="settingId !== null">
         <!--代表者-->
         <tr>
           <th rowspan="1">代表者</th>
@@ -12,7 +12,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_user" :isOn="is_edit_user" :on_click="() => {this.is_edit_user = !this.is_edit_user}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_user"
+              :disabled="!!saving.is_edit_user"
+              :on_click="() => saveToggle('is_edit_user')"
+            />
           </td>
         </tr>
         <!--団体-->
@@ -25,7 +30,12 @@
           </td>
           <td>
             <!-- roleのupdateがtrueになっているroleだけ，トグルボタンが表示される -->
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_regist_group"
+              :disabled="!!saving.is_regist_group"
+              :on_click="() => saveToggle('is_regist_group')"
+            />
           </td>
         </tr>
         <tr>
@@ -35,7 +45,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_group" :isOn="is_edit_group" :on_click="() => {this.is_edit_group = !this.is_edit_group}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_group"
+              :disabled="!!saving.is_edit_group"
+              :on_click="() => saveToggle('is_edit_group')"
+            />
           </td>
         </tr>
         <!--副代表-->
@@ -47,7 +62,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_sub_rep" :isOn="is_edit_sub_rep" :on_click="() => {this.is_edit_sub_rep = !this.is_edit_sub_rep}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_sub_rep"
+              :disabled="!!saving.is_edit_sub_rep"
+              :on_click="() => saveToggle('is_edit_sub_rep')"
+            />
           </td>
         </tr>
         <!--会場-->
@@ -59,7 +79,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_place" :isOn="is_edit_place" :on_click="() => {this.is_edit_place = !this.is_edit_place}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_place"
+              :disabled="!!saving.is_edit_place"
+              :on_click="() => saveToggle('is_edit_place')"
+            />
           </td>
         </tr>
         <!--電力-->
@@ -71,7 +96,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_power_order" :isOn="add_power_order" :on_click="() => {this.add_power_order = !this.add_power_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_power_order"
+              :disabled="!!saving.add_power_order"
+              :on_click="() => saveToggle('add_power_order')"
+            />
           </td>
         </tr>
         <tr>
@@ -81,7 +111,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_power_order" :isOn="is_edit_power_order" :on_click="() => {this.is_edit_power_order = !this.is_edit_power_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_power_order"
+              :disabled="!!saving.is_edit_power_order"
+              :on_click="() => saveToggle('is_edit_power_order')"
+            />
           </td>
         </tr>
         <!--物品-->
@@ -93,7 +128,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_rental_order" :isOn="add_rental_order" :on_click="() => {this.add_rental_order = !this.add_rental_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_rental_order"
+              :disabled="!!saving.add_rental_order"
+              :on_click="() => saveToggle('add_rental_order')"
+            />
           </td>
         </tr>
         <tr>
@@ -103,7 +143,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_rental_order" :isOn="is_edit_rental_order" :on_click="() => {this.is_edit_rental_order = !this.is_edit_rental_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_rental_order"
+              :disabled="!!saving.is_edit_rental_order"
+              :on_click="() => saveToggle('is_edit_rental_order')"
+            />
           </td>
         </tr>
         <!--ステージ-->
@@ -115,7 +160,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_stage_order" :isOn="add_stage_order" :on_click="() => {this.add_stage_order = !this.add_stage_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_stage_order"
+              :disabled="!!saving.add_stage_order"
+              :on_click="() => saveToggle('add_stage_order')"
+            />
           </td>
         </tr>
         <tr>
@@ -125,7 +175,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_stage_order"
+              :disabled="!!saving.is_edit_stage_order"
+              :on_click="() => saveToggle('is_edit_stage_order')"
+            />
           </td>
         </tr>
         <!--ステージオプション-->
@@ -137,7 +192,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_common_option" :isOn="is_edit_stage_common_option" :on_click="() => {this.is_edit_stage_common_option = !this.is_edit_stage_common_option}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_stage_common_option"
+              :disabled="!!saving.is_edit_stage_common_option"
+              :on_click="() => saveToggle('is_edit_stage_common_option')"
+            />
           </td>
         </tr>
         <!--従業員-->
@@ -149,7 +209,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_employee" :isOn="add_employee" :on_click="() => {this.add_employee = !this.add_employee}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_employee"
+              :disabled="!!saving.add_employee"
+              :on_click="() => saveToggle('add_employee')"
+            />
           </td>
         </tr>
         <tr>
@@ -159,7 +224,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_employee"
+              :disabled="!!saving.is_edit_employee"
+              :on_click="() => saveToggle('is_edit_employee')"
+            />
           </td>
         </tr>
         <!--販売品-->
@@ -173,7 +243,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_food_product" :isOn="add_food_product" :on_click="() => {this.add_food_product = !this.add_food_product}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_food_product"
+              :disabled="!!saving.add_food_product"
+              :on_click="() => saveToggle('add_food_product')"
+            />
           </td>
         </tr>
         <tr>
@@ -183,7 +258,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_food_product" :isOn="is_edit_food_product" :on_click="() => {this.is_edit_food_product = !this.is_edit_food_product}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_food_product"
+              :disabled="!!saving.is_edit_food_product"
+              :on_click="() => saveToggle('is_edit_food_product')"
+            />
           </td>
         </tr>
         <!--購入品-->
@@ -195,7 +275,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_purchase_list" :isOn="add_purchase_list" :on_click="() => {this.add_purchase_list = !this.add_purchase_list}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_purchase_list"
+              :disabled="!!saving.add_purchase_list"
+              :on_click="() => saveToggle('add_purchase_list')"
+            />
           </td>
         </tr>
         <tr>
@@ -205,7 +290,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_purchase_list" :isOn="is_edit_purchase_list" :on_click="() => {this.is_edit_purchase_list = !this.is_edit_purchase_list}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_purchase_list"
+              :disabled="!!saving.is_edit_purchase_list"
+              :on_click="() => saveToggle('is_edit_purchase_list')"
+            />
           </td>
         </tr>
         <!--アナウンス文-->
@@ -217,7 +307,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_announcement" :isOn="is_edit_announcement" :on_click="() => {this.is_edit_announcement = !this.is_edit_announcement}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_announcement"
+              :disabled="!!saving.is_edit_announcement"
+              :on_click="() => saveToggle('is_edit_announcement')"
+            />
           </td>
         </tr>
         <!--PR-->
@@ -229,7 +324,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_public_relation" :isOn="is_edit_public_relation" :on_click="() => {this.is_edit_public_relation = !this.is_edit_public_relation}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_public_relation"
+              :disabled="!!saving.is_edit_public_relation"
+              :on_click="() => saveToggle('is_edit_public_relation')"
+            />
           </td>
         </tr>
         <!--模擬店平面図-->
@@ -241,7 +341,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_venue_map" :isOn="is_edit_venue_map" :on_click="() => {this.is_edit_venue_map = !this.is_edit_venue_map}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_venue_map"
+              :disabled="!!saving.is_edit_venue_map"
+              :on_click="() => saveToggle('is_edit_venue_map')"
+            />
           </td>
         </tr>
         <!--調理工程-->
@@ -253,7 +358,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_cooking_process" :isOn="is_edit_cooking_process" :on_click="() => {this.is_edit_cooking_process = !this.is_edit_cooking_process}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_cooking_process"
+              :disabled="!!saving.is_edit_cooking_process"
+              :on_click="() => saveToggle('is_edit_cooking_process')"
+            />
           </td>
         </tr>
         <!--火気使用申請-->
@@ -265,7 +375,12 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_fire_equipment_order" :isOn="add_fire_equipment_order" :on_click="() => {this.add_fire_equipment_order = !this.add_fire_equipment_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="add_fire_equipment_order"
+              :disabled="!!saving.add_fire_equipment_order"
+              :on_click="() => saveToggle('add_fire_equipment_order')"
+            />
           </td>
         </tr>
         <tr>
@@ -275,16 +390,29 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_fire_equipment_order" :isOn="is_edit_fire_equipment_order" :on_click="() => {this.is_edit_fire_equipment_order = !this.is_edit_fire_equipment_order}" />
+            <SwitchButton
+              v-if="this.$role(roleID).user_page_setting.update"
+              :isOn="is_edit_fire_equipment_order"
+              :disabled="!!saving.is_edit_fire_equipment_order"
+              :on_click="() => saveToggle('is_edit_fire_equipment_order')"
+            />
           </td>
         </tr>
         <!--開催年-->
         <tr>
-          <td>開催年</td>
+          <td>現在の開催年</td>
           <td>
             <Row gap="0px">
               <span class="material-icons">expand_more</span>
-              <select v-model="fes_year_id">
+              <select
+                v-model.number="selectedFesYearId"
+                :disabled="
+                  !$role(roleID).user_page_setting.update ||
+                  !!saving.fes_year_id ||
+                  fes_year_list.length === 0
+                "
+                @change="saveYear"
+              >
                 <option
                   v-for="item in fes_year_list"
                   :key="item.id"
@@ -294,24 +422,61 @@
                 </option>
               </select>
             </Row>
+            <small>選択すると現在の開催年がすぐに切り替わります。</small>
           </td>
         </tr>
       </VerticalTable>
+      <p v-else>
+        {{
+          isLoading
+            ? "設定を読み込み中です。"
+            : "設定を読み込めませんでした。ページを再読み込みしてください。"
+        }}
+      </p>
     </Card>
-    <Row>
-      <CommonButton v-if="$role(roleID).user_page_setting.update" iconName="save" :on_click="update">保存</CommonButton>
-      <InTableButton v-if="$role(roleID).user_page_setting.update" iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
-    </Row>
+    <v-snackbar v-model="snackbar" color="error" top :timeout="6000">
+      {{ errorMessage }}
+    </v-snackbar>
   </div>
   <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+
+const settingKeys = [
+  "is_regist_group",
+  "is_edit_group",
+  "is_edit_user",
+  "is_edit_sub_rep",
+  "is_edit_place",
+  "is_edit_power_order",
+  "is_edit_rental_order",
+  "is_edit_stage_order",
+  "is_edit_stage_common_option",
+  "is_edit_employee",
+  "is_edit_food_product",
+  "is_edit_purchase_list",
+  "is_edit_announcement",
+  "is_edit_public_relation",
+  "is_edit_venue_map",
+  "is_edit_cooking_process",
+  "is_edit_fire_equipment_order",
+  "add_fire_equipment_order",
+  "add_power_order",
+  "add_rental_order",
+  "add_stage_order",
+  "add_employee",
+  "add_food_product",
+  "add_purchase_list",
+];
+
 export default {
   data() {
     return {
-      data: [],
+      settingId: null,
+      isLoading: true,
+      saving: {},
       is_regist_group: false,
       is_edit_group: false,
       is_edit_user: false,
@@ -338,58 +503,27 @@ export default {
       add_announcement: false,
       add_fire_equipment_order: false,
       fes_year_id: null,
+      selectedFesYearId: null,
       fes_year_list: [],
-      multiLine: true,
       snackbar: false,
-      text: `I'm a multi-line snackbar.`,
+      errorMessage: "",
     };
   },
 
   mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
     this.$nextTick(() => {
-      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      window.scrollTo(
+        0,
+        Number(localStorage.getItem("scrollPosition-" + this.$route.path)) || 0
+      );
     });
 
-    this.$axios
-      .get("/user_page_settings")
-      .then((response) => {
-        this.is_regist_group = response.data.data.is_regist_group;
-        this.is_edit_group = response.data.data.is_edit_group;
-        this.is_edit_user = response.data.data.is_edit_user;
-        this.is_edit_sub_rep = response.data.data.is_edit_sub_rep;
-        this.is_edit_place = response.data.data.is_edit_place;
-        this.is_edit_power_order = response.data.data.is_edit_power_order;
-        this.is_edit_rental_order = response.data.data.is_edit_rental_order;
-        this.is_edit_stage_order = response.data.data.is_edit_stage_order;
-        this.is_edit_stage_common_option = response.data.data.is_edit_stage_common_option;
-        this.is_edit_employee = response.data.data.is_edit_employee;
-        this.is_edit_food_product = response.data.data.is_edit_food_product;
-        this.is_edit_purchase_list = response.data.data.is_edit_purchase_list;
-        this.is_edit_announcement = response.data.data.is_edit_announcement;
-        this.is_edit_public_relation = response.data.data.is_edit_public_relation;
-        this.is_edit_venue_map = response.data.data.is_edit_venue_map;
-        this.is_edit_cooking_process = response.data.data.is_edit_cooking_process;
-        this.is_edit_fire_equipment_order = response.data.data.is_edit_fire_equipment_order;
-        this.add_fire_equipment_order = response.data.data.add_fire_equipment_order;
-        this.add_power_order = response.data.data.add_power_order;
-        this.add_rental_order = response.data.data.add_rental_order;
-        this.add_stage_order = response.data.data.add_stage_order;
-        this.add_employee = response.data.data.add_employee;
-        this.add_food_product = response.data.data.add_food_product;
-        this.add_purchase_list = response.data.data.add_purchase_list;
-        this.add_announcement = response.data.data.add_announcement;
-        this.fes_year_id = response.data.data.fes_year_id
-      });
-    this.$axios
-      .get("/fes_years", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.fes_year_list = response.data.data;
-      });
+    this.loadSettings();
+    this.loadFesYears();
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.saveScrollPosition);
   },
   computed: {
     ...mapState({
@@ -398,49 +532,71 @@ export default {
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
-    update: function() {
-      const update_url = "/user_page_settings/1";
-      let params = new URLSearchParams();
-      params.append("is_regist_group", this.is_regist_group);
-      params.append("is_edit_group", this.is_edit_group);
-      params.append("is_edit_user", this.is_edit_user);
-      params.append("is_edit_sub_rep", this.is_edit_sub_rep);
-      params.append("is_edit_place", this.is_edit_place);
-      params.append("is_edit_power_order", this.is_edit_power_order);
-      params.append("is_edit_rental_order", this.is_edit_rental_order);
-      params.append("is_edit_stage_order", this.is_edit_stage_order);
-      params.append("is_edit_stage_common_option", this.is_edit_stage_common_option);
-      params.append("is_edit_employee", this.is_edit_employee);
-      params.append("is_edit_food_product", this.is_edit_food_product);
-      params.append("is_edit_purchase_list", this.is_edit_purchase_list);
-      params.append("is_edit_announcement", this.is_edit_announcement);
-      params.append("is_edit_public_relation", this.is_edit_public_relation);
-      params.append("is_edit_venue_map", this.is_edit_venue_map);
-      params.append("is_edit_cooking_process", this.is_edit_cooking_process);
-      params.append("is_edit_fire_equipment_order", this.is_edit_fire_equipment_order);
-      params.append("add_fire_equipment_order", this.add_fire_equipment_order);
-      params.append("add_power_order", this.add_power_order);
-      params.append("add_rental_order", this.add_rental_order);
-      params.append("add_stage_order", this.add_stage_order);
-      params.append("add_employee", this.add_employee);
-      params.append("add_food_product", this.add_food_product);
-      params.append("add_purchase_list", this.add_purchase_list);
-      params.append("add_announcement", this.add_announcement);
-      params.append("fes_year_id", this.fes_year_id);
+    async loadSettings() {
+      try {
+        const response = await this.$axios.get("/user_page_settings");
+        const setting = response.data.data;
+        if (!setting || !setting.id) throw new Error("Setting not found");
 
-      this.$axios
-        .put(update_url, params)
+        settingKeys.forEach((key) => {
+          this[key] = setting[key] === true;
+        });
+        this.settingId = setting.id;
+        this.fes_year_id = setting.fes_year_id;
+        this.selectedFesYearId = setting.fes_year_id;
+      } catch (_) {
+        this.errorMessage =
+          "設定を読み込めませんでした。ページを再読み込みしてください。";
+        this.snackbar = true;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async loadFesYears() {
+      try {
+        const response = await this.$axios.get("/fes_years");
+        if (!Array.isArray(response.data.data))
+          throw new Error("Years not found");
+        this.fes_year_list = response.data.data;
+      } catch (_) {
+        this.errorMessage = "開催年一覧を読み込めませんでした。";
+        this.snackbar = true;
+      }
+    },
+    saveToggle(key) {
+      this.saveSetting(key, !this[key]);
+    },
+    async saveYear() {
+      if (this.selectedFesYearId === this.fes_year_id) return;
+      await this.saveSetting("fes_year_id", this.selectedFesYearId);
+      this.selectedFesYearId = this.fes_year_id;
+    },
+    async saveSetting(key, nextValue) {
+      if (this.settingId === null || this.saving[key]) return;
 
-        .then(
-          (response) => {
-            this.snackbar = true;
-          },
-          (error) => {}
+      const previous = this[key];
+      this.$set(this.saving, key, true);
+      this[key] = nextValue;
+
+      try {
+        const response = await this.$axios.patch(
+          `/user_page_settings/${this.settingId}`,
+          { [key]: nextValue }
         );
-
-      this.snackbar = true;
+        if (response.data.status.code !== 200) throw new Error("Save failed");
+      } catch (_) {
+        this[key] = previous;
+        this.errorMessage =
+          "変更を保存できませんでした。時間をおいて再度お試しください。";
+        this.snackbar = true;
+      } finally {
+        this.$set(this.saving, key, false);
+      }
     },
   },
 };

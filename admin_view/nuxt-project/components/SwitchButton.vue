@@ -1,5 +1,12 @@
 <template>
-  <button class="switch-button" @click="on_click" :style="SwitchButtonOption">
+  <button
+    type="button"
+    class="switch-button"
+    @click="on_click"
+    :disabled="disabled"
+    :aria-pressed="isOn"
+    :style="SwitchButtonOption"
+  >
     <div></div>
   </button>
 </template>
@@ -9,7 +16,7 @@ export default {
     return {
       background: "#DEDEDE",
       paddingLeft: "2px",
-    }
+    };
   },
   name: "SwitchButton",
   props: {
@@ -27,22 +34,27 @@ export default {
       required: false,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     SwitchButtonOption() {
       if (this.isOn) {
-        this.background = "linear-gradient(135deg, var(--button-primary) 0%, var(--button-secondary) 100%)"
-        this.paddingLeft = "28px"
-      }else{
-        this.background = "#DEDEDE"
-        this.paddingLeft = "2px"
+        this.background =
+          "linear-gradient(135deg, var(--button-primary) 0%, var(--button-secondary) 100%)";
+        this.paddingLeft = "28px";
+      } else {
+        this.background = "#DEDEDE";
+        this.paddingLeft = "2px";
       }
       return {
         "--switch-background": this.background,
         "--switch-padding": this.paddingLeft,
       };
     },
-  }
+  },
 };
 </script>
 <style scoped>
@@ -94,6 +106,11 @@ export default {
 .switch-button:active {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.25);
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.switch-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .switch-button div {
