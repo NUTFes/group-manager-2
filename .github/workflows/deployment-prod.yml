@@ -1,0 +1,51 @@
+name: CD
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    permissions:
+      contents: read
+      packages: read
+    
+    steps:
+      - name: Add deploy host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keygen -R "${{ secrets.CONTAINER_IP }}" 2>/dev/null || true
+          echo "${{ secrets.DEPLOY_HOST_KEY }}" >> ~/.ssh/known_hosts
+
+      - name: SSH and Deploy
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: |
+          IMAGE_TAG="${GITHUB_SHA::7}"
+
+          {
+            printf 'export GHCR_TOKEN=%q\n' "$GHCR_TOKEN"
+            printf 'export GHCR_USERNAME=%q\n' "$GHCR_USERNAME"
+            printf 'export IMAGE_TAG=%q\n' "$IMAGE_TAG"
+
+            cat <<'EOF'
+            set -e
+
+            cd /home/deploy-user/group-manager-2
+
+            git fetch origin feat/mitomen/2031/CI-CD-pipeline
+            git reset --hard origin/feat/mitomen/2031/CI-CD-pipeline
+            git checkout -B feat/mitomen/2031/CI-CD-pipeline origin/feat/mitomen/2031/CI-CD-pipeline
+
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
+
+            docker compose -f compose.cd.yml pull
+            docker compose -f compose.cd.yml up -d --wait --wait-timeout 120
+
+            docker image prune -f
+
+          EOF
+          } | ssh deploy-user@${{ secrets.CONTAINER_IP }} -T bash -s
