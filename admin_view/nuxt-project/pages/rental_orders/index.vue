@@ -315,7 +315,7 @@ export default {
     },
     async submit() {
       const url =
-        "/rental_orders?group_id=" +
+        "/api/v1/create_rental_order_for_admin_view?group_id=" +
         this.groupID +
         "&rental_item_id=" +
         this.rentalItemID +

@@ -184,7 +184,7 @@ export default {
   methods: {
     edit() {
       const url =
-        "/place_orders/" +
+        "/api/v1/update_place_order_for_admin_view/" +
         this.routeId +
         "?group_id=" +
         this.placeOrder.group.id +
@@ -196,7 +196,7 @@ export default {
         this.thirdPlaceOrder +
         "&remark=" +
         this.remark;
-      this.$axios.$put(url).then((response) => {
+      this.$axios.$patch(url).then((response) => {
         this.openSnackBar("申請情報を編集しました");
         this.reload(response.data.id);
         this.closeEditModal();
@@ -208,7 +208,7 @@ export default {
       this.placeOrder = resPlaceOrder.data;
     },
     async destroy() {
-      const url = "/place_orders/" + this.routeId;
+      const url = "/api/v1/delete_place_order_for_admin_view/" + this.routeId;
       await this.$axios.$delete(url);
       this.$router.push("/place_orders");
     },

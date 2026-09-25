@@ -99,8 +99,14 @@ export default {
         label: "会場申請",
         request: () =>
           po.id
-            ? this.$axios.$put(`/place_orders/${po.id}`, data)
-            : this.$axios.$post(`/place_orders`, data),
+            ? this.$axios.$patch(
+                `/api/v1/update_place_order_for_admin_view/${po.id}`,
+                data
+              )
+            : this.$axios.$post(
+                `/api/v1/create_place_order_for_admin_view`,
+                data
+              ),
       });
     },
   },

@@ -180,6 +180,7 @@ Rails.application.routes.draw do
       post 'get_refinement_groups' => 'groups_api#get_refinement_groups'
       post 'get_search_groups' => 'groups_api#get_search_groups'
       get 'get_groups_refinemented_by_current_fes_year' => 'groups_api#get_groups_refinemented_by_current_fes_year'
+      patch 'update_group_for_admin_view/:id' => 'groups_api#update_group_for_admin_view'
 
       #---電力申請ページ
       get 'get_power_order_index_for_admin_view' => 'power_orders_api#get_power_order_index_for_admin_view'
@@ -192,12 +193,18 @@ Rails.application.routes.draw do
       get 'get_place_order_show_for_admin_view/:id' => 'place_orders_api#get_place_order_show_for_admin_view'
       post 'get_refinement_place_orders' => 'place_orders_api#get_refinement_place_orders'
       post 'get_search_place_orders' => 'place_orders_api#get_search_place_orders'
+      post 'create_place_order_for_admin_view' => 'place_orders_api#create_place_order_for_admin_view'
+      patch 'update_place_order_for_admin_view/:id' => 'place_orders_api#update_place_order_for_admin_view'
+      delete 'delete_place_order_for_admin_view/:id' => 'place_orders_api#delete_place_order_for_admin_view'
 
       #---物品申請ページ
       get 'get_rental_order_index_for_admin_view' => 'rental_orders_api#get_rental_order_index_for_admin_view'
       get 'get_rental_order_show_for_admin_view/:id' => 'rental_orders_api#get_rental_order_show_for_admin_view'
       post 'get_refinement_rental_orders' => 'rental_orders_api#get_refinement_rental_orders'
       post 'get_search_rental_orders' => 'rental_orders_api#get_search_rental_orders'
+      post 'create_rental_order_for_admin_view' => 'rental_orders_api#create_rental_order_for_admin_view'
+      patch 'update_rental_order_for_admin_view/:id' => 'rental_orders_api#update_rental_order_for_admin_view'
+      delete 'delete_rental_order_for_admin_view/:id' => 'rental_orders_api#delete_rental_order_for_admin_view'
 
       #---ステージ申請ページ
       get 'get_stage_order_index_for_admin_view' => 'stage_orders_api#get_stage_order_index_for_admin_view'
@@ -210,12 +217,18 @@ Rails.application.routes.draw do
       get 'get_stage_common_option_show_for_admin_view/:id' => 'stage_common_options_api#get_stage_common_option_show_for_admin_view'
       post 'get_refinement_stage_common_options' => 'stage_common_options_api#get_refinement_stage_common_options'
       post 'get_search_stage_common_options' => 'stage_common_options_api#get_search_stage_common_options'
+      post 'create_stage_common_option_for_admin_view' => 'stage_common_options_api#create_stage_common_option_for_admin_view'
+      patch 'update_stage_common_option_for_admin_view/:id' => 'stage_common_options_api#update_stage_common_option_for_admin_view'
+      delete 'delete_stage_common_option_for_admin_view/:id' => 'stage_common_options_api#delete_stage_common_option_for_admin_view'
 
       #---従業員申請ページ
       get 'get_employee_index_for_admin_view' => 'employees_api#get_employee_index_for_admin_view'
       get 'get_employee_show_for_admin_view/:id' => 'employees_api#get_employee_show_for_admin_view'
       post 'get_refinement_employees' => 'employees_api#get_refinement_employees'
       post 'get_search_employees' => 'employees_api#get_search_employees'
+      post 'create_employee_for_admin_view' => 'employees_api#create_employee_for_admin_view'
+      patch 'update_employee_for_admin_view/:id' => 'employees_api#update_employee_for_admin_view'
+      delete 'delete_employee_for_admin_view/:id' => 'employees_api#delete_employee_for_admin_view'
 
       #---販売品申請ページ
       get 'get_food_product_index_for_admin_view' => 'food_products_api#get_food_product_index_for_admin_view'
@@ -235,6 +248,9 @@ Rails.application.routes.draw do
       get 'get_public_relation_for_admin_view/:id' => 'public_relations_api#get_public_relation_for_admin_view'
       post 'get_refinement_public_relations' => 'public_relations_api#get_refinement_public_relations'
       post 'get_search_public_relations' => 'public_relations_api#get_search_public_relations'
+      post 'create_public_relation_for_admin_view' => 'public_relations_api#create_public_relation_for_admin_view'
+      patch 'update_public_relation_for_admin_view/:id' => 'public_relations_api#update_public_relation_for_admin_view'
+      delete 'delete_public_relation_for_admin_view/:id' => 'public_relations_api#delete_public_relation_for_admin_view'
       get 'get_groups_have_no_public_relation' => 'groups_api#get_groups_have_no_public_relation'
 
       #---模擬店平面図申請ページ

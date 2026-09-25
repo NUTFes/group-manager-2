@@ -354,7 +354,7 @@ export default {
     },
     async submitPlaceOrder() {
       const postPlaceOrderUrl =
-        "/place_orders/" +
+        "/api/v1/create_place_order_for_admin_view" +
         "?group_id=" +
         this.appGroup +
         "&first=" +

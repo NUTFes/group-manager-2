@@ -57,4 +57,40 @@ class Api::V1::StageCommonOptionsApiController < Api::V1::StaffController
       render json: fmt(ok, fit_stage_common_option_index_for_admin_view(@stage_common_options))
     end
   end
+
+  # admin_view: staff/managerが任意団体のステージオプション申請を作成・編集・削除するためのエンドポイント
+  # (共有の StageCommonOptionsController は current_api_user.groups にスコープされるため専用に用意する)
+  def create_stage_common_option_for_admin_view
+    @stage_common_option = StageCommonOption.new(stage_common_option_params)
+    if @stage_common_option.save
+      render json: fmt(created, @stage_common_option)
+    else
+      render_validation_errors(@stage_common_option)
+    end
+  end
+
+  def update_stage_common_option_for_admin_view
+    @stage_common_option = StageCommonOption.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_common_option
+
+    if @stage_common_option.update(stage_common_option_params)
+      render json: fmt(ok, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
+    else
+      render_validation_errors(@stage_common_option)
+    end
+  end
+
+  def delete_stage_common_option_for_admin_view
+    @stage_common_option = StageCommonOption.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_common_option
+
+    @stage_common_option.destroy
+    render json: fmt(ok, [], "Deleted stage_common_option = #{params[:id]}")
+  end
+
+  private
+
+  def stage_common_option_params
+    params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound)
+  end
 end

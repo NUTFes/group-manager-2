@@ -161,31 +161,9 @@ export default {
       const res = await this.$axios.$get(reUrl);
       this.employee = res.data;
     },
-    async edit() {
-      const url =
-        "/employees/" +
-        this.employee.employee.id +
-        "?group_id=" +
-        this.groupId +
-        "&name=" +
-        this.name +
-        "&student_id=" +
-        this.studentId +
-        "&stool_test_id=" +
-        this.stoolTestID;
-
-      await this.$axios.$put(url).then((response) => {
-        this.openSnackBar(this.name + "を編集しました");
-        this.groupId = null;
-        this.name = null;
-        this.studentId = null;
-        this.stoolTestID = null;
-        this.reload(response.data.id);
-        this.closeEditModal();
-      });
-    },
     async destroy() {
-      const delUrl = "/employees/" + this.employee.employee.id;
+      const delUrl =
+        "/api/v1/delete_employee_for_admin_view/" + this.employee.employee.id;
       await this.$axios.$delete(delUrl);
       this.$router.push("/employees");
     },

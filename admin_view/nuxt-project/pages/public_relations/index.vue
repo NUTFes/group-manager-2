@@ -232,7 +232,10 @@ export default {
             blurb: this.blurb,
           };
 
-          await this.$axios.$post("/public_relations", data);
+          await this.$axios.$post(
+            "/api/v1/create_public_relation_for_admin_view",
+            data
+          );
         }
 
         this.reload();

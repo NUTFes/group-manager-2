@@ -1368,6 +1368,65 @@ paths:
         '403':
           description: Forbidden
       deprecated: false
+  "/api/v1/create_employee_for_admin_view":
+    post:
+      tags:
+      - api/v1/employees_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/delete_employee_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/employees_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_employee_index_for_admin_view":
     get:
       tags:
@@ -1477,6 +1536,37 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/update_employee_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/employees_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/employees_api description
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_current_fes_dates":
     get:
       tags:
@@ -2182,6 +2272,37 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+  "/api/v1/update_group_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/groups_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/groups_api description
+        '404':
+          description: api/v1/groups_api description
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/health_center_submission_statuses":
     post:
       tags:
@@ -3508,6 +3629,65 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/create_place_order_for_admin_view":
+    post:
+      tags:
+      - api/v1/place_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+  "/api/v1/delete_place_order_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/place_orders_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '404':
+          description: api/v1/place_orders_api description
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_place_order_index_for_admin_view":
     get:
       tags:
@@ -3617,6 +3797,37 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+  "/api/v1/update_place_order_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/place_orders_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/place_orders_api description
+        '404':
+          description: api/v1/place_orders_api description
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/power_orders":
     post:
       tags:
@@ -3845,6 +4056,65 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrdersApi"
+  "/api/v1/create_public_relation_for_admin_view":
+    post:
+      tags:
+      - api/v1/public_relations_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+  "/api/v1/delete_public_relation_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/public_relations_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '404':
+          description: api/v1/public_relations_api description
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
       tags:
@@ -3930,6 +4200,37 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+  "/api/v1/update_public_relation_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/public_relations_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/public_relations_api description
+        '404':
+          description: api/v1/public_relations_api description
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_purchase_list_index_for_admin_view":
     get:
       tags:
@@ -4183,6 +4484,65 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+  "/api/v1/create_rental_order_for_admin_view":
+    post:
+      tags:
+      - api/v1/rental_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+  "/api/v1/delete_rental_order_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/rental_orders_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '404':
+          description: api/v1/rental_orders_api description
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_refinement_rental_orders":
     post:
       tags:
@@ -4292,6 +4652,37 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+  "/api/v1/update_rental_order_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/rental_orders_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/rental_orders_api description
+        '404':
+          description: api/v1/rental_orders_api description
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_refinement_representatives":
     post:
       tags:
@@ -4344,6 +4735,65 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RepresentativesApi"
+  "/api/v1/create_stage_common_option_for_admin_view":
+    post:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
+  "/api/v1/delete_stage_common_option_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '404':
+          description: api/v1/stage_common_options_api description
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_refinement_stage_common_options":
     post:
       tags:
@@ -4446,6 +4896,37 @@ paths:
         '403':
           description: Forbidden
       deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/update_stage_common_option_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/stage_common_options_api description
+        '404':
+          description: api/v1/stage_common_options_api description
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
       parameters:
       - name: id
         in: path

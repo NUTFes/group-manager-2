@@ -261,14 +261,14 @@ export default {
 
         if (this.publicRelation.public_relation_id) {
           //put
-          const editUrl = `/public_relations/${this.publicRelation.public_relation_id}`;
-          const response = await this.$axios.$put(editUrl, data);
+          const editUrl = `/api/v1/update_public_relation_for_admin_view/${this.publicRelation.public_relation_id}`;
+          const response = await this.$axios.$patch(editUrl, data);
           this.reload(response.data.group_id);
           this.closeEditModal();
           this.openSnackBar("参加団体PR申請を編集しました");
         } else {
           //post
-          const postUrl = `/public_relations?group_id=${this.publicRelation.group.id}`;
+          const postUrl = `/api/v1/create_public_relation_for_admin_view?group_id=${this.publicRelation.group.id}`;
           const response = await this.$axios.$post(postUrl, data);
           this.reload(response.data.group_id);
           this.closeEditModal();
@@ -284,7 +284,9 @@ export default {
       }
     },
     async destroy() {
-      const delUrl = "/public_relations/" + this.publicRelation.public_relation_id;
+      const delUrl =
+        "/api/v1/delete_public_relation_for_admin_view/" +
+        this.publicRelation.public_relation_id;
       await this.$axios.$delete(delUrl);
       this.$router.push("/public_relations");
     },

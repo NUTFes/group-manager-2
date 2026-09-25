@@ -426,7 +426,7 @@ export default {
     },
     async submitEmployee() {
       const postStageOptionUrl =
-        "/stage_common_options/" +
+        "/api/v1/create_stage_common_option_for_admin_view" +
         "?group_id=" +
         this.appGroup +
         "&own_equipment=" +
@@ -437,7 +437,6 @@ export default {
         this.cameraPermission +
         "&loud_sound=" +
         this.loudSound;
-      console.log(postStageOptionUrl);
 
       await this.$axios.$post(postStageOptionUrl).then((response) => {
         this.openSnackBar("申請を追加しました");

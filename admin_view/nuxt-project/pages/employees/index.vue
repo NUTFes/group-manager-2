@@ -266,7 +266,7 @@ export default {
     },
     async submitEmployee() {
       const postEmployeeUrl =
-        "/employees/" +
+        "/api/v1/create_employee_for_admin_view" +
         "?group_id=" +
         this.groupId +
         "&name=" +

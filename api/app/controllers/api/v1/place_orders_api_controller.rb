@@ -56,4 +56,40 @@ class Api::V1::PlaceOrdersApiController < Api::V1::StaffController
       render json: fmt(ok, fit_place_order_index_for_admin_view(@place_orders))
     end
   end
+
+  # admin_view: staff/managerが任意団体の会場申請を作成・編集・削除するためのエンドポイント
+  # (共有の PlaceOrdersController は current_api_user.groups にスコープされるため専用に用意する)
+  def create_place_order_for_admin_view
+    @place_order = PlaceOrder.new(place_order_params)
+    if @place_order.save
+      render json: fmt(created, @place_order)
+    else
+      render_validation_errors(@place_order)
+    end
+  end
+
+  def update_place_order_for_admin_view
+    @place_order = PlaceOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @place_order
+
+    if @place_order.update(place_order_params)
+      render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
+    else
+      render_validation_errors(@place_order)
+    end
+  end
+
+  def delete_place_order_for_admin_view
+    @place_order = PlaceOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @place_order
+
+    @place_order.destroy
+    render json: fmt(ok, [], "Deleted place_order = #{params[:id]}")
+  end
+
+  private
+
+  def place_order_params
+    params.permit(:group_id, :first, :second, :third, :remark)
+  end
 end

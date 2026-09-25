@@ -60,8 +60,14 @@ export default {
         label: "PR申請",
         request: () =>
           pr.id
-            ? this.$axios.$put(`/public_relations/${pr.id}`, data)
-            : this.$axios.$post(`/public_relations`, data),
+            ? this.$axios.$patch(
+                `/api/v1/update_public_relation_for_admin_view/${pr.id}`,
+                data
+              )
+            : this.$axios.$post(
+                `/api/v1/create_public_relation_for_admin_view`,
+                data
+              ),
       });
     },
   },

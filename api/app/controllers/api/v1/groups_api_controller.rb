@@ -105,4 +105,45 @@ class Api::V1::GroupsApiController < Api::V1::StaffController
               end
     render json: { data: @groups }
   end
+
+  # admin_view: staff/managerが任意団体を編集するためのエンドポイント
+  # (共有の GroupsController#update は current_api_user.groups にスコープされ、
+  #  自団体を持たないstaff/managerアカウントでは404になるため専用に用意する)
+  def update_group_for_admin_view
+    @group = Group.find_by(id: params[:id])
+    return render json: fmt(not_found, [], "Not found group id = #{params[:id]}"), status: :not_found unless @group
+
+    return render_validation_errors(@group) unless @group.update(group_params)
+
+    render json: fmt(ok, @group, "Updated group id = #{params[:id]}")
+    notify_group_updated(@group) unless Current.skip_slack_notification
+  end
+
+  private
+
+  def group_params
+    params.permit(:name, :project_name, :activity, :group_category_id, :fes_year_id, :committee, :is_international, :is_external, :uses_place_id)
+  end
+
+  # GroupsController#update と同じ通知を送り、admin_viewからの編集でも通知が途切れないようにする
+  def notify_group_updated(group)
+    Slack::Web::Client.new.chat_postMessage(
+      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+      channel: "##{ENV.fetch('CHANNEL', nil)}",
+      text: "
+
+      参加団体「#{group.name}」が編集されました
+      ーーーーーーーーーーーーーーーー
+      代表者：#{group.user.name}
+      委員: #{group.committee}
+      参加形式：#{group.group_category.name}
+      企画名：#{group.project_name}
+      国際：#{group.is_international}
+      学外：#{group.is_external}
+      概要：#{group.activity}
+      ーーーーーーーーーーーーーーーー
+
+      "
+    )
+  end
 end

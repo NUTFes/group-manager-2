@@ -232,7 +232,7 @@ export default {
     },
     async edit() {
       const putStageOptionUrl =
-        "/stage_common_options/" +
+        "/api/v1/update_stage_common_option_for_admin_view/" +
         this.stageCommonOption.stage_common_option.id +
         "?group_id=" +
         this.appGroup +
@@ -244,16 +244,17 @@ export default {
         this.cameraPermission +
         "&loud_sound=" +
         this.loudSound;
-      console.log(putStageOptionUrl);
 
-      await this.$axios.$put(putStageOptionUrl).then(() => {
+      await this.$axios.$patch(putStageOptionUrl).then(() => {
         this.openSnackBar("申請を編集しました");
         this.reload();
         this.closeEditModal();
       });
     },
     async deleteData() {
-      const delUrl = "/stage_common_options/" + this.$route.params.id;
+      const delUrl =
+        "/api/v1/delete_stage_common_option_for_admin_view/" +
+        this.$route.params.id;
       await this.$axios.$delete(delUrl);
       this.$router.push("/stage_common_options");
     },
