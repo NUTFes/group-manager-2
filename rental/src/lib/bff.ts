@@ -3,10 +3,12 @@
 // ブラウザはAPIを直接呼ばない。Access のCookieはrentalのドメインにしか無く、
 // APIへ識別情報を運べないため、ここでサーバー側から呼ぶ（設計書6章）。
 import { resolveRecorderEmail } from "./access";
+import {
+  API_TOKEN_HEADER,
+  RECORDER_EMAIL_HEADER,
+  apiStatusBody,
+} from "./apiContract";
 import { RENTAL_API_TOKEN, SSR_API_URL } from "./serverEnv";
-
-const API_TOKEN_HEADER = "X-Rental-Api-Token";
-const RECORDER_EMAIL_HEADER = "Cf-Access-Authenticated-User-Email";
 
 type ForwardOptions = {
   path: string;
@@ -27,7 +29,7 @@ function buildUrl(path: string, query: ForwardOptions["query"]): string {
 }
 
 function jsonError(status: number, message: string) {
-  return Response.json({ status: { code: status, message } }, { status });
+  return Response.json(apiStatusBody(status, message), { status });
 }
 
 /**
@@ -45,12 +47,17 @@ export async function forwardToApi(
 ): Promise<Response> {
   const access = await resolveRecorderEmail(request);
   if (!access.ok) {
-    return jsonError(401, access.reason);
+    // 内部の設定名は画面に出さない。現地では画面のコードを、原因はログを見る
+    console.error(
+      `[rental] access check failed: ${access.code}: ${access.detail}`
+    );
+    return jsonError(401, `認証情報を確認できませんでした (${access.code})`);
   }
 
   if (!RENTAL_API_TOKEN) {
     // 設定漏れを黙って200で返さない。settingsリポジトリの.envに追加が必要。
-    return jsonError(500, "RENTAL_API_TOKEN が設定されていません");
+    console.error("[rental] RENTAL_API_TOKEN が設定されていません");
+    return jsonError(500, "サーバーの設定が不足しています (api_token_missing)");
   }
 
   const headers: Record<string, string> = {
@@ -58,7 +65,18 @@ export async function forwardToApi(
     [API_TOKEN_HEADER]: RENTAL_API_TOKEN,
   };
   if (withRecorderEmail) {
-    headers[RECORDER_EMAIL_HEADER] = access.email;
+    // パスワードの構成では記録者が担当者名の自己申告になる。作業場所の選択からやり直せば
+    // 入り直せるので、足りないことをコードで伝える
+    if (!access.email) {
+      return jsonError(
+        401,
+        "担当者名が設定されていません (staff_name_missing)"
+      );
+    }
+    // 記録者はアプリの中では平文で扱い、ホップごとに必要な形へ包む。
+    // Access のメールと担当者名を同じ型で扱えるようにするためで、HTTPヘッダーには
+    // 日本語をそのまま載せられないのでここでURLエンコードする（API側で戻す）
+    headers[RECORDER_EMAIL_HEADER] = encodeURIComponent(access.email);
   }
 
   try {

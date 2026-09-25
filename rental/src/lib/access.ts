@@ -8,6 +8,8 @@
 // 記録者を偽装できてしまう。そのためJWTをCloudflareのJWKSで検証し、
 // 検証済みのクレームからメールを取り出す。
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { STAFF_NAME_HEADER } from "./apiContract";
+import { isPasscodeEnabled } from "./passcode";
 import {
   CF_ACCESS_AUD,
   CF_ACCESS_TEAM_DOMAIN,
@@ -17,6 +19,15 @@ import {
 
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 const ACCESS_EMAIL_HEADER = "cf-access-authenticated-user-email";
+function staffName(request: Request): string {
+  const raw = request.headers.get(STAFF_NAME_HEADER);
+  if (!raw) return "";
+  try {
+    return decodeURIComponent(raw).trim();
+  } catch {
+    return raw.trim();
+  }
+}
 
 let jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
 
@@ -29,7 +40,9 @@ function getJwks() {
 }
 
 export type AccessResult =
-  { ok: true; email: string } | { ok: false; reason: string };
+  | { ok: true; email: string }
+  // code は画面に出してよい短い識別子。detail は内部の設定名を含むためログ専用。
+  | { ok: false; code: string; detail: string };
 
 export async function resolveRecorderEmail(
   request: Request
@@ -37,24 +50,45 @@ export async function resolveRecorderEmail(
   const token = request.headers.get(ACCESS_JWT_HEADER);
   const keySet = getJwks();
 
-  // Access の設定が無い環境では検証できない。ローカル開発だけ固定のメールで動かし、
-  // それ以外（staging / production）は設定を要求して閉じる。
-  // 設定漏れのまま検証なしでヘッダーを信用すると、BFFに直接到達できた人が
-  // 記録者を偽装できてしまうため、黙って劣化させない。
-  if (!keySet || !CF_ACCESS_AUD) {
+  // Access の検証ができないときは、代わりの守り方がある場合だけ通す。
+  //
+  //   パスワードあり … proxy.ts が入口を守っている。記録者は担当者名の自己申告
+  //   ローカル開発 … 固定のメールで動かす
+  //
+  // どちらでもないときは閉じる。設定漏れのまま検証なしでヘッダーを信用すると、
+  // BFFに直接到達できた人が記録者を偽装できてしまうため、黙って劣化させない。
+  //
+  // Access の設定が残っていてもトークンが来ない場合（Access のポリシーを Bypass に
+  // した構成）も同じ扱いにする。こうしておくと、席数が戻ったときにポリシーを
+  // 戻すだけでよく、CF_ACCESS_* を消したり入れ直したりしなくて済む。
+  if (!keySet || CF_ACCESS_AUD === "" || !token) {
+    if (isPasscodeEnabled()) {
+      // 入口は proxy.ts のパスワードが守っている。記録者は担当者名の自己申告で、
+      // まだ名前を決めていない最初の画面（作業場所の取得）もあるため空を許す。
+      // 記録するときに名前が要ることは forwardToApi 側で確かめる。
+      return { ok: true, email: staffName(request) };
+    }
+
+    // Access は設定されているのにトークンだけ来ていない（パスワードも無い）なら閉じる
+    if (keySet && CF_ACCESS_AUD !== "") {
+      return {
+        ok: false,
+        code: "access_token_missing",
+        detail: "Cf-Access-Jwt-Assertion がありません",
+      };
+    }
+
     if (!isDevelopment) {
       return {
         ok: false,
-        reason: "CF_ACCESS_TEAM_DOMAIN / CF_ACCESS_AUD が未設定です",
+        code: "access_not_configured",
+        detail:
+          "CF_ACCESS_TEAM_DOMAIN / CF_ACCESS_AUD / RENTAL_PASSCODE が未設定です",
       };
     }
     const devEmail =
       request.headers.get(ACCESS_EMAIL_HEADER) || DEV_RECORDER_EMAIL;
     return { ok: true, email: devEmail };
-  }
-
-  if (!token) {
-    return { ok: false, reason: "Cf-Access-Jwt-Assertion がありません" };
   }
 
   try {
@@ -63,11 +97,19 @@ export async function resolveRecorderEmail(
     });
     const email = typeof payload.email === "string" ? payload.email : "";
     if (!email) {
-      return { ok: false, reason: "トークンにメールが含まれていません" };
+      return {
+        ok: false,
+        code: "access_email_missing",
+        detail: "トークンにメールが含まれていません",
+      };
     }
     return { ok: true, email };
   } catch {
     // 失敗理由（期限切れ・署名不一致など）は攻撃者に手がかりを与えるため返さない
-    return { ok: false, reason: "アクセストークンを検証できませんでした" };
+    return {
+      ok: false,
+      code: "access_token_invalid",
+      detail: "アクセストークンを検証できませんでした",
+    };
   }
 }

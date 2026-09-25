@@ -102,6 +102,8 @@ flowchart TD
 
 **数量の表記**は `今回入力する数量 / 貸出残`（返却モードでは `今回入力する数量 / 返却残`）。分母は入力の上限でもある。
 
+**同じ物品が複数あるときは物品名に在庫場所を添える。** 「余り」のように全場所の余り物品をまとめて持つ団体では、同じ団体に同じ物品の割当が在庫場所ちがいで複数ぶら下がる（割当の一意キーは 団体×在庫場所×物品）。物品名だけだと「机」「机」と並んで見分けがつかないため、`机（講義棟104）` のように出す。1件しか無い物品には添えない（通常の団体の画面が冗長になるため）。`src/lib/itemLabel.ts` に集約し、処理対象アイテム・団体全体の一覧・訂正モーダルの候補・進捗確認の内訳で使う。
+
 **カードの選択と初期値**: カードは未選択のとき分子 0（`0/13`）で、タップして選択すると残数を流し込む（`13/13`）。そこから減らして調整する。「全部渡す」が大半なので選択だけで数量が決まり、部分的に渡すときだけ減らせばよい。Figma のカード状態と対応する。
 
 | 状態 | Figma | 表示 | 意味 |
@@ -217,6 +219,8 @@ category: rental | return | rental_absolute | return_absolute | addition | reduc
 
 団体ステータス（場所ごと）: ログ0件なら未着手、一部のアイテムに貸出残があれば進行中、全アイテムの貸出残が0なら完了。返却モードは返却残で同様に判定する。
 
+**一覧はステータスごとにまとめ、未着手 → 進行中 → 完了 の順に並べる。** 「まだ終わっていないところを一括で確認したい」ため、終わっていないものを先頭に置く。見出しには件数を出し、1件も無いステータスは見出しごと出さない。
+
 全体進捗（場所・区分ごと）= 完了した団体数 ÷ 対象団体数。団体ステータスを完了=1、進行中・未着手=0 の二値でカウントする。アイテム数ベースにはしない（「あと何団体残っているか」を見るため）。
 
 冪等性: `uid` はクライアント生成の UUID。再送は同内容なら 200、内容が違えば 409（別端末で記録済みの可能性があるため再取得を促す）を返す。
@@ -230,6 +234,8 @@ API では `addition` / `reduction` として記録できる（#2198）。UI は
 検証は確認してから書くまでの間に別の端末が書き込めるため、**割当行を `FOR UPDATE` で押さえてから**行う（`create` は対象の割当、`transfer` は提供元の割当）。押さえないと、残り5個に対する5個の記録が2件同時に通って10個貸し出した記録になる。`addition` / `reduction` は単独では上限が決まらないうえ、片方だけ残ると在庫が消えたように見えるため、`POST /item_rental_logs` では受け付けず `transfer` 専用にしている。
 
 **2件は必ず対で書く。** BFF から `POST /item_rental_logs` を2回呼ぶ形だと、`reduction` の後に `addition` が失敗したときに提供元の割当だけが減ったまま残り、在庫が消えたように見える。`POST /item_rental_logs/transfer` が1トランザクションで2件を作るようにし、片方でも失敗すれば何も残さない（#2230）。同じ `uid` の再送は既存の対をそのまま返し、内容が違えば 409。画面側も送信のたびに `uid` を作り直さず、入力が同じ間は同じ `uid` を使う（再送で割当を二重に動かさないため）。
+
+**団体一覧は作業場所で変わる。** 作業場所を選んでいるときは、そこに割当がある団体だけを出す（そこで渡す相手はそれだけ）。作業場所が「すべての場所」のときは、**割当が1件も無い団体も含めて今年度の全団体**を出す。予定に無い物品を渡す相手は割当を持たないことがあり、選べないと記録できないため。貸出場所が未設定の割当しか持たない団体も同様に出る。
 
 **物品・在庫場所・団体はいずれもマスタの全件から選ぶ。** 当日は「この倉庫の分だけ」「予定していた物品だけ」では回らないため、例外対応は貸出場所でも割当でも絞らない（`get_rental_items_for_rental_view` / `get_stocker_places_for_rental_view` / `get_groups_for_rental_view`）。講義棟103で作業していても、余り在庫を持たせた団体（「余り」等）の講義棟104の机を選べる。選んだ組み合わせを提供元が持っていなければ未貸出数が0になり、その旨を画面に出して送信を止める。
 
@@ -266,9 +272,21 @@ flowchart LR
 | --- | --- | --- |
 | ① スマホ → Access | 通常の HTTPS リクエスト | Access 未ログインならログイン画面へ |
 | ② Access → BFF | `Cf-Access-Jwt-Assertion`、`Cf-Access-Authenticated-User-Email` | BFF が JWT を JWKS で検証する（F9） |
-| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、記録者メール | `http://api:3000` を compose ネットワーク内で呼ぶ（A1） |
+| ③ BFF → API | `X-Rental-Api-Token`（BFF 専用）、`X-Rental-Recorder-Email`（記録者） | `SSR_API_URL` 宛て。既定は compose ネットワーク内の `http://api:3000`（A1） |
 
-ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`。
+ブラウザは API を直接呼ばない。Access の Cookie は rental ドメインにしか無く、API に識別情報を運べないためだ。CORS の変更は不要。トークン等は settings リポジトリの .env で管理する: `RENTAL_API_TOKEN`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`（Access の代わりにパスワードで守る場合は `RENTAL_PASSCODE`）。
+
+**③ で `Cf-Access-*` をそのまま転送しない。** `SSR_API_URL` に公開 URL（`https://group-manager-api.nutfes.net`）を設定した構成では、この区間が一度 Cloudflare を通る。Cloudflare は偽装防止のためクライアント由来の `Cf-` ヘッダーを削除するため、記録者メールが API に届かず**記録の POST だけが 401（`Missing recorder email`）になる**。読み取りは記録者を要求しないので通ってしまい、切り分けを難しくする。経路に依存しないよう、記録者は自前の `X-Rental-Recorder-Email` で運ぶ（値は BFF が Access の JWT を JWKS で検証して取り出したもの、区間の保護は `X-Rental-Api-Token`）。API 側は移行期間のみ、新ヘッダーが無いときに限り旧 `Cf-Access-Authenticated-User-Email` も見る。
+
+**`APP_ENV` は必ず実行時に入れる。** 未設定だと `serverEnv.ts` が `"development"` とみなし、Access の検証を飛ばしてヘッダーを無検証で信用する（記録者を偽装できる）。`prod.Dockerfile` の runner で ENV にし、`compose.prod.yml` のビルド引数にも `:?` ガードを置く（Compose は未設定の変数を空文字として明示的に渡すため、`ARG` の既定値では埋まらない）。
+
+**Access が使えないときはパスワードで守る。** Cloudflare Access の無料枠は月あたりの席数に上限があり、当日のスタッフ数によっては使い切る。`RENTAL_PASSCODE` を設定すると、Access の代わりに `src/proxy.ts`（Next 16 では middleware ではなく proxy）が入口を守る。パスワードが合えば Cookie（パスワードそのものではなく、そこから決まる固定値）を発行し、以降は素通しにする。BFF への呼び出しは HTML ではなく JSON の 401 を返す（`fetch` がログイン画面を受け取らないため）。
+
+この構成では**人の識別ができない**ので、記録者は自己申告になる。画面①で**局名（総務局 / 企画局 / 制作局 / 情報局 / 財務局 / 渉外局 / 産学局 / その他 から選択）と担当者名**を入力させ、端末に保持して毎回ヘッダーで送る。記録には `情報局_上條` のように「局名_担当者名」で残す（同姓の人を区別できるようにするため）。偽装はできるが「誰が入れたか」は当日の追跡に使える。名前が必要なのは記録するときだけで、読み取り（作業場所の取得など）は名前を決める前に通す必要があるため要求しない。担当者名は日本語のことがありHTTPヘッダーにそのまま載せられないため、BFF が URL エンコードして送り API 側で戻す。
+
+Access とパスワードの両方が設定されていて **Access のトークンが来ていれば Access が優先**（`proxy.ts` もパスワードを求めずに通し、トークンの検証は後段の BFF が JWKS で行う）。トークンが来ない場合（Access のポリシーを Bypass にした構成）はパスワードの構成として扱う。こうしておくと、席数が戻ったときにポリシーを戻すだけでよく、`CF_ACCESS_*` を消したり入れ直したりしなくて済む。パスワードが無い状態でトークンも来なければ、従来どおり閉じる。
+
+**設定エラーの文言は画面に出さない。** BFF は内部の設定名を含む理由をサーバー側のログに残し、画面には `access_not_configured` のような短いコードだけを返す。現地ではコードを読み上げてもらい、原因はログで確かめる。
 
 ### 認証は3層に分かれる
 
@@ -278,7 +296,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | ① 人（スタッフ） | 誰がアプリを開いているか | Cloudflare Access。アプリ側にログイン画面は持たない | Access ポリシー設定待ち |
 | ② アプリ → API | 呼び出し元が rental の BFF か | 共有トークン `X-Rental-Api-Token`（A1） | 未実装 |
-| ③ 記録者の特定 | 誰が記録したか | Access が付けた `Cf-Access-Authenticated-User-Email` を BFF が転送し `recorder_email` に入れる（A1） | 未実装 |
+| ③ 記録者の特定 | 誰が記録したか | BFF が Access の JWT を検証して取り出したメールを `X-Rental-Recorder-Email` で転送し `recorder_email` に入れる（A1） | 未実装 |
 
 既存 API（`user/` と `admin_view/` が使う devise_token_auth の経路）には手を入れない。rental 向けのエンドポイントにのみ別の認証を足す。
 
@@ -316,7 +334,7 @@ flowchart LR
 
 | ID | 内容 | 影響 | 対応 |
 | --- | --- | --- | --- |
-| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは `Cf-Access-Authenticated-User-Email` から取得する。 |
+| A1 | 認証の不整合（最重要・唯一の実装ブロッカー） | `ItemRentalLogsController` は `authenticate_api_user!` + `require_admin!`（devise_token_auth、role_id∈{1,2}）のままで、記録者を `current_api_user.email` から取る。ログインの無い rental から呼べない。 | BFF トークン認証の concern を追加。記録者メールは BFF が転送する `X-Rental-Recorder-Email` から取得する。 |
 | A3 | 登録画面のデータが名前付きで取れない | `GET /item_rental_logs` は id のみを返す。物品名・在庫場所名・貸出場所名・団体名・remark が無い。 | rental 向けの名前付きエンドポイント、この場所に割当がある今年度団体一覧、作業場所候補の3つを追加する。今年度に限定する。 |
 | A4 | メモの保存先が無い | `item_rental_logs` に `memo` が無く、当日のスタッフメモを保存できない。 | `item_rental_logs.memo`（text, null 可）を追加する。remark は上書きしない。 |
 
@@ -328,7 +346,7 @@ flowchart LR
 
 - `api/app/controllers/concerns/` に BFF 認証の concern を追加し、`ItemRentalLogsController` と A3 で追加するエンドポイントに適用する
 - `X-Rental-Api-Token` を `ENV['RENTAL_API_TOKEN']` と `ActiveSupport::SecurityUtils.secure_compare` で比較する。不一致・欠落は 401
-- 記録者は BFF が転送する `Cf-Access-Authenticated-User-Email` から取得する。欠落は 401。`current_api_user.email` は使わない
+- 記録者は BFF が転送する `X-Rental-Recorder-Email` から取得する。欠落は 401。`current_api_user.email` は使わない。**`Cf-Access-*` をそのまま転送しない**のは、`SSR_API_URL` が公開URLだとこの区間が Cloudflare を通り、クライアント由来の `Cf-` ヘッダーが偽装防止のため削除されるため（本番で記録のPOSTだけ401になった）
 - `ItemRentalLogsController` から `authenticate_api_user!` / `require_admin!` を外す
 - 既存の devise_token_auth 経路（`user/` / `admin_view/`）には影響させない
 - 認証の位置づけは 6 章「認証は3層に分かれる」を参照
@@ -428,7 +446,7 @@ PoC のフロント・API はすべて実装済み。統合ブランチ `feat/ka
 
 **QR 読み取りの2経路**: `BarcodeDetector` があるブラウザ（Android Chrome など）はブラウザ内蔵の実装を使い、無い場合（iOS Safari）は `qr-scanner`（jsQR ベース）に動的インポートでフォールバックする。カメラそのものが使えない環境では手動選択に誘導する。
 
-残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
+残作業: iOS 実機でのカメラ読み取り確認、settings リポジトリへの環境変数追加（`RENTAL_API_TOKEN` / `CF_ACCESS_TEAM_DOMAIN` / `CF_ACCESS_AUD`。**`RENTAL_API_TOKEN` は api / rental の両方が同じ `.env` から読むので、値を足したら両方のコンテナを再起動する**）、Cloudflare の DNS レコードと Access ポリシー設定、返却モードの訂正モーダルのデザイン確認。
 
 ## 11. 参考リンク
 
