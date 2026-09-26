@@ -31,4 +31,14 @@ paths:
         required: true
         schema:
           type: string
+      - name: locale
+        in: query
+        description: 物品名・場所名の表示言語。ja / en のみ有効で、未指定・未対応の値はjaとして扱う。
+          英語名が未登録の場合は日本語名にフォールバックする
+        required: false
+        schema:
+          type: string
+          enum:
+          - ja
+          - en
       security: []

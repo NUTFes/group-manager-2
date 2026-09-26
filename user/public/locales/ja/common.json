@@ -1003,6 +1003,7 @@
       "title": "情報を表示できません",
       "description": "URLが正しいかご確認ください。"
     },
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "pageTitle": "確定情報 | Group Manager"
   }
 }

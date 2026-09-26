@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
+import i18n from 'i18next';
+import { I18nextProvider } from 'react-i18next';
 import ConfirmedInfo from './ConfirmedInfo';
 
 export default {
@@ -16,6 +19,18 @@ export default {
 } as Meta<typeof ConfirmedInfo>;
 
 type Story = StoryObj<typeof ConfirmedInfo>;
+
+// 英語表示の確認用。グローバルのi18nをchangeLanguageで切り替えると、
+// 同じインスタンスを共有している他のストーリーまで英語になってしまうため、
+// 言語だけ変えた複製を作ってこのストーリーにだけ適用する
+const withEnglish = (Story: () => React.ReactElement) => {
+  const enI18n = useMemo(() => i18n.cloneInstance({ lng: 'en' }), []);
+  return (
+    <I18nextProvider i18n={enI18n}>
+      <Story />
+    </I18nextProvider>
+  );
+};
 
 // 実際のAPIが返すのと同じ形式（data URI）。上のURLをQRコード化したもの
 const QRCODE_PNG =
@@ -124,4 +139,59 @@ export const Error: Story = {
     hasError: true,
     getShareUrl: () => '',
   },
+};
+
+// 英語表示。文言は en/common.json、物品名・場所名はAPIが出し分けた値が入る想定なので
+// argsも英語にしてある（#2161）
+export const English: Story = {
+  decorators: [withEnglish],
+  args: {
+    isLoading: false,
+    hasError: false,
+    qrcodePng: QRCODE_PNG,
+    getShareUrl: () =>
+      'https://example.com/en/confirmed?group_id=1&secret=xxxxxxxx',
+    confirmedInfo: {
+      group: {
+        id: 1,
+        name: 'nutfes',
+        projectName: 'Example Cafe',
+        places: ['Lecture Building 103'],
+      },
+      rentalItems: [
+        {
+          rentalItemName: 'Desk',
+          rentalPlaceName: 'Lecture Building 103',
+          stocks: [
+            {
+              id: 1,
+              stockPlaceName: 'Lecture Building 103',
+              num: 10,
+              remark: 'One of them has a broken leg',
+            },
+            // 英語名が未登録の場所は日本語のまま返る（APIのフォールバック）
+            { id: 2, stockPlaceName: '機械棟104', num: 3, remark: null },
+          ],
+        },
+        {
+          rentalItemName: 'Long Desk',
+          rentalPlaceName: 'Lecture Building 103',
+          stocks: [
+            {
+              id: 3,
+              stockPlaceName: 'Lecture Building 103',
+              num: 20,
+              remark: null,
+            },
+          ],
+        },
+      ],
+    },
+  },
+};
+
+// 英語のエラー画面
+export const ErrorEnglish: Story = {
+  decorators: [withEnglish],
+  args: { isLoading: false, hasError: true, getShareUrl: () => '' },
 };

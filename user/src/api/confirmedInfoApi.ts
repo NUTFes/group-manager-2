@@ -37,13 +37,15 @@ export type ConfirmedInfo = {
 };
 
 // group_id と secret が両方一致したときだけ確定情報を返す（認証不要）
+// locale は物品名・場所名の出し分けに使う。文言そのものは next-i18next が扱う
 export const useGetConfirmedInfo = (
   groupId: number | null,
-  secret: string | null
+  secret: string | null,
+  locale: string
 ) => {
   const endpoint =
     groupId !== null && secret !== null
-      ? `${API_ENDPOINTS.CONFIRMED_INFO}/${groupId}?secret=${encodeURIComponent(secret)}`
+      ? `${API_ENDPOINTS.CONFIRMED_INFO}/${groupId}?secret=${encodeURIComponent(secret)}&locale=${encodeURIComponent(locale)}`
       : null;
 
   const { data, error, isLoading } = useUnauthenticatedGet<

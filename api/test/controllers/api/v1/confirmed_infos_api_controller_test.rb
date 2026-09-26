@@ -112,6 +112,90 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
                  find_rental_item('長机')['stocks'].sole.keys.sort
   end
 
+  # 英語対応 ---------------------------------------------------------------
+  # 物品名・在庫場所・貸出場所・会場を locale で出し分ける。
+  # 団体名と企画名はユーザーが入力する値で英語版を持たないため対象外。
+
+  test 'returns the english names when the locale is en' do
+    @rental_item.update!(name_en: 'Long Desk')
+    @rental_place.update!(name_en: 'Gymnasium 1 Entrance')
+    assign_places!(@group, [@venue])
+    @venue.update!(name_en: 'Lecture Hall 101')
+
+    get confirmed_info_path(@group, @group.secret, locale: 'en')
+
+    assert_response :success
+    data = response.parsed_body['data']
+    assert_equal ['Lecture Hall 101'], data.dig('group', 'places')
+    item = data['rental_items'].sole
+    assert_equal 'Long Desk', item['rental_item_name']
+    assert_equal 'Gymnasium 1 Entrance', item['rental_place_name']
+    assert_equal 'Gymnasium Storage', item['stocks'].sole['stock_place_name']
+  end
+
+  # issue指定の要件。英語名が未登録のものだけ日本語に落ちる
+  test 'falls back to the japanese name when the english name is blank' do
+    @rental_item.update!(name_en: 'Long Desk')
+    # @stocker_place は name_en 登録済み、@rental_place は未登録
+    assert_predicate @rental_place.name_en, :blank?
+
+    get confirmed_info_path(@group, @group.secret, locale: 'en')
+
+    assert_response :success
+    item = response.parsed_body.dig('data', 'rental_items').sole
+    assert_equal 'Long Desk', item['rental_item_name']
+    assert_equal 'Gymnasium Storage', item['stocks'].sole['stock_place_name']
+    assert_equal '第1体育館前', item['rental_place_name'], '英語名が無い場合は日本語に落ちる'
+  end
+
+  test 'returns the japanese names when the locale is not given' do
+    @rental_item.update!(name_en: 'Long Desk')
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal '長机', response.parsed_body.dig('data', 'rental_items').sole['rental_item_name']
+  end
+
+  # 未対応の言語やおかしな値でもエラーにはせず日本語で返す。
+  # 配列やハッシュで渡されても落ちないことも固定する
+  test 'falls back to japanese when the locale is unsupported' do
+    ['fr', '', 'EN'].each do |locale|
+      get confirmed_info_path(@group, @group.secret, locale: locale)
+
+      assert_response :success, "locale=#{locale} で成功していない"
+      assert_equal '長机', response.parsed_body.dig('data', 'rental_items').sole['rental_item_name']
+    end
+
+    get confirmed_info_url(@group), params: { secret: @group.secret, locale: %w[en ja] }
+
+    assert_response :success
+    assert_equal '長机', response.parsed_body.dig('data', 'rental_items').sole['rental_item_name']
+  end
+
+  # 並び順は表示する言語の名前で決める。日本語順のまま英語を並べると
+  # 画面上で名前順に見えなくなる
+  test 'orders the rental items by the english name when the locale is en' do
+    # 日本語では パイプ椅子 < 長机、英語では Long Desk < Pipe Chair になる組み合わせ
+    @rental_item.update!(name_en: 'Long Desk')
+    @other_rental_item.update!(name_en: 'Pipe Chair')
+    AssignRentalItem.create!(
+      group: @group, rental_item: @other_rental_item, stocker_place: @stocker_place,
+      rental_place: @rental_place, num: 1
+    )
+
+    get confirmed_info_path(@group, @group.secret)
+
+    assert_response :success
+    assert_equal(%w[パイプ椅子 長机], response.parsed_body.dig('data', 'rental_items').pluck('rental_item_name'))
+
+    get confirmed_info_path(@group, @group.secret, locale: 'en')
+
+    assert_response :success
+    assert_equal(['Long Desk', 'Pipe Chair'],
+                 response.parsed_body.dig('data', 'rental_items').pluck('rental_item_name'))
+  end
+
   # 会場は place_order -> assign_group_places -> stocker_place から引く。
   # has_many なので複数あり得る
   # 割り当て順ではなく名前順で返す。取得順まかせだと表示順が不定になるため、
@@ -338,8 +422,9 @@ class Api::V1::ConfirmedInfosApiControllerTest < ActionDispatch::IntegrationTest
     "/api/v1/get_confirmed_info_for_user_view/#{group.id}"
   end
 
-  def confirmed_info_path(group, secret)
-    "#{confirmed_info_url(group)}?secret=#{CGI.escape(secret.to_s)}"
+  def confirmed_info_path(group, secret, locale: nil)
+    path = "#{confirmed_info_url(group)}?secret=#{CGI.escape(secret.to_s)}"
+    locale.nil? ? path : "#{path}&locale=#{CGI.escape(locale)}"
   end
 
   def find_rental_item(rental_item_name)
