@@ -27,6 +27,8 @@ module.exports = defineConfig({
       NODE_OPTIONS: "--openssl-legacy-provider",
       VUE_APP_URL: apiURL,
       VUE_APP_API_URL: apiURL,
+      // imgurへのアップロードはE2E内でpage.routeによりモックする
+      NEXT_PUBLIC_IMGUR_CLIENT_ID: "playwright-dummy-client-id",
     },
   },
   projects: [

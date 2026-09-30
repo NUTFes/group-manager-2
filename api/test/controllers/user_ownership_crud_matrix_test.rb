@@ -5,6 +5,12 @@ require 'test_helper'
 class UserOwnershipCrudMatrixTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
+  OWNERSHIP_CASE_NAMES = %i[
+    announcements contact_persons cooking_process_orders employees food_products place_orders
+    public_relations purchase_lists rental_orders stage_common_options stage_orders sub_reps
+    un_registered_groups venue_maps
+  ].freeze
+
   setup do
     Role.create!(id: Role::USER_ID, name: 'user')
     @user = create_user!('ownership-crud-user@example.com')
@@ -60,6 +66,34 @@ class UserOwnershipCrudMatrixTest < ActionDispatch::IntegrationTest
       assert_response :not_found, "#{test_case.fetch(:name)} update should hide another group"
       assert_equal original_owner_id, test_case.fetch(:owner_id).call(owned_record.reload),
                    "#{test_case.fetch(:name)} must remain in its original group"
+    end
+  end
+
+  OWNERSHIP_CASE_NAMES.each do |name|
+    test "#{name} lets the user show update destroy and create records of their own group" do
+      test_case = @crud_cases.find { |crud_case| crud_case.fetch(:name) == name }
+      success = own_group_success_params.fetch(name)
+      model = test_case.fetch(:model)
+      owned_record = test_case.fetch(:owned)
+      member_path = "#{test_case.fetch(:path)}/#{owned_record.id}"
+
+      get member_path, headers: auth_headers(@user), as: :json
+      assert_response :success, "#{name} show should succeed for the owned record"
+
+      patch member_path, params: success.fetch(:update), headers: auth_headers(@user), as: :json
+      assert_response :success, "#{name} update should succeed for the owned record"
+      assert success.fetch(:updated).call(owned_record.reload), "#{name} update should be persisted"
+
+      delete member_path, headers: auth_headers(@user), as: :json
+      assert_response :success, "#{name} destroy should succeed for the owned record"
+      assert_not model.exists?(owned_record.id), "#{name} destroy should remove the owned record"
+
+      assert_difference("#{model.name}.count", 1, "#{name} create should add a record") do
+        post test_case.fetch(:path), params: success.fetch(:create), headers: auth_headers(@user), as: :json
+      end
+      assert_response :success, "#{name} create should succeed for the owned group"
+      assert_equal @group.id, test_case.fetch(:owner_id).call(model.order(:id).last),
+                   "#{name} create should belong to the owned group"
     end
   end
 
@@ -233,6 +267,23 @@ class UserOwnershipCrudMatrixTest < ActionDispatch::IntegrationTest
          as: :json
     assert_response :success
     assert_equal @user.id, Group.order(:id).last.user_id
+  end
+
+  test 'group endpoints let the user show and update their own group' do
+    get "/groups/#{@group.id}", headers: auth_headers(@user), as: :json
+    assert_response :success
+    assert_equal @group.id, response.parsed_body.dig('data', 'id')
+
+    patch "/groups/#{@group.id}",
+          params: { name: 'Updated own group' },
+          headers: auth_headers(@user).merge('X-Skip-Slack-Notification' => 'true'),
+          as: :json
+    assert_response :success
+    assert_equal 'Updated own group', @group.reload.name
+
+    get "/groups/user/#{@user.id}", headers: auth_headers(@user), as: :json
+    assert_response :success
+    assert_equal @group.id, response.parsed_body.dig('data', 'id')
   end
 
   test 'health center submission statuses are scoped for index create and update' do
@@ -469,6 +520,88 @@ class UserOwnershipCrudMatrixTest < ActionDispatch::IntegrationTest
         direct_group_owner
       )
     ]
+  end
+
+  def own_group_success_params
+    owned_food_product_id = @owned_records.fetch(:food_products).id
+
+    {
+      announcements: {
+        update: { message: 'updated announcement' },
+        updated: ->(record) { record.message == 'updated announcement' },
+        create: { group_id: @group.id, message: 'new announcement' }
+      },
+      contact_persons: {
+        update: { contact_person: { name: 'updated contact' } },
+        updated: ->(record) { record.name == 'updated contact' },
+        create: { contact_person: { group_id: @group.id, name: 'new contact' } }
+      },
+      cooking_process_orders: {
+        update: { cooking_process_order: { tent: 'updated cooking' } },
+        updated: ->(record) { record.tent == 'updated cooking' },
+        create: { cooking_process_order: { food_product_id: owned_food_product_id, tent: 'new cooking' } }
+      },
+      employees: {
+        update: { name: 'updated employee' },
+        updated: ->(record) { record.name == 'updated employee' },
+        create: { group_id: @group.id, name: 'new employee', student_id: 1234, stool_test_id: @stool_test.id }
+      },
+      food_products: {
+        update: { name: 'updated food' },
+        updated: ->(record) { record.name == 'updated food' },
+        create: { group_id: @group.id, name: 'new food' }
+      },
+      place_orders: {
+        update: { remark: 'updated place' },
+        updated: ->(record) { record.remark == 'updated place' },
+        create: { group_id: @group.id, remark: 'new place' }
+      },
+      public_relations: {
+        update: { blurb: 'updated public relation' },
+        updated: ->(record) { record.blurb == 'updated public relation' },
+        create: { group_id: @group.id, blurb: 'new public relation' }
+      },
+      purchase_lists: {
+        update: { items: 'updated purchase' },
+        updated: ->(record) { record.items == 'updated purchase' },
+        create: {
+          food_product_id: owned_food_product_id,
+          shop_id: @shop.id,
+          fes_date_id: @fes_date.id,
+          items: 'new purchase'
+        }
+      },
+      rental_orders: {
+        update: { num: 5 },
+        updated: ->(record) { record.num == 5 },
+        create: { group_id: @group.id, rental_item_id: @rental_item.id, num: 2 }
+      },
+      stage_common_options: {
+        update: { own_equipment: false },
+        updated: ->(record) { record.own_equipment == false },
+        create: { group_id: @group.id, own_equipment: true }
+      },
+      stage_orders: {
+        update: { is_sunny: false },
+        updated: ->(record) { record.is_sunny == false },
+        create: { group_id: @group.id, fes_date_id: @fes_date.id, is_sunny: true }
+      },
+      sub_reps: {
+        update: { name: 'updated sub rep' },
+        updated: ->(record) { record.name == 'updated sub rep' },
+        create: { group_id: @group.id, name: 'new sub rep', department_id: @department.id, grade_id: @grade.id }
+      },
+      un_registered_groups: {
+        update: { un_registered_group: { order_type: 'power_order' } },
+        updated: ->(record) { record.order_type == 'power_order' },
+        create: { un_registered_group: { group_id: @group.id, order_type: 'power_order' } }
+      },
+      venue_maps: {
+        update: { picture_name: 'updated venue map' },
+        updated: ->(record) { record.picture_name == 'updated venue map' },
+        create: { group_id: @group.id, picture_name: 'new venue map' }
+      }
+    }
   end
 
   def ownership_case(name, path, model, create_for_other, move_to_other, owner_id)

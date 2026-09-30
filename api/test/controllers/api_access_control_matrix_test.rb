@@ -93,6 +93,8 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
       "#{route.defaults[:controller]}##{route.defaults[:action]}"
   end
 
+  # 認可ゲートの通過だけを見る。ゲート後の業務処理の成否(2xx/404/422)は
+  # user_ownership_crud_matrix_test.rb と api/v1/admin_view_record_management_test.rb で固定データを使って検証する
   def assert_roles_pass_access_control(routes, users)
     routes.product(users).each do |route, user|
       message = "#{route_label(route)} should pass for role_id=#{user.role_id}"
@@ -125,7 +127,10 @@ class ApiAccessControlMatrixTest < ActionDispatch::IntegrationTest
     )
   end
 
+  # 同一秒に発行したトークンが上限(10件)を超えると、devise_token_authが発行直後のトークンを
+  # 破棄することがあるため、ユーザーごとに1回だけ発行して使い回す(トークンはリクエストごとに変わらない設定)
   def auth_headers(user)
-    user.create_new_auth_token
+    @auth_headers ||= {}
+    @auth_headers[user.id] ||= user.create_new_auth_token
   end
 end

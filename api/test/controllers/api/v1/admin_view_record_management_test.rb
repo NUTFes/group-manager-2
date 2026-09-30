@@ -179,6 +179,31 @@ class Api::V1::AdminViewRecordManagementTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'staff without an owned group can read another groups records from the admin detail endpoints' do
+    detail_requests = {
+      "/api/v1/get_group_show_for_admin_view/#{@group.id}" => ->(data) { data.dig('group', 'id') == @group.id },
+      "/api/v1/get_employee_show_for_admin_view/#{@employee.id}" =>
+        ->(data) { data.dig('employee', 'id') == @employee.id && data.dig('group', 'id') == @group.id },
+      "/api/v1/get_stage_common_option_show_for_admin_view/#{@stage_common_option.id}" =>
+        lambda { |data|
+          data.dig('stage_common_option', 'id') == @stage_common_option.id && data.dig('group', 'id') == @group.id
+        },
+      "/api/v1/get_place_order_show_for_admin_view/#{@place_order.id}" =>
+        ->(data) { data.dig('place_order', 'id') == @place_order.id && data.dig('group', 'id') == @group.id },
+      "/api/v1/get_rental_order_show_for_admin_view/#{@rental_order.id}" =>
+        ->(data) { data.dig('rental_order', 'id') == @rental_order.id && data.dig('group', 'id') == @group.id },
+      "/api/v1/get_public_relation_for_admin_view/#{@group.id}" =>
+        ->(data) { data.first['public_relation_id'] == @public_relation.id }
+    }
+
+    detail_requests.each do |path, expected|
+      get path, headers: auth_headers(@staff), as: :json
+
+      assert_response :success, "GET #{path} should succeed for staff"
+      assert expected.call(response.parsed_body['data']), "GET #{path} should return the other group's record"
+    end
+  end
+
   test 'admin endpoints require authentication' do
     requests = [[:patch, "/api/v1/update_group_for_admin_view/#{@group.id}"]]
     RESOURCES.each_key do |name|
