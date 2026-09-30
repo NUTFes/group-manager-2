@@ -110,6 +110,35 @@ class UserOwnershipTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # 画面は本文のcodeで未登録を判定するため、自団体の未登録はgm3/developと同じくHTTP 200で返す
+  test 'user group endpoints report an unregistered own record in the body instead of an HTTP 404' do
+    paths = %W[
+      /public_relations/group/#{@group.id}
+      /stage_common_options/group/#{@group.id}
+      /sub_reps/group/#{@group.id}
+      /stage_orders/group/#{@group.id}
+      /place_orders/group/#{@group.id}
+      /venue_maps/group/#{@group.id}
+    ]
+
+    paths.each do |path|
+      get path, headers: auth_headers(@user), as: :json
+      assert_response :success, "GET #{path} should not be an HTTP error for the own group"
+      assert_equal 404, response.parsed_body.dig('status', 'code'), "GET #{path} should report not found in the body"
+    end
+  end
+
+  test 'group lookup by user id reports a missing own group in the body and hides other users with 404' do
+    user_without_group = create_user!('user-without-group@example.com')
+
+    get "/groups/user/#{user_without_group.id}", headers: auth_headers(user_without_group), as: :json
+    assert_response :success
+    assert_equal 404, response.parsed_body.dig('status', 'code')
+
+    get "/groups/user/#{@user.id}", headers: auth_headers(user_without_group), as: :json
+    assert_response :not_found
+  end
+
   test 'user nested endpoint rejects another groups parent record' do
     other_food_product = FoodProduct.create!(group: @other_group, name: 'other food')
 

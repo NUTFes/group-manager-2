@@ -69,7 +69,8 @@ class PlaceOrdersController < ApplicationController
     return unless group
 
     @place_order = PlaceOrder.find_by(group_id: group.id)
-    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @place_order
+    # 自団体の未登録はHTTP 200で返す(画面が本文のcodeで未登録を判定するため。他団体はcurrent_api_user_group!で404)
+    render json: fmt(not_found, [], 'Not Found') unless @place_order
   end
 
   # Only allow a list of trusted parameters through.

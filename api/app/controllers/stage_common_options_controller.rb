@@ -69,7 +69,8 @@ class StageCommonOptionsController < ApplicationController
     return unless group
 
     @stage_common_option = StageCommonOption.find_by(group_id: group.id)
-    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_common_option
+    # 自団体の未登録はHTTP 200で返す(画面が本文のcodeで未登録を判定するため。他団体はcurrent_api_user_group!で404)
+    render json: fmt(not_found, [], 'Not Found') unless @stage_common_option
   end
 
   # Only allow a list of trusted parameters through.

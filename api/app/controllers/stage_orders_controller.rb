@@ -69,7 +69,8 @@ class StageOrdersController < ApplicationController
     return unless group
 
     @stage_order = StageOrder.find_by(group_id: group.id)
-    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @stage_order
+    # 自団体の未登録はHTTP 200で返す(画面が本文のcodeで未登録を判定するため。他団体はcurrent_api_user_group!で404)
+    render json: fmt(not_found, [], 'Not Found') unless @stage_order
   end
 
   # Only allow a list of trusted parameters through.

@@ -69,7 +69,8 @@ class PublicRelationsController < ApplicationController
     return unless group
 
     @public_relation = PublicRelation.find_by(group_id: group.id)
-    render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @public_relation
+    # 自団体の未登録はHTTP 200で返す(画面が本文のcodeで未登録を判定するため。他団体はcurrent_api_user_group!で404)
+    render json: fmt(not_found, [], 'Not Found') unless @public_relation
   end
 
   # Only allow a list of trusted parameters through.

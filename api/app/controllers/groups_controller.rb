@@ -20,13 +20,16 @@ class GroupsController < AuthenticatedController
 
   # GET /groups/user/:user_id/
   def get_user_group_id_and_group_category_id
+    not_found_body = fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}")
+    return render json: not_found_body, status: :not_found unless params[:user_id].to_i == current_api_user.id
+
     @group = current_api_user.groups.find_by(user_id: params[:user_id])
 
     if @group
       render json: fmt(ok, { id: @group.id, group_category_id: @group.group_category_id })
     else
-      render json: fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}"),
-             status: :not_found
+      # 団体未登録の本人はHTTP 200で返す(画面が本文のcodeで未登録を判定するため)
+      render json: not_found_body
     end
   end
 
