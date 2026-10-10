@@ -1,35 +1,12 @@
 # frozen_string_literal: true
 
-class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationController
+class Api::V1::HealthCenterSubmissionStatusesApiController < Api::V1::StaffController
   APPLICATION_TYPES = HealthCenterSubmissionStatus.application_types.keys.freeze
-
-  before_action :authenticate_api_user!, only: %i[
-    get_health_center_submission_status_index_for_admin_view
-    get_health_center_submission_status_show_for_admin_view
-    update_health_center_submission_status
-    upsert_health_center_submission_status
-    get_health_center_submission_status_counts
-    create_health_center_submission_status_comment
-    create_health_center_submission_status_comment_mail
-    resend_health_center_submission_status_comment_mail
-    sync_health_center_submission_statuses
-    update_health_center_submission_target
-  ]
-
-  before_action :require_admin!, only: %i[
-    update_health_center_submission_target
-  ]
 
   before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
   ]
-  before_action :require_mail_delivery_role!, only: %i[
-    create_health_center_submission_status_comment
-    create_health_center_submission_status_comment_mail
-    resend_health_center_submission_status_comment_mail
-  ]
-
   #---取得（GET）
 
   # 全グループの保健所提出ステータス一覧取得
@@ -241,14 +218,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     errors
   end
 
-  def require_mail_delivery_role!
-    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
-    return if [1, 2].include?(current_api_user&.role_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
-           status: :forbidden
-  end
-
   def save_failed_mail_comment!(subject:, body:)
     submission_status = nil
     comment = nil
@@ -268,6 +237,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     comment
   rescue ActiveRecord::RecordNotUnique
     submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    raise ActiveRecord::RecordInvalid, HealthCenterSubmissionStatus.new if submission_status.nil?
+
     submission_status.comments.create!(
       subject: subject,
       body: body,

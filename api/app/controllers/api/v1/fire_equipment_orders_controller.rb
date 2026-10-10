@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::FireEquipmentOrdersController < ApplicationController
-  before_action :authenticate_api_user!
-  before_action :require_admin!
-
+class Api::V1::FireEquipmentOrdersController < Api::V1::StaffController
   def index
     fes_year_id = params[:fes_year_id]
     fire_equipment_orders =

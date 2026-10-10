@@ -295,7 +295,7 @@ import { downloadFile } from '~/utils/download-file';
       },
       async editGroup() {
         const putGroupUrl =
-          "/groups/" +
+          "/api/v1/update_group_for_admin_view/" +
           this.group.group.id +
           "?name=" +
           this.groupName +
@@ -314,7 +314,7 @@ import { downloadFile } from '~/utils/download-file';
           "&is_external=" +
           this.external;
 
-        await this.$axios.$put(putGroupUrl).then((response) => {
+        await this.$axios.$patch(putGroupUrl).then((response) => {
           this.openSnackBar(this.groupName + "を編集しました");
           this.groupName = "";
           this.committee = "";

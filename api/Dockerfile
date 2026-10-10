@@ -37,6 +37,9 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN mkdir /myapp/tmp
 RUN mkdir /myapp/tmp/pids
 RUN bundle install
+# wkhtmltopdf-binaryは初回実行時にgz圧縮されたバイナリを展開するため、並列テストで同時に展開すると
+# Errno::ETXTBSY(Text file busy)で失敗する。イメージ作成時に一度実行して展開しておく
+RUN wkhtmltopdf --version || true
 COPY . /myapp
 
 # エントリーポイントスクリプトのコピーと実行権限の付与

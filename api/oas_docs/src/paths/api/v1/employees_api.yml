@@ -1,5 +1,56 @@
 ---
 paths:
+  "/api/v1/create_employee_for_admin_view":
+    post:
+      tags:
+      - api/v1/employees_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/delete_employee_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/employees_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_employee_index_for_admin_view":
     get:
       tags:
@@ -93,3 +144,30 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/update_employee_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/employees_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/employees_api description
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

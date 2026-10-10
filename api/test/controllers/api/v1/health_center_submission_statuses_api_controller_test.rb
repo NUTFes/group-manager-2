@@ -8,7 +8,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiControllerTest < ActionDispatch:
   setup do
     Role.find_or_create_by!(id: 1, name: 'admin')
     @admin = create_user!(email: 'admin-submission-target@example.com', role_id: 1)
-    group_category = GroupCategory.find_or_create_by!(name: '食品販売')
+    group_category = GroupCategory.find_or_create_by!(id: 1) { |category| category.name = '食品販売' }
     fes_year = FesYear.find_or_create_by!(year_num: 2026)
     @group = Group.create!(
       name: '技大祭企画',

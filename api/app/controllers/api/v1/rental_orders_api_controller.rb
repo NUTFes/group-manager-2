@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::RentalOrdersApiController < ApplicationController
+class Api::V1::RentalOrdersApiController < Api::V1::StaffController
   def get_rental_order_index_for_admin_view
     @rental_orders = RentalOrder.with_groups_and_rental_item
     render json: fmt(ok, @rental_orders)
@@ -98,5 +98,41 @@ class Api::V1::RentalOrdersApiController < ApplicationController
     else
       render json: fmt(ok, output)
     end
+  end
+
+  # admin_view: staff/managerが任意団体の物品申請を作成・編集・削除するためのエンドポイント
+  # (共有の RentalOrdersController は current_api_user.groups にスコープされるため専用に用意する)
+  def create_rental_order_for_admin_view
+    @rental_order = RentalOrder.new(rental_order_params)
+    if @rental_order.save
+      render json: fmt(created, @rental_order)
+    else
+      render_validation_errors(@rental_order)
+    end
+  end
+
+  def update_rental_order_for_admin_view
+    @rental_order = RentalOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @rental_order
+
+    if @rental_order.update(rental_order_params)
+      render json: fmt(ok, @rental_order, "Updated rental_order id = #{params[:id]}")
+    else
+      render_validation_errors(@rental_order)
+    end
+  end
+
+  def delete_rental_order_for_admin_view
+    @rental_order = RentalOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], 'Not Found'), status: :not_found unless @rental_order
+
+    @rental_order.destroy
+    render json: fmt(ok, [], "Deleted rental_order = #{params[:id]}")
+  end
+
+  private
+
+  def rental_order_params
+    params.permit(:group_id, :rental_item_id, :num)
   end
 end

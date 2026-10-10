@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  group: one
-  order_type: employee
+  id: 1
+  group_id: 1
+  order_type: 0
 
 two:
-  group: two
-  order_type: power_order
+  id: 2
+  group_id: 2
+  order_type: 1

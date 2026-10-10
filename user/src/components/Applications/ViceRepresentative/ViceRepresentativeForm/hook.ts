@@ -95,15 +95,23 @@ export const useViceRepresentativeFormHook = (
         if (isIndividual) {
           // 未登録データが存在しなければ、未登録グループの登録処理を実行
           if (unregisteredData === null) {
-            await registerUnregisteredGroup(data.groupId);
+            const registerResult = await registerUnregisteredGroup(
+              data.groupId
+            );
+            if (!registerResult.success) {
+              throw registerResult.error;
+            }
           }
           // 副代表の削除処理を実行と未登録データのキャッシュ更新
-          await deleteViceRep();
+          await deleteViceRep({});
           await mutateUnregisteredGroup();
         } else {
           // 二人以上の場合
           // 既存の未登録グループを削除する処理とキャッシュの更新を実行
-          await deleteUnregisteredGroup(unregisteredData);
+          const deleteResult = await deleteUnregisteredGroup(unregisteredData);
+          if (!deleteResult.success) {
+            throw deleteResult.error;
+          }
           await mutateUnregisteredGroup();
           // 副代表が存在する場合の分岐
           if (viceRepresentative) {

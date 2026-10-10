@@ -1,7 +1,14 @@
 // src/api/rentItemsApi.ts
+import type { Session } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import {
+  ApiError,
+  authenticatedGetFetcher,
+  authenticatedPatchFetcher,
+  authenticatedPostFetcher,
+} from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -139,12 +146,17 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
 // 物品申請の操作用フック
 export const useMutateRentalOrders = () => {
   const { remove } = useApiMutations();
+  const { data: session, status } = useSession();
   // 物品申請データを送信
   const submitRentalOrders = async (
     items: Array<{ group_id: number; rental_item_id: number; num: number }>,
     existingItems: RentalOrder[] = []
   ) => {
     try {
+      if (status !== 'authenticated' || !session) {
+        throw new Error('User is not authenticated');
+      }
+
       const promises = [];
 
       // 既存データと新データの長さを比較
@@ -153,8 +165,8 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          legacyPatchFetcher(
-            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+          authenticatedPatchFetcher(
+            [`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`, session],
             {
               arg: { body: items[i] },
             }
@@ -166,7 +178,7 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            legacyPostFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+            authenticatedPostFetcher([API_ENDPOINTS.RENTAL_ORDERS, session], {
               arg: { body: items[i] },
             })
           );
@@ -232,7 +244,32 @@ export const useMutateRentalOrders = () => {
   };
 };
 
+// 404は「未登録データなし」として空配列を返す
+const fetchUnRegisteredGroups = async (
+  session: Session | null | undefined,
+  groupId: number,
+  orderType: number
+): Promise<UnRegisteredGroupResponse[]> => {
+  if (!session) throw new Error('User is not authenticated');
+
+  try {
+    const result = await authenticatedGetFetcher<{
+      data?: UnRegisteredGroupResponse[];
+    }>([
+      `${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
+      session,
+    ]);
+    return result.data ?? [];
+  } catch (error) {
+    if ((error as ApiError).status === 404) return [];
+    throw error;
+  }
+};
+
 export const useRegisterUnRegisteredGroup = () => {
+  const { data: session } = useSession();
+  const { post, remove } = useApiMutations();
+
   // 未登録グループを登録
   const registerUnRegisteredGroup = async (data: {
     group_id: number;
@@ -247,39 +284,21 @@ export const useRegisterUnRegisteredGroup = () => {
         },
       };
 
-      // fetchを使用して送信
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        }
+      const result = await post(
+        API_ENDPOINTS.UN_REGISTERED_GROUPS,
+        requestData
       );
 
-      if (!response.ok) {
-        // エラーレスポンスの詳細を取得
-        let errorDetail: string;
-        try {
-          const errorJson = await response.json();
-          errorDetail = JSON.stringify(errorJson);
-        } catch {
-          errorDetail = await response.text();
-        }
-
-        console.error('APIエラーレスポンス:', errorDetail);
+      if (!result.success) {
+        console.error('APIエラーレスポンス:', result.error.message);
         return {
           success: false,
-          error: `APIエラー: ${response.status}`,
-          details: errorDetail,
+          error: `APIエラー: ${result.error.status}`,
+          details: result.error.message,
         };
       }
 
-      const result = await response.json();
-
-      return { success: true, data: result };
+      return { success: true, data: result.data };
     } catch (error) {
       console.error('UnRegisteredGroup登録エラー:', error);
       return {
@@ -293,35 +312,8 @@ export const useRegisterUnRegisteredGroup = () => {
   // 未登録グループを取得
   const getUnRegisteredGroup = async (groupId: number, orderType: number) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      // 404の場合は特別に処理（データが見つからない場合は正常）
-      if (response.status === 404) {
-        return { success: true, exists: false, data: [] };
-      }
-
-      if (!response.ok) {
-        return {
-          success: false,
-          error: `APIエラー: ${response.status}`,
-        };
-      }
-
-      const result = await response.json();
-
-      return {
-        success: true,
-        exists: result.data && result.data.length > 0,
-        data: result.data || [],
-      };
+      const data = await fetchUnRegisteredGroups(session, groupId, orderType);
+      return { success: true, exists: data.length > 0, data };
     } catch (error) {
       console.error('UnRegisteredGroup取得エラー:', error);
       return {
@@ -350,38 +342,22 @@ export const useRegisterUnRegisteredGroup = () => {
         return { success: true, noData: true }; // データがなければ削除不要
       }
 
-      // 削除処理
-      const deletePromises = getResult.data.map(
-        (item: UnRegisteredGroupResponse) => {
-          return fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${item.id}`,
-            {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-        }
+      const deleteResults = await Promise.all(
+        getResult.data.map((item: UnRegisteredGroupResponse) =>
+          remove(`${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${item.id}`)
+        )
+      );
+      const failedStatuses = deleteResults.flatMap((result) =>
+        result.success ? [] : [result.error.status]
       );
 
-      const deleteResponses = await Promise.all(deletePromises);
-
-      // 全ての削除リクエストが成功したか確認
-      const allSuccess = deleteResponses.every((response) => response.ok);
-
-      if (allSuccess) {
+      if (failedStatuses.length === 0) {
         return { success: true };
-      } else {
-        const failedStatuses = deleteResponses
-          .filter((response) => !response.ok)
-          .map((response) => response.status);
-
-        return {
-          success: false,
-          error: `削除に失敗: ${failedStatuses.join(', ')}`,
-        };
       }
+      return {
+        success: false,
+        error: `削除に失敗: ${failedStatuses.join(', ')}`,
+      };
     } catch (error) {
       console.error('UnRegisteredGroup削除エラー:', error);
       return {
@@ -400,38 +376,13 @@ export const useRegisterUnRegisteredGroup = () => {
 
 // 未登録グループの存在確認用フック
 export const useCheckUnRegisteredGroup = () => {
+  const { data: session } = useSession();
+
   // 未登録グループの存在をチェックする関数
   const checkUnRegisteredGroup = async (groupId: number, orderType: number) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      // 404は存在しないという意味なので、エラーではなく「存在しない」という結果を返す
-      if (response.status === 404) {
-        return { success: true, exists: false };
-      }
-
-      if (!response.ok) {
-        return {
-          success: false,
-          exists: false,
-          error: `APIエラー: ${response.status}`,
-        };
-      }
-
-      const result = await response.json();
-
-      return {
-        success: true,
-        exists: result.data && result.data.length > 0,
-      };
+      const data = await fetchUnRegisteredGroups(session, groupId, orderType);
+      return { success: true, exists: data.length > 0 };
     } catch (error) {
       console.error('UnRegisteredGroup確認エラー:', error);
       return {

@@ -7,7 +7,7 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = Employee.all
+    @employees = current_user_group_scope(Employee)
     render json: fmt(ok, @employees)
   end
 
@@ -19,14 +19,20 @@ class EmployeesController < ApplicationController
 
   # GET /employees/group/:group_id
   def get_by_group
-    @employees = Employee.where(group_id: params[:group_id])
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @employees = Employee.where(group_id: group.id)
     render json: fmt(ok, @employees)
   end
 
   # POST /employees
   # POST /employees.json
   def create
-    @employee = Employee.new(employee_params)
+    group = current_api_user_group!(employee_params[:group_id])
+    return unless group
+
+    @employee = Employee.new(employee_params.merge(group_id: group.id))
     if @employee.save
       render json: fmt(created, @employee)
     else
@@ -38,7 +44,10 @@ class EmployeesController < ApplicationController
   # POST /employees/upsert.json
   def upsert
     now = Time.current
-    records = employees_params.map do |attrs|
+    records = employees_params
+    return render_employee_not_found unless current_user_employee_params?(records)
+
+    records = records.map do |attrs|
       attrs[:id] ||= nil
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
@@ -50,9 +59,9 @@ class EmployeesController < ApplicationController
     # より正確な検索条件を構築
     scopes = records.map do |attrs|
       if attrs[:id].present?
-        Employee.where(id: attrs[:id])
+        current_user_group_scope(Employee).where(id: attrs[:id])
       else
-        Employee.where(
+        current_user_group_scope(Employee).where(
           group_id: attrs[:group_id],
           name: attrs[:name],
           student_id: attrs[:student_id],
@@ -70,7 +79,10 @@ class EmployeesController < ApplicationController
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
-    if @employee.update(employee_params)
+    attrs = employee_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @employee.update(attrs)
       render json: fmt(ok, @employee, "Updated employee id = #{params[:id]}")
     else
       render_validation_errors(@employee)
@@ -87,10 +99,7 @@ class EmployeesController < ApplicationController
   private
 
   def set_employee
-    @employee = Employee.find_by(id: params[:id])
-    return if @employee
-
-    render json: fmt(not_found, [], "Not found employee id=#{params[:id]}"), status: :not_found
+    @employee = current_user_group_record!(Employee, params[:id])
   end
 
   # 単一レコード用 Strong Parameters
@@ -107,5 +116,16 @@ class EmployeesController < ApplicationController
         .to_h
         .symbolize_keys
     end
+  end
+
+  def current_user_employee_params?(records)
+    records.all? do |attrs|
+      current_api_user.groups.exists?(id: attrs[:group_id]) &&
+        (attrs[:id].blank? || current_user_group_scope(Employee).exists?(id: attrs[:id]))
+    end
+  end
+
+  def render_employee_not_found
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
   end
 end

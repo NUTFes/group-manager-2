@@ -1,5 +1,4 @@
-import { unauthenticatedGetFetcher } from '@/api/api';
-import useSWR from 'swr';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 
 // openapiの型定義に変えたい
 export type News = {
@@ -16,12 +15,7 @@ const API_ENDPOINTS = {
 
 export const useGetNews = () => {
   const endpoint = `${API_ENDPOINTS.ANNOUNCEMENTS}`;
-
-  // TODO: あとでsessionがいらないAPIのuseApiGetを作る
-  const { data, error, isLoading } = useSWR<News[]>(
-    endpoint,
-    unauthenticatedGetFetcher
-  );
+  const { data, error, isLoading } = useAuthenticatedGet<News[]>(endpoint);
 
   const news = data;
 

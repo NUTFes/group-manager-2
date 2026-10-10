@@ -1,10 +1,9 @@
-import useSWRMutation from 'swr/mutation';
-import { useAuthenticatedGet } from '@/hooks/useApi';
 import {
-  legacyDeleteFetcher,
-  legacyPatchFetcher,
-  legacyPostFetcher,
-} from './api';
+  useAuthenticatedDelete,
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 const API_ENDPOINT = '/sub_reps';
 
@@ -46,13 +45,13 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
 };
 
 export const useCreateViceRepresentative = () => {
-  return useSWRMutation(API_ENDPOINT, legacyPostFetcher);
+  return useAuthenticatedPost(API_ENDPOINT);
 };
 
 export const useUpdateViceRepresentative = (id: number | undefined) => {
-  return useSWRMutation(`${API_ENDPOINT}/${id}`, legacyPatchFetcher);
+  return useAuthenticatedPatch(`${API_ENDPOINT}/${id}`);
 };
 
 export const useDeleteViceRepresentative = (id: number | undefined) => {
-  return useSWRMutation(`${API_ENDPOINT}/${id}`, legacyDeleteFetcher);
+  return useAuthenticatedDelete(`${API_ENDPOINT}/${id}`);
 };

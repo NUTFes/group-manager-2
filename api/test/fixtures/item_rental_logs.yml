@@ -2,20 +2,20 @@
 
 one:
   uid: item-rental-log-uid-one
-  assign_rental_item: one
-  group: one
-  stocker_place: one
-  rental_item: one
+  assign_rental_item_id: 1
+  group_id: 1
+  stocker_place_id: 1
+  rental_item_id: 1
   category: rental
   quantity: 10
   recorder_email: recorder-one@example.com
 
 two:
   uid: item-rental-log-uid-two
-  assign_rental_item: two
-  group: two
-  stocker_place: two
-  rental_item: two
+  assign_rental_item_id: 2
+  group_id: 2
+  stocker_place_id: 2
+  rental_item_id: 2
   category: return
   quantity: 2
   recorder_email: recorder-two@example.com

@@ -1,12 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   days_num: 1
   date: MyString
   day: MyString
   fes_year_id: 1
 
 two:
+  id: 2
   days_num: 1
   date: MyString
   day: MyString

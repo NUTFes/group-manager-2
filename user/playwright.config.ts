@@ -23,7 +23,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: `rm -rf .next && NEXT_PUBLIC_API_URL=${apiBaseURL} SSR_API_URL=${apiBaseURL} NEXTAUTH_URL=${baseURL} NEXTAUTH_SECRET=${nextAuthSecret} pnpm exec next dev --turbopack --hostname 127.0.0.1 --port ${PORT}`,
+    // imgurへのアップロードはE2E内でpage.routeによりモックするため、ダミーのClient IDを渡す
+    command: `rm -rf .next && NEXT_PUBLIC_API_URL=${apiBaseURL} SSR_API_URL=${apiBaseURL} NEXTAUTH_URL=${baseURL} NEXTAUTH_SECRET=${nextAuthSecret} NEXT_PUBLIC_IMGUR_CLIENT_ID=playwright-dummy-client-id pnpm exec next dev --turbopack --hostname 127.0.0.1 --port ${PORT}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

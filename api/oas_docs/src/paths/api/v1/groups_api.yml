@@ -242,3 +242,30 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+  "/api/v1/update_group_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/groups_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/groups_api description
+        '404':
+          description: api/v1/groups_api description
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

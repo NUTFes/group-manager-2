@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-class Api::V1::FoodProductsApiController < ApplicationController
+class Api::V1::FoodProductsApiController < Api::V1::StaffController
+  skip_before_action :authenticate_api_user!, only: %i[get_food_products_by_group_id]
+  skip_before_action :require_staff_or_above!, only: %i[get_food_products_by_group_id]
+
   def get_food_product_index_for_admin_view
     @food_products = FoodProduct.with_groups
     render json: fmt(ok, @food_products)
@@ -84,8 +87,10 @@ class Api::V1::FoodProductsApiController < ApplicationController
 
   # group_idに紐づいたfood_productsの取得
   def get_food_products_by_group_id
-    group_id = params[:group_id]
-    @food_products = FoodProduct.where(group_id: group_id)
+    group = current_api_user_group!(params[:group_id])
+    return unless group
+
+    @food_products = FoodProduct.where(group_id: group.id)
     if @food_products.none?
       render json: fmt(not_found, [], 'Not found food_products')
     else

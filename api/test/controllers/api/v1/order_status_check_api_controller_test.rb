@@ -21,6 +21,7 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
     exhibition_category = GroupCategory.create!(name: '展示・体験')
     committee_category = GroupCategory.create!(id: GroupCategory::COMMITTEE_ID, name: '実行委員')
     year = FesYear.create!(year_num: 2026)
+    @fes_year = year
     @committee_category_group = create_group!(
       name: 'D-カテゴリ実行委員',
       category: committee_category,
@@ -98,7 +99,8 @@ class Api::V1::OrderStatusCheckApiControllerTest < ActionDispatch::IntegrationTe
     response.parsed_body.fetch('data').map { |group| group.dig('group', 'id') }
   end
 
-  def post_refinement(committee: 0, fes_year_id: 0)
+  # 共通fixtureの団体が混ざらないよう、既定ではこのテストで作った開催年度に絞る
+  def post_refinement(committee: 0, fes_year_id: @fes_year.id)
     post '/api/v1/get_refinement_order_status_check',
          params: {
            fes_year_id: fes_year_id,

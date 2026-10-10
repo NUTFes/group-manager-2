@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  group_id: 
-  number: 
+  id: 1
+  group_id: 1
+  number: 1
 
 two:
-  group_id: 
-  number: 
+  id: 2
+  group_id: 2
+  number: 2

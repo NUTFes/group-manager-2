@@ -1,9 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  group: one
+  id: 1
+  group_id: 1
   is_sunny: false
-  fes_date: one
+  fes_date_id: 1
   stage_first: 1
   stage_second: 1
   use_time_interval: MyString
@@ -15,9 +16,10 @@ one:
   cleanup_end_time: MyString
 
 two:
-  group: one
+  id: 2
+  group_id: 1
   is_sunny: false
-  fes_date: one
+  fes_date_id: 1
   stage_first: 1
   stage_second: 1
   use_time_interval: MyString

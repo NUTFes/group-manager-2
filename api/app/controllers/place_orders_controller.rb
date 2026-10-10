@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 class PlaceOrdersController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_place_order, only: %i[show update destroy]
   before_action :set_place_order_by_group_id, only: [:get_by_group_id]
-  before_action :require_own_group!, only: %i[create update]
 
   # GET /place_orders
   # GET /place_orders.json
   def index
-    @place_orders = own_place_orders_scope
+    @place_orders = current_user_group_scope(PlaceOrder)
     render json: fmt(ok, @place_orders)
   end
 
@@ -22,7 +20,10 @@ class PlaceOrdersController < ApplicationController
   # POST /place_orders
   # POST /place_orders.json
   def create
-    @place_order = PlaceOrder.new(place_order_params)
+    group = current_api_user_group!(place_order_params[:group_id])
+    return unless group
+
+    @place_order = PlaceOrder.new(place_order_params.merge(group_id: group.id))
     if @place_order.save
       render json: fmt(created, @place_order)
     else
@@ -33,7 +34,10 @@ class PlaceOrdersController < ApplicationController
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
-    if @place_order.update(place_order_params)
+    attrs = place_order_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @place_order.update(attrs)
       render json: fmt(ok, @place_order, "Updated place_order id = #{params[:id]}")
     else
       render_validation_errors(@place_order)
@@ -54,38 +58,19 @@ class PlaceOrdersController < ApplicationController
 
   private
 
-  # 管理者は全団体、一般ユーザーは自団体のplace_orderのみを対象にする
-  def own_place_orders_scope
-    return PlaceOrder.all if admin_user?
-
-    PlaceOrder.where(group_id: current_api_user.groups.select(:id))
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order
-    @place_order = own_place_orders_scope.find_by(id: params[:id])
-    @place_order || render(json: fmt(not_found, [], "Not found place_order = #{params[:id]}"))
+    @place_order = current_user_group_record!(PlaceOrder, params[:id])
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order_by_group_id
-    @place_order = own_place_orders_scope.find_by(group_id: params[:group_id])
-    @place_order || render(json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}"))
-  end
+    group = current_api_user_group!(params[:group_id])
+    return unless group
 
-  # create/updateで指定されたgroup_idが自団体(管理者は全団体可)かを検証する
-  def require_own_group!
-    return if admin_user?
-
-    group_id = params.dig(:place_order, :group_id)
-    return if group_id.blank? # 未指定ならモデルの必須バリデーションに委ねる(updateでの部分更新も許可する)
-    return if current_api_user.groups.exists?(id: group_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []), status: :forbidden
-  end
-
-  def admin_user?
-    [1, 2].include?(current_api_user&.role_id)
+    @place_order = PlaceOrder.find_by(group_id: group.id)
+    # 自団体の未登録はHTTP 200で返す(画面が本文のcodeで未登録を判定するため。他団体はcurrent_api_user_group!で404)
+    render json: fmt(not_found, [], 'Not Found') unless @place_order
   end
 
   # Only allow a list of trusted parameters through.

@@ -59,7 +59,8 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'index requires authentication' do
-    get assign_group_places_url, as: :json
+    # headersを明示し、fixture利用テストの自動認証(test_helper)を使わない
+    get assign_group_places_url, headers: { 'Accept' => 'application/json' }, as: :json
     assert_response :unauthorized
   end
 

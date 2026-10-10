@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    ItemRentalLog:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ItemRentalLog"

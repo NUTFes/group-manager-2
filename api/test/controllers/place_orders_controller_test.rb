@@ -6,12 +6,12 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
   setup do
-    Role.find_or_create_by!(id: 1) { |role| role.name = 'admin' }
-    Role.find_or_create_by!(id: 3) { |role| role.name = 'user' }
+    Role.find_or_create_by!(id: Role::MANAGER_ID) { |role| role.name = 'manager' }
+    Role.find_or_create_by!(id: Role::USER_ID) { |role| role.name = 'user' }
 
-    @admin = create_user!(email: 'admin-place-order@example.com', role_id: 1)
-    @user = create_user!(email: 'user-place-order@example.com', role_id: 3)
-    @other_user = create_user!(email: 'other-place-order@example.com', role_id: 3)
+    @admin = create_user!(email: 'admin-place-order@example.com', role_id: Role::MANAGER_ID)
+    @user = create_user!(email: 'user-place-order@example.com', role_id: Role::USER_ID)
+    @other_user = create_user!(email: 'other-place-order@example.com', role_id: Role::USER_ID)
 
     @group = create_group!(@user, name: '自団体')
     @other_group = create_group!(@other_user, name: '他団体')
@@ -34,13 +34,14 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes ids, @other_place_order.id
   end
 
-  test 'index returns all place_orders for an admin' do
+  # 管理者も旧APIでは自団体分のみ。全団体の操作はadmin_view用のv1 APIで行う
+  test 'index is scoped to owned groups even for an admin' do
     get place_orders_url, headers: auth_headers(@admin), as: :json
     assert_response :success
 
     ids = response.parsed_body['data'].pluck('id')
-    assert_includes ids, @place_order.id
-    assert_includes ids, @other_place_order.id
+    assert_not_includes ids, @place_order.id
+    assert_not_includes ids, @other_place_order.id
   end
 
   test 'should show own place_order' do
@@ -50,8 +51,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'show does not expose another group place_order' do
     get place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :not_found
   end
 
   test 'should create place_order for own group' do
@@ -65,25 +65,24 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal 201, response.parsed_body['status']['code']
   end
 
-  test 'create is forbidden for another group' do
+  test 'create is not found for another group' do
     assert_no_difference('PlaceOrder.count') do
       post place_orders_url,
            params: { place_order: place_order_params(group: @other_group) },
            headers: auth_headers(@user), as: :json
     end
 
-    assert_response :forbidden
+    assert_response :not_found
   end
 
-  test 'admin can create place_order for any group' do
-    assert_difference('PlaceOrder.count') do
+  test 'admin cannot create place_order for another group through the user api' do
+    assert_no_difference('PlaceOrder.count') do
       post place_orders_url,
            params: { place_order: place_order_params(group: @other_group) },
            headers: auth_headers(@admin), as: :json
     end
 
-    assert_response :success
-    assert_equal 201, response.parsed_body['status']['code']
+    assert_response :not_found
   end
 
   test 'should update own place_order' do
@@ -97,8 +96,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     patch place_order_url(@other_place_order),
           params: { place_order: place_order_params(group: @other_group, remark: '更新後') },
           headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :not_found
   end
 
   test 'partial update without group_id is allowed for the owner' do
@@ -109,11 +107,12 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_equal '備考のみ更新', response.parsed_body['data']['remark']
   end
 
-  test 'reassigning own place_order to another group_id is forbidden' do
+  test 'reassigning own place_order to another group_id is not found' do
     patch place_order_url(@place_order),
           params: { place_order: place_order_params(group: @other_group, remark: '乗っ取り') },
           headers: auth_headers(@user), as: :json
-    assert_response :forbidden
+    assert_response :not_found
+    assert_equal @group.id, @place_order.reload.group_id
   end
 
   test 'should destroy own place_order' do
@@ -129,8 +128,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
       delete place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
     end
 
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :not_found
   end
 
   test 'get_by_group_id returns own group place_order' do
@@ -140,8 +138,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'get_by_group_id does not expose another group place_order' do
     get "/place_orders/group/#{@other_group.id}", headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :not_found
   end
 
   private

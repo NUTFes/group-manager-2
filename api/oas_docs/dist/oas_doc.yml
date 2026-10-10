@@ -51,6 +51,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -70,6 +74,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Announcement"
@@ -94,6 +102,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -118,6 +128,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Announcement"
@@ -144,6 +156,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Announcement"
@@ -174,6 +188,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Announcement"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -257,6 +273,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.auth.Registration"
+      security: []
   "/api/auth/cancel":
     get:
       tags:
@@ -337,6 +354,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/api.auth.Session"
       deprecated: false
+      security: []
     post:
       tags:
       - api/auth/session
@@ -488,6 +506,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AnnouncementsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -515,6 +537,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AnnouncementsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_announcement_show_for_admin_view/{id}":
     get:
@@ -537,6 +563,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AnnouncementsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -564,6 +594,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AnnouncementsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.AnnouncementsApi"
@@ -586,6 +620,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AnnouncementsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.AnnouncementsApi"
@@ -608,6 +646,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AssignRentalItemsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.AssignRentalItemsApi"
@@ -630,6 +672,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.AssignRentalItemsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.AssignRentalItemsApi"
@@ -649,6 +695,12 @@ paths:
         '404':
           description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
             団体が存在しない場合をすべて404に統一している
+        '422':
+          description: api/v1/confirmed_infos_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedInfosApi"
       deprecated: false
       parameters:
       - name: group_id
@@ -677,12 +729,18 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '404':
+          description: group_idに該当する団体が存在しない
+        '422':
+          description: api/v1/confirmed_qrcodes_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
         '401':
           description: 未認証
         '403':
           description: manager/staff以外
-        '404':
-          description: group_idに該当する団体が存在しない
       deprecated: false
       parameters:
       - name: group_id
@@ -707,6 +765,12 @@ paths:
         '404':
           description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
             団体が存在しない場合をすべて404に統一している
+        '422':
+          description: api/v1/confirmed_qrcodes_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
       deprecated: false
       parameters:
       - name: group_id
@@ -722,99 +786,6 @@ paths:
         schema:
           type: string
       security: []
-  "/api/v1/get_contact_person_index_for_admin_view":
-    get:
-      tags:
-      - api/v1/contact_persons_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-        '422':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-      deprecated: false
-  "/api/v1/get_contact_person_show_for_admin_view/{id}":
-    get:
-      tags:
-      - api/v1/contact_persons_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-        '404':
-          description: api/v1/contact_persons_api description
-        '422':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-  "/api/v1/get_refinement_contact_persons":
-    post:
-      tags:
-      - api/v1/contact_persons_api
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-        '422':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.ContactPersonsApi"
-  "/api/v1/get_search_contact_persons":
-    post:
-      tags:
-      - api/v1/contact_persons_api
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-        '422':
-          description: api/v1/contact_persons_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.ContactPersonsApi"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.ContactPersonsApi"
   "/api/v1/get_cooking_process_order_by_food_product_id/{food_product_id}":
     get:
       tags:
@@ -836,6 +807,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: food_product_id
@@ -865,6 +840,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -892,6 +871,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.CookingProcessOrdersApi"
@@ -914,6 +897,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.CookingProcessOrdersApi"
@@ -936,6 +923,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/current_user/current_regist_info":
     get:
@@ -956,6 +947,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/current_user/edit_user_info":
     post:
@@ -976,6 +971,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.CurrentUserApi"
@@ -998,46 +997,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-      deprecated: false
-  "/api/v1/current_user/groups":
-    get:
-      tags:
-      - api/v1/current_user_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-        '422':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-      deprecated: false
-  "/api/v1/current_user/groups/places":
-    get:
-      tags:
-      - api/v1/current_user_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-        '422':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/current_user/is_login":
     get:
@@ -1058,6 +1021,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/current_user/password_reset":
     post:
@@ -1078,29 +1045,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.CurrentUserApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.CurrentUserApi"
-  "/api/v1/current_user/regist_info":
-    get:
-      tags:
-      - api/v1/current_user_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-        '422':
-          description: api/v1/current_user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.CurrentUserApi"
-      deprecated: false
   "/api/v1/dashboard":
     get:
       tags:
@@ -1120,7 +1071,70 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.DashboardApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
+  "/api/v1/create_employee_for_admin_view":
+    post:
+      tags:
+      - api/v1/employees_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/delete_employee_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/employees_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_employee_index_for_admin_view":
     get:
       tags:
@@ -1140,6 +1154,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_employee_show_for_admin_view/{id}":
     get:
@@ -1162,6 +1180,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1189,6 +1211,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
@@ -1211,9 +1237,44 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+  "/api/v1/update_employee_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/employees_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/employees_api description
+        '404':
+          description: api/v1/employees_api description
+        '422':
+          description: api/v1/employees_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.EmployeesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.EmployeesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_current_fes_dates":
     get:
       tags:
@@ -1233,6 +1294,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FesDatesApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/get_refinement_fes_date_by_fes_year/{fes_year_id}":
     get:
@@ -1255,6 +1320,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FesDatesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -1282,6 +1351,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -1301,6 +1374,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
@@ -1325,6 +1402,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1349,6 +1430,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
@@ -1375,6 +1460,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FireEquipmentOrder"
@@ -1405,6 +1494,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1432,6 +1525,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_food_product_show_for_admin_view/{id}":
     get:
@@ -1454,6 +1551,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1483,6 +1584,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -1510,6 +1613,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_refinement_food_products":
     post:
@@ -1530,6 +1637,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FoodProductsApi"
@@ -1552,6 +1663,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.FoodProductsApi"
@@ -1574,6 +1689,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupMailCommentsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_group_for_admin_view/{id}":
     get:
@@ -1596,6 +1715,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1623,6 +1746,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_group_show_for_admin_view/{id}":
     get:
@@ -1645,6 +1772,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -1672,6 +1803,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_groups_have_no_announcement":
     get:
@@ -1692,6 +1827,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_groups_have_no_cooking_process_order":
     get:
@@ -1712,6 +1851,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_groups_have_no_public_relation":
     get:
@@ -1732,6 +1875,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_groups_have_no_venue_map":
     get:
@@ -1752,6 +1899,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_groups_refinemented_by_current_fes_year":
     get:
@@ -1772,6 +1923,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_refinement_groups":
     post:
@@ -1792,6 +1947,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
@@ -1814,9 +1973,44 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+  "/api/v1/update_group_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/groups_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/groups_api description
+        '404':
+          description: api/v1/groups_api description
+        '422':
+          description: api/v1/groups_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.GroupsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/health_center_submission_statuses":
     post:
       tags:
@@ -1836,6 +2030,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatus"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatus"
@@ -1858,6 +2056,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -1888,6 +2090,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -1912,6 +2118,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: group_id
@@ -1939,6 +2149,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_health_center_submission_status_show_for_admin_view/{group_id}":
     get:
@@ -1961,6 +2175,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: group_id
@@ -2002,6 +2220,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -2031,6 +2253,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -2051,6 +2277,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -2084,6 +2314,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -2113,6 +2347,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
@@ -2135,6 +2373,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MailDelivery"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.MailDelivery"
@@ -2157,6 +2399,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -2176,6 +2422,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
@@ -2200,6 +2450,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -2224,6 +2478,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
@@ -2250,6 +2508,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.MessageTemplate"
@@ -2281,6 +2543,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.MessageTemplate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -2310,6 +2576,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderInfosApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -2337,6 +2607,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderInfosApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderInfosApi"
@@ -2359,6 +2633,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderInfosApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderInfosApi"
@@ -2383,6 +2661,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -2398,19 +2680,31 @@ paths:
       summary: post summary
       description: post description
       responses:
-        '200':
+        '201':
           description: api/v1/order_status_check_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
         '422':
           description: api/v1/order_status_check_api description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        '200':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
       parameters:
       - name: fes_year_id
         in: query
@@ -2476,6 +2770,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
@@ -2498,6 +2796,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
@@ -2534,6 +2836,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckCommentMail"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckCommentMail"
@@ -2563,6 +2869,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_assign_rental_items_csv/{fes_year_id}":
     get:
@@ -2585,6 +2895,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2612,6 +2926,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_employees_csv/{fes_year_id}":
     get:
@@ -2634,6 +2952,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2666,6 +2988,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2695,6 +3021,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2724,6 +3054,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2753,6 +3087,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2782,6 +3120,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2811,6 +3153,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2840,6 +3186,43 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_rental_items_list_csv/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '404':
+          description: api/v1/output_csv description
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2869,6 +3252,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2898,6 +3285,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2927,6 +3318,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2956,6 +3351,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2985,6 +3384,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -2993,36 +3396,62 @@ paths:
         required: true
         schema:
           type: integer
-  "/api/v1/get_project_check_list_pdf/{group_id}":
-    get:
+  "/api/v1/create_place_order_for_admin_view":
+    post:
       tags:
-      - api/v1/output_pdf
-      summary: get summary
-      description: get description
+      - api/v1/place_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+  "/api/v1/delete_place_order_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/place_orders_api
+      summary: delete summary
+      description: delete description
       responses:
         '200':
-          description: api/v1/output_pdf description
+          description: api/v1/place_orders_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OutputPdf"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
         '404':
-          description: api/v1/output_pdf description
+          description: api/v1/place_orders_api description
         '422':
-          description: api/v1/output_pdf description
+          description: api/v1/place_orders_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/api.v1.OutputPdf"
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
-      - name: group_id
+      - name: id
         in: path
-        description: group_id
+        description: id
         required: true
         schema:
           type: integer
@@ -3045,6 +3474,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_place_order_show_for_admin_view/{id}":
     get:
@@ -3067,6 +3500,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3094,6 +3531,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
@@ -3116,9 +3557,44 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+  "/api/v1/update_place_order_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/place_orders_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/place_orders_api description
+        '404':
+          description: api/v1/place_orders_api description
+        '422':
+          description: api/v1/place_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PlaceOrdersApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/power_orders":
     post:
       tags:
@@ -3138,6 +3614,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrder"
@@ -3158,6 +3638,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrder"
@@ -3184,6 +3668,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrder"
@@ -3214,6 +3702,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3241,6 +3733,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_power_order_show_for_admin_view/{id}":
     get:
@@ -3263,6 +3759,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3290,6 +3790,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrdersApi"
@@ -3312,57 +3816,72 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PowerOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PowerOrdersApi"
-  "/api/v1/output_pdf/power_orders":
-    get:
+  "/api/v1/create_public_relation_for_admin_view":
+    post:
       tags:
-      - api/v1/print_pdf
-      summary: get summary
-      description: get description
+      - api/v1/public_relations_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+  "/api/v1/delete_public_relation_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/public_relations_api
+      summary: delete summary
+      description: delete description
       responses:
         '200':
-          description: api/v1/print_pdf description
+          description: api/v1/public_relations_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/PrintPdf"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '404':
+          description: api/v1/public_relations_api description
         '422':
-          description: api/v1/print_pdf description
+          description: api/v1/public_relations_api description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/PrintPdf"
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
-  "/api/v1/output_pdf/rental_items":
-    get:
-      tags:
-      - api/v1/print_pdf
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/print_pdf description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PrintPdf"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-        '422':
-          description: api/v1/print_pdf description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/PrintPdf"
-      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_public_relation_for_admin_view/{id}":
     get:
       tags:
@@ -3384,6 +3903,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3411,6 +3934,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
@@ -3433,9 +3960,44 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+  "/api/v1/update_public_relation_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/public_relations_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/public_relations_api description
+        '404':
+          description: api/v1/public_relations_api description
+        '422':
+          description: api/v1/public_relations_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.PublicRelationsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.PublicRelationsApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_purchase_list_index_for_admin_view":
     get:
       tags:
@@ -3455,6 +4017,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PurchaseListsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_purchase_list_show_for_admin_view/{id}":
     get:
@@ -3477,6 +4043,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PurchaseListsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3504,6 +4074,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PurchaseListsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PurchaseListsApi"
@@ -3526,6 +4100,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.PurchaseListsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.PurchaseListsApi"
@@ -3548,6 +4126,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/get_inside_shop_rentable_items":
     get:
@@ -3568,6 +4150,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/get_outside_shop_rentable_items":
     get:
@@ -3588,6 +4174,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/get_rentable_items":
     get:
@@ -3608,6 +4198,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_shop_rentable_items":
     get:
@@ -3628,6 +4222,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_stage_rentable_items":
     get:
@@ -3648,7 +4246,70 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalItemsApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
+  "/api/v1/create_rental_order_for_admin_view":
+    post:
+      tags:
+      - api/v1/rental_orders_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+  "/api/v1/delete_rental_order_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/rental_orders_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '404':
+          description: api/v1/rental_orders_api description
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_refinement_rental_orders":
     post:
       tags:
@@ -3668,6 +4329,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
@@ -3690,6 +4355,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_rental_order_show_for_admin_view/{id}":
     get:
@@ -3712,6 +4381,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3739,9 +4412,144 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+  "/api/v1/update_rental_order_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/rental_orders_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/rental_orders_api description
+        '404':
+          description: api/v1/rental_orders_api description
+        '422':
+          description: api/v1/rental_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.RentalOrdersApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_assign_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_groups_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_stocker_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
   "/api/v1/get_refinement_representatives":
     post:
       tags:
@@ -3761,6 +4569,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RepresentativesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RepresentativesApi"
@@ -3783,9 +4595,72 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.RepresentativesApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.RepresentativesApi"
+  "/api/v1/create_stage_common_option_for_admin_view":
+    post:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
+  "/api/v1/delete_stage_common_option_for_admin_view/{id}":
+    delete:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '404':
+          description: api/v1/stage_common_options_api description
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_refinement_stage_common_options":
     post:
       tags:
@@ -3805,6 +4680,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
@@ -3827,6 +4706,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
@@ -3849,6 +4732,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_stage_common_option_show_for_admin_view/{id}":
     get:
@@ -3871,7 +4758,42 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/update_stage_common_option_for_admin_view/{id}":
+    patch:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/stage_common_options_api description
+        '404':
+          description: api/v1/stage_common_options_api description
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
       parameters:
       - name: id
         in: path
@@ -3898,6 +4820,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.StageOrdersApi"
@@ -3920,6 +4846,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.StageOrdersApi"
@@ -3942,6 +4872,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_stage_order_show_for_admin_view/{id}":
     get:
@@ -3964,6 +4898,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.StageOrdersApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -3991,6 +4929,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.SubRepApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.SubRepApi"
@@ -4013,6 +4955,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.User"
@@ -4035,6 +4981,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_representative_show_for_admin_view/{id}":
     get:
@@ -4057,6 +5007,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4084,6 +5038,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.User"
@@ -4106,6 +5064,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/api/v1/get_user_show_for_admin_view/{id}":
     get:
@@ -4128,6 +5090,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4157,6 +5123,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4190,29 +5160,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.User"
-  "/api/v1/users/get_user_detail":
-    get:
-      tags:
-      - api/v1/user
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/user description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.User"
-        '422':
-          description: api/v1/user description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.User"
-      deprecated: false
   "/api/v1/users/reset_password":
     post:
       tags:
@@ -4232,6 +5186,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.User"
@@ -4254,46 +5212,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.User"
-      deprecated: false
-  "/api/v1/get_user_with_user_detail":
-    get:
-      tags:
-      - api/v1/user_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.UserApi"
-        '422':
-          description: api/v1/user_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.UserApi"
-      deprecated: false
-  "/api/v1/get_user_with_user_details":
-    get:
-      tags:
-      - api/v1/users_api
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: api/v1/users_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.UsersApi"
-        '422':
-          description: api/v1/users_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.UsersApi"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/api/v1/get_refinement_venue_maps":
     post:
@@ -4314,6 +5236,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.VenueMapsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.VenueMapsApi"
@@ -4336,6 +5262,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.VenueMapsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.VenueMapsApi"
@@ -4360,6 +5290,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.VenueMapsApi"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4387,6 +5321,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -4406,6 +5344,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignGroupPlace"
@@ -4430,6 +5372,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4454,6 +5400,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignGroupPlace"
@@ -4480,6 +5430,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignGroupPlace"
@@ -4510,156 +5464,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignGroupPlace"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-  "/assign_items":
-    get:
-      tags:
-      - assign_item
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-      deprecated: false
-    post:
-      tags:
-      - assign_item
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/AssignItem"
-  "/assign_items/{id}":
-    get:
-      tags:
-      - assign_item
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-        '404':
-          description: assign_item description
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - assign_item
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: assign_item description
-        '404':
-          description: assign_item description
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/AssignItem"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    put:
-      tags:
-      - assign_item
-      summary: put summary
-      description: put description
-      responses:
-        '204':
-          description: assign_item description
-        '404':
-          description: assign_item description
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/AssignItem"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    delete:
-      tags:
-      - assign_item
-      summary: delete summary
-      description: delete description
-      responses:
-        '200':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
-        '404':
-          description: assign_item description
-        '422':
-          description: assign_item description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/AssignItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4687,6 +5495,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -4706,6 +5518,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignRentalItem"
@@ -4730,6 +5546,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4754,6 +5574,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignRentalItem"
@@ -4780,6 +5604,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignRentalItem"
@@ -4810,6 +5638,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignRentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4837,6 +5669,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -4856,6 +5692,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignStage"
@@ -4880,6 +5720,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4904,6 +5748,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignStage"
@@ -4930,6 +5778,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/AssignStage"
@@ -4960,6 +5812,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/AssignStage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -4989,6 +5845,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CheckAllRegistered"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -5016,6 +5874,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -5035,6 +5897,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/ContactPerson"
@@ -5059,6 +5925,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5083,6 +5951,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/ContactPerson"
@@ -5109,6 +5979,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/ContactPerson"
@@ -5139,6 +6011,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ContactPerson"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5166,6 +6040,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -5185,6 +6063,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/CookingProcessOrder"
@@ -5209,6 +6091,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -5236,6 +6120,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/CookingProcessOrder"
@@ -5260,6 +6148,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5284,6 +6174,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/CookingProcessOrder"
@@ -5310,6 +6202,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/CookingProcessOrder"
@@ -5340,6 +6234,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CookingProcessOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5366,6 +6262,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
     put:
       tags:
       - devise_token_auth/password
@@ -5383,6 +6280,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
     post:
       tags:
       - devise_token_auth/password
@@ -5404,6 +6302,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Password"
+      security: []
   "/api/auth/password/edit":
     get:
       tags:
@@ -5424,6 +6323,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Password"
       deprecated: false
+      security: []
   "/api/auth/password/new":
     get:
       tags:
@@ -5444,6 +6344,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Password"
       deprecated: false
+      security: []
   "/api/auth/sign_in":
     get:
       tags:
@@ -5464,6 +6365,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/devisetokenauth.Session"
       deprecated: false
+      security: []
     post:
       tags:
       - devise_token_auth/session
@@ -5485,6 +6387,7 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/devisetokenauth.Session"
+      security: []
   "/api/auth/sign_out":
     delete:
       tags:
@@ -5544,6 +6447,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -5563,6 +6470,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Employee"
@@ -5587,6 +6498,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -5614,6 +6527,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Employee"
@@ -5638,6 +6555,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5662,6 +6581,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Employee"
@@ -5688,6 +6609,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Employee"
@@ -5718,6 +6641,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Employee"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5745,6 +6670,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -5764,6 +6693,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesDate"
@@ -5788,6 +6721,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5812,6 +6747,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesDate"
@@ -5838,6 +6777,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesDate"
@@ -5868,6 +6811,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesDate"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -5895,6 +6842,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -5914,6 +6865,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesYear"
@@ -5938,6 +6893,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -5962,6 +6919,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesYear"
@@ -5988,6 +6949,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FesYear"
@@ -6018,6 +6983,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -6045,6 +7014,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/fire_equipment_orders/group/{group_id}":
     get:
@@ -6067,6 +7040,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -6092,6 +7067,10 @@ paths:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
         '200':
           description: fire_equipment_order description
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FireEquipmentOrder"
@@ -6111,6 +7090,10 @@ paths:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
         '200':
           description: fire_equipment_order description
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FireEquipmentOrder"
@@ -6135,6 +7118,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FireEquipmentOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6162,6 +7147,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -6181,45 +7170,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/FoodProduct"
-    patch:
-      tags:
-      - food_product
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: food_product description
-        '422':
-          description: food_product description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FoodProduct"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/FoodProduct"
-  "/food_products/bulk_upsert":
-    post:
-      tags:
-      - food_product
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: food_product description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FoodProduct"
-        '422':
-          description: food_product description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FoodProduct"
@@ -6244,6 +7198,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -6271,6 +7227,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FoodProduct"
@@ -6295,6 +7255,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6319,6 +7281,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FoodProduct"
@@ -6345,6 +7309,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FoodProduct"
@@ -6375,6 +7341,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6402,6 +7370,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -6421,6 +7393,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Group"
@@ -6445,6 +7421,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: user_id
@@ -6474,6 +7452,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6498,6 +7478,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Group"
@@ -6524,6 +7506,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Group"
@@ -6554,6 +7538,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Group"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -6581,6 +7569,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -6600,6 +7592,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/GroupCategory"
@@ -6624,6 +7620,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -6648,6 +7646,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/GroupCategory"
@@ -6674,6 +7676,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/GroupCategory"
@@ -6704,6 +7710,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -6731,6 +7741,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupIdentification"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -6750,6 +7764,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupIdentification"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/GroupIdentification"
@@ -6770,6 +7788,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupIdentification"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/GroupIdentification"
@@ -6800,6 +7822,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/GroupIdentification"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -6829,6 +7855,8 @@ paths:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
         '404':
           description: health_center_submission_status description
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -6861,6 +7889,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
@@ -6887,6 +7919,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
@@ -6913,6 +7947,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/HealthCenterSubmissionStatus"
@@ -6923,26 +7959,69 @@ paths:
         required: true
         schema:
           type: integer
-  "/letter_opener":
+  "/item_rental_logs":
     get:
       tags:
-      - letter_opener_web/engine
+      - item_rental_log
       summary: get summary
       description: get description
       responses:
         '200':
-          description: letter_opener_web/engine description
+          description: item_rental_log description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/letteropenerweb.Engine"
+                "$ref": "#/components/schemas/ItemRentalLog"
         '422':
-          description: letter_opener_web/engine description
+          description: item_rental_log description
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/letteropenerweb.Engine"
+                "$ref": "#/components/schemas/ItemRentalLog"
       deprecated: false
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
+  "/item_rental_logs/transfer":
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
   "/":
     get:
       tags:
@@ -6963,123 +8042,6 @@ paths:
               schema:
                 "$ref": "#/components/schemas/letteropenerweb.Letter"
       deprecated: false
-  "/clear":
-    post:
-      tags:
-      - letter_opener_web/letter
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-        '422':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
-  "/{id}":
-    get:
-      tags:
-      - letter_opener_web/letter
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-        '404':
-          description: letter_opener_web/letter description
-        '422':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-  "/{id}/attachments/{file}":
-    get:
-      tags:
-      - letter_opener_web/letter
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-        '404':
-          description: letter_opener_web/letter description
-        '422':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-      - name: file
-        in: path
-        description: file
-        required: true
-        schema:
-          type: string
-  "/{id}/delete":
-    post:
-      tags:
-      - letter_opener_web/letter
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-        '404':
-          description: letter_opener_web/letter description
-        '422':
-          description: letter_opener_web/letter description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/letteropenerweb.Letter"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
   "/memos":
     get:
       tags:
@@ -7099,6 +8061,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -7118,6 +8084,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Memo"
@@ -7142,6 +8112,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7166,6 +8140,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Memo"
@@ -7192,6 +8170,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Memo"
@@ -7222,6 +8204,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Memo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7249,6 +8235,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -7268,6 +8258,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/News"
@@ -7292,6 +8286,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -7316,6 +8312,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/News"
@@ -7342,6 +8342,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/News"
@@ -7372,6 +8376,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/News"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7399,6 +8407,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -7418,6 +8430,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Place"
@@ -7442,6 +8458,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -7466,6 +8484,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Place"
@@ -7492,6 +8514,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Place"
@@ -7522,6 +8548,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Place"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7549,6 +8579,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -7568,6 +8602,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceAllowList"
@@ -7592,6 +8630,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7616,6 +8658,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceAllowList"
@@ -7642,6 +8688,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceAllowList"
@@ -7672,6 +8722,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7714,6 +8768,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -7761,6 +8819,10 @@ paths:
                     type: array
                     items:
                       type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7798,6 +8860,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -7855,6 +8921,10 @@ paths:
                         type: string
                   data:
                     "$ref": "#/components/schemas/PlaceCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7914,6 +8984,10 @@ paths:
                         type: string
                   data:
                     "$ref": "#/components/schemas/PlaceCategory"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceCategory"
@@ -7979,6 +9053,10 @@ paths:
                     type: array
                     items:
                       type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -8006,6 +9084,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -8025,6 +9107,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceNumber"
@@ -8045,6 +9131,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceNumber"
@@ -8075,6 +9165,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -8102,6 +9196,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -8121,6 +9219,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceOrder"
@@ -8145,6 +9247,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -8174,6 +9278,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8198,6 +9304,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceOrder"
@@ -8224,6 +9332,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PlaceOrder"
@@ -8254,6 +9364,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PlaceOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8281,6 +9393,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/power_orders/group/{group_id}":
     get:
@@ -8303,6 +9419,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -8328,6 +9446,10 @@ paths:
                 "$ref": "#/components/schemas/PowerOrder"
         '200':
           description: power_order description
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PowerOrder"
@@ -8352,6 +9474,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PowerOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8381,6 +9505,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8410,6 +9538,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8439,6 +9571,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8468,6 +9604,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8497,6 +9637,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: group_id
@@ -8526,6 +9670,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8555,6 +9703,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: group_id
@@ -8584,6 +9736,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8613,6 +9769,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8642,6 +9802,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PrintPdf"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: fes_year_id
@@ -8669,6 +9833,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -8688,6 +9856,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PublicRelation"
@@ -8712,6 +9884,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -8741,6 +9915,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8765,6 +9941,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PublicRelation"
@@ -8791,6 +9969,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PublicRelation"
@@ -8821,6 +10001,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PublicRelation"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8854,6 +10036,10 @@ paths:
                 type: array
                 items:
                   "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -8873,6 +10059,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
@@ -8895,40 +10085,11 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
-      deprecated: false
-  "/purchase_lists/group/{group_id}":
-    get:
-      tags:
-      - purchase_list
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: purchase_list description
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
         '404':
-          description: purchase_list description
-        '422':
-          description: purchase_list description
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/PurchaseList"
+          description: Not Found
       deprecated: false
-      parameters:
-      - name: group_id
-        in: path
-        description: group_id
-        required: true
-        schema:
-          type: integer
   "/purchase_lists/upsert":
     post:
       tags:
@@ -8948,6 +10109,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
@@ -8972,6 +10137,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -8996,6 +10163,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
@@ -9022,6 +10191,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
@@ -9052,6 +10223,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9079,6 +10252,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -9098,6 +10275,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentableItem"
@@ -9122,6 +10303,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9146,6 +10331,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentableItem"
@@ -9172,6 +10361,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentableItem"
@@ -9202,6 +10395,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentableItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9229,6 +10426,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -9248,6 +10449,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
@@ -9283,6 +10488,10 @@ paths:
                 properties:
                   name_en:
                     type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
@@ -9314,6 +10523,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9338,6 +10549,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
@@ -9364,6 +10579,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItem"
@@ -9394,6 +10613,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9421,6 +10644,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -9440,6 +10667,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItemAllowList"
@@ -9464,6 +10695,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9488,6 +10723,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItemAllowList"
@@ -9514,6 +10753,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalItemAllowList"
@@ -9544,6 +10787,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalItemAllowList"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9571,6 +10818,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -9590,6 +10841,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalOrder"
@@ -9614,6 +10869,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -9643,6 +10900,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9667,6 +10926,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalOrder"
@@ -9693,6 +10954,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/RentalOrder"
@@ -9723,6 +10986,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/RentalOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9750,6 +11015,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -9769,6 +11038,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Shop"
@@ -9793,6 +11066,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9817,6 +11092,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Shop"
@@ -9843,6 +11122,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Shop"
@@ -9873,6 +11156,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Shop"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -9900,6 +11187,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/stages":
     get:
@@ -9920,6 +11211,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -9939,6 +11234,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Stage"
@@ -9963,6 +11262,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -9987,6 +11288,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Stage"
@@ -10013,6 +11318,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Stage"
@@ -10043,6 +11352,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10070,6 +11383,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Stage"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/stage_common_options":
     get:
@@ -10090,6 +11407,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -10109,6 +11430,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageCommonOption"
@@ -10133,6 +11458,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -10162,6 +11489,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10186,6 +11515,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageCommonOption"
@@ -10212,6 +11543,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageCommonOption"
@@ -10242,6 +11575,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageCommonOption"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10269,6 +11604,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -10288,6 +11627,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageNumber"
@@ -10308,6 +11651,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageNumber"
@@ -10338,6 +11685,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageNumber"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10365,6 +11716,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -10384,6 +11739,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageOrder"
@@ -10408,6 +11767,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -10437,6 +11798,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10461,6 +11824,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageOrder"
@@ -10487,6 +11852,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageOrder"
@@ -10517,6 +11884,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StageOrder"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10544,6 +11913,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -10563,6 +11936,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerItem"
@@ -10587,6 +11964,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10611,6 +11992,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerItem"
@@ -10637,6 +12022,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerItem"
@@ -10667,6 +12056,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerItem"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10694,6 +12087,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
     post:
       tags:
@@ -10713,6 +12110,36 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/StockerPlace"
+  "/stocker_places/translate":
+    post:
+      tags:
+      - stocker_place
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerPlace"
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerPlace"
@@ -10737,6 +12164,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10761,6 +12192,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerPlace"
@@ -10787,6 +12222,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerPlace"
@@ -10817,6 +12256,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -10844,6 +12287,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -10863,6 +12310,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/SubRep"
@@ -10887,6 +12338,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -10916,6 +12369,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -10940,6 +12395,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/SubRep"
@@ -10966,6 +12423,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/SubRep"
@@ -10996,6 +12455,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SubRep"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11023,6 +12484,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -11042,6 +12507,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UnRegisteredGroup"
@@ -11064,6 +12533,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/un_registered_groups/{id}":
     get:
@@ -11086,6 +12559,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11110,6 +12585,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UnRegisteredGroup"
@@ -11136,6 +12613,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UnRegisteredGroup"
@@ -11166,6 +12645,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnRegisteredGroup"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11193,6 +12674,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
   "/users":
     get:
@@ -11213,6 +12698,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
   "/users/simply_user_create":
     post:
@@ -11233,6 +12722,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/User"
@@ -11257,6 +12750,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -11281,6 +12778,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/User"
@@ -11311,6 +12812,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/User"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -11338,6 +12843,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -11357,6 +12866,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserDetail"
@@ -11381,6 +12894,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11405,6 +12920,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserDetail"
@@ -11431,6 +12948,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserDetail"
@@ -11461,6 +12980,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserDetail"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11488,6 +13009,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -11507,6 +13032,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"
@@ -11531,6 +13060,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11555,6 +13086,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"
@@ -11581,6 +13116,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"
@@ -11611,6 +13150,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UserPageSetting"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
       deprecated: false
       parameters:
       - name: id
@@ -11638,6 +13181,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
     post:
       tags:
@@ -11657,6 +13204,10 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/VenueMap"
@@ -11681,6 +13232,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: group_id
@@ -11710,6 +13263,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -11734,6 +13289,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/VenueMap"
@@ -11760,6 +13317,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/VenueMap"
@@ -11790,6 +13349,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/VenueMap"
+        '401':
+          description: Unauthorized
       deprecated: false
       parameters:
       - name: id
@@ -12056,6 +13617,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.RentalRecordsApi: {}
     api.v1.RepresentativesApi:
       type: object
       properties:
@@ -12299,6 +13861,12 @@ components:
       required:
       - application_type
       - status
+    ItemRentalLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
     letteropenerweb.Engine: {}
     letteropenerweb.Letter: {}
     Memo:
@@ -12575,6 +14143,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.OrderInfosApi"
+    api.v1.OrderStatusCheckApi:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
     api.v1.OrderStatusCheckCommentMail: {}
     api.v1.PlaceOrdersApi:
       content:
@@ -12717,6 +14290,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+    ItemRentalLog:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ItemRentalLog"
     letteropenerweb.Letter: {}
     Memo:
       content:

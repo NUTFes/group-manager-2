@@ -13,21 +13,21 @@ class CheckAllRegisteredController < ApplicationController
   def show
     group_id = params[:group_id]
 
-    group = Group
-            .includes(
-              :sub_rep,
-              :place_order,
-              :stage_common_option,
-              :power_orders,
-              :employees,
-              :public_relation,
-              :venue_map,
-              :cooking_process_order,
-              stage_orders: [],
-              food_products: :purchase_lists,
-              rental_orders: []
-            )
-            .find(group_id)
+    group = current_api_user.groups
+                            .includes(
+                              :sub_rep,
+                              :place_order,
+                              :stage_common_option,
+                              :power_orders,
+                              :employees,
+                              :public_relation,
+                              :venue_map,
+                              :cooking_process_order,
+                              stage_orders: [],
+                              food_products: :purchase_lists,
+                              rental_orders: []
+                            )
+                            .find(group_id)
 
     unregistered_types = UnRegisteredGroup
                          .where(group_id: group_id)
@@ -53,7 +53,7 @@ class CheckAllRegisteredController < ApplicationController
 
     render json: fmt(:ok, statuses)
   rescue ActiveRecord::RecordNotFound
-    render json: fmt(:not_found, [], "Not found group_id = #{group_id}")
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
   end
 
   private

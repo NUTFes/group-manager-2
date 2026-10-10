@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PrintPdfController < ApplicationController
+class PrintPdfController < StaffController
   include ActionController::MimeResponds
 
   # 物品貸出関連の帳票（物品貸出表・貸出物品リストまとめ）が参照する関連の一覧。
@@ -14,16 +14,6 @@ class PrintPdfController < ApplicationController
     { assign_rental_items: %i[rental_item stocker_place rental_place] },
     { place_order: { assign_group_places: :stocker_place } }
   ].freeze
-
-  before_action :authenticate_api_user!
-  # 管理画面からのみ利用され、団体ごとのsecretを含むQRコードや会場割り当てなど
-  # 他団体には見せられない情報を含むため、管理者(role_id: 1, 2)に限定する。
-  before_action :require_admin!, only: %i[
-    output_rental_items_pdf
-    output_group_info_pdf
-    output_all_groups_rental_items_pdf
-    output_all_groups_info_pdf
-  ]
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf

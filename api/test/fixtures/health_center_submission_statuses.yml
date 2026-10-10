@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 food_product_unapproved:
-  group: one
+  group_id: 1
   application_type: food_product
   status: unapproved
 
 purchase_list_approved:
-  group: two
+  group_id: 2
   application_type: purchase_list
   status: approved

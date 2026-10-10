@@ -1,4 +1,9 @@
 export default {
+  // 認証情報はDevise Token AuthのレスポンスヘッダーをlocalStorageへ保存して
+  // Axiosで付与しているため、管理画面はブラウザ上で描画する。
+  // SSRで保護APIを呼ぶとlocalStorageを参照できず、直リンクやリロードが401になる。
+  ssr: false,
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   server: {
     host: "0.0.0.0",

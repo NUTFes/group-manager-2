@@ -90,8 +90,14 @@ export default {
         label: "ステージオプション",
         request: () =>
           sco.id
-            ? this.$axios.$put(`/stage_common_options/${sco.id}`, data)
-            : this.$axios.$post(`/stage_common_options`, data),
+            ? this.$axios.$patch(
+                `/api/v1/update_stage_common_option_for_admin_view/${sco.id}`,
+                data
+              )
+            : this.$axios.$post(
+                `/api/v1/create_stage_common_option_for_admin_view`,
+                data
+              ),
       });
     },
   },

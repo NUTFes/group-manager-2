@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::StageOrdersApiController < ApplicationController
+class Api::V1::StageOrdersApiController < Api::V1::StaffController
   def get_stage_order_index_for_admin_view
     @stage_orders = StageOrder.with_groups
     render json: fmt(ok, @stage_orders)

@@ -2,7 +2,7 @@
 
 class PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!, only: [:index]
+  before_action :require_staff_or_above!, only: [:index]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
@@ -62,7 +62,7 @@ class PowerOrdersController < ApplicationController
                    .where(group_id: current_api_user.groups.select(:id))
                    .find_by(id: params[:id])
 
-    @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
+    @power_order || render(json: fmt(not_found, [], 'Not Found'), status: :not_found)
   end
 
   # Use callbacks to share common setup or constraints between actions.
@@ -73,7 +73,7 @@ class PowerOrdersController < ApplicationController
       @power_orders = group.power_orders
     else
       Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
-      render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
+      render json: fmt(not_found, [], 'Not Found'), status: :not_found
     end
   end
 

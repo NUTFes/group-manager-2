@@ -1,11 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   name: 消火器
   quantity: 1
-  group: one
+  group_id: 1
 
 two:
+  id: 2
   name: 防炎シート
   quantity: 2
-  group: two
+  group_id: 2

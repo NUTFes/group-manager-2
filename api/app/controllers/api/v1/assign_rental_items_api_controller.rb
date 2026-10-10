@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::AssignRentalItemsApiController < ApplicationController
+class Api::V1::AssignRentalItemsApiController < Api::V1::StaffController
   # 在庫物品 stocker_items
   def get_stocker_item_index_for_admin_view
     @stocker_items = StockerItem.with_rental_items

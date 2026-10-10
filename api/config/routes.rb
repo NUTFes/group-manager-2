@@ -79,7 +79,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :assign_items
   resources :assign_stages
   resources :stage_orders do
     collection do
@@ -191,6 +190,7 @@ Rails.application.routes.draw do
       post 'get_refinement_groups' => 'groups_api#get_refinement_groups'
       post 'get_search_groups' => 'groups_api#get_search_groups'
       get 'get_groups_refinemented_by_current_fes_year' => 'groups_api#get_groups_refinemented_by_current_fes_year'
+      patch 'update_group_for_admin_view/:id' => 'groups_api#update_group_for_admin_view'
 
       #---電力申請ページ
       get 'get_power_order_index_for_admin_view' => 'power_orders_api#get_power_order_index_for_admin_view'
@@ -203,12 +203,18 @@ Rails.application.routes.draw do
       get 'get_place_order_show_for_admin_view/:id' => 'place_orders_api#get_place_order_show_for_admin_view'
       post 'get_refinement_place_orders' => 'place_orders_api#get_refinement_place_orders'
       post 'get_search_place_orders' => 'place_orders_api#get_search_place_orders'
+      post 'create_place_order_for_admin_view' => 'place_orders_api#create_place_order_for_admin_view'
+      patch 'update_place_order_for_admin_view/:id' => 'place_orders_api#update_place_order_for_admin_view'
+      delete 'delete_place_order_for_admin_view/:id' => 'place_orders_api#delete_place_order_for_admin_view'
 
       #---物品申請ページ
       get 'get_rental_order_index_for_admin_view' => 'rental_orders_api#get_rental_order_index_for_admin_view'
       get 'get_rental_order_show_for_admin_view/:id' => 'rental_orders_api#get_rental_order_show_for_admin_view'
       post 'get_refinement_rental_orders' => 'rental_orders_api#get_refinement_rental_orders'
       post 'get_search_rental_orders' => 'rental_orders_api#get_search_rental_orders'
+      post 'create_rental_order_for_admin_view' => 'rental_orders_api#create_rental_order_for_admin_view'
+      patch 'update_rental_order_for_admin_view/:id' => 'rental_orders_api#update_rental_order_for_admin_view'
+      delete 'delete_rental_order_for_admin_view/:id' => 'rental_orders_api#delete_rental_order_for_admin_view'
 
       #---ステージ申請ページ
       get 'get_stage_order_index_for_admin_view' => 'stage_orders_api#get_stage_order_index_for_admin_view'
@@ -221,12 +227,18 @@ Rails.application.routes.draw do
       get 'get_stage_common_option_show_for_admin_view/:id' => 'stage_common_options_api#get_stage_common_option_show_for_admin_view'
       post 'get_refinement_stage_common_options' => 'stage_common_options_api#get_refinement_stage_common_options'
       post 'get_search_stage_common_options' => 'stage_common_options_api#get_search_stage_common_options'
+      post 'create_stage_common_option_for_admin_view' => 'stage_common_options_api#create_stage_common_option_for_admin_view'
+      patch 'update_stage_common_option_for_admin_view/:id' => 'stage_common_options_api#update_stage_common_option_for_admin_view'
+      delete 'delete_stage_common_option_for_admin_view/:id' => 'stage_common_options_api#delete_stage_common_option_for_admin_view'
 
       #---従業員申請ページ
       get 'get_employee_index_for_admin_view' => 'employees_api#get_employee_index_for_admin_view'
       get 'get_employee_show_for_admin_view/:id' => 'employees_api#get_employee_show_for_admin_view'
       post 'get_refinement_employees' => 'employees_api#get_refinement_employees'
       post 'get_search_employees' => 'employees_api#get_search_employees'
+      post 'create_employee_for_admin_view' => 'employees_api#create_employee_for_admin_view'
+      patch 'update_employee_for_admin_view/:id' => 'employees_api#update_employee_for_admin_view'
+      delete 'delete_employee_for_admin_view/:id' => 'employees_api#delete_employee_for_admin_view'
 
       #---販売品申請ページ
       get 'get_food_product_index_for_admin_view' => 'food_products_api#get_food_product_index_for_admin_view'
@@ -246,6 +258,9 @@ Rails.application.routes.draw do
       get 'get_public_relation_for_admin_view/:id' => 'public_relations_api#get_public_relation_for_admin_view'
       post 'get_refinement_public_relations' => 'public_relations_api#get_refinement_public_relations'
       post 'get_search_public_relations' => 'public_relations_api#get_search_public_relations'
+      post 'create_public_relation_for_admin_view' => 'public_relations_api#create_public_relation_for_admin_view'
+      patch 'update_public_relation_for_admin_view/:id' => 'public_relations_api#update_public_relation_for_admin_view'
+      delete 'delete_public_relation_for_admin_view/:id' => 'public_relations_api#delete_public_relation_for_admin_view'
       get 'get_groups_have_no_public_relation' => 'groups_api#get_groups_have_no_public_relation'
 
       #---模擬店平面図申請ページ
@@ -271,12 +286,6 @@ Rails.application.routes.draw do
 
       #---火気使用申請
       get 'get_groups_for_fire_equipment_order' => 'groups_api#get_groups_for_fire_equipment_order'
-
-      #---実行委員担当者申請ページ
-      get 'get_contact_person_index_for_admin_view' => 'contact_persons_api#get_contact_person_index_for_admin_view'
-      get 'get_contact_person_show_for_admin_view/:id' => 'contact_persons_api#get_contact_person_show_for_admin_view'
-      post 'get_refinement_contact_persons' => 'contact_persons_api#get_refinement_contact_persons'
-      post 'get_search_contact_persons' => 'contact_persons_api#get_search_contact_persons'
 
       #---申請情報ページ
       get 'get_order_info_for_admin_view/:id' => 'order_infos_api#get_order_info_for_admin_view'
@@ -363,11 +372,6 @@ Rails.application.routes.draw do
       get 'get_public_relations_csv/:fes_year_id' => 'output_csv#output_public_relations_csv'
       get 'get_fire_equipment_orders_csv/:fes_year_id' => 'output_csv#output_fire_equipment_orders_csv'
 
-      #---pdf出力
-      get 'output_pdf/rental_items' => 'print_pdf#rental_items_pdf'
-      get 'output_pdf/power_orders' => 'print_pdf#power_orders_pdf'
-      get 'get_project_check_list_pdf/:group_id' => 'output_pdf#output_project_check_list_pdf'
-
       # ダッシュボード
       get 'dashboard' => 'dashboard_api#get_dashboard_info'
 
@@ -377,13 +381,8 @@ Rails.application.routes.draw do
       post 'users/reset_password' => 'users#reset_password'
       post 'get_refinement_users' => 'users#get_refinement_users'
       post 'get_search_users' => 'users#get_search_users'
-      get 'users/get_user_detail' => 'users#get_user_detail'
-
       # 現在のユーザーについて
       get 'current_user' => 'current_user_api#get_current_user_with_user_detail'
-      get 'current_user/groups' => 'current_user_api#get_groups'
-      get 'current_user/groups/places' => 'current_user_api#get_groups_place_allow_list'
-      get 'current_user/regist_info' => 'current_user_api#get_regist_info'
       get 'current_user/is_login' => 'current_user_api#is_login'
 
       ### TODO: フロントが整備されたらこのAPIを/current_user/regist_infoにして既存のものを消す
@@ -393,10 +392,6 @@ Rails.application.routes.draw do
       get 'current_user/get_user_detail_raw' => 'current_user_api#get_user_detail_raw'
       post 'current_user/edit_user_info' => 'current_user_api#edit_user_info'
       post 'current_user/password_reset' => 'current_user_api#password_reset'
-
-      # --- 新規ユーザー周りのAPI ---
-      get 'get_user_with_user_details' => 'users_api#get_user_with_user_details'
-      get 'get_user_with_user_detail' => 'user_api#get_user_with_user_detail'
     end
   end
 

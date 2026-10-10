@@ -6,7 +6,8 @@ class UnRegisteredGroupsController < ApplicationController
   # GET /un_registered_groups
   # GET /un_registered_groups?group_id=1
   def index
-    @un_registered_groups = params[:group_id].present? ? UnRegisteredGroup.where(group_id: params[:group_id]) : UnRegisteredGroup.all
+    @un_registered_groups = current_user_group_scope(UnRegisteredGroup)
+    @un_registered_groups = @un_registered_groups.where(group_id: params[:group_id]) if params[:group_id].present?
     render json: fmt(:ok, @un_registered_groups)
   end
 
@@ -17,7 +18,10 @@ class UnRegisteredGroupsController < ApplicationController
 
   # POST /un_registered_groups
   def create
-    @un_registered_group = UnRegisteredGroup.new(un_registered_group_params)
+    group = current_api_user_group!(un_registered_group_params[:group_id])
+    return unless group
+
+    @un_registered_group = UnRegisteredGroup.new(un_registered_group_params.merge(group_id: group.id))
 
     if @un_registered_group.save
       render json: fmt(:ok, @un_registered_group), status: :created
@@ -28,7 +32,10 @@ class UnRegisteredGroupsController < ApplicationController
 
   # PUT /un_registered_groups/:id
   def update
-    if @un_registered_group.update(un_registered_group_params)
+    attrs = un_registered_group_params
+    return if attrs[:group_id].present? && !current_api_user_group!(attrs[:group_id])
+
+    if @un_registered_group.update(attrs)
       render json: fmt(:ok, @un_registered_group)
     else
       render json: fmt(:unprocessable_entity, @un_registered_group.errors), status: :unprocessable_entity
@@ -46,9 +53,12 @@ class UnRegisteredGroupsController < ApplicationController
     group_id = params[:group_id]
     order_type = params[:order_type]
 
+    group = current_api_user_group!(group_id)
+    return unless group
+
     if group_id.present? && order_type.present?
-      if UnRegisteredGroup.exists?(group_id: group_id, order_type: order_type)
-        @un_registered_groups = UnRegisteredGroup.where(group_id: group_id, order_type: order_type)
+      if UnRegisteredGroup.exists?(group_id: group.id, order_type: order_type)
+        @un_registered_groups = UnRegisteredGroup.where(group_id: group.id, order_type: order_type)
         render json: fmt(:ok, @un_registered_groups)
       else
         render json: fmt(not_found, [], "Not found un_registered_group = #{group_id} and order_type = #{order_type}")
@@ -61,7 +71,7 @@ class UnRegisteredGroupsController < ApplicationController
   private
 
   def set_un_registered_group
-    @un_registered_group = UnRegisteredGroup.find(params[:id])
+    @un_registered_group = current_user_group_record!(UnRegisteredGroup, params[:id])
   end
 
   def un_registered_group_params

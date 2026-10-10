@@ -12,7 +12,7 @@
 <script>
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   components: {
     Header,
@@ -45,32 +45,20 @@ export default {
       );
     },
   },
+  watch: {
+    "$route.path"() {
+      this.loadAuthenticatedUser();
+    },
+  },
   mounted() {
-    this.getUser()
-    this.$axios
-      .get("api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => { this.user = response.data.data;
-      });
-
-    this.$axios
-      .get("/memos", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.memos = response.data;
-      });
+    this.loadAuthenticatedUser();
   },
   methods: {
-    ...mapActions('users', ['getUser']),
+    ...mapActions("users", ["getUser"]),
+    loadAuthenticatedUser() {
+      if (this.$route.path === "/" || !this.$auth.loggedIn) return;
+      this.getUser();
+    },
     submit: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();

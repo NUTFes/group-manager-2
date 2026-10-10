@@ -8,11 +8,10 @@ class UserDetailsController < ApplicationController
   # GET /user_details
   # GET /user_details.json
   def index
-    @user_details = if params[:user_id]
-                      UserDetail.find_by(user_id: params[:user_id].to_i)
-                    else
-                      UserDetail.all
-                    end
+    requested_user_id = params[:user_id].presence&.to_i
+    return render_user_detail_not_found if requested_user_id && requested_user_id != current_api_user.id
+
+    @user_details = current_api_user.user_detail
 
     render json: fmt(ok, @user_details)
   end
@@ -26,14 +25,14 @@ class UserDetailsController < ApplicationController
   # POST /user_details
   # POST /user_details.json
   def create
-    @user_detail = UserDetail.create(user_detail_params)
+    @user_detail = UserDetail.create(user_detail_params.merge(user_id: current_api_user.id))
     render json: fmt(created, @user_detail)
   end
 
   # PATCH/PUT /user_details/1
   # PATCH/PUT /user_details/1.json
   def update
-    @user_detail.update(user_detail_params)
+    @user_detail.update(user_detail_params.except(:user_id))
     render json: fmt(created, @user_detail, "Updated user_detail id = #{params[:id]}")
   end
 
@@ -48,11 +47,12 @@ class UserDetailsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user_detail
-    if UserDetail.exists?(params[:id])
-      @user_detail = UserDetail.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found user_detail = #{params[:id]}")
-    end
+    @user_detail = current_api_user.user_detail
+    render_user_detail_not_found unless @user_detail&.id == params[:id].to_i
+  end
+
+  def render_user_detail_not_found
+    render json: fmt(not_found, [], 'Not Found'), status: :not_found
   end
 
   # Only allow a list of trusted parameters through.

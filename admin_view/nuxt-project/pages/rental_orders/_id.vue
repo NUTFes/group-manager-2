@@ -139,29 +139,8 @@ export default {
         this.rentalOrder = response.data;
       });
     },
-    async edit() {
-      const url =
-        "/rental_orders/" +
-        this.routeId +
-        "?group_id=" +
-        this.rentalOrder.rental_order.group_id +
-        "&rental_item_id=" +
-        this.rentalItemID +
-        "&num=" +
-        this.num;
-      console.log(url);
-
-      await this.$axios.$put(url).then((response) => {
-        this.openSnackBar("物品申請を編集しました");
-        this.groupID = null;
-        this.rentalItemID = null;
-        this.num = null;
-        this.reload(response.data.id);
-        this.closeEditModal();
-      });
-    },
     async destroy() {
-      const url = "/rental_orders/" + this.routeId;
+      const url = "/api/v1/delete_rental_order_for_admin_view/" + this.routeId;
       await this.$axios.$delete(url);
       this.$router.push("/rental_orders");
     },

@@ -91,8 +91,14 @@ export default {
         label: "従業員申請",
         request: () =>
           employee.id
-            ? this.$axios.$put(`/employees/${employee.id}`, data)
-            : this.$axios.$post(`/employees`, data),
+            ? this.$axios.$patch(
+                `/api/v1/update_employee_for_admin_view/${employee.id}`,
+                data
+              )
+            : this.$axios.$post(
+                `/api/v1/create_employee_for_admin_view`,
+                data
+              ),
       });
     },
   },

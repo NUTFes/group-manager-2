@@ -163,8 +163,8 @@ export const staffRole = {
   },
   users: {
     read: true,
-    create: true,
-    update: true,
+    create: false,
+    update: false,
     delete: false,
   },
   assign_items: {

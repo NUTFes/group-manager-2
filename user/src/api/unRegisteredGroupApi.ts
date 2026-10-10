@@ -58,7 +58,7 @@ export const useGetUnregisteredGroup = (
  * 未登録テーブルデータを操作するフック
  */
 export const useMutateUnregisteredGroup = (orderType: number) => {
-  const { post } = useApiMutations();
+  const { post, remove } = useApiMutations();
 
   /**
    * 未登録テーブルを登録する
@@ -69,8 +69,15 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
         group_id: groupId,
         order_type: orderType,
       };
-      await post(API_ENDPOINT, requestData);
-      return { success: true };
+      // postはHTTPエラーでも例外を投げず { success: false } を返すため、結果を確認する
+      const result = await post(API_ENDPOINT, requestData);
+      if (result.success) {
+        return { success: true };
+      }
+      return {
+        success: false,
+        error: `登録に失敗しました: ${result.error.message}`,
+      };
     } catch (error) {
       return { success: false, error };
     }
@@ -86,34 +93,15 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
       return { success: true, noData: true };
     }
 
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINT}/${unregisteredData.id}`;
-
     try {
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
+      const result = await remove(`${API_ENDPOINT}/${unregisteredData.id}`);
+      if (result.success) {
         return { success: true };
       }
-
-      let errorDetail = `削除に失敗しました。ステータス: ${response.status}`;
-      try {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const errorText = await response.text();
-          if (errorText) {
-            const errorJson = JSON.parse(errorText);
-            errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
-          }
-        }
-      } catch {
-        // エラーレスポンスの詳細解析に失敗しても、既定メッセージで処理を続ける。
-      }
-      return { success: false, error: errorDetail };
+      return {
+        success: false,
+        error: `削除に失敗しました: ${result.error.message}`,
+      };
     } catch (fetchError) {
       return {
         success: false,

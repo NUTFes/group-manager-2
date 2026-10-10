@@ -95,8 +95,14 @@ export default {
         label: "物品申請",
         request: () =>
           rentalOrder.id
-            ? this.$axios.$put(`/rental_orders/${rentalOrder.id}`, data)
-            : this.$axios.$post(`/rental_orders`, data),
+            ? this.$axios.$patch(
+                `/api/v1/update_rental_order_for_admin_view/${rentalOrder.id}`,
+                data
+              )
+            : this.$axios.$post(
+                `/api/v1/create_rental_order_for_admin_view`,
+                data
+              ),
       });
     },
   },
