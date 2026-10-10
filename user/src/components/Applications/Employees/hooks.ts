@@ -320,7 +320,10 @@ export const useUnregisteredGroupHooks = (
    */
   const handleRegisterUnregisteredGroup = async () => {
     try {
-      await registerUnregisteredGroup(groupId);
+      const result = await registerUnregisteredGroup(groupId);
+      if (!result.success) {
+        throw result.error;
+      }
       await mutateUnregisteredGroup(); // データ再取得
     } catch (error) {
       console.error('Error registering unregistered group:', error);
@@ -338,7 +341,10 @@ export const useUnregisteredGroupHooks = (
   const handleDeleteUnregisteredGroup = async () => {
     try {
       if (unregisteredData) {
-        await deleteUnregisteredGroup(unregisteredData);
+        const result = await deleteUnregisteredGroup(unregisteredData);
+        if (!result.success) {
+          throw result.error;
+        }
         await mutateUnregisteredGroup();
       }
     } catch (error) {

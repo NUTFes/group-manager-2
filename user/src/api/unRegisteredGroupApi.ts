@@ -69,8 +69,15 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
         group_id: groupId,
         order_type: orderType,
       };
-      await post(API_ENDPOINT, requestData);
-      return { success: true };
+      // postはHTTPエラーでも例外を投げず { success: false } を返すため、結果を確認する
+      const result = await post(API_ENDPOINT, requestData);
+      if (result.success) {
+        return { success: true };
+      }
+      return {
+        success: false,
+        error: `登録に失敗しました: ${result.error.message}`,
+      };
     } catch (error) {
       return { success: false, error };
     }
