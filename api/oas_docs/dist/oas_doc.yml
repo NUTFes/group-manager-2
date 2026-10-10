@@ -32,405 +32,6 @@ tags:
     description: description
     url: url
 paths:
-  "/rails/action_mailbox/mailgun/inbound_emails/mime":
-    post:
-      tags:
-      - action_mailbox/ingresses/mailgun/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: action_mailbox/ingresses/mailgun/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mailgun.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/mailgun/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mailgun.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/actionmailbox.ingresses.mailgun.InboundEmail"
-  "/rails/action_mailbox/mandrill/inbound_emails":
-    get:
-      tags:
-      - action_mailbox/ingresses/mandrill/inbound_email
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: action_mailbox/ingresses/mandrill/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/mandrill/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
-      deprecated: false
-    post:
-      tags:
-      - action_mailbox/ingresses/mandrill/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: action_mailbox/ingresses/mandrill/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/mandrill/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/actionmailbox.ingresses.mandrill.InboundEmail"
-  "/rails/action_mailbox/postmark/inbound_emails":
-    post:
-      tags:
-      - action_mailbox/ingresses/postmark/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: action_mailbox/ingresses/postmark/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/postmark/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/actionmailbox.ingresses.postmark.InboundEmail"
-  "/rails/action_mailbox/relay/inbound_emails":
-    post:
-      tags:
-      - action_mailbox/ingresses/relay/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: action_mailbox/ingresses/relay/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.relay.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/relay/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.relay.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/actionmailbox.ingresses.relay.InboundEmail"
-  "/rails/action_mailbox/sendgrid/inbound_emails":
-    post:
-      tags:
-      - action_mailbox/ingresses/sendgrid/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: action_mailbox/ingresses/sendgrid/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.sendgrid.InboundEmail"
-        '422':
-          description: action_mailbox/ingresses/sendgrid/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/actionmailbox.ingresses.sendgrid.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/actionmailbox.ingresses.sendgrid.InboundEmail"
-  "/rails/active_storage/blobs/proxy/{signed_id}/*filename":
-    get:
-      tags:
-      - active_storage/blobs/proxy
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/blobs/proxy description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Proxy"
-        '404':
-          description: active_storage/blobs/proxy description
-        '422':
-          description: active_storage/blobs/proxy description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Proxy"
-      deprecated: false
-      parameters:
-      - name: signed_id
-        in: path
-        description: signed_id
-        required: true
-        schema:
-          type: integer
-  "/rails/active_storage/blobs/redirect/{signed_id}/*filename":
-    get:
-      tags:
-      - active_storage/blobs/redirect
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/blobs/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
-        '404':
-          description: active_storage/blobs/redirect description
-        '422':
-          description: active_storage/blobs/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
-      deprecated: false
-      parameters:
-      - name: signed_id
-        in: path
-        description: signed_id
-        required: true
-        schema:
-          type: integer
-  "/rails/active_storage/blobs/{signed_id}/*filename":
-    get:
-      tags:
-      - active_storage/blobs/redirect
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/blobs/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
-        '404':
-          description: active_storage/blobs/redirect description
-        '422':
-          description: active_storage/blobs/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
-      deprecated: false
-      parameters:
-      - name: signed_id
-        in: path
-        description: signed_id
-        required: true
-        schema:
-          type: integer
-  "/rails/active_storage/direct_uploads":
-    post:
-      tags:
-      - active_storage/direct_upload
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: active_storage/direct_upload description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.DirectUpload"
-        '422':
-          description: active_storage/direct_upload description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.DirectUpload"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/activestorage.DirectUpload"
-  "/rails/active_storage/disk/{encoded_key}/*filename":
-    get:
-      tags:
-      - active_storage/disk
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/disk description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.Disk"
-        '404':
-          description: active_storage/disk description
-        '422':
-          description: active_storage/disk description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.Disk"
-      deprecated: false
-      parameters:
-      - name: encoded_key
-        in: path
-        description: encoded_key
-        required: true
-        schema:
-          type: string
-  "/rails/active_storage/disk/{encoded_token}":
-    put:
-      tags:
-      - active_storage/disk
-      summary: put summary
-      description: put description
-      responses:
-        '204':
-          description: active_storage/disk description
-        '404':
-          description: active_storage/disk description
-        '422':
-          description: active_storage/disk description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.Disk"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/activestorage.Disk"
-      parameters:
-      - name: encoded_token
-        in: path
-        description: encoded_token
-        required: true
-        schema:
-          type: string
-  "/rails/active_storage/representations/proxy/{signed_blob_id}/{variation_key}/*filename":
-    get:
-      tags:
-      - active_storage/representations/proxy
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/representations/proxy description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Proxy"
-        '404':
-          description: active_storage/representations/proxy description
-        '422':
-          description: active_storage/representations/proxy description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Proxy"
-      deprecated: false
-      parameters:
-      - name: signed_blob_id
-        in: path
-        description: signed_blob_id
-        required: true
-        schema:
-          type: integer
-      - name: variation_key
-        in: path
-        description: variation_key
-        required: true
-        schema:
-          type: string
-  "/rails/active_storage/representations/redirect/{signed_blob_id}/{variation_key}/*filename":
-    get:
-      tags:
-      - active_storage/representations/redirect
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/representations/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Redirect"
-        '404':
-          description: active_storage/representations/redirect description
-        '422':
-          description: active_storage/representations/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Redirect"
-      deprecated: false
-      parameters:
-      - name: signed_blob_id
-        in: path
-        description: signed_blob_id
-        required: true
-        schema:
-          type: integer
-      - name: variation_key
-        in: path
-        description: variation_key
-        required: true
-        schema:
-          type: string
-  "/rails/active_storage/representations/{signed_blob_id}/{variation_key}/*filename":
-    get:
-      tags:
-      - active_storage/representations/redirect
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: active_storage/representations/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Redirect"
-        '404':
-          description: active_storage/representations/redirect description
-        '422':
-          description: active_storage/representations/redirect description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/activestorage.representations.Redirect"
-      deprecated: false
-      parameters:
-      - name: signed_blob_id
-        in: path
-        description: signed_blob_id
-        required: true
-        schema:
-          type: integer
-      - name: variation_key
-        in: path
-        description: variation_key
-        required: true
-        schema:
-          type: string
   "/announcements":
     get:
       tags:
@@ -1078,6 +679,113 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.AssignRentalItemsApi"
+  "/api/v1/get_confirmed_info_for_user_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_infos_api
+      summary: ユーザー向け確定情報の取得（認証なし）
+      description: group_idとsecretの両方が一致したときだけ確定情報を返す。QRコードで配るURL から呼ばれるため認証を必要としない。
+      responses:
+        '200':
+          description: 確定情報
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedInfosApi"
+        '404':
+          description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
+            団体が存在しない場合をすべて404に統一している
+        '422':
+          description: api/v1/confirmed_infos_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedInfosApi"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+      - name: secret
+        in: query
+        description: group_secrets.secret。大文字小文字を区別する
+        required: true
+        schema:
+          type: string
+      security: []
+  "/api/v1/get_confirmed_qrcode_for_admin_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_qrcodes_api
+      summary: 管理画面向け確定情報QRコードの取得
+      description: 確定情報ページURLとPNG形式のQRコード(data URI)を返す。manager/staff(role_id 1, 2)のみ利用可能。
+      responses:
+        '200':
+          description: 確定情報URLとQRコード
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '404':
+          description: group_idに該当する団体が存在しない
+        '422':
+          description: api/v1/confirmed_qrcodes_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '401':
+          description: 未認証
+        '403':
+          description: manager/staff以外
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_confirmed_qrcode_for_user_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_qrcodes_api
+      summary: 参加団体向け確定情報QRコードの取得（認証なし）
+      description: group_idとsecretの両方が一致したときだけ確定情報ページURLとPNG形式のQRコード(data URI)を返す。QRコードで配るURLから呼ばれるため認証を必要としない。
+      responses:
+        '200':
+          description: 確定情報URLとQRコード
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '404':
+          description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
+            団体が存在しない場合をすべて404に統一している
+        '422':
+          description: api/v1/confirmed_qrcodes_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+      - name: secret
+        in: query
+        description: group_secrets.secret。大文字小文字を区別する
+        required: true
+        schema:
+          type: string
+      security: []
   "/api/v1/get_cooking_process_order_by_food_product_id/{food_product_id}":
     get:
       tags:
@@ -2984,6 +2692,12 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        '200':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
         '401':
           description: Unauthorized
         '403':
@@ -2991,32 +2705,52 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
-  "/api/v1/get_search_order_status_check":
-    post:
-      tags:
-      - api/v1/order_status_check_api
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-        '422':
-          description: api/v1/order_status_check_api description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/api.v1.OrderStatusCheckApi"
+      parameters:
+      - name: fes_year_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: group_category_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: committee
+        in: query
+        description: 0=ALL, 1=実行委員会, 2=一般参加団体
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
+      - name: is_international
+        in: query
+        description: 0=ALL, 1=国際, 2=国内
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
+      - name: is_external
+        in: query
+        description: 0=ALL, 1=学外, 2=学内
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          default: 0
   "/api/v1/create_order_status_check_comment":
     post:
       tags:
@@ -3432,6 +3166,39 @@ paths:
         schema:
           type: integer
   "/api/v1/get_purchase_lists_csv/{fes_year_id}":
+    get:
+      tags:
+      - api/v1/output_csv
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '404':
+          description: api/v1/output_csv description
+        '422':
+          description: api/v1/output_csv description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OutputCsv"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: path
+        description: fes_year_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_rental_items_list_csv/{fes_year_id}":
     get:
       tags:
       - api/v1/output_csv
@@ -4683,6 +4450,106 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_assign_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_groups_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_stocker_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
   "/api/v1/get_refinement_representatives":
     post:
       tags:
@@ -8092,6 +7959,69 @@ paths:
         required: true
         schema:
           type: integer
+  "/item_rental_logs":
+    get:
+      tags:
+      - item_rental_log
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
+  "/item_rental_logs/transfer":
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
   "/":
     get:
       tags:
@@ -9465,8 +9395,8 @@ paths:
                 "$ref": "#/components/schemas/PowerOrder"
         '401':
           description: Unauthorized
-        '404':
-          description: Not Found
+        '403':
+          description: Forbidden
       deprecated: false
   "/power_orders/group/{group_id}":
     get:
@@ -10300,229 +10230,6 @@ paths:
       - name: id
         in: path
         description: id
-        required: true
-        schema:
-          type: integer
-  "/rails/conductor/action_mailbox/inbound_emails":
-    get:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-    post:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.InboundEmail"
-  "/rails/conductor/action_mailbox/inbound_emails/{id}":
-    get:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-        '404':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    patch:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '404':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.InboundEmail"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    put:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: put summary
-      description: put description
-      responses:
-        '204':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '404':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.InboundEmail"
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-    delete:
-      tags:
-      - rails/conductor/action_mailbox/inbound_email
-      summary: delete summary
-      description: delete description
-      responses:
-        '200':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-        '404':
-          description: rails/conductor/action_mailbox/inbound_email description
-        '422':
-          description: rails/conductor/action_mailbox/inbound_email description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-      deprecated: false
-      parameters:
-      - name: id
-        in: path
-        description: id
-        required: true
-        schema:
-          type: integer
-  "/rails/conductor/action_mailbox/inbound_emails/sources":
-    post:
-      tags:
-      - rails/conductor/action_mailbox/inbound_emails/source
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: rails/conductor/action_mailbox/inbound_emails/source description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
-        '422':
-          description: rails/conductor/action_mailbox/inbound_emails/source description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.inboundemails.Source"
-  "/rails/conductor/action_mailbox/inbound_emails/sources/new":
-    get:
-      tags:
-      - rails/conductor/action_mailbox/inbound_emails/source
-      summary: get summary
-      description: get description
-      responses:
-        '200':
-          description: rails/conductor/action_mailbox/inbound_emails/source description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
-        '422':
-          description: rails/conductor/action_mailbox/inbound_emails/source description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
-      deprecated: false
-  "/rails/conductor/action_mailbox/{inbound_email_id}/reroute":
-    post:
-      tags:
-      - rails/conductor/action_mailbox/reroute
-      summary: post summary
-      description: post description
-      responses:
-        '201':
-          description: rails/conductor/action_mailbox/reroute description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.Reroute"
-        '404':
-          description: rails/conductor/action_mailbox/reroute description
-        '422':
-          description: rails/conductor/action_mailbox/reroute description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/rails.conductor.actionmailbox.Reroute"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.Reroute"
-      parameters:
-      - name: inbound_email_id
-        in: path
-        description: inbound_email_id
         required: true
         schema:
           type: integer
@@ -12410,6 +12117,32 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StockerPlace"
+  "/stocker_places/translate":
+    post:
+      tags:
+      - stocker_place
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerPlace"
+        '422':
+          description: stocker_place description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StockerPlace"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/StockerPlace"
   "/stocker_places/{id}":
     get:
       tags:
@@ -13628,72 +13361,6 @@ paths:
           type: integer
 components:
   schemas:
-    actionmailbox.ingresses.mailgun.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    actionmailbox.ingresses.mandrill.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    actionmailbox.ingresses.postmark.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    actionmailbox.ingresses.relay.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    actionmailbox.ingresses.sendgrid.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.blobs.Proxy:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.blobs.Redirect:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.DirectUpload:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.Disk:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.representations.Proxy:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    activestorage.representations.Redirect:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
     Announcement:
       type: object
       properties:
@@ -13724,6 +13391,86 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.ConfirmedInfosApi:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: object
+          properties:
+            group:
+              type: object
+              description: 認証なしで露出するため、公開してよい項目のみを返す
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                name:
+                  type: string
+                project_name:
+                  type: string
+                  description: 企画名
+                places:
+                  type: array
+                  description: 確定した会場名。割り当てが無い場合は空配列
+                  items:
+                    type: string
+            rental_items:
+              type: array
+              description: 貸出物品。(物品, 貸出場所) ごとにまとめ、物品名・貸出場所・在庫場所の順に整列する
+              items:
+                type: object
+                properties:
+                  rental_item_name:
+                    type: string
+                  rental_place_name:
+                    type: string
+                    description: 貸出場所名。貸出場所調整で未設定の場合は空文字
+                  stocks:
+                    type: array
+                    description: 同じ物品を複数の在庫場所から貸し出す場合は複数件になる
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          description: assign_rental_items.id。画面側が行を一意に識別するために使う
+                        stock_place_name:
+                          type: string
+                          description: 在庫場所名。未設定の場合は空文字
+                        num:
+                          type: integer
+                        remark:
+                          type: string
+                          nullable: true
+                          description: 物品割り当ての備考。未入力の場合はnull
+    api.v1.ConfirmedQrcodesApi:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: object
+          properties:
+            confirmed_url:
+              type: string
+              description: 確定情報ページのURL(group_id, secretを含む)
+            qrcode_png:
+              type: string
+              description: confirmed_urlをPNG形式でエンコードしたQRコード。data:image/png;base64,...
+                の形式
     api.v1.ContactPersonsApi:
       type: object
       properties:
@@ -13784,12 +13531,41 @@ components:
         id:
           type: integer
           format: int64
+        total_power:
+          type: integer
+          description: 参加団体が申請した電力の合計値（W）
     api.v1.OrderStatusCheckApi:
       type: object
       properties:
         id:
           type: integer
           format: int64
+    api.v1.OrderStatusCheckRefinementResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        sort_orders:
+          type: object
+          description: 絞り込み後の団体ID表示順
+          properties:
+            category:
+              type: array
+              items:
+                type: integer
+            name:
+              type: array
+              items:
+                type: integer
     api.v1.OrderStatusCheckCommentMail: {}
     api.v1.OutputCsv:
       type: object
@@ -13841,6 +13617,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.RentalRecordsApi: {}
     api.v1.RepresentativesApi:
       type: object
       properties:
@@ -13919,6 +13696,9 @@ components:
         rental_place_id:
           type: integer
           format: int64
+          nullable: true
+        remark:
+          type: string
           nullable: true
         created_at:
           type: string
@@ -14081,6 +13861,12 @@ components:
       required:
       - application_type
       - status
+    ItemRentalLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
     letteropenerweb.Engine: {}
     letteropenerweb.Letter: {}
     Memo:
@@ -14171,24 +13957,6 @@ components:
           type: integer
           format: int64
     PurchaseList:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    rails.conductor.actionmailbox.InboundEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    rails.conductor.actionmailbox.inboundemails.Source:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    rails.conductor.actionmailbox.Reroute:
       type: object
       properties:
         id:
@@ -14310,41 +14078,6 @@ components:
           type: integer
           format: int64
   requestBodies:
-    actionmailbox.ingresses.mailgun.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.mailgun.InboundEmail"
-    actionmailbox.ingresses.mandrill.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
-    actionmailbox.ingresses.postmark.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
-    actionmailbox.ingresses.relay.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.relay.InboundEmail"
-    actionmailbox.ingresses.sendgrid.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.sendgrid.InboundEmail"
-    activestorage.DirectUpload:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/activestorage.DirectUpload"
-    activestorage.Disk:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/activestorage.Disk"
     Announcement:
       content:
         application/json:
@@ -14557,6 +14290,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/HealthCenterSubmissionStatus"
+    ItemRentalLog:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/ItemRentalLog"
     letteropenerweb.Letter: {}
     Memo:
       content:
@@ -14615,21 +14353,6 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/PurchaseList"
-    rails.conductor.actionmailbox.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/rails.conductor.actionmailbox.InboundEmail"
-    rails.conductor.actionmailbox.inboundemails.Source:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
-    rails.conductor.actionmailbox.Reroute:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/rails.conductor.actionmailbox.Reroute"
     RentableItem:
       content:
         application/json:

@@ -1,6 +1,6 @@
 # Group Manager API アクセス権限一覧
 
-> 生成日: 2026-09-16
+> 生成日: 2026-10-10
 >
 > 正本: `api/config/api_access_control.yml` と Rails routes
 >
@@ -10,6 +10,7 @@
 ## 基本方針
 
 - 業務APIに未認証で利用できるPublic区分は設けない。
+- 例外として、団体secretやBFFトークンなどコントローラ側で独自に認証するAPIは別区分で管理する。
 - ロールは `user`（role_id 3）、`staff`（role_id 2）、`manager`（role_id 1）の3種類。
 - 上位ロールは下位区分のAPIも利用できる。
 - user区分の団体依存APIは、ログインユーザーが所有する団体内だけ参照・変更できる。
@@ -20,8 +21,10 @@
 | 区分 | 認証 | 利用可能ロール | controller action数 | HTTPルート数 | 拒否・秘匿 |
 |---|---|---|---:|---:|---|
 | 未認証で利用できる認証フロー | 不要 | 未ログインを含む全利用者 | 8 | 9 | 各認証APIのバリデーションに従う |
-| user権限API | 必要 | user / staff / manager | 141 | 159 | 未認証401、団体所有権不一致404 |
-| staff権限API | 必要 | staff / manager | 244 | 266 | 未認証401、userは403 |
+| 団体secretで認可するAPI | ログイン不要（group_idとsecretの一致） | QRコードのURLを持つ利用者 | 2 | 2 | secret不一致・団体なしは404 |
+| 貸出記録アプリ(BFF)向けAPI | Cloudflare Access + BFFトークン | 貸出記録アプリのBFF | 8 | 8 | BFFトークン不正は401 |
+| user権限API | 必要 | user / staff / manager | 140 | 158 | 未認証401、団体所有権不一致404 |
+| staff権限API | 必要 | staff / manager | 247 | 269 | 未認証401、userは403 |
 | manager権限API | 必要 | manager | 7 | 7 | 未認証401、user・staffは403 |
 
 ## HTTPステータスの意味
@@ -49,6 +52,36 @@
 | `GET` | `/api/auth/sessions` | `api/auth/sessions#index` |
 | `GET` | `/api/auth/sign_in` | `devise_token_auth/sessions#new` |
 | `POST` | `/api/auth/sign_in` | `devise_token_auth/sessions#create` |
+
+
+## 団体secretで認可するAPI
+
+- 認証: ログイン不要（group_idとsecretの一致）
+- 利用可能: QRコードのURLを持つ利用者
+- 拒否・秘匿: secret不一致・団体なしは404
+
+| Method | Path | Controller#Action |
+|---|---|---|
+| `GET` | `/api/v1/get_confirmed_info_for_user_view/:group_id` | `api/v1/confirmed_infos_api#get_confirmed_info_for_user_view` |
+| `GET` | `/api/v1/get_confirmed_qrcode_for_user_view/:group_id` | `api/v1/confirmed_qrcodes_api#get_confirmed_qrcode_for_user_view` |
+
+
+## 貸出記録アプリ(BFF)向けAPI
+
+- 認証: Cloudflare Access + BFFトークン
+- 利用可能: 貸出記録アプリのBFF
+- 拒否・秘匿: BFFトークン不正は401
+
+| Method | Path | Controller#Action |
+|---|---|---|
+| `GET` | `/api/v1/get_assign_rental_items_for_rental_view` | `api/v1/rental_records_api#get_assign_rental_items_for_rental_view` |
+| `GET` | `/api/v1/get_groups_for_rental_view` | `api/v1/rental_records_api#get_groups_for_rental_view` |
+| `GET` | `/api/v1/get_rental_items_for_rental_view` | `api/v1/rental_records_api#get_rental_items_for_rental_view` |
+| `GET` | `/api/v1/get_rental_places_for_rental_view` | `api/v1/rental_records_api#get_rental_places_for_rental_view` |
+| `GET` | `/api/v1/get_stocker_places_for_rental_view` | `api/v1/rental_records_api#get_stocker_places_for_rental_view` |
+| `GET` | `/item_rental_logs` | `item_rental_logs#index` |
+| `POST` | `/item_rental_logs` | `item_rental_logs#create` |
+| `POST` | `/item_rental_logs/transfer` | `item_rental_logs#transfer` |
 
 
 ## user権限API
@@ -141,7 +174,6 @@
 | `GET` | `/place_orders/group/:group_id` | `place_orders#get_by_group_id` |
 | `GET` | `/places` | `places#index` |
 | `GET` | `/places/:id` | `places#show` |
-| `GET` | `/power_orders` | `power_orders#index` |
 | `GET` | `/power_orders/:id` | `power_orders#show` |
 | `GET` | `/power_orders/group/:group_id` | `power_orders#get_by_group_id` |
 | `PUT` | `/power_orders/submit` | `power_orders#submit` |
@@ -253,6 +285,7 @@
 | `GET` | `/api/v1/get_announcement_show_for_admin_view/:id` | `api/v1/announcements_api#get_announcement_show_for_admin_view` |
 | `GET` | `/api/v1/get_announcements_csv` | `api/v1/output_csv#output_announcements_csv` |
 | `GET` | `/api/v1/get_assign_rental_items_csv/:fes_year_id` | `api/v1/output_csv#output_assign_rental_items_csv` |
+| `GET` | `/api/v1/get_confirmed_qrcode_for_admin_view/:group_id` | `api/v1/confirmed_qrcodes_api#get_confirmed_qrcode_for_admin_view` |
 | `GET` | `/api/v1/get_cooking_process_order_by_food_product_id/:food_product_id` | `api/v1/cooking_process_orders_api#get_cooking_process_order_by_food_product_id` |
 | `GET` | `/api/v1/get_cooking_process_order_for_admin_view/:id` | `api/v1/cooking_process_orders_api#get_cooking_process_order_for_admin_view` |
 | `GET` | `/api/v1/get_cooking_process_orders_csv` | `api/v1/output_csv#output_cooking_process_orders_csv` |
@@ -311,6 +344,7 @@
 | `POST` | `/api/v1/get_refinement_users` | `api/v1/users#get_refinement_users` |
 | `POST` | `/api/v1/get_refinement_venue_maps` | `api/v1/venue_maps_api#get_refinement_venue_maps` |
 | `GET` | `/api/v1/get_rentable_items` | `api/v1/rental_items_api#get_rentable_items` |
+| `GET` | `/api/v1/get_rental_items_list_csv/:fes_year_id` | `api/v1/output_csv#output_rental_items_list_csv` |
 | `GET` | `/api/v1/get_rental_order_index_for_admin_view` | `api/v1/rental_orders_api#get_rental_order_index_for_admin_view` |
 | `GET` | `/api/v1/get_rental_order_show_for_admin_view/:id` | `api/v1/rental_orders_api#get_rental_order_show_for_admin_view` |
 | `GET` | `/api/v1/get_rental_orders_csv/:fes_year_id` | `api/v1/output_csv#output_rental_orders_csv` |
@@ -322,7 +356,6 @@
 | `POST` | `/api/v1/get_search_food_products` | `api/v1/food_products_api#get_search_food_products` |
 | `POST` | `/api/v1/get_search_groups` | `api/v1/groups_api#get_search_groups` |
 | `POST` | `/api/v1/get_search_order_infos` | `api/v1/order_infos_api#get_search_order_infos` |
-| `POST` | `/api/v1/get_search_order_status_check` | `api/v1/order_status_check_api#get_search_order_status_check` |
 | `POST` | `/api/v1/get_search_place_orders` | `api/v1/place_orders_api#get_search_place_orders` |
 | `POST` | `/api/v1/get_search_power_orders` | `api/v1/power_orders_api#get_search_power_orders` |
 | `POST` | `/api/v1/get_search_public_relations` | `api/v1/public_relations_api#get_search_public_relations` |
@@ -437,6 +470,7 @@
 | `DELETE` | `/places/:id` | `places#destroy` |
 | `PATCH` | `/places/:id` | `places#update` |
 | `PUT` | `/places/:id` | `places#update` |
+| `GET` | `/power_orders` | `power_orders#index` |
 | `GET` | `/print_pdf/all_groups_info/:fes_year_id/output` | `print_pdf#output_all_groups_info_pdf` |
 | `GET` | `/print_pdf/contacts/:fes_year_id/output` | `print_pdf#output_contacts_pdf` |
 | `GET` | `/print_pdf/employees/:fes_year_id/output` | `print_pdf#output_employees_pdf` |
@@ -488,6 +522,7 @@
 | `GET` | `/stocker_places/:id` | `stocker_places#show` |
 | `PATCH` | `/stocker_places/:id` | `stocker_places#update` |
 | `PUT` | `/stocker_places/:id` | `stocker_places#update` |
+| `POST` | `/stocker_places/translate` | `stocker_places#translate` |
 | `POST` | `/user_page_settings` | `user_page_settings#create` |
 | `DELETE` | `/user_page_settings/:id` | `user_page_settings#destroy` |
 | `PATCH` | `/user_page_settings/:id` | `user_page_settings#update` |

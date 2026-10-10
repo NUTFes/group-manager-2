@@ -37,7 +37,7 @@ class OpenapiAccessControlSync
         apply_access_contract(operation, category)
       end
 
-      (path_item.keys & HTTP_METHODS).empty?
+      !path_item.keys.intersect?(HTTP_METHODS)
     end
 
     File.write(document_path, YAML.dump(document))

@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    actionmailbox.ingresses.postmark.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"

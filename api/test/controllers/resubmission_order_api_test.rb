@@ -375,7 +375,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user power order update route is not available' do
     power_order = create_power_order!(@other_group, item: '他団体更新対象')
 
-    assert_raises(ActionController::RoutingError) do
+    assert_not_routable do
       put "/power_orders/#{power_order.id}",
           params: {
             group_id: @other_group.id,
@@ -395,7 +395,7 @@ class ResubmissionOrderApiTest < ActionDispatch::IntegrationTest
   test 'user fire equipment order update route is not available' do
     fire_equipment_order = create_fire_equipment_order!(@other_group, name: '他団体更新対象')
 
-    assert_raises(ActionController::RoutingError) do
+    assert_not_routable do
       put "/fire_equipment_orders/#{fire_equipment_order.id}",
           params: {
             fire_equipment_order: {

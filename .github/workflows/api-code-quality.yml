@@ -55,9 +55,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          # .rubocop.yml の AllCops.TargetRubyVersion(3.0) に合わせるのが基本
-          # .ruby-version を使うなら：ruby-version-file: 'api/.ruby-version'
-          ruby-version: '3.0'
+          # api/.ruby-version と同じバージョンを指定する
+          ruby-version: '3.3.12'
           bundler-cache: true
 
       # ① 自動修正（-A）

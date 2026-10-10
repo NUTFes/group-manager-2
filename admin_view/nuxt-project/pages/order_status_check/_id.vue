@@ -12,28 +12,6 @@
     </div>
 
     <template v-else-if="group">
-      <div class="side-nav side-nav-left">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!prevGroupId || isNavigatingGroup"
-          aria-label="前の団体へ移動"
-          @click="onPrevGroup"
-        >
-          <span class="side-nav-icon">&lt;</span>
-        </button>
-      </div>
-      <div class="side-nav side-nav-right">
-        <button
-          type="button"
-          class="side-nav-button"
-          :disabled="!nextGroupId || isNavigatingGroup"
-          aria-label="次の団体へ移動"
-          @click="onNextGroup"
-        >
-          <span class="side-nav-icon">&gt;</span>
-        </button>
-      </div>
       <Row
         wrap="nowrap"
         align="start"
@@ -150,6 +128,43 @@
                   </tr>
                 </tbody>
               </VerticalTable>
+              <HorizontalRule style="margin-top: 24px" />
+            </div>
+
+            <!-- 確定情報ページ -->
+            <div style="width: 100%">
+              <div class="section-header">
+                <h2>確定情報ページ</h2>
+              </div>
+              <div v-if="confirmedQrcode" class="confirmed-qrcode-section">
+                <button
+                  type="button"
+                  class="confirmed-qrcode-button"
+                  aria-label="確定情報ページQRコードを新規タブで開く"
+                  @click="openQrcodeImage(confirmedQrcode.qrcode_png)"
+                >
+                  <img
+                    class="confirmed-qrcode-image"
+                    :src="confirmedQrcode.qrcode_png"
+                    alt=""
+                  />
+                </button>
+                <div class="confirmed-qrcode-url-row">
+                  <a
+                    class="confirmed-qrcode-url"
+                    :href="confirmedQrcode.confirmed_url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ confirmedQrcode.confirmed_url }}</a
+                  >
+                  <CommonButton
+                    iconName="content_copy"
+                    :on_click="copyConfirmedUrl"
+                    >コピー</CommonButton
+                  >
+                </div>
+              </div>
+              <p v-else>QRコードを読み込めませんでした。</p>
               <HorizontalRule style="margin-top: 24px" />
             </div>
 
@@ -495,6 +510,11 @@
                     >
                     <span v-else>-</span>
                   </td>
+                </tr>
+                <tr class="power-total-row">
+                  <th>合計電力</th>
+                  <td>{{ group.total_power }} W</td>
+                  <td colspan="3"></td>
                 </tr>
               </VerticalTable>
 
@@ -1288,9 +1308,6 @@ import {
 
 const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
   "/api/v1/health_center_submission_statuses";
-// 一覧画面(index.vue)がlocalStorageに保存している絞り込み条件を、
-// 前後移動ボタンでも維持するために参照するキーのprefix。
-const ORDER_STATUS_CHECK_INDEX_PATH = "/order_status_check";
 
 export default {
   components: {
@@ -1315,12 +1332,11 @@ export default {
       group: null,
       loading: true,
       unregisteredGroups: [],
-      allGroupIds: [],
-      isNavigatingGroup: false,
       activeEditType: null,
       selectedItem: null,
       isOpenEditModal: false,
       submissions: [],
+      confirmedQrcode: null,
       isPreviewModalOpen: false,
       statusOptions: [
         { value: "unapproved", label: "未確認" },
@@ -1334,22 +1350,6 @@ export default {
     currentGroupId() {
       const id = Number(this.$route.params.id);
       return Number.isNaN(id) ? null : id;
-    },
-    currentGroupIndex() {
-      if (!this.currentGroupId || this.allGroupIds.length === 0) return -1;
-      return this.allGroupIds.indexOf(this.currentGroupId);
-    },
-    prevGroupId() {
-      if (this.currentGroupIndex <= 0) return null;
-      return this.allGroupIds[this.currentGroupIndex - 1];
-    },
-    nextGroupId() {
-      if (
-        this.currentGroupIndex < 0 ||
-        this.currentGroupIndex >= this.allGroupIds.length - 1
-      )
-        return null;
-      return this.allGroupIds[this.currentGroupIndex + 1];
     },
     activeModalComponent() {
       if (!this.activeEditType) return null;
@@ -1374,39 +1374,41 @@ export default {
   watch: {
     "$route.params.id": {
       async handler() {
-        const previousFesYearId = this.group?.group?.fes_year_id;
         await this.fetchData();
-        if (this.group?.group?.fes_year_id !== previousFesYearId) {
-          await this.fetchAllGroupIds();
-        }
       },
     },
   },
   async mounted() {
     await this.fetchData();
-    await this.fetchAllGroupIds();
   },
   methods: {
     formatWeather,
     async fetchData(silent = false) {
       if (!silent) this.loading = true;
       try {
-        const [orderInfoRes, unregRes, submissionRes] = await Promise.all([
-          this.$axios.$get(
-            `/api/v1/get_order_info_for_admin_view/${this.$route.params.id}`
-          ),
-          this.$axios.$get(
-            `/un_registered_groups?group_id=${this.$route.params.id}`
-          ),
-          this.$axios
-            .$get(
-              `/api/v1/get_health_center_submission_status_show_for_admin_view/${this.$route.params.id}`
-            )
-            .catch(() => ({ data: { submissions: [] } })),
-        ]);
+        const [orderInfoRes, unregRes, submissionRes, confirmedQrcodeRes] =
+          await Promise.all([
+            this.$axios.$get(
+              `/api/v1/get_order_info_for_admin_view/${this.$route.params.id}`
+            ),
+            this.$axios.$get(
+              `/un_registered_groups?group_id=${this.$route.params.id}`
+            ),
+            this.$axios
+              .$get(
+                `/api/v1/get_health_center_submission_status_show_for_admin_view/${this.$route.params.id}`
+              )
+              .catch(() => ({ data: { submissions: [] } })),
+            this.$axios
+              .$get(
+                `/api/v1/get_confirmed_qrcode_for_admin_view/${this.$route.params.id}`
+              )
+              .catch(() => ({ data: null })),
+          ]);
         this.group = orderInfoRes.data;
         this.unregisteredGroups = unregRes.data || [];
         this.submissions = submissionRes.data?.submissions || [];
+        this.confirmedQrcode = confirmedQrcodeRes.data || null;
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push("/");
@@ -1418,85 +1420,6 @@ export default {
           this.loading = false;
           window.scrollTo(0, 0);
         }
-      }
-    },
-    async fetchAllGroupIds() {
-      // 閲覧中の団体自身の年度をデフォルトの絞り込みとしつつ、
-      // 一覧画面(index.vue)で指定されていた絞り込み条件(年度・参加形式・国際・学外)が
-      // localStorageに残っていれば、それを維持したまま前後移動できるようにする。
-      const fesYearId = this.group?.group?.fes_year_id;
-      if (!fesYearId) return;
-
-      const storedFilters = this.getStoredIndexFilters();
-      const filteredIds = await this.fetchGroupIdsByFilter({
-        fesYearId: storedFilters.fesYearId ?? fesYearId,
-        groupCategoryId: storedFilters.groupCategoryId ?? 0,
-        isInternational: storedFilters.isInternational ?? 0,
-        isExternal: storedFilters.isExternal ?? 0,
-      });
-      // 取得に失敗した場合(null)は前後移動ボタンが消えてしまわないよう、
-      // それまでのallGroupIdsを保持したまま何もしない。
-      if (filteredIds === null) return;
-
-      // 一覧画面の絞り込み条件と閲覧中の団体が噛み合わない場合
-      // (別画面から直接開いた・絞り込み条件を変えた後に古いリンクを開いた等)は、
-      // 前後移動ボタンが機能しなくならないよう、団体自身の年度のみでフォールバックする。
-      if (filteredIds.includes(this.currentGroupId)) {
-        this.allGroupIds = filteredIds;
-        return;
-      }
-
-      const fallbackIds = await this.fetchGroupIdsByFilter({ fesYearId });
-      if (fallbackIds === null) return;
-      this.allGroupIds = fallbackIds;
-    },
-    getStoredIndexFilters() {
-      if (typeof localStorage === "undefined") return {};
-
-      const toNumberOrNull = (value) =>
-        value === null || value === undefined ? null : Number(value);
-      const prefix = ORDER_STATUS_CHECK_INDEX_PATH;
-
-      return {
-        fesYearId: toNumberOrNull(localStorage.getItem(prefix + "RefYear")),
-        groupCategoryId: toNumberOrNull(
-          localStorage.getItem(prefix + "RefCategory")
-        ),
-        isInternational: toNumberOrNull(
-          localStorage.getItem(prefix + "RefInternational")
-        ),
-        isExternal: toNumberOrNull(
-          localStorage.getItem(prefix + "RefExternal")
-        ),
-      };
-    },
-    async fetchGroupIdsByFilter({
-      fesYearId,
-      groupCategoryId = 0,
-      isInternational = 0,
-      isExternal = 0,
-    }) {
-      try {
-        const refRes = await this.$axios.$post(
-          "/api/v1/get_refinement_order_status_check",
-          null,
-          {
-            params: {
-              fes_year_id: fesYearId,
-              group_category_id: groupCategoryId,
-              is_international: isInternational,
-              is_external: isExternal,
-            },
-          }
-        );
-
-        if (refRes && refRes.data) {
-          return refRes.data.map((g) => g.group.id).sort((a, b) => a - b);
-        }
-        return [];
-      } catch (e) {
-        console.error("Failed to fetch all group ids", e);
-        return null;
       }
     },
     isUnregistered(orderType) {
@@ -1528,27 +1451,6 @@ export default {
         default:
           return true; // power_orders, rental_orders, public_relation 等は基本表示
       }
-    },
-    onPrevGroup() {
-      // 連続クリック（ダブルクリック等）で1回の操作が2団体分進んでしまうのを防ぐ
-      if (this.isNavigatingGroup || !this.prevGroupId) return;
-      this.isNavigatingGroup = true;
-      this.$router
-        .push(`/order_status_check/${this.prevGroupId}`)
-        .catch(() => {})
-        .finally(() => {
-          this.isNavigatingGroup = false;
-        });
-    },
-    onNextGroup() {
-      if (this.isNavigatingGroup || !this.nextGroupId) return;
-      this.isNavigatingGroup = true;
-      this.$router
-        .push(`/order_status_check/${this.nextGroupId}`)
-        .catch(() => {})
-        .finally(() => {
-          this.isNavigatingGroup = false;
-        });
     },
     openModal(type, item) {
       this.activeEditType = type;
@@ -1654,6 +1556,41 @@ export default {
     openImage(url) {
       window.open(url, "_blank", "noopener,noreferrer");
     },
+    // data URIを直接window.openすると一部ブラウザでトップレベルナビゲーションが
+    // 拒否されるため、Blob URLに変換してから新規タブで開く。
+    openQrcodeImage(dataUri) {
+      if (!dataUri) return;
+      try {
+        const [meta, base64] = dataUri.split(",");
+        const mime = meta.match(/data:(.*);base64/)?.[1] || "image/png";
+        const binary = window.atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blobUrl = URL.createObjectURL(
+          new Blob([bytes], { type: mime })
+        );
+        window.open(blobUrl, "_blank", "noopener,noreferrer");
+        // 新規タブでの読み込みが完了する猶予を置いてから解放する
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch (error) {
+        console.error("QRコード画像の表示に失敗しました", error);
+        window.alert("QRコード画像を開けませんでした。");
+      }
+    },
+    async copyConfirmedUrl() {
+      if (!this.confirmedQrcode) return;
+      try {
+        await navigator.clipboard.writeText(
+          this.confirmedQrcode.confirmed_url
+        );
+        window.alert("URLをコピーしました。");
+      } catch (error) {
+        console.error("URLのコピーに失敗しました", error);
+        window.alert("URLのコピーに失敗しました。");
+      }
+    },
     async onEditorSaved() {
       await this.clearUnregisteredFlagIfNeeded();
       await this.fetchData(true);
@@ -1707,6 +1644,9 @@ export default {
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
 }
+.power-total-row {
+  font-weight: bold;
+}
 .venue-map-image {
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -1742,62 +1682,6 @@ export default {
 }
 .selectable-card-body {
   width: 100%;
-}
-
-.side-nav {
-  position: fixed;
-  top: 50vh;
-  transform: translateY(-50%);
-  z-index: 20;
-}
-
-.side-nav-left {
-  left: calc(260px + 60px - 56px);
-}
-
-.side-nav-right {
-  right: calc(60px - 56px);
-}
-
-.side-nav-button {
-  min-width: 20px;
-  width: 20px;
-  height: 56px;
-  padding: 0;
-  letter-spacing: 0;
-  gap: 0;
-  font-size: 10px;
-  border-radius: 10px;
-  border: 1px solid #c9ccd1;
-  box-shadow: none;
-  backdrop-filter: none;
-  color: #6b7280;
-  background: #ffffff;
-  opacity: 0.9;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.side-nav-icon {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.side-nav-button:hover {
-  background: #f3f4f6;
-  border-color: #b8bcc2;
-  color: #4b5563;
-  opacity: 1;
-}
-
-.side-nav-button:disabled {
-  background: #f9fafb;
-  border-color: #e5e7eb;
-  color: #9ca3af;
-  opacity: 1;
-  cursor: not-allowed;
 }
 
 .comment-form {
@@ -1854,25 +1738,6 @@ export default {
   .sticky-right-column {
     position: static;
     top: auto;
-  }
-
-  .side-nav-left {
-    left: 8px;
-  }
-
-  .side-nav-right {
-    right: 8px;
-  }
-
-  .side-nav-button {
-    min-width: 18px;
-    width: 18px;
-    height: 46px;
-    border-radius: 8px;
-  }
-
-  .side-nav-icon {
-    font-size: 12px;
   }
 }
 
@@ -2061,5 +1926,38 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.confirmed-qrcode-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.confirmed-qrcode-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.confirmed-qrcode-button:focus-visible {
+  outline: 2px solid var(--button-primary);
+  outline-offset: 2px;
+}
+.confirmed-qrcode-image {
+  width: 140px;
+  height: 140px;
+}
+.confirmed-qrcode-url-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.confirmed-qrcode-url {
+  word-break: break-all;
+  color: inherit;
 }
 </style>

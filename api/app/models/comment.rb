@@ -3,7 +3,7 @@
 class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true
 
-  enum mail_delivery_status: {
+  enum :mail_delivery_status, {
     memo: 0,
     failed: 1,
     sent: 2

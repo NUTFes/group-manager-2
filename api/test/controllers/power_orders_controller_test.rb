@@ -38,7 +38,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create route is not available for user root api' do
-    assert_raises(ActionController::RoutingError) do
+    assert_not_routable do
       post power_orders_url,
            params: power_order_params(item: '新規'),
            headers: auth_headers(@user),
@@ -47,7 +47,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'update route is not available for user root api' do
-    assert_raises(ActionController::RoutingError) do
+    assert_not_routable do
       patch power_order_url(@power_order),
             params: power_order_params(item: '更新後'),
             headers: auth_headers(@user),
@@ -56,7 +56,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'destroy route is not available for user root api' do
-    assert_raises(ActionController::RoutingError) do
+    assert_not_routable do
       delete power_order_url(@power_order), as: :json
     end
   end

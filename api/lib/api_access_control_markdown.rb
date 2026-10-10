@@ -5,9 +5,11 @@ require 'fileutils'
 require Rails.root.join('lib/api_access_control_registry')
 
 class ApiAccessControlMarkdown
-  CATEGORY_ORDER = %w[authentication user staff manager].freeze
+  CATEGORY_ORDER = %w[authentication group_secret rental_bff user staff manager].freeze
   CATEGORY_LABELS = {
     'authentication' => '未認証で利用できる認証フロー',
+    'group_secret' => '団体secretで認可するAPI',
+    'rental_bff' => '貸出記録アプリ(BFF)向けAPI',
     'user' => 'user権限API',
     'staff' => 'staff権限API',
     'manager' => 'manager権限API'
@@ -17,6 +19,16 @@ class ApiAccessControlMarkdown
       authentication: '不要',
       roles: '未ログインを含む全利用者',
       errors: '各認証APIのバリデーションに従う'
+    },
+    'group_secret' => {
+      authentication: 'ログイン不要（group_idとsecretの一致）',
+      roles: 'QRコードのURLを持つ利用者',
+      errors: 'secret不一致・団体なしは404'
+    },
+    'rental_bff' => {
+      authentication: 'Cloudflare Access + BFFトークン',
+      roles: '貸出記録アプリのBFF',
+      errors: 'BFFトークン不正は401'
     },
     'user' => {
       authentication: '必要',
@@ -58,6 +70,7 @@ class ApiAccessControlMarkdown
       ## 基本方針
 
       - 業務APIに未認証で利用できるPublic区分は設けない。
+      - 例外として、団体secretやBFFトークンなどコントローラ側で独自に認証するAPIは別区分で管理する。
       - ロールは `user`（role_id 3）、`staff`（role_id 2）、`manager`（role_id 1）の3種類。
       - 上位ロールは下位区分のAPIも利用できる。
       - user区分の団体依存APIは、ログインユーザーが所有する団体内だけ参照・変更できる。
@@ -150,8 +163,9 @@ class ApiAccessControlMarkdown
   def action_count(category)
     return entries_for(category).map(&:action).uniq.length if category == 'authentication'
 
+    section = ApiAccessControlRegistry::SELF_AUTHENTICATED_CATEGORIES.include?(category) ? 'self_authenticated' : 'access'
     @registry.config
-             .fetch('access')
+             .fetch(section)
              .fetch(category)
              .values
              .sum(&:length)

@@ -2,6 +2,7 @@ ja:
   print_pdf:
     output_all_groups_rental_items:
       title: "物品貸出表"
+      qrcode_caption: "このQRコードから貸出物品などの情報が閲覧できます"
       sections:
         participating_org: "参加団体情報"
         rental_items: "貸出物品一覧"
@@ -17,7 +18,8 @@ ja:
       items_table:
         headers:
           item_name: "物品名"
-          pickup_location: "借りる場所"
+          stock_location: "在庫場所"
+          rental_location: "貸出場所"
           quantity: "数量"
           pickup_date: "貸出日"
           return_date: "返却日"

@@ -16,6 +16,10 @@
     <th>カテゴリ</th>
     <td><%= @group.group_category.name %>
   </tr>
+  <tr>
+    <th>会場</th>
+    <td><%= @group.assigned_venue_names %>
+  </tr>
 </table>
 
 <p>代表者情報</p>
@@ -98,27 +102,22 @@
 <table>
   <tr>
     <th>物品名</th>
-    <th>借用場所</th>
+    <th>在庫場所</th>
     <th>数量</th>
   </tr>
   <% @group.assign_rental_items.each do |item| %>
   <tr>
-    <td><%= item.rental_item.name %></td>
-    <td><%= item.stocker_place.name %></td>
+    <td>
+      <%= item.rental_item.name %>
+      <% if item.remark.present? %><br><span class="remark-note"><%= item.remark %></span><% end %>
+    </td>
+    <td><%= item.stock_place_name %></td>
     <td><%= item.num %></td>
   </tr>
   <% end %>
 </table>
 
 <% if @group.group_category_id == 1 %>
-<p>会場情報</p>
-<table>
-  <tr>
-    <th>会場</th>
-    <td><%= @group.place %></td>
-  </tr>
-</table>
-
 <p>販売品</p>
 <table>
   <tr>
@@ -169,13 +168,5 @@
   </tr>
   <% end %>
   <% end %>
-</table>
-<% elsif @group.group_category_id == 3 %>
-<% else %>
-<table>
-  <tr>
-    <th>会場</th>
-    <td><%= @group.place %></td>
-  </tr>
 </table>
 <% end %>

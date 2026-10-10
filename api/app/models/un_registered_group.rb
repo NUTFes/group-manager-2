@@ -3,7 +3,7 @@
 class UnRegisteredGroup < ApplicationRecord
   belongs_to :group
 
-  enum order_type: {
+  enum :order_type, {
     rental_item_order: 0,
     power_order: 1,
     sub_rep: 2,

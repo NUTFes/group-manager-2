@@ -38,3 +38,15 @@ module AuthenticatedFixtureRequests
 end
 
 ActionDispatch::IntegrationTest.prepend(AuthenticatedFixtureRequests)
+
+module RouteAssertions
+  # Rails 7.2では未定義ルートが例外ではなく404レスポンスになる場合があるため、両方を許容する
+  def assert_not_routable
+    yield
+    assert_response :not_found
+  rescue ActionController::RoutingError
+    pass
+  end
+end
+
+ActionDispatch::IntegrationTest.include(RouteAssertions)

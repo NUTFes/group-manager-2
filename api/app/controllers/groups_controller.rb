@@ -134,6 +134,6 @@ class GroupsController < AuthenticatedController
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.permit(:name, :project_name, :activity, :group_category_id, :fes_year_id, :committee, :is_international, :is_external, :uses_place_id)
+    params.permit(:name, :project_name, :activity, :group_category_id, :fes_year_id, :committee, :is_international, :is_external)
   end
 end

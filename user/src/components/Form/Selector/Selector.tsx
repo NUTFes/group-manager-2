@@ -34,7 +34,7 @@ const Selector: FC<SelectorProps> = ({
 
   return (
     <>
-      <label>
+      <label className="block w-full">
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
@@ -42,7 +42,7 @@ const Selector: FC<SelectorProps> = ({
         <select
           value={value}
           onChange={handleChange}
-          className={`h-12 w-[400px] rounded-[10px] border-2 text-font ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
+          className={`h-12 w-full max-w-[400px] rounded-[10px] border-2 text-font ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
         >
           {options.map((option) => (
             <option

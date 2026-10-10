@@ -4,6 +4,10 @@ require 'yaml'
 
 class ApiAccessControlRegistry
   CATEGORIES = %w[user staff manager].freeze
+  # ログイントークンではなく、コントローラ側の独自認証で保護するアクションの区分
+  # group_secret: QRコードで配るURLのgroup_idとsecretの一致で認可する
+  # rental_bff: Cloudflare Access + BFFトークン(RentalBffAuthenticatable)で認証する
+  SELF_AUTHENTICATED_CATEGORIES = %w[group_secret rental_bff].freeze
   UNAUTHENTICATED_AUTH_ACTIONS = %w[
     api/auth/registrations#create
     api/auth/sessions#index
@@ -29,7 +33,7 @@ class ApiAccessControlRegistry
   end
 
   def classified_actions
-    @classified_actions ||= CATEGORIES.each_with_object({}) do |category, actions|
+    @classified_actions ||= (CATEGORIES + SELF_AUTHENTICATED_CATEGORIES).each_with_object({}) do |category, actions|
       controllers_for(category).each do |controller, controller_actions|
         controller_actions.each do |action|
           key = action_key(controller, action)
@@ -39,6 +43,10 @@ class ApiAccessControlRegistry
         end
       end
     end
+  end
+
+  def self_authenticated_actions(category)
+    classified_actions.select { |_key, value| value == category }.keys.sort
   end
 
   def unresolved_actions
@@ -86,7 +94,8 @@ class ApiAccessControlRegistry
   private
 
   def controllers_for(category)
-    config.fetch('access', {}).fetch(category, {})
+    section = SELF_AUTHENTICATED_CATEGORIES.include?(category) ? 'self_authenticated' : 'access'
+    config.fetch(section, {}).fetch(category, {})
   end
 
   def excluded_controller?(controller)

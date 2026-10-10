@@ -32,3 +32,13 @@ export const RADIO_VALUE = {
 // 申請の必要性の型定義
 export type NeedApplicationValue =
   (typeof NEED_APPLICATION)[keyof typeof NEED_APPLICATION];
+
+/**
+ * ページ公開範囲の定義
+ */
+
+// 認証なしで閲覧できるページのパス。AuthGuard と Header が参照する
+export const PUBLIC_PATHS = ['/', '/confirmed'] as const;
+
+export const isPublicPath = (pathname: string): boolean =>
+  (PUBLIC_PATHS as readonly string[]).includes(pathname);

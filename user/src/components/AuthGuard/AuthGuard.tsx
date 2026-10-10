@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { isPublicPath } from '@/utils/constants';
 import { useSession } from 'next-auth/react';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -6,16 +7,20 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   const router = useRouter();
 
-  // トップページのURLを取得
-  const isAuthPage = router.pathname === '/';
+  // 認証なしで閲覧できるページは、セッション状態を待たずに表示する
+  // （QRコードから開くページなどをセッション問い合わせで白画面にしないため）
+  const isPublicPage = isPublicPath(router.pathname);
+  if (isPublicPage) {
+    return <>{children}</>;
+  }
 
   // 読み込み中は何も表示しない
   if (status === 'loading') {
     return null;
   }
 
-  // 未認証かつ、トップページ以外にいる場合はリダイレクト
-  if (status === 'unauthenticated' && !isAuthPage) {
+  // 未認証の場合はトップページへリダイレクト
+  if (status === 'unauthenticated') {
     router.replace('/');
     return null;
   }

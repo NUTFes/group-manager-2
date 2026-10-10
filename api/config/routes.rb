@@ -61,7 +61,17 @@ Rails.application.routes.draw do
   end
   resources :rental_item_allow_lists
   resources :stocker_items
-  resources :stocker_places
+  resources :stocker_places do
+    collection do
+      post :translate
+    end
+  end
+  resources :item_rental_logs, only: %i[index create] do
+    collection do
+      # 超過貸出。reductionとadditionを1トランザクションで対にして記録する
+      post :transfer
+    end
+  end
   resources :place_categories
   resources :rental_orders do
     collection do
@@ -282,10 +292,13 @@ Rails.application.routes.draw do
       post 'get_refinement_order_infos' => 'order_infos_api#get_refinement_order_infos'
       post 'get_search_order_infos' => 'order_infos_api#get_search_order_infos'
 
+      #---確定情報ページQRコード
+      get 'get_confirmed_qrcode_for_admin_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_admin_view'
+      get 'get_confirmed_qrcode_for_user_view/:group_id' => 'confirmed_qrcodes_api#get_confirmed_qrcode_for_user_view'
+
       #---申請状況一覧
       get 'get_order_status_check_for_admin_view/:id' => 'order_status_check_api#get_order_status_check_for_admin_view'
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
-      post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
       resources :order_status_check_comment_mails, only: [:create] do
         member do
           post :resend
@@ -318,6 +331,21 @@ Rails.application.routes.draw do
       get 'get_outside_shop_rentable_items' => 'rental_items_api#get_outside_shop_rentable_items'
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
+      #---貸出・返却記録アプリ(rental/)向け
+      # 認証はBFF専用トークン(X-Rental-Api-Token)で行う。人の認証はCloudflare Accessが担う。
+      get 'get_rental_places_for_rental_view' => 'rental_records_api#get_rental_places_for_rental_view'
+      get 'get_groups_for_rental_view' => 'rental_records_api#get_groups_for_rental_view'
+      get 'get_assign_rental_items_for_rental_view' => 'rental_records_api#get_assign_rental_items_for_rental_view'
+      get 'get_rental_items_for_rental_view' => 'rental_records_api#get_rental_items_for_rental_view'
+      get 'get_stocker_places_for_rental_view' => 'rental_records_api#get_stocker_places_for_rental_view'
+
+      #---ユーザー向け確定情報閲覧画面
+      # 認証なしで公開する。認証の書き忘れではなく意図的な公開で、#2136 の Public 区分にあたる。
+      # 公開であることは OpenAPI の security: [] と、認証ヘッダ無しで200になるテストで固定している。
+      # public サブ名前空間には分けていない。URLを変えると #2182・OpenAPIの生成物・フロント・
+      # QRコードで配るURLまで波及し、#2136 が別の方式を採ったとき作り直しになるため。
+      get 'get_confirmed_info_for_user_view/:group_id' => 'confirmed_infos_api#get_confirmed_info_for_user_view'
+
       #---CSV出力
       resources :message_templates, only: %i[index show create update] do
         member do
@@ -329,6 +357,7 @@ Rails.application.routes.draw do
       get 'get_groups_csv/:fes_year_id' => 'output_csv#output_groups_csv'
       get 'get_sub_reps_csv/:fes_year_id' => 'output_csv#output_sub_reps_csv'
       get 'get_rental_orders_csv/:fes_year_id' => 'output_csv#output_rental_orders_csv'
+      get 'get_rental_items_list_csv/:fes_year_id' => 'output_csv#output_rental_items_list_csv'
       get 'get_power_orders_csv/:fes_year_id' => 'output_csv#output_power_orders_csv'
       get 'get_place_orders_csv/:fes_year_id' => 'output_csv#output_place_orders_csv'
       get 'get_stage_orders_csv/:fes_year_id' => 'output_csv#output_stage_orders_csv'

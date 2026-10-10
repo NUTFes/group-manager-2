@@ -34,6 +34,14 @@ class ApplicationController < ActionController::API
     return { code: 422, message: 'Unprocessable Entity' }
   end
 
+  def conflict
+    return { code: 409, message: 'Conflict' }
+  end
+
+  def unauthorized
+    return { code: 401, message: 'Unauthorized' }
+  end
+
   # 出力するAPIのフォーマット
   def fmt(status = undefined, data = [], option = '')
     # メッセージを追加したいときに使う
@@ -52,6 +60,8 @@ class ApplicationController < ActionController::API
   def enforce_api_access_policy!
     category = api_access_control_registry.category_for(controller_path, action_name)
     return if category == 'excluded'
+    # 独自認証のアクションはコントローラのbefore_actionで認可する(registryテストで存在を検証)
+    return if ApiAccessControlRegistry::SELF_AUTHENTICATED_CATEGORIES.include?(category)
 
     if %w[user staff manager].include?(category)
       authenticate_api_user!
@@ -68,10 +78,10 @@ class ApplicationController < ActionController::API
   end
 
   def api_access_control_registry
-    registry = Rails.application.config.x[:api_access_control_registry]
+    registry = Rails.application.config.x.api_access_control_registry
     return registry if registry.is_a?(ApiAccessControlRegistry)
 
-    Rails.application.config.x[:api_access_control_registry] = ApiAccessControlRegistry.new
+    Rails.application.config.x.api_access_control_registry = ApiAccessControlRegistry.new
   end
 
   def set_skip_slack_notification

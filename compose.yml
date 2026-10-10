@@ -35,6 +35,10 @@ services:
     env_file: [webhook.env, ./api/.env]
     environment:
       - TZ=Asia/Tokyo
+      # rental/ のBFFからの呼び出しを認証するトークン。rentalサービスと同じ値にする。
+      # 本番・stagingの値は settings リポジトリの .env で管理する。
+      - RENTAL_API_TOKEN=${RENTAL_API_TOKEN:-local-dev-rental-token}
+      - APP_ENV=development
     depends_on: [db]
 
   admin_view:
@@ -68,8 +72,38 @@ services:
       - "8003:3000"
     command: pnpm run dev
     volumes: [./user:/app]
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - SSR_API_URL=http://api:3000
+    depends_on: [api]
+
+  rental:
+    build: ./rental
+    container_name: "GM3-RENTAL"
+    ports:
+      - "8004:3000"
+    command: sh -c "pnpm install --frozen-lockfile && pnpm run dev"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - SSR_API_URL=http://api:3000
+      # API側と同じ値を渡す（api サービスの RENTAL_API_TOKEN と一致させる）
+      - RENTAL_API_TOKEN=${RENTAL_API_TOKEN:-local-dev-rental-token}
+      # パスワード。設定すると Access の代わりに入口を守る（設計書6章）。
+      # ローカルでは既定で空＝素通しにし、確かめたいときだけ値を入れる
+      - RENTAL_PASSCODE=${RENTAL_PASSCODE:-}
+    volumes:
+      - ./rental:/app
+      - rental-node-modules:/app/node_modules
+      - rental-next-cache:/app/.next
+      - rental-pnpm-store:/app/.pnpm-store
     depends_on: [api]
 
 volumes:
   mysql-data:
+    driver: local
+  rental-node-modules:
+    driver: local
+  rental-next-cache:
+    driver: local
+  rental-pnpm-store:
     driver: local

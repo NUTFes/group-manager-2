@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 # Mocks
 GroupMock = Struct.new(:id, :name, :employees, :user, :sub_rep)
 EmployeeMock = Struct.new(:name, :student_id)

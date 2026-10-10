@@ -13,6 +13,11 @@ services:
     container_name: prod-api
     volumes: [./api:/myapp]
     env_file: [.env]
+    environment:
+      # Spring 4.7.0はconfig.enable_reloadingが無効な環境（production）でも
+      # bin/rails経由で起動しようとして異常終了するため、production実行時は無効化する。
+      DISABLE_SPRING: "1"
+      APP_ENV: ${APP_ENV:?APP_ENV must be set}
 
   user:
     build:
@@ -20,7 +25,9 @@ services:
       dockerfile: prod.Dockerfile
       args:
       - NODE_ENV=${NODE_ENV}
-      - APP_ENV=${APP_ENV}
+      - APP_ENV=${APP_ENV:?APP_ENV must be set}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - SSR_API_URL=${SSR_API_URL}
       - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
       - IMGUR_CLIENT_SECRET=${IMGUR_CLIENT_SECRET}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
@@ -28,6 +35,20 @@ services:
     container_name: prod-view
     ports:
       - "8003:3000"
+    env_file: [.env]
+
+  rental:
+    build:
+      context: ./rental
+      dockerfile: prod.Dockerfile
+      args:
+      - NODE_ENV=${NODE_ENV}
+      - APP_ENV=${APP_ENV:?APP_ENV must be set}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - SSR_API_URL=${SSR_API_URL}
+    container_name: prod-rental
+    ports:
+      - "8004:3000"
     env_file: [.env]
 
   # 旧

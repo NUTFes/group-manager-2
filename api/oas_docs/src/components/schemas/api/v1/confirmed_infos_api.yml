@@ -1,0 +1,63 @@
+---
+components:
+  schemas:
+    api.v1.ConfirmedInfosApi:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: object
+          properties:
+            group:
+              type: object
+              description: 認証なしで露出するため、公開してよい項目のみを返す
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                name:
+                  type: string
+                project_name:
+                  type: string
+                  description: 企画名
+                places:
+                  type: array
+                  description: 確定した会場名。割り当てが無い場合は空配列
+                  items:
+                    type: string
+            rental_items:
+              type: array
+              description: 貸出物品。(物品, 貸出場所) ごとにまとめ、物品名・貸出場所・在庫場所の順に整列する
+              items:
+                type: object
+                properties:
+                  rental_item_name:
+                    type: string
+                  rental_place_name:
+                    type: string
+                    description: 貸出場所名。貸出場所調整で未設定の場合は空文字
+                  stocks:
+                    type: array
+                    description: 同じ物品を複数の在庫場所から貸し出す場合は複数件になる
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          description: assign_rental_items.id。画面側が行を一意に識別するために使う
+                        stock_place_name:
+                          type: string
+                          description: 在庫場所名。未設定の場合は空文字
+                        num:
+                          type: integer
+                        remark:
+                          type: string
+                          nullable: true
+                          description: 物品割り当ての備考。未入力の場合はnull

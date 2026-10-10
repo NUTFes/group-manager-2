@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    actionmailbox.ingresses.mandrill.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"

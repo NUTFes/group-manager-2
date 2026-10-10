@@ -2,6 +2,7 @@ en:
   print_pdf:
     output_all_groups_rental_items:
       title: "Rental Items List"
+      qrcode_caption: "Scan this QR code to view rental item information."
       sections:
         participating_org: "Participating Organizations"
         rental_items: "Rental Items List"
@@ -17,7 +18,8 @@ en:
       items_table:
         headers:
           item_name: "Item Name"
-          pickup_location: "Pickup Location"
+          stock_location: "Stock Location"
+          rental_location: "Pickup Location"
           quantity: "Quantity"
           pickup_date: "Pickup Date"
           return_date: "Return Date"

@@ -6,7 +6,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
 
   DEFAULT_STATUS = 'unsubmitted'
 
-  enum application_type: {
+  enum :application_type, {
     food_product: 0,
     purchase_list: 1,
     cooking_process_order: 2,
@@ -17,7 +17,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
     fire_equipment_order: 7
   }
 
-  enum status: {
+  enum :status, {
     unapproved: 0,
     waiting_resubmission: 1,
     approved: 2,

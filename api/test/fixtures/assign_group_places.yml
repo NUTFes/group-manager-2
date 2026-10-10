@@ -3,9 +3,9 @@
 one:
   id: 1
   place_order_id: 1
-  place_id: 1
+  stocker_place_id: 1
 
 two:
   id: 2
-  place_order_id: 1
-  place_id: 1
+  place_order_id: 2
+  stocker_place_id: 2

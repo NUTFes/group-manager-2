@@ -29,11 +29,33 @@ class ApiAccessControlRegistryTest < ActiveSupport::TestCase
       ApiAccessControlRegistry::CATEGORIES.sort,
       @registry.config.fetch('access').keys.sort
     )
-    assert(
-      @registry.classified_actions.values.all? do |category|
-        ApiAccessControlRegistry::CATEGORIES.include?(category)
-      end
+    allowed = ApiAccessControlRegistry::CATEGORIES + ApiAccessControlRegistry::SELF_AUTHENTICATED_CATEGORIES
+    assert(@registry.classified_actions.values.all? { |category| allowed.include?(category) })
+  end
+
+  test 'self authenticated actions are limited to the supported categories' do
+    assert_equal(
+      ApiAccessControlRegistry::SELF_AUTHENTICATED_CATEGORIES.sort,
+      @registry.config.fetch('self_authenticated').keys.sort
     )
+  end
+
+  # ゲートを素通りするため、rental_bff区分のアクションには必ずBFF認証が掛かっていること
+  test 'every rental bff action authenticates the rental bff' do
+    actions = @registry.self_authenticated_actions('rental_bff')
+    assert_not_empty actions
+
+    actions.each do |key|
+      controller, = key.split('#', 2)
+      callbacks = "#{controller.camelize}Controller".constantize._process_action_callbacks.select do |callback|
+        callback.kind == :before && callback.filter == :authenticate_rental_bff!
+      end
+      applies = callbacks.any? do |callback|
+        callback.instance_variable_get(:@unless).empty? &&
+          callback.instance_variable_get(:@if).empty?
+      end
+      assert applies, "#{key} must run authenticate_rental_bff!"
+    end
   end
 
   test 'only authentication flow actions are marked unauthenticated' do

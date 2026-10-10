@@ -24,9 +24,7 @@ class Group < ApplicationRecord
   belongs_to :user
   belongs_to :fes_year
   belongs_to :group_category
-  belongs_to :uses_place, class_name: 'StockerPlace', optional: true
 
-  validates :uses_place, presence: true, if: -> { uses_place_id.present? }
   has_one :stage_common_option, dependent: :destroy
   has_many :power_orders, dependent: :destroy
   has_one :sub_rep, dependent: :destroy
@@ -45,8 +43,18 @@ class Group < ApplicationRecord
   has_many :fire_equipment_orders, dependent: :destroy
   has_many :health_center_submission_statuses, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
+  has_one :group_secret, dependent: :destroy
+
+  delegate :secret, to: :group_secret, allow_nil: true
+
+  after_create :create_group_secret!
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
+
+  # 参加団体向けの確定情報ページURL（QRコードで配布する）
+  def confirmed_info_url
+    "#{UserFrontUrlResolver.call}/confirmed?group_id=#{id}&secret=#{secret}"
+  end
 
   ### group_category (参加団体カテゴリ)
 
@@ -200,6 +208,7 @@ class Group < ApplicationRecord
                           }
                         end
                       end,
+        total_power: group.sum_power_orders,
         rental_orders: if group.rental_orders.none?
                          nil
                        else
@@ -663,6 +672,85 @@ class Group < ApplicationRecord
     end
   end
 
+  ### confirmed info（ユーザー向け確定情報）
+
+  # 認証なしで公開する確定情報を取得する
+  # group_idとsecretの両方が一致したときだけ返し、片方でも違えばnilを返す
+  # 認証なしで露出するため、groupは公開してよい項目だけに絞る
+  def self.with_confirmed_info(group_id, secret)
+    # secretが空のときは検索する前に弾く。GroupSecretには空文字を禁じる制約が無いため、
+    # 万一空文字のレコードがあるとsecret未指定のリクエストが一致してしまう
+    return nil if secret.blank?
+
+    group = Group.joins(:group_secret)
+                 .includes(
+                   { assign_rental_items: %i[rental_item stocker_place rental_place] },
+                   { place_order: { assign_group_places: :stocker_place } }
+                 )
+                 .find_by(id: group_id, group_secrets: { secret: secret })
+
+    group&.to_confirmed_info_h
+  end
+
+  # 確定情報を整形して返す。他のモデルの to_*_h と同じ役割
+  # 他のwith_*に倣って@recordに代入していたが、クラスメソッド内の@recordは
+  # クラスレベルのインスタンス変数になりPumaのスレッド間で共有される。
+  # ここは使い捨てのHashを返すだけで代入先を読む箇所も無いため、そのまま返す
+  def to_confirmed_info_h
+    {
+      group: {
+        id: id,
+        name: name,
+        project_name: project_name,
+        places: confirmed_place_names
+      },
+      rental_items: confirmed_rental_items
+    }
+  end
+
+  # 確定した会場名。place_orderに紐づく割り当てを名前にして返す
+  # 表示順が取得順まかせにならないよう、物品と同じく名前で並べる
+  def confirmed_place_names
+    place_order&.assign_group_places
+               .to_a
+               .filter_map { |assign| assign.stocker_place&.display_name.presence }
+               .sort
+  end
+
+  # 貸出物品を (物品, 貸出場所) ごとにまとめて返す
+  # 貸出場所は種類ごとに1つという運用だが、DBでは一意性が保証されていない。
+  # 組でまとめれば、割れている場合でも見出しの貸出場所が必ず1つに定まる
+  def confirmed_rental_items
+    assign_rental_items
+      .sort_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name, assign.stock_place_name] }
+      .group_by { |assign| [assign.rental_item.name.to_s, assign.rental_place_name] }
+      .map do |(rental_item_name, rental_place_name), assigns|
+        {
+          rental_item_name: rental_item_name,
+          rental_place_name: rental_place_name,
+          stocks: assigns.map do |assign|
+            # idは画面側が行を一意に識別するために返す。stocker_placesのnameには
+            # UNIQUEもNOT NULLも無く、同名の在庫場所を作れてしまうため、
+            # 在庫場所名は同一stocks内で重複し得る
+            #
+            # remarkに空文字を禁じる制約が無く、備考なしがnilと空文字の2通りになる。
+            # CSV・PDFがpresent?で同一に扱っているのに合わせ、ここでnilに寄せる
+            {
+              id: assign.id,
+              stock_place_name: assign.stock_place_name,
+              num: assign.num,
+              remark: assign.remark.presence
+            }
+          end
+        }
+      end
+  end
+
+  # to_confirmed_info_h の組み立て専用。外から呼ぶ用途は無い。
+  # このファイルには後続に公開インスタンスメソッドがあるため、
+  # private セクションを切らずにメソッド単位で指定する
+  private :confirmed_place_names, :confirmed_rental_items
+
   ### employee（従業員）
 
   # 全てのgroupとそのemployeeを取得する
@@ -897,6 +985,13 @@ class Group < ApplicationRecord
     return group_identification.nil? || group_identification.place_number.nil? ? nil : group_identification.place_number.place.name
   end
 
+  # 会場割り当て画面（assign_places）で割り当てられた会場名。複数割り当てられている場合は「、」区切り
+  def assigned_venue_names(locale: :ja)
+    return '' if place_order.nil?
+
+    place_order.assign_group_places.map { |assign_group_place| assign_group_place.stocker_place.display_name(locale: locale) }.join('、')
+  end
+
   # 識別番号取得
   def number
     return group_identification&.number
@@ -909,11 +1004,7 @@ class Group < ApplicationRecord
 
   # 電力申請の総和を計算する
   def sum_power_orders
-    sum = 0
-    power_orders.each do |power_order|
-      sum += power_order.power
-    end
-    return sum
+    power_orders.sum { |power_order| power_order.power.to_i }
   end
 
   # 購入品の個数を計算する

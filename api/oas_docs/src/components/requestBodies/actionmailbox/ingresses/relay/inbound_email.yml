@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    actionmailbox.ingresses.relay.InboundEmail:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/actionmailbox.ingresses.relay.InboundEmail"

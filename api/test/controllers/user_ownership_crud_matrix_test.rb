@@ -222,7 +222,10 @@ class UserOwnershipCrudMatrixTest < ActionDispatch::IntegrationTest
   end
 
   test 'power and fire equipment index and show are scoped to owned groups' do
-    assert_index_scope('/power_orders', @owned_records.fetch(:power_orders), @other_records.fetch(:power_orders))
+    # power_orders#indexは全団体分を返すadmin_view(会場割り当て)用のためstaff以上に限定している
+    get '/power_orders', headers: auth_headers(@user), as: :json
+    assert_response :forbidden
+
     assert_index_scope(
       '/fire_equipment_orders',
       @owned_records.fetch(:fire_equipment_orders),
