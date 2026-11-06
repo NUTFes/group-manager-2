@@ -3,6 +3,15 @@ const http = require("http");
 const port = Number(process.env.PLAYWRIGHT_ADMIN_API_PORT || 3201);
 const requests = [];
 const unauthorizedPaths = new Set();
+const initialUserPageSetting = {
+  id: 1,
+  fes_year_id: 1,
+  is_edit_user: false,
+  is_edit_place: false,
+  add_fire_equipment_order: true,
+};
+let userPageSetting = { ...initialUserPageSetting };
+let nextSettingUpdateStatus = null;
 let comments = [];
 let nextCommentId = 1;
 
@@ -80,6 +89,26 @@ http
       unauthorizedPaths.clear();
       comments = [];
       nextCommentId = 1;
+      userPageSetting = { ...initialUserPageSetting };
+      nextSettingUpdateStatus = null;
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    // テスト側から設定の値（id など）を差し替える
+    if (url.pathname === "/_e2e/setting" && request.method === "POST") {
+      const payload = await readBody(request);
+      userPageSetting = { ...userPageSetting, ...payload };
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
+    if (
+      url.pathname === "/_e2e/next-setting-update-status" &&
+      request.method === "POST"
+    ) {
+      const payload = await readBody(request);
+      nextSettingUpdateStatus = payload.status;
       sendJson(response, 200, { ok: true });
       return;
     }
@@ -223,10 +252,35 @@ http
       return;
     }
 
-    if (url.pathname === "/user_page_settings/1") {
+    if (url.pathname === "/user_page_settings" && request.method === "GET") {
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
-        data: { fes_year_id: 1 },
+        data: userPageSetting,
+      });
+      return;
+    }
+
+    if (url.pathname === `/user_page_settings/${userPageSetting.id}`) {
+      if (request.method === "PATCH") {
+        const payload = await readBody(request);
+        requests.push({ method: "PATCH", path: url.pathname, payload });
+
+        if (nextSettingUpdateStatus) {
+          const status = nextSettingUpdateStatus;
+          nextSettingUpdateStatus = null;
+          sendJson(response, status, {
+            status: { code: status, message: "Save failed" },
+            data: [],
+          });
+          return;
+        }
+
+        userPageSetting = { ...userPageSetting, ...payload };
+      }
+
+      sendJson(response, 200, {
+        status: { code: 200, message: "Success" },
+        data: userPageSetting,
       });
       return;
     }
@@ -235,7 +289,10 @@ http
     if (url.pathname === "/fes_years") {
       sendJson(response, 200, {
         status: { code: 200, message: "Success" },
-        data: [{ id: 1, year_num: 2026 }],
+        data: [
+          { id: 1, year_num: 2026 },
+          { id: 2, year_num: 2027 },
+        ],
       });
       return;
     }
