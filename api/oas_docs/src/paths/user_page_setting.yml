@@ -27,17 +27,17 @@ paths:
       description: post description
       responses:
         '201':
-          description: user_page_setting description
+          description: Created user page setting
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/UserPageSetting"
+                "$ref": "#/components/schemas/UserPageSettingResponse"
         '422':
-          description: user_page_setting description
+          description: Validation failed
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/UserPageSetting"
+                "$ref": "#/components/schemas/UserPageSettingErrorResponse"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"
@@ -76,20 +76,24 @@ paths:
       summary: patch summary
       description: patch description
       responses:
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSettingErrorResponse"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSettingErrorResponse"
         '200':
           description: Updated user page setting
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/UserPageSetting"
-        '404':
-          description: user_page_setting description
-        '422':
-          description: user_page_setting description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/UserPageSetting"
+                "$ref": "#/components/schemas/UserPageSettingResponse"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"
@@ -106,20 +110,24 @@ paths:
       summary: put summary
       description: put description
       responses:
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSettingErrorResponse"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserPageSettingErrorResponse"
         '200':
           description: Updated user page setting
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/UserPageSetting"
-        '404':
-          description: user_page_setting description
-        '422':
-          description: user_page_setting description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/UserPageSetting"
+                "$ref": "#/components/schemas/UserPageSettingResponse"
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/UserPageSetting"

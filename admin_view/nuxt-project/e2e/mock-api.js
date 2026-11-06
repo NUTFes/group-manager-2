@@ -95,6 +95,14 @@ http
       return;
     }
 
+    // テスト側から設定の値（id など）を差し替える
+    if (url.pathname === "/_e2e/setting" && request.method === "POST") {
+      const payload = await readBody(request);
+      userPageSetting = { ...userPageSetting, ...payload };
+      sendJson(response, 200, { ok: true });
+      return;
+    }
+
     if (
       url.pathname === "/_e2e/next-setting-update-status" &&
       request.method === "POST"
@@ -252,7 +260,7 @@ http
       return;
     }
 
-    if (url.pathname === "/user_page_settings/1") {
+    if (url.pathname === `/user_page_settings/${userPageSetting.id}`) {
       if (request.method === "PATCH") {
         const payload = await readBody(request);
         requests.push({ method: "PATCH", path: url.pathname, payload });

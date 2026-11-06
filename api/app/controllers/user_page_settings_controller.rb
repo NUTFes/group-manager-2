@@ -19,8 +19,12 @@ class UserPageSettingsController < ApplicationController
   # POST /user_page_settings
   # POST /user_page_settings.json
   def create
-    @user_page_setting = UserPageSetting.create(user_page_setting_params)
-    render json: fmt(created, @user_page_setting)
+    @user_page_setting = UserPageSetting.new(user_page_setting_params)
+    if @user_page_setting.save
+      render json: fmt(created, @user_page_setting), status: :created
+    else
+      render json: fmt(unprocessable_entity, [], @user_page_setting.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /user_page_settings/1
@@ -29,7 +33,7 @@ class UserPageSettingsController < ApplicationController
     if @user_page_setting.update(user_page_setting_params)
       render json: fmt(ok, @user_page_setting, "Updated user_page_setting id = #{params[:id]}")
     else
-      render_validation_errors(@user_page_setting)
+      render json: fmt(unprocessable_entity, [], @user_page_setting.errors.full_messages.join(', ')), status: :unprocessable_entity
     end
   end
 

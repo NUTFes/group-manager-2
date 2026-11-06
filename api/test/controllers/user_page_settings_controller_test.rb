@@ -17,7 +17,17 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
       post user_page_settings_url, params: { fes_year_id: fes_years(:one).id, is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group }, as: :json
     end
 
-    assert_response :ok
+    assert_response :created
+    assert_equal 201, response.parsed_body.dig('status', 'code')
+  end
+
+  test 'should reject creating user_page_setting with an invalid festival year' do
+    assert_no_difference('UserPageSetting.count') do
+      post user_page_settings_url, params: { fes_year_id: FesYear.maximum(:id) + 1, is_edit_employee: true }, as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal 422, response.parsed_body.dig('status', 'code')
   end
 
   test 'should show user_page_setting' do

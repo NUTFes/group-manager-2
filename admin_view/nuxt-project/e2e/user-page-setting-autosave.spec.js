@@ -117,6 +117,54 @@ test.describe("ユーザー画面制御の楽観的保存", () => {
     ).toBeVisible();
   });
 
+  test("取得した設定の id を更新先に使う", async ({ page }) => {
+    await page.request.post(`${API_URL}/_e2e/setting`, { data: { id: 42 } });
+    await openSettings(page);
+
+    await page
+      .locator("tr")
+      .filter({ hasText: "代表者" })
+      .locator(".switch-button")
+      .click();
+
+    await expect
+      .poll(async () =>
+        page.request
+          .get(`${API_URL}/_e2e/requests`)
+          .then((response) => response.json())
+      )
+      .toEqual([
+        {
+          method: "PATCH",
+          path: "/user_page_settings/42",
+          payload: { is_edit_user: true },
+        },
+      ]);
+  });
+
+  test("設定が未登録(data: null)の場合はエラー表示にしてトグルを出さない", async ({
+    page,
+  }) => {
+    await page.route("**/user_page_settings", (route) =>
+      route.fulfill({
+        status: 200,
+        json: { status: { code: 200, message: "Success" }, data: null },
+      })
+    );
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.$nuxt));
+    await page.evaluate(() => window.$nuxt.$router.push("/user_page_setting"));
+
+    await expect(
+      page
+        .getByText(
+          "設定を読み込めませんでした。ページを再読み込みしてください。"
+        )
+        .first()
+    ).toBeVisible();
+    await expect(page.locator(".switch-button")).toHaveCount(0);
+  });
+
   test("初期取得に失敗した場合はトグルを表示しない", async ({ page }) => {
     await page.route("**/user_page_settings", (route) => route.abort());
     await page.goto("/", { waitUntil: "domcontentloaded" });
