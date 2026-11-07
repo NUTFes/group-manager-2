@@ -161,46 +161,7 @@
     }
   },
   "lists": {
-    "grade": {
-      "select": "Select",
-      "B1": "B1 (1st year undergraduate)",
-      "B2": "B2 (2nd year undergraduate)",
-      "B3": "B3 (3rd year undergraduate)",
-      "B4": "B4 (4th year undergraduate)",
-      "M1": "M1 (1st year master's)",
-      "M2": "M2 (2nd year master's)",
-      "D1": "D1 (1st year doctoral)",
-      "D2": "D2 (2nd year doctoral)",
-      "D3": "D3 (3rd year doctoral)",
-      "GD1": "GD1 (1st year innovation program)",
-      "GD2": "GD2 (2nd year innovation program)",
-      "GD3": "GD3 (3rd year innovation program)",
-      "GD4": "GD4 (4th year innovation program)",
-      "GD5": "GD5 (5th year innovation program)",
-      "faculty": "Faculty / Staff",
-      "other": "Other"
-    },
-    "department": {
-      "select": "Select",
-      "1": "Mechanical Engineering (Undergraduate Program)",
-      "2": "Electrical, Electronics and Information Engineering (Undergraduate Program)",
-      "3": "Materials Science and Biotechnology (Undergraduate Programs)",
-      "4": "Civil and Environmental Engineering (Undergraduate Program)",
-      "5": "Information and Management Systems Engineering (Undergraduate Program)",
-      "6": "Mechanical Engineering (Graduate Program)",
-      "7": "Electrical, Electronics and Information Engineering (Graduate Program)",
-      "8": "Materials Science and Biotechnology (Graduate Programs)",
-      "9": "Civil and Environmental Engineering (Graduate Program)",
-      "10": "Information and Management Systems Engineering (Graduate Program)",
-      "11": "Integrated Quantum and Nuclear Engineering",
-      "12": "System Safety Engineering",
-      "13": "GIGAKU Innovation Group",
-      "14": "Information Science and Control Engineering",
-      "15": "Materials Science",
-      "16": "Energy and Environmental Engineering",
-      "17": "Integrated Bioscience and Technology",
-      "18": "Other"
-    }
+    "select": "Select"
   },
   "userEditModal": {
     "labels": {
