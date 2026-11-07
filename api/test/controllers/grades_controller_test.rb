@@ -13,7 +13,7 @@ class GradesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     data = response.parsed_body['data']
-    assert_equal [first.id, second.id], data.map { |row| row['id'] }
+    assert_equal([first.id, second.id], data.pluck('id'))
     assert_equal 'B1（学部1年）', data.first['name']
     assert_equal 'B1 (1st year undergraduate)', data.first['name_en']
     assert_nil data.last['name_en']

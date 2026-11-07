@@ -13,7 +13,7 @@ class DepartmentsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     data = response.parsed_body['data']
-    assert_equal [first.id, second.id], data.map { |row| row['id'] }
+    assert_equal([first.id, second.id], data.pluck('id'))
     assert_equal '機械工学分野', data.first['name']
     assert_equal 'Mechanical Engineering', data.first['name_en']
     assert_nil data.last['name_en']
