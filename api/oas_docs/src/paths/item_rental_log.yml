@@ -1,0 +1,65 @@
+---
+paths:
+  "/item_rental_logs":
+    get:
+      tags:
+      - item_rental_log
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
+  "/item_rental_logs/transfer":
+    post:
+      tags:
+      - item_rental_log
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+        '422':
+          description: item_rental_log description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemRentalLog"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ItemRentalLog"
