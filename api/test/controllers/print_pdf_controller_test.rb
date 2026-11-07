@@ -25,8 +25,8 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
     # output_all_groups_info_pdfが代表者情報(user_detail)を参照するため作成する
     UserDetail.create!(
       user: @admin,
-      department: Department.create!(name: '情報学部'),
-      grade: Grade.create!(name: '4年'),
+      department: Department.create!(name: '情報学部', name_en: 'Information'),
+      grade: Grade.create!(name: '4年', name_en: '4th year'),
       student_id: '12345678',
       tel: '0000000000'
     )
@@ -95,6 +95,20 @@ class PrintPdfControllerTest < ActionDispatch::IntegrationTest
     get_group_info_pdf(@general_user)
 
     assert_response :forbidden
+  end
+
+  test 'admin can get english group info pdfs' do
+    get "/print_pdf/group_info/#{@group.id}/output",
+        params: { format: :pdf, locale: 'en' },
+        headers: @admin.create_new_auth_token
+    assert_response :success
+    assert_equal 'application/pdf', response.media_type
+
+    get "/print_pdf/all_groups_info/#{@year.id}/output",
+        params: { format: :pdf, locale: 'en' },
+        headers: @admin.create_new_auth_token
+    assert_response :success
+    assert_equal 'application/pdf', response.media_type
   end
 
   private

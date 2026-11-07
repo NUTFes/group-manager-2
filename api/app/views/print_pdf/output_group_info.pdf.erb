@@ -44,8 +44,8 @@
   </tr>
   <tr>
     <td><%= @group.user.user_detail.student_id %></td>
-    <td><%= @group.user.user_detail.department.name %></td>
-    <td><%= @group.user.user_detail.grade.name %></td>
+    <td><%= @group.user.user_detail.department.display_name(locale: @pdf_locale) %></td>
+    <td><%= @group.user.user_detail.grade.display_name(locale: @pdf_locale) %></td>
   </tr>
 
   <tr></tr>
@@ -70,8 +70,8 @@
   </tr>
   <tr>
     <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.student_id %></td>
-    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.department.name %></td>
-    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.grade.name %></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.department.display_name(locale: @pdf_locale) %></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.grade.display_name(locale: @pdf_locale) %></td>
   </tr>
 </table>
 
