@@ -23,7 +23,7 @@
             </tr>
             <tr>
               <th>内容</th>
-              <td>{{ news.body }}</td>
+              <td :style="{ whiteSpace: 'pre-line' }">{{ news.body }}</td>
             </tr>
             <tr>
               <th>登録日時</th>
@@ -106,6 +106,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     openEditModal() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content"  v-if="this.$role(roleID).public_relations.read">
     <SubHeader pageTitle="参加団体PR申請一覧">
       <CommonButton v-if="this.$role(roleID).public_relations.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -103,11 +103,13 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
+import { uploadImageToImgur } from "~/utils/imgur_upload";
 import { mapState } from "vuex";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
@@ -158,7 +160,22 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async openAddModal() {
       const url = "/api/v1/get_groups_have_no_public_relation";
       const resGroups = await this.$axios.$get(url);
@@ -190,69 +207,54 @@ export default {
       this.files = event.target.files;
       console.log(this.files[0])
     },
-    upload() {
-      for (let f of this.files) {
-        let storageRef = ref(this.$storage, f.name);
-        let uploadTask = uploadBytesResumable(storageRef, f);
-        this.run(uploadTask);
+    async upload() {
+      if (
+        !this.files ||
+        this.files.length === 0 ||
+        !(this.files[0] instanceof File)
+      )
+        return;
+      this.buttonState = "待機";
+      this.isPush.disabled = true;
+      this.state = "Uploading ...";
+
+      try {
+        for (const file of this.files) {
+          const uploadedImage = await uploadImageToImgur(
+            file,
+            this.$config.imgurClientId
+          );
+          const data = {
+            group_id: this.appGroup,
+            picture_name: file.name,
+            picture_path: uploadedImage.link,
+            imgur_deletehash: uploadedImage.deletehash,
+            blurb: this.blurb,
+          };
+
+          await this.$axios.$post("/public_relations", data);
+        }
+
+        this.reload();
+        this.closeAddModal();
+        this.openSnackBar("PR画像・文申請を追加しました");
+        this.appGroup = "";
+        this.blurb = null;
+      } catch (error) {
+        console.error(error);
+        this.openSnackBar("PR画像・文申請の追加に失敗しました");
+      } finally {
+        this.buttonState = "登録";
+        this.isPush.disabled = false;
+        this.state = "";
       }
     },
-    run(uploadTask) {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          this.progress = progress * 100;
-          switch (snapshot.state) {
-            case "paused":
-              this.buttonState = "待機"
-              this.isPush.disabled = true
-              this.state = "paused";
-              break;
-            case "running":
-              this.buttonState = "待機"
-              this.isPush.disabled = true
-              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-         () => {
-           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-             const url =
-               "/public_relations?group_id=" +
-               this.appGroup +
-               "&picture_name=" +
-               uploadTask.snapshot.ref.name +
-               "&picture_path=" +
-               downloadURL +
-               "&blurb=" +
-               this.blurb;
-             console.log(url)
-
-             this.$axios.$post(url).then((response) => {
-               this.reload();
-               this.closeAddModal();
-               this.openSnackBar("PR画像・文申請を追加しました");
-               this.buttonState = "登録"
-               this.isPush.disabled = false
-               this.groupID = null;
-               this.blurb = null;
-             })
-             /*
-             const url = "/api/videos?name=" + uploadTask.snapshot.ref.name + "&path=" + downloadURL
-             axios.post(url).then(
-               console.log("Uploading Success!")
-             )
-              */
-           }
-          )
-        }
-      );
-    },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -263,6 +265,8 @@ export default {
           this.refYears = name_list[item_id - 1].year_num;
         }
       }
+    },
+    async fetchFilteredData() {
       this.publicRelations = [];
       const refUrl =
         "/api/v1/get_refinement_public_relations?fes_year_id=" +
@@ -271,8 +275,19 @@ export default {
       for (const res of refRes.data) {
         this.publicRelations.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPurchaseLists();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPurchaseLists() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.publicRelations = [];
       const searchUrl =
         "/api/v1/get_search_public_relations?word=" + this.searchText;
@@ -286,7 +301,8 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_public_relations_csv/" +
         this.refYearID;
-      window.open(url, "PR申請_CSV");
+      await downloadFile(this.$axios,url, "PR申請_CSV", "text/csv");
+      this.openSnackBar("PR申請のCSVをダウンロードしました");
     },
   },
 };

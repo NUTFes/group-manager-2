@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).print.read">
     <SubHeader pageTitle="書類印刷"></SubHeader>
     <Card width="100%">
       <VerticalTable>
@@ -9,7 +9,10 @@
             <InTableButton iconName="file_download" :on_click="downloadPowerPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadPowerCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadPowerCSV"
+            >
               CSV
             </InTableButton>
           </td>
@@ -22,7 +25,10 @@
               :on_click="downloadEmployeePDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadEmployeeCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadEmployeeCSV"
+            >
               CSV
             </InTableButton>
           </td>
@@ -35,20 +41,26 @@
               :on_click="downloadRentalItemsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadRentalItemsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
         <tr>
-          <td>販売食品リスト</td>
+          <td>販売品リスト</td>
           <td>
             <InTableButton
               iconName="file_download"
               :on_click="downloadFoodProductsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadFoodProductsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadFoodProductsCSV"
+            >
               CSV
             </InTableButton>
           </td>
@@ -61,7 +73,10 @@
               :on_click="downloadContactsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadContactsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadContactsCSV"
+            >
               CSV
             </InTableButton>
           </td>
@@ -74,7 +89,10 @@
               :on_click="downloadGroupInfoPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadGroupInfoCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadGroupInfoCSV"
+            >
               CSV
             </InTableButton>
           </td>
@@ -87,24 +105,48 @@
               :on_click="downloadRentalItemsAllPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadRentalItemsAllCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsAllCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
         <tr>
-          <td>保健所提出書類（調理計画・従事者）</td>
+
+          <td>物品貸出表（国際団体・英語版）</td>
           <td>
-            <InTableButton iconName="file_download" :on_click="downloadHealthOfficeDocumentsPDF">PDF</InTableButton>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsAllPDFen"
+              >PDF</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>保健所提出書類（調理計画・調理工程・従事者・平面図）</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadHealthOfficeDocumentsPDF"
+              >PDF</InTableButton
+            >
           </td>
         </tr>
       </VerticalTable>
     </Card>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ snackBarMessage }}
+    </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   async asyncData({ $axios }) {
@@ -112,6 +154,8 @@ export default {
     const currentYearRes = await $axios.$get(currentYearUrl);
     return {
       currentYearID: currentYearRes.data.fes_year_id,
+      isOpenSnackBar: false,
+      snackBarMessage: "",
     };
   },
   computed: {
@@ -119,113 +163,127 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener("scroll", this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(
+        0,
+        parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+      );
+    });
+  },
   methods: {
-    downloadPowerPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/power/" +
-          this.currentYearID +
-          "/output.pdf",
-        "使用電力リスト"
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
       );
     },
-    downloadEmployeePDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/employees/" +
-          this.currentYearID +
-          "/output.pdf",
-        "従業員リスト"
-      );
+    openSnackBar(message) {
+        this.snackBarMessage = message;
+        this.isOpenSnackBar = true;
+        setTimeout(this.closeSnackBar, 2000);
     },
-    downloadRentalItemsPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/rental_items_list/" +
-          this.currentYearID +
-          "/output.pdf",
-        "貸出物品リスト"
-      );
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
-    downloadFoodProductsPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/food_products/" +
-          this.currentYearID +
-          "/output.pdf",
-        "販売食品リスト"
-      );
+    async downloadPowerPDF() {
+      const endpoint = `/print_pdf/power/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '使用電力リスト');
+      this.openSnackBar("使用電力リストをダウンロードしました");
     },
-    downloadContactsPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/contacts/" +
-          this.currentYearID +
-          "/output.pdf",
-        "連絡先リスト"
-      );
+    async downloadEmployeePDF() {
+      const endpoint = `/print_pdf/employees/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '従業員リスト');
+      this.openSnackBar("従業員リストをダウンロードしました");
     },
-    downloadGroupInfoPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/all_groups_info/" +
-          this.currentYearID +
-          "/output.pdf",
-        "参加団体情報リスト"
-      );
+    async downloadRentalItemsPDF() {
+      const endpoint = `/print_pdf/rental_items_list/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '貸出物品リスト');
+      this.openSnackBar("貸出物品リストをダウンロードしました");
     },
-    downloadRentalItemsAllPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/group_all/" +
-          this.currentYearID +
-          "/output.pdf",
-        "物品貸し出し表まとめ"
-      );
+    async downloadFoodProductsPDF() {
+      const endpoint = `/print_pdf/food_products/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '販売品リスト');
+      this.openSnackBar("販売品リストをダウンロードしました");
     },
-    downloadHealthOfficeDocumentsPDF: function () {
-      window.open(
-        this.$config.apiURL +
-          "/print_pdf/health_office_documents/" +
-          this.currentYearID +
-          "/output.pdf",
-        "保健所提出書類（調理計画・従事者）"
-      );
+    async downloadContactsPDF() {
+      const endpoint = `/print_pdf/contacts/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '連絡先リスト');
+      this.openSnackBar("連絡先リストをダウンロードしました");
+    },
+    async downloadGroupInfoPDF() {
+      const endpoint = `/print_pdf/all_groups_info/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '参加団体情報リスト');
+      this.openSnackBar("参加団体情報リストをダウンロードしました");
+    },
+    async downloadRentalItemsAllPDF() {
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?render_locale=ja`;
+      await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ');
+      this.openSnackBar("物品貸し出し表まとめをダウンロードしました");
+    },
+    async downloadRentalItemsAllPDFen() {
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?locale=en&render_locale=en`;
+      await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ（国際団体・英語版）');
+      this.openSnackBar("物品貸し出し表まとめ（国際団体・英語版）をダウンロードしました");
+    },
+    async downloadHealthOfficeDocumentsPDF() {
+      const endpoint = `/print_pdf/health_office_documents/${this.currentYearID}/output.pdf`;
+      await downloadFile(this.$axios,endpoint, '保健所提出書類（調理計画・調理工程・従事者・平面図）');
+      this.openSnackBar("保健所提出書類（調理計画・調理工程・従事者・平面図）をダウンロードしました");
     },
     async downloadPowerCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      window.open(url, "使用電力リスト_CSV");
+      const endpoint = `/api/v1/get_power_orders_csv/${this.currentYearID}`;
+      await downloadFile(this.$axios,endpoint, '使用電力リスト', 'text/csv');
+      this.openSnackBar("使用電力リストのCSVをダウンロードしました");
     },
     async downloadEmployeeCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
-      window.open(url, "従業員リスト_CSV");
+      const endpoint = `/api/v1/get_employees_csv/${this.currentYearID}`;
+      await downloadFile(this.$axios,endpoint, '従業員リスト', 'text/csv');
+      this.openSnackBar("従業員リストのCSVをダウンロードしました");
     },
     async downloadRentalItemsCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
-      window.open(url, "貸出物品リスト_CSV");
+      const endpoint = `/api/v1/get_rental_items_list_csv/${this.currentYearID}`;
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "貸出物品リスト",
+        "text/csv"
+      );
+      this.openSnackBar(
+        succeeded
+          ? "貸出物品リストのCSVをダウンロードしました"
+          : "貸出物品リストのCSVのダウンロードに失敗しました"
+      );
     },
     async downloadFoodProductsCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
-      window.open(url, "販売食品リスト_CSV");
+      const endpoint = `/api/v1/get_food_products_csv/${this.currentYearID}`;
+      await downloadFile(this.$axios,endpoint, '販売品リスト', 'text/csv');
+      this.openSnackBar("販売品リストのCSVをダウンロードしました");
     },
     async downloadContactsCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_users_csv/" + this.refYearID;
-      window.open(url, "連絡先リスト_CSV");
+      const endpoint = `/api/v1/get_users_csv/${this.currentYearID}`;
+      await downloadFile(this.$axios,endpoint, '連絡先リスト', 'text/csv');
+      this.openSnackBar("連絡先リストのCSVをダウンロードしました");
     },
     async downloadGroupInfoCSV() {
-      const url =
-        this.$config.apiURL + "/api/v1/get_assign_rental_items_csv/" + this.refYearID;
-      window.open(url, "参加団体情報リスト_CSV");
+      const endpoint = `/api/v1/get_groups_csv/${this.currentYearID}`;
+      await downloadFile(this.$axios,endpoint, '参加団体情報リスト', 'text/csv');
+      this.openSnackBar("参加団体情報リストのCSVをダウンロードしました");
     },
     async downloadRentalItemsAllCSV() {
-      const url =  //無し
-        this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
-      window.open(url, "物品貸し出し表まとめ_CSV");
+      const endpoint = `/api/v1/get_assign_rental_items_csv/${this.currentYearID}`;
+      const succeeded = await downloadFile(
+        this.$axios,
+        endpoint,
+        "物品貸し出し表まとめ",
+        "text/csv"
+      );
+      this.openSnackBar(
+        succeeded
+          ? "物品貸し出し表まとめのCSVをダウンロードしました"
+          : "物品貸し出し表まとめのCSVのダウンロードに失敗しました"
+      );
     },
   },
 };

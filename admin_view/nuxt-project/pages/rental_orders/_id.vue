@@ -49,34 +49,12 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsRentalOrderEditModal
       v-if="isOpenEditModal"
-      title="物品申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>物品</h3>
-          <select v-model="rentalItemID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="item in rentableItemList"
-              :key="item.id"
-              :value="item.id"
-            >
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>個数</h3>
-          <input v-model="num" type="number" placeholder="入力してください" />
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
-      </template>
-    </EditModal>
+      :rental-order="rentalOrder"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"
@@ -124,6 +102,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     async openEditModal() {

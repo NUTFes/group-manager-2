@@ -1,0 +1,139 @@
+---
+paths:
+  "/":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+  "/clear":
+    post:
+      tags:
+      - letter_opener_web/letter
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
+  "/{id}":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/{id}/attachments/{file}":
+    get:
+      tags:
+      - letter_opener_web/letter
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+      - name: file
+        in: path
+        description: file
+        required: true
+        schema:
+          type: string
+  "/{id}/delete":
+    post:
+      tags:
+      - letter_opener_web/letter
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+        '404':
+          description: letter_opener_web/letter description
+        '422':
+          description: letter_opener_web/letter description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/letteropenerweb.Letter"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/letteropenerweb.Letter"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

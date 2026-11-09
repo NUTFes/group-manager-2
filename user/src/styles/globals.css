@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #ededed;
+  --main-color: #34a854;
+  --secondary-color: #98bf00;
+  --thirdly-color: #324cd7;
+  --font-color: #484848;
+  --alert-color: #ff6752;
+  --sub-color: #b2b2b2;
+  --base-color: #ffffff;
+  --re-color: #ff8411;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #ededed;
+    --main-color: #34a854;
+    --secondary-color: #98bf00;
+    --thirdly-color: #324cd7;
+    --font-color: #484848;
+    --alert-color: #ff6752;
+    --sub-color: #b2b2b2;
+    --base-color: #ffffff;
+    --re-color: #ff8411;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Noto Sans JP';
+  font-weight: 500;
+}

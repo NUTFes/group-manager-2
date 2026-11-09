@@ -1,7 +1,11 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).power_orders.read">
     <SubHeader pageTitle="電力申請一覧">
-      <CommonButton v-if="this.$role(roleID).power_orders.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).power_orders.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -98,7 +102,7 @@
           <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>電力</h3>
+          <h3>消費電力</h3>
           <input v-model="power" type="number" placeholder="入力してください" />
         </div>
         <div>
@@ -125,16 +129,19 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from "~/utils/download-file";
+
 export default {
   watchQuery: ["page"],
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "委員", "製品", "電力 [w]"],
+      headers: ["ID", "参加団体", "委員", "製品", "消費電力 [W]"],
       isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,
@@ -155,16 +162,7 @@ export default {
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
       ],
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       groupID: null,
       item: null,
       power: 0,
@@ -177,7 +175,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
+    const groupCategoryRes = await $axios.$get("group_categories");
     // const url = "/api/v1/get_power_order_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -192,6 +190,7 @@ export default {
     return {
       powerOrders: powerOrdersRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
@@ -201,8 +200,55 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = "Year";
+    }
+
+    const storedPower = localStorage.getItem(this.$route.path + "RefPower");
+    if (storedPower) {
+      this.refPower = Number(storedPower);
+      this.updateFilters(this.refPower, this.powerList);
+    } else {
+      this.refPower = 0;
+    }
+
+    const storedCategoryID = localStorage.getItem(
+      this.$route.path + "RefCategory"
+    );
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = "Category";
+    }
+
+    this.fetchFilteredData();
+
+    window.addEventListener("scroll", this.saveScrollPosition);
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
+    },
     async refinementPowerOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(this.$route.path + "RefPower", this.refPower);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -230,6 +276,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.powerOrders = [];
       const refUrl =
         "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -242,8 +290,22 @@ export default {
       for (const res of refRes.data) {
         this.powerOrders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPowerOrders();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
+      });
     },
     async searchPowerOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.powerOrders = [];
       const searchUrl =
         "/api/v1/get_search_power_orders?word=" + this.searchText;
@@ -277,7 +339,7 @@ export default {
     },
     async submit() {
       const url =
-        "/power_orders?group_id=" +
+        "/api/v1/power_orders?group_id=" +
         this.groupID +
         "&item=" +
         this.item +
@@ -304,7 +366,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      window.open(url, "電力申請_CSV");
+      await downloadFile(this.$axios, url, "電力申請_CSV", "text/csv");
+      this.openSnackBar("電力申請のCSVをダウンロードしました");
     },
   },
 };

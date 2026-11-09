@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    FesDate:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/FesDate"

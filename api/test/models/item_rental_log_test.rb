@@ -1,0 +1,84 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+class ItemRentalLogTest < ActiveSupport::TestCase
+  setup do
+    @stocker_place = stocker_places(:one)
+    @rental_item = rental_items(:one)
+    @assign_rental_item = assign_rental_items(:one)
+    @group = groups(:one)
+  end
+
+  def build_log(attrs = {})
+    ItemRentalLog.new(
+      {
+        uid: 'model-test-uid',
+        assign_rental_item: @assign_rental_item,
+        group: @group,
+        stocker_place: @stocker_place,
+        rental_item: @rental_item,
+        category: :rental,
+        quantity: 1,
+        recorder_email: 'recorder@example.com'
+      }.merge(attrs)
+    )
+  end
+
+  test 'valid with required attributes' do
+    assert build_log.valid?
+  end
+
+  test 'invalid without assign_rental_item' do
+    log = build_log(assign_rental_item: nil)
+    assert_not log.valid?
+  end
+
+  test 'invalid without stocker_place' do
+    log = build_log(stocker_place: nil)
+    assert_not log.valid?
+  end
+
+  test 'invalid with duplicate uid' do
+    build_log(uid: item_rental_logs(:one).uid).save
+    duplicate = build_log(uid: item_rental_logs(:one).uid)
+    assert_not duplicate.valid?
+    assert duplicate.errors.of_kind?(:uid, :taken)
+  end
+
+  test 'invalid with negative quantity' do
+    log = build_log(quantity: -1)
+    assert_not log.valid?
+  end
+
+  test 'invalid with unknown category' do
+    assert_raises(ArgumentError) { build_log(category: 'unknown') }
+  end
+
+  test 'valid addition log without assign_rental_item' do
+    log = build_log(assign_rental_item: nil, category: :addition, uid: 'addition-uid')
+    assert log.valid?
+  end
+
+  test 'valid reduction log without assign_rental_item' do
+    log = build_log(assign_rental_item: nil, category: :reduction, uid: 'reduction-uid')
+    assert log.valid?
+  end
+
+  test 'invalid addition log with assign_rental_item present' do
+    log = build_log(category: :addition, uid: 'addition-uid')
+    assert_not log.valid?
+    assert log.errors.of_kind?(:assign_rental_item, :present)
+  end
+
+  test 'invalid without group' do
+    log = build_log(group: nil)
+    assert_not log.valid?
+  end
+
+  test 'invalid to create a new absolute_adjustment log' do
+    log = build_log(category: :absolute_adjustment, uid: 'absolute-adjustment-uid')
+    assert_not log.valid?
+    assert log.errors.of_kind?(:category, :exclusion)
+  end
+end

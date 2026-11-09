@@ -14,7 +14,7 @@ export default {
       { hid: "description", name: "description", content: "" },
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=2" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/icon?family=Material+Icons",
@@ -27,7 +27,8 @@ export default {
   },
 
   publicRuntimeConfig: {
-    apiURL: process.env.VUE_APP_URL
+    apiURL: process.env.VUE_APP_URL,
+    imgurClientId: process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID,
   },
 
   router: {
@@ -39,7 +40,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    { src: "~/plugins/axios.js", ssr: false },
+    { src: "~/plugins/axios.js" },
     { src: "~/plugins/fileter.js", ssr: false },
     { src: "~/plugins/firebase.js" },
     { src: "~/plugins/role" },

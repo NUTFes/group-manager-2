@@ -1,0 +1,9 @@
+---
+components:
+  requestBodies:
+    letteropenerweb:
+      Letter:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/letteropenerweb.Letter"

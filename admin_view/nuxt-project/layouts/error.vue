@@ -25,6 +25,11 @@ export default {
       otherError: "An error occurred",
     };
   },
+  mounted() {
+    if (this.error.statusCode === 401) {
+      this.$router.replace("/reauthentication_required");
+    }
+  },
   head() {
     const title =
       this.error.statusCode === 404 ? this.pageNotFound : this.otherError;

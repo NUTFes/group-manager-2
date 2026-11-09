@@ -1,5 +1,6 @@
-class Api::V1::PowerOrdersApiController < ApplicationController
+# frozen_string_literal: true
 
+class Api::V1::PowerOrdersApiController < ApplicationController
   def get_power_order_index_for_admin_view
     @power_orders = PowerOrder.with_groups
     render json: fmt(ok, @power_orders)
@@ -12,16 +13,15 @@ class Api::V1::PowerOrdersApiController < ApplicationController
 
   # admin_pageのviewの形に整える
   def fit_power_order_index_for_admin_view(power_orders)
-    power_orders.map{
-      |power_order|
+    power_orders.map do |power_order|
       {
-        "power_order": power_order,
-        "group": power_order.group,
+        power_order: power_order,
+        group: power_order.group
       }
-    }
+    end
   end
 
-  #絞り込み機能
+  # 絞り込み機能
   def get_refinement_power_orders
     fes_year_id = params[:fes_year_id].to_i
     power = params[:power].to_i
@@ -29,32 +29,25 @@ class Api::V1::PowerOrdersApiController < ApplicationController
 
     # fes_year_id, power, category_idで絞り込み
     @power_orders = PowerOrder.all
-    if fes_year_id != 0
-      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact
-    end
-    if power != 0
-      @power_orders = @power_orders.preload(:group).where("power >= ?", power)
-    end
-    if group_category_id != 0
-      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.group_category_id == group_category_id }.compact
-    end
+    @power_orders = @power_orders.joins(:group).where(groups: { fes_year_id: fes_year_id }) if fes_year_id != 0
+    @power_orders = @power_orders.preload(:group).where(power: power..) if power != 0
+    @power_orders = @power_orders.joins(:group).where(groups: { group_category_id: group_category_id }) if group_category_id != 0
 
-    if @power_orders.count == 0
-      render json: fmt(not_found, [], "Not found power_orders")
+    if @power_orders.none?
+      render json: fmt(not_found, [], 'Not found power_orders')
     else
       render json: fmt(ok, fit_power_order_index_for_admin_view(@power_orders))
     end
   end
 
-  #あいまい検索
+  # あいまい検索
   def get_search_power_orders
     word = params[:word]
-    @power_orders = PowerOrder.all.map{ |power_order| power_order if power_order.group.name.include?(word) || power_order.item.include?(word) }.compact
-    if @power_orders.count == 0
-      render json: fmt(not_found, [], "Not found power_orders")
+    @power_orders = PowerOrder.all.select { |power_order| power_order.group.name.include?(word) || power_order.item.include?(word) }
+    if @power_orders.none?
+      render json: fmt(not_found, [], 'Not found power_orders')
     else
       render json: fmt(ok, fit_power_order_index_for_admin_view(@power_orders))
     end
   end
-
 end

@@ -1,42 +1,64 @@
+# frozen_string_literal: true
+
 class StockerPlacesController < ApplicationController
-  before_action :set_stocker_place, only: [:show, :update, :destroy]
+  before_action :set_stocker_place, only: %i[show update destroy]
 
   def index
-    @stocker_places = StockerPlace.all
-    render json: fmt(ok, @stocker_places)
+    @stocker_places = StockerPlace.includes(:place_category).all
+    render json: fmt(ok, @stocker_places.as_json(include: :place_category))
   end
 
   def show
-    render json: fmt(ok, @stocker_place)
+    render json: fmt(ok, @stocker_place.as_json(include: :place_category))
   end
 
   def create
-    @stocker_place = StockerPlace.create(stocker_place_params)
-    render json: fmt(created, @stocker_place)
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank?
+    @stocker_place = StockerPlace.new(stocker_place_params)
+    if @stocker_place.save
+      render json: fmt(created, @stocker_place)
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def update
-    @stocker_place.update(stocker_place_params)
-    render json: fmt(created, @stocker_place, "Updated stocker_place id = "+params[:id])
+    # name を伴わない部分更新（stock_item_status だけの変更など）では name_en に触らない。
+    # translate_to_en(nil) の nil をそのまま入れると既存の英語名が黙って消えるため。
+    params[:name_en] = translate_to_en(params[:name]) if params[:name_en].blank? && params[:name].present?
+    if @stocker_place.update(stocker_place_params)
+      render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, @stocker_place.errors.full_messages), status: :unprocessable_entity
+    end
   end
 
   def destroy
-    @stocker_place.destroy
-    render json: fmt(ok, [], "Deleted stocker_place = "+params[:id])
+    if @stocker_place.destroy
+      render json: fmt(ok, [], "Deleted stocker_place = #{params[:id]}")
+    else
+      render json: fmt(conflict, [], @stocker_place.errors.full_messages.join(', ')), status: :conflict
+    end
+  end
+
+  def translate
+    translated = translate_to_en(params[:text])
+    render json: fmt(ok, { name_en: translated })
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stocker_place
-      if StockerPlace.exists?(params[:id])
-        @stocker_place = StockerPlace.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found stocker_place = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def stocker_place_params
-      params.permit(:name, :stock_item_status, :assign_item_status)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stocker_place
+    if StockerPlace.exists?(params[:id])
+      @stocker_place = StockerPlace.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found stocker_place = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def stocker_place_params
+    params.permit(:name, :name_en, :stock_item_status, :assign_item_status, :place_category_id)
+  end
 end

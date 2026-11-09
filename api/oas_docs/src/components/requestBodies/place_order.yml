@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    PlaceOrder:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/PlaceOrder"

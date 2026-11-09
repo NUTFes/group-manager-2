@@ -1,6 +1,6 @@
 <template>
-  <div class="main-content">
-    <SubHeader pageTitle="購入食品申請一覧">
+  <div class="main-content" v-if="this.$role(roleID).purchase_lists.read">
+    <SubHeader pageTitle="購入品申請一覧">
       <CommonButton
         v-if="this.$role(roleID).purchase_lists.create"
         iconName="add_circle"
@@ -25,7 +25,7 @@
         <SearchDropDown
           :nameList="isFreshList"
           :on_click="refinementPurchaseLists"
-          value="value"
+          value="freshText"
         >
           {{ refIsFresh }}
         </SearchDropDown>
@@ -67,8 +67,10 @@
               {{ purchaseList.purchase_list_info.food_product }}
             </td>
             <td class="purchase">{{ purchaseList.purchase_list.items }}</td>
-            <td class="fresh">{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">〇</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">×</td>
             <td class="url">{{ purchaseList.purchase_list.url }}</td>
+            <td class="remark">{{ purchaseList.purchase_list.remark }}</td>
           </tr>
         </template>
       </Table>
@@ -94,7 +96,7 @@
           </select>
         </div>
         <div>
-          <h3>調理品目</h3>
+          <h3>販売品名</h3>
           <select v-model="foodProductID">
             <option disabled value="">選択してください</option>
             <option
@@ -140,6 +142,10 @@
           <h3>ネットで買った場合はURLを記入してください</h3>
           <input v-model="url" placeholder="入力してください" />
         </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="remark" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
@@ -151,20 +157,22 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "調理品目", "購入品", "なまもの", "URL"],
+      headers: ["ID", "参加団体", "販売品名", "購入品", "なまもの", "URL", "備考"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: true },
-        { id: 2, text: "いいえ", value: false },
+        { id: 1, text: "はい", value: true, freshText:"〇" },
+        { id: 2, text: "いいえ", value: false, freshText:"×" },
       ],
       groupList: [],
       shopList: [],
@@ -184,6 +192,7 @@ export default {
       purchase_date: null,
       isFresh: null,
       url: null,
+      remark: null,
     };
   },
   async asyncData({ $axios }) {
@@ -201,6 +210,7 @@ export default {
     const currentYears = yearsRes.data.filter(function (element) {
       return element.id == currentYearRes.data.fes_year_id;
     });
+    console.log(purchaseListsRes.data);
     return {
       purchaseLists: purchaseListsRes.data,
       yearList: yearsRes.data,
@@ -213,7 +223,32 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsFreshID = localStorage.getItem(this.$route.path + 'RefIsFresh');
+    if (storedIsFreshID) {
+      this.refIsFreshID = Number(storedIsFreshID);
+      this.updateFilters(this.refIsFreshID, this.isFreshList);
+    } else {
+      this.refIsFresh = 'なまもの';
+    }
+
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+
     async getFoodProducts() {
       const url = "/api/v1/get_food_products_by_group_id/" + this.groupID;
       const res = await this.$axios.$get(url);
@@ -236,6 +271,12 @@ export default {
       this.isOpenAddModal = false;
     },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsFresh', this.refIsFreshID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -255,6 +296,8 @@ export default {
           this.refIsFresh = name_list[item_id - 1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.purchaseLists = [];
       const refUrl =
         "/api/v1/get_refinement_purchase_lists?fes_year_id=" +
@@ -265,8 +308,20 @@ export default {
       for (const res of refRes.data) {
         this.purchaseLists.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPurchaseLists();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
+
     },
     async searchPurchaseLists() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.purchaseLists = [];
       const searchUrl =
         "/api/v1/get_search_purchase_lists?word=" + this.searchText;
@@ -304,7 +359,9 @@ export default {
         "&purchase_date=" +
         this.purchase_date +
         "&url=" +
-        this.url;
+        this.url +
+        "&remark=" +
+        this.remark;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(this.items + "を追加しました");
@@ -315,6 +372,7 @@ export default {
         this.isFresh = null;
         this.purchase_date = null;
         this.url = null;
+        this.remark = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
@@ -324,7 +382,8 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_purchase_lists_csv/" +
         this.refYearID;
-      window.open(url, "購入品申請_CSV");
+      await downloadFile(this.$axios,url, "購入品申請_" + this.refYears + ".csv","text/csv");
+      this.openSnackBar("購入申請のCSVをダウンロードしました");
     },
   },
 };
@@ -332,19 +391,19 @@ export default {
 
 <style scoped>
 .id {
-  width: 5%;
+  width: 10%;
   word-break: break-all;
 }
 .group {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .food {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .purchase {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .fresh {
@@ -352,7 +411,11 @@ export default {
   word-break: break-all;
 }
 .url {
-  width: 25%;
+  width: 15%;
+  word-break: break-all;
+}
+.remark {
+  width: 10%;
   word-break: break-all;
 }
 </style>

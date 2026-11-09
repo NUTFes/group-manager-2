@@ -2,12 +2,20 @@
   <div class="main-content">
     <SubHeader
       v-bind:pageTitle="foodProduct.food_product.name"
-      pageSubTitle="販売食品申請一覧"
+      pageSubTitle="販売品申請一覧"
     >
-      <CommonButton v-if="this.$role(this.roleID).food_products.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).food_products.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).food_products.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).food_products.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -39,7 +47,10 @@
           </tr>
           <tr>
             <th>調理の有無</th>
-            <td>{{ foodProduct.food_product.is_cooking }}</td>
+            <td>
+              <div v-if="foodProduct.food_product.is_cooking">○</div>
+              <div v-else-if="!foodProduct.food_product.is_cooking">✖</div>
+            </td>
           </tr>
           <tr>
             <th>登録日時</th>
@@ -53,51 +64,17 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsFoodProductEditModal
       v-if="isOpenEditModal"
-      title="販売食品申請の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>食品名</h3>
-          <input v-model="name" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>調理するか</h3>
-          <select v-model="isCooking">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="isCook in isCookingList"
-              :key="isCook.id"
-              :value="isCook.value"
-            >
-              {{ isCook.text }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>1日目の個数</h3>
-          <input v-model="first" type="number" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>2日目の個数</h3>
-          <input
-            v-model="second"
-            type="number"
-            placeholder="入力してください"
-          />
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
-      </template>
-    </EditModal>
+      :food-product="foodProduct"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="販売食品申請の削除"
+      title="販売品申請の削除"
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
@@ -145,6 +122,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     openEditModal() {

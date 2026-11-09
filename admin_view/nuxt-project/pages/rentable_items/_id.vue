@@ -77,9 +77,7 @@
       <v-col></v-col>
     </v-row>
 
-    </v-col>
     <v-col cols="1"></v-col>
-    </v-row>
     <!-- modal window to edit -->
     <v-dialog v-model="dialog" width="1200">
       <v-card>
@@ -163,6 +161,8 @@ export default {
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     const url = "rentable_items/" + this.$route.params.id;
     this.$axios
       .get(url, {

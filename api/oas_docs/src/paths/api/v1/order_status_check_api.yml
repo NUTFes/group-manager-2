@@ -1,0 +1,88 @@
+---
+paths:
+  "/api/v1/get_order_status_check_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/order_status_check_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+        '404':
+          description: api/v1/order_status_check_api description
+        '422':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_refinement_order_status_check":
+    post:
+      tags:
+      - api/v1/order_status_check_api
+      summary: post summary
+      description: post description
+      responses:
+        '200':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckRefinementResponse"
+        '422':
+          description: api/v1/order_status_check_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.OrderStatusCheckApi"
+      deprecated: false
+      parameters:
+      - name: fes_year_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: group_category_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: committee
+        in: query
+        description: 0=ALL, 1=実行委員会, 2=一般参加団体
+        required: false
+        schema:
+          type: integer
+          enum: [0, 1, 2]
+          default: 0
+      - name: is_international
+        in: query
+        description: 0=ALL, 1=国際, 2=国内
+        required: false
+        schema:
+          type: integer
+          enum: [0, 1, 2]
+          default: 0
+      - name: is_external
+        in: query
+        description: 0=ALL, 1=学外, 2=学内
+        required: false
+        schema:
+          type: integer
+          enum: [0, 1, 2]
+          default: 0

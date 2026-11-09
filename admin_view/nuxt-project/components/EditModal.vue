@@ -5,7 +5,7 @@
         <div class="edit-modal__box">
           <h2>{{ title }}</h2>
           <div class="edit-modal_content">
-            <form>
+            <form @submit.prevent>
               <slot name="form"></slot>
             </form>
           </div>
@@ -59,6 +59,22 @@ export default {
   outline: 0;
 }
 
+.edit-modal input[type="radio"] {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
+.edit-modal input[type="radio"] + label {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
 .edit-modal__box h2 {
   color: var(--accent-5);
 }
@@ -73,7 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   flex-flow: column;
   gap: 25px;
@@ -81,7 +97,7 @@ export default {
 
 .edit-modal_content div {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-flow: column;
   gap: 10px;

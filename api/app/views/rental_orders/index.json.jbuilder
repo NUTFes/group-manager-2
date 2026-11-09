@@ -1,1 +1,3 @@
-json.array! @rental_orders, partial: "rental_orders/rental_order", as: :rental_order
+# frozen_string_literal: true
+
+json.array! @rental_orders, partial: 'rental_orders/rental_order', as: :rental_order

@@ -148,6 +148,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openEditModal() {
       this.fesYearID = this.fesDate.fes_date.fes_year_id;

@@ -1,0 +1,62 @@
+---
+paths:
+  "/api/v1/get_confirmed_qrcode_for_admin_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_qrcodes_api
+      summary: 管理画面向け確定情報QRコードの取得
+      description: 確定情報ページURLとPNG形式のQRコード(data URI)を返す。manager/staff(role_id
+        1, 2)のみ利用可能。
+      responses:
+        '200':
+          description: 確定情報URLとQRコード
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '401':
+          description: 未認証
+        '403':
+          description: manager/staff以外
+        '404':
+          description: group_idに該当する団体が存在しない
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_confirmed_qrcode_for_user_view/{group_id}":
+    get:
+      tags:
+      - api/v1/confirmed_qrcodes_api
+      summary: 参加団体向け確定情報QRコードの取得（認証なし）
+      description: group_idとsecretの両方が一致したときだけ確定情報ページURLとPNG形式のQRコード(data
+        URI)を返す。QRコードで配るURLから呼ばれるため認証を必要としない。
+      responses:
+        '200':
+          description: 確定情報URLとQRコード
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.ConfirmedQrcodesApi"
+        '404':
+          description: group_idとsecretの組み合わせが一致しない。idの存在有無を漏らさないため、secret未指定・不一致・
+            団体が存在しない場合をすべて404に統一している
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+      - name: secret
+        in: query
+        description: group_secrets.secret。大文字小文字を区別する
+        required: true
+        schema:
+          type: string
+      security: []
