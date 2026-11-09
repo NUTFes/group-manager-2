@@ -7,3 +7,112 @@ components:
         id:
           type: integer
           format: int64
+        fes_year_id:
+          type: integer
+          description: 現在の開催年の ID
+        is_regist_group:
+          type: boolean
+          nullable: true
+        is_regist_food_product:
+          type: boolean
+          nullable: true
+        is_edit_group:
+          type: boolean
+          nullable: true
+        is_edit_sub_rep:
+          type: boolean
+          nullable: true
+        is_edit_place:
+          type: boolean
+          nullable: true
+        is_edit_power_order:
+          type: boolean
+          nullable: true
+        is_edit_rental_order:
+          type: boolean
+          nullable: true
+        is_edit_stage_order:
+          type: boolean
+          nullable: true
+        is_edit_employee:
+          type: boolean
+          nullable: true
+        is_edit_food_product:
+          type: boolean
+          nullable: true
+        is_edit_purchase_list:
+          type: boolean
+          nullable: true
+        add_power_order:
+          type: boolean
+          nullable: true
+        add_rental_order:
+          type: boolean
+          nullable: true
+        add_employee:
+          type: boolean
+          nullable: true
+        add_food_product:
+          type: boolean
+          nullable: true
+        add_purchase_list:
+          type: boolean
+          nullable: true
+        is_edit_announcement:
+          type: boolean
+          nullable: true
+        add_announcement:
+          type: boolean
+          nullable: true
+        is_edit_user:
+          type: boolean
+          nullable: true
+        is_edit_stage_common_option:
+          type: boolean
+          nullable: true
+        is_edit_public_relation:
+          type: boolean
+          nullable: true
+        is_edit_venue_map:
+          type: boolean
+          nullable: true
+        is_edit_cooking_process:
+          type: boolean
+          nullable: true
+        add_stage_order:
+          type: boolean
+          nullable: true
+        add_fire_equipment_order:
+          type: boolean
+          nullable: true
+        is_edit_fire_equipment_order:
+          type: boolean
+          nullable: true
+    UserPageSettingResponse:
+      type: object
+      description: 成功時のレスポンス。fmt により status と data で包まれる
+      properties:
+        status:
+          "$ref": "#/components/schemas/UserPageSettingStatus"
+        data:
+          "$ref": "#/components/schemas/UserPageSetting"
+    UserPageSettingErrorResponse:
+      type: object
+      description: 失敗時のレスポンス。data は空配列で、理由は status.option に入る
+      properties:
+        status:
+          "$ref": "#/components/schemas/UserPageSettingStatus"
+        data:
+          type: array
+          items: {}
+    UserPageSettingStatus:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+        option:
+          type: string
+          description: メッセージやバリデーションエラーの詳細（あるときのみ）
