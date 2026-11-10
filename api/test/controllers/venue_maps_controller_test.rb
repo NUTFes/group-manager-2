@@ -19,7 +19,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should get index without imgur_deletehash' do
     @venue_map.update!(imgur_deletehash: 'index-deletehash')
 
-    get venue_maps_url, as: :json
+    get venue_maps_url, headers: api_auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -31,6 +31,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should create venue_map with imgur_deletehash' do
     assert_difference('VenueMap.count') do
       post venue_maps_url,
+           headers: api_auth_headers,
            params: {
              group_id: groups(:two).id,
              picture_name: 'new_venue_map.png',
@@ -48,7 +49,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should show venue_map without imgur_deletehash' do
     @venue_map.update!(imgur_deletehash: 'show-deletehash')
 
-    get venue_map_url(@venue_map), as: :json
+    get venue_map_url(@venue_map), headers: api_auth_headers, as: :json
 
     assert_response :success
     assert_equal 200, response.parsed_body['status']['code']
@@ -58,6 +59,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
   test 'should update venue_map with new imgur_deletehash' do
     ImgurImageDeleter.stub(:call, ->(_deletehash) { true }) do
       patch venue_map_url(@venue_map),
+            headers: api_auth_headers,
             params: {
               group_id: @venue_map.group_id,
               picture_name: 'updated_venue_map.png',
@@ -84,6 +86,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
       true
     }) do
       patch venue_map_url(@venue_map),
+            headers: api_auth_headers,
             params: {
               group_id: @venue_map.group_id,
               picture_name: @venue_map.picture_name,
@@ -106,7 +109,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
         deletehashes << deletehash
         true
       }) do
-        delete venue_map_url(@venue_map), as: :json
+        delete venue_map_url(@venue_map), headers: api_auth_headers, as: :json
       end
     end
 
@@ -119,7 +122,7 @@ class VenueMapsControllerTest < ActionDispatch::IntegrationTest
     @venue_map.update!(imgur_deletehash: nil)
 
     assert_difference('VenueMap.count', -1) do
-      delete venue_map_url(@venue_map), as: :json
+      delete venue_map_url(@venue_map), headers: api_auth_headers, as: :json
     end
 
     assert_response :success

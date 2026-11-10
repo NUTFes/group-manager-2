@@ -17,13 +17,13 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get stage_orders_url, as: :json
+    get stage_orders_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should create stage_order' do
     assert_difference('StageOrder.count') do
-      post stage_orders_url, params: valid_params, as: :json
+      post stage_orders_url, headers: api_auth_headers, params: valid_params, as: :json
     end
 
     assert_response :ok
@@ -31,7 +31,7 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should not create stage_order with invalid fes_date_id' do
     assert_no_difference('StageOrder.count') do
-      post stage_orders_url, params: valid_params.merge(fes_date_id: 0), as: :json
+      post stage_orders_url, headers: api_auth_headers, params: valid_params.merge(fes_date_id: 0), as: :json
     end
 
     assert_response :unprocessable_entity
@@ -40,23 +40,23 @@ class StageOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show stage_order' do
-    get stage_order_url(@stage_order), as: :json
+    get stage_order_url(@stage_order), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update stage_order' do
-    patch stage_order_url(@stage_order), params: valid_params, as: :json
+    patch stage_order_url(@stage_order), headers: api_auth_headers, params: valid_params, as: :json
     assert_response :ok
   end
 
   test 'should not update stage_order with invalid fes_date_id' do
-    patch stage_order_url(@stage_order), params: valid_params.merge(fes_date_id: 0), as: :json
+    patch stage_order_url(@stage_order), headers: api_auth_headers, params: valid_params.merge(fes_date_id: 0), as: :json
     assert_response :unprocessable_entity
   end
 
   test 'should destroy stage_order' do
     assert_difference('StageOrder.count', -1) do
-      delete stage_order_url(@stage_order), as: :json
+      delete stage_order_url(@stage_order), headers: api_auth_headers, as: :json
     end
 
     assert_response :ok

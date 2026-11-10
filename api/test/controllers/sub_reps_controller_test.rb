@@ -31,7 +31,7 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get sub_reps_url, as: :json
+    get sub_reps_url, headers: auth_headers, as: :json
     assert_response :success
   end
 
@@ -54,7 +54,7 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show sub_rep' do
-    get sub_rep_url(@sub_rep), as: :json
+    get sub_rep_url(@sub_rep), headers: auth_headers, as: :json
     assert_response :success
   end
 

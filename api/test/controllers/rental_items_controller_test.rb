@@ -14,13 +14,13 @@ class RentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get rental_items_url, as: :json
+    get rental_items_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   # name を伴わない部分更新で、登録済みの英語名が消えないこと
   test 'should keep name_en on a partial update that does not touch the name' do
-    patch rental_item_url(@rental_item), params: { is_stage_rentable: true }, as: :json
+    patch rental_item_url(@rental_item), headers: api_auth_headers, params: { is_stage_rentable: true }, as: :json
 
     assert_response :success
     assert_equal 'Long Table', @rental_item.reload.name_en
@@ -29,7 +29,7 @@ class RentalItemsControllerTest < ActionDispatch::IntegrationTest
 
   # 英語名を明示的に送ったときはその値で更新されること
   test 'should update name_en when it is given' do
-    patch rental_item_url(@rental_item), params: { name_en: 'Long Desk' }, as: :json
+    patch rental_item_url(@rental_item), headers: api_auth_headers, params: { name_en: 'Long Desk' }, as: :json
 
     assert_response :success
     assert_equal 'Long Desk', @rental_item.reload.name_en
@@ -38,7 +38,7 @@ class RentalItemsControllerTest < ActionDispatch::IntegrationTest
   # 保存の成否を見るようにした後も、成功時の応答が変わっていないこと
   test 'should create rental_item' do
     assert_difference('RentalItem.count') do
-      post rental_items_url, params: { name: 'パイプ椅子', name_en: 'Folding Chair' }, as: :json
+      post rental_items_url, headers: api_auth_headers, params: { name: 'パイプ椅子', name_en: 'Folding Chair' }, as: :json
     end
 
     assert_response :success
@@ -47,7 +47,7 @@ class RentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update rental_item' do
-    patch rental_item_url(@rental_item), params: { name: '長机（大）', name_en: 'Long Table L' }, as: :json
+    patch rental_item_url(@rental_item), headers: api_auth_headers, params: { name: '長机（大）', name_en: 'Long Table L' }, as: :json
 
     assert_response :success
     assert_equal 201, response.parsed_body.dig('status', 'code')
