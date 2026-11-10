@@ -40,12 +40,20 @@ function buildHeaders(session?: Session): HeadersInit {
   return haaders;
 }
 
+// 同時に走った呼び出しで getSession() を共有し、/api/auth/session への問い合わせを1回にまとめる
+let pendingSession: ReturnType<typeof getSession> | null = null;
+
 /**
  * 現在のセッションから認証ヘッダーを組み立てる
  * useSession を使えない箇所（レガシーFetcherや生のfetch）向け
  */
 export async function buildAuthHeaders(): Promise<HeadersInit> {
-  const session = await getSession();
+  if (!pendingSession) {
+    pendingSession = getSession().finally(() => {
+      pendingSession = null;
+    });
+  }
+  const session = await pendingSession;
   return buildHeaders(session ?? undefined);
 }
 
