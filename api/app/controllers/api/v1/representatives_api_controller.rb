@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::RepresentativesApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   NO_SUB_REP = {
     id: nil,

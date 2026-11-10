@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CheckAllRegisteredController < ApplicationController
+  before_action :authenticate_api_user!
+
   ORDER_TYPE_MAPPING = {
     sub_rep_application: 'sub_rep',
     rental_item_application: 'rental_item_order',

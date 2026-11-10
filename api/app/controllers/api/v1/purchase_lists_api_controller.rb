@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::PurchaseListsApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_purchase_list_index_for_admin_view
     @purchase_lists = PurchaseList.with_groups_and_info
     render json: fmt(ok, @purchase_lists)

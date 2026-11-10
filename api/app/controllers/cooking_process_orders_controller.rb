@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CookingProcessOrdersController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_cooking_process_order, only: %i[show update destroy]
 
   # GET /cooking_process_orders
