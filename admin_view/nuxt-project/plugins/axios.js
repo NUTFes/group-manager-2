@@ -20,12 +20,16 @@ export default function ({ $axios, app, redirect, route, req }) {
     }
   }
 
+  // SSR 時は localStorage を読めないため、ブラウザから届いた Cookie から付ける。
+  // プラグインはリクエストごとに実行され req は変わらないので、ここで1回だけ読む
+  const ssrTokens = process.client
+    ? null
+    : readAuthTokenCookies(req?.headers?.cookie);
+
   $axios.onRequest((config) => {
     if (!process.client) {
-      // SSR 時は localStorage を読めないため、ブラウザから届いた Cookie から付ける
-      const tokens = readAuthTokenCookies(req?.headers?.cookie);
       AUTH_TOKEN_KEYS.forEach((key) => {
-        if (tokens[key]) config.headers[key] = tokens[key];
+        if (ssrTokens[key]) config.headers[key] = ssrTokens[key];
       });
       return;
     }
