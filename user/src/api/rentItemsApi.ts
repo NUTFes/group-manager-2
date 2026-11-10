@@ -1,7 +1,7 @@
 // src/api/rentItemsApi.ts
 import { useTranslation } from 'next-i18next';
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
-import { legacyPatchFetcher, legacyPostFetcher } from './api';
+import { buildAuthHeaders, legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -252,9 +252,7 @@ export const useRegisterUnRegisteredGroup = () => {
         `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: await buildAuthHeaders(),
           body: JSON.stringify(requestData),
         }
       );
@@ -297,9 +295,7 @@ export const useRegisterUnRegisteredGroup = () => {
         `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
         {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: await buildAuthHeaders(),
         }
       );
 
@@ -351,15 +347,14 @@ export const useRegisterUnRegisteredGroup = () => {
       }
 
       // 削除処理
+      const headers = await buildAuthHeaders();
       const deletePromises = getResult.data.map(
         (item: UnRegisteredGroupResponse) => {
           return fetch(
             `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${item.id}`,
             {
               method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers,
             }
           );
         }
@@ -407,9 +402,7 @@ export const useCheckUnRegisteredGroup = () => {
         `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
         {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: await buildAuthHeaders(),
         }
       );
 

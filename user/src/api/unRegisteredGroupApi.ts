@@ -1,4 +1,5 @@
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
+import { buildAuthHeaders } from './api';
 
 export type UnregisteredGroupData = {
   group_id: number;
@@ -91,9 +92,7 @@ export const useMutateUnregisteredGroup = (orderType: number) => {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await buildAuthHeaders(),
       });
 
       if (response.ok) {
