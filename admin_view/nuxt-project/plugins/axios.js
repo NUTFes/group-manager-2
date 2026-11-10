@@ -1,9 +1,34 @@
-export default function ({ $axios, app, redirect, route }) {
+import {
+  AUTH_TOKEN_KEYS,
+  readAuthTokenCookies,
+  saveAuthTokenCookies,
+} from "~/utils/auth-token-cookie";
+
+export default function ({ $axios, app, redirect, route, req }) {
   const reauthenticationPath = "/reauthentication_required";
   const loginPath = "/api/auth/sign_in";
 
+  // Cookie 保存を入れる前にログインしていた場合に備え、localStorage の値を Cookie に写す
+  if (process.client && window.localStorage.getItem("access-token")) {
+    const tokens = readAuthTokenCookies(document.cookie);
+    if (!tokens["access-token"]) {
+      saveAuthTokenCookies(
+        Object.fromEntries(
+          AUTH_TOKEN_KEYS.map((key) => [key, window.localStorage.getItem(key)])
+        )
+      );
+    }
+  }
+
   $axios.onRequest((config) => {
-    if (!process.client) return;
+    if (!process.client) {
+      // SSR 時は localStorage を読めないため、ブラウザから届いた Cookie から付ける
+      const tokens = readAuthTokenCookies(req?.headers?.cookie);
+      AUTH_TOKEN_KEYS.forEach((key) => {
+        if (tokens[key]) config.headers[key] = tokens[key];
+      });
+      return;
+    }
 
     config.headers.client = window.localStorage.getItem("client");
     config.headers["access-token"] =
@@ -20,6 +45,7 @@ export default function ({ $axios, app, redirect, route }) {
       localStorage.setItem("client", response.headers.client);
       localStorage.setItem("uid", response.headers.uid);
       localStorage.setItem("token-type", response.headers["token-type"]);
+      saveAuthTokenCookies(response.headers);
     }
   });
 
