@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { clearAuthTokenCookies } from "~/utils/auth-token-cookie";
+
 export default {
   layout: "empty",
   methods: {
@@ -30,6 +32,7 @@ export default {
       ].forEach((key) => {
         localStorage.removeItem(key);
       });
+      clearAuthTokenCookies();
       this.$router.push("/");
     },
   },
