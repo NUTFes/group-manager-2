@@ -1,4 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import {
+  useDepartmentOptions,
+  useGradeOptions,
+} from '@/api/gradeDepartmentApi';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -10,7 +14,6 @@ import {
   useDeleteViceRepresentative,
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
@@ -140,8 +143,8 @@ export const useViceRepresentativeFormHook = (
 
 export const useViceRepresentativeFormTexts = () => {
   const { t } = useTranslation('common');
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const { options: gradeOptions } = useGradeOptions();
+  const { options: departmentOptions } = useDepartmentOptions();
   const labels = viceRepresentativeLabels.map((labelKey) => t(labelKey));
   const radioOptions = [
     {

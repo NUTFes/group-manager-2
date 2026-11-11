@@ -1,0 +1,22 @@
+---
+paths:
+  "/grades":
+    get:
+      tags:
+      - grade
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: grade description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Grade"
+        '422':
+          description: grade description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Grade"
+      deprecated: false

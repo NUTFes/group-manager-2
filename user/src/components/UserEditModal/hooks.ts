@@ -1,6 +1,9 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
+import {
+  useDepartmentOptions,
+  useGradeOptions,
+} from '@/api/gradeDepartmentApi';
 import { UserInformation, useMutateUserDetails } from '@/api/useUserDetailApi';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -118,8 +121,8 @@ export const useUserEditModalHooks = (
 
 export const useUserEditModalTexts = () => {
   const { t } = useTranslation('common');
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const { options: gradeOptions } = useGradeOptions();
+  const { options: departmentOptions } = useDepartmentOptions();
   return {
     labels: {
       name: t('userEditModal.labels.name'),

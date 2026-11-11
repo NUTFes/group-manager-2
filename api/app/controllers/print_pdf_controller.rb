@@ -141,6 +141,8 @@ class PrintPdfController < ApplicationController
     # Allow caller to specify a rendering locale separate from filter locale.
     # Use `params[:render_locale]` if provided, otherwise fall back to `params[:locale]` or :ja.
     locale = params[:render_locale].presence&.to_sym || params[:locale].presence&.to_sym || :ja
+    # ビュー側で言語ごとの名称を出し分けるために使う（アクション側で設定済みならそれを優先する）
+    @pdf_locale ||= locale
 
     respond_to do |format|
       format.pdf do
