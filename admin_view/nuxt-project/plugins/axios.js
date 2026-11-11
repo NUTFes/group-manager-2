@@ -23,7 +23,7 @@ export default function ({ $axios, app, redirect, route, req }) {
   // SSR 時は localStorage を読めないため、ブラウザから届いた Cookie から付ける。
   // プラグインはリクエストごとに実行され req は変わらないので、ここで1回だけ読む
   const ssrTokens = process.client
-    ? null
+    ? {}
     : readAuthTokenCookies(req?.headers?.cookie);
 
   $axios.onRequest((config) => {
