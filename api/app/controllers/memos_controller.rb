@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MemosController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_memo, only: %i[show update destroy]
 
   # GET /memos

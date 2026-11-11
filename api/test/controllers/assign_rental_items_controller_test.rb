@@ -9,7 +9,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get assign_rental_items_url, as: :json
+    get assign_rental_items_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
@@ -17,6 +17,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   test 'should create assign_rental_item' do
     assert_difference('AssignRentalItem.count', 2) do
       post assign_rental_items_url,
+           headers: api_auth_headers,
            params: {
              rentalItemId: @assign_rental_item.rental_item_id,
              stockerPlaceId: @stocker_place.id,
@@ -43,6 +44,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   # items配列の各要素で備考(remark)を受け取り、割当に保存できること
   test 'should save remark on create' do
     post assign_rental_items_url,
+         headers: api_auth_headers,
          params: {
            rentalItemId: @assign_rental_item.rental_item_id,
            stockerPlaceId: @stocker_place.id,
@@ -62,6 +64,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   test 'should not create any assign_rental_item when one of the items is invalid' do
     assert_no_difference('AssignRentalItem.count') do
       post assign_rental_items_url,
+           headers: api_auth_headers,
            params: {
              rentalItemId: @assign_rental_item.rental_item_id,
              stockerPlaceId: @stocker_place.id,
@@ -87,6 +90,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_no_difference('AssignRentalItem.count') do
       post assign_rental_items_url,
+           headers: api_auth_headers,
            params: {
              rentalItemId: @assign_rental_item.rental_item_id,
              stockerPlaceId: @stocker_place.id,
@@ -100,7 +104,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show assign_rental_item' do
-    get assign_rental_item_url(@assign_rental_item), as: :json
+    get assign_rental_item_url(@assign_rental_item), headers: api_auth_headers, as: :json
     assert_response :success
     assert_equal 200, response.parsed_body.dig('status', 'code')
   end
@@ -110,6 +114,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     new_num = @assign_rental_item.num + 1
 
     patch assign_rental_item_url(@assign_rental_item),
+          headers: api_auth_headers,
           params: { num: new_num, group_id: groups(:two).id },
           as: :json
 
@@ -129,6 +134,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     )
 
     patch assign_rental_item_url(@assign_rental_item),
+          headers: api_auth_headers,
           params: { group_id: groups(:two).id },
           as: :json
 
@@ -142,6 +148,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   # 保存に失敗したら200ではなく422で返すこと
   test 'should return unprocessable entity when the update is invalid' do
     patch assign_rental_item_url(@assign_rental_item),
+          headers: api_auth_headers,
           params: { group_id: unknown_group_id },
           as: :json
 
@@ -152,12 +159,14 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   # updateで備考(remark)も更新でき、空文字を送ると消えること
   test 'should update remark' do
     patch assign_rental_item_url(@assign_rental_item),
+          headers: api_auth_headers,
           params: { num: @assign_rental_item.num, remark: '入口1番' },
           as: :json
     assert_response :ok
     assert_equal '入口1番', @assign_rental_item.reload.remark
 
     patch assign_rental_item_url(@assign_rental_item),
+          headers: api_auth_headers,
           params: { num: @assign_rental_item.num, remark: '' },
           as: :json
     assert_response :ok
@@ -175,7 +184,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     )
 
     assert_difference('AssignRentalItem.count', -1) do
-      delete assign_rental_item_url(assign_rental_item_without_logs), as: :json
+      delete assign_rental_item_url(assign_rental_item_without_logs), headers: api_auth_headers, as: :json
     end
 
     # destroyは204ではなく、削除結果をJSONで返す実装になっている
@@ -203,7 +212,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
     )
 
     assert_no_difference('AssignRentalItem.count') do
-      delete assign_rental_item_url(assign_rental_item), as: :json
+      delete assign_rental_item_url(assign_rental_item), headers: api_auth_headers, as: :json
     end
 
     assert_response :conflict
@@ -213,7 +222,7 @@ class AssignRentalItemsControllerTest < ActionDispatch::IntegrationTest
   # 存在しないIDの場合、HTTPステータスは200のままレスポンス本文で404を返す実装になっている
   test 'should respond not found in the body for a nonexistent id' do
     %i[get patch delete].each do |verb|
-      send(verb, assign_rental_item_url(unknown_assign_rental_item_id), as: :json)
+      send(verb, assign_rental_item_url(unknown_assign_rental_item_id), headers: api_auth_headers, as: :json)
 
       assert_response :success
       assert_equal 404, response.parsed_body.dig('status', 'code'), "#{verb} のレスポンス"

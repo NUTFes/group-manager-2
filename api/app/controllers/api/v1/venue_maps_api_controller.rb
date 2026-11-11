@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::VenueMapsApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_venue_map_for_admin_view
     @groups = Group.with_venue_map(params[:id])
     render json: fmt(ok, @groups)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CurrentStocksController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_current_stock, only: %i[show update destroy]
 
   # GET /current_stocks

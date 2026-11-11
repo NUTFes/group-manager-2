@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::StageOrdersApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_stage_order_index_for_admin_view
     @stage_orders = StageOrder.with_groups
     render json: fmt(ok, @stage_orders)

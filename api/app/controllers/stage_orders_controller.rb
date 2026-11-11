@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StageOrdersController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_stage_order, only: %i[show update destroy]
   before_action :set_stage_order_by_group_id, only: [:get_by_group_id]
 

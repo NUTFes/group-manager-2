@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::DashboardApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_dashboard_info
     # ユーザー数
     all_user_num = User.all.length
