@@ -12,8 +12,10 @@ class GradesControllerTest < ActionDispatch::IntegrationTest
     get '/grades'
 
     assert_response :success
-    data = response.parsed_body['data']
-    assert_equal([first.id, second.id], data.pluck('id'))
+    # 他のテストが投入したfixtureの行が残っていても影響を受けないよう、作成した行だけで比べる
+    created_ids = [first.id, second.id]
+    data = response.parsed_body['data'].select { |row| created_ids.include?(row['id']) }
+    assert_equal(created_ids, data.pluck('id'))
     assert_equal 'B1（学部1年）', data.first['name']
     assert_equal 'B1 (1st year undergraduate)', data.first['name_en']
     assert_nil data.last['name_en']
