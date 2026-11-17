@@ -1,6 +1,6 @@
 interface:
-  display_name: "GM3 PR Review"
+  display_name: "GM3 コードレビュー"
   short_description: "group-manager-2 の差分を過剰指摘を除いてレビュー"
-  default_prompt: "Use $gm3-review to review the current branch against origin/gm3/develop without changing code or posting comments."
+  default_prompt: "$gm3-review を使って、現在の branch を origin/gm3/develop と比較してレビューしてください。"
 policy:
   allow_implicit_invocation: true

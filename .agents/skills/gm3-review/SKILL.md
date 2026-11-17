@@ -1,78 +1,60 @@
 ---
 name: gm3-review
-description: Review a group-manager-2 PR, branch, or diff using nutmeg's evidence-based severity and scope rules. Automatically use when the user asks to review code in this repository, including short requests such as "レビューして", "PR を見て", or "差分を確認して", as well as initial and follow-up reviews.
+description: group-manager-2 の PR・ブランチ・差分をレビューする。このリポジトリで「レビューして」「PR を見て」「差分を確認して」と頼まれたときは、短い依頼でも初回・再レビューを問わず使う。
 ---
 
-# GM3 PR review
+# GM3 コードレビュー
 
-Perform a read-only review. Do not edit files, create commits, push, or post to GitHub.
+コードの変更、commit、push、branch の切り替え、worktree の作成、GitHub への投稿は行わない。
 
-Read these sources before judging the diff:
+## 対象
 
-1. The applicable `AGENTS.md` files.
-2. [AI コードレビュー運用ガイド](../../../docs/dev/ai-code-review.md).
-3. The PR description and linked issue when available.
-4. Existing code and tests around the changed paths.
+- 指定された PR、branch、commit、diff range を優先する。
+- 指定がなければ `origin/gm3/develop...HEAD` を見る。
+- PR の場合は、本文、関連 Issue、既出コメント、base、head も読み取り専用の `gh` コマンドで確認する。
+- 再レビューでは、前回以降の修正と前回の指摘だけを確認する。追加指摘は修正が持ち込んだ問題に限る。
 
-## Choose the review mode and target
+適用される `AGENTS.md`、差分の周辺コード、呼び出し元、テスト、base 側の実装を読む。
 
-Infer the target from the user's invocation:
+## 判断基準
 
-- Initial review with no target: compare `origin/gm3/develop...HEAD`.
-- PR number or URL: inspect its base, head, description, linked issue, comments, and diff with read-only `gh` commands. Review the checked-out head when it matches; otherwise use read-only GitHub data and clearly state what could not be run locally.
-- Explicit base, branch, commit, or diff range: use it as written.
-- Follow-up review: inspect only `<previous-commit>...HEAD`, re-check the listed earlier findings, and report a new finding only when the follow-up changes introduced it.
+次を重点的に確認する。
 
-Do not change branches or create a worktree unless the user explicitly asks.
+- 正常系だけでなく、`nil`、空、複数件、途中失敗、transaction の扱い
+- 認証、認可、他団体のデータへ到達できないこと
+- API と各フロントの request / response の整合
+- 既存機能の回帰
+- migration の可逆性と既存データとの互換性
+- UI の loading、empty、error、二重操作などの状態
+- テストが実際の挙動を検証していること
 
-## Isolate the review
+指摘は、次をすべて満たすものに絞る。
 
-When subagents are available, delegate the complete review to exactly one review subagent and wait for its result. Give it the target, review mode, paths to the applicable instructions and shared guide, PR purpose, earlier findings for follow-up review, and the read-only/no-posting constraints. Ask it to return the report in the format below. If subagents are unavailable, perform the same workflow directly.
+- この差分が新しく持ち込んだ問題である。
+- 実際の画面、API、デプロイ手順から到達できる。
+- 具体的な入力や操作から誤動作まで説明できる。
+- 実データと運用規模を踏まえて対応する価値がある。
+- このリポジトリの既存パターンに沿った小さな修正がある。
 
-The reviewer must inspect the whole relevant change, not divide findings across independent reviewers. A single reviewer avoids duplicate and inconsistent severity judgments.
+既存問題、到達経路のない推測、可能性と影響が小さい競合、書き方の好み、base でも失敗する CI は指摘しない。重要でも PR 全体に関わる既存課題は、merge を止めず別 Issue 候補として分ける。
 
-## Review method
+認可漏れ、秘密情報の露出、不可逆なデータ損失、通常操作や本番デプロイの失敗、API とフロントの不整合は merge を止める。AI や bot が付けた重大度はそのまま採用しない。
 
-Establish the PR's purpose in one sentence before evaluating findings. Then inspect the diff in repository context and verify each candidate against all five gates in the shared guide:
+PR 本文の検証結果や bot の「修正済み」は、コード、履歴、テスト、可能なら再現で確かめる。確認は対象に必要な最小範囲にする。
 
-1. Did this PR introduce the problem?
-2. Can a real application or deployment path reach it?
-3. Can it occur with actual or plausibly existing data?
-4. Is the risk material for this system's scale and operation?
-5. Does the judgment match established repository patterns?
+## 実行
 
-Deeply check correctness, authorization and tenant isolation, API/client compatibility, regression, migration safety and data compatibility, UI states, and whether tests assert behavior rather than merely execute code. Treat PR claims and bot conclusions as unverified until supported by code, history, tests, or reproducible behavior.
+subagent が利用できる場合は、一つのレビュー用 subagent に対象と上記基準を渡し、結果を待つ。複数へ分割して重複した指摘を出さない。利用できない場合は直接レビューする。
 
-Use `git show`, `git blame`, the base version, and nearby patterns to distinguish regression from existing debt. Run the smallest relevant checks when feasible. Tests are evidence, not permission to broaden the review into unrelated failures.
+## 出力
 
-Only report an actionable finding when all of these are true:
+日本語で、指摘を重大度順に書く。各指摘には次を含める。
 
-- The reviewed change introduced it.
-- A concrete input or sequence leads to observable incorrect behavior or meaningful risk.
-- The evidence is specific enough to explain and, where practical, reproduce.
-- A small fix fits this PR.
-
-Do not report pre-existing issues, unreachable defensive hypotheticals, low-value concurrency hardening for unlikely operations, style preferences, unrelated lint, or CI failures that also occur on the base. Mention an out-of-scope systemic concern only under `Separate issue candidates`, and only when it is important enough that a human should preserve it.
-
-Use `REQUEST_CHANGES` only for merge-blocking findings under the shared guide. Suggestions and separate-issue candidates do not block approval.
-
-## Output
-
-Write in Japanese. Lead with findings in descending severity. For every finding include:
-
-- concise title without invented severity jargon
 - `file:line`
-- concrete input or sequence and resulting failure
-- evidence, including why this PR introduced it
-- the smallest repository-consistent fix
+- どの入力・操作で何が壊れるか
+- この PR が原因である根拠
+- 既存パターンに沿う最小の修正案
 
-Then include:
+続けて、問題がなかった主な観点と、実行できなかったテストや確認できなかった前提を書く。再レビューでは各指摘を `RESOLVED`、`PARTIALLY`、`NOT RESOLVED` で判定する。
 
-1. `Suggestions` for non-blocking improvements, only when worth the author's time.
-2. `Separate issue candidates`, omitted when empty.
-3. `Verified areas` listing important perspectives checked with no finding.
-4. `Unverified` listing tests or facts that could not be confirmed.
-5. For follow-up review, each earlier finding as `RESOLVED`, `PARTIALLY`, or `NOT RESOLVED` with `file:line` and evidence.
-6. A final line containing exactly `APPROVE` or `REQUEST_CHANGES`.
-
-If there are no actionable findings, say so directly rather than inventing one. Never output ready-to-post GitHub comments as if they were already verified by a human.
+最後の一行は、merge を止める指摘があれば `REQUEST_CHANGES`、なければ `APPROVE` とする。問題がなければ無理に指摘を作らない。
