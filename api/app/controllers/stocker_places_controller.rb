@@ -2,6 +2,7 @@
 
 class StockerPlacesController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_stocker_place, only: %i[show update destroy]
 
   def index

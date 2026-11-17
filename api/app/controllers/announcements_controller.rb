@@ -2,6 +2,7 @@
 
 class AnnouncementsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_announcement, only: %i[show update destroy]
 
   # GET /announcements

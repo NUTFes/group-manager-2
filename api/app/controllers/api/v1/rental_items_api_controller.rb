@@ -2,6 +2,8 @@
 
 class Api::V1::RentalItemsApiController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれる参照系以外は管理画面向け
+  before_action :require_admin!, except: %i[get_all_rentable_items get_inside_shop_rentable_items get_outside_shop_rentable_items]
 
   def get_rentable_items
     @items = RentalItem.where(is_inside_shop_rentable: true).where(is_outside_shop_rentable: true).where(is_stage_rentable: true)

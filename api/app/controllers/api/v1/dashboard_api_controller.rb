@@ -2,6 +2,7 @@
 
 class Api::V1::DashboardApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_dashboard_info
     # ユーザー数

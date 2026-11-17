@@ -2,6 +2,7 @@
 
 class Api::V1::StockerItemsApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_stocker_items_with_remaining_num
     rental_item_id = params[:rental_item_id].to_i

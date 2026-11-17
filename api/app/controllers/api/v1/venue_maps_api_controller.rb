@@ -2,6 +2,7 @@
 
 class Api::V1::VenueMapsApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_venue_map_for_admin_view
     @groups = Group.with_venue_map(params[:id])

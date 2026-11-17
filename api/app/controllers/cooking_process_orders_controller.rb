@@ -2,11 +2,13 @@
 
 class CookingProcessOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[get_by_group_id]
+  before_action :require_accessible_food_product!, only: %i[create update]
   before_action :set_cooking_process_order, only: %i[show update destroy]
 
   # GET /cooking_process_orders
   def index
-    @cooking_process_orders = CookingProcessOrder.all
+    @cooking_process_orders = scope_to_accessible_groups(CookingProcessOrder.all)
     render json: @cooking_process_orders
   end
 
@@ -61,6 +63,8 @@ class CookingProcessOrdersController < ApplicationController
     ]
     now = Time.current
     raw_orders = params[:cooking_process_orders].map(&:to_unsafe_h)
+    return render_forbidden unless accessible_cooking_process_orders?(raw_orders)
+
     existing_orders = existing_cooking_process_orders(raw_orders)
 
     upserts = raw_orders.map do |order|
@@ -110,9 +114,28 @@ class CookingProcessOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions
   def set_cooking_process_order
-    @cooking_process_order = CookingProcessOrder.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Not found' }, status: :not_found
+    @cooking_process_order = scope_to_accessible_groups(CookingProcessOrder.all).find_by(id: params[:id])
+    return if @cooking_process_order
+
+    render_not_found_or_forbidden { render json: { error: 'Not found' }, status: :not_found }
+  end
+
+  # 指定されたfood_product_idが自団体（adminは全団体）の販売品でなければ403にする
+  def require_accessible_food_product!
+    food_product_id = params.dig(:cooking_process_order, :food_product_id)
+    return if food_product_id.blank? || admin_user?
+    return if scope_to_accessible_groups(FoodProduct.all).exists?(id: food_product_id)
+
+    render_forbidden
+  end
+
+  def accessible_cooking_process_orders?(raw_orders)
+    return true if admin_user?
+
+    records = raw_orders.map(&:symbolize_keys)
+    food_product_ids = records.filter_map { |attrs| attrs[:food_product_id]&.to_s }.uniq
+    accessible_bulk_records?(CookingProcessOrder.all, records) &&
+      scope_to_accessible_groups(FoodProduct.all).where(id: food_product_ids).count == food_product_ids.size
   end
 
   # Only allow a list of trusted parameters through

@@ -2,6 +2,7 @@
 
 class StageNumberController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_stage_number, only: %i[update destroy]
 
   # ステージ割り当て

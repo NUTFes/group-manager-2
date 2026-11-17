@@ -2,13 +2,14 @@
 
 class StageOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_stage_order, only: %i[show update destroy]
   before_action :set_stage_order_by_group_id, only: [:get_by_group_id]
 
   # GET /stage_orders
   # GET /stage_orders.json
   def index
-    @stage_orders = StageOrder.all
+    @stage_orders = scope_to_accessible_groups(StageOrder.all)
     render json: fmt(ok, @stage_orders)
   end
 
@@ -55,11 +56,10 @@ class StageOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_order
-    if StageOrder.exists?(params[:id])
-      @stage_order = StageOrder.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}")
-    end
+    @stage_order = scope_to_accessible_groups(StageOrder.all).find_by(id: params[:id])
+    return if @stage_order
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

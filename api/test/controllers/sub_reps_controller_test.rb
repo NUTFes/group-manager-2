@@ -10,7 +10,6 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @sub_rep = sub_reps(:one)
-    Role.find_or_create_by!(name: 'admin')
     @user = User.create!(
       name: 'sub-rep-test-user',
       email: 'sub-rep-test-user@example.com',
@@ -18,7 +17,7 @@ class SubRepsControllerTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role: Role.find_by(name: 'admin')
+      role: ensure_role(1)
     )
   end
 

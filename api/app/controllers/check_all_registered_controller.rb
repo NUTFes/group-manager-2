@@ -2,6 +2,7 @@
 
 class CheckAllRegisteredController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[show]
 
   ORDER_TYPE_MAPPING = {
     sub_rep_application: 'sub_rep',

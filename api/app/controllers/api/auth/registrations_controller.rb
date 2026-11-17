@@ -4,6 +4,10 @@
 module Api
   module Auth
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
+      # 新規登録で作れるのは参加団体ユーザー（role_id 3）だけ。
+      # クライアントが送ったrole_idは受け付けない（APIを直接叩いて管理者として登録できないようにする）
+      USER_ROLE_ID = 3
+
       private
 
       # 困惑しないように解説コメント
@@ -17,24 +21,25 @@ module Api
 
       def sign_up_params
         # 許可するパラメータを定義
-        allowed_attrs = %i[name email password password_confirmation role_id confirm_success_url]
+        allowed_attrs = %i[name email password password_confirmation confirm_success_url]
         # user_detailsのネストされたパラメータも許可
         nested = { user_details: %i[student_id department_id grade_id tel] }
 
         # registrationキーが存在する場合と存在しない場合で分岐
-        if params[:registration]
-          # registrationキーがある場合、その中のパラメータを許可
-          params.require(:registration).permit(allowed_attrs, nested)
-        else
-          # registrationキーがない場合、トップレベルのパラメータを許可
-          params.permit(allowed_attrs, nested)
-        end
+        permitted = if params[:registration]
+                      # registrationキーがある場合、その中のパラメータを許可
+                      params.require(:registration).permit(allowed_attrs, nested)
+                    else
+                      # registrationキーがない場合、トップレベルのパラメータを許可
+                      params.permit(allowed_attrs, nested)
+                    end
+        permitted.merge(role_id: USER_ROLE_ID)
       end
 
       # アカウント更新時の Strong Parameters
       def account_update_params
-        # 許可するパラメータを定義
-        allowed_attrs = %i[name email role_id]
+        # 許可するパラメータを定義（自分のロールは変更させない）
+        allowed_attrs = %i[name email]
         nested = { user_details: %i[student_id department_id grade_id tel] }
 
         # registrationキーが存在する場合と存在しない場合で分岐

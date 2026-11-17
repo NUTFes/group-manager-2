@@ -2,6 +2,8 @@
 
 class StagesController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれる参照系以外は管理画面向け
+  before_action :require_admin!, except: %i[index show show_sunny show_rainy]
   before_action :set_stage, only: %i[show update destroy]
 
   def index

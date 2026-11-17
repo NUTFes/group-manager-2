@@ -2,12 +2,13 @@
 
 class EmployeesController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group]
   before_action :set_employee, only: %i[show update destroy]
 
   # GET /employees
   # GET /employees.json
   def index
-    @employees = Employee.all
+    @employees = scope_to_accessible_groups(Employee.all)
     render json: fmt(ok, @employees)
   end
 
@@ -38,6 +39,8 @@ class EmployeesController < ApplicationController
   # POST /employees/upsert.json
   def upsert
     now = Time.current
+    return render_forbidden unless accessible_bulk_records?(Employee.all, employees_params)
+
     records = employees_params.map do |attrs|
       attrs[:id] ||= nil
       attrs[:created_at] ||= now
@@ -87,10 +90,12 @@ class EmployeesController < ApplicationController
   private
 
   def set_employee
-    @employee = Employee.find_by(id: params[:id])
+    @employee = scope_to_accessible_groups(Employee.all).find_by(id: params[:id])
     return if @employee
 
-    render json: fmt(not_found, [], "Not found employee id=#{params[:id]}"), status: :not_found
+    render_not_found_or_forbidden do
+      render json: fmt(not_found, [], "Not found employee id=#{params[:id]}"), status: :not_found
+    end
   end
 
   # 単一レコード用 Strong Parameters

@@ -10,7 +10,6 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @employee = employees(:one)
-    Role.find_or_create_by!(name: 'admin')
     @user = User.create!(
       name: 'employee-test-user',
       email: 'employee-test-user@example.com',
@@ -18,7 +17,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role: Role.find_by(name: 'admin')
+      role: ensure_role(1)
     )
   end
 

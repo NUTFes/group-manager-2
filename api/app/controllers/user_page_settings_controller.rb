@@ -2,6 +2,8 @@
 
 class UserPageSettingsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれる参照系以外は管理画面向け
+  before_action :require_admin!, except: %i[index show]
   before_action :set_user_page_setting, only: %i[show update destroy]
 
   # GET /user_page_settings

@@ -2,6 +2,7 @@
 
 class Api::V1::OrderStatusCheckApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_order_status_check_for_admin_view
     @groups = Group.with_order_status_check(params[:id])
