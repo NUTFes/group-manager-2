@@ -2,6 +2,7 @@
 
 class Api::V1::GroupsApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_group_index_for_admin_view
     @groups = Group.with_group_categories_and_fes_years

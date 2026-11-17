@@ -2,6 +2,7 @@
 
 class GroupIdentificationController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_group_identification, only: %i[update destroy]
 
   def index

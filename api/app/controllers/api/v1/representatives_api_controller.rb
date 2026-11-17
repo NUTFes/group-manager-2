@@ -2,6 +2,7 @@
 
 class Api::V1::RepresentativesApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   NO_SUB_REP = {

@@ -2,6 +2,7 @@
 
 class Api::V1::PowerOrdersApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_power_order_index_for_admin_view
     @power_orders = PowerOrder.with_groups

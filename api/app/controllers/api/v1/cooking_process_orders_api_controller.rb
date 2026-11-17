@@ -2,6 +2,7 @@
 
 class Api::V1::CookingProcessOrdersApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 
   def get_cooking_process_order_for_admin_view
     @groups = Group.with_cooking_process_order(params[:id])

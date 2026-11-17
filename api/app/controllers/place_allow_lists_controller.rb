@@ -2,6 +2,7 @@
 
 class PlaceAllowListsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_place_allow_list, only: %i[show update destroy]
 
   # GET /place_allow_lists

@@ -2,4 +2,5 @@
 
 class Api::V1::PlaceAllowListsApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
 end

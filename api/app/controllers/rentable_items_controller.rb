@@ -2,6 +2,7 @@
 
 class RentableItemsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!
   before_action :set_rentable_item, only: %i[show update destroy]
 
   # GET /rentable_items
