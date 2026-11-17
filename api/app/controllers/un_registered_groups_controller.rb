@@ -2,12 +2,14 @@
 
 class UnRegisteredGroupsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[index group]
+  before_action :require_accessible_body_group!, only: %i[create update]
   before_action :set_un_registered_group, only: %i[show update destroy]
 
   # GET /un_registered_groups
   # GET /un_registered_groups?group_id=1
   def index
-    @un_registered_groups = params[:group_id].present? ? UnRegisteredGroup.where(group_id: params[:group_id]) : UnRegisteredGroup.all
+    @un_registered_groups = params[:group_id].present? ? UnRegisteredGroup.where(group_id: params[:group_id]) : scope_to_accessible_groups(UnRegisteredGroup.all)
     render json: fmt(:ok, @un_registered_groups)
   end
 
@@ -62,7 +64,14 @@ class UnRegisteredGroupsController < ApplicationController
   private
 
   def set_un_registered_group
-    @un_registered_group = UnRegisteredGroup.find(params[:id])
+    return @un_registered_group = UnRegisteredGroup.find(params[:id]) if admin_user?
+
+    @un_registered_group = scope_to_accessible_groups(UnRegisteredGroup.all).find_by(id: params[:id])
+    render_forbidden unless @un_registered_group
+  end
+
+  def require_accessible_body_group!
+    require_accessible_group_param!(params.dig(:un_registered_group, :group_id))
   end
 
   def un_registered_group_params

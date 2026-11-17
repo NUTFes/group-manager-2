@@ -61,8 +61,11 @@ class HealthCenterSubmissionStatusesController < ApplicationController
       .find_by(id: id)
   end
 
+  # 自団体以外・存在しない場合、adminでなければ区別させないよう403にする
   def render_not_found
-    render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
+    render_not_found_or_forbidden do
+      render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
+    end
   end
 
   def render_invalid_status

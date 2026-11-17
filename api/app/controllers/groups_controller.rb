@@ -2,7 +2,9 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_admin!, only: %i[index destroy]
   before_action :set_group, only: %i[show update destroy]
+  before_action :require_own_user_id!, only: %i[get_user_group_id_and_group_category_id create update]
 
   # GET /groups
   # GET /groups.json
@@ -119,13 +121,15 @@ class GroupsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_group
-    # groupのIDのgroupが存在するかを確認
-    if Group.exists?(params[:id])
-      @group = Group.find(params[:id])
-    else
-      # なければnot found
-      render json: fmt(not_found, [], "Not found group id = #{params[:id]}")
-    end
+    @group = accessible_groups.find_by(id: params[:id])
+    return if @group
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found group id = #{params[:id]}") }
+  end
+
+  # adminは全団体、それ以外は自分が代表の団体だけ
+  def accessible_groups
+    admin_user? ? Group.all : current_api_user.groups
   end
 
   # Only allow a list of trusted parameters through.

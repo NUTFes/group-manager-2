@@ -2,6 +2,7 @@
 
 class UserDetailsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_own_user_id!, only: %i[index create update]
   before_action :set_user_detail, only: %i[show update destroy]
 
   # GET /user_details
@@ -10,7 +11,7 @@ class UserDetailsController < ApplicationController
     @user_details = if params[:user_id]
                       UserDetail.find_by(user_id: params[:user_id].to_i)
                     else
-                      UserDetail.all
+                      accessible_user_details
                     end
 
     render json: fmt(ok, @user_details)
@@ -47,11 +48,15 @@ class UserDetailsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user_detail
-    if UserDetail.exists?(params[:id])
-      @user_detail = UserDetail.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found user_detail = #{params[:id]}")
-    end
+    @user_detail = accessible_user_details.find_by(id: params[:id])
+    return if @user_detail
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found user_detail = #{params[:id]}") }
+  end
+
+  # adminは全ユーザー、それ以外は自分のユーザー詳細だけ
+  def accessible_user_details
+    admin_user? ? UserDetail.all : UserDetail.where(user_id: current_api_user.id)
   end
 
   # Only allow a list of trusted parameters through.

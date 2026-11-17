@@ -2,13 +2,14 @@
 
 class StageCommonOptionsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_stage_common_option, only: %i[show update destroy]
   before_action :set_stage_common_option_by_group_id, only: [:get_by_group_id]
 
   # GET /stage_common_options
   # GET /stage_common_options.json
   def index
-    @stage_common_options = StageCommonOption.all
+    @stage_common_options = scope_to_accessible_groups(StageCommonOption.all)
     render json: fmt(ok, @stage_common_options)
   end
 
@@ -55,11 +56,10 @@ class StageCommonOptionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_common_option
-    if StageCommonOption.exists?(params[:id])
-      @stage_common_option = StageCommonOption.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}")
-    end
+    @stage_common_option = scope_to_accessible_groups(StageCommonOption.all).find_by(id: params[:id])
+    return if @stage_common_option
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

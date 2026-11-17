@@ -2,13 +2,14 @@
 
 class RentalOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_rental_order, only: %i[show update destroy]
   before_action :set_rental_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /rental_orders
   # GET /rental_orders.json
   def index
-    @rental_orders = RentalOrder.all
+    @rental_orders = scope_to_accessible_groups(RentalOrder.all)
     render json: fmt(ok, @rental_orders)
   end
 
@@ -55,11 +56,10 @@ class RentalOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rental_order
-    if RentalOrder.exists?(params[:id])
-      @rental_order = RentalOrder.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found rental_order = #{params[:id]}")
-    end
+    @rental_order = scope_to_accessible_groups(RentalOrder.all).find_by(id: params[:id])
+    return if @rental_order
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found rental_order = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

@@ -2,11 +2,12 @@
 
 class FoodProductsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[group_food_products create update]
   before_action :set_food_product, only: %i[show destroy]
 
   # GET /food_products
   def index
-    @food_products = FoodProduct.all
+    @food_products = scope_to_accessible_groups(FoodProduct.all)
     render json: fmt(ok, @food_products)
   end
 
@@ -50,6 +51,8 @@ class FoodProductsController < ApplicationController
       attrs
     end
 
+    return render_forbidden unless accessible_bulk_records?(FoodProduct.all, upserts)
+
     FoodProduct.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
@@ -77,7 +80,9 @@ class FoodProductsController < ApplicationController
   # PATCH/PUT /food_products/:id
   # 単一レコード更新
   def update
-    @food_product = FoodProduct.find_by(id: params[:id])
+    @food_product = scope_to_accessible_groups(FoodProduct.all).find_by(id: params[:id])
+    return render_forbidden if @food_product.nil? && !admin_user?
+
     if @food_product&.update(food_product_params)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else
@@ -96,10 +101,12 @@ class FoodProductsController < ApplicationController
   private
 
   def set_food_product
-    @food_product = FoodProduct.find_by(id: params[:id])
+    @food_product = scope_to_accessible_groups(FoodProduct.all).find_by(id: params[:id])
     return if @food_product
 
-    render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+    render_not_found_or_forbidden do
+      render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+    end
   end
 
   # 単一レコード用 Strong Parameters

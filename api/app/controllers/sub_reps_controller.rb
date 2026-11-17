@@ -2,13 +2,14 @@
 
 class SubRepsController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_sub_rep, only: %i[show update destroy]
   before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
 
   # GET /sub_reps
   # GET /sub_reps.json
   def index
-    @sub_reps = SubRep.all
+    @sub_reps = scope_to_accessible_groups(SubRep.all)
     render json: fmt(ok, @sub_reps)
   end
 
@@ -55,11 +56,10 @@ class SubRepsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_sub_rep
-    if SubRep.exists?(params[:id])
-      @sub_rep = SubRep.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
-    end
+    @sub_rep = scope_to_accessible_groups(SubRep.all).find_by(id: params[:id])
+    return if @sub_rep
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.
