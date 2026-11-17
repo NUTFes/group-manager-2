@@ -5,7 +5,7 @@ description: group-manager-2 の PR・ブランチ・差分をレビューする
 
 # GM3 コードレビュー
 
-コードの変更、commit、push、branch の切り替え、worktree の作成、GitHub への投稿は行わない。
+コードの変更、commit、push、branch の切り替え、worktree の作成、GitHub への投稿は行わない。`git fetch`、`git pull` など、ref や作業ツリーを更新するコマンドも実行しない。
 
 ## 対象
 
@@ -19,7 +19,7 @@ description: group-manager-2 の PR・ブランチ・差分をレビューする
 適用される `AGENTS.md`、PR 本文、関連 Issue、差分の周辺コード、呼び出し元、テスト、base 側の実装を読む。レビューの冒頭に、この PR の目的を一文で書く。
 
 - PR と Issue が宣言している範囲を確認する。範囲外の欠落は必須修正にせず、確認事項か別 Issue 候補に分ける。
-- `user`、`admin_view`、`rental`、`user_front` のどれが、どの API を、どの権限で呼ぶかを追う。仕様どおりの 403 を不具合として扱わない。
+- `user`、`admin_view`、`rental` のどれが、どの API を、どの権限で呼ぶかを追う。仕様どおりの 403 を不具合として扱わない。
 - 設計の方向への反対と、合意された設計に対する実装漏れを分ける。設計への反対は blocker と断定せず、作者への確認事項にする。
 
 ## 指摘候補を判定する五つの問い
