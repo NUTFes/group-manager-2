@@ -50,8 +50,12 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'show does not expose another group place_order' do
     get place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
+  end
+
+  test 'show of a nonexistent place_order is forbidden for user' do
+    get place_order_url(PlaceOrder.maximum(:id) + 1), headers: auth_headers(@user), as: :json
+    assert_response :forbidden
   end
 
   test 'should create place_order for own group' do
@@ -93,12 +97,11 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
-  test 'update another group place_order by id is not found' do
+  test 'update another group place_order by id is forbidden' do
     patch place_order_url(@other_place_order),
           params: { place_order: place_order_params(group: @other_group, remark: '更新後') },
           headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   test 'partial update without group_id is allowed for the owner' do
@@ -124,13 +127,12 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
-  test 'destroy another group place_order by id is not found' do
+  test 'destroy another group place_order by id is forbidden' do
     assert_no_difference('PlaceOrder.count') do
       delete place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
     end
 
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   test 'get_by_group_id returns own group place_order' do
@@ -140,8 +142,7 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'get_by_group_id does not expose another group place_order' do
     get "/place_orders/group/#{@other_group.id}", headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   private
