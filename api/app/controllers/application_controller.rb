@@ -5,6 +5,9 @@ require 'digest'
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
+  # 管理画面を使うロール（manager / staff）
+  ADMIN_ROLE_IDS = [1, 2].freeze
+
   around_action :set_skip_slack_notification
 
   # status
@@ -66,12 +69,67 @@ class ApplicationController < ActionController::API
     !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
   end
 
-  def require_admin!
-    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
-    return if [1, 2].include?(current_api_user&.role_id)
+  def admin_user?
+    ADMIN_ROLE_IDS.include?(current_api_user&.role_id)
+  end
 
+  # 管理画面向けAPIはadmin以上（role_id 1, 2）に限定する
+  def require_admin!
+    return if admin_user?
+
+    render_forbidden
+  end
+
+  def render_forbidden
     render json: fmt({ code: 403, message: 'Forbidden' }, []),
            status: :forbidden
+  end
+
+  # adminは全団体、それ以外は自団体に紐づくレコードだけに絞る
+  def scope_to_accessible_groups(relation)
+    return relation if admin_user?
+
+    relation.where(group_id: current_api_user.groups.select(:id))
+  end
+
+  def accessible_group?(group_id)
+    admin_user? || current_api_user.groups.exists?(id: group_id)
+  end
+
+  # 対象が見つからないとき、adminには各controllerの既存のNot foundを返し、
+  # それ以外には他団体のレコードか存在しないIDかを区別させないよう403を返す
+  def render_not_found_or_forbidden
+    return render_forbidden unless admin_user?
+
+    yield
+  end
+
+  # adminでなければ、指定できるuser_idは自分だけにする
+  def require_own_user_id!
+    return if admin_user? || params[:user_id].blank? || params[:user_id].to_s == current_api_user.id.to_s
+
+    render_forbidden
+  end
+
+  # 一括登録（upsert）で受け取った全レコードが、自団体（adminは全団体）の範囲かを確認する。
+  # group_idだけでなく既存のidも確認し、他団体のレコードをidで上書きできないようにする
+  def accessible_bulk_records?(relation, records)
+    return true if admin_user?
+
+    group_ids = records.filter_map { |attrs| attrs[:group_id]&.to_s }.uniq
+    return false unless current_api_user.groups.where(id: group_ids).count == group_ids.size
+
+    ids = records.filter_map { |attrs| attrs[:id].presence&.to_s }.uniq
+    ids.empty? || scope_to_accessible_groups(relation).where(id: ids).count == ids.size
+  end
+
+  # 指定されたgroup_idが自団体（adminは全団体）でなければ403にする。
+  # 未指定ならモデルの必須バリデーションに委ねる（updateでの部分更新も許可する）
+  def require_accessible_group_param!(group_id = params[:group_id])
+    return true if group_id.blank? || accessible_group?(group_id)
+
+    render_forbidden
+    false
   end
 
   def current_api_user_group(group_id)
