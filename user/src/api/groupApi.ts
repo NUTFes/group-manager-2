@@ -1,3 +1,4 @@
+import { localizeName } from '@/utils/localizeName';
 import { useTranslation } from 'next-i18next';
 import useSWRMutation from 'swr/mutation';
 import { useAuthenticatedGet } from '@/hooks/useApi';
@@ -78,10 +79,7 @@ export const useGetGroupCategories = () => {
       data?.status.code === 200
         ? data.data.map((category) => ({
             ...category,
-            name:
-              i18n.language.startsWith('en') && category.nameEn
-                ? category.nameEn
-                : category.name,
+            name: localizeName(category, i18n.language.startsWith('en')),
           }))
         : undefined,
     isLoading,

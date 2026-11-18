@@ -1,4 +1,5 @@
 // src/api/rentItemsApi.ts
+import { localizeName } from '@/utils/localizeName';
 import { useTranslation } from 'next-i18next';
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
@@ -82,10 +83,7 @@ export const useRentableItemsByType = (locationType: string) => {
     items:
       response?.data.map((item) => ({
         ...item,
-        name:
-          i18n.language.startsWith('en') && item.nameEn
-            ? item.nameEn
-            : item.name,
+        name: localizeName(item, i18n.language.startsWith('en')),
       })) || [],
     itemsError: error,
     itemsLoading: isLoading,
@@ -107,10 +105,7 @@ export const useAllRentableItems = () => {
     items:
       response?.data.map((item) => ({
         ...item,
-        name:
-          i18n.language.startsWith('en') && item.nameEn
-            ? item.nameEn
-            : item.name,
+        name: localizeName(item, i18n.language.startsWith('en')),
       })) || [],
     itemsError: error,
     itemsLoading: isLoading,

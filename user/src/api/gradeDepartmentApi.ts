@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { localizeName } from '@/utils/localizeName';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import { useUnauthenticatedGet } from '@/hooks/useApi';
@@ -28,8 +29,13 @@ export type SelectorOption = {
 // 登録画面など未ログインの画面でも使うため、認証なしで取得する
 const useLocalizedMasterOptions = (endpoint: string) => {
   const { t, i18n } = useTranslation('common');
-  const { data, error, isLoading } =
-    useUnauthenticatedGet<ApiResponse<MasterResponse[]>>(endpoint);
+  const { data, error, isLoading } = useUnauthenticatedGet<
+    ApiResponse<MasterResponse[]>
+  >(endpoint, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  });
   const isEnglish = i18n.language.startsWith('en');
 
   const options: SelectorOption[] = useMemo(() => {
@@ -38,7 +44,7 @@ const useLocalizedMasterOptions = (endpoint: string) => {
       { id: 0, name: t('lists.select') },
       ...records.map((record) => ({
         id: record.id,
-        name: isEnglish && record.nameEn ? record.nameEn : record.name,
+        name: localizeName(record, isEnglish),
       })),
     ];
   }, [data, isEnglish, t]);
@@ -48,7 +54,10 @@ const useLocalizedMasterOptions = (endpoint: string) => {
   // 取得に失敗すると選択肢がプレースホルダーだけになるため、原因が分かるように通知する
   useEffect(() => {
     if (hasError) {
-      toast.error(t('general.errors.fetch'));
+      // 学年・学部のフックが複数同時に呼ばれても、エラー表示は1件にまとめる
+      toast.error(t('general.errors.fetch'), {
+        toastId: 'master-options-fetch-error',
+      });
     }
   }, [hasError, t]);
 
