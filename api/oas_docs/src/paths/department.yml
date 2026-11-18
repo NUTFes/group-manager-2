@@ -12,7 +12,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Department"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Department"
         '422':
           description: department description
           content:

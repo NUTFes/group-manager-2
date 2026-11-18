@@ -5515,7 +5515,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Department"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Department"
         '422':
           description: department description
           content:
@@ -6570,7 +6582,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Grade"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Grade"
         '422':
           description: grade description
           content:
@@ -12457,6 +12481,12 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+          nullable: true
+        name_en:
+          type: string
+          nullable: true
     devisetokenauth.Password:
       type: object
       properties:
@@ -12514,6 +12544,12 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+          nullable: true
+        name_en:
+          type: string
+          nullable: true
     Group:
       type: object
       properties:

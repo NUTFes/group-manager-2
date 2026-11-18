@@ -7,3 +7,9 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+          nullable: true
+        name_en:
+          type: string
+          nullable: true

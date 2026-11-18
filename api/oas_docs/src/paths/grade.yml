@@ -12,7 +12,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Grade"
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Grade"
         '422':
           description: grade description
           content:
