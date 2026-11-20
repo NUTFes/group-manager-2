@@ -16,6 +16,16 @@ Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成さ
 - `docker compose run --rm user_front npm run dev` / `docker compose run --rm admin_view npm run dev`: 各 Nuxt アプリのローカルサーバーを起動します。
 - `make fmt` または `docker compose run --rm user pnpm run fmt`: Prettier と import 並び替えを適用します。
 
+## Docker 開発環境の扱い
+- 開発、テスト、動作確認は、原則としてルートの `compose.yml` と既存コンテナを使います。ホストへ Ruby・Node.js・DB の依存を追加したり、別の開発環境を新設したりしません。
+- 最初に `docker compose ps` で状態を確認し、必要なサービスだけを `docker compose up -d <service...>` で起動します。すでに動いているサービスは作り直しません。
+- 一回限りのコマンドは `docker compose run --rm <service> ...`、起動済みサービスの状態を使う確認は `docker compose exec -T <service> ...` を使います。
+- 依存関係、Dockerfile、DB 初期化に関係しない変更で `make build-gm3` や全サービスの再 build を行いません。必要なら対象サービスだけを build します。
+- `docker compose down -v`、volume の削除、DB の作り直し、`docker system prune` は、ユーザーから明示的に依頼されない限り実行しません。既存データを保ったまま検証します。
+- `compose.prod.yml` と `compose.stage.yml` は、ユーザーが本番・stage の操作を明示した場合だけ使います。認証情報や不足している環境変数を推測して作りません。
+- ローカルの入口は API `http://localhost:3000`、admin `http://localhost:8000`、user_front `http://localhost:8002`、user `http://localhost:8003`、rental `http://localhost:8004` です。
+- 起動確認は `docker compose ps` と対象サービスの `docker compose logs --tail=100 <service>` で行います。作業前から動いていたコンテナを停止しません。
+
 ## コーディングスタイルと命名ルール
 - Ruby は 2 スペースインデント、`snake_case` 命名、RESTful コントローラ、変更ごとのマイグレーション作成を徹底します。
 - TypeScript / React は `PascalCase` コンポーネント、`camelCase` フックとユーティリティ、スタイルは Tailwind。UI 作成は `make gen-component` でスキャフォールド。
