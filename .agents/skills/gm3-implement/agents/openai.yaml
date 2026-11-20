@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 コード実装"
+  short_description: "既存設計に沿う最小差分でIssue・仕様を実装"
+  default_prompt: "$gm3-implement を使って、このIssueを既存パターンに沿って実装してください。"
+policy:
+  allow_implicit_invocation: true

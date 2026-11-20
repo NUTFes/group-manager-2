@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 branch 作成"
+  short_description: "最新の gm3/develop から安全に作業 branch を作成"
+  default_prompt: "$gm3-start-branch を使って、指定した Issue の作業 branch を作成してください。"
+policy:
+  allow_implicit_invocation: true

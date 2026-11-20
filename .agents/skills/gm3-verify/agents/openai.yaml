@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 動作確認"
+  short_description: "既存Docker環境とブラウザでIssue・PRの動作を確認"
+  default_prompt: "$gm3-verify を使って、現在の変更がIssueどおり動くか確認してください。"
+policy:
+  allow_implicit_invocation: true
