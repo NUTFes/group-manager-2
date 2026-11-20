@@ -1,5 +1,5 @@
-# ベースイメージとして Node.js 22.13.0 を指定
-FROM node:22.13.0
+# ベースイメージとして Node.js 24.22.2 を指定
+FROM node:24.22.2
 
 # corepack経由でpnpmを有効化（全ユーザーが読めるディレクトリにキャッシュさせる）
 ENV COREPACK_HOME=/usr/local/corepack

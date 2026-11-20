@@ -27,11 +27,11 @@ jobs:
         with:
           version: 10.7.0
 
-      # Node.js v22をセットアップ
-      - name: Use Node.js v22
+      # Node.js v24をセットアップ
+      - name: Use Node.js v24
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: 'pnpm'
           cache-dependency-path: ./rental/pnpm-lock.yaml
 

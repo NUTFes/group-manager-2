@@ -1,5 +1,5 @@
 # Build用 コンテナ
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Install corepack
 ENV PNPM_HOME="/pnpm"
@@ -26,7 +26,7 @@ COPY . .
 RUN pnpm run build
 
 # Create runner image
-FROM gcr.io/distroless/nodejs22-debian12:nonroot AS runner
+FROM gcr.io/distroless/nodejs24-debian13:nonroot AS runner
 
 WORKDIR /app
 LABEL org.opencontainers.image.source="https://github.com/NUTFes/group-manager-2"

@@ -1,5 +1,5 @@
-# ベースイメージとして Node.js 20.11.0 を指定
-FROM node:22.13.0
+# ベースイメージとして Node.js 24.22.2 を指定（Playwright 用の apt パッケージ名が変わらないよう bookworm 版）
+FROM node:24.22.2-bookworm
 
 # 必要なツールと Playwright Chromium の実行ライブラリをインストール
 RUN apt-get update \
