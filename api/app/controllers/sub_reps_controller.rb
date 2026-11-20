@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class SubRepsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_sub_rep, only: %i[show update destroy]
   before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
-  before_action :authenticate_api_user!, except: %i[index show get_by_group_id]
 
   # GET /sub_reps
   # GET /sub_reps.json

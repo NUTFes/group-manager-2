@@ -8,31 +8,31 @@ class PurchaseListsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get purchase_lists_url, as: :json
+    get purchase_lists_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should create purchase_list' do
     assert_difference('PurchaseList.count') do
-      post purchase_lists_url, params: { purchase_list: { fes_date_id: @purchase_list.fes_date_id, food_product_id: @purchase_list.food_product_id, is_fresh: @purchase_list.is_fresh, items: @purchase_list.items, shop_id: @purchase_list.shop_id } }, as: :json
+      post purchase_lists_url, headers: api_auth_headers, params: { purchase_list: { fes_date_id: @purchase_list.fes_date_id, food_product_id: @purchase_list.food_product_id, is_fresh: @purchase_list.is_fresh, items: @purchase_list.items, shop_id: @purchase_list.shop_id } }, as: :json
     end
 
     assert_response :created
   end
 
   test 'should show purchase_list' do
-    get purchase_list_url(@purchase_list), as: :json
+    get purchase_list_url(@purchase_list), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update purchase_list' do
-    patch purchase_list_url(@purchase_list), params: { purchase_list: { fes_date_id: @purchase_list.fes_date_id, food_product_id: @purchase_list.food_product_id, is_fresh: @purchase_list.is_fresh, items: @purchase_list.items, shop_id: @purchase_list.shop_id } }, as: :json
+    patch purchase_list_url(@purchase_list), headers: api_auth_headers, params: { purchase_list: { fes_date_id: @purchase_list.fes_date_id, food_product_id: @purchase_list.food_product_id, is_fresh: @purchase_list.is_fresh, items: @purchase_list.items, shop_id: @purchase_list.shop_id } }, as: :json
     assert_response :ok
   end
 
   test 'should destroy purchase_list' do
     assert_difference('PurchaseList.count', -1) do
-      delete purchase_list_url(@purchase_list), as: :json
+      delete purchase_list_url(@purchase_list), headers: api_auth_headers, as: :json
     end
 
     assert_response :no_content

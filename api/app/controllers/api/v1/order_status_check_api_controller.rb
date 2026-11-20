@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::OrderStatusCheckApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_order_status_check_for_admin_view
     @groups = Group.with_order_status_check(params[:id])
     render json: fmt(ok, @groups)

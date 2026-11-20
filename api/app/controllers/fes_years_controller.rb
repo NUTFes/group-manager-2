@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FesYearsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_fes_year, only: %i[show update destroy]
 
   def index

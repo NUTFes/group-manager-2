@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::FesDatesApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_refinement_fes_date_by_fes_year
     fes_year_id = params[:fes_year_id]
     @fes_dates = FesDate.where(fes_year_id: fes_year_id)

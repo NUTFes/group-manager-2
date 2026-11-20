@@ -31,7 +31,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get employees_url, as: :json
+    get employees_url, headers: auth_headers, as: :json
     assert_response :success
   end
 
@@ -54,7 +54,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show employee' do
-    get employee_url(@employee), as: :json
+    get employee_url(@employee), headers: auth_headers, as: :json
     assert_response :success
   end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::PowerOrdersApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_power_order_index_for_admin_view
     @power_orders = PowerOrder.with_groups
     render json: fmt(ok, @power_orders)

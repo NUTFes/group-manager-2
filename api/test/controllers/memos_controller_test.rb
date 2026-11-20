@@ -8,31 +8,31 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get memos_url, as: :json
+    get memos_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should create memo' do
     assert_difference('Memo.count') do
-      post memos_url, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
+      post memos_url, headers: api_auth_headers, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
     end
 
     assert_response :created
   end
 
   test 'should show memo' do
-    get memo_url(@memo), as: :json
+    get memo_url(@memo), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update memo' do
-    patch memo_url(@memo), params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
+    patch memo_url(@memo), headers: api_auth_headers, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
     assert_response :ok
   end
 
   test 'should destroy memo' do
     assert_difference('Memo.count', -1) do
-      delete memo_url(@memo), as: :json
+      delete memo_url(@memo), headers: api_auth_headers, as: :json
     end
 
     assert_response :no_content

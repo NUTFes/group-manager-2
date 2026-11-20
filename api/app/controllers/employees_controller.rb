@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmployeesController < ApplicationController
-  before_action :authenticate_api_user!, except: %i[index show get_by_group]
+  before_action :authenticate_api_user!
   before_action :set_employee, only: %i[show update destroy]
 
   # GET /employees

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserPageSettingsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_user_page_setting, only: %i[show update destroy]
 
   # GET /user_page_settings

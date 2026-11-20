@@ -1,5 +1,6 @@
 import camelcaseKeys from 'camelcase-keys';
 import type { Session } from 'next-auth';
+import { getSession } from 'next-auth/react';
 import snakecaseKeys from 'snakecase-keys';
 import { MutationFetcher } from 'swr/mutation';
 
@@ -37,6 +38,23 @@ function buildHeaders(session?: Session): HeadersInit {
     haaders['uid'] = session.uid!;
   }
   return haaders;
+}
+
+// 同時に走った呼び出しで getSession() を共有し、/api/auth/session への問い合わせを1回にまとめる
+let pendingSession: ReturnType<typeof getSession> | null = null;
+
+/**
+ * 現在のセッションから認証ヘッダーを組み立てる
+ * useSession を使えない箇所（レガシーFetcherや生のfetch）向け
+ */
+export async function buildAuthHeaders(): Promise<HeadersInit> {
+  if (!pendingSession) {
+    pendingSession = getSession().finally(() => {
+      pendingSession = null;
+    });
+  }
+  const session = await pendingSession;
+  return buildHeaders(session ?? undefined);
 }
 
 /** クエリ文字列化 */
@@ -179,9 +197,7 @@ export async function legacyPostFetcher(
 
   const response = await fetch(finalUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: await buildAuthHeaders(),
     body: JSON.stringify(arg.body),
   });
 
@@ -208,9 +224,7 @@ export async function legacyPatchFetcher(
 
   const response = await fetch(finalUrl, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: await buildAuthHeaders(),
     body: JSON.stringify(arg.body),
   });
 
@@ -239,9 +253,7 @@ export async function legacyDeleteFetcher(
 
   const response = await fetch(finalUrl, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: await buildAuthHeaders(),
   });
 
   if (!response.ok) {

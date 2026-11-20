@@ -14,25 +14,25 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create news' do
     assert_difference('News.count') do
-      post news_index_url, params: { news: { body: @news.body, title: @news.title } }, as: :json
+      post news_index_url, headers: api_auth_headers, params: { news: { body: @news.body, title: @news.title } }, as: :json
     end
 
     assert_response :created
   end
 
   test 'should show news' do
-    get news_url(@news), as: :json
+    get news_url(@news), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update news' do
-    patch news_url(@news), params: { news: { body: @news.body, title: @news.title } }, as: :json
+    patch news_url(@news), headers: api_auth_headers, params: { news: { body: @news.body, title: @news.title } }, as: :json
     assert_response :ok
   end
 
   test 'should destroy news' do
     assert_difference('News.count', -1) do
-      delete news_url(@news), as: :json
+      delete news_url(@news), headers: api_auth_headers, as: :json
     end
 
     assert_response :no_content

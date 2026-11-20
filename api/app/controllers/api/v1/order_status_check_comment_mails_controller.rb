@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :require_mail_delivery_role!
 
   # メモを保存し、保存済みメモの本文をメール送信する

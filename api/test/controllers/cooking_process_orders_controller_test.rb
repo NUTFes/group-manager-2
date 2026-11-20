@@ -17,6 +17,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate(calls) do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                food_product_id: food_product.id,
@@ -41,6 +42,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_raises do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                food_product_id: food_product.id,
@@ -64,6 +66,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_raises do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                food_product_id: food_product.id,
@@ -88,6 +91,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_original do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                food_product_id: food_product.id,
@@ -113,6 +117,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_raises do
       put cooking_process_order_url(order),
+          headers: api_auth_headers,
           params: {
             cooking_process_order: {
               food_product_id: order.food_product_id,
@@ -141,6 +146,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate(calls) do
       put cooking_process_order_url(order),
+          headers: api_auth_headers,
           params: {
             cooking_process_order: {
               food_product_id: order.food_product_id,
@@ -167,6 +173,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_raises do
       post upsert_cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_orders: [
                {
@@ -199,6 +206,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate(calls) do
       post upsert_cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_orders: [
                {
@@ -224,6 +232,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   test 'create fails without food_product_id' do
     assert_no_difference('CookingProcessOrder.count') do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                pre_open_kitchen: true,
@@ -239,6 +248,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
   test 'create fails with invalid food_product_id' do
     assert_no_difference('CookingProcessOrder.count') do
       post cooking_process_orders_url,
+           headers: api_auth_headers,
            params: {
              cooking_process_order: {
                food_product_id: -1,
@@ -256,6 +266,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference('CookingProcessOrder.count') do
       stub_deepl_translate_original do
         post upsert_cooking_process_orders_url,
+             headers: api_auth_headers,
              params: {
                cooking_process_orders: [
                  {
@@ -281,6 +292,7 @@ class CookingProcessOrdersControllerTest < ActionDispatch::IntegrationTest
 
     stub_deepl_translate_raises do
       put cooking_process_order_url(order),
+          headers: api_auth_headers,
           params: {
             cooking_process_order: {
               food_product_id: nil,

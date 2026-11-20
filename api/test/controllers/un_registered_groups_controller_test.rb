@@ -14,7 +14,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index without group_id filter' do
-    get un_registered_groups_url, as: :json
+    get un_registered_groups_url, headers: api_auth_headers, as: :json
     assert_response :success
 
     body = response.parsed_body
@@ -27,7 +27,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
     # NOTE: GET + as: :json + params は Rails のテストヘルパーが
     # X-Http-Method-Override 付きの POST に変換してしまうため、
     # クエリパラメータ付きの GET では as: :json を付けない。
-    get un_registered_groups_url, params: { group_id: @un_registered_group.group_id }
+    get un_registered_groups_url, headers: api_auth_headers, params: { group_id: @un_registered_group.group_id }
     assert_response :success
 
     body = response.parsed_body
@@ -37,7 +37,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'index filtered by group_id with no matching records returns empty array' do
-    get un_registered_groups_url, params: { group_id: 0 }
+    get un_registered_groups_url, headers: api_auth_headers, params: { group_id: 0 }
     assert_response :success
 
     body = response.parsed_body
@@ -47,6 +47,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
   test 'should create un_registered_group' do
     assert_difference('UnRegisteredGroup.count') do
       post un_registered_groups_url,
+           headers: api_auth_headers,
            params: { un_registered_group: { group_id: groups(:one).id, order_type: 'sub_rep' } },
            as: :json
     end
@@ -56,19 +57,20 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should not create un_registered_group without required params' do
     assert_no_difference('UnRegisteredGroup.count') do
-      post un_registered_groups_url, params: { un_registered_group: { group_id: nil, order_type: nil } }, as: :json
+      post un_registered_groups_url, headers: api_auth_headers, params: { un_registered_group: { group_id: nil, order_type: nil } }, as: :json
     end
 
     assert_response :unprocessable_entity
   end
 
   test 'should show un_registered_group' do
-    get un_registered_group_url(@un_registered_group), as: :json
+    get un_registered_group_url(@un_registered_group), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should get by group and order_type' do
     get group_un_registered_groups_url,
+        headers: api_auth_headers,
         params: { group_id: @un_registered_group.group_id, order_type: @un_registered_group.order_type }
     assert_response :success
 
@@ -79,6 +81,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
 
   test 'group action returns not found body when no records match' do
     get group_un_registered_groups_url,
+        headers: api_auth_headers,
         params: { group_id: @un_registered_group.group_id, order_type: 'nonexistent_order_type' }
     assert_response :success
 
@@ -89,7 +92,7 @@ class UnRegisteredGroupsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should destroy un_registered_group' do
     assert_difference('UnRegisteredGroup.count', -1) do
-      delete un_registered_group_url(@un_registered_group), as: :json
+      delete un_registered_group_url(@un_registered_group), headers: api_auth_headers, as: :json
     end
   end
 end

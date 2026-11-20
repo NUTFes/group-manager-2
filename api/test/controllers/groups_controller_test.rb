@@ -8,31 +8,31 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get groups_url, as: :json
+    get groups_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should create group' do
     assert_difference('Group.count') do
-      post groups_url, params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
+      post groups_url, headers: api_auth_headers, params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
     end
 
     assert_response :created
   end
 
   test 'should show group' do
-    get group_url(@group), as: :json
+    get group_url(@group), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update group' do
-    patch group_url(@group), params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
+    patch group_url(@group), headers: api_auth_headers, params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
     assert_response :ok
   end
 
   test 'should destroy group' do
     assert_difference('Group.count', -1) do
-      delete group_url(@group), as: :json
+      delete group_url(@group), headers: api_auth_headers, as: :json
     end
 
     assert_response :no_content

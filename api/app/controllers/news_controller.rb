@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class NewsController < ApplicationController
+  before_action :authenticate_api_user!, except: %i[index]
   before_action :set_news, only: %i[show update destroy]
 
   # GET /news

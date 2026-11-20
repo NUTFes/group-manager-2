@@ -3,18 +3,7 @@
 class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationController
   APPLICATION_TYPES = HealthCenterSubmissionStatus.application_types.keys.freeze
 
-  before_action :authenticate_api_user!, only: %i[
-    get_health_center_submission_status_index_for_admin_view
-    get_health_center_submission_status_show_for_admin_view
-    update_health_center_submission_status
-    upsert_health_center_submission_status
-    get_health_center_submission_status_counts
-    create_health_center_submission_status_comment
-    create_health_center_submission_status_comment_mail
-    resend_health_center_submission_status_comment_mail
-    sync_health_center_submission_statuses
-    update_health_center_submission_target
-  ]
+  before_action :authenticate_api_user!
 
   before_action :require_admin!, only: %i[
     update_health_center_submission_target

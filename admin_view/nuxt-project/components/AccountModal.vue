@@ -77,6 +77,11 @@
 </template>
 
 <script>
+import {
+  clearAuthTokenCookies,
+  setAuthTokenCookie,
+} from "~/utils/auth-token-cookie";
+
 export default {
   data() {
     return {
@@ -161,6 +166,7 @@ export default {
       };
       this.$axios.post(userUrl, params).then(() => {
         localStorage.setItem("uid", this.email);
+        setAuthTokenCookie("uid", this.email);
         this.closeEditModal()
       });
     },
@@ -169,6 +175,8 @@ export default {
       localStorage.removeItem("access-token");
       localStorage.removeItem("client");
       localStorage.removeItem("uid");
+      localStorage.removeItem("token-type");
+      clearAuthTokenCookies();
       this.$router.push("/");
     },
   },

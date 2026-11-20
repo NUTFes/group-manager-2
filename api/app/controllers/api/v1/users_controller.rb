@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_api_user!, only: %i[
-    get_user_index_for_admin_view get_user_show_for_admin_view
-    get_representative_index_for_admin_view get_representative_show_for_admin_view
-    get_refinement_users get_search_users show
-    update edit_user_info reset_password
-  ]
+  before_action :authenticate_api_user!
 
   def get_user_index_for_admin_view
     @users = User.with_user_details

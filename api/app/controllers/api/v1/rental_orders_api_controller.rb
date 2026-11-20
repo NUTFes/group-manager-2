@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::RentalOrdersApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_rental_order_index_for_admin_view
     @rental_orders = RentalOrder.with_groups_and_rental_item
     render json: fmt(ok, @rental_orders)

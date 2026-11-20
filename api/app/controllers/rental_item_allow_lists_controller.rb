@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RentalItemAllowListsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_rental_item_allow_list, only: %i[show update destroy]
 
   def index

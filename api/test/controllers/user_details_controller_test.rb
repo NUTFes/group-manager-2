@@ -8,31 +8,31 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
-    get user_details_url, as: :json
+    get user_details_url, headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should create user_detail' do
     assert_difference('UserDetail.count') do
-      post user_details_url, params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
+      post user_details_url, headers: api_auth_headers, params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
     end
 
     assert_response :created
   end
 
   test 'should show user_detail' do
-    get user_detail_url(@user_detail), as: :json
+    get user_detail_url(@user_detail), headers: api_auth_headers, as: :json
     assert_response :success
   end
 
   test 'should update user_detail' do
-    patch user_detail_url(@user_detail), params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
+    patch user_detail_url(@user_detail), headers: api_auth_headers, params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
     assert_response :ok
   end
 
   test 'should destroy user_detail' do
     assert_difference('UserDetail.count', -1) do
-      delete user_detail_url(@user_detail), as: :json
+      delete user_detail_url(@user_detail), headers: api_auth_headers, as: :json
     end
 
     assert_response :no_content

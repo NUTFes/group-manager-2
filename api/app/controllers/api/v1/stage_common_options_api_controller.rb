@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::StageCommonOptionsApiController < ApplicationController
+  before_action :authenticate_api_user!
+
   def get_stage_common_option_index_for_admin_view
     @stage_common_options = StageCommonOption.with_groups
     render json: fmt(ok, @stage_common_options)
