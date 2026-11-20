@@ -10,6 +10,7 @@
 - 依存関係、Dockerfile、DB 初期化に関係しない変更では `make build-gm3` や全サービスの再 build を行いません。必要なら対象サービスだけを build します。
 - `docker compose down -v`、volume の削除、DB の作り直し、`docker system prune` は、ユーザーから明示的に依頼されない限り実行しません。
 - `compose.prod.yml` と `compose.stage.yml` は、ユーザーが対象環境の操作を明示した場合だけ使います。秘密値や不足している環境変数は推測しません。
+- 動作確認に必要なデータはローカルDBへ作成して構いません。作成・更新したデータ、再現手順、後始末の要否を報告し、既存データの破壊やDB全体の初期化は避けます。
 - ローカルの入口は API `http://localhost:3000`、admin `http://localhost:8000`、user_front `http://localhost:8002`、user `http://localhost:8003`、rental `http://localhost:8004` です。
 - `docker compose ps` と `docker compose logs --tail=100 <service>` で状態を確かめ、作業前から動いていたコンテナは停止しません。
 
