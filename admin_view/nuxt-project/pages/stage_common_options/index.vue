@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).stage_common_options.read">
     <SubHeader pageTitle="ステージオプション申請一覧">
       <CommonButton v-if="this.$role(roleID).stage_common_options.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -165,10 +165,6 @@
             </option>
           </select>
         </div>
-        <div>
-          <h3>ステージ内容</h3>
-          <textarea v-model="stageContent" placeholder="入力してください" />
-        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitEmployee"
@@ -180,10 +176,12 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
@@ -220,7 +218,6 @@ export default {
       bgm: "",
       cameraPermission: "",
       loudSound: "",
-      stageContent: "",
       //refinement
       stageCommonOption: [],
       searchText: "",
@@ -268,8 +265,65 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsOwnEquipmentID = localStorage.getItem(this.$route.path + 'RefIsOwnEquipment');
+    if (storedIsOwnEquipmentID) {
+      this.refIsOwnEquipmentID = Number(storedIsOwnEquipmentID);
+      this.updateFilters(this.refIsOwnEquipmentID, this.isOwnEquipmentList);
+    } else {
+      this.refIsOwnEquipment = '所持機器の使用';
+    }
+
+    const storedIsBgmID = localStorage.getItem(this.$route.path + 'RefIsBgm');
+    if (storedIsBgmID) {
+      this.refIsBgmID = Number(storedIsBgmID);
+      this.updateFilters(this.refIsBgmID, this.isBgmList);
+    } else {
+      this.refIsBgm = '音楽をかける';
+    }
+
+    const storedIsCameraPermissionID = localStorage.getItem(this.$route.path + 'RefIsCameraPermission');
+    if (storedIsCameraPermissionID) {
+      this.refIsCameraPermissionID = Number(storedIsCameraPermissionID);
+      this.updateFilters(this.refIsCameraPermissionID, this.isCameraPermissionList);
+    } else {
+      this.refIsCameraPermission = '撮影許可';
+    }
+
+    const storedIsLoudSoundID = localStorage.getItem(this.$route.path + 'RefIsLoudSound');
+    if (storedIsLoudSoundID) {
+      this.refIsLoudSoundID = Number(storedIsLoudSoundID);
+      this.updateFilters(this.refIsLoudSoundID, this.isLoudSoundList);
+    } else {
+      this.refIsLoudSound = '大きな音';
+    }
+
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+
     async refinementStageCommonOptions(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsOwnEquipment', this.refIsOwnEquipmentID);
+      localStorage.setItem(this.$route.path + 'RefIsBgm', this.refIsBgmID);
+      localStorage.setItem(this.$route.path + 'RefIsCameraPermission', this.refIsCameraPermissionID);
+      localStorage.setItem(this.$route.path + 'RefIsLoudSound', this.refIsLoudSoundID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (Object.is(name_list, this.yearList)) {
         this.refYearID = item_id;
@@ -316,6 +370,8 @@ export default {
           this.refIsLoudSound = name_list[item_id - 1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.stageCommonOption = [];
       const refUrl =
         "/api/v1/get_refinement_stage_common_options?fes_year_id=" +
@@ -332,8 +388,19 @@ export default {
       for (const res of refRes.data) {
         this.stageCommonOption.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchStageCommonOptions();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchStageCommonOptions() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.stageCommonOption = [];
       const searchUrl =
         "/api/v1/get_search_stage_common_options?word=" + this.searchText;
@@ -369,9 +436,7 @@ export default {
         "&camera_permission=" +
         this.cameraPermission +
         "&loud_sound=" +
-        this.loudSound +
-        "&stage_content=" +
-        this.stageContent;
+        this.loudSound;
       console.log(postStageOptionUrl);
 
       await this.$axios.$post(postStageOptionUrl).then((response) => {
@@ -381,7 +446,6 @@ export default {
         this.bgm = "";
         this.cameraPermission = "";
         this.loudSound = "";
-        this.stageContent = "";
         this.refinementStageCommonOptions(0, this.yearList);
         this.closeAddModal();
       });
@@ -391,7 +455,8 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_stage_common_options_csv/" +
         this.refYearID;
-      window.open(url, "ステージオプション申請_CSV");
+      await downloadFile(this.$axios,url, "ステージオプション申請_CSV","text/csv");
+      this.openSnackBar("ステージオプション申請一覧をダウンロードしました");
     },
   },
 };

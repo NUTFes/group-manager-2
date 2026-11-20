@@ -1,10 +1,11 @@
-class Api::V1::FesDatesApiController < ApplicationController
+# frozen_string_literal: true
 
+class Api::V1::FesDatesApiController < ApplicationController
   def get_refinement_fes_date_by_fes_year
     fes_year_id = params[:fes_year_id]
     @fes_dates = FesDate.where(fes_year_id: fes_year_id)
 
-    if @fes_dates.count == 0
+    if @fes_dates.none?
       render json: fmt(not_found, @fes_dates)
     else
       render json: fmt(ok, @fes_dates)
@@ -17,4 +18,3 @@ class Api::V1::FesDatesApiController < ApplicationController
     render json: fmt(ok, @fes_dates)
   end
 end
-

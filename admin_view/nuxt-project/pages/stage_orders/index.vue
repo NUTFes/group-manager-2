@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).stage_orders.read">
     <SubHeader pageTitle="ステージ申請一覧">
       <CommonButton
         v-if="this.$role(roleID).stage_orders.create"
@@ -26,7 +26,7 @@
         <SearchDropDown
           :nameList="isSunnyList"
           :on_click="refinementStageOrders"
-          value="value"
+          value="text"
         >
           {{ refIsSunny }}
         </SearchDropDown>
@@ -80,15 +80,10 @@
           >
             <td>{{ stageOrder.stage_order.id }}</td>
             <td>{{ stageOrder.group.name }}</td>
-            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ formatWeather(stageOrder.stage_order.is_sunny) }}</td>
             <td>{{ stageOrder.stage_order_info.date }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
-            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
-            <td v-if="venueMaps[index]">
-              <div v-if="venueMaps[index].venue_map === null">未登録</div>
-              <div v-else>登録済み</div>
-            </td>
-            <td v-else>会場配置図を読み込めません</td>
+            <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
           </tr>
         </template>
       </Table>
@@ -231,10 +226,13 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+import { formatWeather } from '~/utils/constants';
 export default {
   watchQuery: ["page"],
   data() {
@@ -246,12 +244,10 @@ export default {
         "希望日",
         "第一希望",
         "第二希望",
-        "会場配置図",
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isIntervalMode: true,
-      venueMaps: [],
       isSunnyList: [
         { id: 1, text: "はい", value: true },
         { id: 2, text: "いいえ", value: false },
@@ -339,14 +335,6 @@ export default {
 
     const stageOrdersRes = await $axios.$post(url);
 
-    let venueMaps = [];
-    for (const res of stageOrdersRes.data) {
-      const vennuMapUrl =
-        "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
-      const venueMapRes = await $axios.$get(vennuMapUrl);
-      venueMaps.push(venueMapRes.data);
-    }
-
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const stagesUrl = "/stages";
@@ -360,16 +348,51 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
       stageList: stagesRes.data,
-      venueMaps: venueMaps,
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
+
     // 時間を作る
     for (let hour of this.hour_range) {
       for (let minute of this.minute_range) {
         this.timeRange.push(hour + ":" + minute);
       }
     }
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsSunnyID = localStorage.getItem(this.$route.path + 'RefIsSunny');
+    if (storedIsSunnyID) {
+      this.refIsSunnyID = Number(storedIsSunnyID);
+      this.updateFilters(this.refIsSunnyID, this.isSunnyList);
+    } else {
+      this.refIsSunny = '晴れ希望';
+    }
+
+    const storedDaysNumID = localStorage.getItem(this.$route.path + 'RefDaysNum');
+    if (storedDaysNumID) {
+      this.refDaysNumID = Number(storedDaysNumID);
+      this.updateFilters(this.refDaysNumID, this.daysNumList);
+    } else {
+      this.refDaysNum = '何日目';
+    }
+
+    const storedStageID = localStorage.getItem(this.$route.path + 'RefStage');
+    if (storedStageID) {
+      this.refStageID = Number(storedStageID);
+      this.updateFilters(this.refStageID, this.stageList);
+    } else {
+      this.refStage = 'Stage';
+    }
+
+    this.fetchFilteredData();
   },
   computed: {
     useInterval() {
@@ -383,10 +406,19 @@ export default {
     }),
   },
   methods: {
+    formatWeather,
     changeMode() {
       this.isIntervalMode = !this.isIntervalMode;
     },
     async refinementStageOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsSunny', this.refIsSunnyID);
+      localStorage.setItem(this.$route.path + 'RefDaysNum', this.refDaysNumID);
+      localStorage.setItem(this.$route.path + 'RefStage', this.refStageID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -403,7 +435,7 @@ export default {
         if (item_id == 0) {
           this.refIsSunny = "ALL";
         } else {
-          this.refIsSunny = name_list[item_id - 1].value;
+          this.refIsSunny = name_list[item_id - 1].text;
         }
         // days_numで絞り込むとき
       } else if (Object.is(name_list, this.daysNumList)) {
@@ -424,8 +456,9 @@ export default {
           this.refStage = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.stageOrders = [];
-      this.venueMaps = [];
       const refUrl =
         "/api/v1/get_refinement_stage_orders?fes_year_id=" +
         this.refYearID +
@@ -437,16 +470,19 @@ export default {
         this.refIsSunnyID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
-        const url =
-          "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
-        const response = await this.$axios.$get(url);
         this.stageOrders.push(res);
-        this.venueMaps.push(response.data);
+      }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchStageOrders();
       }
     },
     async searchStageOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.stageOrders = [];
-      this.venueMaps = [];
       const searchUrl =
         "/api/v1/get_search_stage_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
@@ -455,7 +491,6 @@ export default {
           "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
         const response = await this.$axios.$get(url);
         this.stageOrders.push(res);
-        this.venueMaps.push(response.data);
       }
     },
     openSnackBar(message) {
@@ -538,7 +573,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_stage_orders_csv/" + this.refYearID;
-      window.open(url, "ステージ申請一覧_CSV");
+      await downloadFile(this.$axios,url, "ステージ申請一覧_CSV", "text/csv");
+      this.openSnackBar("ステージ申請一覧をダウンロードしました");
     },
   },
 };

@@ -1,1 +1,3 @@
-json.array! @stocker_items, partial: "stocker_items/stocker_item", as: :stocker_item
+# frozen_string_literal: true
+
+json.array! @stocker_items, partial: 'stocker_items/stocker_item', as: :stocker_item

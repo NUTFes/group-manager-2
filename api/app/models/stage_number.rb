@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageNumber < ApplicationRecord
   belongs_to :stage
   belongs_to :group_identification

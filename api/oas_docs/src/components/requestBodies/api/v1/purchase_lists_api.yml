@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    api.v1.PurchaseListsApi:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/api.v1.PurchaseListsApi"

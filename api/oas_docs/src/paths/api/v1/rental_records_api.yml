@@ -1,0 +1,102 @@
+---
+paths:
+  "/api/v1/get_assign_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_groups_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_items_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_rental_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false
+  "/api/v1/get_stocker_places_for_rental_view":
+    get:
+      tags:
+      - api/v1/rental_records_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+        '422':
+          description: api/v1/rental_records_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.RentalRecordsApi"
+      deprecated: false

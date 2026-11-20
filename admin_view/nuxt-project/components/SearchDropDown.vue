@@ -150,8 +150,8 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .drop-down__box {

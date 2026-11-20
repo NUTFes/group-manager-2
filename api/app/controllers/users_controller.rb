@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  # before_action :authenticate_api_user!
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: %i[show update destroy]
+
+  before_action :authenticate_api_user!, only: %i[index show get_current_user show_user_detail show_user_detail]
 
   def index
     @users = User.all
     render json: fmt(ok, @users)
   end
-  
+
   def show
     render json: fmt(ok, @user)
   end
@@ -18,12 +21,12 @@ class UsersController < ApplicationController
 
   def update
     @user.update(user_params)
-    render json: fmt(ok, @user, "Updated user id = "+params[:id])
+    render json: fmt(ok, @user, "Updated user id = #{params[:id]}")
   end
 
   def destroy
     @user.destroy
-    render json: fmt(ok, [], "Deleted user = "+params[:id])
+    render json: fmt(ok, [], "Deleted user = #{params[:id]}")
   end
 
   def show_user_detail
@@ -39,11 +42,10 @@ class UsersController < ApplicationController
     user_provider = @user.provider
     user_name = @user.name
     email = @user.email
-    
+
     @groups = @user.groups
     groups = []
-    for group in @groups
-      group_data = []
+    @groups.each do |group|
       group_data = {
         group: group,
         fes_year: group.fes_year.year_num,
@@ -64,7 +66,7 @@ class UsersController < ApplicationController
       department: department,
       department_id: department_id,
       student_id: student_id,
-      tel: tel,
+      tel: tel
     }
 
     render json: fmt(ok, user_detail)
@@ -83,8 +85,8 @@ class UsersController < ApplicationController
       grade: @grade,
       department: @department,
       student_id: @student_id,
-      tel: @tel,
-      
+      tel: @tel
+
     }
 
     render json: fmt(ok, user_detail)
@@ -93,12 +95,12 @@ class UsersController < ApplicationController
   def edit_user_info
     @user = User.find(edit_user_info_params[:user_id])
     @user_detail = @user.user_detail
-    @user.name = edit_user_info_params[:name] 
-    @user.email = edit_user_info_params[:email] 
-    @user_detail.student_id = edit_user_info_params[:student_id] 
-    @user_detail.grade_id = edit_user_info_params[:grade_id] 
-    @user_detail.department_id = edit_user_info_params[:department_id] 
-    @user_detail.tel = edit_user_info_params[:tel] 
+    @user.name = edit_user_info_params[:name]
+    @user.email = edit_user_info_params[:email]
+    @user_detail.student_id = edit_user_info_params[:student_id]
+    @user_detail.grade_id = edit_user_info_params[:grade_id]
+    @user_detail.department_id = edit_user_info_params[:department_id]
+    @user_detail.tel = edit_user_info_params[:tel]
     @user.save!
     @user_detail.save!
   end
@@ -108,37 +110,37 @@ class UsersController < ApplicationController
     @user.password = reset_password_params[:password]
     @user.password_confirmation = reset_password_params[:password_confirmation]
     @user.save!
-    render json: fmt(ok, [], "Updated password user_id = "+params[:user_id])
+    render json: fmt(ok, [], "Updated password user_id = #{params[:user_id]}")
   end
 
   def simply_user_create
     @user = User.create(simply_user_create_params)
-    if @user.id == nil
-      render json: fmt(internal_server_error, [], "internal_server_error")
-    else 
+    if @user.id.nil?
+      render json: fmt(internal_server_error, [], 'internal_server_error')
+    else
       render json: fmt(created, @user)
     end
   end
 
   private
 
-    def set_user
-      @user = User.find(params[:id])
-    end
+  def set_user
+    @user = User.find(params[:id])
+  end
 
-    def user_params
-      params.permit(:name, :email, :role_id)
-    end
-  
-    def edit_user_info_params
-      params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
-    end
+  def user_params
+    params.permit(:name, :email, :role_id)
+  end
 
-    def reset_password_params
-      params.permit(:user_id, :password, :password_confirmation)
-    end
+  def edit_user_info_params
+    params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
+  end
 
-    def simply_user_create_params
-      params.permit(:name, :email, :password, :password_confirmation, :role_id)
-    end
+  def reset_password_params
+    params.permit(:user_id, :password, :password_confirmation)
+  end
+
+  def simply_user_create_params
+    params.permit(:name, :email, :password, :password_confirmation, :role_id)
+  end
 end

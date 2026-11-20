@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).users.read">
     <SubHeader pageTitle="ユーザー一覧">
       <CommonButton v-if="this.$role(roleID).users.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -54,7 +54,7 @@
         </template>
       </Table>
     </Card>
-     
+
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
@@ -130,39 +130,40 @@
     </SnackBar>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   watchQuery: ["page"],
   data() {
     return {
       headers: ["ID", "名前", "権限"],
       roles: [
-        { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-        { id: 2, name: "manager" }, // 管理者( 参加団体部門長にユーザ画面制御の権限のみを与える )
-        { id: 3, name: "user" },  // 参加団体( 権限を与えない )
-        { id: 4, name: "member" },  // 実行委員/その他の部門長 (閲覧権限のみ与える)
+        { id: 1, name: "manager" },
+        { id: 2, name: "staff" },
+        { id: 3, name: "user" },
       ],
       departmentList: [
-        { id: 1,  name: "機械創造工学課程" },
-        { id: 2,  name: "電気電子情報工学課程" },
-        { id: 3,  name: "物質材料工学課程/生物機能工学課程" },
-        { id: 4,  name: "環境社会基盤工学課程" },
-        { id: 5,  name: "情報・経営システム工学課程" },
-        { id: 6,  name: "機械創造工学専攻" },
-        { id: 7,  name: "電気電子情報工学専攻" },
-        { id: 8,  name: "物質材料工学専攻/生物機能工学専攻" },
-        { id: 9, name: "環境社会基盤工学専攻" },
-        { id: 10, name: "情報・経営システム工学専攻" },
-        { id: 11, name: "原子力システム安全工学専攻" },
-        { id: 12, name: "システム安全専攻" },
+        { id: 1,  name: "機械工学分野/機械創造工学課程" },
+        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学課程" },
+        { id: 3,  name: "物質生物工学分野/物質材料工学課程/生物機能工学課程" },
+        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学課程" },
+        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学課程" },
+        { id: 6,  name: "機械工学分野/機械創造工学専攻" },
+        { id: 7,  name: "電気電子情報工学分野/電気電子情報工学専攻" },
+        { id: 8,  name: "物質生物工学分野/物質材料工学専攻/生物機能工学専攻" },
+        { id: 9,  name: "環境社会基盤工学分野/環境社会基盤工学専攻" },
+        { id: 10, name: "情報・経営システム工学分野/情報・経営システム工学専攻" },
+        { id: 11, name: "量子・原子力統合工学分野/原子力システム安全工学専攻" },
+        { id: 12, name: "システム安全工学専攻" },
         { id: 13, name: "技術科学イノベーション専攻" },
-        { id: 14, name: "情報・制御工学専攻" },
-        { id: 15, name: "材料工学専攻" },
-        { id: 16, name: "エネルギー・環境工学専攻" },
-        { id: 17, name: "生物統合工学専攻" },
+        { id: 14, name: "情報・制御工学分野/情報・制御工学専攻" },
+        { id: 15, name: "材料工学分野/材料工学専攻" },
+        { id: 16, name: "エネルギー工学分野/エネルギー・環境工学専攻" },
+        { id: 17, name: "社会環境・生物機能工学分野/生物統合工学専攻" },
         { id: 18, name: "その他" },
       ],
       gradeList: [
@@ -198,25 +199,60 @@ export default {
       createPassword: null,
       createPasswordConfirmation: null,
       createUserId: null,
-      createRoleId: 2,
-    };
-  },
-  async asyncData({ $axios }) {
-    const url = "/api/v1/get_user_index_for_admin_view";
-    const userRes = await $axios.$get(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    return {
-      users: userRes.data,
-      yearList: yearsRes.data,
+      createRoleId: 3,
     };
   },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    canCreate() {
+      return (
+        this.createName &&
+        this.createStudentId &&
+        this.createEmail &&
+        this.createTel &&
+        this.createDepartmentId &&
+        this.createGradeId &&
+        this.createPassword &&
+        this.createPasswordConfirmation &&
+        this.createPassword === this.createPasswordConfirmation
+      );
+    },
+  },
+  mounted() {
+    // スクロール位置の復元リスナー
+    window.addEventListener("scroll", this.saveScrollPosition);
+
+    // 初期データ取得
+    this.fetchInitialData();
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
+    },
+    async fetchInitialData() {
+      // ユーザー一覧と年度リストを同時取得
+      const [userRes, yearsRes] = await Promise.all([
+        this.$axios.$get("/api/v1/get_user_index_for_admin_view"),
+        this.$axios.$get("/fes_years"),
+      ]);
+      this.users = userRes.data;
+      this.yearList = yearsRes.data;
+
+      // フィルタ・検索・スクロール復元
+      const storedRoleID = localStorage.getItem(
+        this.$route.path + "RefRole"
+      );
+      if (storedRoleID) {
+        this.refRoleID = Number(storedRoleID);
+        this.updateFilters(this.refRoleID, this.roles);
+      }
+      this.fetchFilteredData();
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
@@ -233,20 +269,38 @@ export default {
       this.isOpenSnackBar = false;
     },
     async refinementUsers(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefRole', item_id);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       this.refRoleID = item_id
       if (item_id == 0){
         this.refRole = "ALL";
       } else {
         this.refRole = name_list[item_id - 1].name;
       }
+    },
+    async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data){
         this.users.push(res)
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchUsers();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchUsers(){
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.users = []
       const searchUrl = "/api/v1/get_search_users?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
@@ -254,6 +308,7 @@ export default {
         this.users.push(res);
       }
     },
+    // TODO: api/auth/のAPIに変更し、user_detailsをきちんと登録する（現状は電話番号が登録できない）
     async simplyUserCreate() {
       const simply_user_create_url = "/users/simply_user_create"
       var simply_user_create_params = {

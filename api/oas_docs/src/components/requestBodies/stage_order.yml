@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    StageOrder:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/StageOrder"

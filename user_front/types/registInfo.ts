@@ -90,7 +90,6 @@ interface Stage_common_option {
   bgm: boolean;
   camera_permission: boolean;
   loud_sound: boolean;
-  stage_content: string;
 }
 
 interface Power_orders {

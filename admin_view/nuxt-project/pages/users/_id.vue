@@ -1,10 +1,18 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
-      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).users.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         権限編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openResetModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).users.update"
+        iconName="edit"
+        :on_click="openResetModal"
+      >
         パスワード再設定
       </CommonButton>
     </SubHeader>
@@ -64,15 +72,15 @@
       title="権限の編集"
     >
       <template v-slot:form>
-        <label for="developer" style="color:black">Developer</label>
-        <input type="radio" id="developer" value="1" v-model="picked" />
-        <label for="manager" style="color:black">Manager</label>
-        <input type="radio" id="manager" value="2" v-model="picked" />
-        <label for="user" style="color:black">User</label>
+        <label for="manager" style="color: black">Manager</label>
+        <input type="radio" id="manager" value="1" v-model="picked" />
+        <label for="staff" style="color: black">Staff</label>
+        <input type="radio" id="staff" value="2" v-model="picked" />
+        <label for="user" style="color: black">User</label>
         <input type="radio" id="user" value="3" v-model="picked" />
-        <label for="member" style="color:black">Member</label>
-        <input type="radio" id="member" value="4" v-model="picked" />
-        <span style="color:black">{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
+        <span style="color: black"
+          >{{ roles[role - 1].name }} → {{ roles[picked - 1].name }}</span
+        >
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="editRole">編集</CommonButton>
@@ -87,24 +95,38 @@
       <template v-slot:form>
         <div>
           <h3>新しいパスワード</h3>
-          <input v-model="password" type="password" placeholder="入力してください" />
+          <input
+            v-model="password"
+            type="password"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>新しいパスワード再確認</h3>
-          <input v-model="passwordConfirm" type="password" placeholder="入力してください" />
-          <p v-if="passwordConfirm !== '' && password !== passwordConfirm">パスワードが一致しません</p>
+          <input
+            v-model="passwordConfirm"
+            type="password"
+            placeholder="入力してください"
+          />
+          <p v-if="passwordConfirm !== '' && password !== passwordConfirm">
+            パスワードが一致しません
+          </p>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton v-if="password === passwordConfirm" iconName="edit" :on_click="editPassword">編集</CommonButton>
-        <CommonButton v-else iconName="edit" disabled :on_click="editPassword">編集</CommonButton>
+        <CommonButton
+          v-if="password === passwordConfirm"
+          iconName="edit"
+          :on_click="editPassword"
+          >編集</CommonButton
+        >
+        <CommonButton v-else iconName="edit" disabled :on_click="editPassword"
+          >編集</CommonButton
+        >
       </template>
     </EditModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -118,45 +140,67 @@ export default {
     ...mapState({
       selfRoleId: (state) => state.users.role,
       uid: (state) => state.users.uid,
+      roleID: (state) => state.users.role,
     }),
   },
   data() {
     return {
       isOpenEditModal: false,
       isOpenResetModal: false,
-      picked: '',
-      password: '',
-      passwordConfirm: '',
+      picked: "",
+      password: "",
+      passwordConfirm: "",
       isOpenSnackBar: false,
       roles: [
-        { id: 1, name: "developer" },
-        { id: 2, name: "manager" },
+        { id: 1, name: "manager" },
+        { id: 2, name: "staff" },
         { id: 3, name: "user" },
-        { id: 4, name: "member" },
       ],
+      user: {
+        user: {
+          id: "",
+          name: "",
+          email: "",
+          created_at: "",
+          updated_at: "",
+        },
+        user_detail: {
+          tel: "",
+          student_id: "",
+        },
+        user_detail_info: {
+          department: "",
+          grade: "",
+        },
+        role: {
+          id: "",
+          name: "",
+        },
+      },
     };
   },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/users/", "");
-    const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      user: response.data,
-      role: response.data.role.id,
-      routeId: routeId,
-      route: url,
-    };
-  },
-  computed: {
-    ...mapState({
-      roleID: (state) => state.users.role,
-    }),
+  mounted() {
+    window.scrollTo(0, 0);
+
+    // データ取得
+    this.fetchInitialData();
   },
   methods: {
+
+    async fetchInitialData() {
+      const routeId = this.$route.path.replace("/users/", "");
+      this.routeId = routeId
+      const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
+      const response = await this.$axios.$get(url);
+      this.user = response.data;
+      this.role = response.data.role.id,
+      this.route = url;
+
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
-      this.picked = this.role
+      this.picked = this.role;
     },
     closeEditModal() {
       this.isOpenEditModal = false;
@@ -182,16 +226,22 @@ export default {
       this.user = reUserRes.data;
     },
     async editRole() {
-      const url = "/users/" + this.routeId + "?role_id=" + this.picked
+      const url = "/users/" + this.routeId + "?role_id=" + this.picked;
       await this.$axios.$put(url).then((res) => {
-        this.role = res.data.role_id
+        this.role = res.data.role_id;
         this.reload();
         this.closeEditModal();
         this.openSnackBar("権限を編集しました");
       });
     },
     async editPassword() {
-      const url = "/api/v1/users/reset_password?user_id=" + this.routeId + "&password=" + this.password + "&password_confirmation=" + this.passwordConfirm
+      const url =
+        "/api/v1/users/reset_password?user_id=" +
+        this.routeId +
+        "&password=" +
+        this.password +
+        "&password_confirmation=" +
+        this.passwordConfirm;
       await this.$axios.$post(url).then((res) => {
         this.closeResetModal();
         this.openSnackBar("パスワードを変更しました");

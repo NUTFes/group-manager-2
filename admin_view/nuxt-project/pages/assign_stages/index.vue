@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).stages.read">
     <SubHeader pageTitle="ステージ割り当て">
     </SubHeader>
 
@@ -54,8 +54,8 @@
                   <td>{{ stageOrder.group.name }}</td>
                   <td>{{ stageOrder.stage_order.is_sunny }}</td>
                   <td>{{ stageOrder.stage_order_info.date }}</td>
-                  <td>{{ stageOrder.stage_order_info.stage_first }}</td>
-                  <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+                  <td>{{ stageOrder.stage_order_info.stage_first_name }}</td>
+                  <td>{{ stageOrder.stage_order_info.stage_second_name }}</td>
                 </tr>
               </template>
             </Table>
@@ -128,11 +128,13 @@
     </AddModal>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import AddModal from '../../components/AddModal.vue';
 import CommonButton from '../../components/CommonButton.vue';
+import { mapState } from "vuex";
 export default {
   components: { AddModal, CommonButton },
   data() {
@@ -182,7 +184,21 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    mounted() {
+      window.addEventListener('scroll', this.saveScrollPosition);
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
+    },
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     openAddModal() {
       this.$axios.$get("/stages").then((res) => {
         this.stages = res.data;

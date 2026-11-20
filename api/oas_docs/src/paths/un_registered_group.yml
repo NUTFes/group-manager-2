@@ -1,0 +1,172 @@
+---
+paths:
+  "/un_registered_groups":
+    get:
+      tags:
+      - un_registered_group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+    post:
+      tags:
+      - un_registered_group
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/UnRegisteredGroup"
+  "/un_registered_groups/group":
+    get:
+      tags:
+      - un_registered_group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+  "/un_registered_groups/{id}":
+    get:
+      tags:
+      - un_registered_group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '404':
+          description: un_registered_group description
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - un_registered_group
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: un_registered_group description
+        '404':
+          description: un_registered_group description
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/UnRegisteredGroup"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - un_registered_group
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: un_registered_group description
+        '404':
+          description: un_registered_group description
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/UnRegisteredGroup"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - un_registered_group
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+        '404':
+          description: un_registered_group description
+        '422':
+          description: un_registered_group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnRegisteredGroup"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

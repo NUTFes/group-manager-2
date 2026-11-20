@@ -6,17 +6,14 @@
     <div class="users-card-content">
       <h1>{{ dashboardData.all_user_num }}</h1>
       <Row>
-        <Tag primaryColor="#FF7070" secondaryColor="#E38AD5"
-          >{{ dashboardData.developer_num }} Developers</Tag
-        >
-        <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A"
+        <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A" width="auto"
           >{{ dashboardData.manager_num }} Managers</Tag
         >
-        <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD"
-          >{{ dashboardData.user_num }} Users</Tag
+        <Tag primaryColor="#ffce56" secondaryColor="#70FFDD"
+          >{{ dashboardData.staff_num }} Staffs</Tag
         >
         <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
-          >{{ dashboardData.member_num }} Members</Tag
+          >{{ dashboardData.user_num }} Users</Tag
         >
       </Row>
     </div>
@@ -40,7 +37,7 @@ export default {
 .users-card-content {
   font-size: 60px;
   width: 400px;
-  height: 300px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;

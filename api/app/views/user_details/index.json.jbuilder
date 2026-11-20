@@ -1,1 +1,3 @@
-json.array! @user_details, partial: "user_details/user_detail", as: :user_detail
+# frozen_string_literal: true
+
+json.array! @user_details, partial: 'user_details/user_detail', as: :user_detail

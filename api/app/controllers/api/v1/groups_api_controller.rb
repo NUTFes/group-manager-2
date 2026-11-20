@@ -1,5 +1,6 @@
-class Api::V1::GroupsApiController < ApplicationController
+# frozen_string_literal: true
 
+class Api::V1::GroupsApiController < ApplicationController
   def get_group_index_for_admin_view
     @groups = Group.with_group_categories_and_fes_years
     render json: fmt(ok, @groups)
@@ -21,19 +22,36 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @groups)
   end
 
-  # admin_pageのviewの形に整える
-  def fit_group_index_for_admin_view(groups)
-    groups.map{
-      |group|
-      {
-        "group": group,
-        "group_category": group.group_category,
-        "fes_year": group.fes_year
-      }
-    }
+  def get_groups_have_no_announcement
+    @current_fes_year = UserPageSetting.first.fes_year
+    @groups = Group.have_no_announcement(@current_fes_year.id)
+    render json: fmt(ok, @groups)
   end
 
-  #fes_yearによる絞り込み
+  def get_groups_have_no_cooking_process_order
+    @current_fes_year = UserPageSetting.first.fes_year
+    @groups = Group.have_no_cooking_process_order(@current_fes_year.id)
+    render json: fmt(ok, @groups)
+  end
+
+  def get_groups_have_no_venue_map
+    @current_fes_year = UserPageSetting.first.fes_year
+    @groups = Group.have_no_venue_map(@current_fes_year.id)
+    render json: fmt(ok, @groups)
+  end
+
+  # admin_pageのviewの形に整える
+  def fit_group_index_for_admin_view(groups)
+    groups.map do |group|
+      {
+        group: group,
+        group_category: group.group_category,
+        fes_year: group.fes_year
+      }
+    end
+  end
+
+  # fes_yearによる絞り込み
   def get_groups_refinemented_by_current_fes_year
     @current_fes_year = UserPageSetting.first.fes_year
     @group = Group.where(fes_year_id: @current_fes_year.id)
@@ -45,16 +63,18 @@ class Api::V1::GroupsApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     group_category_id = params[:group_category_id].to_i
     committee = params[:committee].to_i
-
-    option_list = [nil, true, false] # 0: 指定なし(ALL) 1: true 2: false
+    is_international = params[:is_international].to_i
+    is_external = params[:is_external].to_i # 0: 指定なし(ALL) 1: true 2: false
 
     @groups = Group.all
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
     @groups = @groups.where(committee: committee == 1) unless committee == 0
+    @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
+    @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
-    if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+    if @groups.none?
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
@@ -63,17 +83,26 @@ class Api::V1::GroupsApiController < ApplicationController
   # あいまい検索機能
   def get_search_groups
     word = params[:word]
-    groups_name = Group.where("name like ?","%#{word}%")
-    groups_category = Group.where("group_category_id like ?","%#{word}%")
-    project_name = Group.where("project_name like ?","%#{word}%")
+    groups_name = Group.where('name like ?', "%#{word}%")
+    groups_category = Group.where('group_category_id like ?', "%#{word}%")
+    project_name = Group.where('project_name like ?', "%#{word}%")
 
     @groups = (groups_name + groups_category + project_name).uniq
 
-    if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+    if @groups.none?
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end
 
+  def get_groups_for_fire_equipment_order
+    fes_year_id = params[:fes_year_id]
+    @groups = if fes_year_id.present? && fes_year_id.to_i != 0
+                Group.where(fes_year_id: fes_year_id).order(:id)
+              else
+                Group.order(:id)
+              end
+    render json: { data: @groups }
+  end
 end

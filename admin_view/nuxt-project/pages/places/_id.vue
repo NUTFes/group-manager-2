@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <SubHeader v-bind:pageTitle="place.name" pageSubTitle="会場一覧">
+    <SubHeader v-bind:pageTitle="place.name" pageSubTitle="会場選択肢一覧">
       <CommonButton v-if="this.$role(this.roleID).places.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
@@ -96,6 +96,9 @@ export default {
       place: placeRes.data,
       routeId: routeId,
     };
+  },
+  mounted() {
+    window.scrollTo(0, 0);
   },
   methods: {
     openEditModal() {

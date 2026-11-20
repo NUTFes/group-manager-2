@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :update, :destroy]
+  before_action :set_group, only: %i[show update destroy]
 
   # GET /groups
   # GET /groups.json
@@ -14,17 +16,29 @@ class GroupsController < ApplicationController
     render json: fmt(ok, @group)
   end
 
+  # GET /groups/user/:user_id/
+  def get_user_group_id_and_group_category_id
+    @group = Group.find_by(user_id: params[:user_id])
+
+    if @group
+      render json: fmt(ok, { id: @group.id, group_category_id: @group.group_category_id })
+    else
+      render json: fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}")
+    end
+  end
+
   # POST /groups
   # POST /groups.json
   def create
     @group = Group.create(group_params)
     render json: fmt(created, @group)
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が追加されました
       ーーーーーーーーーーーーーーーー
@@ -32,24 +46,28 @@ class GroupsController < ApplicationController
       委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
+      国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
     @group.update(group_params)
-    render json: fmt(created, @group, "Updated group id = "+params[:id])
+    render json: fmt(created, @group, "Updated group id = #{params[:id]}")
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が編集されました
       ーーーーーーーーーーーーーーーー
@@ -57,24 +75,28 @@ class GroupsController < ApplicationController
       委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
+      国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
     @group.destroy
-    render json: fmt(ok, [], "Deleted group id = "+params[:id])
+    render json: fmt(ok, [], "Deleted group id = #{params[:id]}")
 
-    client = Slack::Web::Client.new
-    client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
-      text: "
+    unless Current.skip_slack_notification
+      client = Slack::Web::Client.new
+      client.chat_postMessage(
+        token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+        channel: "##{ENV.fetch('CHANNEL', nil)}",
+        text: "
 
       参加団体「#{@group.name}」が削除されました
       ーーーーーーーーーーーーーーーー
@@ -82,27 +104,31 @@ class GroupsController < ApplicationController
       委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
+      国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
       "
-    )
+      )
+    end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_group
-      # groupのIDのgroupが存在するかを確認
-      if Group.exists?(params[:id])
-        @group = Group.find(params[:id])
-      else
-        # なければnot found
-        render json: fmt(not_found, [], "Not found group id = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def group_params
-      params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_group
+    # groupのIDのgroupが存在するかを確認
+    if Group.exists?(params[:id])
+      @group = Group.find(params[:id])
+    else
+      # なければnot found
+      render json: fmt(not_found, [], "Not found group id = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def group_params
+    params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee, :is_international, :is_external)
+  end
 end

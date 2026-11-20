@@ -2,6 +2,7 @@
 import { gradeList, GradeWithDepartmentList } from "~/utils/list";
 import { useField, useForm } from "vee-validate";
 import { subRepSchema } from "~/utils/validate";
+import { User, UserDetail } from "@/types/currentUser";
 const config = useRuntimeConfig();
 
 interface Props {
@@ -13,7 +14,9 @@ interface Props {
   tel: string;
   email: string;
   student_id: number | null;
+  rep_user_id: number | null;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -23,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   tel: "",
   email: "",
   student_id: null,
+  rep_user_id: null,
 });
 
 const { meta, isSubmitting } = useForm({
@@ -45,6 +49,55 @@ const { handleChange: handleDepartmentId, errorMessage: departmentIdError } =
   useField("department");
 const { handleChange: handleGradeId, errorMessage: gradeIdError } =
   useField("grade");
+
+const userData = ref<User | null>(null);
+const userDetailData = ref<UserDetail | null>(null);
+
+onMounted(async () => {
+  console.log(props.tel);
+  const res = await $fetch<{ data: User }>(
+    config.APIURL + "/users/" + props.rep_user_id
+  );
+  userData.value = res.data;
+  const resDetail = await $fetch<{ data: UserDetail }>(
+    config.APIURL + "/user_details?user_id=" + props.rep_user_id
+  );
+  userDetailData.value = resDetail.data;
+
+  checkNameOverlap();
+  checkTelOverlap();
+  checkEmailOverlap();
+  checkStudentIdOverlap();
+});
+
+const checkNameOverlap = () => {
+  if (newName.value == userData.value?.name) {
+    handleName("false");
+  } else {
+    handleName(newName.value);
+  }
+};
+const checkTelOverlap = () => {
+  if (newTel.value == userDetailData.value?.tel) {
+    handleTel("false");
+  } else {
+    handleTel(newTel.value);
+  }
+};
+const checkEmailOverlap = () => {
+  if (newEmail.value == userData.value?.email) {
+    handleMail("false");
+  } else {
+    handleMail(newEmail.value);
+  }
+};
+const checkStudentIdOverlap = () => {
+  if (newStudentId.value == userDetailData.value?.student_id) {
+    handleStudentId("false");
+  } else {
+    handleStudentId(newStudentId.value);
+  }
+};
 
 interface Emits {
   (e: "update:editSubRep", isEditSubRep: boolean): void;
@@ -144,7 +197,7 @@ onMounted(() => {
       <input
         class="entry"
         v-model="newName"
-        @change="handleName"
+        @change="checkNameOverlap"
         :class="{ error_border: nameError }"
       />
       <div class="error_msg">{{ nameError }}</div>
@@ -153,7 +206,7 @@ onMounted(() => {
         class="entry"
         v-model="newStudentId"
         maxlength="8"
-        @change="handleStudentId"
+        @change="checkStudentIdOverlap"
         :class="{ error_border: studentIdError }"
       />
       <div class="error_msg">{{ studentIdError }}</div>
@@ -194,7 +247,7 @@ onMounted(() => {
       <input
         class="entry"
         v-model="newEmail"
-        @change="handleMail"
+        @change="checkEmailOverlap"
         :class="{ error_border: mailError }"
       />
       <div class="error_msg">{{ mailError }}</div>
@@ -202,7 +255,7 @@ onMounted(() => {
       <input
         class="entry"
         v-model="newTel"
-        @change="handleTel"
+        @change="checkTelOverlap"
         maxlength="11"
         :class="{ error_border: telError }"
       />

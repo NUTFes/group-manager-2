@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).dashboard.read">
     <SubHeader pageTitle="ダッシュボード" />
     <Row>
       <Card width="300px" gap="10px">
@@ -9,7 +9,10 @@
         <hr />
         <Row>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
-           <GroupsCard v-bind:dashboardData="dashboard_data" :styles="myStyles"/>
+            <GroupsCard
+              v-bind:dashboardData="dashboard_data"
+              :styles="myStyles"
+            />
           </Card>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
             <Chart1 :styles="myStyles" />
@@ -37,6 +40,7 @@
       </Card>
     </Row>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -45,6 +49,7 @@ import Chart1 from "./Chart_Group";
 import Chart2 from "./Chart_Stock";
 import Chart3 from "./Chart_Assign";
 import Update from "../components/Update.vue";
+import { mapState } from "vuex";
 
 export default {
   watchQuery: ["page"],
@@ -53,6 +58,28 @@ export default {
     Chart2,
     Chart3,
     Update,
+  },
+  roles: [
+    { id: 1, name: "manager" }, //　GM2メンバー,総務局長,総務副局長
+    { id: 2, name: "staff" }, //総務局員
+    { id: 3, name: "user" }, //参加団体,企画局員
+  ],
+  mounted() {
+    window.addEventListener("scroll", this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(
+        0,
+        parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+      );
+    });
+  },
+  method: {
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
+    },
   },
   data() {
     return {
@@ -83,6 +110,9 @@ export default {
         position: "relative",
       };
     },
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
 };
 </script>

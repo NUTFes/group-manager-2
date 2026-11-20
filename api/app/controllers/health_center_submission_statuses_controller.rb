@@ -1,0 +1,79 @@
+# frozen_string_literal: true
+
+class HealthCenterSubmissionStatusesController < ApplicationController
+  before_action :authenticate_api_user!
+  before_action :require_group_id, only: %i[index create]
+
+  def index
+    group = current_user_group(params[:group_id])
+    return render_not_found unless group
+
+    render json: fmt(
+      ok,
+      {
+        submissions: HealthCenterSubmissionStatus.default_submissions_for(group)
+      }
+    )
+  end
+
+  def create
+    return render_unprocessable_entity('Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
+    return render_invalid_status unless valid_status?(params[:status].to_s)
+
+    group = current_user_group(params[:group_id])
+    return render_not_found unless group
+
+    submission_status = HealthCenterSubmissionStatus.find_or_initialize_by(
+      group_id: group.id,
+      application_type: params[:application_type]
+    )
+
+    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
+  end
+
+  def update
+    return render_invalid_status unless valid_status?(params[:status].to_s)
+
+    submission_status = current_user_submission_status(params[:id])
+    return render_not_found unless submission_status
+
+    save_health_center_submission_status(submission_status, unprocessable_http_status: :unprocessable_entity)
+  end
+
+  private
+
+  def valid_application_type?(application_type)
+    HealthCenterSubmissionStatus.application_types.key?(application_type)
+  end
+
+  def valid_status?(status)
+    status == 'unapproved'
+  end
+
+  def current_user_group(group_id)
+    current_api_user_group(group_id)
+  end
+
+  def current_user_submission_status(id)
+    HealthCenterSubmissionStatus
+      .joins(:group)
+      .where(groups: { user_id: current_api_user.id })
+      .find_by(id: id)
+  end
+
+  def render_not_found
+    render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
+  end
+
+  def render_invalid_status
+    render_unprocessable_entity('Invalid status')
+  end
+
+  def require_group_id
+    return render_unprocessable_entity('group_id is required') if params[:group_id].blank?
+  end
+
+  def render_unprocessable_entity(message)
+    render json: fmt(unprocessable_entity, [], message), status: :unprocessable_entity
+  end
+end

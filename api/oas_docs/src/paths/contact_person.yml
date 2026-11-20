@@ -1,0 +1,152 @@
+---
+paths:
+  "/contact_persons":
+    get:
+      tags:
+      - contact_person
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+    post:
+      tags:
+      - contact_person
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ContactPerson"
+  "/contact_persons/{id}":
+    get:
+      tags:
+      - contact_person
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '404':
+          description: contact_person description
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - contact_person
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: contact_person description
+        '404':
+          description: contact_person description
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ContactPerson"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - contact_person
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: contact_person description
+        '404':
+          description: contact_person description
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/ContactPerson"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - contact_person
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+        '404':
+          description: contact_person description
+        '422':
+          description: contact_person description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactPerson"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

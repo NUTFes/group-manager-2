@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    GroupCategory:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/GroupCategory"

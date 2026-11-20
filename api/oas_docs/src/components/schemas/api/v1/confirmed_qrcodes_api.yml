@@ -1,0 +1,23 @@
+---
+components:
+  schemas:
+    api.v1.ConfirmedQrcodesApi:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        data:
+          type: object
+          properties:
+            confirmed_url:
+              type: string
+              description: 確定情報ページのURL(group_id, secretを含む)
+            qrcode_png:
+              type: string
+              description: confirmed_urlをPNG形式でエンコードしたQRコード。data:image/png;base64,...
+                の形式

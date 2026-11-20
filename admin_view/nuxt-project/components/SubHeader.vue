@@ -1,19 +1,13 @@
 <template>
-  <div class="sub-header-container" :style="SubHeader">
+  <div class="sub-header-container" :style="SubHeaderOption">
     <div v-if="pageSubTitle !== ''" class="sub-header-link">
-      <button
-        @click="
-          () => {
-            this.$router.go(-1);
-          }
-        "
-      >
+      <button @click="onSubHeaderBack">
         <span class="material-icons">arrow_back</span>
         {{ pageSubTitle }}
       </button>
     </div>
     <div v-else class="" />
-    <div class="sub-header-main" :style="SubHeader">
+    <div class="sub-header-main" :style="SubHeaderOption">
       <div class="sub-header-title">
         <h2>{{ pageTitle }}</h2>
       </div>
@@ -52,6 +46,20 @@ export default {
       return {
         "--sub-header-height": this.height,
       };
+    },
+  },
+  methods: {
+    resolveIndexPath() {
+      const segments = this.$route.path.split("/").filter(Boolean);
+      if (segments.length <= 1) return "/";
+      return `/${segments.slice(0, -1).join("/")}`;
+    },
+    onSubHeaderBack() {
+      if (this.parentPageLink) {
+        this.$router.push(this.parentPageLink);
+        return;
+      }
+      this.$router.push(this.resolveIndexPath());
     },
   },
 };
@@ -106,8 +114,8 @@ export default {
   width: 100%;
   height: 100px;
   display: flex;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-flow: column;
 }
 
@@ -122,7 +130,7 @@ export default {
 
 .sub-header-title {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-wrap: wrap;
   flex-flow: column;
@@ -131,7 +139,7 @@ export default {
 .sub-header-content {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex-wrap: wrap;
   flex-grow: 1;
   gap: 20px;

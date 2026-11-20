@@ -19,11 +19,14 @@ const { handleChange: handleRemark, errorMessage: remarkError } =
   useField("remark");
 
 const EATING_AREA = [
-  "事務棟エリア",
+  "希望なし",
+  "事務棟エリア（講義室は含まない。)",
   "図書館エリア",
   "電気棟エリア",
-  "機械・建設エリア",
-  "メインステージエリア",
+  "メインステージエリア（情報処理センター前）",
+  "機械・建設棟エリア",
+  "生物棟エリア(電力使用不可)",
+  "環境棟エリア",
 ];
 const isEatingArea = (place: string) => {
   return EATING_AREA.includes(place);
@@ -88,15 +91,20 @@ const registerPlace = async () => {
 
   await $fetch<Place>(config.APIURL + "/place_orders", {
     method: "POST",
-    params: {
-      group_id: registerParams.groupId,
-      first: registerParams.first,
-      second: registerParams.second,
-      third: registerParams.third,
-      remark: registerParams.remark,
+    body: {
+      place_order: {
+        group_id: registerParams.groupId,
+        first: registerParams.first,
+        second: registerParams.second,
+        third: registerParams.third,
+        remark: registerParams.remark,
+      },
     },
     headers: {
       "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      client: localStorage.getItem("client") || "",
+      uid: localStorage.getItem("uid") || "",
     },
   });
   router.push("/regist/item");

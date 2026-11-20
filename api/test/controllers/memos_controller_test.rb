@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class MemosControllerTest < ActionDispatch::IntegrationTest
@@ -5,34 +7,34 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
     @memo = memos(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get memos_url, as: :json
     assert_response :success
   end
 
-  test "should create memo" do
+  test 'should create memo' do
     assert_difference('Memo.count') do
       post memos_url, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
-  test "should show memo" do
+  test 'should show memo' do
     get memo_url(@memo), as: :json
     assert_response :success
   end
 
-  test "should update memo" do
+  test 'should update memo' do
     patch memo_url(@memo), params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
-  test "should destroy memo" do
+  test 'should destroy memo' do
     assert_difference('Memo.count', -1) do
       delete memo_url(@memo), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

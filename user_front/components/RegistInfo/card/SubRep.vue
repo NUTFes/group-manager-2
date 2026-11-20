@@ -13,6 +13,7 @@ interface Props {
   email: string
   studentId: number | null
   setting: boolean | null
+  rep_user_id: number | null
 }
 const sub = withDefaults(defineProps<Props>(), {
   id: null,
@@ -25,7 +26,8 @@ const sub = withDefaults(defineProps<Props>(), {
   tel: '',
   email: '',
   studentId: null,
-  setting: null
+  setting: null,
+  rep_user_id: null
 })
 
 interface Emits {
@@ -89,6 +91,7 @@ const openEditModal = () => {
     :student_id="sub.studentId"
     :email="sub.email"
     :tel="sub.tel"
+    :rep_user_id="sub.rep_user_id"
     @reload-sub-rep="reloadSubRep"
   />
 </template>

@@ -1,0 +1,56 @@
+# Actionの名前
+name: Rental Code Quality
+
+on:
+  # Pull Request時
+  pull_request:
+    # 対象のブランチを指定
+    branches: ["gm3/develop"]
+    paths:
+      - "rental/**"
+
+jobs:
+  Code-Check:
+    name: Code-Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # GitHubリポジトリのコードをチェックアウト
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # pnpm を明示的にセットアップしてから setup-node の cache を使う
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.7.0
+
+      # Node.js v22をセットアップ
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: ./rental/pnpm-lock.yaml
+
+      # pnpmで依存関係をインストール
+      - name: pnpm install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./rental
+
+      # ESLintでコードチェックを実行
+      - name: Lint with ESLint
+        run: pnpm run lint
+        working-directory: ./rental
+
+      # tscで型チェックを実行
+      - name: Check types with TypeScript
+        run: pnpm run type-check
+        working-directory: ./rental
+
+      # ビルドが通ることを確認
+      - name: Build
+        run: pnpm run build
+        working-directory: ./rental

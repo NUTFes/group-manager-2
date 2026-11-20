@@ -1,0 +1,85 @@
+# Actionの名前
+name: User Code Quality
+
+permissions:
+  contents: write
+
+on:
+  # Pull Request時
+  pull_request:
+    # 対象のブランチを指定
+    branches: ["gm3/develop"]
+
+jobs:
+  Code-Check:
+    name: Code-Check
+    runs-on: ubuntu-latest
+    steps:
+
+      # github appトークンを作成する
+      - name: Create github app token
+        id: create
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_KEY }}
+
+      # GitHubリポジトリのコードをチェックアウト
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ steps.create.outputs.token }}
+          persist-credentials: true
+
+      # pnpm を明示的にセットアップしてから setup-node の cache を使う
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.7.0
+
+      # Node.js v22をセットアップ
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: ./user/pnpm-lock.yaml
+
+      # pnpmで依存関係をインストール
+      - name: pnpm install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./user
+
+      # prettierでコードのフォーマットを実行
+      - name: Format code with Prettier
+        run: pnpm run fmt
+        working-directory: ./user
+
+      # 変更があれば、コミット＆プッシュする
+      - name: Commit formatted files
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "chore: auto format code"
+          push: true
+
+      # ESLintでコードの自動修正を実行
+      - name: Fix lint issues with ESLint
+        run: pnpm run lint-fix
+        working-directory: ./user
+
+      # 変更があれば、コミット＆プッシュする
+      - name: Commit lint fixed files
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "chore: auto fix lint issues"
+          push: true
+
+      # tscで型チェックを実行
+      - name: Check types with TypeScript
+        run: pnpm run type-check
+        working-directory: ./user

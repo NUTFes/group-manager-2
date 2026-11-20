@@ -4,12 +4,12 @@ one:
   group_id: 1
   item: MyString
   power: 1
-  manufacture: MyString
+  manufacturer: MyString
   model: MyString
 
 two:
   group_id: 1
   item: MyString
   power: 1
-  manufacture: MyString
+  manufacturer: MyString
   model: MyString
