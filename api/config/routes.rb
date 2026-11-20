@@ -123,6 +123,8 @@ Rails.application.routes.draw do
     end
   end
   resources :group_categories
+  resources :grades, only: %i[index]
+  resources :departments, only: %i[index]
   resources :user_details
   resources :shops
   resources :fes_dates

@@ -1,0 +1,34 @@
+---
+paths:
+  "/departments":
+    get:
+      tags:
+      - department
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: department description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Department"
+        '422':
+          description: department description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Department"
+      deprecated: false

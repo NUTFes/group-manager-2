@@ -1,12 +1,14 @@
-import { useMemo } from 'react';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
+import {
+  useDepartmentOptions,
+  useGradeOptions,
+} from '@/api/gradeDepartmentApi';
 import { useTranslation } from 'next-i18next';
 
 export const useRegisterCarouselTexts = () => {
   const { t } = useTranslation('common');
 
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const { options: gradeOptions } = useGradeOptions();
+  const { options: departmentOptions } = useDepartmentOptions();
 
   return {
     steps: {

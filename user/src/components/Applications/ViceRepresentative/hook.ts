@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  useDepartmentOptions,
+  useGradeOptions,
+} from '@/api/gradeDepartmentApi';
+import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
@@ -14,8 +17,8 @@ export const useViceRepresentativeHook = (
   isRegistered?: boolean
 ) => {
   const { t } = useTranslation('common');
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const { options: gradeOptions } = useGradeOptions();
+  const { options: departmentOptions } = useDepartmentOptions();
   const {
     viceRepresentative,
     isLoading: isViceRepresentativeLoading,
