@@ -1,0 +1,967 @@
+erDiagram
+  %% Proposal version date: 2026-07-15.
+  %% Proposed steady-state logical schema: 78 runtime tables.
+  %% This is a design proposal, not current DDL. Unresolved gates are documented in
+  %% database-erd-current-and-target-2026-07-15.md and must be closed before migrations are authored.
+  %% Conventions: bigint PKs; UTC datetime(6); utf8mb4; every FK indexed; required FKs NOT NULL.
+  %% Mutable records have created_at/updated_at; aggregate roots have lock_version.
+  %% Composite UNIQUE/FK and CHECK constraints are stated in comments where Mermaid cannot draw them.
+
+  users {
+    bigint id PK
+    string email_normalized UK "NOT NULL"
+    string provider "NOT NULL"
+    string uid "NOT NULL; UNIQUE(provider,uid)"
+    string encrypted_password "NOT NULL"
+    string name "NOT NULL"
+    string status "active locked archived"
+    datetime confirmed_at
+    datetime archived_at
+    integer lock_version "NOT NULL default 0"
+  }
+  user_profiles {
+    bigint id PK
+    bigint user_id FK, UK "NOT NULL"
+    bigint department_id FK
+    bigint grade_id FK
+    string tel "PII"
+    string student_id "PII"
+  }
+  departments {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  grades {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  roles {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name "NOT NULL"
+    datetime archived_at
+  }
+  capabilities {
+    bigint id PK
+    string key UK "NOT NULL"
+    string description
+  }
+  role_capabilities {
+    bigint id PK
+    bigint role_id FK "NOT NULL; UNIQUE(role_id,capability_id)"
+    bigint capability_id FK "NOT NULL"
+  }
+  user_role_assignments {
+    bigint id PK
+    bigint user_id FK "NOT NULL; UNIQUE(user_id,role_id,active_slot)"
+    bigint role_id FK "NOT NULL"
+    bigint granted_by_user_id FK "NOT NULL"
+    datetime active_from "NOT NULL"
+    datetime active_until
+    string active_slot "active row = active; historical row = NULL"
+  }
+  access_sessions {
+    bigint id PK
+    bigint user_id FK "NOT NULL"
+    string audience "user admin"
+    string token_digest UK "NOT NULL; raw token forbidden"
+    datetime idle_expires_at "NOT NULL"
+    datetime absolute_expires_at "NOT NULL"
+    integer rotation_version "NOT NULL default 0"
+    datetime last_used_at
+    datetime revoked_at
+  }
+  password_recovery_tokens {
+    bigint id PK
+    bigint user_id FK "NOT NULL"
+    string token_digest UK "NOT NULL; raw token forbidden"
+    string purpose "reset confirm"
+    datetime expires_at "NOT NULL"
+    datetime used_at
+  }
+
+  festival_years {
+    bigint id PK
+    integer year_num UK "NOT NULL; ID never reseeded"
+    string lifecycle "draft active closed archived"
+    string active_slot UK "active year = active; other rows = NULL"
+    datetime opened_at
+    datetime closed_at
+    datetime archived_at
+    integer lock_version "NOT NULL default 0"
+  }
+  festival_dates {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,date); UNIQUE(year,ordinal)"
+    date event_date "NOT NULL"
+    integer ordinal "NOT NULL"
+    string label
+  }
+  group_categories {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  application_requirements {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,key); UNIQUE(id,year)"
+    string key "NOT NULL; code and OpenAPI stable application key"
+    string label "NOT NULL"
+    string owner_module "NOT NULL"
+    string detail_kind "NOT NULL"
+    datetime retired_at
+  }
+  application_requirement_versions {
+    bigint id PK
+    bigint application_requirement_id FK "NOT NULL; UNIQUE(requirement,version); UNIQUE(id,requirement)"
+    integer version_number "NOT NULL"
+    string schema_version "NOT NULL"
+    string eligibility_policy_key "NOT NULL"
+    integer eligibility_policy_version "NOT NULL"
+    string review_policy_key "NOT NULL"
+    integer review_policy_version "NOT NULL"
+    string review_scope "none submission item both"
+    string submission_policy_key "NOT NULL"
+    integer submission_policy_version "NOT NULL"
+    string withdrawal_policy_key "NOT NULL"
+    integer withdrawal_policy_version "NOT NULL"
+    string product_reference_policy "draft_allowed submitted effective or NULL"
+    boolean allow_no_request "NOT NULL"
+    integer min_items "CHECK >= 0"
+    integer max_items "CHECK max >= min"
+    datetime opens_at
+    datetime due_at "CHECK due > opens"
+  }
+  application_requirement_publications {
+    bigint application_requirement_id PK, FK
+    bigint current_version_id FK, UK "NOT NULL; version must belong to requirement"
+    bigint published_by_user_id FK "NOT NULL"
+    datetime published_at "NOT NULL"
+  }
+  application_requirement_collection_rules {
+    bigint id PK
+    bigint application_requirement_version_id FK "NOT NULL; UNIQUE(version,collection_key)"
+    string collection_key "NOT NULL"
+    integer min_items "NOT NULL; CHECK >= 0"
+    integer max_items "NOT NULL; CHECK max >= min"
+  }
+
+  organizations {
+    bigint id PK
+    bigint merged_into_organization_id FK "nullable; CHECK not self"
+    string canonical_name "NOT NULL; intentionally not UNIQUE"
+    string lifecycle "active merged archived"
+    string origin "native legacy_import"
+    datetime archived_at
+    integer lock_version "NOT NULL default 0"
+  }
+  festival_participations {
+    bigint id PK
+    bigint organization_id FK "NOT NULL; UNIQUE(org,year,entry); UNIQUE(id,org); UNIQUE(id,year)"
+    bigint festival_year_id FK "NOT NULL"
+    bigint group_category_id FK "NOT NULL"
+    integer entry_number "NOT NULL"
+    string display_name "NOT NULL; annual snapshot"
+    string project_name "NOT NULL; annual snapshot"
+    text activity
+    boolean committee "NOT NULL default false"
+    boolean international "NOT NULL default false"
+    boolean external "NOT NULL default false"
+    string origin "native legacy_import"
+    string lifecycle "draft active withdrawn archived"
+    integer lock_version "NOT NULL default 0"
+  }
+  organization_memberships {
+    bigint id PK
+    bigint organization_id FK "NOT NULL; UNIQUE(org,user,active_slot); UNIQUE(id,org)"
+    bigint user_id FK "NOT NULL"
+    string role_key "owner member history_viewer"
+    datetime active_from "NOT NULL"
+    datetime active_until
+    string active_slot "active row = active; historical row = NULL"
+  }
+  participation_memberships {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL; UNIQUE(participation,org_membership,active_slot); UNIQUE(id,participation)"
+    bigint organization_membership_id FK "NOT NULL"
+    bigint organization_id FK "NOT NULL; composite FKs prove same organization"
+    string role_key "primary_representative editor viewer"
+    datetime active_from "NOT NULL"
+    datetime active_until
+    string active_slot "active row = active; historical row = NULL"
+    string primary_slot "primary row = primary; other rows = NULL; UNIQUE(participation,primary_slot)"
+  }
+  participation_contacts {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL"
+    bigint linked_user_id FK "nullable; contact is not automatically an account"
+    string role_key "primary deputy operational"
+    string name "PII"
+    string email "PII"
+    string tel "PII"
+    datetime archived_at
+  }
+
+  application_cases {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL; UNIQUE(participation,requirement); UNIQUE(id,participation,requirement)"
+    bigint festival_year_id FK "NOT NULL; composite FK enforces same year"
+    bigint application_requirement_id FK "NOT NULL"
+    bigint application_requirement_version_id FK "NOT NULL; policy snapshot"
+    string applicability "required optional not_applicable"
+    string lifecycle "active cancelled"
+    datetime due_at_snapshot
+    bigint cancelled_by_user_id FK
+    datetime cancelled_at
+    string cancellation_reason
+    integer lock_version "NOT NULL default 0; response state is derived"
+  }
+  application_submissions {
+    bigint id PK
+    bigint application_case_id FK "NOT NULL; UNIQUE(case,version); UNIQUE(case,draft_slot)"
+    bigint festival_participation_id FK "NOT NULL; composite FK with case and actor"
+    bigint application_requirement_id FK "NOT NULL; composite FK with case/version"
+    bigint application_requirement_version_id FK "NOT NULL; composite FK (version,requirement)"
+    bigint submitted_by_membership_id FK "composite FK (membership,participation)"
+    bigint withdrawn_by_membership_id FK "composite FK (membership,participation)"
+    bigint idempotency_record_id FK "native submitted NOT NULL and UNIQUE; legacy import NULL"
+    integer version_number "NOT NULL"
+    string state "draft submitted withdrawn"
+    string draft_slot "current draft = current; other rows = NULL"
+    string response_kind "provided no_request; NULL only for unselected draft"
+    string origin "native legacy_import"
+    string created_via "user admin migration"
+    boolean legacy_actor_unknown "NOT NULL default false"
+    string submitted_at_source "native status_updated_at latest_source_updated_at"
+    datetime due_at_snapshot
+    datetime submitted_at
+    datetime withdrawn_at
+    string withdrawal_reason
+    integer lock_version "NOT NULL default 0; submitted rows immutable"
+  }
+  application_submission_items {
+    bigint id PK
+    bigint application_submission_id FK "NOT NULL; UNIQUE(submission,collection,position); UNIQUE(id,submission)"
+    string item_kind "NOT NULL; typed-leaf discriminator"
+    string collection_key "NOT NULL"
+    integer position "NOT NULL; CHECK >= 0"
+    string origin "native legacy_import"
+  }
+  application_attachments {
+    bigint id PK
+    bigint application_submission_id FK "NOT NULL"
+    bigint application_submission_item_id FK "nullable; item must belong to submission"
+    string kind "NOT NULL"
+    integer position "NOT NULL"
+    string object_key UK "NOT NULL"
+    string original_filename "NOT NULL"
+    string mime_type "NOT NULL"
+    bigint byte_size "NOT NULL; CHECK >= 0"
+    string sha256 "NOT NULL; UNIQUE(submission,sha256) when duplicates forbidden"
+    string scan_status "pending clean rejected; only clean may be submitted"
+  }
+  application_dependency_invalidations {
+    bigint id PK
+    bigint downstream_submission_id FK "NOT NULL; UNIQUE(submission,kind,active_slot)"
+    bigint old_profile_id FK
+    bigint new_profile_id FK
+    bigint resolved_by_submission_id FK
+    string dependency_kind "NOT NULL"
+    string reason "NOT NULL"
+    datetime invalidated_at "NOT NULL"
+    datetime resolved_at
+    string active_slot "active => resolved fields NULL; resolved => resolved_at/submission required"
+  }
+  announcement_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    text message "NOT NULL"
+  }
+  deputy_contact_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    bigint participation_contact_id FK
+    string role_key "NOT NULL"
+    string name "NOT NULL; immutable PII snapshot"
+    bigint department_id FK
+    bigint grade_id FK
+    string tel "PII"
+    string email "PII"
+    string student_id "PII"
+  }
+  fire_equipment_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    string name "NOT NULL"
+    integer quantity "NOT NULL; CHECK > 0"
+    string fuel_key
+    text usage
+    boolean takeaway "NOT NULL default false"
+    text remark
+  }
+  power_device_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    string item_name "NOT NULL"
+    integer watts "NOT NULL; CHECK > 0"
+    string manufacturer
+    string model
+    string item_url
+  }
+  employee_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    string name "NOT NULL; PII"
+    string student_id "PII"
+  }
+  participation_products {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL"
+    string lifecycle "active retired"
+    integer lock_version "NOT NULL default 0"
+  }
+  participation_product_profiles {
+    bigint id PK
+    bigint participation_product_id FK "NOT NULL; UNIQUE(product,revision)"
+    bigint source_submission_item_id FK
+    integer revision "NOT NULL"
+    string name "NOT NULL"
+    boolean cooking "NOT NULL"
+    boolean alcohol "NOT NULL"
+    string lifecycle "pending effective superseded"
+    datetime effective_at
+  }
+  participation_product_profile_daily_quantities {
+    bigint id PK
+    bigint participation_product_profile_id FK "NOT NULL; UNIQUE(profile,date)"
+    bigint festival_date_id FK "NOT NULL"
+    integer quantity "NOT NULL; CHECK >= 0"
+  }
+  food_product_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; UNIQUE(submission,product)"
+    bigint participation_product_id FK "NOT NULL"
+    bigint participation_product_profile_id FK "NOT NULL"
+  }
+  purchase_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    bigint participation_product_id FK "NOT NULL"
+    bigint participation_product_profile_id FK "NOT NULL"
+    bigint vendor_id FK
+    bigint intended_festival_date_id FK
+    date purchase_on
+    string item_name "NOT NULL"
+    boolean fresh "NOT NULL default false"
+    string item_url
+    text remark
+  }
+  cooking_process_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; UNIQUE(submission,product)"
+    bigint participation_product_id FK "NOT NULL"
+    bigint participation_product_profile_id FK "NOT NULL"
+    boolean pre_open_kitchen "NOT NULL default false"
+    boolean during_open_kitchen "NOT NULL default false"
+    text tent
+    text tent_ja
+  }
+  place_request_details {
+    bigint application_submission_id PK, FK
+    text remark
+  }
+  place_preferences {
+    bigint id PK
+    bigint application_submission_id FK "NOT NULL; UNIQUE(submission,rank); UNIQUE(submission,venue_setting)"
+    bigint venue_year_setting_id FK "NOT NULL"
+    integer rank "NOT NULL; CHECK > 0"
+  }
+  stage_request_details {
+    bigint application_submission_id PK, FK
+    boolean own_equipment "NOT NULL default false"
+    boolean bgm "NOT NULL default false"
+    boolean camera_permission "NOT NULL default false"
+    boolean loud_sound "NOT NULL default false"
+  }
+  stage_request_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    bigint festival_date_id FK "NOT NULL"
+    string weather_scope "sunny rainy both"
+    datetime prepare_start_at "NOT NULL"
+    datetime performance_start_at "NOT NULL"
+    datetime performance_end_at "NOT NULL"
+    datetime cleanup_end_at "NOT NULL; ordered-time CHECK"
+  }
+  stage_preferences {
+    bigint id PK
+    bigint stage_request_item_id FK "NOT NULL; UNIQUE(item,rank); UNIQUE(item,stage_setting)"
+    bigint stage_year_setting_id FK "NOT NULL"
+    integer rank "NOT NULL; CHECK > 0"
+  }
+  public_relation_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    text blurb "NOT NULL"
+    boolean announcement_requested "NOT NULL default false"
+  }
+  venue_map_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; composite FK to item"
+    string label
+    text description
+  }
+
+  review_cases {
+    bigint id PK
+    bigint application_submission_id FK, UK "NOT NULL; UNIQUE(id,application_submission_id)"
+    bigint assigned_to_user_id FK
+    bigint decided_by_user_id FK
+    string status "pending in_review approved changes_requested rejected"
+    string lifecycle "active closed"
+    string origin "native legacy_import"
+    string created_via "admin automation migration"
+    boolean legacy_decider_unknown "NOT NULL default false"
+    datetime decided_at
+    string decided_at_source "native status_updated_at"
+    datetime closed_at
+    string closure_reason
+    integer lock_version "NOT NULL default 0"
+  }
+  review_items {
+    bigint id PK
+    bigint review_case_id FK "NOT NULL; UNIQUE(case,item); composite FK with submission"
+    bigint application_submission_id FK "NOT NULL; FK (case,submission) to review_cases"
+    bigint application_submission_item_id FK "NOT NULL; FK (item,submission) to submission_items"
+    bigint assigned_to_user_id FK
+    bigint decided_by_user_id FK
+    string status "pending in_review approved changes_requested rejected"
+    string origin "native legacy_import"
+    boolean legacy_decider_unknown "NOT NULL default false"
+    datetime decided_at
+    string decided_at_source "native status_updated_at"
+    integer lock_version "NOT NULL default 0"
+  }
+  review_comments {
+    bigint id PK
+    bigint review_case_id FK "NOT NULL"
+    bigint review_item_id FK
+    bigint author_user_id FK "nullable only for legacy unknown author"
+    boolean legacy_author_unknown "NOT NULL default false"
+    string visibility "participant staff legacy_unknown"
+    text body "NOT NULL"
+    string origin "native legacy_import"
+  }
+  review_events {
+    bigint id PK
+    bigint review_case_id FK "NOT NULL"
+    bigint review_item_id FK
+    bigint actor_user_id FK "nullable for system or legacy unknown"
+    string actor_kind "user system legacy_unknown"
+    boolean legacy_actor_unknown "NOT NULL default false"
+    integer event_sequence "NOT NULL; UNIQUE(case,event_sequence)"
+    string before_status
+    string after_status "NOT NULL"
+    string reason
+    string request_id
+    string origin "native legacy_import automation"
+    datetime occurred_at "NOT NULL; append-only"
+  }
+
+  venues {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  venue_year_settings {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,venue)"
+    bigint venue_id FK "NOT NULL"
+    boolean available "NOT NULL"
+    integer capacity "CHECK >= 0"
+  }
+  venue_eligibility_rules {
+    bigint id PK
+    bigint venue_year_setting_id FK "NOT NULL; UNIQUE(setting,category,policy_version)"
+    bigint group_category_id FK "NOT NULL"
+    integer policy_version "NOT NULL"
+    boolean enabled "NOT NULL"
+  }
+  stages {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  stage_year_settings {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,stage)"
+    bigint stage_id FK "NOT NULL"
+    boolean sunny_available "NOT NULL"
+    boolean rainy_available "NOT NULL"
+  }
+  participation_identifiers {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL; UNIQUE(participation,namespace)"
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,namespace,number)"
+    string namespace_key "NOT NULL"
+    integer number "NOT NULL"
+  }
+  place_allocations {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL; UNIQUE(participation,active_slot)"
+    bigint source_submission_id FK "NOT NULL"
+    bigint venue_year_setting_id FK "NOT NULL"
+    bigint participation_identifier_id FK
+    bigint allocated_by_user_id FK "NOT NULL"
+    string status "provisional confirmed cancelled"
+    string active_slot "active allocation = active; historical row = NULL"
+    datetime allocated_at "NOT NULL"
+  }
+  stage_allocations {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL"
+    bigint source_stage_request_item_id FK "NOT NULL"
+    bigint stage_year_setting_id FK "NOT NULL"
+    bigint festival_date_id FK "NOT NULL"
+    bigint participation_identifier_id FK
+    bigint allocated_by_user_id FK "NOT NULL"
+    datetime starts_at "NOT NULL"
+    datetime ends_at "NOT NULL; CHECK end > start"
+    string status "provisional confirmed cancelled"
+    string active_slot "active allocation = active; historical row = NULL"
+  }
+
+  rental_items {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  storage_locations {
+    bigint id PK
+    string key UK "NOT NULL"
+    string name_ja "NOT NULL"
+    string name_en
+    datetime archived_at
+  }
+  storage_location_year_settings {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,location)"
+    bigint storage_location_id FK "NOT NULL"
+    string stock_entry_state "closed open locked"
+    string assignment_state "closed open locked"
+  }
+  participation_storage_allocations {
+    bigint id PK
+    bigint festival_participation_id FK "NOT NULL; UNIQUE(participation,role,active_slot)"
+    bigint storage_location_id FK "NOT NULL"
+    string role_key "usage delivery"
+    datetime active_from "NOT NULL"
+    datetime active_until
+    string active_slot "active allocation = active; historical row = NULL"
+  }
+  inventory_movements {
+    bigint id PK
+    bigint festival_year_id FK "nullable for cross-year carryover"
+    bigint rental_item_id FK "NOT NULL"
+    bigint storage_location_id FK "NOT NULL"
+    bigint actor_user_id FK "nullable for system or legacy unknown"
+    bigint idempotency_record_id FK
+    string actor_kind "user system legacy_unknown"
+    string origin "native legacy_import"
+    boolean legacy_actor_unknown "NOT NULL default false"
+    string movement_type "opening_balance receipt issue return adjustment carryover"
+    integer on_hand_delta "NOT NULL"
+    integer rentable_delta "NOT NULL"
+    string reason "NOT NULL"
+    string source_type
+    bigint source_id
+    datetime occurred_at "NOT NULL; append-only"
+    string occurred_at_source "native source_updated_at migration_snapshot_at"
+  }
+  inventory_balances {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,item,location)"
+    bigint rental_item_id FK "NOT NULL"
+    bigint storage_location_id FK "NOT NULL"
+    integer on_hand_quantity "NOT NULL; CHECK >= 0"
+    integer rentable_quantity "NOT NULL; CHECK 0 <= rentable <= on_hand"
+    integer lock_version "NOT NULL default 0; rebuildable projection"
+  }
+  rental_item_eligibility_rules {
+    bigint id PK
+    bigint festival_year_id FK "NOT NULL; UNIQUE(year,item,category,policy_version)"
+    bigint rental_item_id FK "NOT NULL"
+    bigint group_category_id FK "NOT NULL"
+    integer policy_version "NOT NULL"
+    boolean enabled "NOT NULL"
+    integer max_quantity "CHECK >= 0"
+  }
+  rental_request_submission_items {
+    bigint application_submission_item_id PK, FK
+    bigint application_submission_id FK "NOT NULL; UNIQUE(submission,rental_item)"
+    bigint rental_item_id FK "NOT NULL"
+    integer quantity "NOT NULL; CHECK > 0"
+  }
+  rental_item_allocations {
+    bigint id PK
+    bigint rental_request_item_id FK "NOT NULL; UNIQUE(request_item,balance)"
+    bigint inventory_balance_id FK "NOT NULL"
+    bigint source_location_id FK "NOT NULL"
+    bigint destination_location_id FK
+    bigint allocated_by_user_id FK "NOT NULL"
+    integer quantity "NOT NULL; CHECK > 0 and <= requested"
+    string status "provisional confirmed returned cancelled"
+    datetime allocated_at "NOT NULL"
+  }
+
+  vendors {
+    bigint id PK
+    string key UK "approved natural identity; name alone not deduped"
+    string name "NOT NULL"
+    string tel
+    string opening_hours
+    string address
+    datetime archived_at
+  }
+
+  news_posts {
+    bigint id PK
+    bigint published_by_user_id FK
+    string state "draft published archived"
+    string audience "user admin both"
+    string title "NOT NULL"
+    text body "NOT NULL"
+    datetime published_at
+  }
+  staff_notes {
+    bigint id PK
+    bigint author_user_id FK "NOT NULL"
+    bigint festival_participation_id FK "nullable until scope policy confirmed"
+    text content "NOT NULL"
+  }
+  message_templates {
+    bigint id PK
+    string key UK "NOT NULL"
+    datetime archived_at
+  }
+  message_template_versions {
+    bigint id PK
+    bigint message_template_id FK "NOT NULL; UNIQUE(template,version,locale)"
+    integer version_number "NOT NULL"
+    string locale "NOT NULL"
+    string subject "NOT NULL"
+    text body "NOT NULL"
+    string checksum "NOT NULL"
+    datetime published_at
+  }
+  message_deliveries {
+    bigint id PK
+    bigint outbox_event_id FK "NOT NULL; UNIQUE(event,channel,delivery_identity_key)"
+    bigint message_template_version_id FK
+    string channel "email slack"
+    string recipient_ciphertext "PII"
+    string recipient_fingerprint "nullable only for legacy unknown recipient"
+    string delivery_identity_key "NOT NULL; native fingerprint or migration source key"
+    boolean legacy_recipient_unknown "NOT NULL default false"
+    boolean legacy_template_unknown "NOT NULL default false"
+    string status "pending sending outcome_unknown retryable succeeded failed dead_letter"
+    string origin "native legacy_import"
+    string outcome_source "provider legacy_mail_status unknown"
+    integer attempt_count "NOT NULL default 0"
+    datetime next_attempt_at
+    string last_error_code
+    string lease_owner
+    datetime leased_until
+    integer lease_generation "NOT NULL default 0"
+    string provider_message_id
+    datetime sent_at
+  }
+  message_delivery_attempts {
+    bigint id PK
+    bigint message_delivery_id FK "NOT NULL; UNIQUE(delivery,attempt)"
+    integer attempt_number "NOT NULL"
+    integer lease_generation "NOT NULL"
+    string result "succeeded retryable_failed outcome_unknown terminal_failed"
+    string provider_idempotency_key
+    string provider_message_id
+    string provider_code
+    text redacted_error
+    text redacted_response
+    datetime started_at "NOT NULL"
+    datetime finished_at
+  }
+
+  idempotency_records {
+    bigint id PK
+    bigint actor_user_id FK "NOT NULL; UNIQUE(actor,audience,scope,key)"
+    string audience "NOT NULL"
+    string operation_scope "NOT NULL"
+    string idempotency_key "NOT NULL"
+    string request_hash "NOT NULL; SHA-256 of canonical request"
+    string state "processing completed failed"
+    string resource_type
+    bigint resource_id
+    integer response_status
+    string response_content_type
+    text response_body_ciphertext "exact replay payload; encrypted/redacted by policy"
+    datetime completed_at
+    datetime expires_at
+  }
+  outbox_events {
+    bigint id PK
+    string event_id UK "NOT NULL"
+    string aggregate_type "NOT NULL; UNIQUE(type,id,version)"
+    bigint aggregate_id "NOT NULL"
+    integer aggregate_version "NOT NULL"
+    string event_type "NOT NULL"
+    integer event_schema_version "NOT NULL"
+    text payload_json "redacted/encrypted versioned event envelope only"
+    string origin "native legacy_import"
+    string dispatch_state "pending dispatching retryable published dead_letter"
+    datetime available_at "NOT NULL"
+    integer attempt_count "NOT NULL default 0"
+    string lease_owner
+    datetime leased_until
+    integer lease_generation "NOT NULL default 0"
+    string last_error_code
+    datetime occurred_at "NOT NULL"
+    string occurred_at_source "native source_timestamp migration_snapshot_at"
+    datetime published_at
+    datetime dead_lettered_at
+  }
+  audit_events {
+    bigint id PK
+    bigint actor_user_id FK
+    string actor_kind "user system legacy_unknown"
+    string audience "user admin system migration"
+    string origin "native legacy_import"
+    string request_id
+    string action "NOT NULL"
+    string subject_type "NOT NULL"
+    bigint subject_id
+    text before_json "redacted audit snapshot only"
+    text after_json "redacted audit snapshot only"
+    datetime occurred_at "NOT NULL; append-only"
+  }
+  schema_identity {
+    bigint id PK
+    string schema_key UK "fixed target identity"
+    integer schema_version "NOT NULL"
+    datetime activated_at "NOT NULL"
+  }
+  export_jobs {
+    bigint id PK
+    bigint requested_by_user_id FK "NOT NULL"
+    bigint idempotency_record_id FK
+    string export_kind "NOT NULL"
+    text filter_json "validated/versioned filter only"
+    string filter_checksum "NOT NULL"
+    text capability_snapshot "NOT NULL; authorization evidence"
+    string audience_snapshot "NOT NULL"
+    string format "csv xlsx json"
+    string status "queued running succeeded failed expired"
+    string object_key
+    string checksum
+    bigint row_count
+    string error_code
+    datetime expires_at
+  }
+
+  %% Identity and access
+  users ||--o| user_profiles : has
+  departments o|--o{ user_profiles : classifies
+  grades o|--o{ user_profiles : classifies
+  users ||--o{ user_role_assignments : receives
+  roles ||--o{ user_role_assignments : assigns
+  roles ||--o{ role_capabilities : grants
+  capabilities ||--o{ role_capabilities : contains
+  users ||--o{ access_sessions : authenticates
+  users ||--o{ password_recovery_tokens : recovers
+
+  %% Cross-year organization and annual participation
+  users ||--o{ organization_memberships : joins
+  organizations ||--o{ organization_memberships : has
+  organizations o|--o{ organizations : merged_into
+  organizations ||--o{ festival_participations : enters
+  festival_years ||--o{ festival_participations : holds
+  group_categories ||--o{ festival_participations : classifies
+  organization_memberships ||--o{ participation_memberships : authorizes
+  festival_participations ||--o{ participation_memberships : scopes
+  festival_participations ||--o{ participation_contacts : has
+  users o|--o{ participation_contacts : may_link
+
+  %% Annual requirement and immutable submissions
+  festival_years ||--o{ festival_dates : contains
+  festival_years ||--o{ application_requirements : configures
+  application_requirements ||--|{ application_requirement_versions : versions
+  application_requirements ||--o| application_requirement_publications : publishes
+  application_requirement_versions ||--o| application_requirement_publications : current
+  application_requirement_versions ||--o{ application_requirement_collection_rules : limits
+  festival_participations ||--o{ application_cases : receives
+  application_requirements ||--o{ application_cases : defines
+  application_requirement_versions ||--o{ application_cases : snapshots
+  application_cases ||--o{ application_submissions : versions
+  participation_memberships o|--o{ application_submissions : submitted_by
+  participation_memberships o|--o{ application_submissions : withdrawn_by
+  idempotency_records o|--o{ application_submissions : deduplicates
+  application_submissions ||--o{ application_submission_items : contains
+  application_submissions ||--o{ application_attachments : owns
+  application_submission_items o|--o{ application_attachments : may_own
+  application_submissions ||--o{ application_dependency_invalidations : invalidates
+  application_submissions o|--o{ application_dependency_invalidations : resolves
+
+  %% Typed leaves: exactly one compatible leaf per item_kind where required.
+  %% MySQL CHECK cannot enforce this XOR or no_request => zero items/attachments across tables.
+  %% Enforce in one Command transaction plus integrity tests/monitor; DB trigger use is a DDL gate.
+  application_submission_items ||--o| announcement_submission_items : typed_as
+  application_submission_items ||--o| deputy_contact_submission_items : typed_as
+  application_submission_items ||--o| fire_equipment_submission_items : typed_as
+  application_submission_items ||--o| power_device_submission_items : typed_as
+  application_submission_items ||--o| employee_submission_items : typed_as
+  application_submission_items ||--o| food_product_submission_items : typed_as
+  application_submission_items ||--o| purchase_submission_items : typed_as
+  application_submission_items ||--o| cooking_process_submission_items : typed_as
+  application_submission_items ||--o| stage_request_items : typed_as
+  application_submission_items ||--o| public_relation_submission_items : typed_as
+  application_submission_items ||--o| venue_map_submission_items : typed_as
+  application_submission_items ||--o| rental_request_submission_items : typed_as
+  participation_contacts o|--o{ deputy_contact_submission_items : snapshots
+  application_submissions ||--o| place_request_details : has
+  place_request_details ||--o{ place_preferences : ranks
+  application_submissions ||--o| stage_request_details : has
+  stage_request_items ||--o{ stage_preferences : ranks
+
+  %% Products and food-chain dependencies
+  festival_participations ||--o{ participation_products : owns
+  participation_products ||--o{ participation_product_profiles : versions
+  participation_product_profiles ||--o{ participation_product_profile_daily_quantities : quantities
+  festival_dates ||--o{ participation_product_profile_daily_quantities : dates
+  participation_products ||--o{ food_product_submission_items : identifies
+  participation_product_profiles ||--o{ food_product_submission_items : snapshots
+  participation_products ||--o{ purchase_submission_items : identifies
+  participation_product_profiles ||--o{ purchase_submission_items : snapshots
+  participation_products ||--o{ cooking_process_submission_items : identifies
+  participation_product_profiles ||--o{ cooking_process_submission_items : snapshots
+  vendors o|--o{ purchase_submission_items : supplies
+  festival_dates o|--o{ purchase_submission_items : schedules
+
+  %% Submission and item review
+  application_submissions ||--o| review_cases : reviewed_as
+  review_cases ||--o{ review_items : contains
+  application_submission_items ||--o| review_items : reviewed_by
+  review_cases ||--o{ review_comments : receives
+  review_items o|--o{ review_comments : scopes
+  review_cases ||--o{ review_events : records
+  review_items o|--o{ review_events : scopes
+
+  %% Venue and stage configuration / allocation
+  venues ||--o{ venue_year_settings : configures
+  festival_years ||--o{ venue_year_settings : scopes
+  venue_year_settings ||--o{ venue_eligibility_rules : permits
+  group_categories ||--o{ venue_eligibility_rules : eligible
+  stages ||--o{ stage_year_settings : configures
+  festival_years ||--o{ stage_year_settings : scopes
+  venue_year_settings ||--o{ place_preferences : preferred
+  stage_year_settings ||--o{ stage_preferences : preferred
+  festival_participations ||--o{ participation_identifiers : identifies
+  festival_years ||--o{ participation_identifiers : scopes
+  festival_participations ||--o{ place_allocations : receives
+  application_submissions ||--o{ place_allocations : sources
+  venue_year_settings ||--o{ place_allocations : assigns
+  participation_identifiers o|--o{ place_allocations : labels
+  festival_participations ||--o{ stage_allocations : receives
+  stage_request_items ||--o{ stage_allocations : sources
+  stage_year_settings ||--o{ stage_allocations : assigns
+  festival_dates ||--o{ stage_allocations : schedules
+  participation_identifiers o|--o{ stage_allocations : labels
+
+  %% Inventory: append-only movements are truth; balances are rebuildable
+  storage_locations ||--o{ storage_location_year_settings : configures
+  festival_years ||--o{ storage_location_year_settings : scopes
+  festival_participations ||--o{ participation_storage_allocations : receives
+  storage_locations ||--o{ participation_storage_allocations : assigns
+  rental_items ||--o{ inventory_movements : moves
+  storage_locations ||--o{ inventory_movements : locates
+  festival_years o|--o{ inventory_movements : scopes
+  rental_items ||--o{ inventory_balances : balances
+  storage_locations ||--o{ inventory_balances : balances
+  festival_years ||--o{ inventory_balances : scopes
+  rental_items ||--o{ rental_item_eligibility_rules : permits
+  group_categories ||--o{ rental_item_eligibility_rules : eligible
+  festival_years ||--o{ rental_item_eligibility_rules : scopes
+  rental_items ||--o{ rental_request_submission_items : requests
+  rental_request_submission_items ||--o{ rental_item_allocations : allocated
+  inventory_balances ||--o{ rental_item_allocations : consumes
+  storage_locations ||--o{ rental_item_allocations : source_location
+  storage_locations o|--o{ rental_item_allocations : destination_location
+
+  %% Communications and platform
+  users o|--o{ news_posts : publishes
+  users ||--o{ staff_notes : authors
+  festival_participations o|--o{ staff_notes : scopes
+  message_templates ||--o{ message_template_versions : versions
+  outbox_events ||--o{ message_deliveries : dispatches
+  message_template_versions o|--o{ message_deliveries : renders
+  message_deliveries ||--o{ message_delivery_attempts : attempts
+  users ||--o{ idempotency_records : owns
+  users o|--o{ audit_events : acts
+  users ||--o{ export_jobs : requests
+
+  %% Additional physical FK paths retained for composite tenant/year checks and actor provenance.
+  users ||--o{ user_role_assignments : grants
+  users ||--o{ application_requirement_publications : publishes
+  organizations ||--o{ participation_memberships : tenant_scope
+  festival_years ||--o{ application_cases : tenant_year
+  users o|--o{ application_cases : cancels
+  festival_participations ||--o{ application_submissions : tenant_snapshot
+  application_requirements ||--o{ application_submissions : requirement_snapshot
+  application_requirement_versions ||--o{ application_submissions : policy_snapshot
+
+  %% Typed leaves also carry submission_id for a composite FK to (item_id, submission_id).
+  application_submissions ||--o{ announcement_submission_items : owns_typed
+  application_submissions ||--o{ deputy_contact_submission_items : owns_typed
+  application_submissions ||--o{ fire_equipment_submission_items : owns_typed
+  application_submissions ||--o{ power_device_submission_items : owns_typed
+  application_submissions ||--o{ employee_submission_items : owns_typed
+  application_submissions ||--o{ food_product_submission_items : owns_typed
+  application_submissions ||--o{ purchase_submission_items : owns_typed
+  application_submissions ||--o{ cooking_process_submission_items : owns_typed
+  application_submissions ||--o{ stage_request_items : owns_typed
+  application_submissions ||--o{ public_relation_submission_items : owns_typed
+  application_submissions ||--o{ venue_map_submission_items : owns_typed
+  application_submissions ||--o{ rental_request_submission_items : owns_typed
+  departments o|--o{ deputy_contact_submission_items : snapshots
+  grades o|--o{ deputy_contact_submission_items : snapshots
+  application_submission_items o|--o{ participation_product_profiles : sources
+  participation_product_profiles o|--o{ application_dependency_invalidations : old_profile
+  participation_product_profiles o|--o{ application_dependency_invalidations : new_profile
+  festival_dates ||--o{ stage_request_items : schedules
+
+  %% Review, allocation and inventory actor/scope FKs.
+  application_submissions ||--o{ review_items : tenant_submission
+  users o|--o{ review_cases : assigned_to
+  users o|--o{ review_cases : decided_by
+  users o|--o{ review_items : assigned_to
+  users o|--o{ review_items : decided_by
+  users o|--o{ review_comments : authors
+  users o|--o{ review_events : acts
+  users ||--o{ place_allocations : allocates
+  users ||--o{ stage_allocations : allocates
+  users o|--o{ inventory_movements : records
+  idempotency_records o|--o{ inventory_movements : deduplicates
+  users ||--o{ rental_item_allocations : allocates
+  idempotency_records o|--o{ export_jobs : deduplicates

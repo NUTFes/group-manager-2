@@ -1,0 +1,578 @@
+erDiagram
+  %% Snapshot date: 2026-07-15.
+  %% Exact physical columns generated from api/db/schema.rb (schema version 2026_07_11_000001).
+  %% Relationship overlay includes DB FKs, Rails-only associations and confirmed application correlations.
+  %% Labels are authoritative: only edges labelled [DB FK] are enforced by the database.
+  %% [RAILS ONLY] can admit orphan/duplicate rows; [APP ...] is code coupling, not a row-level FK.
+  %% ID-like columns marked UNCONFIRMED have no edge until runtime/data evidence proves a target.
+  %% All 49 tables use charset utf8mb4 and collation utf8mb4_0900_ai_ci.
+  announcements {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    text message
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    string status
+  }
+  assign_group_places {
+    bigint id PK "implicit Rails primary key"
+    integer place_order_id
+    integer place_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  assign_rental_items {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    integer rental_item_id
+    integer num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer stocker_place_id
+    bigint rental_place_id FK "INDEX index_assign_rental_items_on_rental_place_id(rental_place_id)"
+  }
+  assign_stages {
+    bigint id PK "implicit Rails primary key"
+    integer stage_order_id
+    integer stage_id
+    string time_point_start
+    string time_point_end
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  comments {
+    bigint id PK "implicit Rails primary key"
+    string commentable_type "NOT NULL; INDEX index_comments_on_commentable(commentable_type,commentable_id)"
+    bigint commentable_id "NOT NULL; INDEX index_comments_on_commentable(commentable_type,commentable_id)"
+    text body "NOT NULL"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer mail_delivery_status "NOT NULL; default=0"
+  }
+  contact_people {
+    bigint id PK "implicit Rails primary key"
+    integer group_id "APP lookup; Model direction mismatch; no FK/index"
+    string name
+    string email
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  cooking_process_orders {
+    bigint id PK "implicit Rails primary key"
+    bigint group_id FK "NOT NULL; INDEX index_cooking_process_orders_on_group_id(group_id)"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean pre_open_kitchen "NOT NULL; default=false"
+    boolean during_open_kitchen "NOT NULL; default=false"
+    text tent
+    bigint food_product_id FK "NOT NULL; INDEX index_cooking_process_orders_on_food_product_id(food_product_id)"
+    text tent_ja
+  }
+  current_stocks {
+    bigint id PK "implicit Rails primary key"
+    integer place_category_id "UNCONFIRMED target"
+    integer place_id "UNCONFIRMED target"
+    integer item_id "UNCONFIRMED target"
+    integer stock_num
+    integer date_id "UNCONFIRMED target"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  departments {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  employees {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string name
+    integer student_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer stool_test_id
+  }
+  fes_dates {
+    bigint id PK "implicit Rails primary key"
+    integer days_num
+    string date
+    string day
+    integer fes_year_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  fes_years {
+    bigint id PK "implicit Rails primary key"
+    integer year_num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  fire_equipment_orders {
+    bigint id PK "implicit Rails primary key"
+    string name "NOT NULL"
+    integer quantity "NOT NULL"
+    integer fuel "default=0"
+    text usage
+    boolean is_takeaway
+    text remark
+    bigint group_id FK "NOT NULL; INDEX index_fire_equipment_orders_on_group_id(group_id)"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  food_products {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string name
+    boolean is_cooking
+    integer first_day_num
+    integer second_day_num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean is_alcohol
+  }
+  grades {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  group_categories {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    string name_en
+  }
+  group_identifications {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    integer number
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  groups {
+    bigint id PK "implicit Rails primary key"
+    string name
+    string project_name
+    text activity
+    integer user_id
+    integer group_category_id
+    integer fes_year_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean committee
+    boolean is_international
+    boolean is_external
+    bigint uses_place_id FK "INDEX index_groups_on_uses_place_id(uses_place_id)"
+  }
+  health_center_submission_statuses {
+    bigint id PK "implicit Rails primary key"
+    bigint group_id FK "NOT NULL; UNIQUE INDEX index_health_center_submission_statuses_on_group_and_type(group_id,application_type); INDEX index_health_center_submission_statuses_on_group_id(group_id)"
+    integer application_type "NOT NULL; UNIQUE INDEX index_health_center_submission_statuses_on_group_and_type(group_id,application_type)"
+    integer status "NOT NULL; default=0"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  item_adjustments {
+    bigint id PK "implicit Rails primary key"
+    integer group_id "UNCONFIRMED target"
+    integer use_place_id "UNCONFIRMED target"
+    integer rental_place_id "UNCONFIRMED target"
+    integer item_id "UNCONFIRMED target"
+    integer item_num
+    integer people_num
+    datetime time_start
+    datetime time_end
+    integer date_id "UNCONFIRMED target"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  memos {
+    bigint id PK "implicit Rails primary key"
+    text content
+    integer user_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  message_templates {
+    bigint id PK "implicit Rails primary key"
+    integer locale "NOT NULL; UNIQUE INDEX index_message_templates_on_name_and_locale(name,locale)"
+    string name "NOT NULL; UNIQUE INDEX index_message_templates_on_name_and_locale(name,locale)"
+    string subject "NOT NULL"
+    text body "NOT NULL"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  news {
+    bigint id PK "implicit Rails primary key"
+    string title
+    text body
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  place_allow_lists {
+    bigint id PK "implicit Rails primary key"
+    integer place_id
+    integer group_category_id
+    boolean enable
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  place_numbers {
+    bigint id PK "implicit Rails primary key"
+    integer place_id
+    integer group_identification_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  place_orders {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    integer first
+    integer second
+    integer third
+    text remark
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  places {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  power_orders {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string item
+    integer power
+    string manufacturer
+    string model
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    string item_url
+  }
+  public_relations {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string picture_name
+    string picture_path
+    text blurb
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean is_announcement_requested "NOT NULL; default=false"
+    string imgur_deletehash
+  }
+  purchase_lists {
+    bigint id PK "implicit Rails primary key"
+    integer food_product_id
+    integer shop_id
+    integer fes_date_id
+    string items
+    boolean is_fresh
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    string purchase_date
+    string url
+    string remark
+  }
+  rentable_items {
+    bigint id PK "implicit Rails primary key"
+    integer stocker_item_id
+    integer stocker_place_id
+    integer max_num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  rental_item_allow_lists {
+    bigint id PK "implicit Rails primary key"
+    integer rental_item_id
+    integer group_category_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  rental_items {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean is_stage_rentable
+    boolean is_inside_shop_rentable
+    boolean is_outside_shop_rentable
+    string name_en
+  }
+  rental_orders {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    integer rental_item_id
+    integer num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  roles {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  shops {
+    bigint id PK "implicit Rails primary key"
+    string name
+    string tel
+    string opening_hours
+    string address
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stage_common_options {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    boolean own_equipment
+    boolean bgm
+    boolean camera_permission
+    boolean loud_sound
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stage_numbers {
+    bigint id PK "implicit Rails primary key"
+    integer stage_id
+    integer group_identification_id
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stage_orders {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    boolean is_sunny
+    integer fes_date_id
+    integer stage_first
+    integer stage_second
+    string use_time_interval
+    string prepare_time_interval
+    string cleanup_time_interval
+    string prepare_start_time
+    string performance_start_time
+    string performance_end_time
+    string cleanup_end_time
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stages {
+    bigint id PK "implicit Rails primary key"
+    string name
+    boolean enable_sunny
+    boolean enable_rainy
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stocker_items {
+    bigint id PK "implicit Rails primary key"
+    integer rental_item_id
+    integer stocker_place_id
+    integer fes_year_id
+    integer num
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  stocker_places {
+    bigint id PK "implicit Rails primary key"
+    string name
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer stock_item_status
+    integer assign_item_status
+    string name_en
+  }
+  stool_tests {
+    bigint id PK "implicit Rails primary key"
+    string status
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  sub_reps {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string name
+    integer department_id
+    integer grade_id
+    string tel
+    string email
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer student_id
+  }
+  un_registered_groups {
+    bigint id PK "implicit Rails primary key"
+    bigint group_id FK "NOT NULL; INDEX index_un_registered_groups_on_group_id(group_id)"
+    integer order_type "NOT NULL; default=0"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  user_details {
+    bigint id PK "implicit Rails primary key"
+    string tel
+    integer grade_id
+    integer department_id
+    bigint user_id FK "NOT NULL; INDEX index_user_details_on_user_id(user_id)"
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    integer student_id
+  }
+  user_page_settings {
+    bigint id PK "implicit Rails primary key"
+    boolean is_regist_group
+    boolean is_regist_food_product
+    boolean is_edit_group
+    boolean is_edit_sub_rep
+    boolean is_edit_place
+    boolean is_edit_power_order
+    boolean is_edit_rental_order
+    boolean is_edit_stage_order
+    boolean is_edit_employee
+    boolean is_edit_food_product
+    boolean is_edit_purchase_list
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    boolean add_power_order
+    boolean add_rental_order
+    boolean add_employee
+    boolean add_food_product
+    boolean add_purchase_list
+    integer fes_year_id
+    boolean is_edit_announcement
+    boolean add_announcement
+    boolean is_edit_user
+    boolean is_edit_stage_common_option
+    boolean is_edit_public_relation
+    boolean is_edit_venue_map
+    boolean is_edit_cooking_process
+    boolean add_stage_order
+    boolean add_fire_equipment_order "default=true"
+    boolean is_edit_fire_equipment_order "default=true"
+  }
+  users {
+    bigint id PK "implicit Rails primary key"
+    string provider "NOT NULL; default='email'; UNIQUE INDEX index_users_on_uid_and_provider(uid,provider)"
+    string uid "NOT NULL; default=''; UNIQUE INDEX index_users_on_uid_and_provider(uid,provider)"
+    string encrypted_password "NOT NULL; default=''"
+    string reset_password_token UK "UNIQUE INDEX index_users_on_reset_password_token(reset_password_token)"
+    datetime reset_password_sent_at
+    boolean allow_password_change "default=false"
+    datetime remember_created_at
+    integer sign_in_count "NOT NULL; default=0"
+    datetime current_sign_in_at
+    datetime last_sign_in_at
+    string current_sign_in_ip
+    string last_sign_in_ip
+    string confirmation_token UK "UNIQUE INDEX index_users_on_confirmation_token(confirmation_token)"
+    datetime confirmed_at
+    datetime confirmation_sent_at
+    string unconfirmed_email
+    string name
+    string email UK "UNIQUE INDEX index_users_on_email(email)"
+    integer role_id
+    text tokens
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+  }
+  venue_maps {
+    bigint id PK "implicit Rails primary key"
+    integer group_id
+    string picture_name
+    string picture_path
+    datetime created_at "NOT NULL; precision=6"
+    datetime updated_at "NOT NULL; precision=6"
+    string imgur_deletehash
+  }
+
+  %% Physical foreign keys (8)
+  stocker_places o|--o{ assign_rental_items : "rental_place_id [DB FK]"
+  food_products ||--o{ cooking_process_orders : "food_product_id [DB FK; has_one lacks UNIQUE; same-group not enforced]"
+  groups ||--o{ cooking_process_orders : "group_id [DB FK; has_one lacks UNIQUE; same-group not enforced]"
+  groups ||--o{ fire_equipment_orders : "group_id [DB FK]"
+  stocker_places o|--o{ groups : "uses_place_id [DB FK]"
+  groups ||--o{ health_center_submission_statuses : "group_id [DB FK]"
+  groups ||--o{ un_registered_groups : "group_id [DB FK]"
+  users ||--o{ user_details : "user_id [DB FK; AR has_one lacks UNIQUE]"
+
+  %% Rails associations without an equivalent DB foreign key.
+  %% Optional-to-many endpoints reflect what the physical DB can contain, not the stricter Rails intention.
+  roles o|--o{ users : "role_id [RAILS ONLY]"
+  departments o|--o{ user_details : "department_id [RAILS ONLY]"
+  departments o|--o{ sub_reps : "department_id [RAILS ONLY]"
+  grades o|--o{ user_details : "grade_id [RAILS ONLY]"
+  grades o|--o{ sub_reps : "grade_id [RAILS ONLY]"
+  users o|--o{ groups : "user_id [RAILS ONLY; has_many but API returns first match]"
+  users o|--o{ memos : "user_id [RAILS ONLY]"
+  fes_years o|--o{ groups : "fes_year_id [RAILS ONLY]"
+  fes_years o|--o{ fes_dates : "fes_year_id [RAILS ONLY]"
+  fes_years o|--o{ stocker_items : "fes_year_id [RAILS ONLY]"
+  fes_years o|--o{ user_page_settings : "fes_year_id [RAILS has_one lacks UNIQUE; plural accessor may fail]"
+  group_categories o|--o{ groups : "group_category_id [RAILS ONLY]"
+  group_categories o|--o{ place_allow_lists : "group_category_id [RAILS ONLY]"
+  group_categories o|--o{ rental_item_allow_lists : "group_category_id [RAILS ONLY]"
+  groups o|--o{ stage_common_options : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ sub_reps : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ place_orders : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ group_identifications : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ public_relations : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ venue_maps : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ announcements : "group_id [RAILS has_one lacks UNIQUE]"
+  groups o|--o{ power_orders : "group_id [RAILS ONLY]"
+  groups o|--o{ employees : "group_id [RAILS ONLY]"
+  groups o|--o{ stage_orders : "group_id [RAILS ONLY]"
+  groups o|--o{ food_products : "group_id [RAILS ONLY]"
+  groups o|--o{ rental_orders : "group_id [RAILS ONLY]"
+  groups o|--o{ assign_rental_items : "group_id [RAILS ONLY]"
+  groups o|--o{ comments : "commentable_id/type [RAILS POLYMORPHIC]"
+  health_center_submission_statuses o|--o{ comments : "commentable_id/type [RAILS POLYMORPHIC]"
+  group_identifications o|--o{ place_numbers : "group_identification_id [RAILS has_one lacks UNIQUE]"
+  group_identifications o|--o{ stage_numbers : "group_identification_id [RAILS has_one lacks UNIQUE]"
+  place_orders o|--o{ assign_group_places : "place_order_id [RAILS has_one lacks UNIQUE]"
+  places o|--o{ assign_group_places : "place_id [RAILS ONLY]"
+  places o|--o{ place_allow_lists : "place_id [RAILS ONLY]"
+  places o|--o{ place_numbers : "place_id [RAILS ONLY]"
+  stage_orders o|--o{ assign_stages : "stage_order_id [RAILS has_one lacks UNIQUE]"
+  stages o|--o{ assign_stages : "stage_id [RAILS ONLY]"
+  stages o|--o{ stage_numbers : "stage_id [RAILS ONLY]"
+  fes_dates o|--o{ stage_orders : "fes_date_id [RAILS ONLY]"
+  fes_dates o|--o{ purchase_lists : "fes_date_id [RAILS ONLY]"
+  stool_tests o|--o{ employees : "stool_test_id [RAILS has_one lacks UNIQUE]"
+  food_products o|--o{ purchase_lists : "food_product_id [RAILS ONLY]"
+  rental_items o|--o{ rental_item_allow_lists : "rental_item_id [RAILS ONLY]"
+  rental_items o|--o{ rental_orders : "rental_item_id [RAILS ONLY]"
+  rental_items o|--o{ stocker_items : "rental_item_id [RAILS ONLY]"
+  rental_items o|--o{ assign_rental_items : "rental_item_id [RAILS ONLY]"
+  stocker_places o|--o{ stocker_items : "stocker_place_id [RAILS ONLY]"
+  stocker_places o|--o{ rentable_items : "stocker_place_id [RAILS ONLY]"
+  stocker_places o|--o{ assign_rental_items : "stocker_place_id [RAILS ONLY]"
+  stocker_items o|--o{ rentable_items : "stocker_item_id [RAILS has_one lacks UNIQUE]"
+  shops o|--o{ purchase_lists : "shop_id [RAILS ONLY]"
+  stages o|--o{ stage_orders : "stage_first/stage_second [RAILS ONLY; no FK/index]"
+
+  %% Confirmed application lookups and business correlations; none is a DB FK.
+  places o|--o{ place_orders : "first/second/third [APP LOOKUP]"
+  health_center_submission_statuses o{--o{ food_products : "application_type=food_product + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ purchase_lists : "application_type=purchase_list + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ cooking_process_orders : "application_type=cooking_process_order + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ employees : "application_type=employee + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ venue_maps : "application_type=venue_map + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ rental_orders : "application_type=equipment + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ power_orders : "application_type=power_order + group_id [APP STATE]"
+  health_center_submission_statuses o{--o{ fire_equipment_orders : "application_type=fire_equipment_order + group_id [APP STATE]"
+  un_registered_groups o{--o{ sub_reps : "order_type=sub_rep + group_id [APP NEGATIVE]"
+  un_registered_groups o{--o{ rental_orders : "order_type=rental_item_order + group_id [APP NEGATIVE]"
+  un_registered_groups o{--o{ power_orders : "order_type=power_order + group_id [APP NEGATIVE]"
+  un_registered_groups o{--o{ employees : "order_type=employee + group_id [APP NEGATIVE]"
+  un_registered_groups o{--o{ fire_equipment_orders : "order_type=fire_equipment_order + group_id [APP NEGATIVE]"
+  rental_orders o{--o{ assign_rental_items : "group_id+rental_item_id [APP RECONCILE]"
+  stocker_items o{--o{ assign_rental_items : "rental_item_id+stocker_place_id [APP RECONCILE]"
+  groups o|--o{ contact_people : "contact_people.group_id [APP LOOKUP; no belongs_to]"
+
+  %% No edge is drawn for the legacy admin fallback through rental_order_id/rentable_item_id:
+  %% neither column exists in assign_rental_items, so it is not a persisted relationship.
+
+  %% Broken Model declaration: ContactPerson.has_many :groups expects a column that does not exist.
+  contact_people o|--o{ groups : "missing groups.contact_person_id [BROKEN RAILS]"

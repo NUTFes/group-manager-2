@@ -1,0 +1,170 @@
+flowchart LR
+  %% Snapshot date: 2026-07-15.
+  %% Current logical relation map. Every one of the 49 physical tables appears once.
+  %% Thick arrows = DB foreign keys; dotted arrows = Rails-only associations;
+  %% thin arrows = application-code lookups/business correlations without a DB FK.
+  %% ID-like columns whose target cannot be proved are labelled UNCONFIRMED and have no edge.
+
+  subgraph IA["Identity / access"]
+    users["users"]
+    user_details["user_details"]
+    roles["roles"]
+    departments["departments"]
+    grades["grades"]
+    memos["memos"]
+  end
+
+  subgraph FP["Festival / participation"]
+    fes_years["fes_years"]
+    fes_dates["fes_dates"]
+    groups["groups"]
+    group_categories["group_categories"]
+    contact_people["contact_people"]
+    sub_reps["sub_reps"]
+    group_identifications["group_identifications"]
+    user_page_settings["user_page_settings"]
+  end
+
+  subgraph AP["Applications / review"]
+    announcements["announcements"]
+    comments["comments"]
+    cooking_process_orders["cooking_process_orders"]
+    employees["employees"]
+    fire_equipment_orders["fire_equipment_orders"]
+    food_products["food_products"]
+    health_center_submission_statuses["health_center_submission_statuses"]
+    place_orders["place_orders"]
+    power_orders["power_orders"]
+    public_relations["public_relations"]
+    purchase_lists["purchase_lists"]
+    rental_orders["rental_orders"]
+    stage_common_options["stage_common_options"]
+    stage_orders["stage_orders"]
+    stool_tests["stool_tests"]
+    un_registered_groups["un_registered_groups"]
+    venue_maps["venue_maps"]
+  end
+
+  subgraph AL["Allocation / inventory / masters"]
+    assign_group_places["assign_group_places"]
+    assign_rental_items["assign_rental_items"]
+    assign_stages["assign_stages"]
+    current_stocks["current_stocks\nplace_category_id/place_id/item_id/date_id: UNCONFIRMED"]
+    item_adjustments["item_adjustments\ngroup/use_place/rental_place/item/date IDs: UNCONFIRMED"]
+    place_allow_lists["place_allow_lists"]
+    place_numbers["place_numbers"]
+    places["places"]
+    rentable_items["rentable_items"]
+    rental_item_allow_lists["rental_item_allow_lists"]
+    rental_items["rental_items"]
+    shops["shops"]
+    stage_numbers["stage_numbers"]
+    stages["stages"]
+    stocker_items["stocker_items"]
+    stocker_places["stocker_places"]
+  end
+
+  subgraph CO["Communications"]
+    message_templates["message_templates"]
+    news["news"]
+  end
+
+  %% Eight relationships that the database actually enforces.
+  stocker_places ==>|"DB FK rental_place_id"| assign_rental_items
+  food_products ==>|"DB FK food_product_id; has_one no UNIQUE; same-group not enforced"| cooking_process_orders
+  groups ==>|"DB FK group_id; has_one no UNIQUE; same-group not enforced"| cooking_process_orders
+  groups ==>|"DB FK group_id"| fire_equipment_orders
+  stocker_places ==>|"DB FK uses_place_id"| groups
+  groups ==>|"DB FK group_id"| health_center_submission_statuses
+  groups ==>|"DB FK group_id"| un_registered_groups
+  users ==>|"DB FK user_id; AR has_one but no UNIQUE"| user_details
+
+  %% Rails associations without an equivalent physical FK.
+  roles -.->|"role_id"| users
+  departments -.->|"department_id"| user_details
+  departments -.->|"department_id"| sub_reps
+  grades -.->|"grade_id"| user_details
+  grades -.->|"grade_id"| sub_reps
+  users -.->|"user_id; has_many but API returns first match"| groups
+  users -.->|"user_id"| memos
+  fes_years -.->|"fes_year_id"| groups
+  fes_years -.->|"fes_year_id"| fes_dates
+  fes_years -.->|"fes_year_id"| stocker_items
+  fes_years -.->|"fes_year_id; has_one not UNIQUE; plural accessor may not resolve"| user_page_settings
+  group_categories -.->|"group_category_id"| groups
+  group_categories -.->|"group_category_id"| place_allow_lists
+  group_categories -.->|"group_category_id"| rental_item_allow_lists
+  groups -.->|"group_id; has_one not UNIQUE"| stage_common_options
+  groups -.->|"group_id; has_one not UNIQUE"| sub_reps
+  groups -.->|"group_id; has_one not UNIQUE"| place_orders
+  groups -.->|"group_id; has_one not UNIQUE"| group_identifications
+  groups -.->|"group_id; has_one not UNIQUE"| public_relations
+  groups -.->|"group_id; has_one not UNIQUE"| venue_maps
+  groups -.->|"group_id; has_one not UNIQUE"| announcements
+  groups -.->|"group_id"| power_orders
+  groups -.->|"group_id"| employees
+  groups -.->|"group_id"| stage_orders
+  groups -.->|"group_id"| food_products
+  groups -.->|"group_id"| rental_orders
+  groups -.->|"group_id"| assign_rental_items
+  groups -.->|"commentable polymorphic"| comments
+  health_center_submission_statuses -.->|"commentable polymorphic"| comments
+  group_identifications -.->|"group_identification_id; has_one not UNIQUE"| place_numbers
+  group_identifications -.->|"group_identification_id; has_one not UNIQUE"| stage_numbers
+  place_orders -.->|"place_order_id; has_one not UNIQUE"| assign_group_places
+  places -.->|"place_id"| assign_group_places
+  places -.->|"place_id"| place_allow_lists
+  places -.->|"place_id"| place_numbers
+  stage_orders -.->|"stage_order_id; has_one not UNIQUE"| assign_stages
+  stages -.->|"stage_id"| assign_stages
+  stages -.->|"stage_id"| stage_numbers
+  fes_dates -.->|"fes_date_id"| stage_orders
+  fes_dates -.->|"fes_date_id"| purchase_lists
+  stool_tests -.->|"stool_test_id; has_one not UNIQUE"| employees
+  food_products -.->|"food_product_id"| purchase_lists
+  rental_items -.->|"rental_item_id"| rental_item_allow_lists
+  rental_items -.->|"rental_item_id"| rental_orders
+  rental_items -.->|"rental_item_id"| stocker_items
+  rental_items -.->|"rental_item_id"| assign_rental_items
+  stocker_places -.->|"stocker_place_id"| stocker_items
+  stocker_places -.->|"stocker_place_id"| rentable_items
+  stocker_places -.->|"stocker_place_id"| assign_rental_items
+  stocker_items -.->|"stocker_item_id; has_one not UNIQUE"| rentable_items
+  shops -.->|"shop_id"| purchase_lists
+
+  %% References/correlations implemented in application code, without FK/model association.
+  places -->|"APP LOOKUP first / second / third"| place_orders
+  stages -.->|"stage_first / stage_second; Rails belongs_to only"| stage_orders
+
+  %% Review status is coupled to eight positive application collections by group_id + application_type.
+  health_center_submission_statuses -->|"APP STATE food_product + group_id"| food_products
+  health_center_submission_statuses -->|"APP STATE purchase_list + group_id"| purchase_lists
+  health_center_submission_statuses -->|"APP STATE cooking_process_order + group_id"| cooking_process_orders
+  health_center_submission_statuses -->|"APP STATE employee + group_id"| employees
+  health_center_submission_statuses -->|"APP STATE venue_map + group_id"| venue_maps
+  health_center_submission_statuses -->|"APP STATE equipment + group_id"| rental_orders
+  health_center_submission_statuses -->|"APP STATE power_order + group_id"| power_orders
+  health_center_submission_statuses -->|"APP STATE fire_equipment_order + group_id"| fire_equipment_orders
+
+  %% Negative answers are coupled to positive collections by group_id + order_type.
+  un_registered_groups -->|"APP NEGATIVE sub_rep"| sub_reps
+  un_registered_groups -->|"APP NEGATIVE rental_item_order"| rental_orders
+  un_registered_groups -->|"APP NEGATIVE power_order"| power_orders
+  un_registered_groups -->|"APP NEGATIVE employee"| employees
+  un_registered_groups -->|"APP NEGATIVE fire_equipment_order"| fire_equipment_orders
+
+  %% Allocation/stock are reconciled by shared keys rather than a persisted parent ID.
+  rental_orders -->|"APP RECONCILE group_id + rental_item_id"| assign_rental_items
+  stocker_items -->|"APP RECONCILE rental_item_id + stocker_place_id"| assign_rental_items
+
+  %% The legacy admin fallback reads assign_rental_items.rental_order_id/rentable_item_id,
+  %% but neither column exists. It is intentionally not represented as a relationship.
+
+  %% Schema/model mismatch: application code uses contact_people.group_id, while the Model declares the reverse.
+  groups -->|"APP LOOKUP contact_people.group_id; no belongs_to"| contact_people
+  contact_people -.->|"BROKEN RAILS has_many expects missing groups.contact_person_id"| groups
+
+  legend_db["THICK = DB-enforced"]
+  legend_model["DOTTED = Rails-only"]
+  legend_lookup["THIN = manual lookup / business correlation"]
+  legend_unconfirmed["UNCONFIRMED = no edge until runtime/data evidence"]
