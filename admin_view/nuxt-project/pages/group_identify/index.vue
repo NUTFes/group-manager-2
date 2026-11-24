@@ -30,6 +30,7 @@
           <tr
             v-for="gi in groupIdentifications"
             :key="gi.id"
+            :class="{ 'no-row-hover': !$role(roleID).group_identify.update }"
             @click="openAddModal(gi.id, gi.group_id, gi.name, gi.number)"
           >
             <td>{{ gi.group_id }}</td>

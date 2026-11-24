@@ -71,6 +71,13 @@
   box-shadow: 5px 5px 14px #f0f0f0, -5px -5px 14px #fafafa;
 }
 
+/* クリックしても何も起きない行（staffの閲覧時など）はホバー表示を出さない */
+.normal-table tr.no-row-hover:hover {
+  transform: none;
+  border: none;
+  box-shadow: none;
+}
+
 .normal-table td:hover {
   background: linear-gradient(
     45deg,
