@@ -7,6 +7,7 @@ class PlaceOrdersController < ApplicationController
   before_action :require_manager!, except: %i[create update get_by_group_id index show]
   # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
   before_action :reject_staff_write!, only: %i[create update]
+  before_action :require_accessible_group_param!, only: %i[get_by_group_id]
   before_action :set_place_order, only: %i[show update destroy]
   before_action :set_place_order_by_group_id, only: [:get_by_group_id]
   before_action :require_own_group!, only: %i[create update]
@@ -74,10 +75,10 @@ class PlaceOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order_by_group_id
-    @place_order = accessible_place_orders_scope.find_by(group_id: params[:group_id])
+    @place_order = PlaceOrder.find_by(group_id: params[:group_id])
     return if @place_order
 
-    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}") }
+    render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}")
   end
 
   # create/updateで指定されたgroup_idが自団体(管理者は全団体可)かを検証する

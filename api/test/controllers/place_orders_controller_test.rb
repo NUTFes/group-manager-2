@@ -143,6 +143,15 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'get_by_group_id returns not found when own group has no place_order' do
+    group_without_place_order = create_group!(@user, name: '会場申請未登録団体')
+
+    get "/place_orders/group/#{group_without_place_order.id}", headers: auth_headers(@user), as: :json
+
+    assert_response :success
+    assert_equal 404, response.parsed_body.dig('status', 'code')
+  end
+
   test 'get_by_group_id does not expose another group place_order' do
     get "/place_orders/group/#{@other_group.id}", headers: auth_headers(@user), as: :json
     assert_response :forbidden
