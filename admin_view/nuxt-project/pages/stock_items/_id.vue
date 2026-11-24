@@ -16,7 +16,7 @@
       <Column width="100%">
         <Card width="100%">
           <SubHeader pageTitle="在庫物品">
-            <CommonButton v-if="this.$role(this.roleID).rental_items.create" iconName="add_circle" :on_click="openItemAddModal">
+            <CommonButton v-if="this.$role(this.roleID).stocker_items.create" iconName="add_circle" :on_click="openItemAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -25,8 +25,8 @@
               <th v-for="(header, index) in rental_headers" v-bind:key="index">
                 {{ header }}
               </th>
-              <th>編集</th>
-              <th>削除</th>
+              <th v-if="$role(roleID).stocker_items.update">編集</th>
+              <th v-if="$role(roleID).stocker_items.delete">削除</th>
             </template>
             <template v-slot:table-body>
               <tr
@@ -39,8 +39,8 @@
                 <td :class="{ warning: warningStatus[index], 'no-hover': warningStatus[index] }">
                     {{ calculateDifference(stockerItem, index) }}
                 </td>
-                <td><btn v-if="this.$role(roleID).rental_items.create" @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
-                <td><btn v-if="this.$role(roleID).rental_items.delete" @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
+                <td v-if="$role(roleID).stocker_items.update"><btn @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
+                <td v-if="$role(roleID).stocker_items.delete"><btn @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -56,8 +56,8 @@
               <th v-for="(header, index) in stocker_headers" v-bind:key="index" @click = "sorted_assignRentalItems(index)">
                 {{ header }}
               </th>
-              <th>編集</th>
-              <th>削除</th>
+              <th v-if="$role(roleID).assign_items.update">編集</th>
+              <th v-if="$role(roleID).assign_items.delete">削除</th>
             </template>
             <template v-slot:table-body>
               <tr
@@ -69,8 +69,8 @@
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.remark }}</td>
-                <td><btn v-if="this.$role(roleID).assign_items.update" @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
-                <td><btn v-if="this.$role(roleID).assign_items.delete" @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
+                <td v-if="$role(roleID).assign_items.update"><btn @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
+                <td v-if="$role(roleID).assign_items.delete"><btn @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -313,7 +313,7 @@
 
     <EditModal
       @close="closeItemEditModal"
-      v-if="isOpenItemEditModal && this.$role(this.roleID).rental_items.create"
+      v-if="isOpenItemEditModal && this.$role(this.roleID).stocker_items.update"
       title="在庫物品個数の編集"
     >
       <template v-slot:form>
@@ -362,7 +362,7 @@
 
     <DeleteModal
       @close="closeItemDeleteModal"
-      v-if="isOpenItemDeleteModal && this.$role(this.roleID).rental_items.delete"
+      v-if="isOpenItemDeleteModal && this.$role(this.roleID).stocker_items.delete"
       title="在庫物品の削除"
     >
       <template v-slot:method>
