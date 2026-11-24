@@ -5,8 +5,9 @@ require 'digest'
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
-  # 管理画面を使うロール（manager / staff）
-  ADMIN_ROLE_IDS = [1, 2].freeze
+  MANAGER_ROLE_ID = 1
+  # 管理画面を使うロール。staffは閲覧専用で、書き込みはmanagerだけ
+  STAFF_OR_ABOVE_ROLE_IDS = [1, 2].freeze
 
   around_action :set_skip_slack_notification
 
@@ -69,13 +70,31 @@ class ApplicationController < ActionController::API
     !Rails.env.production? && request.headers['X-Skip-Slack-Notification'].to_s == 'true'
   end
 
-  def admin_user?
-    ADMIN_ROLE_IDS.include?(current_api_user&.role_id)
+  def staff_or_above?
+    STAFF_OR_ABOVE_ROLE_IDS.include?(current_api_user&.role_id)
   end
 
-  # 管理画面向けAPIはadmin以上（role_id 1, 2）に限定する
-  def require_admin!
-    return if admin_user?
+  def manager?
+    current_api_user&.role_id == MANAGER_ROLE_ID
+  end
+
+  # 管理画面の参照系APIはstaff以上（role_id 1, 2）に限定する
+  def require_staff!
+    return if staff_or_above?
+
+    render_forbidden
+  end
+
+  # 管理画面の書き込み系APIはmanager（role_id 1）に限定する
+  def require_manager!
+    return if manager?
+
+    render_forbidden
+  end
+
+  # staffは管理画面の閲覧専用のため、userの画面から呼ばれる書き込み系APIも拒否する
+  def reject_staff_write!
+    return if manager? || !staff_or_above?
 
     render_forbidden
   end
@@ -85,36 +104,36 @@ class ApplicationController < ActionController::API
            status: :forbidden
   end
 
-  # adminは全団体、それ以外は自団体に紐づくレコードだけに絞る
+  # staff以上は全団体、それ以外は自団体に紐づくレコードだけに絞る
   def scope_to_accessible_groups(relation)
-    return relation if admin_user?
+    return relation if staff_or_above?
 
     relation.where(group_id: current_api_user.groups.select(:id))
   end
 
   def accessible_group?(group_id)
-    admin_user? || current_api_user.groups.exists?(id: group_id)
+    staff_or_above? || current_api_user.groups.exists?(id: group_id)
   end
 
-  # 対象が見つからないとき、adminには各controllerの既存のNot foundを返し、
+  # 対象が見つからないとき、staff以上には各controllerの既存のNot foundを返し、
   # それ以外には他団体のレコードか存在しないIDかを区別させないよう403を返す
   def render_not_found_or_forbidden
-    return render_forbidden unless admin_user?
+    return render_forbidden unless staff_or_above?
 
     yield
   end
 
-  # adminでなければ、指定できるuser_idは自分だけにする
+  # staff以上でなければ、指定できるuser_idは自分だけにする
   def require_own_user_id!
-    return if admin_user? || params[:user_id].blank? || params[:user_id].to_s == current_api_user.id.to_s
+    return if staff_or_above? || params[:user_id].blank? || params[:user_id].to_s == current_api_user.id.to_s
 
     render_forbidden
   end
 
-  # 一括登録（upsert）で受け取った全レコードが、自団体（adminは全団体）の範囲かを確認する。
+  # 一括登録（upsert）で受け取った全レコードが、自団体（staff以上は全団体）の範囲かを確認する。
   # group_idだけでなく既存のidも確認し、他団体のレコードをidで上書きできないようにする
   def accessible_bulk_records?(relation, records)
-    return true if admin_user?
+    return true if staff_or_above?
 
     group_ids = records.filter_map { |attrs| attrs[:group_id]&.to_s }.uniq
     return false unless current_api_user.groups.where(id: group_ids).count == group_ids.size
@@ -123,7 +142,7 @@ class ApplicationController < ActionController::API
     ids.empty? || scope_to_accessible_groups(relation).where(id: ids).count == ids.size
   end
 
-  # 指定されたgroup_idが自団体（adminは全団体）でなければ403にする。
+  # 指定されたgroup_idが自団体（staff以上は全団体）でなければ403にする。
   # 未指定ならモデルの必須バリデーションに委ねる（updateでの部分更新も許可する）
   def require_accessible_group_param!(group_id = params[:group_id])
     return true if group_id.blank? || accessible_group?(group_id)
@@ -132,10 +151,11 @@ class ApplicationController < ActionController::API
     false
   end
 
+  # staff以上は全団体、それ以外は自団体から探す
   def current_api_user_group(group_id)
     return nil if group_id.blank?
 
-    current_api_user.groups.find_by(id: group_id)
+    (staff_or_above? ? Group.all : current_api_user.groups).find_by(id: group_id)
   end
 
   def save_health_center_submission_status(submission_status, unprocessable_http_status: nil)
