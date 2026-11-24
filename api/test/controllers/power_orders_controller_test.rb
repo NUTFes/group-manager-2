@@ -6,7 +6,8 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   self.fixture_table_names = []
 
   setup do
-    Role.create!(id: 1, name: 'admin')
+    Role.create!(id: 1, name: 'manager')
+    Role.create!(id: 3, name: 'user')
     @user = create_user!
     @group = create_group!(@user)
     @power_order = create_power_order!(@group)
@@ -27,14 +28,14 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'show does not expose another users power order' do
-    other_user = create_user!(email: 'other-power-order-user@example.com')
-    other_group = create_group!(other_user, name: '他団体')
-    other_power_order = create_power_order!(other_group)
+  # show はuserの画面から呼ばれないため管理画面向け。参加団体ユーザーは自団体の申請も参照できない
+  test 'show is forbidden for a participant user' do
+    participant = create_user!(email: 'participant-power-order-user@example.com', role_id: 3)
+    participant_group = create_group!(participant, name: '参加団体')
+    participant_power_order = create_power_order!(participant_group)
 
-    get power_order_url(other_power_order), headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    get power_order_url(participant_power_order), headers: auth_headers(participant), as: :json
+    assert_response :forbidden
   end
 
   test 'create route is not available for user root api' do
@@ -63,7 +64,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_user!(email: 'power-order-user@example.com')
+  def create_user!(email: 'power-order-user@example.com', role_id: 1)
     User.create!(
       name: email.split('@').first,
       email: email,
@@ -71,7 +72,7 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
       provider: 'email',
       password: 'password',
       password_confirmation: 'password',
-      role_id: 1
+      role_id: role_id
     )
   end
 

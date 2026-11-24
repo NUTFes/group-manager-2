@@ -25,13 +25,10 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'index only returns own group place_orders for a regular user' do
+  # 全件を返す一覧はuserの画面から呼ばれないため管理画面向け
+  test 'index is forbidden for a regular user' do
     get place_orders_url, headers: auth_headers(@user), as: :json
-    assert_response :success
-
-    ids = response.parsed_body['data'].pluck('id')
-    assert_includes ids, @place_order.id
-    assert_not_includes ids, @other_place_order.id
+    assert_response :forbidden
   end
 
   test 'index returns all place_orders for an admin' do
@@ -43,9 +40,15 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_includes ids, @other_place_order.id
   end
 
-  test 'should show own place_order' do
-    get place_order_url(@place_order), headers: auth_headers(@user), as: :json
+  test 'admin can show any place_order' do
+    get place_order_url(@other_place_order), headers: auth_headers(@admin), as: :json
     assert_response :success
+  end
+
+  # show はuserの画面から呼ばれないため、自団体のものでも参照できない
+  test 'show of own place_order is forbidden for a regular user' do
+    get place_order_url(@place_order), headers: auth_headers(@user), as: :json
+    assert_response :forbidden
   end
 
   test 'show does not expose another group place_order' do
@@ -119,9 +122,9 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test 'should destroy own place_order' do
+  test 'admin can destroy place_order' do
     assert_difference('PlaceOrder.count', -1) do
-      delete place_order_url(@place_order), headers: auth_headers(@user), as: :json
+      delete place_order_url(@place_order), headers: auth_headers(@admin), as: :json
     end
 
     assert_response :ok
