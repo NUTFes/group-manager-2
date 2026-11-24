@@ -18,6 +18,7 @@ const API_ENDPOINTS = {
   SUNNY_STAGES: '/sunny/stages',
   RAINY_STAGES: '/rainy/stages',
   STAGE_ORDERS: '/stage_orders',
+  STAGE_ORDERS_GROUP: '/stage_orders/group',
 };
 
 export type BaseStageOrder = {
@@ -93,7 +94,7 @@ export const useStageFormData = () => {
 // 既存のステージ申請を取得するフック
 export const useGetStageOrders = (groupId: number | null) => {
   const endpoint = groupId
-    ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}`
+    ? `${API_ENDPOINTS.STAGE_ORDERS_GROUP}/${groupId}`
     : null;
 
   const { data, error, isLoading } = useAuthenticatedGet<{
