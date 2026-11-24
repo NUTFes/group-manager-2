@@ -197,6 +197,26 @@ class GroupOwnershipTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  test 'placesのgroup_id指定はuserを自団体に限定し、staff以上は全団体を参照できる' do
+    nonexistent_group_id = Group.maximum(:id) + 1
+
+    get places_url, params: { group_id: @group.id }, headers: headers_for(@user)
+    assert_response :success
+
+    get places_url, params: { group_id: @other_group.id }, headers: headers_for(@user)
+    assert_response :forbidden
+
+    get places_url, params: { group_id: nonexistent_group_id }, headers: headers_for(@user)
+    assert_response :forbidden
+
+    get places_url, params: { group_id: @other_group.id }, headers: headers_for(@staff)
+    assert_response :success
+
+    get places_url, params: { group_id: nonexistent_group_id }, headers: headers_for(@staff)
+    assert_response :success
+    assert_equal 404, response.parsed_body.dig('status', 'code')
+  end
+
   private
 
   def headers_for(user)

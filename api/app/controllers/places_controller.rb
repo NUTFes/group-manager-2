@@ -5,6 +5,7 @@ class PlacesController < ApplicationController
   # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
   before_action :require_staff!, except: %i[index]
   before_action :require_manager!, except: %i[index show]
+  before_action :require_accessible_group_param!, only: %i[index]
   before_action :set_place, only: %i[show update destroy]
 
   def index
