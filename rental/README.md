@@ -7,7 +7,7 @@
 
 ## 前提
 
-- 認証は Cloudflare Zero Trust（Access）で行い、**アプリ側にログイン画面は持ちません**
+- 原則は Cloudflare Zero Trust（Access）でアクセス制御します。Accessを使えない構成では `RENTAL_PASSCODE` によるパスワード画面で入口を保護します
 - API は直接呼ばず、Next.js の Route Handler（BFF）経由で呼びます
 - API キーなどの秘匿値は settings リポジトリの `.env` で管理します
 

@@ -16,18 +16,19 @@
 ![group-manager-jpeg 001](https://user-images.githubusercontent.com/33748835/117114823-45700b00-adc7-11eb-8bab-7442f38a7065.jpeg)
 
 ### api
-ruby 2.7.1 <br> 
-rails 6.1.3.1<br>
+Ruby 3.3.12 / Rails 7.2.3.2
 
-### view(ユーザー画面)
-SPA<br>
-node v12.14.1<br>
-@vue/cli 4.4.4<br>
+### user（参加団体向け画面）
+Next.js 15 / React 19 / TypeScript
 
-### admin_view(管理者画面）
-SSR<br>
-node v12.18.4<br>
-nuxt.js<br>
+### user_front（公開画面）
+Nuxt 3
+
+### admin_view（管理者画面）
+Nuxt 2
+
+### rental（貸出・返却記録画面）
+Next.js 16 / React 19 / TypeScript。原則は Cloudflare Access で保護し、必要に応じて `RENTAL_PASSCODE` によるパスワード画面を使用します。
 
 ## セットアップ
 [git cloneをしたら](https://github.com/NUTFes/group-manager-2/wiki/git-clone-%E3%82%92%E3%81%97%E3%81%9F%E3%82%89)

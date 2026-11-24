@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 テストコード作成"
+  short_description: "既存テスト構成に沿って回帰を検出するテストを追加"
+  default_prompt: "$gm3-write-tests を使って、この変更の回帰テストを追加してください。"
+policy:
+  allow_implicit_invocation: true

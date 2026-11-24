@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 Issue 作成"
+  short_description: "重複を確認し、具体的なテスト項目付きIssueを作成"
+  default_prompt: "$gm3-create-issue を使って、この課題をGitHub Issueにしてください。"
+policy:
+  allow_implicit_invocation: true

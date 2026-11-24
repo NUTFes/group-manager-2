@@ -1,0 +1,6 @@
+interface:
+  display_name: "GM3 Pull Request 作成"
+  short_description: "差分と検証結果から gm3/develop 向けDraft PRを作成"
+  default_prompt: "$gm3-create-pr を使って、現在のbranchからDraft PRを作成してください。"
+policy:
+  allow_implicit_invocation: true

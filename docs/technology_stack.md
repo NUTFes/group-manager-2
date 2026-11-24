@@ -6,8 +6,8 @@
 
 ### 使用技術
 
-- **Ruby** 3.0.7
-- **Rails** 6.1.3.1 (API モード)
+- **Ruby** 3.3.12
+- **Rails** 7.2.3.2 (API モード)
 - **MySQL** (データベース)
 - **Puma** (アプリケーションサーバー)
 
@@ -21,8 +21,8 @@
 
 ### API判断方法 🔍
 
-- **Ruby バージョン**: `Gemfile` の `ruby '3.0.7'`
-- **Rails バージョン**: `Gemfile` の `gem 'rails', '~> 6.1.3.1'`
+- **Ruby バージョン**: `Gemfile` の `ruby '3.3.12'`
+- **Rails バージョン**: `Gemfile` の `gem 'rails', '7.2.3.2'`
 - **API モード**: `config/application.rb` の `config.api_only = true`
 - **データベース**: `Gemfile` の `gem 'mysql2'` と `config/database.yml`
 
@@ -70,7 +70,7 @@
 
 ### Next.js判断方法 🔍
 
-- **認証**: Cloudflare Zero Trust によるアクセス制御が前提のため、アプリ側にログイン画面・認証コードは持たない
+- **認証**: 原則はCloudflare Zero Trustでアクセス制御し、Accessを使えない構成では `RENTAL_PASSCODE` によるパスワード画面で入口を保護する
 - その他の判断方法は `user/` と同様(`package.json` の `next` バージョン等)
 
 ---
@@ -181,7 +181,7 @@
 
 ```text
 group-manager-2/
-├── api/              # Rails API (Ruby 3.0.7, Rails 6.1.3.1)
+├── api/              # Rails API (Ruby 3.3.12, Rails 7.2.3.2)
 ├── user/             # Next.js 15 + React 19 + TypeScript
 ├── rental/           # Next.js 16 + React 19 + TypeScript (スタッフ向け貸出・返却記録)
 ├── admin_view/       # Nuxt.js 2 + Vue 2 + Vuetify
@@ -193,7 +193,7 @@ group-manager-2/
 - **バックエンド**: Rails API (RESTful API)
 - **フロントエンド**:
   - ユーザー向け: Next.js 15 (最新版) と Nuxt.js 3 (2つの実装)
-  - スタッフ向け(貸出・返却記録): Next.js 16。Cloudflare Zero Trust でアクセス制御
+  - スタッフ向け(貸出・返却記録): Next.js 16。原則はCloudflare Zero Trust、必要に応じてパスワード画面でアクセス制御
   - 管理者向け: Nuxt.js 2 (レガシー)
 
 ---
@@ -229,4 +229,4 @@ cat package.json | grep "nuxt"
 
 ---
 
-**作成日**: 2025年11月18日
+**更新日**: 2026年11月25日
