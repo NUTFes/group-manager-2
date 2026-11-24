@@ -61,7 +61,7 @@
       <template v-slot:method>
         <div class="template-detail-actions">
           <CommonButton
-            v-if="this.$role(roleID).message_templates.update"
+            v-if="$role(roleID).message_templates.update"
             iconName="edit"
             :on_click="openEditModalFromDetail"
             :disabled="isSaving"
@@ -69,7 +69,7 @@
             編集
           </CommonButton>
           <CommonButton
-            v-if="this.$role(roleID).message_templates.create"
+            v-if="$role(roleID).message_templates.create"
             iconName="content_copy"
             :on_click="openCopyModalFromDetail"
             :disabled="isSaving"

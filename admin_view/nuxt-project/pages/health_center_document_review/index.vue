@@ -103,7 +103,7 @@
             <td @click.stop>
               <SwitchButton
                 :isOn="group.group.is_health_center_submission_target"
-                :disabled="!this.$role(roleID).order_status.update"
+                :disabled="!$role(roleID).order_status.update"
                 :on_click="
                   () =>
                     onToggleSubmissionTarget(
