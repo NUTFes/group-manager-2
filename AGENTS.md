@@ -1,11 +1,13 @@
 # Repository Guidelines
 Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成されています。以下を守って変更を進めてください。
 
+Codex・Claude共通スキルの正本は `.agents/skills/` に置きます。`.claude/skills/` は同じスキルディレクトリへのsymlinkであり、スキル本文は `.agents/skills/*/SKILL.md` だけを編集してください。
+
 ## プロジェクト構成とモジュール整理
-- `api/`: Rails 6.1 バックエンド。本体コードは `app/`、マイグレーションと Seed は `db/`、OpenAPI の元データは `oas_docs/` にあります。
+- `api/`: Rails 7.2 バックエンド。本体コードは `app/`、マイグレーションと Seed は `db/`、OpenAPI の元データは `oas_docs/` にあります。
 - `user/`: 参加団体向け Next.js 15 クライアント。UI は `src/components`、状態管理は `src/hooks`、API 呼び出しは `src/api` に集約します。
 - `user_front/`: 公開用 Nuxt 3 SPA。実行委員向け旧管理画面は `admin_view/nuxt-project` に残っています。
-- `rental/`: 物品の貸出・返却記録用 Next.js クライアント(スタッフ向け)。Cloudflare Zero Trust でアクセス制御する前提のため、アプリ側にログイン画面・認証コードは持たせません。
+- `rental/`: 物品の貸出・返却記録用 Next.js クライアント(スタッフ向け)。原則は Cloudflare Zero Trust でアクセス制御し、Accessを使えない構成では `RENTAL_PASSCODE` によるパスワード画面で入口を保護します。
 - Docker 関連は `Makefile` と `compose*.yml`、各種 Dockerfile にまとまっています。インフラ設定はここで完結させてください。
 
 ## ビルド・テスト・開発コマンド
@@ -25,6 +27,7 @@ Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成さ
 - `compose.prod.yml` と `compose.stage.yml` は、ユーザーが本番・stage の操作を明示した場合だけ使います。認証情報や不足している環境変数を推測して作りません。
 - 動作確認に必要なデータはローカルDBへ作成して構いません。作成・更新したデータ、再現手順、後始末の要否を報告し、既存データの破壊やDB全体の初期化は避けます。
 - ローカルの入口は API `http://localhost:3000`、admin `http://localhost:8000`、user_front `http://localhost:8002`、user `http://localhost:8003`、rental `http://localhost:8004` です。
+- Docker版Playwright MCPから画面を確認する場合は `docs/playwright_mcp_docker.md` に従い、`localhost` を同じポートの `host.docker.internal` に置き換えます。
 - 起動確認は `docker compose ps` と対象サービスの `docker compose logs --tail=100 <service>` で行います。作業前から動いていたコンテナを停止しません。
 
 ## コーディングスタイルと命名ルール

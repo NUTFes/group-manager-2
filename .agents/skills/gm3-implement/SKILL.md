@@ -9,6 +9,6 @@ description: group-manager-2 の Issue・仕様・依頼に沿ってコードを
 2. `AGENTS.md`、関連するcontroller/model/component/API client、共通処理、テスト、履歴を読む。新しい処理を足す前に同じ責務や似た実装を検索し、既存機能の重複実装を避ける。APIから各フロントまで影響範囲を追い、一般論よりリポジトリの既存パターンを優先する。
 3. 目的を満たすよう処理を整理し、必要最小限の差分で実装する。既存のcomponent、hook、utility、concern、serviceなどを再利用する。同じ処理を複数箇所で使うことが明確なら、既存の配置と責務に沿って適切に共通化する。一度しか使わない処理や責務の異なる処理を、将来の可能性だけで抽象化しない。
 4. 無関係なrename、format、例外動作の変更、依存更新を混ぜない。認証・認可はフロントだけに任せない。
-5. Docker環境は `AGENTS.md` の方針に従う。migrationは既存データとrollbackを考慮し、API変更は呼び出し元とOAS更新の必要性を確認する。UIはloading、empty、error、二重操作も扱う。
-6. 変更に近い既存テスト、lint、型検査を実行する。必要なテスト追加が依頼範囲なら行い、別作業なら不足として報告する。
-7. 変更内容、再利用・共通化の判断、実行した検証、未確認事項を日本語で報告する。commit、push、Issue・PR操作は明示された場合だけ行う。
+5. Docker環境は `AGENTS.md` の方針に従う。migrationは既存データとrollbackを考慮する。API仕様を変更した場合は呼び出し元を更新し、`make openapi` でOASと成果物を再生成する。UIはloading、empty、error、二重操作を扱い、Storybook対象の変更ではstoryを更新して確認する。
+6. 実装依頼には、その変更を守るために必要なテスト追加も含む。`gm3-write-tests` の方針に従って変更に対応するテストを追加し、対象テスト、lint、型検査、必要なStorybook確認を実行する。テスト追加だけを別依頼にせず、実行不能な場合は理由と未検証範囲を報告する。
+7. 変更内容、追加したテスト、再利用・共通化の判断、OAS・Storybookを含む実行済み検証、未確認事項を日本語で報告する。commit、push、Issue・PR操作は明示された場合だけ行う。

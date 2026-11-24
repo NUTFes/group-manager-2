@@ -7,7 +7,7 @@ WSL / macOS どちらでも Chrome のローカルパス分岐を避けるため
 
 - Docker が起動している
 - MCP クライアントがリポジトリルートの `.mcp.json` を読み込める
-- GM3 user 画面をホスト側ポート `8003` で起動している
+- 確認対象のサービスをホスト側の公開ポートで起動している
 
 ```bash
 docker compose up -d api user
@@ -16,10 +16,14 @@ docker compose up -d api user
 ## MCP からアクセスする URL
 
 MCP は Docker コンテナ内で動くため、コンテナ内の `localhost` はホストではなく MCP コンテナ自身を指します。
-ホスト側で公開されている user 画面へアクセスする場合は、次の URL を使います。
+ホスト側で公開されている各サービスへアクセスする場合は、次の URL を使います。
 
 ```txt
-http://host.docker.internal:8003
+API:        http://host.docker.internal:3000
+admin:      http://host.docker.internal:8000
+user_front: http://host.docker.internal:8002
+user:       http://host.docker.internal:8003
+rental:     http://host.docker.internal:8004
 ```
 
 `--add-host=host.docker.internal:host-gateway` を `.mcp.json` に含めているため、Docker Desktop ではない Linux / WSL 環境でも解決しやすくしています。
