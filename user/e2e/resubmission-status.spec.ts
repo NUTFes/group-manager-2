@@ -2,6 +2,10 @@ import { expect, request, test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 
 const API_BASE_URL = process.env.PLAYWRIGHT_API_BASE_URL ?? 'http://api:3000';
+// 新規登録ではロールを指定できないため、既存のmanagerでログインしてmanagerを作成する
+const MANAGER_EMAIL =
+  process.env.PLAYWRIGHT_E2E_EMAIL ?? 'nutfes-taro@email.com';
+const MANAGER_PASSWORD = process.env.PLAYWRIGHT_E2E_PASSWORD ?? 'gidaifes';
 
 type ApiResponse<T> = {
   status: {
@@ -66,8 +70,8 @@ test.describe('power and fire equipment resubmission status', () => {
         'Content-Type': 'application/json',
       },
     });
-    authContext = await registerAndGetAuthContext(api);
-    const group = await createGroup(api, authContext.userId);
+    authContext = await createManagerAndGetAuthContext(api);
+    const group = await createGroup(api, authContext);
     groupId = group.id;
   });
 
@@ -212,23 +216,13 @@ test.describe('power and fire equipment resubmission status', () => {
   });
 });
 
-const registerAndGetAuthContext = async (
-  api: APIRequestContext
+const signIn = async (
+  api: APIRequestContext,
+  email: string,
+  password: string
 ): Promise<AuthContext> => {
-  const email = `e2e-resubmission-${Date.now()}-${Math.random()
-    .toString(36)
-    .slice(2)}@example.com`;
-
-  const response = await api.post('/api/auth', {
-    data: {
-      registration: {
-        name: 'e2e resubmission user',
-        email,
-        password: 'password',
-        password_confirmation: 'password',
-        role_id: 1,
-      },
-    },
+  const response = await api.post('/api/auth/sign_in', {
+    data: { email, password },
   });
 
   expect(response.ok()).toBe(true);
@@ -239,10 +233,8 @@ const registerAndGetAuthContext = async (
   expect(headers.client).toBeTruthy();
   expect(headers.uid).toBe(email);
 
-  expect(body.data.id).toBeGreaterThan(0);
-
   return {
-    userId: body.data.id,
+    userId: Number(body.data.id),
     headers: {
       'access-token': headers['access-token'],
       client: headers.client,
@@ -251,17 +243,44 @@ const registerAndGetAuthContext = async (
   };
 };
 
+const createManagerAndGetAuthContext = async (
+  api: APIRequestContext
+): Promise<AuthContext> => {
+  const email = `e2e-resubmission-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}@example.com`;
+  const manager = await signIn(api, MANAGER_EMAIL, MANAGER_PASSWORD);
+
+  const response = await api.post('/users/simply_user_create', {
+    headers: manager.headers,
+    data: {
+      name: 'e2e resubmission user',
+      email,
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: 1,
+    },
+  });
+
+  expect(response.ok()).toBe(true);
+  const body = (await response.json()) as ApiResponse<{ id: number }>;
+  expect(body.status.code).toBe(201);
+  expect(body.data.id).toBeGreaterThan(0);
+
+  return signIn(api, email, 'password');
+};
+
 const createGroup = async (
   api: APIRequestContext,
-  userId: number
+  authContext: AuthContext
 ): Promise<Group> => {
   const response = await api.post('/groups', {
-    headers: skipSlackNotificationHeader,
+    headers: { ...authContext.headers, ...skipSlackNotificationHeader },
     data: {
       name: `e2e-resubmission-group-${Date.now()}`,
       project_name: 'e2e resubmission project',
       activity: 'e2e',
-      user_id: userId,
+      user_id: authContext.userId,
       group_category_id: 1,
       fes_year_id: 1,
     },
