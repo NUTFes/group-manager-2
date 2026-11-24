@@ -2,6 +2,12 @@
 
 class StageCommonOptionsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_stage_common_option, only: %i[show update destroy]
   before_action :set_stage_common_option_by_group_id, only: [:get_by_group_id]
 
@@ -55,11 +61,10 @@ class StageCommonOptionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_stage_common_option
-    if StageCommonOption.exists?(params[:id])
-      @stage_common_option = StageCommonOption.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}")
-    end
+    @stage_common_option = scope_to_accessible_groups(StageCommonOption.all).find_by(id: params[:id])
+    return if @stage_common_option
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

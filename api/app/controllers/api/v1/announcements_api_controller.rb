@@ -2,6 +2,8 @@
 
 class Api::V1::AnnouncementsApiController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_announcement_index_for_admin_view
     @announcements = Announcement.with_groups

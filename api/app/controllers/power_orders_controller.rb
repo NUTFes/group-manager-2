@@ -2,7 +2,10 @@
 
 class PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!, only: [:index]
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id submit]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[submit]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
@@ -26,7 +29,7 @@ class PowerOrdersController < ApplicationController
 
   def submit
     group = current_user_group
-    return render_submit_not_found unless group
+    return render_not_found_or_forbidden { render_submit_not_found } unless group
     return render_submit_unprocessable_entity('use_power is required') unless params.key?(:use_power)
     return render_submit_unprocessable_entity('power_orders is required') if use_power? && power_order_params_list.empty?
 
@@ -51,30 +54,31 @@ class PowerOrdersController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound
-    render_submit_not_found
+    render_not_found_or_forbidden { render_submit_not_found }
   end
 
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_power_order
-    @power_order = PowerOrder
-                   .where(group_id: current_api_user.groups.select(:id))
-                   .find_by(id: params[:id])
-
+    @power_order = PowerOrder.find_by(id: params[:id])
     @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_power_orders_by_group_id
     group = current_user_group
+    return render_not_found_or_forbidden { render_power_orders_not_found } if group.nil?
 
-    if group&.power_orders&.exists?
+    if group.power_orders.exists?
       @power_orders = group.power_orders
     else
-      Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
-      render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
+      render_power_orders_not_found
     end
+  end
+
+  def render_power_orders_not_found
+    render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
   end
 
   # Only allow a list of trusted parameters through.

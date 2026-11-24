@@ -2,6 +2,12 @@
 
 class CookingProcessOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id upsert]
+  before_action :require_manager!, except: %i[get_by_group_id upsert index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[upsert]
+  before_action :require_accessible_group_param!, only: %i[get_by_group_id]
   before_action :set_cooking_process_order, only: %i[show update destroy]
 
   # GET /cooking_process_orders
@@ -61,6 +67,8 @@ class CookingProcessOrdersController < ApplicationController
     ]
     now = Time.current
     raw_orders = params[:cooking_process_orders].map(&:to_unsafe_h)
+    return render_forbidden unless accessible_cooking_process_orders?(raw_orders)
+
     existing_orders = existing_cooking_process_orders(raw_orders)
 
     upserts = raw_orders.map do |order|
@@ -113,6 +121,15 @@ class CookingProcessOrdersController < ApplicationController
     @cooking_process_order = CookingProcessOrder.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'Not found' }, status: :not_found
+  end
+
+  def accessible_cooking_process_orders?(raw_orders)
+    return true if staff_or_above?
+
+    records = raw_orders.map(&:symbolize_keys)
+    food_product_ids = records.filter_map { |attrs| attrs[:food_product_id]&.to_s }.uniq
+    accessible_bulk_records?(CookingProcessOrder.all, records) &&
+      scope_to_accessible_groups(FoodProduct.all).where(id: food_product_ids).count == food_product_ids.size
   end
 
   # Only allow a list of trusted parameters through

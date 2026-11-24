@@ -2,6 +2,12 @@
 
 class FoodProductsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[group_food_products upsert destroy]
+  before_action :require_manager!, except: %i[group_food_products upsert destroy index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[upsert destroy]
+  before_action :require_accessible_group_param!, only: %i[group_food_products]
   before_action :set_food_product, only: %i[show destroy]
 
   # GET /food_products
@@ -50,6 +56,8 @@ class FoodProductsController < ApplicationController
       attrs
     end
 
+    return render_forbidden unless accessible_bulk_records?(FoodProduct.all, upserts)
+
     FoodProduct.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
@@ -96,10 +104,12 @@ class FoodProductsController < ApplicationController
   private
 
   def set_food_product
-    @food_product = FoodProduct.find_by(id: params[:id])
+    @food_product = scope_to_accessible_groups(FoodProduct.all).find_by(id: params[:id])
     return if @food_product
 
-    render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+    render_not_found_or_forbidden do
+      render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+    end
   end
 
   # 単一レコード用 Strong Parameters

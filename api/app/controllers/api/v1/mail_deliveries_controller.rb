@@ -2,7 +2,8 @@
 
 class Api::V1::MailDeliveriesController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の書き込み系のみのため、manager
+  before_action :require_manager!
 
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP
   MULTIPLE_RECIPIENTS_REGEXP = /[,;]|\S+@\S+\s+\S+@\S+|<[^>]+>.*<[^>]+>/
@@ -22,14 +23,6 @@ class Api::V1::MailDeliveriesController < ApplicationController
   end
 
   private
-
-  def require_admin!
-    # TODO: 管理者向けAPIは別issueでロールごとの制限機能を追加し、実装後にこの暫定判定を削除する。
-    return if [1, 2].include?(current_api_user&.role_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
-           status: :forbidden
-  end
 
   def mail_delivery_base_params
     params.permit(:to, :subject, :body)

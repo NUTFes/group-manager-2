@@ -2,6 +2,11 @@
 
 class FireEquipmentOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id submit]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[submit]
+  before_action :require_accessible_group_param!, only: %i[get_by_group_id]
 
   # GET /fire_equipment_orders
   def index
@@ -21,9 +26,7 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders/:id
   def show
-    fire_equipment_order = FireEquipmentOrder
-                           .where(group_id: current_api_user.groups.select(:id))
-                           .find_by(id: params[:id])
+    fire_equipment_order = FireEquipmentOrder.find_by(id: params[:id])
     return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}") if fire_equipment_order.nil?
 
     order_with_fuel_japanese = fire_equipment_order.as_json(include: { group: { only: %i[id name] } }).merge(
@@ -43,7 +46,7 @@ class FireEquipmentOrdersController < ApplicationController
   # （火気を使用しない申請への切り替え、または最後の1件を削除するケース）。
   def submit
     group = current_user_group
-    return render_submit_not_found unless group
+    return render_not_found_or_forbidden { render_submit_not_found } unless group
 
     ActiveRecord::Base.transaction do
       delete_unregistered_fire_equipment_order(group)
@@ -61,7 +64,7 @@ class FireEquipmentOrdersController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound
-    render_submit_not_found
+    render_not_found_or_forbidden { render_submit_not_found }
   end
 
   private

@@ -2,6 +2,8 @@
 
 class Api::V1::FesDatesApiController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_current_fes_dates]
 
   def get_refinement_fes_date_by_fes_year
     fes_year_id = params[:fes_year_id]

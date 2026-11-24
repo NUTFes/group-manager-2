@@ -2,6 +2,12 @@
 
 class PublicRelationsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_public_relation, only: %i[show update destroy]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 
@@ -55,11 +61,10 @@ class PublicRelationsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_public_relation
-    if PublicRelation.exists?(params[:id])
-      @public_relation = PublicRelation.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}")
-    end
+    @public_relation = scope_to_accessible_groups(PublicRelation.all).find_by(id: params[:id])
+    return if @public_relation
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

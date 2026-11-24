@@ -2,7 +2,8 @@
 
 class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_mail_delivery_role!
+  # 管理画面の書き込み系のみのため、manager
+  before_action :require_manager!
 
   # メモを保存し、保存済みメモの本文をメール送信する
   def create
@@ -73,13 +74,6 @@ class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
     errors << 'subject is required' if params[:subject].to_s.strip.blank?
     errors << 'body is required' if params[:body].to_s.strip.blank?
     errors
-  end
-
-  def require_mail_delivery_role!
-    return if [1, 2].include?(current_api_user&.role_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []),
-           status: :forbidden
   end
 
   def save_failed_mail_comment!(group, subject:, body:)

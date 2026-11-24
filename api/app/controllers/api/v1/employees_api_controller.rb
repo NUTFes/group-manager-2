@@ -2,6 +2,8 @@
 
 class Api::V1::EmployeesApiController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_employee_index_for_admin_view
     @employees = Employee.with_groups

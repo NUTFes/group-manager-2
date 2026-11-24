@@ -2,6 +2,9 @@
 
 class UserDetailsController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!
+  before_action :require_manager!, except: %i[index show]
   before_action :set_user_detail, only: %i[show update destroy]
 
   # GET /user_details

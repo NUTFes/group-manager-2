@@ -2,6 +2,8 @@
 
 class Api::V1::PurchaseListsApiController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_purchase_list_index_for_admin_view
     @purchase_lists = PurchaseList.with_groups_and_info

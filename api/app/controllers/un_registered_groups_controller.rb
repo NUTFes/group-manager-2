@@ -2,6 +2,13 @@
 
 class UnRegisteredGroupsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create destroy group]
+  before_action :require_manager!, except: %i[create destroy group index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create destroy]
+  before_action :require_accessible_group_param!, only: %i[group]
+  before_action :require_accessible_body_group!, only: %i[create]
   before_action :set_un_registered_group, only: %i[show update destroy]
 
   # GET /un_registered_groups
@@ -62,7 +69,14 @@ class UnRegisteredGroupsController < ApplicationController
   private
 
   def set_un_registered_group
-    @un_registered_group = UnRegisteredGroup.find(params[:id])
+    return @un_registered_group = UnRegisteredGroup.find(params[:id]) if staff_or_above?
+
+    @un_registered_group = scope_to_accessible_groups(UnRegisteredGroup.all).find_by(id: params[:id])
+    render_forbidden unless @un_registered_group
+  end
+
+  def require_accessible_body_group!
+    require_accessible_group_param!(params.dig(:un_registered_group, :group_id))
   end
 
   def un_registered_group_params

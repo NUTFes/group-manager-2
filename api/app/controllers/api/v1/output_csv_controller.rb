@@ -3,8 +3,8 @@
 class Api::V1::OutputCsvController < ApplicationController
   require 'csv'
   before_action :authenticate_api_user!
-  # 全団体分のメールアドレス・会場・備考を含むため、管理者以外に露出しないよう制限する
-  before_action :require_admin!, only: %i[output_groups_csv output_assign_rental_items_csv]
+  # 全団体分のメールアドレス・会場・備考を含むため、管理画面を使うstaff以上に限定する
+  before_action :require_staff!
   include ApplicationHelper
 
   def output_groups_csv

@@ -2,6 +2,16 @@
 
 class Api::V1::CurrentUserApiController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）。
+  # 本人の情報の変更（edit_user_info / password_reset）は、ロールを問わず本人なら使える
+  before_action :require_staff!, except: %i[get_current_user_with_user_detail edit_user_info password_reset]
+  before_action :require_manager!, except: %i[
+    get_current_user_with_user_detail
+    edit_user_info
+    password_reset
+    current_regist_info
+    is_login
+  ]
 
   # ログインユーザーの登録情報を全て取得する
   def current_regist_info

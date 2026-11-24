@@ -2,6 +2,11 @@
 
 class SubRepsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update destroy get_by_group_id]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update destroy]
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_sub_rep, only: %i[show update destroy]
   before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
 
@@ -55,11 +60,10 @@ class SubRepsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_sub_rep
-    if SubRep.exists?(params[:id])
-      @sub_rep = SubRep.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
-    end
+    @sub_rep = scope_to_accessible_groups(SubRep.all).find_by(id: params[:id])
+    return if @sub_rep
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.

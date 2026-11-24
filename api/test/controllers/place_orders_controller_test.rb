@@ -25,13 +25,10 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'index only returns own group place_orders for a regular user' do
+  # 全件を返す一覧はuserの画面から呼ばれないため管理画面向け
+  test 'index is forbidden for a regular user' do
     get place_orders_url, headers: auth_headers(@user), as: :json
-    assert_response :success
-
-    ids = response.parsed_body['data'].pluck('id')
-    assert_includes ids, @place_order.id
-    assert_not_includes ids, @other_place_order.id
+    assert_response :forbidden
   end
 
   test 'index returns all place_orders for an admin' do
@@ -43,15 +40,25 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_includes ids, @other_place_order.id
   end
 
-  test 'should show own place_order' do
-    get place_order_url(@place_order), headers: auth_headers(@user), as: :json
+  test 'admin can show any place_order' do
+    get place_order_url(@other_place_order), headers: auth_headers(@admin), as: :json
     assert_response :success
+  end
+
+  # show はuserの画面から呼ばれないため、自団体のものでも参照できない
+  test 'show of own place_order is forbidden for a regular user' do
+    get place_order_url(@place_order), headers: auth_headers(@user), as: :json
+    assert_response :forbidden
   end
 
   test 'show does not expose another group place_order' do
     get place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
+  end
+
+  test 'show of a nonexistent place_order is forbidden for user' do
+    get place_order_url(PlaceOrder.maximum(:id) + 1), headers: auth_headers(@user), as: :json
+    assert_response :forbidden
   end
 
   test 'should create place_order for own group' do
@@ -93,12 +100,11 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
-  test 'update another group place_order by id is not found' do
+  test 'update another group place_order by id is forbidden' do
     patch place_order_url(@other_place_order),
           params: { place_order: place_order_params(group: @other_group, remark: '更新後') },
           headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   test 'partial update without group_id is allowed for the owner' do
@@ -116,21 +122,20 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test 'should destroy own place_order' do
+  test 'admin can destroy place_order' do
     assert_difference('PlaceOrder.count', -1) do
-      delete place_order_url(@place_order), headers: auth_headers(@user), as: :json
+      delete place_order_url(@place_order), headers: auth_headers(@admin), as: :json
     end
 
     assert_response :ok
   end
 
-  test 'destroy another group place_order by id is not found' do
+  test 'destroy another group place_order by id is forbidden' do
     assert_no_difference('PlaceOrder.count') do
       delete place_order_url(@other_place_order), headers: auth_headers(@user), as: :json
     end
 
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   test 'get_by_group_id returns own group place_order' do
@@ -138,10 +143,18 @@ class PlaceOrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'get_by_group_id returns not found when own group has no place_order' do
+    group_without_place_order = create_group!(@user, name: '会場申請未登録団体')
+
+    get "/place_orders/group/#{group_without_place_order.id}", headers: auth_headers(@user), as: :json
+
+    assert_response :success
+    assert_equal 404, response.parsed_body.dig('status', 'code')
+  end
+
   test 'get_by_group_id does not expose another group place_order' do
     get "/place_orders/group/#{@other_group.id}", headers: auth_headers(@user), as: :json
-    assert_response :success
-    assert_equal 404, response.parsed_body['status']['code']
+    assert_response :forbidden
   end
 
   private

@@ -2,6 +2,8 @@
 
 class Api::V1::PublicRelationsApiController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_public_relation_for_admin_view
     @groups = Group.with_public_relation(params[:id])

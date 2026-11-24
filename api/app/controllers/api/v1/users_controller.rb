@@ -2,6 +2,21 @@
 
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）。
+  # ユーザー情報の変更・パスワードの再設定は、本人ならロールを問わず使え、他人の分はmanagerだけが変更できる
+  before_action :require_staff!, except: %i[edit_user_info reset_password]
+  before_action :require_manager!, except: %i[
+    get_user_index_for_admin_view
+    get_user_show_for_admin_view
+    get_representative_index_for_admin_view
+    get_representative_show_for_admin_view
+    get_refinement_users
+    get_search_users
+    show
+    edit_user_info
+    reset_password
+  ]
+  before_action :require_self_or_manager!, only: %i[edit_user_info reset_password]
 
   def get_user_index_for_admin_view
     @users = User.with_user_details
@@ -98,6 +113,12 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
+
+  def require_self_or_manager!
+    return if manager? || params[:user_id].to_s == current_api_user.id.to_s
+
+    render_forbidden
+  end
 
   def edit_user_info_params
     params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)

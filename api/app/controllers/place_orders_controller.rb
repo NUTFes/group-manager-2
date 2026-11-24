@@ -2,6 +2,12 @@
 
 class PlaceOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
+  before_action :require_accessible_group_param!, only: %i[get_by_group_id]
   before_action :set_place_order, only: %i[show update destroy]
   before_action :set_place_order_by_group_id, only: [:get_by_group_id]
   before_action :require_own_group!, only: %i[create update]
@@ -9,7 +15,7 @@ class PlaceOrdersController < ApplicationController
   # GET /place_orders
   # GET /place_orders.json
   def index
-    @place_orders = own_place_orders_scope
+    @place_orders = PlaceOrder.all
     render json: fmt(ok, @place_orders)
   end
 
@@ -55,37 +61,29 @@ class PlaceOrdersController < ApplicationController
   private
 
   # 管理者は全団体、一般ユーザーは自団体のplace_orderのみを対象にする
-  def own_place_orders_scope
-    return PlaceOrder.all if admin_user?
-
-    PlaceOrder.where(group_id: current_api_user.groups.select(:id))
+  def accessible_place_orders_scope
+    scope_to_accessible_groups(PlaceOrder.all)
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order
-    @place_order = own_place_orders_scope.find_by(id: params[:id])
-    @place_order || render(json: fmt(not_found, [], "Not found place_order = #{params[:id]}"))
+    @place_order = accessible_place_orders_scope.find_by(id: params[:id])
+    return if @place_order
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found place_order = #{params[:id]}") }
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order_by_group_id
-    @place_order = own_place_orders_scope.find_by(group_id: params[:group_id])
-    @place_order || render(json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}"))
+    @place_order = PlaceOrder.find_by(group_id: params[:group_id])
+    return if @place_order
+
+    render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}")
   end
 
   # create/updateで指定されたgroup_idが自団体(管理者は全団体可)かを検証する
   def require_own_group!
-    return if admin_user?
-
-    group_id = params.dig(:place_order, :group_id)
-    return if group_id.blank? # 未指定ならモデルの必須バリデーションに委ねる(updateでの部分更新も許可する)
-    return if current_api_user.groups.exists?(id: group_id)
-
-    render json: fmt({ code: 403, message: 'Forbidden' }, []), status: :forbidden
-  end
-
-  def admin_user?
-    [1, 2].include?(current_api_user&.role_id)
+    require_accessible_group_param!(params.dig(:place_order, :group_id))
   end
 
   # Only allow a list of trusted parameters through.

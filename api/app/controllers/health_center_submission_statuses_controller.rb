@@ -2,6 +2,10 @@
 
 class HealthCenterSubmissionStatusesController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[index create update]
+  before_action :require_manager!, except: %i[index create update]
+  before_action :reject_staff_write!, only: %i[create update]
   before_action :require_group_id, only: %i[index create]
 
   def index
@@ -55,14 +59,14 @@ class HealthCenterSubmissionStatusesController < ApplicationController
   end
 
   def current_user_submission_status(id)
-    HealthCenterSubmissionStatus
-      .joins(:group)
-      .where(groups: { user_id: current_api_user.id })
-      .find_by(id: id)
+    scope_to_accessible_groups(HealthCenterSubmissionStatus.all).find_by(id: id)
   end
 
+  # 自団体以外・存在しない場合、staff以上でなければ区別させないよう403にする
   def render_not_found
-    render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
+    render_not_found_or_forbidden do
+      render json: fmt(not_found, [], 'health_center_submission_status not found'), status: :not_found
+    end
   end
 
   def render_invalid_status

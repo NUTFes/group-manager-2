@@ -2,6 +2,10 @@ import { expect, request, test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 
 const API_BASE_URL = process.env.PLAYWRIGHT_API_BASE_URL ?? 'http://api:3000';
+// 新規登録ではロールを指定できないため、既存のmanagerでログインしてmanagerを作成する
+const MANAGER_EMAIL =
+  process.env.PLAYWRIGHT_E2E_EMAIL ?? 'nutfes-taro@email.com';
+const MANAGER_PASSWORD = process.env.PLAYWRIGHT_E2E_PASSWORD ?? 'gidaifes';
 
 type ApiResponse<T> = {
   status: {
@@ -55,10 +59,11 @@ const existingResubmissionApplicationTypes = [
 
 test.describe('power and fire equipment resubmission status', () => {
   let api: APIRequestContext;
-  let authContext: AuthContext;
+  let userAuthContext: AuthContext;
+  let managerAuthContext: AuthContext;
   let groupId: number | undefined;
 
-  // E2E用ユーザーを作り、そのユーザーが所有する団体だけを操作対象にする。
+  // 公開登録したuserが所有する団体を操作対象にし、管理操作だけmanagerで行う。
   test.beforeEach(async () => {
     api = await request.newContext({
       baseURL: API_BASE_URL,
@@ -66,8 +71,9 @@ test.describe('power and fire equipment resubmission status', () => {
         'Content-Type': 'application/json',
       },
     });
-    authContext = await registerAndGetAuthContext(api);
-    const group = await createGroup(api, authContext.userId);
+    userAuthContext = await createUserAndGetAuthContext(api);
+    managerAuthContext = await createManagerAndGetAuthContext(api);
+    const group = await createGroup(api, userAuthContext);
     groupId = group.id;
   });
 
@@ -75,7 +81,10 @@ test.describe('power and fire equipment resubmission status', () => {
     try {
       if (groupId !== undefined) {
         await api.delete(`/groups/${groupId}`, {
-          headers: skipSlackNotificationHeader,
+          headers: {
+            ...managerAuthContext.headers,
+            ...skipSlackNotificationHeader,
+          },
         });
         groupId = undefined;
       }
@@ -84,17 +93,17 @@ test.describe('power and fire equipment resubmission status', () => {
     }
   });
 
-  // 実APIを通して、管理者が再提出依頼したステータスをuser用APIで未承認へ戻せることを確認する。
+  // userが申請・取得・更新を行い、managerの再提出依頼後にuser用APIで未承認へ戻せることを確認する。
   test('creates and updates power and fire equipment resubmission statuses through user APIs', async () => {
     expect(groupId).toBeDefined();
 
-    await createPowerOrder(api, authContext.headers, groupId!);
+    await createPowerOrder(api, userAuthContext.headers, groupId!);
 
-    await createFireEquipmentOrder(api, authContext.headers, groupId!);
+    await createFireEquipmentOrder(api, userAuthContext.headers, groupId!);
 
     const initialStatuses = await getSubmissionStatuses(
       api,
-      authContext.headers,
+      userAuthContext.headers,
       groupId!
     );
     expect(findStatus(initialStatuses, 'power_order')?.status).toBe(
@@ -104,33 +113,31 @@ test.describe('power and fire equipment resubmission status', () => {
       'unapproved'
     );
 
-    const waitingPower = await submitSubmissionStatus(
+    const waitingPower = await setWaitingSubmissionStatus(
       api,
-      authContext.headers,
+      managerAuthContext.headers,
       groupId!,
       {
         application_type: 'power_order',
         status: 'waiting_resubmission',
-      },
-      { asAdmin: true }
+      }
     );
     expect(waitingPower.status).toBe('waiting_resubmission');
 
-    const waitingFire = await submitSubmissionStatus(
+    const waitingFire = await setWaitingSubmissionStatus(
       api,
-      authContext.headers,
+      managerAuthContext.headers,
       groupId!,
       {
         application_type: 'fire_equipment_order',
         status: 'waiting_resubmission',
-      },
-      { asAdmin: true }
+      }
     );
     expect(waitingFire.status).toBe('waiting_resubmission');
 
     const updatedPower = await updateSubmissionStatus(
       api,
-      authContext.headers,
+      userAuthContext.headers,
       waitingPower.id,
       'unapproved'
     );
@@ -138,7 +145,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const updatedFire = await updateSubmissionStatus(
       api,
-      authContext.headers,
+      userAuthContext.headers,
       waitingFire.id,
       'unapproved'
     );
@@ -146,7 +153,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const finalStatuses = await getSubmissionStatuses(
       api,
-      authContext.headers,
+      userAuthContext.headers,
       groupId!
     );
     expect(findStatus(finalStatuses, 'power_order')?.status).toBe('unapproved');
@@ -155,22 +162,16 @@ test.describe('power and fire equipment resubmission status', () => {
     );
   });
 
-  // 電力・火器以外の既存再提出申請も、新しいuser用APIで未承認へ戻せることを実APIで確認する。
+  // 電力・火器以外の既存再提出申請も、user用APIで未承認へ戻せることを実APIで確認する。
   test('updates existing resubmission application statuses through user APIs', async () => {
     expect(groupId).toBeDefined();
 
     const waitingStatuses = await Promise.all(
       existingResubmissionApplicationTypes.map((applicationType) =>
-        submitSubmissionStatus(
-          api,
-          authContext.headers,
-          groupId!,
-          {
-            application_type: applicationType,
-            status: 'waiting_resubmission',
-          },
-          { asAdmin: true }
-        )
+        setWaitingSubmissionStatus(api, managerAuthContext.headers, groupId!, {
+          application_type: applicationType,
+          status: 'waiting_resubmission',
+        })
       )
     );
 
@@ -185,7 +186,7 @@ test.describe('power and fire equipment resubmission status', () => {
       waitingStatuses.map((submissionStatus) =>
         updateSubmissionStatus(
           api,
-          authContext.headers,
+          userAuthContext.headers,
           submissionStatus.id,
           'unapproved'
         )
@@ -201,7 +202,7 @@ test.describe('power and fire equipment resubmission status', () => {
 
     const finalStatuses = await getSubmissionStatuses(
       api,
-      authContext.headers,
+      userAuthContext.headers,
       groupId!
     );
     existingResubmissionApplicationTypes.forEach((applicationType) => {
@@ -210,25 +211,33 @@ test.describe('power and fire equipment resubmission status', () => {
       );
     });
   });
+
+  // ステータスがまだ無い場合に、userがuser用APIで未承認ステータスを作成できることを確認する。
+  test('creates a missing submission status through user API', async () => {
+    expect(groupId).toBeDefined();
+
+    const createdStatus = await createSubmissionStatus(
+      api,
+      userAuthContext.headers,
+      groupId!,
+      {
+        application_type: 'equipment',
+        status: 'unapproved',
+      }
+    );
+
+    expect(createdStatus.application_type).toBe('equipment');
+    expect(createdStatus.status).toBe('unapproved');
+  });
 });
 
-const registerAndGetAuthContext = async (
-  api: APIRequestContext
+const signIn = async (
+  api: APIRequestContext,
+  email: string,
+  password: string
 ): Promise<AuthContext> => {
-  const email = `e2e-resubmission-${Date.now()}-${Math.random()
-    .toString(36)
-    .slice(2)}@example.com`;
-
-  const response = await api.post('/api/auth', {
-    data: {
-      registration: {
-        name: 'e2e resubmission user',
-        email,
-        password: 'password',
-        password_confirmation: 'password',
-        role_id: 1,
-      },
-    },
+  const response = await api.post('/api/auth/sign_in', {
+    data: { email, password },
   });
 
   expect(response.ok()).toBe(true);
@@ -239,10 +248,8 @@ const registerAndGetAuthContext = async (
   expect(headers.client).toBeTruthy();
   expect(headers.uid).toBe(email);
 
-  expect(body.data.id).toBeGreaterThan(0);
-
   return {
-    userId: body.data.id,
+    userId: Number(body.data.id),
     headers: {
       'access-token': headers['access-token'],
       client: headers.client,
@@ -251,17 +258,67 @@ const registerAndGetAuthContext = async (
   };
 };
 
+const createManagerAndGetAuthContext = async (
+  api: APIRequestContext
+): Promise<AuthContext> => {
+  const email = `e2e-resubmission-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}@example.com`;
+  const manager = await signIn(api, MANAGER_EMAIL, MANAGER_PASSWORD);
+
+  const response = await api.post('/users/simply_user_create', {
+    headers: manager.headers,
+    data: {
+      name: 'e2e resubmission user',
+      email,
+      password: 'password',
+      password_confirmation: 'password',
+      role_id: 1,
+    },
+  });
+
+  expect(response.ok()).toBe(true);
+  const body = (await response.json()) as ApiResponse<{ id: number }>;
+  expect(body.status.code).toBe(201);
+  expect(body.data.id).toBeGreaterThan(0);
+
+  return signIn(api, email, 'password');
+};
+
+const createUserAndGetAuthContext = async (
+  api: APIRequestContext
+): Promise<AuthContext> => {
+  const email = `e2e-resubmission-user-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}@example.com`;
+  const password = 'password';
+  const response = await api.post('/api/auth', {
+    data: {
+      registration: {
+        name: 'e2e resubmission user',
+        email,
+        password,
+        password_confirmation: password,
+      },
+    },
+  });
+
+  expect(response.ok()).toBe(true);
+
+  return signIn(api, email, password);
+};
+
 const createGroup = async (
   api: APIRequestContext,
-  userId: number
+  authContext: AuthContext
 ): Promise<Group> => {
   const response = await api.post('/groups', {
-    headers: skipSlackNotificationHeader,
+    headers: { ...authContext.headers, ...skipSlackNotificationHeader },
     data: {
       name: `e2e-resubmission-group-${Date.now()}`,
       project_name: 'e2e resubmission project',
       activity: 'e2e',
-      user_id: userId,
+      user_id: authContext.userId,
       group_category_id: 1,
       fes_year_id: 1,
     },
@@ -280,24 +337,29 @@ const createPowerOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<PowerOrder> => {
-  const response = await api.post('/api/v1/power_orders', {
+  const response = await api.put('/power_orders/submit', {
     headers: authHeaders,
     data: {
       group_id: groupId,
-      item: `e2e-hot-plate-${Date.now()}`,
-      power: 1200,
-      manufacturer: 'e2e maker',
-      model: 'E2E-POWER',
-      item_url: 'https://example.com/e2e-power',
+      use_power: true,
+      power_orders: [
+        {
+          item: `e2e-hot-plate-${Date.now()}`,
+          power: 1200,
+          manufacturer: 'e2e maker',
+          model: 'E2E-POWER',
+          item_url: 'https://example.com/e2e-power',
+        },
+      ],
     },
   });
 
   expect(response.ok()).toBe(true);
-  const body = (await response.json()) as ApiResponse<PowerOrder>;
-  expect(body.status.code).toBe(201);
-  expect(body.data.id).toBeGreaterThan(0);
+  const body = (await response.json()) as ApiResponse<PowerOrder[]>;
+  expect(body.status.code).toBe(200);
+  expect(body.data[0].id).toBeGreaterThan(0);
 
-  return body.data;
+  return body.data[0];
 };
 
 const createFireEquipmentOrder = async (
@@ -305,27 +367,29 @@ const createFireEquipmentOrder = async (
   authHeaders: AuthHeaders,
   groupId: number
 ): Promise<FireEquipmentOrder> => {
-  const response = await api.post('/api/v1/fire_equipment_orders', {
+  const response = await api.put('/fire_equipment_orders/submit', {
     headers: authHeaders,
     data: {
-      fire_equipment_order: {
-        group_id: groupId,
-        name: `e2e-burner-${Date.now()}`,
-        quantity: 1,
-        fuel: 'gas_bottle',
-        usage: 'e2e cooking',
-        is_takeaway: false,
-        remark: 'e2e',
-      },
+      group_id: groupId,
+      fire_equipment_orders: [
+        {
+          name: `e2e-burner-${Date.now()}`,
+          quantity: 1,
+          fuel: 1,
+          usage: 'e2e cooking',
+          is_takeaway: false,
+          remark: 'e2e',
+        },
+      ],
     },
   });
 
   expect(response.ok()).toBe(true);
-  const body = (await response.json()) as ApiResponse<FireEquipmentOrder>;
-  expect(body.status.code).toBe(201);
-  expect(body.data.id).toBeGreaterThan(0);
+  const body = (await response.json()) as ApiResponse<FireEquipmentOrder[]>;
+  expect(body.status.code).toBe(200);
+  expect(body.data[0].id).toBeGreaterThan(0);
 
-  return body.data;
+  return body.data[0];
 };
 
 const getSubmissionStatuses = async (
@@ -349,26 +413,42 @@ const getSubmissionStatuses = async (
   return body.data.submissions;
 };
 
-const submitSubmissionStatus = async (
+const setWaitingSubmissionStatus = async (
   api: APIRequestContext,
   authHeaders: AuthHeaders,
   groupId: number,
-  params: Pick<SubmissionStatus, 'application_type' | 'status'>,
-  options: { asAdmin?: boolean } = {}
+  params: Pick<SubmissionStatus, 'application_type' | 'status'>
 ): Promise<SubmissionStatus> => {
-  const response = await api.post(
-    options.asAdmin
-      ? '/api/v1/health_center_submission_statuses'
-      : '/health_center_submission_statuses',
-    {
-      headers: { ...authHeaders, ...skipSlackNotificationHeader },
-      data: {
-        group_id: groupId,
-        application_type: params.application_type,
-        status: params.status,
-      },
-    }
-  );
+  const response = await api.post('/api/v1/health_center_submission_statuses', {
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
+    data: {
+      group_id: groupId,
+      application_type: params.application_type,
+      status: params.status,
+    },
+  });
+
+  expect(response.ok()).toBe(true);
+  const body = (await response.json()) as ApiResponse<SubmissionStatus>;
+  expect(body.status.code).toBe(200);
+
+  return body.data;
+};
+
+const createSubmissionStatus = async (
+  api: APIRequestContext,
+  authHeaders: AuthHeaders,
+  groupId: number,
+  params: Pick<SubmissionStatus, 'application_type' | 'status'>
+): Promise<SubmissionStatus> => {
+  const response = await api.post('/health_center_submission_statuses', {
+    headers: { ...authHeaders, ...skipSlackNotificationHeader },
+    data: {
+      group_id: groupId,
+      application_type: params.application_type,
+      status: params.status,
+    },
+  });
 
   expect(response.ok()).toBe(true);
   const body = (await response.json()) as ApiResponse<SubmissionStatus>;

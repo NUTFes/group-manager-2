@@ -2,6 +2,12 @@
 
 class VenueMapsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
+  before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_venue_map, only: %i[show update destroy]
 
   # GET /venue_maps
@@ -61,11 +67,10 @@ class VenueMapsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_venue_map
-    if VenueMap.exists?(params[:id])
-      @venue_map = VenueMap.find(params[:id])
-    else
-      render json: fmt(not_found, [], "Not found venue_map = #{params[:id]}")
-    end
+    @venue_map = scope_to_accessible_groups(VenueMap.all).find_by(id: params[:id])
+    return if @venue_map
+
+    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found venue_map = #{params[:id]}") }
   end
 
   # Only allow a list of trusted parameters through.

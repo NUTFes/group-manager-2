@@ -2,6 +2,9 @@
 
 class GroupIdentificationController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!
+  before_action :require_manager!, except: %i[index]
   before_action :set_group_identification, only: %i[update destroy]
 
   def index

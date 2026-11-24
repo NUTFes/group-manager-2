@@ -23,10 +23,9 @@ export type Employee = {
 };
 
 export const useGetEmployees = (groupId: number | null) => {
+  // 団体が決まるまでは取得しない（全件取得の一覧APIは管理画面向け）
   const endpoint =
-    groupId !== null
-      ? `${API_ENDPOINTS.EMPLOYEES_GROUP}/${groupId}`
-      : API_ENDPOINTS.EMPLOYEES;
+    groupId !== null ? `${API_ENDPOINTS.EMPLOYEES_GROUP}/${groupId}` : null;
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<Employee[]>>(endpoint);
 

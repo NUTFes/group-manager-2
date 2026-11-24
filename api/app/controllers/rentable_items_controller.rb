@@ -2,6 +2,9 @@
 
 class RentableItemsController < ApplicationController
   before_action :authenticate_api_user!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!
+  before_action :require_manager!, except: %i[index show]
   before_action :set_rentable_item, only: %i[show update destroy]
 
   # GET /rentable_items

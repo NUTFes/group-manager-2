@@ -2,4 +2,5 @@
 
 class Api::V1::RentalItemAllowListsApiController < ApplicationController
   before_action :authenticate_api_user!
+  before_action :require_manager!
 end
