@@ -2,12 +2,17 @@
 
 class FoodProductsController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_accessible_group_param!, only: %i[group_food_products create update]
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[group_food_products upsert destroy]
+  before_action :require_manager!, except: %i[group_food_products upsert destroy index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[upsert destroy]
+  before_action :require_accessible_group_param!, only: %i[group_food_products]
   before_action :set_food_product, only: %i[show destroy]
 
   # GET /food_products
   def index
-    @food_products = scope_to_accessible_groups(FoodProduct.all)
+    @food_products = FoodProduct.all
     render json: fmt(ok, @food_products)
   end
 
@@ -80,9 +85,7 @@ class FoodProductsController < ApplicationController
   # PATCH/PUT /food_products/:id
   # 単一レコード更新
   def update
-    @food_product = scope_to_accessible_groups(FoodProduct.all).find_by(id: params[:id])
-    return render_forbidden if @food_product.nil? && !admin_user?
-
+    @food_product = FoodProduct.find_by(id: params[:id])
     if @food_product&.update(food_product_params)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else

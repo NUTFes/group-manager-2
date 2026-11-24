@@ -2,12 +2,17 @@
 
 class PublicRelationsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
   before_action :require_accessible_group_param!, only: %i[create update get_by_group_id]
   before_action :set_public_relation, only: %i[show update destroy]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 
   def index
-    @public_relations = scope_to_accessible_groups(PublicRelation.all)
+    @public_relations = PublicRelation.all
     render json: fmt(ok, @public_relations)
   end
 

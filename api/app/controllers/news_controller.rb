@@ -2,8 +2,9 @@
 
 class NewsController < ApplicationController
   before_action :authenticate_api_user!, except: %i[index]
-  # userの画面から呼ばれる参照系以外は管理画面向け
-  before_action :require_admin!, except: %i[index]
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[index]
+  before_action :require_manager!, except: %i[index show]
   before_action :set_news, only: %i[show update destroy]
 
   # GET /news

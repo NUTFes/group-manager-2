@@ -2,12 +2,16 @@
 
 class PurchaseListsController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update destroy get_by_food_product_id upsert_all]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update destroy upsert_all]
   before_action :require_accessible_food_product_ids!, only: %i[create update get_by_food_product_id]
   before_action :set_purchase_list, only: %i[show update destroy]
 
   # GET /purchase_lists
   def index
-    @purchase_lists = accessible_purchase_lists
+    @purchase_lists = PurchaseList.all
     render json: fmt(ok, @purchase_lists)
   end
 
@@ -94,7 +98,7 @@ class PurchaseListsController < ApplicationController
   private
 
   def set_purchase_list
-    return @purchase_list = PurchaseList.find(params[:id]) if admin_user?
+    return @purchase_list = PurchaseList.find(params[:id]) if staff_or_above?
 
     @purchase_list = accessible_purchase_lists.find_by(id: params[:id])
     render_forbidden unless @purchase_list
@@ -102,14 +106,14 @@ class PurchaseListsController < ApplicationController
 
   # 購入品は販売品（food_product）を通して団体に紐づくため、自団体の販売品の購入品だけに絞る
   def accessible_purchase_lists
-    return PurchaseList.all if admin_user?
+    return PurchaseList.all if staff_or_above?
 
     PurchaseList.where(food_product_id: scope_to_accessible_groups(FoodProduct.all).select(:id))
   end
 
   def accessible_food_product_ids?(food_product_ids)
     ids = Array(food_product_ids).compact_blank.map(&:to_s).uniq
-    admin_user? || scope_to_accessible_groups(FoodProduct.all).where(id: ids).count == ids.size
+    staff_or_above? || scope_to_accessible_groups(FoodProduct.all).where(id: ids).count == ids.size
   end
 
   # 指定されたfood_product_id（get_by_food_product_idではfood_product_ids）が自団体の販売品でなければ403にする
@@ -120,7 +124,7 @@ class PurchaseListsController < ApplicationController
   end
 
   def accessible_purchase_list_records?(records)
-    return true if admin_user?
+    return true if staff_or_above?
 
     ids = records.filter_map { |attrs| attrs[:id].presence&.to_s }.uniq
     accessible_food_product_ids?(records.pluck(:food_product_id)) &&

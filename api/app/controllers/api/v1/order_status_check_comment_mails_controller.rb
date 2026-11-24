@@ -2,7 +2,8 @@
 
 class Api::V1::OrderStatusCheckCommentMailsController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の書き込み系のみのため、manager
+  before_action :require_manager!
 
   # メモを保存し、保存済みメモの本文をメール送信する
   def create

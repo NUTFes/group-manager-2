@@ -2,7 +2,8 @@
 
 class Api::V1::PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の書き込み系のみのため、manager
+  before_action :require_manager!
 
   def create
     power_order = PowerOrder.new(power_order_params)

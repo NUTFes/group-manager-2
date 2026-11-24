@@ -4,7 +4,9 @@ class Api::V1::MessageTemplatesController < ApplicationController
   COPY_SUFFIX = { 'ja' => 'のコピー', 'en' => ' copy' }.freeze
 
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!
+  before_action :require_manager!, except: %i[index show]
   before_action :set_message_template, only: %i[show update copy_source]
   before_action :validate_locale_param, only: %i[create update]
 

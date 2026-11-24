@@ -2,13 +2,17 @@
 
 class CookingProcessOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id upsert]
+  before_action :require_manager!, except: %i[get_by_group_id upsert index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[upsert]
   before_action :require_accessible_group_param!, only: %i[get_by_group_id]
-  before_action :require_accessible_food_product!, only: %i[create update]
   before_action :set_cooking_process_order, only: %i[show update destroy]
 
   # GET /cooking_process_orders
   def index
-    @cooking_process_orders = scope_to_accessible_groups(CookingProcessOrder.all)
+    @cooking_process_orders = CookingProcessOrder.all
     render json: @cooking_process_orders
   end
 
@@ -114,23 +118,13 @@ class CookingProcessOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions
   def set_cooking_process_order
-    @cooking_process_order = scope_to_accessible_groups(CookingProcessOrder.all).find_by(id: params[:id])
-    return if @cooking_process_order
-
-    render_not_found_or_forbidden { render json: { error: 'Not found' }, status: :not_found }
-  end
-
-  # 指定されたfood_product_idが自団体（adminは全団体）の販売品でなければ403にする
-  def require_accessible_food_product!
-    food_product_id = params.dig(:cooking_process_order, :food_product_id)
-    return if food_product_id.blank? || admin_user?
-    return if scope_to_accessible_groups(FoodProduct.all).exists?(id: food_product_id)
-
-    render_forbidden
+    @cooking_process_order = CookingProcessOrder.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Not found' }, status: :not_found
   end
 
   def accessible_cooking_process_orders?(raw_orders)
-    return true if admin_user?
+    return true if staff_or_above?
 
     records = raw_orders.map(&:symbolize_keys)
     food_product_ids = records.filter_map { |attrs| attrs[:food_product_id]&.to_s }.uniq

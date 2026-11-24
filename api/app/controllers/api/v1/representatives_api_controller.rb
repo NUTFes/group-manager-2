@@ -2,7 +2,8 @@
 
 class Api::V1::RepresentativesApiController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   NO_SUB_REP = {

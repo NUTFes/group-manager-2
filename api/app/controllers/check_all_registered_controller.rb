@@ -2,6 +2,8 @@
 
 class CheckAllRegisteredController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[show]
   before_action :require_accessible_group_param!, only: %i[show]
 
   ORDER_TYPE_MAPPING = {

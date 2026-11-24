@@ -17,8 +17,8 @@ class PrintPdfController < ApplicationController
 
   before_action :authenticate_api_user!
   # 管理画面からのみ利用され、団体ごとのsecretを含むQRコードや会場割り当てなど
-  # 他団体には見せられない情報を含むため、管理者(role_id: 1, 2)に限定する。
-  before_action :require_admin!
+  # 他団体には見せられない情報を含むため、管理画面を使うstaff以上(role_id: 1, 2)に限定する。
+  before_action :require_staff!
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf

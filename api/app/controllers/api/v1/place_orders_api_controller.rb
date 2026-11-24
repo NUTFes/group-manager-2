@@ -2,7 +2,8 @@
 
 class Api::V1::PlaceOrdersApiController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_place_order_index_for_admin_view
     @place_orders = PlaceOrder.get_with_groups

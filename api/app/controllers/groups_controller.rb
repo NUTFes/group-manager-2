@@ -2,7 +2,17 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!, only: %i[index destroy]
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[show get_user_group_id_and_group_category_id create update]
+  before_action :require_manager!, except: %i[
+    show
+    get_user_group_id_and_group_category_id
+    create
+    update
+    index
+  ]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
   before_action :set_group, only: %i[show update destroy]
   before_action :require_own_user_id!, only: %i[get_user_group_id_and_group_category_id create update]
 
@@ -127,9 +137,9 @@ class GroupsController < ApplicationController
     render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found group id = #{params[:id]}") }
   end
 
-  # adminは全団体、それ以外は自分が代表の団体だけ
+  # staff以上は全団体、それ以外は自分が代表の団体だけ
   def accessible_groups
-    admin_user? ? Group.all : current_api_user.groups
+    staff_or_above? ? Group.all : current_api_user.groups
   end
 
   # Only allow a list of trusted parameters through.

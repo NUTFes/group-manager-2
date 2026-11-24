@@ -2,6 +2,11 @@
 
 class PlaceOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[create update get_by_group_id]
+  before_action :require_manager!, except: %i[create update get_by_group_id index show]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create update]
   before_action :set_place_order, only: %i[show update destroy]
   before_action :set_place_order_by_group_id, only: [:get_by_group_id]
   before_action :require_own_group!, only: %i[create update]
@@ -9,7 +14,7 @@ class PlaceOrdersController < ApplicationController
   # GET /place_orders
   # GET /place_orders.json
   def index
-    @place_orders = own_place_orders_scope
+    @place_orders = PlaceOrder.all
     render json: fmt(ok, @place_orders)
   end
 
@@ -55,13 +60,13 @@ class PlaceOrdersController < ApplicationController
   private
 
   # 管理者は全団体、一般ユーザーは自団体のplace_orderのみを対象にする
-  def own_place_orders_scope
+  def accessible_place_orders_scope
     scope_to_accessible_groups(PlaceOrder.all)
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order
-    @place_order = own_place_orders_scope.find_by(id: params[:id])
+    @place_order = accessible_place_orders_scope.find_by(id: params[:id])
     return if @place_order
 
     render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found place_order = #{params[:id]}") }
@@ -69,7 +74,7 @@ class PlaceOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_place_order_by_group_id
-    @place_order = own_place_orders_scope.find_by(group_id: params[:group_id])
+    @place_order = accessible_place_orders_scope.find_by(group_id: params[:group_id])
     return if @place_order
 
     render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}") }

@@ -2,7 +2,8 @@
 
 class Api::V1::GroupMailCommentsApiController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def index
     group = Group.includes(:comments, health_center_submission_statuses: :comments)

@@ -4,7 +4,13 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   APPLICATION_TYPES = HealthCenterSubmissionStatus.application_types.keys.freeze
 
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!
+  before_action :require_manager!, except: %i[
+    get_health_center_submission_status_index_for_admin_view
+    get_health_center_submission_status_counts
+    get_health_center_submission_status_show_for_admin_view
+  ]
 
   before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts

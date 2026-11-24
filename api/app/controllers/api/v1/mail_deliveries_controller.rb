@@ -2,7 +2,8 @@
 
 class Api::V1::MailDeliveriesController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の書き込み系のみのため、manager
+  before_action :require_manager!
 
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP
   MULTIPLE_RECIPIENTS_REGEXP = /[,;]|\S+@\S+\s+\S+@\S+|<[^>]+>.*<[^>]+>/

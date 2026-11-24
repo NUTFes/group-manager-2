@@ -2,7 +2,8 @@
 
 class Api::V1::OrderInfosApiController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!
+  # 管理画面の参照系のみのため、staff以上
+  before_action :require_staff!
 
   def get_order_info_for_admin_view
     @groups = Group.with_order_info(params[:id])

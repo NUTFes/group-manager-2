@@ -2,13 +2,17 @@
 
 class EmployeesController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group create upsert update destroy]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[create upsert update destroy]
   before_action :require_accessible_group_param!, only: %i[create update get_by_group]
   before_action :set_employee, only: %i[show update destroy]
 
   # GET /employees
   # GET /employees.json
   def index
-    @employees = scope_to_accessible_groups(Employee.all)
+    @employees = Employee.all
     render json: fmt(ok, @employees)
   end
 
