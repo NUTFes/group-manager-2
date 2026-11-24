@@ -19,6 +19,7 @@
           <span class="submission-target-label">保健所提出対象</span>
           <SwitchButton
             :isOn="group.group.is_health_center_submission_target"
+            :disabled="!canUpdate"
             :on_click="
               () =>
                 onToggleSubmissionTarget(
@@ -111,6 +112,7 @@
               <div class="select-wrapper">
                 <select
                   class="status-select"
+                  :disabled="!canUpdate"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('cooking_process_order')
@@ -211,6 +213,7 @@
               <div class="select-wrapper">
                 <select
                   class="status-select"
+                  :disabled="!canUpdate"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('food_product')
@@ -281,6 +284,7 @@
               <div class="select-wrapper">
                 <select
                   class="status-select"
+                  :disabled="!canUpdate"
                   :class="
                     getStatusSelectClass(
                       getSubmissionStatusValue('purchase_list')
@@ -356,6 +360,7 @@
               <div class="select-wrapper">
                 <select
                   class="status-select"
+                  :disabled="!canUpdate"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('employee'))
                   "
@@ -409,7 +414,11 @@
           <div class="section-header-with-button">
             <h2>平面図申請</h2>
             <div class="section-actions">
-              <CommonButton iconName="edit" :on_click="openVenueMapModal">
+              <CommonButton
+                v-if="canUpdate"
+                iconName="edit"
+                :on_click="openVenueMapModal"
+              >
                 編集
               </CommonButton>
               <div
@@ -426,6 +435,7 @@
                 <div class="select-wrapper">
                   <select
                     class="status-select"
+                    :disabled="!canUpdate"
                     :class="
                       getStatusSelectClass(
                         getSubmissionStatusValue('venue_map')
@@ -475,6 +485,7 @@
               <div class="select-wrapper">
                 <select
                   class="status-select"
+                  :disabled="!canUpdate"
                   :class="
                     getStatusSelectClass(getSubmissionStatusValue('equipment'))
                   "
@@ -613,6 +624,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import {
   normalizeSubmissionRecordStatus,
   getSubmissionStatusMeta,
@@ -821,7 +833,6 @@ export default {
       shops: [],
       rentalItems: [],
       unRegisteredGroups: [],
-      enableInteractiveRows: true,
       selectedFoodProductId: null,
       selectedPurchaseListId: null,
       selectedEmployeeId: null,
@@ -852,6 +863,17 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    // staffは閲覧のみのため、編集モーダル・ステータス変更・提出対象の切り替えを出さない
+    canUpdate() {
+      return this.$role(this.roleID).order_status.update;
+    },
+    // 行クリックで編集モーダルを開けるときだけ、行を選択できる見た目にする
+    enableInteractiveRows() {
+      return this.canUpdate;
+    },
     currentGroupId() {
       const id = Number(this.$route.params.id);
       return Number.isNaN(id) ? null : id;
@@ -1033,6 +1055,7 @@ export default {
       }
     },
     openFoodProductModal(foodProduct) {
+      if (!this.canUpdate) return;
       if (!foodProduct?.id) return;
       this.selectedFoodProductId = foodProduct.id;
       this.selectedFoodProduct = foodProduct;
@@ -1040,6 +1063,7 @@ export default {
       this.isOpenEditModal = true;
     },
     openPurchaseListModal(purchaseList) {
+      if (!this.canUpdate) return;
       if (!purchaseList?.id) return;
       this.selectedPurchaseListId = purchaseList.id;
       this.selectedPurchaseList = purchaseList;
@@ -1047,6 +1071,7 @@ export default {
       this.isOpenEditModal = true;
     },
     openEmployeeModal(employee) {
+      if (!this.canUpdate) return;
       if (!employee?.id) return;
       this.selectedEmployeeId = employee.id;
       this.selectedEmployee = employee;
@@ -1054,6 +1079,7 @@ export default {
       this.isOpenEditModal = true;
     },
     openRentalOrderModal(rentalOrder) {
+      if (!this.canUpdate) return;
       if (!rentalOrder?.id) return;
       this.selectedRentalOrderId = rentalOrder.id;
       this.selectedRentalOrder = rentalOrder;
@@ -1061,12 +1087,14 @@ export default {
       this.isOpenEditModal = true;
     },
     openCookingProcessOrderModal(order) {
+      if (!this.canUpdate) return;
       if (!order?.id) return;
       this.selectedCookingProcessOrder = order;
       this.activeEditType = "cooking_process_order";
       this.isOpenEditModal = true;
     },
     openVenueMapModal() {
+      if (!this.canUpdate) return;
       if (!this.group?.group?.id) return;
       this.activeEditType = "venue_map";
       this.isOpenEditModal = true;

@@ -1,7 +1,9 @@
 <template>
   <span class="placeholder-line">
     {{ text }}
-    <CommonButton iconName="edit" :on_click="onEdit">編集</CommonButton>
+    <CommonButton v-if="editable" iconName="edit" :on_click="onEdit"
+      >編集</CommonButton
+    >
   </span>
 </template>
 
@@ -15,6 +17,11 @@ export default {
     onEdit: {
       type: Function,
       required: true,
+    },
+    // 書き込み権限が無いとき（staff）は編集ボタンを出さない
+    editable: {
+      type: Boolean,
+      default: true,
     },
   },
 };

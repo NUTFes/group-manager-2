@@ -37,7 +37,7 @@
               <VerticalTable>
                 <!-- 団体名〜代表者: クリックで参加団体モーダルを開く -->
                 <tbody
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('group', group.group)"
                 >
                   <tr>
@@ -97,7 +97,7 @@
 
                 <!-- 副代表: 副代表がいる場合のみクリックでモーダルを開く -->
                 <tbody
-                  :class="{ 'selectable-row': !!group.sub_rep }"
+                  :class="{ 'selectable-row': !!group.sub_rep && canUpdate }"
                   @click="
                     group.sub_rep ? openModal('sub_rep', group.sub_rep) : null
                   "
@@ -108,6 +108,7 @@
                       <EditPlaceholderLine
                         v-if="isUnregistered('sub_rep')"
                         text="申請しない"
+                        :editable="canUpdate"
                         :on-edit="
                           () =>
                             openModal('sub_rep', { group_id: currentGroupId })
@@ -119,6 +120,7 @@
                       <EditPlaceholderLine
                         v-else
                         text="未登録"
+                        :editable="canUpdate"
                         :on-edit="
                           () =>
                             openModal('sub_rep', { group_id: currentGroupId })
@@ -176,13 +178,14 @@
               <EditPlaceholderLine
                 v-if="isUnregistered('place_order')"
                 text="申請しない"
+                :editable="canUpdate"
                 :on-edit="
                   () => openModal('place_order', { group_id: currentGroupId })
                 "
               />
               <VerticalTable v-else-if="group.place_order">
                 <tbody
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('place_order', group.place_order)"
                 >
                   <tr>
@@ -207,6 +210,7 @@
               <EditPlaceholderLine
                 v-else
                 text="未登録"
+                :editable="canUpdate"
                 :on-edit="
                   () => openModal('place_order', { group_id: currentGroupId })
                 "
@@ -220,6 +224,7 @@
                 <h2>物品申請</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="add_circle"
                     :on_click="
                       () =>
@@ -244,6 +249,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('equipment')
@@ -283,7 +289,7 @@
                 <tr
                   v-for="(orderWrapper, index) in group.rental_orders"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('rental_order', orderWrapper)"
                 >
                   <td>{{ orderWrapper.rental_item.name }}</td>
@@ -309,6 +315,7 @@
               <EditPlaceholderLine
                 v-if="isUnregistered('stage_order')"
                 text="申請しない"
+                :editable="canUpdate"
                 :on-edit="
                   () => openModal('stage_order', { group_id: currentGroupId })
                 "
@@ -324,7 +331,7 @@
                 <tr
                   v-for="(orderWrapper, index) in group.stage_orders"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('stage_order', orderWrapper)"
                 >
                   <td>
@@ -353,6 +360,7 @@
               <EditPlaceholderLine
                 v-else
                 text="未登録"
+                :editable="canUpdate"
                 :on-edit="
                   () => openModal('stage_order', { group_id: currentGroupId })
                 "
@@ -368,6 +376,7 @@
               <EditPlaceholderLine
                 v-if="isUnregistered('stage_common_option')"
                 text="申請しない"
+                :editable="canUpdate"
                 :on-edit="
                   () =>
                     openModal('stage_common_option', {
@@ -377,7 +386,7 @@
               />
               <VerticalTable v-else-if="group.stage_common_option">
                 <tbody
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="
                     openModal('stage_common_option', group.stage_common_option)
                   "
@@ -412,6 +421,7 @@
               <EditPlaceholderLine
                 v-else
                 text="未登録"
+                :editable="canUpdate"
                 :on-edit="
                   () =>
                     openModal('stage_common_option', {
@@ -428,6 +438,7 @@
                 <h2>電力申請</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="add_circle"
                     :on_click="
                       () =>
@@ -452,6 +463,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('power_order')
@@ -492,7 +504,7 @@
                 <tr
                   v-for="(orderWrapper, index) in group.power_orders"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('power_order', orderWrapper)"
                 >
                   <td>{{ orderWrapper.power_order.item }}</td>
@@ -530,6 +542,7 @@
               <EditPlaceholderLine
                 v-if="isUnregistered('public_relation')"
                 text="申請しない"
+                :editable="canUpdate"
                 :on-edit="
                   () =>
                     openModal('public_relation', {
@@ -539,7 +552,7 @@
               />
               <VerticalTable v-else-if="group.public_relation">
                 <tbody
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('public_relation', group.public_relation)"
                 >
                   <tr>
@@ -574,6 +587,7 @@
               <EditPlaceholderLine
                 v-else
                 text="未登録"
+                :editable="canUpdate"
                 :on-edit="
                   () =>
                     openModal('public_relation', {
@@ -590,6 +604,7 @@
                 <h2>従業員申請</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="add_circle"
                     :on_click="
                       () => openModal('employee', { group_id: currentGroupId })
@@ -610,6 +625,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('employee')
@@ -648,7 +664,7 @@
                 <tr
                   v-for="(empWrapper, index) in group.employees"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('employee', empWrapper)"
                 >
                   <td>{{ empWrapper.employee.name }}</td>
@@ -667,6 +683,7 @@
                 <h2>模擬店平面図</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="edit"
                     :on_click="
                       () =>
@@ -695,6 +712,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('venue_map')
@@ -748,6 +766,7 @@
                 <h2>販売品申請</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="add_circle"
                     :on_click="
                       () =>
@@ -772,6 +791,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('food_product')
@@ -813,7 +833,7 @@
                 <tr
                   v-for="(fpWrapper, index) in group.food_products"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('food_product', fpWrapper)"
                 >
                   <td>{{ fpWrapper.food_product.name }}</td>
@@ -848,6 +868,7 @@
                   <div class="select-wrapper">
                     <select
                       class="status-select"
+                      :disabled="!canUpdate"
                       :class="
                         getStatusSelectClass(
                           getSubmissionStatusValue('purchase_list')
@@ -887,6 +908,7 @@
                   <div class="subsection-header-with-button">
                     <h4>{{ fpWrapper.food_product.name }}</h4>
                     <CommonButton
+                      v-if="canUpdate"
                       iconName="add_circle"
                       :on_click="
                         () =>
@@ -914,7 +936,7 @@
                     <tr
                       v-for="(plWrapper, j) in fpWrapper.purchase_lists"
                       :key="j"
-                      class="selectable-row"
+                      :class="{ 'selectable-row': canUpdate }"
                       @click="openModal('purchase_list', plWrapper)"
                     >
                       <td>{{ plWrapper.purchase_list.items }}</td>
@@ -975,6 +997,7 @@
                   <div class="select-wrapper">
                     <select
                       class="status-select"
+                      :disabled="!canUpdate"
                       :class="
                         getStatusSelectClass(
                           getSubmissionStatusValue('cooking_process_order')
@@ -1019,7 +1042,7 @@
                   </h4>
                   <VerticalTable v-if="fpWrapper.cooking_process_order">
                     <tbody
-                      class="selectable-row"
+                      :class="{ 'selectable-row': canUpdate }"
                       @click="
                         openModal(
                           'cooking_process_order',
@@ -1072,6 +1095,7 @@
                   <EditPlaceholderLine
                     v-else-if="isUnregistered('cooking_process_order')"
                     text="申請しない"
+                    :editable="canUpdate"
                     :on-edit="
                       () =>
                         openModal('cooking_process_order', {
@@ -1082,6 +1106,7 @@
                   <EditPlaceholderLine
                     v-else
                     text="調理工程未登録"
+                    :editable="canUpdate"
                     :on-edit="
                       () =>
                         openModal('cooking_process_order', {
@@ -1101,6 +1126,7 @@
                 <h2>火気使用申請</h2>
                 <div class="section-actions">
                   <CommonButton
+                    v-if="canUpdate"
                     iconName="add_circle"
                     :on_click="
                       () =>
@@ -1128,6 +1154,7 @@
                     <div class="select-wrapper">
                       <select
                         class="status-select"
+                        :disabled="!canUpdate"
                         :class="
                           getStatusSelectClass(
                             getSubmissionStatusValue('fire_equipment_order')
@@ -1177,7 +1204,7 @@
                 <tr
                   v-for="(orderWrapper, index) in group.fire_equipment_orders"
                   :key="index"
-                  class="selectable-row"
+                  :class="{ 'selectable-row': canUpdate }"
                   @click="openModal('fire_equipment_order', orderWrapper)"
                 >
                   <td>{{ orderWrapper.fire_equipment_order.name }}</td>
@@ -1299,6 +1326,7 @@ import StageOrderEditModal from "~/components/edit-modals/StageOrderEditModal.vu
 import SubRepEditModal from "~/components/edit-modals/SubRepEditModal.vue";
 import VenueMapEditModal from "~/components/edit-modals/VenueMapEditModal.vue";
 import GroupMailSender from "~/components/GroupMailSender.vue";
+import { mapState } from "vuex";
 import { formatWeather } from "~/utils/constants";
 import {
   normalizeSubmissionRecordStatus,
@@ -1347,6 +1375,13 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    // staffは閲覧のみのため、編集モーダル・追加ボタン・ステータス変更を出さない
+    canUpdate() {
+      return this.$role(this.roleID).order_status.update;
+    },
     currentGroupId() {
       const id = Number(this.$route.params.id);
       return Number.isNaN(id) ? null : id;
@@ -1453,6 +1488,7 @@ export default {
       }
     },
     openModal(type, item) {
+      if (!this.canUpdate) return;
       this.activeEditType = type;
       this.selectedItem = item;
       this.isOpenEditModal = true;
