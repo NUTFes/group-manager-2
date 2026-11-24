@@ -28,7 +28,7 @@ class ApiAuthorizationTest < ActionDispatch::IntegrationTest
     'public_relations' => %w[create update get_by_group_id],
     'venue_maps' => %w[create update get_by_group_id],
     'un_registered_groups' => %w[create destroy group],
-    'health_center_submission_statuses' => %w[index],
+    'health_center_submission_statuses' => %w[index create update],
     'check_all_registered' => %w[show],
     'group_categories' => %w[index],
     'places' => %w[index],

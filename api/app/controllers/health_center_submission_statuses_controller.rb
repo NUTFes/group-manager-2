@@ -3,8 +3,9 @@
 class HealthCenterSubmissionStatusesController < ApplicationController
   before_action :authenticate_api_user!
   # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
-  before_action :require_staff!, except: %i[index]
-  before_action :require_manager!, except: %i[index]
+  before_action :require_staff!, except: %i[index create update]
+  before_action :require_manager!, except: %i[index create update]
+  before_action :reject_staff_write!, only: %i[create update]
   before_action :require_group_id, only: %i[index create]
 
   def index
