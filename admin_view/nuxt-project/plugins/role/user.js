@@ -203,4 +203,22 @@ export const userRole = {
     update: false,
     delete: false,
   },
+  fire_equipment_orders: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  message_templates: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+  memos: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
 };
