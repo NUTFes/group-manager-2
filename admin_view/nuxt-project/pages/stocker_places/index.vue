@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="在庫場所一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton
+        v-if="this.$role(selfRoleId).stocker_places.create"
+        iconName="add_circle"
+        :on_click="openModal"
+      >
         追加
       </CommonButton>
     </SubHeader>

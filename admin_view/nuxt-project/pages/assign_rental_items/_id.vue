@@ -29,7 +29,7 @@
         <v-card-title class="font-weight-bold mt-3">
           {{ assign_rental_item.id }}
           <v-spacer></v-spacer>
-          <v-tooltip top>
+          <v-tooltip top v-if="this.$role(selfRoleId).assign_items.update">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 text
@@ -43,7 +43,7 @@
             </template>
             <span>編集</span>
           </v-tooltip>
-          <v-tooltip top>
+          <v-tooltip top v-if="this.$role(selfRoleId).assign_items.delete">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 text

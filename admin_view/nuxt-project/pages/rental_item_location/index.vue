@@ -88,7 +88,7 @@
             <template v-for="[sourceBreakdown] in [[getGroupSourceBreakdown(group.id)]]">
             <div
               :key="group.id"
-              draggable="true"
+              :draggable="$role(roleID).assign_items.update"
               @dragstart="handleDragStartGroup($event, group)"
               class="group-card"
               :class="{ 'is-fulfilled': isGroupFullyAssigned(group.id) }"

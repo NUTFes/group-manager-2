@@ -4,10 +4,18 @@
       v-bind:pageTitle="fireEquipmentOrder.name"
       pageSubTitle="火気使用申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(roleID).fire_equipment_orders.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(roleID).fire_equipment_orders.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>

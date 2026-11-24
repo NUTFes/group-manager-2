@@ -2,6 +2,7 @@
   <div class="main-content message-templates-page">
     <SubHeader pageTitle="メールテンプレート管理">
       <CommonButton
+        v-if="this.$role(roleID).message_templates.create"
         iconName="add_circle"
         :on_click="openCreateModal"
         :disabled="isSaving"
@@ -60,6 +61,7 @@
       <template v-slot:method>
         <div class="template-detail-actions">
           <CommonButton
+            v-if="this.$role(roleID).message_templates.update"
             iconName="edit"
             :on_click="openEditModalFromDetail"
             :disabled="isSaving"
@@ -67,6 +69,7 @@
             編集
           </CommonButton>
           <CommonButton
+            v-if="this.$role(roleID).message_templates.create"
             iconName="content_copy"
             :on_click="openCopyModalFromDetail"
             :disabled="isSaving"
@@ -194,6 +197,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 // TODO: この画面は再提出機能に統合予定の暫定管理画面。再提出機能側の導線が実装されたら移動または削除する。
 export default {
   data() {
@@ -222,6 +227,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
     selectedTemplate() {
       return this.templates.find(
         (template) => template.id === this.selectedTemplateId

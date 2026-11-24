@@ -7,7 +7,11 @@
       <Column width="50%" height="800px">
         <Card width="100%" style="overflow: scroll">
           <SubHeader pageTitle="ステージ割り当て">
-            <CommonButton iconName="add_circle" :on_click="openAddModal">
+            <CommonButton
+              v-if="this.$role(roleID).stages.create"
+              iconName="add_circle"
+              :on_click="openAddModal"
+            >
               割り当て
             </CommonButton>
           </SubHeader>
@@ -210,6 +214,8 @@ export default {
       this.isAddModal = true;
     },
     openEditModal(groupIdentificationId, stageNumberId, stageId) {
+      // staffは閲覧のみのため、行クリックで編集モーダルを開かない
+      if (!this.$role(this.roleID).stages.update) return;
       this.stageNumberId = stageNumberId
       this.stageId = stageId
       this.groupIdentificationId = groupIdentificationId

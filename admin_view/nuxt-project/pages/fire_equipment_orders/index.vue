@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="火気使用申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).fire_equipment_orders.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">

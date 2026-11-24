@@ -39,8 +39,8 @@
                 <td :class="{ warning: warningStatus[index], 'no-hover': warningStatus[index] }">
                     {{ calculateDifference(stockerItem, index) }}
                 </td>
-                <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
-                <td><btn  @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
+                <td><btn v-if="this.$role(roleID).rental_items.create" @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
+                <td><btn v-if="this.$role(roleID).rental_items.delete" @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -69,8 +69,8 @@
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.remark }}</td>
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
-                <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
+                <td><btn v-if="this.$role(roleID).assign_items.update" @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num, assignRentalItem.assign_rental_item.remark)">編集</btn></td>
+                <td><btn v-if="this.$role(roleID).assign_items.delete" @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
