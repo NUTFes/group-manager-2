@@ -2,6 +2,10 @@
 
 class FireEquipmentOrdersController < ApplicationController
   before_action :authenticate_api_user!
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id submit]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[submit]
   before_action :require_accessible_group_param!, only: %i[get_by_group_id]
 
   # GET /fire_equipment_orders
@@ -12,7 +16,6 @@ class FireEquipmentOrdersController < ApplicationController
                              else
                                FireEquipmentOrder.includes(:group).all
                              end
-    @fire_equipment_orders = scope_to_accessible_groups(@fire_equipment_orders)
     orders_with_fuel_japanese = @fire_equipment_orders.map do |order|
       order.as_json(include: { group: { only: %i[id name] } }).merge(
         fuel_japanese: order.fuel_japanese
@@ -23,14 +26,8 @@ class FireEquipmentOrdersController < ApplicationController
 
   # GET /fire_equipment_orders/:id
   def show
-    fire_equipment_order = FireEquipmentOrder
-                           .where(group_id: current_api_user.groups.select(:id))
-                           .find_by(id: params[:id])
-    if fire_equipment_order.nil?
-      return render_not_found_or_forbidden do
-        render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}")
-      end
-    end
+    fire_equipment_order = FireEquipmentOrder.find_by(id: params[:id])
+    return render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}") if fire_equipment_order.nil?
 
     order_with_fuel_japanese = fire_equipment_order.as_json(include: { group: { only: %i[id name] } }).merge(
       fuel_japanese: fire_equipment_order.fuel_japanese

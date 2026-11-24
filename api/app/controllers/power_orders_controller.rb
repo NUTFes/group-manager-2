@@ -2,7 +2,10 @@
 
 class PowerOrdersController < ApplicationController
   before_action :authenticate_api_user!
-  before_action :require_admin!, only: [:index]
+  # userの画面から呼ばれるaction以外は管理画面向け（参照はstaff以上、書き込みはmanager）
+  before_action :require_staff!, except: %i[get_by_group_id submit]
+  # staffは閲覧専用のため、userの画面から呼ばれる書き込みも拒否する
+  before_action :reject_staff_write!, only: %i[submit]
   before_action :set_power_order, only: [:show]
   before_action :set_power_orders_by_group_id, only: [:get_by_group_id]
 
@@ -58,13 +61,8 @@ class PowerOrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_power_order
-    @power_order = PowerOrder
-                   .where(group_id: current_api_user.groups.select(:id))
-                   .find_by(id: params[:id])
-
-    return if @power_order
-
-    render_not_found_or_forbidden { render json: fmt(not_found, [], "Not found power_order = #{params[:id]}") }
+    @power_order = PowerOrder.find_by(id: params[:id])
+    @power_order || render(json: fmt(not_found, [], "Not found power_order = #{params[:id]}"))
   end
 
   # Use callbacks to share common setup or constraints between actions.
