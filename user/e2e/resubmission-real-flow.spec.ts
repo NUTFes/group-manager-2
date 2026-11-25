@@ -653,10 +653,10 @@ const getFireEquipmentOrderByGroup = async (
   const response = await api.get(`/fire_equipment_orders/group/${groupId}`, {
     headers: authHeaders,
   });
-  const body = (await response.json()) as ApiResponse<FireEquipmentOrder | []>;
-  if (body.status.code === 404 || Array.isArray(body.data)) return undefined;
+  const body = (await response.json()) as ApiResponse<FireEquipmentOrder[]>;
+  if (body.status.code === 404) return undefined;
   expect(body.status.code).toBe(200);
-  return body.data;
+  return body.data[0];
 };
 
 const createFireEquipmentOrder = async (
