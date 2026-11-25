@@ -29,7 +29,6 @@
                 <tr
                   v-for="n in stage.stage_numbers"
                   v-bind:key="n.num"
-                  :class="{ 'no-row-hover': !$role(roleID).stages.update }"
                   @click="openEditModal(n.group_identification_id, n.stage_number.id, n.stage_number.stage_id)"
                 >
                 <td v-if="n.group !== null && n.group.fes_year_id==refYearID">{{ n.num }}</td>
