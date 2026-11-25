@@ -78,6 +78,7 @@
 
       <div class="sync-button-container">
         <CommonButton
+          v-if="this.$role(roleID).order_status.update"
           iconName="sync"
           :on_click="onSyncSubmissionStatus"
           :disabled="isSyncing"
@@ -102,6 +103,7 @@
             <td @click.stop>
               <SwitchButton
                 :isOn="group.group.is_health_center_submission_target"
+                :disabled="!$role(roleID).order_status.update"
                 :on_click="
                   () =>
                     onToggleSubmissionTarget(

@@ -8,7 +8,7 @@
       <div class="comment-header">
         <h3>メッセージ</h3>
       </div>
-      <div class="comment-form">
+      <div v-if="this.$role(roleID).order_status.create" class="comment-form">
         <div class="message-mode-panel">
           <label class="message-mode-label" for="message-mode-select">
             種別
@@ -115,7 +115,10 @@
           </summary>
           <p class="comment-body">{{ comment.body }}</p>
           <CommonButton
-            v-if="comment.mail_delivery_status === 'failed'"
+            v-if="
+              comment.mail_delivery_status === 'failed' &&
+              this.$role(roleID).order_status.create
+            "
             iconName="send"
             :on_click="() => resendCommentMail(comment)"
             :disabled="isSendingMessage || resendingCommentId === comment.id"
@@ -199,6 +202,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     groupId: {
@@ -239,6 +244,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
     canSendMessage() {
       const hasRecipient = this.sendMode !== "mail" || !!this.userEmail;
       return (

@@ -6,7 +6,10 @@
           <Row justify="start">
             <slot></slot>
           </Row>
-          <div class="memo-modal_content">
+          <div
+            v-if="this.$role(roleID).memos.create"
+            class="memo-modal_content"
+          >
             <textarea v-model="content" placeholder="メモ" />
             <CommonButton
               v-if="content !== ''"
@@ -38,6 +41,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     memos: Array,
@@ -47,6 +52,11 @@ export default {
       content: "",
       user: null,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async submit() {

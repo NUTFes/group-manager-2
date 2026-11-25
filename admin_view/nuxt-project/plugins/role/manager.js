@@ -203,4 +203,22 @@ export const managerRole = {
     update: true,
     delete: true,
   },
+  fire_equipment_orders: {
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
+  message_templates: {
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
+  memos: {
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
 };

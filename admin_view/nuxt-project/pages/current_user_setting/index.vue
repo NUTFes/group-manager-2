@@ -319,7 +319,8 @@ export default {
     window.scrollTo(0, 0);
     
     this.$axios
-      .get("api/v1/current_user/get_user_detail_raw", {
+      // ログインユーザー本人の情報（ロールを問わず取得できる）
+      .get("/api/v1/current_user", {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
@@ -328,14 +329,14 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        this.user_id = response.data.user.id;
-        this.name = response.data.user.name;
-        this.email = response.data.user.email;
-        this.grade_id = response.data.user_detail.grade_id;
-        this.department_id = response.data.user_detail.department_id;
-        this.student_id = String(response.data.user_detail.student_id);
-        this.tel = response.data.user_detail.tel;
+        const { user, user_detail } = response.data.data;
+        this.user_id = user.id;
+        this.name = user.name;
+        this.email = user.email;
+        this.grade_id = user_detail.grade_id;
+        this.department_id = user_detail.department_id;
+        this.student_id = String(user_detail.student_id);
+        this.tel = user_detail.tel;
       });
   },
   methods: {

@@ -160,6 +160,11 @@ export default {
     },
 
     openAddModal(id, groupId, name, number) {
+      // staffは閲覧のみのため、行クリックで設定・編集モーダルを開かない
+      if (number === null && !this.$role(this.roleID).group_identify.create)
+        return;
+      if (number !== null && !this.$role(this.roleID).group_identify.update)
+        return;
       this.targetId = id;
       this.targetGroupId = groupId;
       this.targetGroupName = name;
