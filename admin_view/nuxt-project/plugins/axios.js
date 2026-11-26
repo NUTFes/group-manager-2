@@ -23,6 +23,26 @@ export default function ({ $axios, app, redirect, route }) {
     }
   });
 
+  // 再ログイン後に戻るページを @nuxtjs/auth の rewriteRedirects 用に保存する。
+  // ログイン後の redirect("home") がこの値を読み出して消す。
+  const saveRedirectPath = (currentRoute) => {
+    const fullPath = currentRoute?.fullPath;
+    const isRelativePath =
+      typeof fullPath === "string" &&
+      fullPath.startsWith("/") &&
+      !fullPath.startsWith("//");
+
+    if (
+      !isRelativePath ||
+      currentRoute.path === (app.$auth?.options?.redirect?.login || "/") ||
+      currentRoute.path === reauthenticationPath
+    ) {
+      return;
+    }
+
+    app.$auth?.$storage?.setUniversal("redirect", fullPath);
+  };
+
   $axios.onError((error) => {
     const status = error?.response?.status;
     const requestUrl = error?.config?.url || "";
@@ -37,6 +57,10 @@ export default function ({ $axios, app, redirect, route }) {
       !isLoginRequest &&
       currentPath !== reauthenticationPath
     ) {
+      // 画面遷移中の asyncData では router.currentRoute が遷移元のままなので、
+      // Nuxt が遷移開始時に更新する context.route（遷移先）を保存する。
+      saveRedirectPath(process.client ? app.context?.route : route);
+
       if (process.client) {
         app.router.replace(reauthenticationPath);
       } else {
