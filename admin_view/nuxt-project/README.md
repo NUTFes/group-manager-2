@@ -21,8 +21,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ## E2E tests
 
-リポジトリルートからE2E専用のDockerイメージで実行します。Playwright用のNode.js、Chromium、依存パッケージはイメージ内へ入るため、ホストや通常のadmin_viewコンテナへ追加する必要はありません。
+Node.js 18以上のホスト環境で実行します。環境選択と将来のコンテナ実行への移行方針は [AGENTS.md](../../AGENTS.md) を参照してください。
 
 ```bash
-make test-admin-e2e
+npm ci
+npx playwright install chromium
+npm run test:e2e
 ```

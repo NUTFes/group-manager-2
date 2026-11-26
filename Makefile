@@ -90,10 +90,6 @@ test-e2e:
 		pnpm exec playwright install chromium >/dev/null && \
 		PLAYWRIGHT_API_BASE_URL=http://api:3000 pnpm run test:e2e'
 
-test-admin-e2e:
-	docker compose --profile test build admin_view_e2e
-	docker compose --profile test run --rm --no-deps admin_view_e2e
-
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
 
