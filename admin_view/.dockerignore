@@ -1,0 +1,4 @@
+nuxt-project/.nuxt
+nuxt-project/node_modules
+nuxt-project/playwright-report
+nuxt-project/test-results
