@@ -16,6 +16,12 @@ Group Manager は Rails API と Next.js / Nuxt フロントエンドで構成さ
 - `docker compose run --rm user_front npm run dev` / `docker compose run --rm admin_view npm run dev`: 各 Nuxt アプリのローカルサーバーを起動します。
 - `make fmt` または `docker compose run --rm user pnpm run fmt`: Prettier と import 並び替えを適用します。
 
+### admin_view の E2E 実行
+
+- `admin_view` の Playwright E2E は、Docker利用原則の一時的な例外として `admin_view/nuxt-project` でホスト実行します。現在の `admin_view` コンテナはNode.js 16で、Playwright 1.61が要求するNode.js 18以上を満たさないため、E2Eには使用しません。
+- ホストのNode.jsが18未満の場合や、依存関係・Chromiumを用意できない場合は、ホスト環境へシステムパッケージを追加したり別の実行環境を新設したりせず、E2E未実行と理由を報告します。
+- 将来 `admin_view` イメージのNode.jsを更新し、固定中のPlaywrightが要求するバージョンを満たしてコンテナ内でE2Eが成功する状態になったら、この例外を廃止してコンテナ実行へ戻し、本節と `admin_view/nuxt-project/README.md` を更新します。
+
 ## コーディングスタイルと命名ルール
 - Ruby は 2 スペースインデント、`snake_case` 命名、RESTful コントローラ、変更ごとのマイグレーション作成を徹底します。
 - TypeScript / React は `PascalCase` コンポーネント、`camelCase` フックとユーティリティ、スタイルは Tailwind。UI 作成は `make gen-component` でスキャフォールド。
