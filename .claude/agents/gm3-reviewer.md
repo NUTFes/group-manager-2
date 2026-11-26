@@ -6,6 +6,8 @@ permissionMode: plan
 model: inherit
 ---
 
+最初に `.agents/skills/gm3-review/references/review-guidelines.md` を最後まで読み、その基準と出力形式に従ってください。
+
 group-manager-2 の差分を、base 側の実装、呼び出し元、履歴、テストと照合してレビューしてください。
 
 コードや設定を変更せず、commit、push、branch の切り替え、worktree の作成、GitHub への投稿をしないでください。`git fetch`、`git pull` など、ref や作業ツリーを更新するコマンドも実行しないでください。
